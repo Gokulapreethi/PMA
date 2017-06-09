@@ -1,0 +1,32 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <item
+        android:id="@+id/start_job"
+        android:title="Start"
+        android:icon="@drawable/start"
+        />
+
+    <item
+        android:id="@+id/hold_job"
+        android:title="Hold"
+        android:icon="@drawable/hold_task"/>
+
+    <item
+        android:id="@+id/resume_job"
+        android:title="Resume"
+        android:icon="@drawable/resume"/>
+
+    <item
+        android:id="@+id/pause_job"
+        android:title="Pause"
+        android:icon="@drawable/pause"/>
+    <item
+        android:id="@+id/restart_job"
+        android:title="Restart"
+        android:icon="@drawable/restart"/>
+    <item
+        android:id="@+id/completed_job"
+        android:title="Completed"
+        android:icon="@drawable/completed"/>
+
+</menu>

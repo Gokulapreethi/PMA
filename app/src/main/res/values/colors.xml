@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#3F51B5</color>
+    <color name="colorPrimaryDark">#303F9F</color>
+    <color name="colorAccent">#FF4081</color>
+    <color name="pressed_color">#B8F2F5</color>
+    <color name="default_color">#E8FEFF</color>
+    <color name="appcolor">#4682B4</color>
+    <color name="dark_green">#3e8704</color>
+    <color name="black">#000000</color>
+    <color name="black2">#272829</color>
+    <color name="title">#05ABE0</color>
+    <color name="green">#33FF4C</color>
+    //green #63d10c black #000000
+
+    //Added for ASE
+    <color name="light_black">#504f4f</color>
+
+    <color name="white">#FFFFFF</color>
+    <color name="replyback">#c1e1ff</color>
+
+    <color name="grey">#949494</color>
+    <color name="grey_dark">#949191</color>
+    <color name="lgyellow">#fafad2</color>
+    <color name="transparent">#17170445</color>
+    <color name="transparent1">#52002077</color>
+    <color name="titleColor">#90929A</color>
+    <color name="test">#B5B7B9</color>
+    <color name="text_color">#31D1F1</color>
+    <color name="orange">#FFE56717</color>
+    <color name="lable_textcolor">#7F3131</color>
+
+    <color name="login">#63E1FF</color>
+    <string name="open">Open</string>
+    <color name="vtab_col1">#FFC600</color>
+    <color name="Note_color">#90929A</color>
+    <color name="audio_color">#90929A</color>
+    <color name="Note_title">#48d1cc</color>
+    <color name="dark_gray">#808080</color>
+    <color name="light_gray">#C0C0C0</color>
+    <color name="chat1">#5dc6f0</color>
+    <color name="audioreceiv">#E6E9EC</color>
+    <color name="audiosender">#93C8FF</color>
+
+    <color name="red_color">#FF0000</color>
+    <color name="red_register">#d28989</color>
+    <color name="blue">#3333FF</color>
+
+
+    <color name="connected">#006600</color>
+    <color name="connecting_ringing">#FFA500</color>
+    <color name="disconnect">#FF0000</color>
+
+
+    <!-- used for text color -->
+    <color name="foreground">#FFFFFF</color>
+    <color name="background">#000000</color>
+
+    <!-- color of the separator line -->
+    <color name="grid">#58585a</color>
+
+    <!-- background color of the number view -->
+    <color name="number_view">#58585a</color>
+
+
+    <color name="dialpad_pressed">#F6F6F6</color>
+
+
+    <color name="darkblue">#0099cc</color>
+    <color name="red">#ff4444</color>
+    <color name="grayStart">#adadad</color>
+    <color name="grayEnd">#ffffff</color>
+    <color name="bg_handle_pressed">#a0a0a0</color>
+
+
+    <color name="symptom_color_selected">#003366</color>
+    <color name="reaction_color_selected">#003366</color>
+    <color name="static_text_color">#003366</color>
+    <color name="journal_entry_listitem_text_color">#003366</color>
+    <color name="note_text_disabled">#333333</color>
+    <color name="c_blue">#0000FF</color>
+    <color name="navy">#6699FF</color>
+    <color name="sky">#0099CC</color>
+    <color name="gray">#808080</color>
+    <color name="lightgray">#e7e7e7</color>
+    <color name="lightgray02">#bfbfbf</color>
+    <color name="dark">#000015</color>
+    <color name="lightgreen">#336666</color>
+    <color name="orrange">#e33d1b</color>
+    <color name="darkorrange">#cc2303</color>
+
+
+    <color name="blackdialog">#FF000000</color>
+    <color name="whitegrey">#FFF2F2F2</color>
+</resources>

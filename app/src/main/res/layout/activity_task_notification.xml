@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="315dp"
+    android:layout_height="wrap_content"
+    android:background="@color/black"
+    android:orientation="horizontal"
+    >
+
+    <TextView
+        android:id="@+id/tv_title"
+        android:layout_width="280dp"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="20dp"
+        android:gravity="center_horizontal"
+        android:text="New Task Received From"
+        android:textColor="@color/white"
+        android:textSize="24dp" />
+
+    <View
+        android:id="@+id/view1"
+        android:layout_width="fill_parent"
+        android:layout_height="2dp"
+        android:layout_below="@+id/tv_title"
+        android:layout_marginTop="10dp"
+        android:background="#FFFFFF"></View>
+
+    <ImageView
+        android:id="@+id/buddy_icon"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_below="@+id/view1"
+        android:layout_centerInParent="true"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/contact" />
+
+    <TextView
+        android:id="@+id/buddy_name"
+        android:layout_width="280dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/buddy_icon"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="20dp"
+        android:gravity="center_horizontal"
+        android:text="caller name"
+        android:textColor="@color/white"
+        android:textSize="20dp" />
+
+    <Button
+        android:id="@+id/layout_decline"
+        android:layout_width="125dp"
+        android:layout_height="45dp"
+        android:layout_below="@+id/buddy_name"
+        android:layout_marginBottom="8dp"
+        android:layout_marginLeft="25dp"
+        android:layout_marginTop="15dp"
+        android:background="@drawable/declinebg"
+        android:clickable="true"
+        android:focusable="true"
+        android:text="OK"
+        android:textColor="@color/white"
+        android:textSize="20dp">
+
+
+    </Button>
+
+    <Button
+        android:id="@+id/layout_accept"
+        android:layout_width="125dp"
+        android:layout_height="45dp"
+        android:layout_below="@+id/buddy_name"
+        android:layout_marginBottom="8dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="15dp"
+        android:layout_toRightOf="@+id/layout_decline"
+        android:background="@drawable/acceptbg"
+        android:clickable="true"
+        android:focusable="true"
+        android:text="View"
+        android:textColor="@color/white"
+        android:textSize="20dp">
+
+
+    </Button>
+
+    <View
+        android:id="@+id/view3"
+        android:layout_width="fill_parent"
+        android:layout_height="17dp"
+        android:layout_below="@+id/layout_accept"
+        android:background="@color/black"></View>
+</RelativeLayout>

@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <!-- <RelativeLayout
+         android:layout_width="fill_parent"
+         android:background="@color/appcolor"
+         android:layout_height="45dp">
+
+         <ImageView
+             android:layout_width="45dp"
+             android:layout_height="45dp"
+             android:layout_centerVertical="true"
+             android:id="@+id/finish_page"
+             android:background="@drawable/navigation_close"/>
+
+
+         <Button
+             android:layout_width="45dp"
+             android:layout_height="45dp"
+             android:id="@+id/submit_icon"
+             android:layout_alignParentRight="true"
+             android:layout_marginRight="10dp"
+             android:layout_toRightOf="@+id/finish_page"
+             android:background="@drawable/navigation_close"
+             />
+     </RelativeLayout>
+ -->
+    <RelativeLayout
+        android:id="@+id/header"
+        android:layout_width="fill_parent"
+        android:layout_height="50dp"
+        android:layout_alignParentTop="true"
+        android:background="@color/white"
+        android:paddingBottom="5dp"
+        android:paddingTop="2dp">
+
+        <TextView
+            android:id="@+id/finish_page"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="0.2"
+            android:drawableLeft="@drawable/back_32"
+            android:drawablePadding="-10dp"
+            android:gravity="center|start"
+            android:text="Back"
+            android:textColor="@color/appcolor" />
+
+        <ImageView
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginTop="3dp"
+            android:layout_toLeftOf="@+id/txtView01"
+            android:background="@drawable/filterdisabled"
+            android:id="@+id/fill"
+            />
+
+        <TextView
+            android:id="@+id/txtView01"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_centerVertical="true"
+            android:layout_centerHorizontal="true"
+            android:layout_centerInParent="true"
+            android:gravity="center"
+            android:text="Active Task List"
+            android:textColor="@color/appcolor"
+            android:textSize="14sp" />
+
+        <ImageView
+            android:id="@+id/submit_icon"
+            android:layout_width="60dp"
+            android:layout_height="match_parent"
+            android:layout_alignParentRight="true"
+            android:layout_alignTop="@+id/finish_page"
+            android:layout_weight="0.1"
+            android:background="@drawable/ic_pie_chart_filled_32"
+            android:padding="2dp"
+            android:textColor="#FFFFFF" />
+
+    </RelativeLayout>
+
+    <View
+        android:id="@+id/view"
+        android:layout_width="wrap_content"
+        android:layout_height="1dp"
+        android:layout_below="@+id/header"
+        android:background="@color/common_action_bar_splitter" />
+
+    <com.baoyz.swipemenulistview.SwipeMenuListView
+        android:id="@+id/non_active"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="45dp"
+        android:visibility="gone" />
+
+    <!--<ListView
+        android:id="@+id/lv_taskHistory"
+        android:layout_marginTop="45dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"></ListView>-->
+    <LinearLayout
+        android:id="@+id/History_Search"
+        android:layout_width="fill_parent"
+        android:layout_height="47dp"
+        android:layout_below="@+id/header"
+        android:background="@color/lightgray"
+        android:orientation="horizontal"
+        android:visibility="visible">
+
+        <EditText
+            android:id="@+id/searchtext"
+            android:layout_width="wrap_content"
+            android:layout_height="38dp"
+            android:layout_alignParentLeft="true"
+            android:layout_marginBottom="2dp"
+            android:layout_marginTop="2dp"
+            android:layout_toLeftOf="@+id/btnsearch"
+            android:layout_weight="1"
+            android:background="#FFFFFF"
+            android:cursorVisible="false"
+            android:drawableLeft="@drawable/search_tr"
+            android:gravity="center"
+            android:hint="Search"
+            android:imeOptions="actionSearch"
+            android:inputType="textPersonName"></EditText>
+
+        <!--<Button
+            android:id="@+id/search_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="2"
+            android:text="Enter" />-->
+
+    </LinearLayout>
+    <TextView
+        android:id="@+id/Noresult"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:text="No Results Found"
+        android:gravity="center"
+        android:visibility="gone"
+        android:layout_below="@id/History_Search"
+        android:textColor="@color/black"
+        android:textSize="14sp" />
+
+    <com.baoyz.swipemenulistview.SwipeMenuListView
+        android:id="@+id/lv_allTaskList"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/Noresult" />
+
+</RelativeLayout>

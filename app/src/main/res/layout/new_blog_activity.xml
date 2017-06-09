@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white">
+    <RelativeLayout
+        android:id="@+id/header"
+        android:layout_width="fill_parent"
+        android:layout_height="50dp"
+        android:layout_alignParentTop="true"
+        android:background="@color/appcolor" >
+
+        <TextView
+            android:id="@+id/txtView01"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="NEW BLOG"
+            android:textColor="@color/white"
+            android:textSize="20sp"
+            android:gravity="center" />
+
+        <Button
+            android:id="@+id/cancel"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_centerVertical="true"
+            android:background="@drawable/navigation_close"
+            android:layout_marginLeft="10dp"/>
+        <Button
+            android:id="@+id/save"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="5dp"
+            android:background="@drawable/navigation_check"
+            android:textColor="#FFFFFF" />
+
+    </RelativeLayout>
+    <LinearLayout
+
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginTop="20dp"
+        android:layout_below="@+id/header">
+
+        <EditText
+            android:id="@+id/et_msg"
+            android:hint="Type your message"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:textColor="@color/black"
+            android:textSize="15sp"
+            android:layout_marginTop="10dp"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"/>
+
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="5dp"
+            android:background="@color/black" />
+
+
+        <TextView
+            android:id="@+id/tv_group"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_marginRight="15dp"
+            android:layout_marginLeft="15dp"
+            android:gravity="left"
+            android:padding="7dp"
+            android:text="Please Select Group"
+            android:visibility="gone"
+            android:textColor="#808080"
+
+            android:textSize="15dp" />
+        <Spinner
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_marginRight="15dp"
+            android:layout_marginLeft="15dp"
+            android:paddingLeft="13dp"
+            android:visibility="gone"
+            android:popupBackground="#202021"
+            android:spinnerMode="dropdown"
+            android:id="@+id/spinner_select_group"/>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="5dp"
+            android:background="@color/white" />
+
+        <ListView
+            android:id="@+id/list_all"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="35dp"
+            android:divider="@null"
+            android:listSelector="@android:color/transparent"></ListView>
+    </LinearLayout>
+    <RelativeLayout
+        android:id="@+id/linear3"
+        android:layout_width="fill_parent"
+        android:layout_height="40dp"
+        android:orientation="horizontal"
+
+        android:layout_alignParentBottom="true"
+        android:background="@color/appcolor">
+
+        <!--<Button
+            android:id="@+id/audio"
+            android:layout_width="40dp"
+            android:layout_height="wrap_content"
+            android:background="@drawable/memory_photo"
+            android:layout_toLeftOf="@+id/photo"
+            android:layout_marginRight="10dp"
+            />
+-->
+        <Button
+            android:layout_width="30dp"
+            android:layout_height="40dp"
+            android:id="@+id/audio"
+            android:layout_toLeftOf="@+id/photo"
+            android:layout_marginRight="10dp"
+            android:background="@drawable/headphones"
+            />
+
+        <Button
+            android:id="@+id/photo"
+            android:layout_width="40dp"
+            android:layout_height="wrap_content"
+            android:background="@drawable/memory_photo"
+            android:layout_toLeftOf="@+id/video"
+            android:layout_marginRight="10dp"
+            />
+        <Button
+            android:id="@+id/video"
+            android:layout_width="40dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="10dp"
+            android:background="@drawable/memory_video" />
+
+    </RelativeLayout>
+
+</RelativeLayout>

@@ -1,0 +1,233 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="#FFFFFF">
+
+    <RelativeLayout
+        android:id="@+id/headerc"
+        android:layout_width="fill_parent"
+        android:layout_height="52dp"
+        android:background="?attr/colorPrimary">
+
+        <TextView
+            android:id="@+id/tv_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="CHAT"
+            android:textColor="@color/white"
+            android:textSize="21dp"
+            android:textStyle="bold" />
+
+        <Button
+            android:id="@+id/btn_back"
+            android:layout_width="wrap_content"
+            android:layout_height="45dp"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="5dp"
+            android:text="back" />
+
+        <Button
+            android:id="@+id/btn_addbuddy"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:text="Add"
+            android:visibility="gone"/>
+    </RelativeLayout>
+
+
+    <TextView
+        android:id="@+id/tv_view"
+        android:layout_width="match_parent"
+        android:layout_height="10dp"
+        android:layout_below="@+id/headerc"
+        android:background="@color/background_floating_material_light"
+        android:padding="6dp"
+
+        android:textColor="#000000" />
+    <LinearLayout
+        android:id="@+id/ll_networkstate"
+        android:layout_width="fill_parent"
+        android:layout_height="50dp"
+        android:layout_below="@+id/tv_view"
+        android:gravity="center_horizontal"
+        android:visibility="gone"
+        android:background="@color/red_color">
+        <TextView
+            android:id="@+id/tv_networksate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="No Network"
+            android:layout_gravity="center_vertical"
+            android:textSize="18dp"
+            android:textColor="@color/white"
+            />
+    </LinearLayout>
+
+    <ListView
+        android:id="@+id/chatlist"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/view1"
+        android:layout_below="@+id/ll_networkstate"
+        android:background="#FFF"
+        android:divider="@null"
+        android:listSelector="@android:color/transparent" />
+
+    <View
+        android:id="@+id/view1"
+        android:layout_width="match_parent"
+        android:layout_height="3dp"
+        android:layout_above="@+id/form"
+        android:layout_marginBottom="5dp"
+        android:background="#F2F2F2" />
+
+    <LinearLayout
+        android:id="@+id/form"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_above="@+id/multimed_layout"
+        android:orientation="horizontal"
+        android:weightSum="3">
+
+        <RelativeLayout
+            android:id="@+id/pin"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_centerInParent="true"
+            android:layout_marginLeft="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_weight="0.25">
+
+            <ImageView
+
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp" />
+        </RelativeLayout>
+
+
+        <Button
+            android:layout_width="50dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/scheduled"
+            android:text="S"/>
+
+        <Button
+            android:layout_width="50dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/timetoLive"
+            android:text="T"/>
+
+
+        <EditText
+            android:id="@+id/edit_message"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:layout_weight="2.25"
+            android:editable="true"
+            android:ems="11" />
+
+        <Button
+            android:id="@+id/img_send"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@drawable/ic_paper_clip_2_128"
+            android:visibility="gone" />
+
+        <Button
+            android:id="@+id/send"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_weight="0.5"
+            android:text="Send"
+            android:textColor="#1b75b2"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/multimed_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="5dp"
+        android:gravity="fill|bottom|end"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/photo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="10dp"
+            android:layout_toLeftOf="@+id/write"
+            android:layout_weight="1"
+            android:background="@drawable/memory_photo" />
+
+
+        <Button
+            android:id="@+id/video"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="10dp"
+            android:layout_toLeftOf="@+id/audio"
+            android:layout_weight="1"
+            android:background="@drawable/ic_camera_6_128" />
+
+        <Button
+            android:id="@+id/audio"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="10dp"
+            android:layout_toLeftOf="@+id/photo"
+            android:layout_weight="1"
+            android:background="@drawable/ic_audio_file_2_128" />
+
+        <Button
+            android:id="@+id/file"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="10dp"
+            android:layout_toLeftOf="@+id/video"
+            android:layout_weight="1"
+            android:background="@drawable/ic_paper_clip_2_128" />
+
+        <Button
+            android:id="@+id/write"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="10dp"
+            android:layout_weight="1"
+            android:background="@drawable/ic_edit_2_128" />
+
+        <Button
+            android:id="@+id/updatelevel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="10dp"
+            android:layout_weight="1"
+            android:background="@drawable/percen1"
+            android:visibility="gone" />
+
+        <Button
+            android:id="@+id/calender_picker"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="10dp"
+            android:layout_weight="1"
+            android:background="@drawable/ic_calendartask"
+            android:visibility="gone" />
+
+
+    </LinearLayout>
+
+</RelativeLayout>

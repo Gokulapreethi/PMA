@@ -1,0 +1,213 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_alignParentBottom="true"
+    android:layout_gravity="bottom"
+    android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:id="@+id/l1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/curve_frquency"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/assingNew"
+            android:layout_width="fill_parent"
+            android:layout_height="35dp"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:textSize="20dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="5dp"
+            android:paddingLeft="15dp"
+            android:paddingRight="15dp"
+            android:text="Assign New Task"
+            android:textColor="@color/appcolor" />
+
+        <View
+            android:layout_width="wrap_content"
+            android:layout_height="0.1dp"
+            android:background="@color/grayStart" />
+        <TextView
+            android:id="@+id/Profile"
+            android:layout_width="fill_parent"
+            android:layout_height="35dp"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:textSize="20dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="5dp"
+            android:paddingLeft="15dp"
+            android:paddingRight="15dp"
+            android:text="View Profile"
+            android:textColor="@color/appcolor" />
+
+        <View
+            android:layout_width="wrap_content"
+            android:layout_height="0.1dp"
+            android:background="@color/grayStart" />
+
+        <!-- <TextView
+             android:id="@+id/reject"
+             android:layout_width="wrap_content"
+             android:layout_height="35dp"
+             android:layout_gravity="center"
+             android:gravity="center"
+             android:textSize="20dp"
+             android:layout_marginTop="5dp"
+             android:layout_marginBottom="5dp"
+             android:paddingLeft="15dp"
+             android:paddingRight="15dp"
+             android:text="Rejected"
+             android:textColor="@color/appcolor" />
+
+         <View
+             android:layout_width="wrap_content"
+             android:layout_height="0.1dp"
+             android:background="@color/grayStart" />
+
+         <TextView
+             android:id="@+id/complete"
+             android:layout_width="wrap_content"
+             android:layout_height="35dp"
+             android:layout_gravity="center"
+             android:gravity="center"
+             android:textSize="20dp"
+             android:layout_marginTop="5dp"
+             android:layout_marginBottom="5dp"
+             android:paddingLeft="15dp"
+             android:paddingRight="15dp"
+             android:text="Completed"
+             android:textColor="@color/appcolor" />
+
+         <View
+             android:layout_width="wrap_content"
+             android:layout_height="0.1dp"
+             android:background="@color/grayStart" />-->
+
+        <TextView
+            android:id="@+id/listTask"
+            android:layout_width="fill_parent"
+            android:layout_height="35dp"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="5dp"
+            android:textSize="20dp"
+            android:paddingLeft="15dp"
+            android:paddingRight="15dp"
+            android:text="View Existing Tasks"
+            android:textColor="@color/appcolor" />
+
+        <View
+            android:layout_width="wrap_content"
+            android:layout_height="0.1dp"
+            android:background="@color/grayStart" />
+
+        <TextView
+            android:id="@+id/chat"
+            android:layout_width="fill_parent"
+            android:layout_height="35dp"
+            android:textSize="20dp"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:paddingLeft="15dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="5dp"
+            android:paddingRight="15dp"
+            android:text="Chat"
+            android:textColor="@color/appcolor" />
+        <View
+            android:layout_width="wrap_content"
+            android:layout_height="0.1dp"
+            android:background="@color/grayStart" />
+
+        <TextView
+            android:id="@+id/videocall"
+            android:layout_width="fill_parent"
+            android:layout_height="35dp"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:textSize="20dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="5dp"
+            android:paddingLeft="15dp"
+            android:paddingRight="15dp"
+            android:text="Video Call"
+            android:textColor="@color/appcolor" />
+
+        <View
+            android:layout_width="wrap_content"
+            android:layout_height="0.1dp"
+            android:background="@color/grayStart" />
+
+        <TextView
+            android:id="@+id/audiocall"
+            android:layout_width="fill_parent"
+            android:layout_height="35dp"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:textSize="20dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="5dp"
+            android:paddingLeft="15dp"
+            android:paddingRight="15dp"
+            android:text="Audio call"
+            android:textColor="@color/appcolor" />
+
+        <View
+            android:layout_width="wrap_content"
+            android:layout_height="0.1dp"
+            android:background="@color/grayStart" />
+
+        <TextView
+            android:id="@+id/leave"
+            android:layout_width="fill_parent"
+            android:layout_height="35dp"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="5dp"
+            android:textSize="20dp"
+            android:paddingLeft="15dp"
+            android:paddingRight="15dp"
+            android:text="Leave Request"
+            android:textColor="@color/appcolor"
+            android:visibility="gone"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_marginRight="15dp"
+        android:layout_marginLeft="15dp"
+        android:layout_below="@+id/l1"
+        android:background="@drawable/curve_frquency"
+        android:layout_marginTop="10dp"
+        android:layout_gravity="bottom"
+        android:gravity="center"
+        android:id="@+id/l2"
+        android:paddingTop="5dp"
+        android:paddingBottom="5dp"
+        android:layout_width="match_parent"
+        android:layout_height="45dp">
+        <TextView
+            android:id="@+id/cancel"
+            android:text="Cancel"
+            android:paddingLeft="15dp"
+            android:paddingRight="15dp"
+            android:gravity="center"
+            android:layout_gravity="center"
+            android:textSize="20dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="5dp"
+            android:layout_width="fill_parent"
+            android:textColor="@color/appcolor"
+            android:layout_height="35dp" />
+
+    </LinearLayout>
+
+</RelativeLayout>

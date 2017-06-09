@@ -1,0 +1,282 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="match_parent"
+    android:layout_alignParentBottom="true"
+    android:background="@color/transparent1">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="100dp"
+        android:background="@color/white">
+
+        <RelativeLayout
+            android:id="@+id/header"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/red"
+            android:paddingBottom="10dp">
+
+            <TextView
+                android:id="@+id/txtView01"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:gravity="center"
+                android:text="Task Status Update"
+                android:textColor="@color/black"
+                android:textSize="23sp"
+                android:textStyle="bold" />
+
+            <Button
+                android:id="@+id/cancel"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="10dp"
+                android:background="@drawable/delete32" />
+
+            <Button
+                android:id="@+id/save"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="10dp"
+                android:background="@drawable/checkmark1" />
+
+            <!--<View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_below="@+id/save"
+                android:layout_marginTop="20dp"
+                android:background="@color/black"
+
+                />-->
+
+        </RelativeLayout>
+
+        <LinearLayout
+            android:id="@+id/rl"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/header"
+            android:layout_marginTop="5dp"
+            android:layout_weight="2"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/textView2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/header"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="10dp"
+                android:layout_weight="2"
+                android:gravity="left"
+                android:text="% Completion	"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:textColor="@color/black" />
+
+            <TextView
+                android:id="@+id/textView3"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/header"
+                android:layout_marginRight="30dp"
+                android:layout_marginTop="10dp"
+                android:layout_weight="4"
+                android:gravity="right"
+                android:text="0%"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:textColor="@color/black" />
+        </LinearLayout>
+
+        <SeekBar
+            android:id="@+id/firstBar"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/rl"
+            android:layout_centerInParent="true"
+            android:layout_marginTop="10dp"
+            android:progressDrawable="@drawable/progress"
+            android:thumb="@drawable/ic_arrow_234_128" />
+
+        <TextView
+            android:id="@+id/tv_status"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/firstBar"
+            android:layout_marginTop="10dp"
+            android:gravity="center"
+            android:text="InProgress"
+            android:textColor="@color/white"
+            android:textSize="16dp" />
+
+
+        <Spinner
+            android:id="@+id/sp_task_status"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/tv_status"
+            android:visibility="gone">
+
+        </Spinner>
+
+        <!-- <View
+             android:layout_width="match_parent"
+             android:layout_height="1dp"
+             android:layout_below="@+id/sp_task_status"
+             android:layout_marginTop="15dp"
+             android:background="@color/black"
+
+             />-->
+
+        <EditText
+            android:id="@+id/edittext1"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="150dp"
+            android:background="@android:drawable/screen_background_light"
+            android:gravity="center"
+            android:hint="Remarks"
+            android:singleLine="true" />
+
+        <View
+            android:layout_width="wrap_content"
+            android:layout_height="1dp"
+            android:layout_above="@+id/content1"
+            android:background="@color/appcolor" />
+
+        <LinearLayout
+            android:id="@+id/content1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_centerInParent="true"
+            android:layout_gravity="center"
+            android:gravity="fill|bottom|center|end"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/audio"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="10dp"
+                android:layout_toLeftOf="@+id/photo"
+                android:layout_weight="1"
+                android:background="@drawable/ic_audio_file_100"
+                android:gravity="center" />
+
+            <Button
+                android:id="@+id/photo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="10dp"
+                android:layout_toLeftOf="@+id/write"
+                android:layout_weight="1"
+                android:background="@drawable/ic_compact_camera_100"
+                android:gravity="center" />
+
+            <Button
+                android:id="@+id/write"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="10dp"
+                android:layout_weight="1"
+                android:background="@drawable/ic_marker_pen_100"
+                android:gravity="center"
+                android:visibility="visible" />
+
+
+            <Button
+                android:id="@+id/video"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="10dp"
+                android:layout_toLeftOf="@+id/audio"
+                android:layout_weight="1"
+                android:background="@drawable/ic_video_message_100"
+                android:gravity="center" />
+
+
+            <Button
+                android:id="@+id/files"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="10dp"
+                android:layout_weight="1"
+                android:background="@drawable/ic_attach_100"
+                android:gravity="center" />
+
+
+            <Button
+                android:id="@+id/file"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="10dp"
+                android:layout_toLeftOf="@+id/video"
+                android:layout_weight="1"
+                android:background="@drawable/ic_phone_100"
+                android:gravity="center"
+                android:visibility="gone" />
+
+            <Button
+                android:id="@+id/calender_picker"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="10dp"
+                android:layout_weight="1"
+                android:background="@drawable/ic_calendartask"
+                android:gravity="center"
+                android:visibility="gone" />
+
+            <Button
+                android:id="@+id/updatelevel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="10dp"
+                android:layout_weight="1"
+                android:background="@drawable/percen1"
+                android:gravity="center"
+                android:visibility="gone" />
+
+            <Button
+                android:id="@+id/update_location"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="3dp"
+                android:layout_marginTop="5dp"
+                android:layout_weight="0.5"
+                android:background="@drawable/ic_geo_fence_32_1"
+                android:gravity="center" />
+
+        </LinearLayout>
+
+
+        <!--<ListView
+           android:layout_width="fill_parent"
+           android:layout_height="wrap_content"
+           android:id="@+id/listOfFiles"
+           android:layout_below="@+id/edittext1"
+           android:layout_above="@+id/content1">
+       </ListView>-->
+
+        <com.baoyz.swipemenulistview.SwipeMenuListView
+            android:id="@+id/listOfFiles"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/content1"
+            android:layout_below="@+id/edittext1" />
+
+    </RelativeLayout>
+
+
+</RelativeLayout>

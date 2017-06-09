@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.myapplication3.chat.BuddyAdd">
+    <RelativeLayout
+        android:id="@+id/headerc"
+        android:layout_width="fill_parent"
+        android:layout_height="52dp"
+        android:background="?attr/colorPrimary">
+
+        <TextView
+            android:id="@+id/tv_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="ADD BUDDY"
+            android:textColor="@color/white"
+            android:textStyle="bold"
+            android:textSize="21dp" />
+
+        <Button
+            android:id="@+id/btn_back"
+            android:layout_width="wrap_content"
+            android:layout_height="45dp"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="5dp"
+            android:text="back"
+            />
+        <Button
+            android:id="@+id/btn_addbuddy"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:text="AddBuddy"/>
+    </RelativeLayout>
+    <ListView
+        android:id="@+id/buddy_list"
+        android:layout_width="match_parent"
+        android:layout_height="fill_parent"
+        android:layout_below="@+id/headerc"
+        android:listSelector="@drawable/bkg"></ListView>
+
+</RelativeLayout>

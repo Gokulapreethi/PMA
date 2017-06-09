@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:android.support.v7.recyclerview="http://schemas.android.com/apk/res-auto">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:id="@+id/header_menu"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+
+            <TextView
+                android:id="@+id/cancel"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text="Back"
+                android:gravity="center|start"
+                android:textColor="@color/appcolor"
+                android:drawablePadding="-10dp"
+                android:drawableLeft="@drawable/ic_back_100"
+                />
+
+            <TextView
+                android:id="@+id/txtView01"
+                android:text="Task from Template"
+                android:ellipsize="end"
+                android:singleLine="true"
+                android:layout_weight="0.4"
+                android:gravity="fill_vertical"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:padding="20dp"
+                android:textSize="15sp"
+                android:textColor="@color/black"
+                android:textStyle="bold"
+                />
+
+        </LinearLayout>
+        <View
+            android:layout_width="wrap_content"
+            android:layout_height="1dp"
+            android:layout_below="@+id/header_menu"
+            android:background="@color/common_action_bar_splitter"
+            />
+
+        <LinearLayout
+            android:id="@+id/ll_networkstate"
+            android:layout_width="fill_parent"
+            android:layout_height="50dp"
+            android:gravity="center_horizontal"
+            android:visibility="gone"
+            android:background="@color/red_color">
+            <TextView
+                android:id="@+id/tv_networksate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="No Network"
+                android:layout_gravity="center_vertical"
+                android:textSize="18dp"
+                android:textColor="@color/white"
+                />
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="200"
+            android:orientation="vertical">
+
+
+            <!--<TextView-->
+            <!--android:layout_width="fill_parent"-->
+            <!--android:layout_height="30dp"-->
+            <!--android:textAppearance="?android:attr/textAppearanceLarge"-->
+            <!--android:text="TASK DESCRIPTION"-->
+            <!--android:id="@+id/textView10"-->
+            <!--android:gravity="center"-->
+            <!--android:background="@color/appcolor"></TextView>-->
+
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/my_recycler_view"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android.support.v7.recyclerview:stackFromEnd ="false"
+                android:visibility="gone"
+
+                />
+            <ListView
+                android:id="@+id/list_all_templates"
+                android:layout_marginTop="15dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:layout_below="@+id/textView10"
+                android:divider="@null"
+                android:listSelector="@android:color/transparent"
+                android:stackFromBottom="true"
+                android:transcriptMode="alwaysScroll">
+            </ListView>
+
+            <!-- android:overScrollMode="always"
+             android:transcriptMode="alwaysScroll"
+             android:divider="@null"
+             android:listSelector="@android:color/background_light"
+             android:layout_alignParentRight="true"
+             android:layout_alignParentEnd="true"-->
+        </LinearLayout>
+    </LinearLayout>
+</RelativeLayout>

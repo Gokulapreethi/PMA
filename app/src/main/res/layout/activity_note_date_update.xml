@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.myapplication3.NoteDateUpdate">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:id="@+id/header_menu"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:id="@+id/cancel"
+                android:layout_width="match_parent"
+                android:layout_height="35dp"
+                android:layout_gravity="center|top"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="10dp"
+                android:layout_weight="4"
+                android:background="@drawable/ic_multiply_100" />
+
+            <TextView
+                android:id="@+id/textview1"
+                android:layout_width="match_parent"
+                android:layout_height="35dp"
+                android:layout_marginLeft="5sp"
+                android:layout_marginTop="10dp"
+                android:layout_weight="1.5"
+                android:gravity="center"
+                android:text="Remind Me"
+                android:textAlignment="center"
+                android:textSize="20sp" />
+
+            <ImageView
+                android:id="@+id/submit"
+                android:layout_width="match_parent"
+                android:layout_height="35dp"
+                android:layout_gravity="center|top"
+                android:layout_marginRight="10dp"
+                android:layout_marginTop="10dp"
+                android:layout_weight="4"
+                android:src="@drawable/ic_paper_plane_100" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:id="@+id/ll_3"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/ll_2"
+                android:orientation="horizontal"
+                android:paddingRight="10dp">
+
+                <TextView
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="20sp"
+                    android:layout_marginTop="10dp"
+                    android:layout_weight="20"
+                    android:gravity="left"
+                    android:singleLine="true"
+                    android:text="Self Reminder Date:"
+                    android:textAlignment="gravity"
+                    android:textSize="16sp" />
+
+                <EditText
+                    android:id="@+id/End_Date"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="20sp"
+                    android:layout_marginRight="10sp"
+                    android:layout_marginTop="10dp"
+                    android:layout_weight="13"
+                    android:background="@drawable/edittextstyle"
+                    android:cursorVisible="false"
+                    android:focusableInTouchMode="false"
+                    android:gravity="left"
+                    android:paddingRight="10dp" />
+
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="5dp"
+                android:layout_marginLeft="20sp"
+                android:layout_marginTop="10dp"
+                android:gravity="left"
+                android:lineSpacingMultiplier="0.9"
+                android:singleLine="true"
+                android:text="Reminder Quote:"
+                android:textSize="16sp" />
+
+            <EditText
+                android:id="@+id/Reminder_quote"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="5dp"
+                android:layout_marginLeft="20sp"
+                android:layout_marginRight="10sp"
+                android:layout_marginTop="5dp"
+                android:background="@drawable/edittextstyle1"
+                android:paddingRight="10dp" />
+
+            <TextView
+                android:id="@+id/rem_tone"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20sp"
+                android:layout_marginTop="10dp"
+                android:gravity="left"
+                android:text="Reminder Tone:"
+                android:textSize="16sp" />
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:orientation="horizontal">
+
+                <Button
+                    android:id="@+id/audio"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="10dp"
+                    android:background="@drawable/ic_audio_file_100" />
+
+                <LinearLayout
+                    android:id="@+id/rem_audio_play"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_toRightOf="@+id/audio"
+                    android:background="@drawable/item_bg_color"
+                    android:visibility="gone">
+
+                    <ImageView
+                        android:id="@+id/play_button"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="5dp"
+                        android:src="@drawable/play" />
+
+                    <TextView
+                        android:id="@+id/txt_time"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginLeft="5dp"
+                        android:layout_toRightOf="@+id/play_button"
+                        android:text="00:00"
+                        android:textColor="@color/blue"
+                        android:visibility="visible" />
+
+
+                    <SeekBar
+                        android:id="@+id/seekBar1"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginLeft="5dp"
+                        android:layout_toRightOf="@+id/txt_time"
+                        android:progressDrawable="@drawable/progress" />
+                    <!--android:thumb="@drawable/seek_handler" />-->
+
+                </LinearLayout>
+
+            </RelativeLayout>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</RelativeLayout>

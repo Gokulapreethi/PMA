@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/bb_Contacts"
+        android:icon="@drawable/contact_tab"
+        android:title="Contacts" />
+    <item
+        android:id="@+id/bb_Task"
+        android:icon="@drawable/task_tab"
+        android:title="Task" />
+    <item
+        android:id="@+id/bb_Chat"
+        android:icon="@drawable/chat_tab"
+        android:title="Chat" />
+    <item
+        android:id="@+id/bb_Blogs"
+        android:icon="@drawable/tab_blog"
+        android:title="Blogs" />
+    <item
+        android:id="@+id/bb_Settings"
+        android:icon="@drawable/settings_tab"
+        android:title="Settings" />
+</menu>

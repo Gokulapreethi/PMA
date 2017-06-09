@@ -1,0 +1,163 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="#FFFFFF" >
+
+    <RelativeLayout
+        android:id="@+id/rlay_tilte"
+        android:layout_width="fill_parent"
+        android:layout_height="42dp"
+        android:background="@color/white"
+        android:orientation="horizontal"
+        android:visibility="visible" >
+
+        <TextView
+            android:id="@+id/back"
+            android:layout_width="50dp"
+            android:layout_height="35dp"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="5dp"
+            android:background="@color/white"
+            android:gravity="center"
+            android:text="Back"
+            android:textColor="@color/appcolor"
+            android:textSize="16dp" />
+
+        <TextView
+            android:id="@+id/heading"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:gravity="center"
+            android:text="Custom Fields"
+            android:textColor="@color/appcolor"
+            android:textSize="18dp"
+            android:textStyle="bold" />
+
+
+        <ImageView
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:id="@+id/addnew"
+            android:src="@drawable/ic_plus_5_128"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="5dp"
+            android:gravity="center"
+            />
+
+
+        <TextView
+            android:id="@+id/send"
+            android:layout_width="wrap_content"
+            android:layout_height="35dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="5dp"
+            android:background="@color/white"
+            android:gravity="center"
+            android:text="Done"
+            android:visibility="gone"
+            android:textColor="@color/appcolor"
+            android:textSize="16dp" />
+    </RelativeLayout>
+
+    <View
+        android:id="@+id/view_land"
+        android:layout_width="wrap_content"
+        android:layout_height="1.5dp"
+        android:layout_below="@+id/rlay_tilte"
+        android:background="@color/gray" />
+    <ScrollView
+        android:id="@+id/scrl_seccard"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/view_land"
+        android:layout_marginBottom="60dp">
+
+        <LinearLayout
+            android:id="@+id/fieldContainer"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" >
+        </LinearLayout>
+    </ScrollView>
+
+
+    <TextView
+        android:id="@+id/NoData"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:gravity="center"
+        android:text="No Data Available \n Please add using '+' button"
+        android:textColor="@color/appcolor"
+        android:textSize="25dp"
+        android:visibility="gone"
+        android:textStyle="bold" />
+
+
+
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="60dp"
+        android:layout_marginBottom="0dp"
+        android:layout_alignBottom="@id/scrl_seccard"
+        android:orientation="horizontal"
+        android:weightSum="1"
+        android:id="@+id/buttomlinear"
+        android:background="@color/whitegrey"
+        android:layout_alignParentBottom="true">
+
+
+        <ImageView
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:src="@drawable/back_32"
+            android:layout_centerVertical="true"
+            android:gravity="center"
+            android:layout_marginLeft="10dp"
+            android:id="@+id/backword"
+            android:layout_marginTop="10dp"
+            />
+
+
+
+        <Button
+            android:layout_width="100dp"
+            android:layout_height="50dp"
+            android:id="@+id/save"
+            android:src="@drawable/ic_plus_5_128"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="10dp"
+            android:layout_marginLeft="10dp"
+            android:layout_weight="1"
+            android:textSize="15dp"
+            android:textStyle="bold"
+            android:gravity="center"
+            android:background="@color/white"
+            android:textColor="@color/appcolor"
+            android:text="Save"
+            />
+
+
+        <ImageView
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:src="@drawable/forward"
+            android:layout_marginRight="10dp"
+            android:layout_marginLeft="10dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginTop="10dp"
+            android:gravity="center"
+            android:id="@+id/forword"
+            />
+
+
+
+    </LinearLayout>
+
+</RelativeLayout>

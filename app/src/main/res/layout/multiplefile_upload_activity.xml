@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white">
+    <RelativeLayout
+        android:id="@+id/header"
+        android:layout_width="fill_parent"
+        android:layout_height="50dp"
+        android:layout_alignParentTop="true"
+        android:background="@color/appcolor" >
+
+        <TextView
+            android:id="@+id/txtView01"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="MULTIFILEUPLOAD"
+            android:textColor="@color/white"
+            android:textSize="20sp"
+            android:gravity="center" />
+
+        <Button
+            android:id="@+id/cancel"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_centerVertical="true"
+            android:background="@drawable/navigation_close"
+            android:layout_marginLeft="10dp"/>
+        <Button
+            android:id="@+id/save"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="5dp"
+            android:background="@drawable/navigation_check"
+            android:textColor="#FFFFFF" />
+
+    </RelativeLayout>
+    <LinearLayout
+
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginTop="20dp"
+        android:layout_below="@+id/header">
+
+        <ListView
+            android:id="@+id/list_all"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="35dp"
+            android:divider="@null"
+            android:listSelector="@android:color/transparent"></ListView>
+    </LinearLayout>
+    <RelativeLayout
+        android:id="@+id/linear3"
+        android:layout_width="fill_parent"
+        android:layout_height="40dp"
+        android:orientation="horizontal"
+        android:layout_alignParentBottom="true"
+        android:background="@color/appcolor">
+
+        <Button
+            android:layout_width="30dp"
+            android:layout_height="40dp"
+            android:id="@+id/audio"
+            android:layout_toLeftOf="@+id/doc"
+            android:layout_marginRight="10dp"
+            android:background="@drawable/headphones"
+            />
+
+        <Button
+            android:layout_width="30dp"
+            android:layout_height="40dp"
+            android:layout_marginBottom="5dp"
+            android:id="@+id/doc"
+            android:layout_toLeftOf="@+id/photo"
+            android:layout_marginRight="10dp"
+            android:background="@drawable/files"
+
+
+            />
+        <Button
+            android:id="@+id/photo"
+            android:layout_width="40dp"
+            android:layout_height="wrap_content"
+            android:background="@drawable/memory_photo"
+            android:layout_toLeftOf="@+id/video"
+            android:layout_marginRight="10dp"
+            />
+        <Button
+            android:id="@+id/video"
+            android:layout_width="40dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="10dp"
+            android:background="@drawable/memory_video" />
+
+    </RelativeLayout>
+
+</RelativeLayout>

@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="#FFF"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:orientation="vertical">
+
+        <FrameLayout
+            android:id="@+id/videoview"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent" />
+
+        <Chronometer
+            android:id="@+id/chronometer1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:text="Chronometer"
+            android:textColor="#4169E1"
+            android:textSize="20sp" />
+
+        <FrameLayout
+            android:id="@+id/videoview1"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:visibility="gone"
+            >
+
+            <ImageView
+                android:id="@+id/image_preview"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                />
+
+            <VideoView
+                android:id="@+id/play_video"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:visibility="gone" />
+        </FrameLayout>
+
+        <Button
+            android:id="@+id/retake"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:text="Retake"
+            android:textSize="12sp"
+            android:visibility="gone"
+
+            />
+
+        <Button
+            android:id="@+id/use_video"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:text="Use video"
+            android:textSize="12sp"
+            android:visibility="gone"
+            />
+        <ProgressBar
+            android:id="@+id/progress"
+            android:layout_width="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:visibility="gone"
+            android:layout_height="wrap_content" />
+
+        <Button
+            android:id="@+id/use_photo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:text="Use Photo"
+            android:textSize="12sp"
+            android:visibility="gone"
+            />
+
+        <Button
+            android:id="@+id/mybutton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:background="@drawable/start_recording"
+            android:textSize="12dp" />
+
+
+        <Button
+            android:id="@+id/mybutton1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:background="@drawable/start_recording"
+            android:textSize="12dp"
+            android:visibility="gone" />
+
+        <Button
+            android:id="@+id/Button1"
+            android:layout_width="50dp"
+            android:layout_height="30dp"
+            android:layout_margin="15dp"
+            android:background="@drawable/switch_camera"
+            android:visibility="gone" />
+
+        <Button
+            android:id="@+id/Button2"
+            android:layout_width="50dp"
+            android:layout_height="30dp"
+            android:layout_margin="15dp"
+            android:background="@drawable/switch_camera"
+            android:visibility="gone" />
+    </RelativeLayout>
+
+    <!--
+        <VideoView
+            android:id="@+id/video_view"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true" />
+    -->
+
+</LinearLayout>

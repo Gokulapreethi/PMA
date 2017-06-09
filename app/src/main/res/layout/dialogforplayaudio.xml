@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    android:orientation="vertical"
+    android:paddingLeft="20dp"
+    android:paddingRight="20dp">
+
+    <LinearLayout
+        android:id="@+id/audio_play"
+        android:layout_width="282dp"
+        android:layout_height="45dp"
+        android:layout_below="@+id/tv_send_time"
+        android:layout_gravity="left"
+        android:layout_marginBottom="7dp"
+        android:layout_marginTop="2dp"
+        android:layout_toLeftOf="@+id/settings_image"
+       >
+
+        <ImageView
+            android:id="@+id/play_button"
+            android:layout_width="8dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_centerInParent="true"
+            android:layout_weight="0.11"
+            android:src="@drawable/play" />
+
+        <TextView
+            android:id="@+id/tvToUpdate"
+            android:layout_width="wrap_content"
+            android:layout_height="20dp"
+            android:layout_centerInParent="true"
+            android:layout_gravity="center"
+            android:layout_toRightOf="@+id/play_button"
+            android:text="00:00"
+            android:textColor="@color/blue" />
+
+        <SeekBar
+            android:id="@+id/seekBar1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:layout_gravity="center"
+            android:layout_marginLeft="5dp"
+            android:layout_toLeftOf="@+id/xbutton"
+            android:layout_toRightOf="@+id/txt_time"
+            android:layout_weight="0.6"
+            android:clickable="true" />
+
+    </LinearLayout>
+
+</LinearLayout>

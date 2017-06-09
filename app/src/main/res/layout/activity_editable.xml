@@ -1,0 +1,611 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="2dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:id="@+id/relativeLayout"
+            android:layout_width="fill_parent"
+            android:layout_height="50dp"
+            android:background="@color/appcolor">
+
+            <ImageView
+                android:id="@+id/imageView1"
+                android:layout_width="40dp"
+                android:layout_height="30dp"
+                android:layout_marginTop="10dp"
+                android:src="@drawable/navigation_close" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:layout_marginLeft="150dp"
+                android:layout_marginTop="13dp"
+                android:gravity="center_horizontal"
+                android:text="Edit Profile"
+                android:textColor="#FFFFFF"
+                android:textSize="25sp" />
+
+            <ImageView
+                android:id="@+id/imageView2"
+                android:layout_width="40dp"
+                android:layout_height="30dp"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:layout_marginTop="10dp"
+                android:src="@drawable/navigation_check" />
+
+        </RelativeLayout>
+
+        <FrameLayout
+            android:id="@+id/frame_layout"
+            android:layout_width="fill_parent"
+            android:layout_height="150dp"
+            android:layout_below="@+id/heading"
+            android:layout_centerHorizontal="true"
+            android:background="@color/audioreceiv">
+
+            <com.myapplication3.RoundedImageView
+                android:id="@+id/imageView_round"
+                android:layout_width="97dp"
+                android:layout_height="105dp"
+                android:layout_centerHorizontal="true"
+                android:layout_gravity="center"
+                android:layout_marginTop="1dp"
+                android:src="@drawable/default_person_circle" />
+
+            <ImageButton
+                android:id="@+id/button2"
+                android:layout_width="20dp"
+                android:layout_height="30dp"
+                android:layout_gravity="center"
+                android:layout_marginLeft="40dp"
+                android:layout_marginTop="25dp"
+                android:src="@drawable/ic_opencamera1" />
+
+        </FrameLayout>
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingRight="10dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:id="@+id/textView"
+                        style="@style/MyTextViewStyle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center|left"
+                        android:layout_marginLeft="15sp"
+                        android:layout_marginTop="10dp"
+                        android:text="FirstName"
+                        android:textSize="12dp" />
+
+                    <EditText
+                        android:id="@+id/editText"
+                        android:layout_width="match_parent"
+                        android:layout_height="40dp"
+                        android:layout_marginLeft="47.9dp"
+                        android:layout_marginTop="10dp"
+                        android:background="@drawable/edittextstyle"
+                        android:hint="  Enter FirstName    "
+                        android:inputType="text"
+                        android:paddingLeft="5dp"
+                        android:paddingRight="10dp"
+                        android:singleLine="true"
+                        android:textColor="@color/black" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:id="@+id/textView2"
+                        style="@style/MyTextViewStyle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center|left"
+                        android:layout_marginLeft="15sp"
+                        android:layout_marginTop="10dp"
+                        android:text="LastName"
+                        android:textSize="12dp" />
+
+                    <EditText
+                        android:id="@+id/editText2"
+                        android:layout_width="match_parent"
+                        android:layout_height="40dp"
+                        android:layout_marginLeft="49dp"
+                        android:layout_marginTop="10dp"
+                        android:background="@drawable/edittextstyle"
+                        android:ellipsize="start"
+                        android:hint="  Enter LastName"
+                        android:inputType="text"
+                        android:paddingLeft="5dp"
+                        android:paddingRight="10dp"
+                        android:singleLine="true"
+                        android:textColor="@color/black" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:id="@+id/textView3"
+                        style="@style/MyTextViewStyle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center|left"
+                        android:layout_marginLeft="15sp"
+                        android:layout_marginTop="10dp"
+                        android:text="Title"
+                        android:textSize="12dp" />
+
+
+                    <EditText
+                        android:id="@+id/editText3"
+                        android:layout_width="match_parent"
+                        android:layout_height="40dp"
+                        android:layout_marginLeft="79.5dp"
+                        android:layout_marginTop="10dp"
+                        android:background="@drawable/edittextstyle"
+                        android:ellipsize="start"
+                        android:hint="  Enter Title"
+                        android:inputType="text"
+                        android:paddingLeft="5dp"
+                        android:paddingRight="10dp"
+                        android:singleLine="true"
+                        android:textColor="@color/black" />
+                    <!--<Spinner
+                                        android:id="@+id/spinner1"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="40dp"
+                                        android:layout_marginTop="10dp"
+                                        android:layout_marginLeft="79.5dp"
+                                        android:background="@drawable/edittextstyle"
+                                        />-->
+                </LinearLayout>
+
+                <!--<LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                    <TextView
+                        android:id="@+id/textView11"
+                        style="@style/MyTextViewStyle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center|left"
+                        android:layout_marginLeft="15sp"
+                        android:layout_marginTop="10dp"
+                        android:text="Role"
+                        android:textSize="12dp" />
+
+                    <EditText
+                        android:id="@+id/spinner2"
+                        android:layout_width="match_parent"
+                        android:layout_height="40dp"
+                        android:layout_marginLeft="79.5dp"
+                        android:layout_marginTop="10dp"
+                        android:background="@drawable/edittextstyle"
+                        android:ellipsize="start"
+                        android:hint="  Enter Title"
+                        android:inputType="text"
+                        android:paddingLeft="5dp"
+                        android:paddingRight="10dp"
+                        android:singleLine="true"
+                        android:textColor="@color/black" />
+                    &lt;!&ndash;<EditText
+                    android:id="@+id/editText3"
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:layout_marginTop="10dp"
+                    android:paddingRight="10dp"
+                    android:background="@drawable/edittextstyle"
+                    android:ellipsize="start"
+                    android:hint="  Enter Title"
+                    android:singleLine="true"
+                    android:inputType="text"
+                    android:paddingLeft="5dp"
+                    android:layout_marginLeft="79.5dp"
+                    android:textColor="@color/black"
+                    />&ndash;&gt;
+
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                    <TextView
+                        android:id="@+id/textView12"
+                        style="@style/MyTextViewStyle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center|left"
+                        android:layout_marginLeft="15sp"
+                        android:layout_marginTop="10dp"
+                        android:text="Profession"
+                        android:textSize="12dp" />
+
+                    <EditText
+                        android:id="@+id/spinner3"
+                        android:layout_width="match_parent"
+                        android:layout_height="40dp"
+                        android:layout_marginLeft="79.5dp"
+                        android:layout_marginTop="10dp"
+                        android:background="@drawable/edittextstyle"
+                        android:ellipsize="start"
+                        android:hint="  Enter Title"
+                        android:inputType="text"
+                        android:paddingLeft="5dp"
+                        android:paddingRight="10dp"
+                        android:singleLine="true"
+                        android:textColor="@color/black" />
+                    &lt;!&ndash;<EditText
+                    android:id="@+id/editText3"
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:layout_marginTop="10dp"
+                    android:paddingRight="10dp"
+                    android:background="@drawable/edittextstyle"
+                    android:ellipsize="start"
+                    android:hint="  Enter Title"
+                    android:singleLine="true"
+                    android:inputType="text"
+                    android:paddingLeft="5dp"
+                    android:layout_marginLeft="79.5dp"
+                    android:textColor="@color/black"
+                    />&ndash;&gt;
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                    <TextView
+                        android:id="@+id/textView13"
+                        style="@style/MyTextViewStyle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center|left"
+                        android:layout_marginLeft="15sp"
+                        android:layout_marginTop="10dp"
+                        android:text="Specialisat"
+                        android:textSize="12dp" />
+
+                    <EditText
+                        android:id="@+id/spinner4"
+                        android:layout_width="match_parent"
+                        android:layout_height="40dp"
+                        android:layout_marginLeft="79.5dp"
+                        android:layout_marginTop="10dp"
+                        android:background="@drawable/edittextstyle"
+                        android:ellipsize="start"
+                        android:hint="  Enter Title"
+                        android:inputType="text"
+                        android:paddingLeft="5dp"
+                        android:paddingRight="10dp"
+                        android:singleLine="true"
+                        android:textColor="@color/black" />
+                    &lt;!&ndash;<EditText
+                    android:id="@+id/editText3"
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:layout_marginTop="10dp"
+                    android:paddingRight="10dp"
+                    android:background="@drawable/edittextstyle"
+                    android:ellipsize="start"
+                    android:hint="  Enter Title"
+                    android:singleLine="true"
+                    android:inputType="text"
+                    android:paddingLeft="5dp"
+                    android:layout_marginLeft="79.5dp"
+                    android:textColor="@color/black"
+                    />&ndash;&gt;
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                    <TextView
+                        android:id="@+id/textView14"
+                        style="@style/MyTextViewStyle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="15sp"
+                        android:layout_marginTop="10dp"
+                        android:layout_gravity="center|left"
+                        android:text="Organisation"
+                        android:textSize="12dp" />
+
+                    <EditText
+                        android:id="@+id/spinner5"
+                        android:layout_width="match_parent"
+                        android:layout_height="40dp"
+                        android:layout_marginLeft="79.5dp"
+                        android:layout_marginTop="10dp"
+                        android:background="@drawable/edittextstyle"
+                        android:ellipsize="start"
+                        android:hint="  Enter Title"
+                        android:inputType="text"
+                        android:paddingLeft="5dp"
+                        android:paddingRight="10dp"
+                        android:singleLine="true"
+                        android:textColor="@color/black" />
+                    &lt;!&ndash;<EditText
+                    android:id="@+id/editText3"
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:layout_marginTop="10dp"
+                    android:paddingRight="10dp"
+                    android:background="@drawable/edittextstyle"
+                    android:ellipsize="start"
+                    android:hint="  Enter Title"
+                    android:singleLine="true"
+                    android:inputType="text"
+                    android:paddingLeft="5dp"
+                    android:layout_marginLeft="79.5dp"
+                    android:textColor="@color/black"
+                    />&ndash;&gt;
+
+                </LinearLayout>
+-->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:id="@+id/textView4"
+                        style="@style/MyTextViewStyle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center|left"
+                        android:layout_marginLeft="15sp"
+                        android:layout_marginTop="10dp"
+                        android:text="Gender"
+                        android:textSize="12dp" />
+
+                    <Spinner
+                        android:id="@+id/spinner"
+                        android:layout_width="match_parent"
+                        android:layout_height="40dp"
+                        android:layout_marginLeft="65dp"
+                        android:layout_marginTop="10dp"
+                        android:background="@drawable/edittextstyle" />
+                </LinearLayout>
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:id="@+id/textView5"
+                        style="@style/MyTextViewStyle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center|left"
+                        android:layout_marginLeft="15sp"
+                        android:layout_marginTop="10dp"
+                        android:text="Job Category 1"
+                        android:textSize="12dp" />
+
+                    <EditText
+                        android:id="@+id/editText5"
+                        android:layout_width="match_parent"
+                        android:layout_height="40dp"
+                        android:layout_marginLeft="22dp"
+                        android:layout_marginTop="10dp"
+                        android:background="@drawable/edittextstyle"
+                        android:ellipsize="start"
+                        android:inputType="text"
+                        android:paddingLeft="5dp"
+                        android:paddingRight="10dp"
+                        android:singleLine="true"
+                        android:textColor="@color/black" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:id="@+id/textView6"
+                        style="@style/MyTextViewStyle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center|left"
+                        android:layout_marginLeft="15sp"
+                        android:layout_marginTop="10dp"
+                        android:text="Job Category 2"
+                        android:textSize="12dp" />
+
+                    <EditText
+                        android:id="@+id/editText6"
+                        android:layout_width="match_parent"
+                        android:layout_height="40dp"
+                        android:layout_marginLeft="22dp"
+                        android:layout_marginTop="10dp"
+                        android:background="@drawable/edittextstyle"
+                        android:ellipsize="start"
+                        android:inputType="text"
+                        android:paddingLeft="5dp"
+                        android:paddingRight="10dp"
+                        android:singleLine="true"
+                        android:textColor="@color/black" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:id="@+id/textView7"
+                        style="@style/MyTextViewStyle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center|left"
+                        android:layout_marginLeft="15sp"
+                        android:layout_marginTop="10dp"
+                        android:text="Job Category 3"
+                        android:textSize="12dp" />
+
+                    <EditText
+                        android:id="@+id/editText7"
+                        android:layout_width="match_parent"
+                        android:layout_height="40dp"
+                        android:layout_marginLeft="22dp"
+                        android:layout_marginTop="10dp"
+                        android:background="@drawable/edittextstyle"
+                        android:ellipsize="start"
+                        android:inputType="text"
+                        android:paddingLeft="5dp"
+                        android:paddingRight="10dp"
+                        android:singleLine="true"
+                        android:textColor="@color/black" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:id="@+id/textView8"
+                        style="@style/MyTextViewStyle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center|left"
+                        android:layout_marginLeft="15sp"
+                        android:layout_marginTop="10dp"
+                        android:text="Job Category 4"
+                        android:textSize="12dp" />
+
+                    <EditText
+                        android:id="@+id/editText8"
+                        android:layout_width="match_parent"
+                        android:layout_height="40dp"
+                        android:layout_marginLeft="22dp"
+                        android:layout_marginTop="10dp"
+                        android:background="@drawable/edittextstyle"
+                        android:ellipsize="start"
+                        android:inputType="text"
+                        android:paddingLeft="5dp"
+                        android:paddingRight="10dp"
+                        android:singleLine="true"
+                        android:textColor="@color/black" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:id="@+id/textView9"
+                        style="@style/MyTextViewStyle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center|left"
+                        android:layout_marginLeft="15sp"
+                        android:layout_marginTop="10dp"
+                        android:text="Text Profile"
+                        android:textSize="12dp" />
+
+                    <ImageView
+                        android:id="@+id/attached"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginLeft="41dp"
+                        android:src="@drawable/attach" />
+
+                    <TextView
+                        android:id="@+id/editText9"
+                        android:layout_width="fill_parent"
+                        android:layout_height="40dp"
+                        android:layout_marginLeft="4dp"
+                        android:layout_marginTop="10dp"
+                        android:background="@drawable/edittextstyle"
+                        android:ellipsize="start"
+                        android:inputType="text"
+                        android:paddingLeft="5dp"
+                        android:paddingRight="10dp"
+                        android:layout_toLeftOf="@+id/attached"
+                        android:singleLine="true"
+                        android:textColor="@color/black" />
+
+
+
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingBottom="5dp">
+
+                    <TextView
+                        android:id="@+id/textView10"
+                        style="@style/MyTextViewStyle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center|left"
+                        android:layout_marginLeft="15sp"
+                        android:layout_marginTop="10dp"
+                        android:text="Video Profile"
+                        android:textSize="12dp" />
+
+                    <ImageView
+                        android:id="@+id/video"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginLeft="34dp"
+                        android:src="@drawable/video" />
+
+                    <TextView
+                        android:id="@+id/editText10"
+                        android:layout_width="fill_parent"
+                        android:layout_height="40dp"
+                        android:layout_marginLeft="4dp"
+                        android:layout_marginTop="10dp"
+                        android:background="@drawable/edittextstyle"
+                        android:ellipsize="start"
+                        android:inputType="text"
+                        android:layout_toLeftOf="@+id/video"
+                        android:singleLine="true"
+                        android:paddingRight="10dp"
+                        android:textColor="@color/black" />
+
+
+                </LinearLayout>
+            </LinearLayout>
+        </ScrollView>
+    </LinearLayout>
+
+
+    <!--<Button-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:text="Edit Pic"-->
+    <!--android:id="@+id/button2"-->
+    <!--android:layout_alignBottom="@+id/imageView"-->
+    <!--android:layout_toRightOf="@+id/imageView"-->
+    <!--android:layout_toEndOf="@+id/imageView" />-->
+
+</RelativeLayout>

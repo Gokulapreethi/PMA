@@ -1,0 +1,310 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <RelativeLayout
+            android:id="@+id/relativeLayout2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+
+
+            <TextView
+                android:id="@+id/heading"
+                android:layout_width="match_parent"
+                android:layout_height="35dp"
+                android:background="@color/white"
+                android:gravity="center"
+                android:text="Settings"
+                android:textAlignment="center"
+                android:textColor="@color/black"
+                android:textSize="25sp" />
+
+            <TextView
+                android:id="@+id/exclation_counter"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:layout_marginRight="8dp"
+                android:layout_marginTop="5dp"
+                android:background="@drawable/exclation_counter"
+                android:layout_toLeftOf="@+id/status_icon"
+                android:gravity="center"
+                android:textColor="#FFFFFF"
+                android:textSize="12sp"
+                android:textStyle="bold" />
+
+            <Button
+                android:id="@+id/addBtn"
+                android:layout_width="1dp"
+                android:layout_height="1dp"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="80dp"
+                android:background="@color/appcolor"
+                android:clickable="true"
+                android:text=""
+                android:textAlignment="center" />
+
+        </RelativeLayout>
+
+        <TextView
+            android:id="@+id/change_password"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:layout_alignParentRight="true"
+            android:layout_below="@+id/relativeLayout2"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="15dp"
+            android:background="@color/appcolor"
+            android:paddingLeft="3dp"
+            android:paddingRight="3dp"
+            android:text="Change Password"
+            android:textColor="@color/white"
+            android:textSize="25dp"
+            android:visibility="visible" />
+
+
+        <TextView
+            android:id="@+id/username"
+            style="@style/MyTextViewStyle"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_below="@+id/imageView_round"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="24dp"
+            android:text="User Name"
+            android:textSize="20dp" />
+
+        <TextView
+            android:id="@+id/em"
+            style="@style/MyTextViewStyle"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/username"
+            android:layout_marginLeft="10sp"
+            android:layout_marginRight="10sp"
+            android:text="Email-Id"
+            android:textSize="20dp" />
+
+        <TextView
+            android:id="@+id/signout"
+            android:layout_width="fill_parent"
+            android:layout_height="40dp"
+            android:layout_below="@+id/em"
+            android:layout_marginLeft="40dp"
+            android:layout_marginRight="40dp"
+            android:layout_marginTop="15dp"
+            android:background="@color/appcolor"
+            android:gravity="center"
+            android:paddingBottom="5dp"
+            android:text="Sign Out"
+            android:textColor="@color/white"
+            android:textSize="25dp" />
+
+        <TextView
+            android:id="@+id/edit_profile"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:layout_alignParentRight="true"
+            android:layout_below="@+id/change_password"
+            android:layout_marginRight="40dp"
+            android:layout_marginTop="10dp"
+            android:background="@color/appcolor"
+            android:gravity="center"
+            android:paddingLeft="3dp"
+            android:paddingRight="3dp"
+            android:text="Edit Profile"
+            android:textColor="@color/white"
+            android:textSize="25dp" />
+        />
+
+        <com.myapplication3.RoundedImageView
+            android:id="@+id/imageView_round"
+            android:layout_width="70dp"
+            android:layout_height="76dp"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_alignTop="@+id/change_password"
+            android:layout_marginLeft="15dp"
+            android:src="@drawable/personimage" />
+
+
+        <LinearLayout
+            android:id="@+id/ll_size"
+            android:layout_width="fill_parent"
+            android:visibility="gone"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/signout">
+
+            <TextView
+                android:id="@+id/size"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="15dp"
+                android:layout_marginTop="11dp"
+                android:layout_weight="1"
+                android:paddingBottom="5dp"
+                android:layout_gravity="top"
+                android:text="High Quality Video"
+                android:textSize="35px"
+                android:textStyle="bold" />
+
+            <Switch
+                android:id="@+id/switch1"
+                android:layout_width="wrap_content"
+                android:layout_height="fill_parent"
+                android:layout_alignParentRight="true"
+                android:layout_marginTop="2dp"
+                android:layout_weight="1"
+                android:paddingRight="10dp"
+                android:switchMinWidth="50dp"
+                android:textOff=" "
+                android:textOn=" "
+                android:thumb="@drawable/switchthump"
+                android:thumbTextPadding="10dp"
+                android:track="@drawable/switchtracter" />
+
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:id="@+id/ll_file"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/ll_size">
+
+            <TextView
+                android:id="@+id/s_file"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="15dp"
+                android:layout_marginTop="5dp"
+                android:layout_weight="1"
+                android:layout_gravity="bottom"
+                android:text="Files "
+                android:textSize="35px"
+                android:textStyle="bold" />
+
+            <ImageView
+                android:id="@+id/s_info"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_marginTop="1dp"
+                android:layout_toRightOf="@+id/s_file"
+                android:paddingRight="10dp"
+                android:src="@drawable/right_arrow" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/ll_sync"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:layout_below="@+id/ll_file"
+            android:visibility="gone">
+
+            <TextView
+                android:id="@+id/s_sync"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="15dp"
+                android:layout_marginTop="5dp"
+                android:layout_weight="1"
+                android:layout_gravity="bottom"
+                android:text="Sync Tasks "
+                android:textSize="35px"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/s_bt_sync"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:text="Click here to sync"
+                android:layout_marginTop="1dp"
+                android:textColor="@color/blue"
+                android:layout_toRightOf="@+id/s_file"
+                android:paddingRight="10dp"
+                android:src="@drawable/right_arrow" />
+
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:id="@+id/conflictview"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/ll_sync">
+            <TextView
+                android:id="@+id/conflict"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="15dp"
+                android:layout_marginTop="5dp"
+                android:layout_weight="1"
+                android:paddingBottom="11dp"
+                android:text="Check Task Conflicts"
+                android:layout_gravity="center"
+                android:textSize="35px"
+                android:textStyle="bold" />
+
+            <Switch
+                android:id="@+id/conflictswitch"
+                android:layout_width="wrap_content"
+                android:layout_height="fill_parent"
+                android:layout_alignParentRight="true"
+                android:layout_marginTop="1dp"
+                android:layout_weight="1"
+                android:paddingRight="10dp"
+                android:switchMinWidth="50dp"
+                android:textOff=" "
+                android:textOn=" "
+                android:thumbTextPadding="10dp"
+                android:thumb="@drawable/switchthump"
+                android:track="@drawable/switchtracter" />
+
+        </LinearLayout>
+        <LinearLayout
+            android:id="@+id/ll_version"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/conflictview">
+
+            <Button
+                android:id="@+id/version"
+                android:layout_width="wrap_content"
+                android:layout_height="35dp"
+                android:layout_below="@+id/s_file"
+                android:layout_marginLeft="15dp"
+                android:background="@color/appcolor"
+                android:paddingLeft="3dp"
+                android:paddingRight="3dp"
+                android:text="Version Number : "
+                android:textAllCaps="false"
+                android:textColor="@color/white"
+                android:textSize="16dp" />
+
+            <Button
+                android:id="@+id/show_log"
+                android:layout_width="120dp"
+                android:layout_height="35dp"
+                android:layout_marginLeft="50dp"
+                android:background="@color/appcolor"
+                android:text="Send Log"
+                android:textAllCaps="false"
+                android:textColor="@color/white"
+                android:visibility="gone"
+                />
+        </LinearLayout>
+
+
+    </RelativeLayout>
+</ScrollView>

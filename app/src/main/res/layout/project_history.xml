@@ -1,0 +1,337 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TableLayout
+        android:id="@+id/header"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content">
+        <TableRow>
+            <TextView
+                android:id="@+id/finish_page"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingRight="10dp"
+                android:layout_gravity="center|start"
+                android:drawableLeft="@drawable/back_32"
+                android:drawablePadding="-10dp"
+                android:gravity="center|start"
+                android:text="Back"
+                android:textColor="@color/appcolor" />
+            <ImageView
+                android:layout_width="35dp"
+                android:layout_height="30dp"
+                android:layout_marginTop="3dp"
+                android:layout_marginRight="5dp"
+                android:layout_marginLeft="5dp"
+                android:layout_toLeftOf="@+id/txtView01"
+                android:background="@drawable/filterdisabled"
+                android:id="@+id/fill"
+                />
+            <TextView
+                android:id="@+id/txtView01"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_weight="10"
+                android:gravity="center_vertical|center_horizontal|center"
+                android:ellipsize="end"
+                android:singleLine="true"
+                android:text="Project"
+                android:textColor="@color/appcolor"
+                android:textSize="14sp" />
+            <ImageView
+                android:id="@+id/addnote"
+                android:layout_width="40dp"
+                android:layout_marginLeft="5dp"
+                android:layout_height="match_parent"
+                android:layout_alignTop="@+id/finish_page"
+                android:layout_toLeftOf="@+id/addsubtasks"
+                android:padding="2dp"
+                android:src="@drawable/ic_note_32_2"
+                android:visibility="gone"
+                android:textColor="#FFFFFF" />
+
+            <ImageView
+                android:id="@+id/addsubtasks"
+                android:layout_width="60dp"
+                android:layout_height="match_parent"
+                android:layout_alignTop="@+id/finish_page"
+                android:layout_toLeftOf="@+id/submit_icon"
+                android:background="@drawable/ic_plus_math_filled"
+                android:padding="2dp"
+                android:visibility="visible"
+                android:textColor="#FFFFFF" />
+
+            <ImageView
+                android:id="@+id/submit_icon"
+                android:layout_width="60dp"
+                android:layout_height="match_parent"
+                android:layout_alignParentRight="true"
+                android:layout_alignTop="@+id/finish_page"
+                android:background="@drawable/ic_pie_chart_filled_32"
+                android:padding="2dp"
+                android:textColor="#FFFFFF" />
+
+        </TableRow>
+    </TableLayout>
+    <View
+        android:id="@+id/view"
+        android:layout_width="wrap_content"
+        android:layout_height="1dp"
+        android:layout_below="@+id/header"
+        android:background="@color/common_action_bar_splitter" />
+
+    <LinearLayout
+        android:id="@+id/options"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/appcolor"
+        android:layout_below="@+id/header"
+        android:paddingLeft="15dp"
+        android:visibility="visible">
+
+        <TableLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TableRow
+                android:id="@+id/view_members"
+                android:padding="4dp">
+
+                <ImageView
+                    android:id="@+id/iv_view_mem"
+                    android:layout_width="wrap_content"
+                    android:layout_height="30dp"
+                    android:background="@drawable/user_members"
+                    android:paddingRight="20dp" />
+
+                <TextView
+                    android:id="@+id/view_mems"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="left|center"
+                    android:layout_marginLeft="10dp"
+                    android:text="View Members"
+                    android:textColor="@color/white"
+                    android:textStyle="bold" />
+            </TableRow>
+
+        </TableLayout>
+
+    </LinearLayout>
+
+    <com.baoyz.swipemenulistview.SwipeMenuListView
+        android:id="@+id/non_active"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="45dp"
+        android:visibility="gone" />
+
+    <!--<ListView
+        android:id="@+id/lv_taskHistory"
+        android:layout_marginTop="45dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"></ListView>-->
+
+    <FrameLayout
+        android:layout_width="fill_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/options"
+        >
+
+
+        <RelativeLayout
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_below="@+id/options"
+            >
+            <LinearLayout
+                android:id="@+id/History_Search"
+                android:layout_width="fill_parent"
+                android:layout_height="47dp"
+                android:background="@color/lightgray"
+                android:orientation="horizontal"
+                android:visibility="visible">
+
+                <EditText
+                    android:id="@+id/searchtext"
+                    android:layout_width="300dp"
+                    android:layout_height="38dp"
+                    android:layout_alignParentLeft="true"
+                    android:layout_marginBottom="2dp"
+                    android:layout_marginTop="2dp"
+                    android:layout_toLeftOf="@+id/btnsearch"
+                    android:layout_weight="1"
+                    android:background="#FFFFFF"
+                    android:cursorVisible="false"
+                    android:drawableLeft="@drawable/search_tr"
+                    android:gravity="center"
+                    android:hint="Search"
+                    android:imeOptions="actionSearch"
+                    android:inputType="textPersonName"></EditText>
+
+                <!--<Button
+                    android:id="@+id/search_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="2"
+                    android:text="Enter" />-->
+
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/Noresult"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:text="No Results Found"
+                android:gravity="center"
+                android:visibility="gone"
+                android:layout_below="@id/History_Search"
+                android:textColor="@color/black"
+                android:textSize="14sp" />
+
+            <com.baoyz.swipemenulistview.SwipeMenuListView
+                android:id="@+id/lv_taskHistory"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_below="@+id/Noresult" />
+
+            <LinearLayout
+                android:id="@+id/spinner_layout"
+                android:layout_width="fill_parent"
+                android:layout_height="190dp"
+                android:orientation="vertical"
+                android:visibility="visible"
+                android:background="@color/audiosender">
+
+                <TableLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:stretchColumns="1"
+                    android:layout_marginTop="10dp"
+                    >
+                    <TableRow
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Category:"
+                            android:layout_column="0"
+                            android:textStyle="bold"/>
+
+                        <Spinner
+                            android:id="@+id/spinner1"
+                            android:layout_column="1"
+                            android:layout_marginLeft="20dp"
+                            android:layout_marginRight="10dp"
+                            android:layout_width="match_parent"
+                            android:layout_height="40dp"
+                            />
+                    </TableRow>
+
+                    <TableRow
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Status:"
+                            android:layout_column="0"
+                            android:textStyle="bold"/>
+
+                        <Spinner
+                            android:id="@+id/spinner2"
+                            android:layout_width="match_parent"
+                            android:layout_column="1"
+                            android:layout_marginLeft="20dp"
+                            android:layout_marginRight="10dp"
+                            android:layout_height="40dp"
+                            />
+                    </TableRow>
+                    <TableRow
+                        android:layout_width="50dp"
+                        android:layout_height="match_parent"
+                        >
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Giver:"
+                            android:layout_column="0"
+                            android:textStyle="bold"/>
+
+                    <Spinner
+                        android:id="@+id/spinner3"
+                        android:layout_column="1"
+                        android:layout_width="match_parent"
+                        android:layout_marginLeft="20dp"
+                        android:layout_marginRight="10dp"
+                        android:layout_height="40dp"
+                        />
+                </TableRow>
+                <LinearLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginTop="20dp">
+                    <TableLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:stretchColumns="3">
+                        <TableRow
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/cancelbutton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Cancel"
+                    android:layout_column="0"
+                    android:layout_marginLeft="45dp"
+                    android:layout_gravity="start"
+                    android:textColor="@color/black"
+                    android:layout_alignParentStart="true"
+                    android:layout_alignParentLeft="true"
+                    android:background="@color/audiosender"/>
+
+                        <TextView
+                            android:id="@+id/clearbutton"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Clear"
+                            android:layout_column="1"
+                            android:layout_marginLeft="45dp"
+                            android:layout_gravity="start"
+                            android:textColor="@color/black"
+                            android:background="@color/audiosender"/>
+
+                <TextView
+                    android:id="@+id/donebutton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_column="2"
+                    android:text="Done"
+                    android:layout_marginLeft="45dp"
+                    android:gravity="center"
+                    android:layout_toRightOf="@id/cancelbutton"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentRight="true"
+                    android:textColor="@color/black"
+                    android:background="@color/audiosender"/>
+                        </TableRow>
+                    </TableLayout>
+                </LinearLayout>
+                </TableLayout>
+
+            </LinearLayout>
+
+
+        </RelativeLayout>
+    </FrameLayout>
+
+</RelativeLayout>

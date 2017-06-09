@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="10dp" >
+
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <com.myapplication3.RoundedImageView
+            android:id="@+id/flag1"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginLeft="5sp"
+            android:src="@drawable/usergroup" />
+
+        <TextView
+            android:id="@+id/group_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:layout_marginRight="10dp"
+            android:layout_toRightOf="@+id/flag1"
+            android:textColor="@color/black"
+            android:layout_toLeftOf="@+id/item_counter1"
+            android:layout_marginLeft="2dp"
+            android:textStyle="bold"
+            android:text="TextView"
+            android:textSize="20dp"
+            android:maxLines="2"/>
+
+        <TextView
+            android:id="@+id/item_counter1"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginTop="8dp"
+            android:background="@drawable/rectangle1"
+            android:layout_toLeftOf="@+id/groupmenucall"
+            android:gravity="center"
+            android:textColor="#FFFFFF"
+            android:textSize="12sp"
+            android:text="1"
+            android:textStyle="bold" />
+        <ImageView
+            android:id="@+id/groupmenucall"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_alignParentRight="true"
+            android:layout_marginTop="5dp"
+            android:layout_marginRight="15dp"
+            android:background="@drawable/ic_menu_2_50"
+            />
+        <!--<ImageView-->
+            <!--android:id="@+id/chat_icon"-->
+            <!--android:layout_width="35dp"-->
+            <!--android:layout_height="35dp"-->
+            <!--android:layout_toLeftOf="@+id/item_counter1"-->
+            <!--android:layout_marginRight="5dp"-->
+            <!--android:layout_marginTop="5dp"-->
+            <!--android:background="@drawable/chat_icon_blue"-->
+            <!--/>-->
+        <!--<ImageView-->
+            <!--android:id="@+id/conference_call"-->
+            <!--android:layout_width="30dp"-->
+            <!--android:layout_height="30dp"-->
+            <!--android:layout_toLeftOf="@+id/broadcast_audio_call"-->
+            <!--android:layout_marginRight="1dp"-->
+            <!--android:layout_marginLeft="10dp"-->
+            <!--android:layout_marginTop="5dp"-->
+            <!--android:background="@drawable/ic_conference_call_100"-->
+            <!--/>-->
+        <!--<ImageView-->
+            <!--android:id="@+id/broadcast_audio_call"-->
+            <!--android:layout_width="30dp"-->
+            <!--android:layout_height="30dp"-->
+            <!--android:layout_toLeftOf="@+id/broadcast_video_call"-->
+            <!--android:layout_marginRight="5dp"-->
+            <!--android:layout_marginTop="5dp"-->
+            <!--android:background="@drawable/ic_broadcasting_50"-->
+            <!--/>-->
+        <!--<ImageView-->
+            <!--android:id="@+id/broadcast_video_call"-->
+            <!--android:layout_width="30dp"-->
+            <!--android:layout_height="30dp"-->
+            <!--android:layout_toLeftOf="@+id/chat_icon"-->
+            <!--android:layout_marginRight="5dp"-->
+            <!--android:layout_marginTop="5dp"-->
+            <!--android:background="@drawable/ic_video_call_128"-->
+            <!--/>-->
+
+        <!--<ImageView-->
+            <!--android:id="@+id/group_icon"-->
+            <!--android:layout_width="30dp"-->
+            <!--android:layout_height="30dp"-->
+            <!--android:layout_marginRight="15dp"-->
+            <!--android:visibility="invisible"-->
+            <!--android:layout_alignParentRight="true"-->
+            <!--android:layout_marginTop="5dp"-->
+            <!--android:background="@drawable/forward"-->
+            <!--/>-->
+
+
+    </RelativeLayout>
+
+
+
+</LinearLayout>

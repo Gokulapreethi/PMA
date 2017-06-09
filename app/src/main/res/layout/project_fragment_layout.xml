@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/relativeLayout_project">
+
+        <TextView
+            android:id="@+id/heading_project"
+            android:layout_width="match_parent"
+            android:layout_height="35dp"
+            android:background="@color/white"
+            android:gravity="center"
+            android:text="Projects"
+            android:textAlignment="center"
+            android:textColor="@color/black"
+            android:textSize="25sp" />
+
+        <TextView
+            android:id="@+id/exclation_counter"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginTop="5dp"
+            android:background="@drawable/exclation_counter"
+            android:layout_toLeftOf="@+id/status_icon"
+            android:gravity="center"
+            android:textColor="#FFFFFF"
+            android:textSize="12sp"
+            android:textStyle="bold" />
+    </RelativeLayout>
+    <LinearLayout
+        android:id="@+id/History_Search"
+        android:layout_width="fill_parent"
+        android:layout_height="47dp"
+        android:layout_below="@+id/header"
+        android:background="@color/lightgray"
+        android:orientation="horizontal"
+        android:visibility="visible">
+
+        <EditText
+            android:id="@+id/searchtext"
+            android:layout_width="300dp"
+            android:layout_height="38dp"
+            android:layout_alignParentLeft="true"
+            android:layout_marginBottom="2dp"
+            android:layout_marginTop="2dp"
+            android:layout_toLeftOf="@+id/btnsearch"
+            android:layout_weight="1"
+            android:background="#FFFFFF"
+            android:cursorVisible="false"
+            android:drawableLeft="@drawable/search_tr"
+            android:gravity="center"
+            android:hint="Search"
+            android:imeOptions="actionSearch"
+            android:inputType="textPersonName"></EditText>
+
+        <!--<Button
+            android:id="@+id/search_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="2"
+            android:text="Enter" />-->
+
+    </LinearLayout>
+    <TextView
+        android:id="@+id/Noresult"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:text="No Results Found"
+        android:gravity="center"
+        android:visibility="gone"
+        android:layout_below="@id/History_Search"
+        android:textColor="@color/black"
+        android:textSize="14sp" />
+
+    <RelativeLayout
+        android:layout_marginTop="5dp"
+        android:id="@+id/linearLayout_project"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        >
+    <!--<ListView
+        android:id="@+id/listview_project"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        >
+
+    </ListView>-->
+
+        <com.baoyz.swipemenulistview.SwipeMenuListView
+            android:id="@+id/listview_project"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </RelativeLayout>
+
+</LinearLayout>

@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/fromUser"
+        android:text="fromUser"
+        android:textSize="20dp"
+        android:textColor="@color/black"
+        android:textStyle="bold"
+        />
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        >
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/task_giver"
+            android:text="TaskGiver:"
+            android:textColor="@color/black"
+            android:textSize="15dp"
+            />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/task_giverval"
+            android:textStyle="bold"
+            android:textColor="@color/black"
+            android:layout_toRightOf="@id/task_giver"
+            android:text="TaskGiver:"
+            android:textSize="15dp"
+            />
+        <Switch
+            android:id="@+id/switch1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:switchMinWidth="50dp"
+            android:layout_alignParentEnd="true"
+            android:layout_marginRight="10dp"
+            android:textOff=" "
+            android:textOn=" "
+            android:visibility="gone"
+            android:thumb="@drawable/switchthump"
+            android:thumbTextPadding="10dp"
+            android:track="@drawable/switchtracter"
+            android:layout_alignParentRight="true" />
+        <!--<com.example.alarm.list.CustomSwitch
+            android:id="@+id/switch1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:switchMinWidth="50dp"
+            android:layout_alignParentEnd="true"
+            android:layout_marginRight="10dp"
+            android:textOff=""
+            android:textOn=""
+            android:visibility="gone"
+            android:thumb="@drawable/switchthump"
+            android:thumbTextPadding="10dp"
+            android:track="@drawable/switchtracter"
+            android:layout_alignParentRight="true" />-->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/status"
+            android:layout_alignParentRight="true"
+            android:text="Status:"
+            android:textColor="@color/black"
+            android:textStyle="bold"
+            android:textSize="15dp"
+            />
+    </RelativeLayout>
+<RelativeLayout
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/task_taker"
+        android:text="TaskTaker:"
+        android:textColor="@color/black"
+        android:textSize="15dp"
+        />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/task_takerval"
+        android:textStyle="bold"
+        android:layout_toRightOf="@id/task_taker"
+        android:text="TaskGiver:"
+        android:textColor="@color/black"
+        android:textSize="15dp"
+        />
+</RelativeLayout>
+<RelativeLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    >
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/start_Date"
+        android:layout_alignParentLeft="true"
+        android:text="start date:"
+        android:textColor="@color/black"
+        android:textSize="10dp"
+        />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/enddate"
+        android:layout_alignParentRight="true"
+        android:text="end date:"
+        android:textColor="@color/black"
+        android:textSize="10dp"
+        />
+</RelativeLayout>
+
+</LinearLayout>

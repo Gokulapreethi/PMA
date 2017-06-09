@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/item_assingNew"
+        android:title="Assign New Task"
+        />
+    <item
+        android:id="@+id/View_ExistingTasks"
+        android:title="View Existing Tasks"
+        />
+    <item
+        android:id="@+id/item_conference_call"
+        android:title="Conference Call"
+        />
+    <item
+        android:id="@+id/item_broadcast_audio_call"
+        android:title="Broadcast Audio Call" />
+
+    <item
+        android:id="@+id/item_broadcast_video_call"
+        android:title="Broadcast Video Call" />
+    <item
+        android:id="@+id/item_Chat"
+        android:title="Chat" />
+
+    <item
+        android:id="@+id/Cancel"
+        android:title="Cancel" />
+
+</menu>

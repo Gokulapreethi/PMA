@@ -1,0 +1,415 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.myapplication3">
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
+    <uses-permission android:name="android.permission.PROCESS_OUTGOING_CALLS" />
+    <uses-permission android:name="android.permission.WRITE_SETTINGS" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.READ_LOGS" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+
+    <!-- To auto-complete the email text field in the login form with the user's emails -->
+    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
+    <uses-permission android:name="android.permission.READ_PROFILE" />
+    <uses-permission android:name="android.permission.READ_CONTACTS" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.DEVICE_POWER" />
+    <uses-permission android:name="android.permission.GET_TASKS" />
+    <uses-permission android:name="com.myapplication3.map.permission.MAPS_RECEIVE" />
+    <!-- <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES" /> -->
+    <!-- <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" /> -->
+    <!-- <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" /> -->
+    <!-- <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" /> -->
+
+    <permission
+        android:name="com.myapplication3.permission.MAPS_RECEIVE"
+        android:protectionLevel="signature" />
+
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+
+    <!-- Required to show current location -->
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+
+    <!--
+     <permission
+         android:name="com.myapplication3.gcm.permission.C2D_MESSAGE"
+         android:protectionLevel="signature" />
+     <uses-permission android:name="com.myapplication3.gcm.permission.C2D_MESSAGE" />
+    -->
+
+    <uses-feature android:name="android.hardware.camera.autofocus" />
+    <uses-feature
+        android:glEsVersion="0x00020000"
+        android:required="false" />
+
+    <application
+        android:allowBackup="true"
+        android:allowClearUserData="true"
+        android:hardwareAccelerated="false"
+        android:icon="@drawable/logo"
+        android:label="@string/app_name"
+        android:largeHeap="true"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme"
+        android:vmSafeMode="true">
+        <activity android:name=".AppMainActivity" />
+
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="@string/google_maps_key" />
+
+        <activity
+            android:name="org.pjsip.pjsua2.app.MainActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="org.pjsip.pjsua2.app.CallActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:screenOrientation="portrait" />
+        <!-- android:label="@string/title_activity_call" -->
+
+        <activity
+            android:name=".Splash"
+            android:configChanges="orientation"
+            android:screenOrientation="portrait">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".LoginActivity"
+            android:screenOrientation="portrait" />
+        <!-- android:label="@string/title_activity_login" -->
+        <receiver android:name=".AlarmManagerBroadcastReceiver" />
+        <receiver android:name="org.pjsip.pjsua2.app.SipRegisterBroadastReceiver" />
+
+        <!--
+         <receiver
+             android:name="com.google.android.gms.gcm.GcmReceiver"
+             android:exported="true"
+             android:permission="com.google.android.c2dm.permission.SEND">
+             <intent-filter>
+                 <action android:name="com.google.android.c2dm.intent.RECEIVE"/>
+                 <category android:name="com.gnirt69.gcmexample"/>
+             </intent-filter>
+         </receiver>
+        -->
+        <!-- GCM Receiver Service -->
+        <service android:name=".gcm.GCMPushReceiverService">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+            </intent-filter>
+        </service>
+
+        <!-- GCM Registration Intent Service -->
+        <service android:name=".gcm.GCMTokenRefreshListenerService">
+            <intent-filter>
+                <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
+            </intent-filter>
+        </service>
+        <service android:name="org.pjsip.pjsua2.app.LocationTrace">
+            <intent-filter android:priority="1000">
+                <action android:name="android.location.PROVIDERS_CHANGED" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </service>
+
+        <activity
+            android:name=".AssignedTemplates"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".chat.ChatActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".Takerslist"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".chat.BuddyAdd"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".RandomNumber.IncomingCallAlert"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            android:showOnLockScreen="true" />
+        <activity
+            android:name=".ChangePassword"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".CustomTagsActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".MainCustomTag"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".CustomHeaderTagActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden" />
+        <activity
+            android:name=".TemplateView"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ReminderFrequencySelection"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.UserDialog" />
+        <activity
+            android:name=".Audioplayer"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.UserDialog" />
+        <activity
+            android:name=".ReminderFrequencyLocal"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.UserDialog" />
+        <activity
+            android:name=".Task_History_Filter"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.UserDialog" />
+        <activity
+            android:name=".Contactlistpage"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.UserDialog" />
+        <activity
+            android:name=".blog.BlogPostCommandActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".CustomVideoCamera"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden" />
+        <activity
+            android:name=".UpdateProfileActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".ProjectHistory"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden" />
+        <activity
+            android:name=".NewBlogActivity"
+            android:label="@string/title_activity_new_blog"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".NewTaskActivity"
+            android:label="@string/title_activity_new_blog"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".VideoPlayer"
+            android:configChanges="orientation|screenSize|keyboardHidden"
+            android:theme="@style/Theme.UserDialog"
+            android:windowSoftInputMode="stateHidden" />
+        <activity android:name=".MultipleFileUploadActivity" />
+        <activity android:name=".FilePicker" />
+        <activity
+            android:name=".TaskConversationActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".FullScreenImage"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".AudioRecorder"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.AppCompat.Light.Dialog" />
+        <activity
+            android:name=".Task_Percentage_update"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".call_list.Call_History"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".Perfomanceview"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".PerformanceMetrics"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".NewTaskConversation"
+            android:largeHeap="true"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden" />
+        <activity
+            android:name=".NewTempConversation"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".UpdateTaskActivity"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar"
+            android:windowSoftInputMode="stateHidden" />
+        <activity
+            android:name=".TaskHistory"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden" />
+        <activity
+            android:name=".ViewProfile"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".TaskDateUpdate"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar"
+            android:windowSoftInputMode="stateHidden" />
+        <activity
+            android:name=".TaskNotification"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Dialog" />
+        <activity android:name=".HandSketchActivity2" />
+        <activity
+            android:name=".AddObserver"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".TaskTakerDateRequest"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden" />
+        <activity
+            android:name=".TaskConversationTagFilter"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.UserDialog" />
+        <activity
+            android:name=".ListOfFiles"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.UserDialog" />
+        <activity
+            android:name=".FileListAdapter"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".TemplateList"
+            android:screenOrientation="portrait" />
+        <activity android:name=".Viewvideo" />
+        <activity
+            android:name=".Forms.FormsListActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".Forms.FormEntryViewActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".Forms.FormsEntryActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" />
+
+        <receiver android:name=".ScheduleManager" />
+        <receiver android:name="receiver.ScheduleCallReceiver" />
+        <receiver android:name="receiver.ScheduleChatReceiver" />
+        <receiver android:name=".NetWorkChange">
+            <intent-filter>
+                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
+            </intent-filter>
+        </receiver>
+
+        <activity
+            android:name=".GroupPercentageStatus"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".ViewProjectMembers"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".ConflictList"
+            android:screenOrientation="portrait"
+            android:theme="@style/TranslucentGreen"
+            android:windowSoftInputMode="stateHidden" />
+        <activity android:name=".Leave_Request_dateSent" />
+        <activity
+            android:name=".LocationFind"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".Forms.AddFormsInWebActivity"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".AddTaskReassign"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".Forms.FormAccessControl"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".activity.SchedulerActivity"
+            android:showOnLockScreen="true"
+            android:theme="@style/AppTheme.NoActionBar">
+
+        </activity>
+        <activity
+            android:name=".AllTaskList"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden" />
+        <activity
+            android:name=".All_Task_History_filter"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.UserDialog" />
+        <activity
+            android:name=".chat.ChatAlert"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".BuzzAlert"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".Reminder_Responses"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".escalations.EscalationEntryActivty"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".escalations.EscalationEditActivity"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".escalations.EscalationOptionsValuesActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.UserDialog" />
+
+        <activity
+            android:name=".NotesList"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".NoteDateUpdate"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar" />
+
+
+        <activity
+            android:name=".Forwardto"
+            android:screenOrientation="portrait" />
+        <!-- ATTENTION: This was auto-generated to add Google Play services to your project for
+             App Indexing.  See https://g.co/AppIndexing/AndroidStudio for more information. -->
+        <meta-data
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version" />
+
+        <activity
+            android:name=".MoreFieldsEntry"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".More_Fields"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".escalations.AddEscalation"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".TaskReport"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ReportView"
+            android:screenOrientation="portrait" />
+
+    </application>
+
+</manifest>

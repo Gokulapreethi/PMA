@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_centerInParent="true"
+    android:background="@android:color/white">
+
+
+    <TextView
+        android:id="@+id/del"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:gravity="center"
+        android:text="Remove"
+        android:textSize="20sp" />
+
+    <TextView
+        android:id="@+id/edit"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_below="@+id/del"
+        android:gravity="center"
+        android:text="Edit"
+        android:textSize="20sp" />
+
+    <TextView
+        android:id="@+id/new_task"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_below="@+id/edit"
+        android:gravity="center"
+        android:text="Add Task"
+        android:textSize="20sp" />
+    <TextView
+        android:id="@+id/chat"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_below="@+id/edit"
+        android:gravity="center"
+        android:text="chat"
+        android:textSize="20sp"
+        android:visibility="gone"
+        />
+
+</RelativeLayout>

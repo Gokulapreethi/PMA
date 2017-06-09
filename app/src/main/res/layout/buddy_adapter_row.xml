@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <com.myapplication3.RoundedImageView
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="5dp"
+        android:id ="@+id/view4"
+        android:background="@drawable/personimage"
+        android:foregroundGravity="center_vertical|center_horizontal"
+        />
+
+    <ImageView
+        android:id="@+id/iv_txtstatus1"
+        android:layout_width="15dp"
+        android:layout_height="15dp"
+        android:layout_marginLeft="30dp"
+        android:layout_marginTop="28dp"
+        android:background="@drawable/off_line" />
+
+    <TextView
+        android:id="@+id/username"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="Name"
+        android:textStyle="bold"
+        android:singleLine="true"
+        android:ellipsize="end"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_toRightOf="@+id/view4"
+        android:layout_toLeftOf="@+id/item_counter"
+        android:textSize="20sp" />
+
+    <TextView
+        android:id="@+id/Organization"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text=""
+        android:layout_below="@id/username"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="6dp"
+        android:layout_toRightOf="@+id/view4"
+        android:textSize="12sp"
+        android:visibility="visible"/>
+
+
+    <TextView
+        android:id="@+id/status"
+        android:layout_below="@+id/username"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_toRightOf="@+id/view4"
+        android:text="Status"
+        android:visibility="gone"
+        android:textSize="10sp" />
+
+    <ImageView
+        android:id="@+id/dependency_icon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toLeftOf="@+id/item_counter"
+        android:layout_marginTop="3dp"
+        android:background="@drawable/ic_alert_64"
+        android:visibility="gone"
+        />
+
+
+    <TextView
+        android:id="@+id/item_counter"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginTop="8dp"
+        android:background="@drawable/rectangle1"
+        android:layout_toLeftOf="@+id/status_icon"
+        android:gravity="center"
+        android:textColor="#FFFFFF"
+        android:textSize="12sp"
+        android:textStyle="bold" />
+<!--
+    <TextView
+        android:id="@+id/statusshower"
+        android:layout_width="wrap_content"
+        android:layout_height="20dp"
+        android:layout_marginRight="2dp"
+        android:layout_toLeftOf="@+id/status_icon"
+        android:gravity="center_vertical"
+        android:layout_marginTop="5dp"
+        android:background="@color/appcolor"
+        android:textColor="#FFFFFF"
+        android:textSize="12sp"
+        android:layout_below="@id/item_counter"
+        android:text="coworker"
+        android:textStyle="normal"
+        android:visibility="gone"/>
+-->
+
+
+    <ImageView
+        android:id="@+id/status_icon"
+        android:layout_width="45sp"
+        android:layout_height="35dp"
+        android:layout_toLeftOf="@+id/t1"
+        android:layout_alignParentRight="true"
+        android:layout_marginTop="5dp"
+        android:visibility="visible"
+        android:background="@drawable/ic_info_100"
+        />
+
+
+    <TextView
+        android:id="@+id/Addobserverbutton"
+        android:layout_width="80sp"
+        android:layout_height="35dp"
+        android:layout_toLeftOf="@+id/t1"
+        android:layout_alignParentRight="true"
+        android:layout_marginTop="5dp"
+        android:visibility="gone"
+        android:textColor="@color/white"
+        android:textStyle="bold"
+        android:gravity="center"
+        android:text="Add"
+        android:textSize="18dp"
+        android:background="@color/blue"
+        />
+
+</RelativeLayout>
