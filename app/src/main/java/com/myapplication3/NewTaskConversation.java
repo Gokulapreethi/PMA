@@ -69,6 +69,7 @@ import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.Task;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -688,18 +689,18 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                     addObserverForProject(projectDetailsBean);
                     isswipe = true;
                     Log.i("taskConversation", "from projectHistory task");
-                    Log.i("task", "after project notify press toUserId  list item click event " + toUserId);
-                    Log.i("task", "after project notify press toUserName  list item click event " + toUserName);
-                    Log.i("task", "after project notify press toUserNameemail  list item click event " + from_UserName);
-                    Log.i("task", "notify project click event task_No  list item click event " + task_No);
-                    Log.i("task", "after project notify click event webtaskId  list item click event " + webtaskId);
-                    Log.i("task", "after project notify press ownerOfTask  list item click event " + ownerOfTask);
-                    Log.i("task", "after project notify press taskReceiver  list item click event " + taskReceiver);
-                    Log.i("task", "after project notify press taskType  list item click event " + taskType);
-                    Log.i("task", "after project notify press taskStatus  list item click event " + taskStatus);
-                    Log.i("task", "after projectHistory parentTaskID ent " + OracleParentTaskId);
-                    Log.d("task", "task_No  not  auto generate notification item click event " + task_No);
-                    Log.d("task", "taskName notification item click event " + taskName);
+                    Log.i("taskConversation", "after project notify press toUserId  list item click event " + toUserId);
+                    Log.i("taskConversation", "after project notify press toUserName  list item click event " + toUserName);
+                    Log.i("taskConversation", "after project notify press toUserNameemail  list item click event " + from_UserName);
+                    Log.i("taskConversation", "notify project click event task_No  list item click event " + task_No);
+                    Log.i("taskConversation", "after project notify click event webtaskId  list item click event " + webtaskId);
+                    Log.i("taskConversation", "after project notify press ownerOfTask  list item click event " + ownerOfTask);
+                    Log.i("taskConversation", "after project notify press taskReceiver  list item click event " + taskReceiver);
+                    Log.i("taskConversation", "after project notify press taskType  list item click event " + taskType);
+                    Log.i("taskConversation", "after project notify press taskStatus  list item click event " + taskStatus);
+                    Log.i("taskConversation", "after projectHistory parentTaskID ent " + OracleParentTaskId);
+                    Log.d("taskConversation", "task_No  not  auto generate notification item click event " + task_No);
+                    Log.d("taskConversation", "taskName notification item click event " + taskName);
                     break;
                 case "newissue":
                     addIssuesEntry();
@@ -3428,7 +3429,8 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
     }
 
     private void showCustom1PopUp() {
-        ArrayList<TaskDetailsBean> taskDetailsBean = new ArrayList<>();
+//        ArrayList<TaskDetailsBean> taskDetailsBean = new ArrayList<>();
+        TaskDetailsBean detailsBean;
         final Dialog dialog = new Dialog(context);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setContentView(R.layout.project_complete_show);
@@ -3455,7 +3457,7 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
 
         TextView address = (TextView) dialog.findViewById(R.id.address);
         TextView description = (TextView) dialog.findViewById(R.id.description);
-        TextView observation = (TextView) dialog.findViewById(R.id.observation);
+        TextView observation = (TextView) dialog.findViewById(R.id.observation_show);
         TextView proj_activity = (TextView) dialog.findViewById(R.id.proj_activity);
         final TextView travel_start = (TextView) dialog.findViewById(R.id.travel_start);
         final TextView travel_end = (TextView) dialog.findViewById(R.id.travel_end);
@@ -3467,16 +3469,22 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
         TextView send_completion = (TextView) dialog.findViewById(R.id.send_completion);
         Button skech_receiver = (Button) dialog.findViewById(R.id.my_sign);
         final TextView remarks_completion = (TextView) dialog.findViewById(R.id.remarks_complete);
-        if (observation.getText().toString() != null)
-            observationStatus = observation.getText().toString();
-        String Query = "Select * from projectStatus where projectId ='" + projectId + "' and taskId = '" + webtaskId + "' and status= 5 ";
-        taskDetailsBean = VideoCallDataBase.getDB(context).getStatusCompletedProjectDetails(Query);
-        if (taskDetailsBean.size() > 0) {
-            TaskDetailsBean detailsBean = taskDetailsBean.get(0);
+//        if (observation.getText().toString() != null)
+//            observationStatus = observation.getText().toString();
+        int queryStatus=5;
+        String Query = "Select * from projectStatus where projectId ='" + projectId + "' and taskId = '" + webtaskId + "' and status = '"+ queryStatus + "'";
+        detailsBean = VideoCallDataBase.getDB(context).getStatusCompletedProjectDetails(Query);
+//        if (taskDetailsBean.size() > 0) {
+//            TaskDetailsBean detailsBean = taskDetailsBean.get(0);
             project_id.setText(detailsBean.getProjectId());
             project_name.setText(detailsBean.getProjectName());
             task_id.setText(detailsBean.getTaskId());
             Log.i("ws123", "username or employee name===>" + Appreference.loginuserdetails.getEmail());
+            Log.i("ws123", "detailsBean.getObservation()===>" + detailsBean.getObservation());
+            Log.i("ws123", "detailsBean.getMcModel()===>" + detailsBean.getMcModel());
+            Log.i("ws123", "detailsBean.getMcSrNo(===>" +detailsBean.getMcSrNo());
+            Log.i("ws123", "detailsBean.getRemark()===>" + detailsBean.getRemark());
+            Log.i("ws123", "detailsBean.getTravelStartTime()===>" +detailsBean.getTravelStartTime());
             mcModel.setText(detailsBean.getMcModel());
             mcSrNo.setText(detailsBean.getMcSrNo());
             est_travel.setText(detailsBean.getEstimatedTravel());
@@ -3494,15 +3502,7 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
             signature_path.setVisibility(View.VISIBLE);
             signature_path.setText(detailsBean.getCustomerSignature());
 
-        }
-
-        skech_receiver.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent i = new Intent(getApplicationContext(), HandSketchActivity2.class);
-                startActivityForResult(i, 423);
-            }
-        });
+//        }
         signature_path.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -3565,10 +3565,10 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
         popup.getMenu().getItem(3).setVisible(false);
         popup.getMenu().getItem(4).setVisible(false);
         popup.getMenu().getItem(5).setVisible(false);
-//        String query="select status from projectStatus where projectId='" + projectId + "' and userId='" + Appreference.loginuserdetails.getId() + "' and taskId= '" + webtaskId + "'";
-//        int current_status=VideoCallDataBase.getDB(context).getCurrentStatus(query);
+        String query="select status from projectStatus where projectId='" + projectId + "' and userId='" + Appreference.loginuserdetails.getId() + "' and taskId= '" + webtaskId + "'";
+        int current_status=VideoCallDataBase.getDB(context).getCurrentStatus(query);
         Log.i("status123","currentStatus========================>"+taskStatus);
-        int current_status=-1;
+       /* int current_status=-1;
         if (taskStatus.equalsIgnoreCase("inprogress"))
             current_status = -1;
         else if(taskStatus.equalsIgnoreCase("assigned"))
@@ -3584,7 +3584,7 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
         else if(taskStatus.equalsIgnoreCase("restart"))
             current_status = 4;
         else if(taskStatus.equalsIgnoreCase("completed"))
-            current_status = 5;
+            current_status = 5;*/
 
 
         Log.i("ws123", "project CurrentStatus from DB====>" + current_status);
@@ -3833,6 +3833,8 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                     final EditText remarks_completion = (EditText) dialog.findViewById(R.id.remarks_complete);
                     if (observation.getText().toString() != null)
                         observationStatus = observation.getText().toString();
+                    else
+                        observationStatus="";
                     String Query = "Select * from projectHistory where projectId ='" + projectId + "' and taskId = '" + webtaskId + "'";
                     taskDetailsBean = VideoCallDataBase.getDB(context).getDetails_to_complete_project(Query);
                     if (taskDetailsBean.size() > 0) {
@@ -3962,10 +3964,6 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
             dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
             String dateforrow = dateFormat.format(new Date());
             long timeInMilliseconds = 0;
-            long timeForStartTravel = 0;
-            long timeForEndTravel = 0;
-            long timeForStartActivity = 0;
-            long timeForEndActivity = 0;
             tasktime = dateTime;
 //            String tasktime1 = tasktime.split(" ")[1];
             Log.i("task", "tasktime" + tasktime);
@@ -3974,22 +3972,12 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
             taskUTCtime = dateforrow;
 
             try {
-                Date TStart = formatDateforstatus.parse(TravelStartdate);
-                Date TEnd = formatDateforstatus.parse(TravelEnddate);
-                Date AStart = formatDateforstatus.parse(ActivityStartdate);
-                Date AEnd = formatDateforstatus.parse(ActivityEnddate);
                 Date mDate = dateFormat.parse(tasktime);
                 timeInMilliseconds = mDate.getTime();
-                timeForStartTravel = TStart.getTime();
-                timeForEndTravel = TEnd.getTime();
-                timeForStartActivity = AStart.getTime();
-                timeForEndActivity = AEnd.getTime();
             } catch (Exception e) {
                 e.printStackTrace();
             }
             TaskDetailsBean taskDetailsBean = new TaskDetailsBean();
-            Log.i("ws123", "currentTime in milliseconds********====>" + timeInMilliseconds);
-//                        tasktime = tasktime.split(" ")[1];
             Log.i("ws123", "taskID start work===>" + webtaskId);
             JSONObject jsonObject = new JSONObject();
             JSONObject jsonObject1 = new JSONObject();
@@ -4014,23 +4002,33 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
             jsonObject4.put("taskFileExt", "");
             jsonObject.put("signatures", jsonObject4);
             if (projectCurrentStatus.equalsIgnoreCase("Complete")) {
-                jsonObject.put("travelStartTime", timeForStartTravel);
-                jsonObject.put("activityStartTime", timeForStartActivity);
-                jsonObject.put("activityEndTime", timeForEndActivity);
-                jsonObject.put("travelEndTime", timeForEndTravel);
+                /*jsonObject.put("travelStartTime", TravelStartdate);
+                jsonObject.put("activityStartTime", TravelEnddate);
+                jsonObject.put("activityEndTime", ActivityStartdate);
+                jsonObject.put("travelEndTime", ActivityEnddate);
 
-                taskDetailsBean.setTravelStartTime((int) timeForStartTravel);
-                taskDetailsBean.setTravelEndTime((int) timeForEndTravel);
-                taskDetailsBean.setActivityStartTime((int) timeForStartActivity);
-                taskDetailsBean.setActivityEndTime((int) timeForEndActivity);
+                taskDetailsBean.setTravelStartTime(TravelStartdate);
+                taskDetailsBean.setTravelEndTime(TravelEnddate);
+                taskDetailsBean.setActivityStartTime(ActivityStartdate);
+                taskDetailsBean.setActivityEndTime(ActivityEnddate);*/
+
+                jsonObject.put("travelStartTime", timeInMilliseconds);
+                jsonObject.put("activityStartTime", timeInMilliseconds);
+                jsonObject.put("activityEndTime", timeInMilliseconds);
+                jsonObject.put("travelEndTime", timeInMilliseconds);
+
+                taskDetailsBean.setTravelStartTime(String.valueOf(timeInMilliseconds));
+                taskDetailsBean.setTravelEndTime(String.valueOf(timeInMilliseconds));
+                taskDetailsBean.setActivityStartTime(String.valueOf(timeInMilliseconds));
+                taskDetailsBean.setActivityEndTime(String.valueOf(timeInMilliseconds));
             } else {
                 jsonObject.put("travelStartTime", 0);
                 jsonObject.put("activityStartTime", timeInMilliseconds);
                 jsonObject.put("activityEndTime", timeInMilliseconds);
                 jsonObject.put("travelEndTime", 0);
 
-                taskDetailsBean.setActivityEndTime((int) timeInMilliseconds);
-                taskDetailsBean.setActivityStartTime((int) timeInMilliseconds);
+                taskDetailsBean.setActivityEndTime(String.valueOf(timeInMilliseconds));
+                taskDetailsBean.setActivityStartTime(String.valueOf(timeInMilliseconds));
 
             }
             if (remarks != null) {
@@ -4049,7 +4047,8 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
             taskDetailsBean.setFromUserId(String.valueOf(Appreference.loginuserdetails.getId()));
             taskDetailsBean.setFromUserName(Appreference.loginuserdetails.getUsername());
             taskDetailsBean.setToUserName(toUserName);
-            taskDetailsBean.setToUserId(String.valueOf(toUserId));
+//            taskDetailsBean.setToUserId(String.valueOf(toUserId));
+            taskDetailsBean.setToUserId("");
             taskDetailsBean.setSignalid(Utility.getSessionID());
             taskDetailsBean.setTaskNo(task_No);
             taskDetailsBean.setIsRemainderRequired("");
@@ -4064,7 +4063,7 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
             taskDetailsBean.setTaskDescription("Task is " + projectCurrentStatus);
             jsonObject.put("hourMeterReading", "");
             if (!isTaskName)
-                if (project)
+                if (isProjectFromOracle)
                     VideoCallDataBase.getDB(context).update_Project_history(taskDetailsBean);
             VideoCallDataBase.getDB(context).insertORupdate_Task_history(taskDetailsBean);
             VideoCallDataBase.getDB(context).insertORupdateStatus(taskDetailsBean);
@@ -9419,7 +9418,7 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                             Toast.makeText(context, "call conecting failure", Toast.LENGTH_SHORT).show();
                         }
                     } else if (WebServiceEnum_Response != null && WebServiceEnum_Response.equalsIgnoreCase(("taskStatus"))) {
-                        Log.i("ws123", "NewTaskConverstaion taskStatus ResponceMethod");
+                        Log.i("output123", "NewTaskConverstaion taskStatus ResponceMethod");
                         final JSONObject jsonObject = new JSONObject(communicationBean.getEmail());
                         if (((String) jsonObject.get("result_text")).equalsIgnoreCase("task started")) {
                             projectCurrentStatus = "start";
@@ -9458,8 +9457,13 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                         detailsBean.setMimeType("text");
                         detailsBean.setCustomTagVisible(true);
 
-                        String xml = composeChatXML(communicationBean.getTaskDetailsBean());
-                        sendMultiInstantMessage(xml, listObservers, 1);
+                        final String xml = composeChatXML(communicationBean.getTaskDetailsBean());
+                        handler.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                sendMultiInstantMessage(xml, listObservers, 1);
+                            }
+                        });
 
                         taskList.add(communicationBean.getTaskDetailsBean());
                         refresh();
@@ -9495,6 +9499,8 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
 //                        Toast.makeText(context, "Escalation Observer added", Toast.LENGTH_SHORT).show();
                         PercentageWebService(taskObs_Bean.getTaskDescription(), Utility.getSessionID(), taskObs_Bean);
                     } else if (communicationBean != null && communicationBean.getTaskDetailsBean() != null && !Appreference.isResponse_multifile) {
+
+                        Log.i("output123", "NewTaskConverstaion !isResponse_multifile ResponceMethod");
                         Log.i("taskresponse123", "isResponse_multifile");
                         TaskDetailsBean taskDetailsBean = communicationBean.getTaskDetailsBean();
                         Log.i("task", "msg status in response" + taskDetailsBean.getMsg_status());
@@ -9783,25 +9789,7 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
 //                                        RemoveObserver();
                                     }
                                 }
-                            }/* else if (str != null && str.contains("taskAcceptedOrRejected")) {
-                                Log.d("Accept", "acceptOrreject");
-                                Log.i("response", "Notes  19 ");
-                                VideoCallDataBase.getDB(context).taskWSStatusUpdate(taskDetailsBean.getSignalid(), "1");
-                                Log.i("task", "jelement.getAsJsonObject() != null 2" + bean.getTaskDetailsBean().getSignalid());
-                                if (jobject.has("requestStatus")) {
-                                    Log.i("response", "Notes  20 ");
-                                    String request_status = jobject.get("requestStatus").toString();
-                                    request_status = request_status.split("\"")[1];
-                                    Log.i("Accept", "request_status " + request_status);
-                                    if (request_status != null && request_status.equals("approved")) {
-                                        Log.i("response", "Notes  21 ");
-                                        sendMessage(category + " accepted", null, "text", null, "", bean.getTaskDetailsBean().getSignalid());
-                                    } else {
-                                        Log.i("response", "Notes  22 ");
-                                        sendMessage(category + " Rejected", null, "text", null, "", bean.getTaskDetailsBean().getSignalid());
-                                    }
-                                }
-                            }*/ else if ((WebServiceEnum_Response != null && WebServiceEnum_Response.equalsIgnoreCase("taskEntry"))) {
+                            } else if ((WebServiceEnum_Response != null && WebServiceEnum_Response.equalsIgnoreCase("taskEntry"))) {
                                 Log.i("taskconversation", "Task first entry");
                                 Log.i("response", "Notes  23 ");
                                 if (jobject.has("listTaskFiles") && jobject.getAsJsonArray("listTaskFiles").size() > 0 && jobject.getAsJsonArray("listTaskFiles").get(0).getAsJsonObject().has("fileName") && jobject.getAsJsonArray("listTaskFiles").get(0).getAsJsonObject().get("fileName") != null) {
@@ -9955,6 +9943,7 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                         }
                         Log.i("task", "msg Status in the response end " + taskDetailsBean.getMsg_status());
                     } else if (communicationBean != null && communicationBean.getTaskDetailsBean() != null && Appreference.isResponse_multifile) {
+                        Log.i("output123", "NewTaskConverstaion isResponse_multifile ResponceMethod");
                         Log.i("response", "Notes  25 ");
                         Log.i("privatemessage", "bean.getFirstname() " + communicationBean.getFirstname());
                         Appreference.isResponse_multifile = false;
@@ -10509,11 +10498,11 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                 task_No = projectBean.getTaskNo();
                 webtaskId = projectBean.getTaskId();
                 ownerOfTask = projectBean.getOwnerOfTask();
-                taskReceiver = projectBean.getTaskReceiver();
                 taskType = projectBean.getTaskType();
                 projectId = projectBean.getId();
                 parentTaskId = projectBean.getParentTaskId();
                 isParentTask = projectBean.getIsParentTask();
+                taskReceiver = projectBean.getTaskReceiver();
                 OracleParentTaskId = projectBean.getParentTaskId();
 
                 if (getResources().getString(R.string.proxyua).equalsIgnoreCase("enable")) {
@@ -15068,21 +15057,7 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
         });
     }
 
-    /*public void resolvemenu(final TaskDetailsBean mediaListBean, View view, final Context adapter_context){
 
-        Intent intent = new Intent(NewTaskConversation.this, UpdateTaskActivity.class);
-        Log.i("percentage", "UpdateTaskActivity 1 " + ownerOfTask);
-        Log.i("percentage", "UpdateTaskActivity 1 " + String.valueOf(toUserId));
-        intent.putExtra("username", toUserName);
-        intent.putExtra("Str", "conversation");
-        intent.putExtra("task","escalation");
-        intent.putExtra("taskType", taskType);
-        intent.putExtra("toUserId", String.valueOf(toUserId));
-        intent.putExtra("ownerOfTask", ownerOfTask);
-        intent.putExtra("bean",mediaListBean);
-        startActivityForResult(intent, 210);
-
-    }*/
 
 
     public void ignoremenu(final TaskDetailsBean mediaListBean, View view, final Context adapter_context) {

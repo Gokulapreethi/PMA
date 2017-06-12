@@ -117,10 +117,10 @@ public class TaskDetailsBean implements Serializable {
     //ASE Newly Added
     private int result;
     private ArrayList<JobCardBean> jobcard;
-    private int travelStartTime;
-    private int activityStartTime;
-    private int activityEndTime;
-    private int travelEndTime;
+    private String travelStartTime;
+    private String activityStartTime;
+    private String activityEndTime;
+    private String travelEndTime;
     private String projectStatus;
 
 
@@ -982,35 +982,35 @@ private String sender_reply;
         this.jobcard = jobcard;
     }
 
-    public int getTravelStartTime() {
+    public String getTravelStartTime() {
         return travelStartTime;
     }
 
-    public void setTravelStartTime(int travelStartTime) {
+    public void setTravelStartTime(String travelStartTime) {
         this.travelStartTime = travelStartTime;
     }
 
-    public int getActivityStartTime() {
+    public String getActivityStartTime() {
         return activityStartTime;
     }
 
-    public void setActivityStartTime(int activityStartTime) {
+    public void setActivityStartTime(String activityStartTime) {
         this.activityStartTime = activityStartTime;
     }
 
-    public int getActivityEndTime() {
+    public String getActivityEndTime() {
         return activityEndTime;
     }
 
-    public void setActivityEndTime(int activityEndTime) {
+    public void setActivityEndTime(String activityEndTime) {
         this.activityEndTime = activityEndTime;
     }
 
-    public int getTravelEndTime() {
+    public String getTravelEndTime() {
         return travelEndTime;
     }
 
-    public void setTravelEndTime(int travelEndTime) {
+    public void setTravelEndTime(String travelEndTime) {
         this.travelEndTime = travelEndTime;
     }
 

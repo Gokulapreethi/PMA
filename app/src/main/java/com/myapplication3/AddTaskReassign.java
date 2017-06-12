@@ -105,6 +105,7 @@ public class AddTaskReassign extends Activity implements View.OnClickListener, W
             contactList = new ArrayList<>();
             context = this;
             addObserver = this;
+            Appreference.context_table.put("AddTaskReassign", this);
             appSharedpreferences = AppSharedpreferences.getInstance(context);
             submit = (Button) findViewById(R.id.submit);
             cancel = (Button) findViewById(R.id.cancel);
@@ -203,6 +204,68 @@ public class AddTaskReassign extends Activity implements View.OnClickListener, W
             taskTime = taskTime.split(" ")[1] + " " + taskTime.split(" ")[2];
             String query = "select * from taskDetailsInfo where loginuser='" + Appreference.loginuserdetails.getEmail() + "' and taskId='" + taskId + "' and mimeType='observer' order by id DESC LIMIT 1";
             ArrayList<TaskDetailsBean> taskDetailsBeenList = VideoCallDataBase.getDB(context).getTaskHistory(query);
+            if(isProjectFromOracle)
+            {
+
+                String SubTaskToUsers,ProjectToUsers;
+                // remove task receiver and owner name in reassign task member list and add the owername in from note
+//        Log.i("ReassignNote", "getOwnerOfTask " + detailsBean.getOwnerOfTask() + " " + detailsBean.getTaskReceiver());
+                Log.i("ReassignTask", "isReassignNote ! " + isReassignNote);
+                ArrayList<ContactBean> tempContactList = new ArrayList<>();
+                if (isProjectFromOracle) {
+                    contactList.clear();
+                    String parentTaskId = VideoCallDataBase.getDB(context).getProjectParentTaskId("select parentTaskId from projectHistory where projectId='" + detailsBean.getProjectId() + "' and taskId='" + taskId + "'");
+                    SubTaskToUsers = VideoCallDataBase.getDB(context).getProjectParentTaskId("select taskMemberList from projectHistory where taskId='" + taskId + "'");
+                    Log.i("ReassignTask", "----------> parentTaskId " + parentTaskId);
+                    ProjectToUsers = VideoCallDataBase.getDB(context).getProjectParentTaskId("select taskMemberList from projectHistory where taskId='" + parentTaskId + "'");
+                    if (ProjectToUsers.contains(",")) {
+                        int counter = 0;
+                        for (int i = 0; i < ProjectToUsers.length(); i++) {
+                            if (ProjectToUsers.charAt(i) == ',') {
+                                counter++;
+                            }
+                            Log.d("ReassignTask", "Task Mem's counter size is == " + counter);
+                        }
+                        for (int j = 0; j < counter + 1; j++) {
+                            ContactBean contactBean = new ContactBean();
+                            String Mem_name = ProjectToUsers.split(",")[j];
+                            if (Mem_name != null && !Mem_name.equalsIgnoreCase(Appreference.loginuserdetails.getUsername())) {
+                                contactBean = VideoCallDataBase.getDB(context).getContactObject(Mem_name);
+                            } else {
+                                ContactBean contactBean1 = new ContactBean();
+                                contactBean1.setEmail(Appreference.loginuserdetails.getEmail());
+                                contactBean1.setFirstname(Appreference.loginuserdetails.getFirstName());
+                                contactBean1.setLastname(Appreference.loginuserdetails.getLastName());
+                                contactBean1.setUserid(Appreference.loginuserdetails.getId());
+                                contactBean1.setUsername(Appreference.loginuserdetails.getUsername());
+                                if (contactBean.getUsername() != null)
+                                    contactList.add(contactBean1);
+                            }
+                            Log.i("ReassignTask", "Task Mem's and position == " + Mem_name + " " + contactBean.getUsername());
+                            if (contactBean.getUsername() != null)
+                                contactList.add(contactBean);
+                        }
+                    } else {
+                        ContactBean contactBean = null;
+                        if (ProjectToUsers != null && !ProjectToUsers.equalsIgnoreCase(Appreference.loginuserdetails.getUsername())) {
+                            contactBean = VideoCallDataBase.getDB(context).getContactObject(ProjectToUsers);
+                            if (contactBean.getUsername() != null)
+                                contactList.add(contactBean);
+                        } else {
+                            ContactBean contactBean1 = new ContactBean();
+                            contactBean1.setEmail(Appreference.loginuserdetails.getEmail());
+                            contactBean1.setFirstname(Appreference.loginuserdetails.getFirstName());
+                            contactBean1.setLastname(Appreference.loginuserdetails.getLastName());
+                            contactBean1.setUserid(Appreference.loginuserdetails.getId());
+                            contactBean1.setUsername(Appreference.loginuserdetails.getUsername());
+                            if (contactBean.getUsername() != null)
+                                contactList.add(contactBean1);
+                        }
+//                     contactBean = VideoCallDataBase.getDB(context).getContactObject(ProjectToUsers);
+
+                    }
+                }
+            }
 
             Log.i("ReassignNote", "isReassignNote ! " + isReassignNote);
             ArrayList<ContactBean> tempContactList = new ArrayList<>();
@@ -228,6 +291,8 @@ public class AddTaskReassign extends Activity implements View.OnClickListener, W
                 }
             }
             Collections.sort(contactList, new CustomComparator());
+//            ArrayList<ContactBean> oracleProjectMembers;
+
 
             buddyArrayAdapter = new BuddyArrayAdapter(context, contactList);
             listView.setAdapter(buddyArrayAdapter);
@@ -392,6 +457,7 @@ public class AddTaskReassign extends Activity implements View.OnClickListener, W
         }
     }
 
+
     private void AssignMmber_OracleProject() {
         if (isProjectFromOracle) {
             Log.i("ws123", "inside wservice AssignTask request");
@@ -404,19 +470,19 @@ public class AddTaskReassign extends Activity implements View.OnClickListener, W
                 oracleProject_object.put("task", taskid);
                 oracleProject_object.put("fromId", Appreference.loginuserdetails.getId());
                 taskDetailsBean.setFromUserId(String.valueOf(Appreference.loginuserdetails.getId()));
-                oracleProject_object.put("projectId", detailsBean.getProjectId());
+                oracleProject_object.put("projectId", Integer.parseInt(detailsBean.getProjectId()));
                 taskDetailsBean.setProjectId(detailsBean.getProjectId());
-                oracleProject_object.put("estimatedTravelHours", "");
+                oracleProject_object.put("estimatedTravelHours", 0);
                 taskDetailsBean.setEstimatedTravel("");
                 taskDetailsBean.setEstimatedActivity("");
-                oracleProject_object.put("estimatedActivityHours", "");
+                oracleProject_object.put("estimatedActivityHours", 0);
                 JSONArray jsonArray = new JSONArray();
 //                String SelectedUserList = null;
                 for (int position = 0; position < contactList.size(); position++) {
                     ContactBean item = contactList.get(position);
                     JSONObject usersList = new JSONObject();
                     if (item.getIscheck()) {
-                        usersList.put("id", item.getUserid());
+                        usersList.put("id", String.valueOf(item.getUserid()));
                         jsonArray.put(position, usersList);
                         if (SelectedUserList != null) {
                             SelectedUserList = SelectedUserList + "," + item.getUsername();
@@ -435,8 +501,8 @@ public class AddTaskReassign extends Activity implements View.OnClickListener, W
 
                 taskDetailsBean.setFromUserId(String.valueOf(Appreference.loginuserdetails.getId()));
                 taskDetailsBean.setFromUserName(Appreference.loginuserdetails.getUsername());
-                taskDetailsBean.setToUserName(SelectedUserList);
-                taskDetailsBean.setToUserId(SelectedUsersId);
+                taskDetailsBean.setToUserName("");
+                taskDetailsBean.setToUserId("");
                 taskDetailsBean.setTaskName(detailsBean.getTaskName());
                 taskDetailsBean.setTaskNo(detailsBean.getTaskNo());
                 taskDetailsBean.setCatagory(detailsBean.getCatagory());
@@ -450,7 +516,7 @@ public class AddTaskReassign extends Activity implements View.OnClickListener, W
                 taskDetailsBean.setSignalid(Utility.getSessionID());
                 taskDetailsBean.setDateTime(dateforrow);
                 taskDetailsBean.setSendStatus("0");
-                taskDetailsBean.setTaskStatus("normal");
+                taskDetailsBean.setTaskStatus("inprogress");
                 taskDetailsBean.setOwnerOfTask(detailsBean.getOwnerOfTask());
                 if (SelectedUserList.length() > 1)
                     taskDetailsBean.setTaskType("group");
@@ -468,6 +534,7 @@ public class AddTaskReassign extends Activity implements View.OnClickListener, W
                 taskDetailsBean.setTaskTagName("");
                 taskDetailsBean.setTaskUTCDateTime(dateforrow);
                 taskDetailsBean.setMimeType("Reassign");
+                taskDetailsBean.setCatagory("Task");
                 taskDetailsBean.setCustomTagVisible(true);
 
             } catch (Exception e) {

@@ -722,6 +722,9 @@ public class ProjectHistory extends Activity implements WebServiceInterface {
                                     /*if task is template*/
                                     intent.putExtra("oracleProjectOwner", taskDetailsBean.getOwnerOfTask());
                                     intent.putExtra("ProjectFromOracle", true);
+                                   /* intent.putExtra("projectName",taskDetailsBean.getProjectName());
+                                    intent.putExtra("parentTaskID",taskDetailsBean.getParentTaskId());*/
+
                                 }
                                 check = true;
                                 startActivity(intent);

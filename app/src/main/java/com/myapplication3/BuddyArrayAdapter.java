@@ -23,6 +23,7 @@ public class BuddyArrayAdapter extends ArrayAdapter<ContactBean> {
     LayoutInflater inflater = null;
     Context adapContext;
     ImageLoader imageLoader1;
+    String OracleMembers;
 
     public BuddyArrayAdapter(Context context, ArrayList<ContactBean> buddyList1) {
         super(context, R.layout.buddy_adapter_row, buddyList1);
@@ -41,6 +42,7 @@ public class BuddyArrayAdapter extends ArrayAdapter<ContactBean> {
                         false);
             }
             final ContactBean contactBean = arrayBuddyList.get(pos);
+
             TextView userName = (TextView) conView.findViewById(R.id.username);
             TextView count = (TextView) conView.findViewById(R.id.item_counter);
             ImageView imageView = (ImageView) conView.findViewById(R.id.view4);
@@ -62,25 +64,6 @@ public class BuddyArrayAdapter extends ArrayAdapter<ContactBean> {
             }
             statusIcon.setVisibility(View.INVISIBLE);
 
-         /*   statusIcon.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent intent = new Intent(getContext(),TaskHistory.class);
-                    intent.putExtra("userName",contactBean.getUsername());
-                    startActivity(intent);
-
-                }
-            });*/
-
-
-            /*    if (contactBean.getStatus() != null && !contactBean.getStatus().equalsIgnoreCase("")) {
-                    buddy_status.setText(contactBean.getStatus());
-                    state.setBackground(getResources().getDrawable(R.drawable.online1));
-                }else {
-                    buddy_status.setText("Offline");
-                    state.setBackground(getResources().getDrawable(R.drawable.off_line));
-                }*/
-
             if (contactBean.getProfileImage() != null) {
                 // Picasso.with(getContext()).load("http://122.165.92.171:8080/uploads/highmessaging/user/" + contactBean.getProfileImage()).into(imageView);
                 Log.i("profiledownload", "image name " + contactBean.getProfileImage());
@@ -94,10 +77,14 @@ public class BuddyArrayAdapter extends ArrayAdapter<ContactBean> {
             imageLoader1.DisplayImage(Environment.getExternalStorageDirectory().getAbsolutePath() + "/High Message/profilePic/" + contactBean.getProfileImage(), imageView, R.drawable.personimage);
 //                imageLoader1.DisplayImage(myFile.toString(), imageView,R.id.view4);
             //Picasso.with(getContext()).load("http://122.165.92.171:8080/uploads/highmessaging/user/" + contactBean.getProfileImage()).into(imageView);
+//            AddTaskReassign addTaskReassign = (AddTaskReassign) Appreference.context_table.get("AddTaskReassign");
+//            if (addTaskReassign != null) {
+//                 OracleMembers=addTaskReassign.getOracleProjMembersList();
+//            }
 
             if (contactBean.getUsername().equalsIgnoreCase(Appreference.loginuserdetails.getUsername())) {
                 userName.setText("Me");
-            } else if (contactBean.getFirstname() != null && contactBean.getLastname() != null) {
+            } else if (contactBean.getFirstname() != null && contactBean.getLastname() != null ) {
                 userName.setText(contactBean.getFirstname() + " " + contactBean.getLastname());
             }
 

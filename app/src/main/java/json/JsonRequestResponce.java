@@ -680,15 +680,14 @@ public class JsonRequestResponce extends Thread {
                     case listGroupTaskUsers:
                         GroupPercentageStatus.getInstance().cancelDialog();
                         break;
-                    case taskStatus:
-                        obj.setEmail(responseString);
-                        obj.setFirstname("taskStatus");
-                        inter.ResponceMethod(obj);
                     case assignTask:
                         obj.setEmail(responseString);
                         obj.setFirstname("assignTask");
                         inter.ResponceMethod(obj);
-
+                    case taskStatus:
+                        obj.setEmail(responseString);
+                        obj.setFirstname("taskStatus");
+                        inter.ResponceMethod(obj);
                   /*  case getRequestType:
                         obj.setEmail(responseString);
                         obj.setFirstname("getRequestType");

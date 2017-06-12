@@ -8121,8 +8121,10 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
             return arrayList;
         }
     }
-    public ArrayList<TaskDetailsBean> getStatusCompletedProjectDetails(String query) {
-        ArrayList<TaskDetailsBean> arrayList = new ArrayList<>();
+    public TaskDetailsBean getStatusCompletedProjectDetails(String query) {
+//        ArrayList<TaskDetailsBean> arrayList = new ArrayList<>();
+        TaskDetailsBean taskDetailsBean = new TaskDetailsBean();
+
         Cursor cur;
         if (db == null)
             db = getReadableDatabase();
@@ -8134,27 +8136,27 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
                 cur.moveToFirst();
 
                 while (!cur.isAfterLast()) {
-                    TaskDetailsBean taskDetailsBean = new TaskDetailsBean();
+//                    TaskDetailsBean taskDetailsBean = new TaskDetailsBean();
                     taskDetailsBean.setProjectId(cur.getString(cur.getColumnIndex("projectId")));
-                    taskDetailsBean.setProjectName(cur.getString(cur.getColumnIndex("projectName")));
+//                    taskDetailsBean.setProjectName(cur.getString(cur.getColumnIndex("projectName")));
                     taskDetailsBean.setTaskId(cur.getString(cur.getColumnIndex("taskId")));
-                    taskDetailsBean.setMcModel(cur.getString(cur.getColumnIndex("mcModel")));
+                    taskDetailsBean.setMcModel(cur.getString(cur.getColumnIndex("McModel")));
                     taskDetailsBean.setMcSrNo(cur.getString(cur.getColumnIndex("mcSrNo")));
                     taskDetailsBean.setEstimatedTravel(cur.getString(cur.getColumnIndex("estimatedTravelHrs")));
                     taskDetailsBean.setEstimatedActivity(cur.getString(cur.getColumnIndex("estimatedActivityHrs")));
-                    taskDetailsBean.setTaskMemberList(cur.getString(cur.getColumnIndex("taskMemberList")));
-                    taskDetailsBean.setDateTime(cur.getString(cur.getColumnIndex("serviceRequestDate")));
+//                    taskDetailsBean.setTaskMemberList(cur.getString(cur.getColumnIndex("taskMemberList")));
+//                    taskDetailsBean.setDateTime(cur.getString(cur.getColumnIndex("serviceRequestDate")));
                     taskDetailsBean.setAddress(cur.getString(cur.getColumnIndex("address")));
                     taskDetailsBean.setTaskDescription(cur.getString(cur.getColumnIndex("taskDescription")));
                     taskDetailsBean.setObservation(cur.getString(cur.getColumnIndex("observation")));
                     taskDetailsBean.setActivity(cur.getString(cur.getColumnIndex("activity")));
                     taskDetailsBean.setRemark(cur.getString(cur.getColumnIndex("remarks")));
-                    taskDetailsBean.setTravelStartTime(cur.getInt(cur.getColumnIndex("travelStartTime")));
-                    taskDetailsBean.setTravelEndTime(cur.getInt(cur.getColumnIndex("travelEndTime")));
-                    taskDetailsBean.setActivityStartTime(cur.getInt(cur.getColumnIndex("activityStartTime")));
-                    taskDetailsBean.setActivityEndTime(cur.getInt(cur.getColumnIndex("activityEndTime")));
+                    taskDetailsBean.setTravelStartTime(cur.getString(cur.getColumnIndex("travelStartTime")));
+                    taskDetailsBean.setTravelEndTime(cur.getString(cur.getColumnIndex("travelEndTime")));
+                    taskDetailsBean.setActivityStartTime(cur.getString(cur.getColumnIndex("activityStartTime")));
+                    taskDetailsBean.setActivityEndTime(cur.getString(cur.getColumnIndex("activityEndTime")));
 
-                    arrayList.add(taskDetailsBean);
+//                    arrayList.add(taskDetailsBean);
                     cur.moveToNext();
                 }
                 cur.close();
@@ -8163,8 +8165,35 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
             e.printStackTrace();
 
         } finally {
-            Log.i("file", "size" + arrayList.size());
-            return arrayList;
+//            Log.i("file", "size" + arrayList.size());
+            return taskDetailsBean;
+        }
+    }
+
+    public String getOracleProjMembers(String query) {
+       String Members = null;
+        Cursor cur;
+        if (db == null)
+            db = getReadableDatabase();
+        try {
+            if (db != null) {
+                if (!db.isOpen())
+                    openDatabase();
+                cur = db.rawQuery(query, null);
+                cur.moveToFirst();
+
+                while (!cur.isAfterLast()) {
+                    Members=(cur.getString(cur.getColumnIndex("taskMemberList")));
+                    cur.moveToNext();
+                }
+                cur.close();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+
+        } finally {
+
+            return Members;
         }
     }
 }
