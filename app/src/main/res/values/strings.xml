@@ -102,6 +102,7 @@
     <string name="group_profile">http://192.168.1.3:8080/uploads/highmessaging/group/</string>-->
 
     <string name="app_version">3</string>
+    <string name="app_versionDate">13June17_1.3</string>
     <string name="app_url">https://192.168.1.3:8443/ASE/</string>
     <string name="server_ip">192.168.1.3</string>
     <string name="file_upload">http://192.168.1.3:8080/uploads/highmessaging/chat/</string>

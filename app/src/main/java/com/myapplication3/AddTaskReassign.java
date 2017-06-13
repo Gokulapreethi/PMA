@@ -63,7 +63,7 @@ public class AddTaskReassign extends Activity implements View.OnClickListener, W
             dateforDate, percentage = "0";
     ArrayList<String> chatUsers, chatUsersName, listOfObservers;
     String taskType, groupname, taskReceiver, projectid, listMembers, RemoveUser, isReassignNote;
-    boolean isTemplate = false, isProjectFromOracle;
+    boolean isTemplate = false, isProjectFromOracle,Self_Assign;
     String SelectedUserList = null;
     String SelectedUsersId = null;
     ProgressDialog dialog;
@@ -117,6 +117,7 @@ public class AddTaskReassign extends Activity implements View.OnClickListener, W
             taskType = getIntent().getExtras().getString("taskType");
             isReassignNote = getIntent().getExtras().getString("Note");
             isProjectFromOracle = getIntent().getBooleanExtra("isProjectFromOracle1", false);
+            Self_Assign = getIntent().getBooleanExtra("selfAssign", false);
             Log.i("ws123", "  AssignTask isProjectFromOracle ====>" + isProjectFromOracle);
             Log.i("add observer", "task type " + taskType);
             if (taskType != null)
@@ -472,10 +473,10 @@ public class AddTaskReassign extends Activity implements View.OnClickListener, W
                 taskDetailsBean.setFromUserId(String.valueOf(Appreference.loginuserdetails.getId()));
                 oracleProject_object.put("projectId", Integer.parseInt(detailsBean.getProjectId()));
                 taskDetailsBean.setProjectId(detailsBean.getProjectId());
-                oracleProject_object.put("estimatedTravelHours", 0);
+                oracleProject_object.put("estimatedTravelHours", "");
                 taskDetailsBean.setEstimatedTravel("");
                 taskDetailsBean.setEstimatedActivity("");
-                oracleProject_object.put("estimatedActivityHours", 0);
+                oracleProject_object.put("estimatedActivityHours", "");
                 JSONArray jsonArray = new JSONArray();
 //                String SelectedUserList = null;
                 for (int position = 0; position < contactList.size(); position++) {
@@ -495,11 +496,11 @@ public class AddTaskReassign extends Activity implements View.OnClickListener, W
 
                 }
                 Log.i("ws123", "AssignTask SelectedUserList=====>  " + SelectedUserList);
-                taskDetailsBean.setToUserName(SelectedUserList);
+//                taskDetailsBean.setToUserName(SelectedUserList);
                 oracleProject_object.put("listUser", jsonArray);
 
 
-                taskDetailsBean.setFromUserId(String.valueOf(Appreference.loginuserdetails.getId()));
+//                taskDetailsBean.setFromUserId(String.valueOf(Appreference.loginuserdetails.getId()));
                 taskDetailsBean.setFromUserName(Appreference.loginuserdetails.getUsername());
                 taskDetailsBean.setToUserName("");
                 taskDetailsBean.setToUserId("");
@@ -722,10 +723,6 @@ public class AddTaskReassign extends Activity implements View.OnClickListener, W
                 detailsBean1 = communicationBean.getTaskDetailsBean();
 
 
-                if (detailsBean1 != null)
-                    Log.i("ws123", "Bean============> 22" + detailsBean1.getParentTaskId() + "getProjectId=========>" + detailsBean1.getProjectId());
-                else
-                    Log.i("ws123", "Bean null============> 22");
 
                 // db insert method
 
@@ -744,15 +741,7 @@ public class AddTaskReassign extends Activity implements View.OnClickListener, W
 //                if (jsonObject.getString("result_code").equalsIgnoreCase("0") ) {
                 RemoveUser = taskReceiver;
                 detailsBean.setTaskReceiver(SelectedUserList);
-
-
-                if (detailsBean1 != null)
-                    Log.i("ws123", "Bean============>" + detailsBean1.getParentTaskId() + "getProjectId=========>" + detailsBean1.getProjectId());
-                else
-                    Log.i("ws123", "Bean null============>");
-
-
-               final ArrayList<String> arrayList1 = new ArrayList<>();
+                    final ArrayList<String> arrayList1 = new ArrayList<>();
                 String projectMembers = VideoCallDataBase.getDB(context).getProjectParentTaskId("select taskMemberList from projectHistory where projectId ='" + detailsBean1.getProjectId() + "' order by id ASC limit 1");
 
                 if (projectMembers != null) {

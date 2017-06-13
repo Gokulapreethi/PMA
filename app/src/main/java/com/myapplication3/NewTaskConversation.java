@@ -69,7 +69,6 @@ import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.tasks.Task;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -114,7 +113,6 @@ import org.pjsip.pjsua2.app.GroupMemberAccess;
 import org.pjsip.pjsua2.app.MainActivity;
 import org.pjsip.pjsua2.app.MyBuddy;
 import org.pjsip.pjsua2.app.MyCall;
-import org.w3c.dom.Text;
 
 import java.io.BufferedOutputStream;
 import java.io.BufferedWriter;
@@ -164,7 +162,7 @@ import static com.myapplication3.MediaListAdapter.onClick;
 /**
  * Created by saravanakumar on 7/11/2016.
  */
-public class NewTaskConversation extends Activity implements View.OnClickListener, WebServiceInterface {
+public class NewTaskConversation extends Activity implements View.OnClickListener, WebServiceInterface,CommonDateTimePicker.DateWatcher {
     private GestureDetector gestureScanner;
     String taskacceptorreject = "None";
     String Leave_taskid;
@@ -198,7 +196,7 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
     LinearLayout linearforimage;
     TextView replymessage, replymessagesendername;
     String reply_mime_type;
-    ImageView replyimageview, cancelreply, status_job;
+    ImageView replyimageview, cancelreply, status_job,travel_job;
     private HashMap<String, Bitmap> cacheBitmap;
     RelativeLayout actorrej;
     TableRow assignFromTemplate, addobserverRow, mute_audio, reassign_tr, percentcompletion_tr, View_Task_TR;
@@ -307,7 +305,9 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
     boolean pause_work;
     boolean restart_work;
     boolean completed_work;
-    String TravelStartdate, TravelEnddate, ActivityStartdate, ActivityEnddate, observationStatus,status_signature;
+    boolean Self_assign=false;
+    String TravelStartdate, TravelEnddate, observationStatus,status_signature,PickDate;
+    String FromTravelStart,FromTravelEnd,ActivityStartdate, ActivityEnddate,TotravelStart,ToTravelEnd;
 
 
     public static NewTaskConversation getInstance() {
@@ -418,6 +418,7 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
         tv_percompletion = (TextView) findViewById(R.id.tv_percompletion);
         reminingtime = (TextView) findViewById(R.id.text13);
         status_job = (ImageView) findViewById(R.id.status_job);
+        travel_job = (ImageView) findViewById(R.id.travel_job);
 
         photo = (Button) findViewById(R.id.photo);
         location = (Button) findViewById(R.id.location);
@@ -855,10 +856,19 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
 
         if (isProjectFromOracle && !oracleProjectOwner.equalsIgnoreCase(Appreference.loginuserdetails.getUsername()))
             status_job.setVisibility(View.VISIBLE);
+        travel_job.setVisibility(View.VISIBLE);
         status_job.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 showStatusPopupWindow(v);
+            }
+
+        });
+
+        travel_job.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showtravelTimePopup(v);
             }
 
         });
@@ -2370,6 +2380,21 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                                 mute_audio.setVisibility(View.GONE);
                                 View_Task_TR.setVisibility(View.GONE);
                                 View_Task_View.setVisibility(View.GONE);
+                            } else if (isProjectFromOracle && !oracleProjectOwner.equalsIgnoreCase(Appreference.loginuserdetails.getUsername())) {
+                                   /*if Oracleproject is Group*/
+                                tv_reassign.setVisibility(View.VISIBLE);
+                                tv_reassign.setText("Assign to me");
+                                Self_assign=true;
+                                addobserverRowView.setVisibility(View.GONE);
+                                tv_percompletion.setVisibility(View.GONE);
+                                assignFromTemplateView.setVisibility(View.GONE);
+                                assignFromTemplate.setVisibility(View.GONE);
+                                addobserverRow.setVisibility(View.GONE);
+                                percentCompletionView.setVisibility(View.GONE);
+                                percentcompletion_tr.setVisibility(View.GONE);
+                                mute_audio.setVisibility(View.GONE);
+                                View_Task_TR.setVisibility(View.GONE);
+                                View_Task_View.setVisibility(View.GONE);
                             } else {
                                 options.setVisibility(View.VISIBLE);
                                 addobserverRowView.setVisibility(View.GONE);
@@ -2402,6 +2427,21 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                                 tv_reassign.setVisibility(View.VISIBLE);
                                 tv_reassign.setText("Assign Task");
 
+                                addobserverRowView.setVisibility(View.GONE);
+                                tv_percompletion.setVisibility(View.GONE);
+                                assignFromTemplateView.setVisibility(View.GONE);
+                                assignFromTemplate.setVisibility(View.GONE);
+                                addobserverRow.setVisibility(View.GONE);
+                                percentCompletionView.setVisibility(View.GONE);
+                                percentcompletion_tr.setVisibility(View.GONE);
+                                mute_audio.setVisibility(View.GONE);
+                                View_Task_TR.setVisibility(View.GONE);
+                                View_Task_View.setVisibility(View.GONE);
+                            }else if (isProjectFromOracle && !oracleProjectOwner.equalsIgnoreCase(Appreference.loginuserdetails.getUsername())) {
+                                   /*if Oracleproject is Group*/
+                                tv_reassign.setVisibility(View.VISIBLE);
+                                tv_reassign.setText("Assign to me");
+                                Self_assign=true;
                                 addobserverRowView.setVisibility(View.GONE);
                                 tv_percompletion.setVisibility(View.GONE);
                                 assignFromTemplateView.setVisibility(View.GONE);
@@ -2454,7 +2494,10 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
         tv_reassign.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if(!Self_assign)
                 addTaskReassignClickEvent();
+                else
+                    sendAssignTask_webservice();
             }
         });
         View_Task_TR.setOnClickListener(new View.OnClickListener() {
@@ -3428,6 +3471,497 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
         });
     }
 
+    private void sendAssignTask_webservice() {
+        if (isProjectFromOracle) {
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            String dateTime = dateFormat.format(new Date());
+            dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
+            String dateforrow = dateFormat.format(new Date());
+            Log.i("ws123", "inside wservice AssignTask request");
+            JSONObject oracleProject_object = new JSONObject();
+            JSONObject taskid = new JSONObject();
+            TaskDetailsBean taskDetailsBean = new TaskDetailsBean();
+            try {
+                taskid.put("id", webtaskId);
+                taskDetailsBean.setTaskId(webtaskId);
+                oracleProject_object.put("task", taskid);
+                int getProjOwnerId=VideoCallDataBase.getDB(context).getUserIdForUserName(ownerOfTask);
+                oracleProject_object.put("fromId", getProjOwnerId);
+                taskDetailsBean.setFromUserId(String.valueOf(getProjOwnerId));
+                oracleProject_object.put("projectId",projectId);
+                taskDetailsBean.setProjectId(projectId);
+                oracleProject_object.put("estimatedTravelHours", "");
+                taskDetailsBean.setEstimatedTravel("");
+                taskDetailsBean.setEstimatedActivity("");
+                oracleProject_object.put("estimatedActivityHours", "");
+
+                JSONArray jsonArray = new JSONArray();
+                JSONObject usersList = new JSONObject();
+                usersList.put("id", String.valueOf(Appreference.loginuserdetails.getId()));
+                jsonArray.put(0, usersList);
+                oracleProject_object.put("listUser", jsonArray);
+
+                taskDetailsBean.setFromUserName(ownerOfTask);
+                taskDetailsBean.setToUserName(Appreference.loginuserdetails.getUsername());
+                taskDetailsBean.setToUserId(String.valueOf(Appreference.loginuserdetails.getId()));
+                taskDetailsBean.setTaskName(taskName);
+                taskDetailsBean.setTaskNo(task_No);
+                taskDetailsBean.setCatagory("");
+                taskDetailsBean.setIssueId("");
+                taskDetailsBean.setParentId(getFileName());
+                taskDetailsBean.setIsRemainderRequired("");
+                taskDetailsBean.setCompletedPercentage("");
+                taskDetailsBean.setPlannedStartDateTime("");
+                taskDetailsBean.setPlannedEndDateTime("");
+                taskDetailsBean.setRemainderFrequency("");
+                taskDetailsBean.setSignalid(Utility.getSessionID());
+                taskDetailsBean.setDateTime(dateforrow);
+                taskDetailsBean.setSendStatus("0");
+                taskDetailsBean.setTaskStatus("inprogress");
+//                taskDetailsBean.setOwnerOfTask(detailsBean.getOwnerOfTask());
+
+                taskDetailsBean.setTaskType("individual");
+                taskDetailsBean.setTaskPriority("medium");
+                taskDetailsBean.setParentTaskId(parentTaskId);
+                taskDetailsBean.setSubType("reassignTask");
+                taskDetailsBean.setTaskMemberList("");
+                taskDetailsBean.setTaskReceiver(Appreference.loginuserdetails.getUsername());
+                taskDetailsBean.setRemark("");
+                taskDetailsBean.setReminderQuote("");
+                taskDetailsBean.setTaskDescription("Task Assigned to " + Appreference.loginuserdetails.getUsername());
+                taskDetailsBean.setRepeatFrequency("");
+                taskDetailsBean.setTaskTagName("");
+                taskDetailsBean.setTaskUTCDateTime(dateforrow);
+                taskDetailsBean.setMimeType("Reassign");
+                taskDetailsBean.setCatagory("Task");
+                taskDetailsBean.setCustomTagVisible(true);
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            Appreference.jsonRequestSender.OracleAssignTask(EnumJsonWebservicename.assignTask, oracleProject_object, taskDetailsBean, NewTaskConversation.this);
+        }
+    }
+
+    private void showtravelTimePopup(View v) {
+        final Dialog dialog = new Dialog(context);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.travel_time_show);
+        WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
+        lp.copyFrom(dialog.getWindow().getAttributes());
+        lp.width = WindowManager.LayoutParams.MATCH_PARENT;
+        lp.height = WindowManager.LayoutParams.MATCH_PARENT;
+        lp.horizontalMargin = 15;
+        Window window = dialog.getWindow();
+        window.setBackgroundDrawableResource((R.color.white));
+        window.setAttributes(lp);
+        window.setGravity(Gravity.BOTTOM);
+        dialog.show();
+        Button travelstart_sign = (Button) dialog.findViewById(R.id.travelstart_sign);
+        Button travelend_sign = (Button) dialog.findViewById(R.id.travelend_sign);
+        Button activitystart_sign = (Button) dialog.findViewById(R.id.activitystart_sign);
+        final Button activityend_sign = (Button) dialog.findViewById(R.id.activityend_sign);
+        Button travelstart_sign_end = (Button) dialog.findViewById(R.id.travelstart_sign_end);
+        Button travelend_sign_end = (Button) dialog.findViewById(R.id.travelend_sign_end);
+
+        final TextView travel_start = (TextView) dialog.findViewById(R.id.travel_start);
+        final TextView travel_end = (TextView) dialog.findViewById(R.id.travel_end);
+        final TextView activity_start = (TextView) dialog.findViewById(R.id.activity_start);
+        final TextView activity_end = (TextView) dialog.findViewById(R.id.activity_end);
+        final TextView travel_start_end = (TextView) dialog.findViewById(R.id.travel_start_end);
+        final TextView travel_end_return = (TextView) dialog.findViewById(R.id.travel_end_return);
+        final TextView back = (TextView) dialog.findViewById(R.id.back);
+        final TextView send_travel = (TextView) dialog.findViewById(R.id.send_travel_completion);
+        back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+        travelstart_sign.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                /*String dateTime=getDatefromPicker();
+                TravelStartdate=dateTime;
+                travel_start.setText(dateTime);*/
+                final Dialog mDateTimeDialog = new Dialog(context);
+                final RelativeLayout mDateTimeDialogView = (RelativeLayout) getLayoutInflater().inflate(R.layout.date_time_dialog, null);
+                final CommonDateTimePicker mDateTimePicker = (CommonDateTimePicker) mDateTimeDialogView.findViewById(R.id.DateTimePicker);
+                mDateTimePicker.setDateChangedListener(NewTaskConversation.this);
+                ((Button) mDateTimeDialogView.findViewById(R.id.SetDateTime)).setOnClickListener(new View.OnClickListener() {
+
+                    public void onClick(View v) {
+                        mDateTimePicker.clearFocus();
+                        // TODO Auto-generated method stub
+                        PickDate = String.valueOf(mDateTimePicker.getYear() + "-" + mDateTimePicker.getMonth() + "-" + String.valueOf(mDateTimePicker.getDay()))
+                                + "  " + String.valueOf(mDateTimePicker.getHour()) + ":" + String.valueOf(mDateTimePicker.getMinute() + ":" + "00");
+                        Date date_from = null;
+                        try {
+                            date_from = new SimpleDateFormat("yyyy-MMM-dd HH:mm:ss").parse(PickDate);
+                        } catch (ParseException e) {
+                            e.printStackTrace();
+                        }
+                        final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                        String ToDate=sdf.format(date_from);
+                        Log.i("output123","Todate===>"+ToDate);
+                        travel_start.setText(ToDate);
+                        FromTravelStart=ToDate;
+//                        PickDate=ToDate;
+                        mDateTimeDialog.dismiss();
+                    }
+                });
+                ((Button) mDateTimeDialogView.findViewById(R.id.CancelDialog)).setOnClickListener(new View.OnClickListener() {
+
+                    public void onClick(View v) {
+                        // TODO Auto-generated method stub
+                        mDateTimeDialog.cancel();
+                    }
+                });
+
+                ((Button) mDateTimeDialogView.findViewById(R.id.ResetDateTime)).setOnClickListener(new View.OnClickListener() {
+
+                    public void onClick(View v) {
+                        // TODO Auto-generated method stub
+                        mDateTimePicker.reset();
+                    }
+                });
+                mDateTimeDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                mDateTimeDialog.setContentView(mDateTimeDialogView);
+                mDateTimeDialog.show();
+            }
+        });
+        travelend_sign.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(travel_start.getText().toString()!=null && travel_start.getText().toString().length()>0) {
+                   /* String dateTime = getDatefromPicker();
+                    travel_end.setText(dateTime);*/
+                    final Dialog mDateTimeDialog = new Dialog(context);
+                    final RelativeLayout mDateTimeDialogView = (RelativeLayout) getLayoutInflater().inflate(R.layout.date_time_dialog, null);
+                    final CommonDateTimePicker mDateTimePicker = (CommonDateTimePicker) mDateTimeDialogView.findViewById(R.id.DateTimePicker);
+                    mDateTimePicker.setDateChangedListener(NewTaskConversation.this);
+                    ((Button) mDateTimeDialogView.findViewById(R.id.SetDateTime)).setOnClickListener(new View.OnClickListener() {
+
+                        public void onClick(View v) {
+                            mDateTimePicker.clearFocus();
+                            // TODO Auto-generated method stub
+                            PickDate = String.valueOf(mDateTimePicker.getYear() + "-" + mDateTimePicker.getMonth() + "-" + String.valueOf(mDateTimePicker.getDay()))
+                                    + "  " + String.valueOf(mDateTimePicker.getHour()) + ":" + String.valueOf(mDateTimePicker.getMinute() + ":" + "00");
+                            Date date_from = null;
+                            try {
+                                date_from = new SimpleDateFormat("yyyy-MMM-dd HH:mm:ss").parse(PickDate);
+                            } catch (ParseException e) {
+                                e.printStackTrace();
+                            }
+                            final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                            String ToDate=sdf.format(date_from);
+                            Log.i("output123","Todate===>"+ToDate);
+                            travel_end.setText(ToDate);
+                            FromTravelEnd=ToDate;
+//                        PickDate=ToDate;
+                            mDateTimeDialog.dismiss();
+                        }
+                    });
+                    ((Button) mDateTimeDialogView.findViewById(R.id.CancelDialog)).setOnClickListener(new View.OnClickListener() {
+
+                        public void onClick(View v) {
+                            // TODO Auto-generated method stub
+                            mDateTimeDialog.cancel();
+                        }
+                    });
+
+                    ((Button) mDateTimeDialogView.findViewById(R.id.ResetDateTime)).setOnClickListener(new View.OnClickListener() {
+
+                        public void onClick(View v) {
+                            // TODO Auto-generated method stub
+                            mDateTimePicker.reset();
+                        }
+                    });
+                    mDateTimeDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                    mDateTimeDialog.setContentView(mDateTimeDialogView);
+                    mDateTimeDialog.show();
+                }else
+                    Toast.makeText(context,"Please fill From Travel Start Date",Toast.LENGTH_SHORT).show();
+            }
+        });
+        activitystart_sign.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(travel_start.getText().toString()!=null && travel_start.getText().toString().length()>0) {
+                    /*String dateTime = getDatefromPicker();
+                    ActivityStartdate = dateTime;
+                    activity_start.setText(dateTime);*/
+                    final Dialog mDateTimeDialog = new Dialog(context);
+                    final RelativeLayout mDateTimeDialogView = (RelativeLayout) getLayoutInflater().inflate(R.layout.date_time_dialog, null);
+                    final CommonDateTimePicker mDateTimePicker = (CommonDateTimePicker) mDateTimeDialogView.findViewById(R.id.DateTimePicker);
+                    mDateTimePicker.setDateChangedListener(NewTaskConversation.this);
+                    ((Button) mDateTimeDialogView.findViewById(R.id.SetDateTime)).setOnClickListener(new View.OnClickListener() {
+
+                        public void onClick(View v) {
+                            mDateTimePicker.clearFocus();
+                            // TODO Auto-generated method stub
+                            PickDate = String.valueOf(mDateTimePicker.getYear() + "-" + mDateTimePicker.getMonth() + "-" + String.valueOf(mDateTimePicker.getDay()))
+                                    + "  " + String.valueOf(mDateTimePicker.getHour()) + ":" + String.valueOf(mDateTimePicker.getMinute() + ":" + "00");
+                            Date date_from = null;
+                            try {
+                                date_from = new SimpleDateFormat("yyyy-MMM-dd HH:mm:ss").parse(PickDate);
+                            } catch (ParseException e) {
+                                e.printStackTrace();
+                            }
+                            final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                            String ToDate=sdf.format(date_from);
+                            Log.i("output123","Todate===>"+ToDate);
+                            activity_start.setText(ToDate);
+                            ActivityStartdate=ToDate;
+//                        PickDate=ToDate;
+                            mDateTimeDialog.dismiss();
+                        }
+                    });
+                    ((Button) mDateTimeDialogView.findViewById(R.id.CancelDialog)).setOnClickListener(new View.OnClickListener() {
+
+                        public void onClick(View v) {
+                            // TODO Auto-generated method stub
+                            mDateTimeDialog.cancel();
+                        }
+                    });
+
+                    ((Button) mDateTimeDialogView.findViewById(R.id.ResetDateTime)).setOnClickListener(new View.OnClickListener() {
+
+                        public void onClick(View v) {
+                            // TODO Auto-generated method stub
+                            mDateTimePicker.reset();
+                        }
+                    });
+                    mDateTimeDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                    mDateTimeDialog.setContentView(mDateTimeDialogView);
+                    mDateTimeDialog.show();
+                }else
+                    Toast.makeText(context,"Please fill From  Travel Start Date",Toast.LENGTH_SHORT).show();
+            }
+        });
+        activityend_sign.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(activity_start.getText().toString()!=null && activity_start.getText().toString().length()>0) {
+                  /*  String dateTime = getDatefromPicker();
+                    ActivityEnddate = dateTime;
+                    activity_end.setText(dateTime);*/
+                    final Dialog mDateTimeDialog = new Dialog(context);
+                    final RelativeLayout mDateTimeDialogView = (RelativeLayout) getLayoutInflater().inflate(R.layout.date_time_dialog, null);
+                    final CommonDateTimePicker mDateTimePicker = (CommonDateTimePicker) mDateTimeDialogView.findViewById(R.id.DateTimePicker);
+                    mDateTimePicker.setDateChangedListener(NewTaskConversation.this);
+                    ((Button) mDateTimeDialogView.findViewById(R.id.SetDateTime)).setOnClickListener(new View.OnClickListener() {
+
+                        public void onClick(View v) {
+                            mDateTimePicker.clearFocus();
+                            // TODO Auto-generated method stub
+                            PickDate = String.valueOf(mDateTimePicker.getYear() + "-" + mDateTimePicker.getMonth() + "-" + String.valueOf(mDateTimePicker.getDay()))
+                                    + "  " + String.valueOf(mDateTimePicker.getHour()) + ":" + String.valueOf(mDateTimePicker.getMinute() + ":" + "00");
+                            Date date_from = null;
+                            try {
+                                date_from = new SimpleDateFormat("yyyy-MMM-dd HH:mm:ss").parse(PickDate);
+                            } catch (ParseException e) {
+                                e.printStackTrace();
+                            }
+                            final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                            String ToDate=sdf.format(date_from);
+                            Log.i("output123","Todate===>"+ToDate);
+                            activity_end.setText(ToDate);
+                            ActivityEnddate=ToDate;
+//                        PickDate=ToDate;
+                            mDateTimeDialog.dismiss();
+                        }
+                    });
+                    ((Button) mDateTimeDialogView.findViewById(R.id.CancelDialog)).setOnClickListener(new View.OnClickListener() {
+
+                        public void onClick(View v) {
+                            // TODO Auto-generated method stub
+                            mDateTimeDialog.cancel();
+                        }
+                    });
+
+                    ((Button) mDateTimeDialogView.findViewById(R.id.ResetDateTime)).setOnClickListener(new View.OnClickListener() {
+
+                        public void onClick(View v) {
+                            // TODO Auto-generated method stub
+                            mDateTimePicker.reset();
+                        }
+                    });
+                    mDateTimeDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                    mDateTimeDialog.setContentView(mDateTimeDialogView);
+                    mDateTimeDialog.show();
+                }else
+                    Toast.makeText(context,"Please fill Activity Start Date",Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        travelstart_sign_end.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(travel_start.getText().toString()!=null && travel_start.getText().toString().length()>0
+                        && activity_start.getText().toString()!=null && activity_start.getText().toString().length()>0) {
+                   /* String dateTime = getDatefromPicker();
+                    travel_start_end.setText(dateTime);*/
+                    final Dialog mDateTimeDialog = new Dialog(context);
+                    final RelativeLayout mDateTimeDialogView = (RelativeLayout) getLayoutInflater().inflate(R.layout.date_time_dialog, null);
+                    final CommonDateTimePicker mDateTimePicker = (CommonDateTimePicker) mDateTimeDialogView.findViewById(R.id.DateTimePicker);
+                    mDateTimePicker.setDateChangedListener(NewTaskConversation.this);
+                    ((Button) mDateTimeDialogView.findViewById(R.id.SetDateTime)).setOnClickListener(new View.OnClickListener() {
+
+                        public void onClick(View v) {
+                            mDateTimePicker.clearFocus();
+                            // TODO Auto-generated method stub
+                            PickDate = String.valueOf(mDateTimePicker.getYear() + "-" + mDateTimePicker.getMonth() + "-" + String.valueOf(mDateTimePicker.getDay()))
+                                    + "  " + String.valueOf(mDateTimePicker.getHour()) + ":" + String.valueOf(mDateTimePicker.getMinute() + ":" + "00");
+                            Date date_from = null;
+                            try {
+                                date_from = new SimpleDateFormat("yyyy-MMM-dd HH:mm:ss").parse(PickDate);
+                            } catch (ParseException e) {
+                                e.printStackTrace();
+                            }
+                            final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                            String ToDate=sdf.format(date_from);
+                            Log.i("output123","Todate===>"+ToDate);
+                            travel_start_end.setText(ToDate);
+                            TotravelStart=ToDate;
+//                        PickDate=ToDate;
+                            mDateTimeDialog.dismiss();
+                        }
+                    });
+                    ((Button) mDateTimeDialogView.findViewById(R.id.CancelDialog)).setOnClickListener(new View.OnClickListener() {
+
+                        public void onClick(View v) {
+                            // TODO Auto-generated method stub
+                            mDateTimeDialog.cancel();
+                        }
+                    });
+
+                    ((Button) mDateTimeDialogView.findViewById(R.id.ResetDateTime)).setOnClickListener(new View.OnClickListener() {
+
+                        public void onClick(View v) {
+                            // TODO Auto-generated method stub
+                            mDateTimePicker.reset();
+                        }
+                    });
+                    mDateTimeDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                    mDateTimeDialog.setContentView(mDateTimeDialogView);
+                    mDateTimeDialog.show();
+                }else
+                    Toast.makeText(context,"Please fill From Travel Start Date",Toast.LENGTH_SHORT).show();
+            }
+        });
+        travelend_sign_end.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+//                String dateTime=getDatefromPicker();
+//                TravelEnddate=dateTime;
+//                travel_end_return.setText(dateTime);
+                if (travel_start_end.getText().toString() != null && travel_start_end.getText().toString().length() > 0) {
+                    final Dialog mDateTimeDialog = new Dialog(context);
+                    final RelativeLayout mDateTimeDialogView = (RelativeLayout) getLayoutInflater().inflate(R.layout.date_time_dialog, null);
+                    final CommonDateTimePicker mDateTimePicker = (CommonDateTimePicker) mDateTimeDialogView.findViewById(R.id.DateTimePicker);
+                    mDateTimePicker.setDateChangedListener(NewTaskConversation.this);
+                    ((Button) mDateTimeDialogView.findViewById(R.id.SetDateTime)).setOnClickListener(new View.OnClickListener() {
+
+                        public void onClick(View v) {
+                            mDateTimePicker.clearFocus();
+                            // TODO Auto-generated method stub
+                            PickDate = String.valueOf(mDateTimePicker.getYear() + "-" + mDateTimePicker.getMonth() + "-" + String.valueOf(mDateTimePicker.getDay()))
+                                    + "  " + String.valueOf(mDateTimePicker.getHour()) + ":" + String.valueOf(mDateTimePicker.getMinute() + ":" + "00");
+                            Date date_from = null;
+                            try {
+                                date_from = new SimpleDateFormat("yyyy-MMM-dd HH:mm:ss").parse(PickDate);
+                            } catch (ParseException e) {
+                                e.printStackTrace();
+                            }
+                            final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                            String ToDate = sdf.format(date_from);
+                            Log.i("output123", "Todate===>" + ToDate);
+                            travel_end_return.setText(ToDate);
+                            ToTravelEnd=ToDate;
+//                        PickDate=ToDate;
+                            mDateTimeDialog.dismiss();
+                        }
+                    });
+                    ((Button) mDateTimeDialogView.findViewById(R.id.CancelDialog)).setOnClickListener(new View.OnClickListener() {
+
+                        public void onClick(View v) {
+                            // TODO Auto-generated method stub
+                            mDateTimeDialog.cancel();
+                        }
+                    });
+                    ((Button) mDateTimeDialogView.findViewById(R.id.ResetDateTime)).setOnClickListener(new View.OnClickListener() {
+
+                        public void onClick(View v) {
+                            // TODO Auto-generated method stub
+                            mDateTimePicker.reset();
+                        }
+                    });
+                    mDateTimeDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                    mDateTimeDialog.setContentView(mDateTimeDialogView);
+                    mDateTimeDialog.show();
+                } else
+                    Toast.makeText(context,"Please fill To Travel Start Date",Toast.LENGTH_SHORT).show();
+            }
+        });
+        send_travel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                    Toast.makeText(NewTaskConversation.this, "Send Successfully", Toast.LENGTH_SHORT).show();
+                    sendStatus_webservice("7", "", "", "");
+                    dialog.dismiss();
+            }
+        });
+
+
+    }
+private String getDatefromPicker()
+{
+    final Dialog mDateTimeDialog = new Dialog(context);
+    final RelativeLayout mDateTimeDialogView = (RelativeLayout) getLayoutInflater().inflate(R.layout.date_time_dialog, null);
+    final CommonDateTimePicker mDateTimePicker = (CommonDateTimePicker) mDateTimeDialogView.findViewById(R.id.DateTimePicker);
+    mDateTimePicker.setDateChangedListener(NewTaskConversation.this);
+    ((Button) mDateTimeDialogView.findViewById(R.id.SetDateTime)).setOnClickListener(new View.OnClickListener() {
+
+        public void onClick(View v) {
+            mDateTimePicker.clearFocus();
+            // TODO Auto-generated method stub
+              PickDate = String.valueOf(mDateTimePicker.getYear() + "-" + mDateTimePicker.getMonth() + "-" + String.valueOf(mDateTimePicker.getDay()))
+                    + "  " + String.valueOf(mDateTimePicker.getHour()) + ":" + String.valueOf(mDateTimePicker.getMinute() + ":" + "00");
+            Date date_from = null;
+            try {
+                date_from = new SimpleDateFormat("yyyy-MMM-dd HH:mm:ss").parse(PickDate);
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+            final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+             String ToDate=sdf.format(date_from);
+            Log.i("output123","Todate===>"+ToDate);
+            PickDate=ToDate;
+            mDateTimeDialog.dismiss();
+        }
+    });
+    ((Button) mDateTimeDialogView.findViewById(R.id.CancelDialog)).setOnClickListener(new View.OnClickListener() {
+
+        public void onClick(View v) {
+            // TODO Auto-generated method stub
+            mDateTimeDialog.cancel();
+        }
+    });
+
+    ((Button) mDateTimeDialogView.findViewById(R.id.ResetDateTime)).setOnClickListener(new View.OnClickListener() {
+
+        public void onClick(View v) {
+            // TODO Auto-generated method stub
+            mDateTimePicker.reset();
+        }
+    });
+    mDateTimeDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+    mDateTimeDialog.setContentView(mDateTimeDialogView);
+    mDateTimeDialog.show();
+    return PickDate;
+
+}
     private void showCustom1PopUp() {
 //        ArrayList<TaskDetailsBean> taskDetailsBean = new ArrayList<>();
         TaskDetailsBean detailsBean;
@@ -3469,8 +4003,6 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
         TextView send_completion = (TextView) dialog.findViewById(R.id.send_completion);
         Button skech_receiver = (Button) dialog.findViewById(R.id.my_sign);
         final TextView remarks_completion = (TextView) dialog.findViewById(R.id.remarks_complete);
-//        if (observation.getText().toString() != null)
-//            observationStatus = observation.getText().toString();
         int queryStatus=5;
         String Query = "Select * from projectStatus where projectId ='" + projectId + "' and taskId = '" + webtaskId + "' and status = '"+ queryStatus + "'";
         detailsBean = VideoCallDataBase.getDB(context).getStatusCompletedProjectDetails(Query);
@@ -3565,10 +4097,10 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
         popup.getMenu().getItem(3).setVisible(false);
         popup.getMenu().getItem(4).setVisible(false);
         popup.getMenu().getItem(5).setVisible(false);
-        String query="select status from projectStatus where projectId='" + projectId + "' and userId='" + Appreference.loginuserdetails.getId() + "' and taskId= '" + webtaskId + "'";
-        int current_status=VideoCallDataBase.getDB(context).getCurrentStatus(query);
+//        String query="select status from projectStatus where projectId='" + projectId + "' and userId='" + Appreference.loginuserdetails.getId() + "' and taskId= '" + webtaskId + "'";
+//        int current_status=VideoCallDataBase.getDB(context).getCurrentStatus(query);
         Log.i("status123","currentStatus========================>"+taskStatus);
-       /* int current_status=-1;
+        int current_status=-1;
         if (taskStatus.equalsIgnoreCase("inprogress"))
             current_status = -1;
         else if(taskStatus.equalsIgnoreCase("assigned"))
@@ -3584,7 +4116,7 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
         else if(taskStatus.equalsIgnoreCase("restart"))
             current_status = 4;
         else if(taskStatus.equalsIgnoreCase("completed"))
-            current_status = 5;*/
+            current_status = 5;
 
 
         Log.i("ws123", "project CurrentStatus from DB====>" + current_status);
@@ -4001,34 +4533,32 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
             jsonObject4.put("fileContent", "");
             jsonObject4.put("taskFileExt", "");
             jsonObject.put("signatures", jsonObject4);
-            if (projectCurrentStatus.equalsIgnoreCase("Complete")) {
-                /*jsonObject.put("travelStartTime", TravelStartdate);
-                jsonObject.put("activityStartTime", TravelEnddate);
-                jsonObject.put("activityEndTime", ActivityStartdate);
-                jsonObject.put("travelEndTime", ActivityEnddate);
+            if (status.equalsIgnoreCase("7")) {
 
-                taskDetailsBean.setTravelStartTime(TravelStartdate);
-                taskDetailsBean.setTravelEndTime(TravelEnddate);
+                jsonObject.put("travelStartTime", FromTravelStart);
+                jsonObject.put("activityStartTime", ActivityStartdate);
+                jsonObject.put("activityEndTime", ActivityEnddate);
+                jsonObject.put("travelEndTime", FromTravelEnd);
+                jsonObject.put("toTravelStartDateTime", TotravelStart);
+                jsonObject.put("toTravelEndDateTime", ToTravelEnd);
+
+                taskDetailsBean.setToTravelStartTime(TotravelStart);
+                taskDetailsBean.setToTravelEndTime(ToTravelEnd);
+                taskDetailsBean.setTravelStartTime(FromTravelStart);
+                taskDetailsBean.setTravelEndTime(FromTravelEnd);
                 taskDetailsBean.setActivityStartTime(ActivityStartdate);
-                taskDetailsBean.setActivityEndTime(ActivityEnddate);*/
+                taskDetailsBean.setActivityEndTime(ActivityEnddate);
 
-                jsonObject.put("travelStartTime", timeInMilliseconds);
-                jsonObject.put("activityStartTime", timeInMilliseconds);
-                jsonObject.put("activityEndTime", timeInMilliseconds);
-                jsonObject.put("travelEndTime", timeInMilliseconds);
-
-                taskDetailsBean.setTravelStartTime(String.valueOf(timeInMilliseconds));
-                taskDetailsBean.setTravelEndTime(String.valueOf(timeInMilliseconds));
-                taskDetailsBean.setActivityStartTime(String.valueOf(timeInMilliseconds));
-                taskDetailsBean.setActivityEndTime(String.valueOf(timeInMilliseconds));
             } else {
-                jsonObject.put("travelStartTime", 0);
-                jsonObject.put("activityStartTime", timeInMilliseconds);
-                jsonObject.put("activityEndTime", timeInMilliseconds);
-                jsonObject.put("travelEndTime", 0);
+                jsonObject.put("travelStartTime", taskUTCtime);
+                jsonObject.put("activityStartTime", taskUTCtime);
+                jsonObject.put("activityEndTime", taskUTCtime);
+                jsonObject.put("travelEndTime", taskUTCtime);
+                jsonObject.put("toTravelStartDateTime", taskUTCtime);
+                jsonObject.put("toTravelEndDateTime", taskUTCtime);
 
-                taskDetailsBean.setActivityEndTime(String.valueOf(timeInMilliseconds));
-                taskDetailsBean.setActivityStartTime(String.valueOf(timeInMilliseconds));
+                taskDetailsBean.setActivityEndTime(taskUTCtime);
+                taskDetailsBean.setActivityStartTime(taskUTCtime);
 
             }
             if (remarks != null) {
@@ -4036,9 +4566,28 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                 taskDetailsBean.setCustomerRemarks(remarks);
             } else
                 jsonObject.put("remarks", "");
-            jsonObject.put("observation", "");
             jsonObject.put("status", status);
-            taskDetailsBean.setObservation(observationStatus);
+            if(observationStatus!=null && observationStatus.length()>0) {
+                jsonObject.put("observation", observationStatus);
+                taskDetailsBean.setObservation(observationStatus);
+            }else
+                jsonObject.put("observation", "");
+
+
+            JSONObject jsonObject5 = new JSONObject();
+//                        filedlist.put("fileContent", encodeTobase64(BitmapFactory.decodeFile((listofFileds.getName()))));
+//                        filedlist.put("fileExt", "png");
+            jsonObject5.put("fileContent", "");
+            jsonObject5.put("taskFileExt", "");
+            jsonObject.put("photos", jsonObject5);
+            JSONObject jsonObject6 = new JSONObject();
+//                        filedlist.put("fileContent", encodeTobase64(BitmapFactory.decodeFile((listofFileds.getName()))));
+//                        filedlist.put("fileExt", "png");
+            jsonObject6.put("fileContent", "");
+            jsonObject6.put("taskFileExt", "");
+            jsonObject.put("technicianSignatures", jsonObject6);
+            jsonObject.put("hourMeterReading", "");
+            jsonObject.put("customerSignatureName", "");
             taskDetailsBean.setProjectStatus(status);
             taskDetailsBean.setTaskUTCDateTime(dateforrow);
             taskDetailsBean.setDateTime(dateTime);
@@ -4060,7 +4609,7 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
             taskDetailsBean.setTaskType(taskType);
             taskDetailsBean.setMimeType("text");
             taskDetailsBean.setCustomerSignature(status_signature);
-            taskDetailsBean.setTaskDescription("Task is " + projectCurrentStatus);
+            taskDetailsBean.setTaskDescription("Task is "  + projectCurrentStatus);
             jsonObject.put("hourMeterReading", "");
             if (!isTaskName)
                 if (isProjectFromOracle)
@@ -9441,19 +9990,6 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                         }
 
                         TaskDetailsBean detailsBean = communicationBean.getTaskDetailsBean();
-                        /*if (projectCurrentStatus.equalsIgnoreCase("start"))
-                            detailsBean.setTaskDescription("Task is started");
-                        else if(projectCurrentStatus.equalsIgnoreCase("hold"))
-                            detailsBean.setTaskDescription("Task is hold");
-                        else if(projectCurrentStatus.equalsIgnoreCase("resume"))
-                            detailsBean.setTaskDescription("Task is resume");
-                        else if(projectCurrentStatus.equalsIgnoreCase("pause"))
-                            detailsBean.setTaskDescription("Task is pause");
-                        else if(projectCurrentStatus.equalsIgnoreCase("restart"))
-                            detailsBean.setTaskDescription("Task is restart");
-                        else if(projectCurrentStatus.equalsIgnoreCase("completed"))
-                            detailsBean.setTaskDescription("Task is completed");*/
-
                         detailsBean.setMimeType("text");
                         detailsBean.setCustomTagVisible(true);
 
@@ -9461,14 +9997,23 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                         handler.post(new Runnable() {
                             @Override
                             public void run() {
-                                sendMultiInstantMessage(xml, listObservers, 1);
+                                sendMultiInstantMessage(xml,listOfObservers, 1);
                             }
                         });
 
                         taskList.add(communicationBean.getTaskDetailsBean());
                         refresh();
 
-                    } else if (WebServiceEnum_Response != null && WebServiceEnum_Response.equalsIgnoreCase("getRequestType")) {
+                    } else if (WebServiceEnum_Response != null && WebServiceEnum_Response.equalsIgnoreCase(("assignTask"))) {
+                        Log.i("output123", "NewTaskConv AssignTask Responce Received" +server_Response_string);
+                        TaskDetailsBean detailsBean1 = null;
+                        detailsBean1 = communicationBean.getTaskDetailsBean();
+                        // db insert method
+                       /* VideoCallDataBase.getDB(context).update_Project_history(detailsBean1);
+                        VideoCallDataBase.getDB(context).insertORupdate_Task_history(detailsBean1);
+                        VideoCallDataBase.getDB(context).insertORupdateStatus(detailsBean1);
+*/
+                    }else if (WebServiceEnum_Response != null && WebServiceEnum_Response.equalsIgnoreCase("getRequestType")) {
                         Log.i("taskresponse123", "getRequestType");
                         ArrayList<MoreFieldsBean> beanArrayList = new ArrayList<MoreFieldsBean>();
                         {
@@ -16396,7 +16941,7 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
 //                                VideoCallDataBase.getDB(context).update_Project_history(taskDetailsBean);
 //                                if (VideoCallDataBase.getDB(context).DuplicateProjectTaskIdChecker(taskDetailsBean.getTaskId())) {
                                 VideoCallDataBase.getDB(context).insert_new_Project_history(taskDetailsBean);
-                                if (taskDetailsBean.getProjectStatus() != null) {
+                                if (taskDetailsBean.getTaskStatus() != null) {
 //                                    VideoCallDataBase.getDB(context).update_Project_history(taskDetailsBean);
                                     VideoCallDataBase.getDB(context).insertORupdate_Task_history(taskDetailsBean);
                                     VideoCallDataBase.getDB(context).insertORupdateStatus(taskDetailsBean);
@@ -16795,7 +17340,7 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                     /*8888888888888888888888888888888*/
                     if (taskDetailsBean.getProjectId() != null && !taskDetailsBean.getProjectId().equalsIgnoreCase("null") && !taskDetailsBean.getProjectId().equalsIgnoreCase("") && !taskDetailsBean.getProjectId().equalsIgnoreCase("(null)")) {
                         VideoCallDataBase.getDB(context).update_Project_history(taskDetailsBean);
-                        if (taskDetailsBean.getProjectStatus() != null) {
+                        if (taskDetailsBean.getTaskStatus() != null) {
 //                            VideoCallDataBase.getDB(context).update_Project_history(taskDetailsBean);
                             VideoCallDataBase.getDB(context).insertORupdate_Task_history(taskDetailsBean);
                             VideoCallDataBase.getDB(context).insertORupdateStatus(taskDetailsBean);
@@ -17631,6 +18176,8 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
             intent.putExtra("Taker", "Assigned Task");
             if (isProjectFromOracle)
                 intent.putExtra("isProjectFromOracle1", true);
+            if(Self_assign)
+                intent.putExtra("selfAssign", true);
 
             if (taskType != null && taskType.equalsIgnoreCase("Group")) {
                 TaskDetailsBean taskDetailsBean = new TaskDetailsBean();
@@ -18146,6 +18693,11 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public void onDateChanged(Calendar c) {
+
     }
 
     public class DownloadImage extends AsyncTask<String, Void, String> {

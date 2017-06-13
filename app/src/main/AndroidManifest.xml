@@ -409,6 +409,9 @@
         <activity
             android:name=".ReportView"
             android:screenOrientation="portrait" />
+        <activity
+            android:name=".CommonDateTimePicker"
+            android:screenOrientation="portrait" />
 
     </application>
 

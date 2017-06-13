@@ -712,7 +712,7 @@ public class ProjectHistory extends Activity implements WebServiceInterface {
                             //                        check = true;
                             //
                             //                    }
-                            if (taskDetailsBean.getOwnerOfTask().equalsIgnoreCase(Appreference.loginuserdetails.getUsername())) {
+//                            if (taskDetailsBean.getOwnerOfTask().equalsIgnoreCase(Appreference.loginuserdetails.getUsername())) {
                                 Log.i("task", String.valueOf(position));
                                 Intent intent = new Intent(context, NewTaskConversation.class);
                                 intent.putExtra("task", "ProjectTemplateview");
@@ -728,9 +728,9 @@ public class ProjectHistory extends Activity implements WebServiceInterface {
                                 }
                                 check = true;
                                 startActivity(intent);
-                            } else {
-                                Toast.makeText(getApplicationContext(), "You are not allowed for this Template", Toast.LENGTH_SHORT).show();
-                            }
+//                            } else {
+//                                Toast.makeText(getApplicationContext(), "You are not allowed for this Template", Toast.LENGTH_SHORT).show();
+//                            }
                         } else if (taskDetailsBean.getTaskType().equalsIgnoreCase("individual")) {
                             if (taskDetailsBean.getTaskReceiver().equalsIgnoreCase(Appreference.loginuserdetails.getUsername()) || taskDetailsBean.getOwnerOfTask().equalsIgnoreCase(Appreference.loginuserdetails.getUsername()) || taskDetailsBean.getTaskObservers().contains(Appreference.loginuserdetails.getUsername())) {
                                 Log.i("task", String.valueOf(position));

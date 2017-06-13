@@ -164,7 +164,7 @@ public class SettingsFragment extends Fragment implements WebServiceInterface {
         SimpleDateFormat simple=new SimpleDateFormat("ddMMM");
         no=simple.format(calender.getTime());
         Log.i("settingsfragment","no value is"+no);
-        version_no.setText(version_no.getText() + no + Appversion);
+        version_no.setText(getResources().getString(R.string.app_versionDate));
         Log.i("settingsfragment",version_no.getText().toString());
 
         try{

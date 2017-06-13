@@ -67,6 +67,10 @@ public class ProjectDetailsBean implements Serializable {
     private String isParentTask;
     private String issueParentId;
     private String requestStatus;
+    private String projectCompletedStatus;
+    private String isActiveStatus;
+    private String jobCardType;
+    private String machineMake;
 
 
     public String getId() {
@@ -491,5 +495,37 @@ public class ProjectDetailsBean implements Serializable {
 
     public void setEstimatedActivityHrs(String estimatedActivityHrs) {
         this.estimatedActivityHrs = estimatedActivityHrs;
+    }
+
+    public String getProjectCompletedStatus() {
+        return projectCompletedStatus;
+    }
+
+    public void setProjectCompletedStatus(String projectCompletedStatus) {
+        this.projectCompletedStatus = projectCompletedStatus;
+    }
+
+    public String getIsActiveStatus() {
+        return isActiveStatus;
+    }
+
+    public void setIsActiveStatus(String isActiveStatus) {
+        this.isActiveStatus = isActiveStatus;
+    }
+
+    public String getJobCardType() {
+        return jobCardType;
+    }
+
+    public void setJobCardType(String jobCardType) {
+        this.jobCardType = jobCardType;
+    }
+
+    public String getMachineMake() {
+        return machineMake;
+    }
+
+    public void setMachineMake(String machineMake) {
+        this.machineMake = machineMake;
     }
 }

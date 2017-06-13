@@ -114,6 +114,7 @@ public class TaskDetailsBean implements Serializable {
     private String CustomerSignature;
 
 
+
     //ASE Newly Added
     private int result;
     private ArrayList<JobCardBean> jobcard;
@@ -122,6 +123,11 @@ public class TaskDetailsBean implements Serializable {
     private String activityEndTime;
     private String travelEndTime;
     private String projectStatus;
+    private String toTravelStartTime;
+    private String toTravelEndTime;
+    private String CustomerName;
+    private String photoPath;
+    private String technicianSignature;
 
 
     public String getEstimatedTravel() {
@@ -1020,6 +1026,46 @@ private String sender_reply;
 
     public void setProjectStatus(String projectStatus) {
         this.projectStatus = projectStatus;
+    }
+
+    public String getToTravelStartTime() {
+        return toTravelStartTime;
+    }
+
+    public void setToTravelStartTime(String toTravelStartTime) {
+        this.toTravelStartTime = toTravelStartTime;
+    }
+
+    public String getToTravelEndTime() {
+        return toTravelEndTime;
+    }
+
+    public void setToTravelEndTime(String toTravelEndTime) {
+        this.toTravelEndTime = toTravelEndTime;
+    }
+
+    public String getCustomerName() {
+        return CustomerName;
+    }
+
+    public void setCustomerName(String customerName) {
+        CustomerName = customerName;
+    }
+
+    public String getPhotoPath() {
+        return photoPath;
+    }
+
+    public void setPhotoPath(String photoPath) {
+        this.photoPath = photoPath;
+    }
+
+    public String getTechnicianSignature() {
+        return technicianSignature;
+    }
+
+    public void setTechnicianSignature(String technicianSignature) {
+        this.technicianSignature = technicianSignature;
     }
 }
 
