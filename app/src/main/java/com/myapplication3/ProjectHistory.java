@@ -1256,7 +1256,11 @@ public class ProjectHistory extends Activity implements WebServiceInterface {
                 ImageView selectedimage = (ImageView) conView.findViewById(R.id.selected);
                 TextView catagory = (TextView) conView.findViewById(R.id.catagory);
                 ImageView dependency_icon = (ImageView) conView.findViewById(R.id.dependency_icon);
-
+                ImageView status_oracle = (ImageView) conView.findViewById(R.id.status_oracle);
+                if(projectDetailsBean.getTaskType().equalsIgnoreCase("Group")) {
+                    status_oracle.setVisibility(View.VISIBLE);
+                    task_status.setVisibility(View.GONE);
+                }
                 conView.setBackgroundResource(R.color.white);
                 dependency_icon.setVisibility(View.GONE);
                 try{
@@ -1272,7 +1276,29 @@ public class ProjectHistory extends Activity implements WebServiceInterface {
                 }catch (Exception e){
                     e.printStackTrace();
                 }
-                Log.i("ws123","taskArrayAdapter values getParentTaskId---------->"+projectDetailsBean.getParentTaskId());
+//                Log.i("ws123","taskArrayAdapter values getParentTaskId---------->"+projectDetailsBean.getParentTaskId());
+                status_oracle.setTag(pos);
+                status_oracle.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Log.i("ws123","taskArrayAdapter status_oracle---------->"+projectDetailsBean.getTaskType().equalsIgnoreCase("Group"));
+                        if(projectDetailsBean.getTaskType().equalsIgnoreCase("Group"))
+                        {
+                            Intent intent = new Intent(ProjectHistory.this, GroupPercentageStatus.class);
+                            intent.putExtra("taskid", projectDetailsBean.getTaskId());
+                            intent.putExtra("groupId", group_UserId);
+                            intent.putExtra("subtype", "normal");
+                            if (isFromOracle) {
+                                intent.putExtra("isProject", "yes");
+                            } else {
+                                intent.putExtra("isProject", "no");
+                            }
+                            if (isFromOracle)
+                            intent.putExtra("isFromOracle",true);
+                            startActivity(intent);
+                        }
+                    }
+                });
 
                 if (projectDetailsBean.getParentTaskId() != null && projectDetailsBean.getTaskId() != null) {
                     if (projectDetailsBean.getParentTaskId().equalsIgnoreCase(projectDetailsBean.getTaskId())) {

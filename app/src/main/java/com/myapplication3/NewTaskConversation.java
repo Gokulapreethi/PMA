@@ -263,7 +263,7 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
     LinearLayout ll_networkUI = null, bottom_layout, options, updatingtask_layout = null;
     ProgressBar progress_updating;
     RelativeLayout task_accept_layout;
-    TextView tv_networkstate = null, head, mute, signature_path;
+    TextView tv_networkstate = null, head, mute, signature_path,photo_path;
     public static boolean conflict = false;
     boolean arrow = false, isTask_Over = false, istask_issue, isNote = false, isProjectFromOracle;
     int vie = 0;
@@ -2496,8 +2496,10 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
             public void onClick(View v) {
                 if(!Self_assign)
                 addTaskReassignClickEvent();
-                else
+                else {
+                    options.setVisibility(View.GONE);
                     sendAssignTask_webservice();
+                }
             }
         });
         View_Task_TR.setOnClickListener(new View.OnClickListener() {
@@ -4359,9 +4361,11 @@ private String getDatefromPicker()
                         }
                     });
                     signature_path = (TextView) dialog.findViewById(R.id.signature_path);
+                    photo_path = (TextView) dialog.findViewById(R.id.photo_path);
                     TextView back = (TextView) dialog.findViewById(R.id.back);
                     TextView send_completion = (TextView) dialog.findViewById(R.id.send_completion);
                     Button skech_receiver = (Button) dialog.findViewById(R.id.my_sign);
+                    Button photo_receiver = (Button) dialog.findViewById(R.id.my_photo);
                     final EditText remarks_completion = (EditText) dialog.findViewById(R.id.remarks_complete);
                     if (observation.getText().toString() != null)
                         observationStatus = observation.getText().toString();
@@ -4390,6 +4394,7 @@ private String getDatefromPicker()
                         address.setText(detailsBean.getAddress());
                         description.setText(detailsBean.getTaskDescription());
                         signature_path.setVisibility(View.VISIBLE);
+                        photo_path.setVisibility(View.VISIBLE);
                     }
 
                     skech_receiver.setOnClickListener(new View.OnClickListener() {
@@ -4397,6 +4402,27 @@ private String getDatefromPicker()
                         public void onClick(View v) {
                             Intent i = new Intent(getApplicationContext(), HandSketchActivity2.class);
                             startActivityForResult(i, 423);
+                        }
+                    });
+                    photo_receiver.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            try {
+                                final String path = Environment.getExternalStorageDirectory() + "/High Message/";
+                                File directory = new File(path);
+                                if (!directory.exists())
+                                    directory.mkdir();
+                                strIPath = path + getFileName() + ".jpg";
+                                Intent intent = new Intent(context, CustomVideoCamera.class);
+                                Uri imageUri = Uri.fromFile(new File(strIPath));
+                                intent.putExtra("filePath", strIPath);
+                                intent.putExtra("isPhoto", true);
+                                intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
+                                startActivityForResult(intent, 132);
+                            }catch(Exception e)
+                            {
+                                e.printStackTrace();
+                            }
                         }
                     });
                     status_signature=signature_path.getText().toString();
@@ -7982,6 +8008,8 @@ private String getDatefromPicker()
                 } else if (requestCode == 132) {
                     try {
                         File new_file = new File(strIPath);
+                        if(photo_path!=null)
+                        photo_path.setText(strIPath);
                         mime_Type = "image";
                         if (subType != null && subType.equalsIgnoreCase("private")) {
                             SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -8159,6 +8187,7 @@ private String getDatefromPicker()
                 } else if (requestCode == 423) {
                     try {
                         strIPath = data.getStringExtra("path");
+                        if(signature_path!=null)
                         signature_path.setText(strIPath);
                         mime_Type = "image";
                         Log.i("Task", "path" + strIPath);
@@ -10009,10 +10038,10 @@ private String getDatefromPicker()
                         TaskDetailsBean detailsBean1 = null;
                         detailsBean1 = communicationBean.getTaskDetailsBean();
                         // db insert method
-                       /* VideoCallDataBase.getDB(context).update_Project_history(detailsBean1);
+                        VideoCallDataBase.getDB(context).update_Project_history(detailsBean1);
                         VideoCallDataBase.getDB(context).insertORupdate_Task_history(detailsBean1);
                         VideoCallDataBase.getDB(context).insertORupdateStatus(detailsBean1);
-*/
+                        finish();
                     }else if (WebServiceEnum_Response != null && WebServiceEnum_Response.equalsIgnoreCase("getRequestType")) {
                         Log.i("taskresponse123", "getRequestType");
                         ArrayList<MoreFieldsBean> beanArrayList = new ArrayList<MoreFieldsBean>();

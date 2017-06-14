@@ -3,7 +3,6 @@ package com.myapplication3;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
@@ -21,13 +20,11 @@ import android.widget.Toast;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.myapplication3.DB.VideoCallDataBase;
 
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
-import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -37,13 +34,11 @@ import json.CommunicationBean;
 import json.EnumJsonWebservicename;
 import json.JsonRequestSender;
 import json.ListMember;
-import json.Loginuserdetails;
-import json.NegativeValue;
-import json.Usergroubdetails;
 import json.WebServiceInterface;
 
 public class GroupPercentageStatus extends AppCompatActivity implements View.OnClickListener, WebServiceInterface {
     String taskid, group_Id, sub_type, isProject;
+    boolean isFromOracle;
     ArrayList<ListMember> arrayList, arrayList_1;
     ListView listView;
     TextView back, private_heading;
@@ -54,6 +49,8 @@ public class GroupPercentageStatus extends AppCompatActivity implements View.OnC
     PrivateMemberAdapter buddyArrayAdapter;
     ArrayList<String> NameList;
     ArrayList<String> PercentageList;
+    ArrayList<String>OracleStatusList;
+
     ArrayAdapter arrayadapter;
     AppSharedpreferences appSharedpreferences;
     private final Handler handler = new Handler();
@@ -83,12 +80,15 @@ static GroupPercentageStatus groupPercentageStatus;
                         JsonElement jelement = new JsonParser().parse(s1);
                         JsonArray jarray = jelement.getAsJsonArray();
                         for (int i = 0; i < jarray.size(); i++) {
-                            JsonObject jobject = jarray.get(i).getAsJsonObject();
-                            String firstname = String.valueOf(jobject.get("firstName"));
-                            String lastname = String.valueOf(jobject.get("lastName"));
-                            firstname = firstname.split("\"")[1];
-                            lastname = lastname.split("\"")[1];
+                            String jobject1 = jarray.get(i).toString();
+                            JSONObject jobject = new JSONObject(jobject1);
+                            String firstname = jobject.getString("firstName");
+                            String lastname = jobject.getString("lastName");
+                           /* firstname = firstname.split("\"")[1];
+                            if(lastname.length()>0 && lastname!=null && !lastname.contains("\"")){
+                            lastname = lastname.split("\"")[1];}*/
                             String percentagecomplete = String.valueOf(jobject.get("percentageCompleted"));
+                            String oracleStatus = String.valueOf(jobject.get("oracleStatus"));
                             String name = firstname + " " + lastname;
                             Log.i("GroupPercentage", firstname);
                             Log.i("GroupPercentage", lastname);
@@ -96,9 +96,16 @@ static GroupPercentageStatus groupPercentageStatus;
                             Log.i("GroupPercentage", percentagecomplete);
                             NameList.add(name);
                             PercentageList.add(percentagecomplete);
-                            final MyAdapter buddyArrayAdapter = new MyAdapter(context, NameList, PercentageList);
-                            listView.setAdapter(buddyArrayAdapter);
-                            buddyArrayAdapter.notifyDataSetChanged();
+                            OracleStatusList.add(oracleStatus);
+                            if(isFromOracle){
+                                final MyAdapter buddyArrayAdapter = new MyAdapter(context, NameList, OracleStatusList);
+                                listView.setAdapter(buddyArrayAdapter);
+                                buddyArrayAdapter.notifyDataSetChanged();
+                            }else {
+                                final MyAdapter buddyArrayAdapter = new MyAdapter(context, NameList, PercentageList);
+                                listView.setAdapter(buddyArrayAdapter);
+                                buddyArrayAdapter.notifyDataSetChanged();
+                            }
 
                         }
                     } catch (Exception e) {
@@ -122,6 +129,8 @@ static GroupPercentageStatus groupPercentageStatus;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Log.i("ws123","group_percentage_status status_oracle---------->");
+
         setContentView(R.layout.activity_group_percentage_status);
         try {
             context = this;
@@ -131,6 +140,7 @@ static GroupPercentageStatus groupPercentageStatus;
             back = (TextView) findViewById(R.id.cancel);
             NameList = new ArrayList<String>();
             PercentageList = new ArrayList<String>();
+            OracleStatusList=new ArrayList<String>();
             submit = (Button) findViewById(R.id.submit);
             private_cancel = (Button) findViewById(R.id.private_cancel);
             private_heading = (TextView) findViewById(R.id.txtView02);
@@ -146,6 +156,7 @@ static GroupPercentageStatus groupPercentageStatus;
                 group_Id = getIntent().getStringExtra("groupId");
                 sub_type = getIntent().getStringExtra("subtype");
                 isProject = getIntent().getStringExtra("isProject");
+                isFromOracle = getIntent().getBooleanExtra("isFromOracle",false);
             }
            /* if (sub_type != null && sub_type.equalsIgnoreCase("private")) {
                 submit.setVisibility(View.VISIBLE);
@@ -155,7 +166,13 @@ static GroupPercentageStatus groupPercentageStatus;
                 private_heading.setText("Private Member List");
                 submit.setVisibility(View.VISIBLE);
             } else if (sub_type != null && sub_type.equalsIgnoreCase("normal")) {
-                private_heading.setText("Percentage Completion");
+                if(isFromOracle)
+                private_heading.setText("Status");
+                else
+                    private_heading.setText("Percentage Completion");
+
+            } else if (sub_type != null && sub_type.equalsIgnoreCase("oracleStatus")) {
+                private_heading.setText("Status");
             }
             submit.setOnClickListener(this);
             arrayList = new ArrayList<>();
@@ -293,7 +310,7 @@ static GroupPercentageStatus groupPercentageStatus;
 
     public void LoadBackGroundWebService() {
         try {
-            showprogress("Loading listGroupTaskUsers");
+            showprogress("Loading....");
             Log.d("test1", "appSharedpreferences.getString" + taskid);
             List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
             nameValuePairs.add(new BasicNameValuePair("taskId", taskid));
@@ -475,12 +492,14 @@ static GroupPercentageStatus groupPercentageStatus;
                         if (percentagecomplete.equalsIgnoreCase("null")) {
                             percent_status.setText("0%");
                         } else {
-                            percent_status.setText(percentagecomplete + "" + "%");
+                            if(isFromOracle)
+                            percent_status.setText(percentagecomplete);
+                            else
+                                percent_status.setText(percentagecomplete + "" + "%");
+
                         }
                     }
                 });
-
-
             } catch (Exception e) {
                 e.printStackTrace();
                 Appreference.printLog("GroupPercentageStatus MyAdapter GetView ","Exception "+e.getMessage(),"WARN",null);

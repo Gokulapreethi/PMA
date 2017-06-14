@@ -49,6 +49,7 @@
             android:layout_marginRight="40dp"
             android:layout_marginTop="8dp"
             android:text="status"
+            android:visibility="visible"
             android:textColor="@color/black" />
 
         <ImageView
@@ -59,6 +60,16 @@
             android:layout_toLeftOf="@+id/project_status"
             android:background="@drawable/ic_alert_64"
             android:visibility="visible"
+            />
+        <ImageView
+            android:id="@+id/status_oracle"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_marginRight="5dp"
+            android:layout_centerVertical="true"
+            android:layout_toLeftOf="@+id/dependency_icon"
+            android:background="@drawable/status_oracle1"
+            android:visibility="gone"
             />
 
 
