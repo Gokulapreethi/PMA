@@ -412,7 +412,10 @@
         <activity
             android:name=".CommonDateTimePicker"
             android:screenOrientation="portrait" />
-
+        <activity
+            android:name=".DisplayList"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.AppCompat.Light.Dialog"/>
     </application>
 
 </manifest>

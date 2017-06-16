@@ -179,6 +179,18 @@ public class From {
     @SerializedName("address")
     @Expose
     private Object address;
+    @SerializedName("specialization")
+    @Expose
+    private String specialization;
+    @SerializedName("accessMode")
+    @Expose
+    private Object accessMode;
+    @SerializedName("percentageCompleted")
+    @Expose
+    private Object percentageCompleted;
+    @SerializedName("oracleStatus")
+    @Expose
+    private Object oracleStatus;
 
     /**
      * 
@@ -1206,4 +1218,35 @@ public class From {
         this.address = address;
     }
 
+    public String getSpecialization() {
+        return specialization;
+    }
+
+    public void setSpecialization(String specialization) {
+        this.specialization = specialization;
+    }
+
+    public Object getAccessMode() {
+        return accessMode;
+    }
+
+    public void setAccessMode(Object accessMode) {
+        this.accessMode = accessMode;
+    }
+
+    public Object getPercentageCompleted() {
+        return percentageCompleted;
+    }
+
+    public void setPercentageCompleted(Object percentageCompleted) {
+        this.percentageCompleted = percentageCompleted;
+    }
+
+    public Object getOracleStatus() {
+        return oracleStatus;
+    }
+
+    public void setOracleStatus(Object oracleStatus) {
+        this.oracleStatus = oracleStatus;
+    }
 }

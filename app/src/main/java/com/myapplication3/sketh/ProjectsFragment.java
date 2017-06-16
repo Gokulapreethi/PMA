@@ -988,7 +988,7 @@ public class ProjectsFragment extends Fragment implements WebServiceInterface {
 //                                    Log.i("Response", "getProject name " + pdb.getProjectName());
 
                                     VideoCallDataBase.getDB(classContext).insertProject_history(pdb);
-//                                    VideoCallDataBase.getDB(classContext).insert_updateProjectStatus(pdb);
+                                    VideoCallDataBase.getDB(classContext).insert_updateProjectStatus(pdb);
                                 }
                             } catch (Exception e) {
                                 e.printStackTrace();

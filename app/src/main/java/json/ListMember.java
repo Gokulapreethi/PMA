@@ -35,6 +35,7 @@ public class ListMember {
     String jobCategory4;
     String textProfile;
     String videoProfile;
+    String oracleStatus;
     Boolean ischeck = false;
 //    String roles;
     String profession;
@@ -307,4 +308,11 @@ public class ListMember {
         this.profession = profession;
     }
 
+    public String getOracleStatus() {
+        return oracleStatus;
+    }
+
+    public void setOracleStatus(String oracleStatus) {
+        this.oracleStatus = oracleStatus;
+    }
 }

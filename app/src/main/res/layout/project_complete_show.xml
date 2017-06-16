@@ -377,7 +377,7 @@
                     android:background="#FFFFFF"
                     android:gravity="left"
                     android:padding="7dp"
-                    android:text="Travel Start Date"
+                    android:text="Travel Start"
                     android:singleLine="true"
                     android:textColor="@color/black"
                     android:textSize="15dp" />
@@ -390,6 +390,45 @@
                     android:layout_marginRight="2dp"
                     android:layout_marginTop="4dp"
                     android:layout_weight="1"
+                    android:hint="click here to view travel details"
+                    android:gravity="center_vertical"
+                    android:maxLength="100"
+                    android:textColor="#808080"
+                    android:visibility="visible" />
+            </LinearLayout>
+            <View
+                android:layout_width="wrap_content"
+                android:layout_height="1.20dp"
+                android:layout_marginTop="10dp"
+                android:background="@color/gray" />
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="2dp"
+                android:layout_marginRight="2dp"
+                android:layout_marginTop="2dp"
+                android:orientation="horizontal" >
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="#FFFFFF"
+                    android:gravity="left"
+                    android:padding="7dp"
+                    android:text="Activity Start &amp; end"
+                    android:singleLine="true"
+                    android:textColor="@color/black"
+                    android:textSize="15dp" />
+
+                <TextView
+                    android:id="@+id/activity_start"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="2dp"
+                    android:layout_marginRight="2dp"
+                    android:layout_marginTop="4dp"
+                    android:layout_weight="1"
+                    android:hint="click here to view activity details"
                     android:gravity="center_vertical"
                     android:maxLength="100"
                     android:textColor="#808080"
@@ -427,6 +466,7 @@
                     android:layout_marginRight="2dp"
                     android:layout_marginTop="4dp"
                     android:layout_weight="1"
+                    android:hint="click here to view travel details"
                     android:gravity="center_vertical"
                     android:maxLength="100"
                     android:textColor="#808080"
@@ -436,51 +476,17 @@
                 android:layout_width="wrap_content"
                 android:layout_height="1.20dp"
                 android:layout_marginTop="10dp"
-                android:background="@color/gray" />
-            <LinearLayout
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="2dp"
-                android:layout_marginRight="2dp"
-                android:layout_marginTop="2dp"
-                android:orientation="horizontal" >
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:background="#FFFFFF"
-                    android:gravity="left"
-                    android:padding="7dp"
-                    android:text="Activity Start Date"
-                    android:singleLine="true"
-                    android:textColor="@color/black"
-                    android:textSize="15dp" />
+                android:background="@color/gray"
+                android:visibility="gone"/>
 
-                <TextView
-                    android:id="@+id/activity_start"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="2dp"
-                    android:layout_marginRight="2dp"
-                    android:layout_marginTop="4dp"
-                    android:layout_weight="1"
-                    android:gravity="center_vertical"
-                    android:maxLength="100"
-                    android:textColor="#808080"
-                    android:visibility="visible" />
-            </LinearLayout>
-            <View
-                android:layout_width="wrap_content"
-                android:layout_height="1.20dp"
-                android:layout_marginTop="10dp"
-                android:background="@color/gray" />
             <LinearLayout
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="2dp"
                 android:layout_marginRight="2dp"
                 android:layout_marginTop="2dp"
-                android:orientation="horizontal" >
+                android:orientation="horizontal"
+                android:visibility="gone">
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
@@ -501,7 +507,8 @@
                     android:layout_marginRight="2dp"
                     android:layout_marginTop="4dp"
                     android:layout_weight="1"
-                    android:gravity="center_vertical"
+                    android:hint="click here to view activity details"
+                     android:gravity="center_vertical"
                     android:maxLength="100"
                     android:textColor="#808080"
                     android:visibility="visible" />
@@ -679,7 +686,83 @@
 
 
                 <TextView
-                    android:id="@+id/signature_path"
+                    android:id="@+id/signature_path1"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="2dp"
+                    android:layout_marginRight="2dp"
+                    android:layout_marginTop="4dp"
+                    android:layout_weight="1"
+                    android:gravity="center_vertical"
+                    android:maxLength="100"
+                    android:textColor="#808080"
+                    android:visibility="gone" />
+            </LinearLayout>
+            <View
+                android:layout_width="wrap_content"
+                android:layout_height="1.20dp"
+                android:layout_marginTop="10dp"
+                android:background="@color/gray" />
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="2dp"
+                android:layout_marginRight="2dp"
+                android:layout_marginTop="2dp"
+                android:orientation="horizontal" >
+                <TextView
+                    android:layout_width="180dp"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/photo_custom1"
+                    android:background="#FFFFFF"
+                    android:gravity="left"
+                    android:padding="7dp"
+                    android:text="Photo"
+                    android:singleLine="true"
+                    android:textColor="@color/black"
+                    android:textSize="15dp" />
+
+
+                <TextView
+                    android:id="@+id/photo_path1"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="2dp"
+                    android:layout_marginRight="2dp"
+                    android:layout_marginTop="4dp"
+                    android:layout_weight="1"
+                    android:gravity="center_vertical"
+                    android:maxLength="100"
+                    android:textColor="#808080"
+                    android:visibility="gone" />
+            </LinearLayout>
+            <View
+                android:layout_width="wrap_content"
+                android:layout_height="1.20dp"
+                android:layout_marginTop="10dp"
+                android:background="@color/gray" />
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="2dp"
+                android:layout_marginRight="2dp"
+                android:layout_marginTop="2dp"
+                android:orientation="horizontal" >
+                <TextView
+                    android:layout_width="180dp"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/tech_sign"
+                    android:background="#FFFFFF"
+                    android:gravity="left"
+                    android:padding="7dp"
+                    android:text="Technician Signature"
+                    android:singleLine="true"
+                    android:textColor="@color/black"
+                    android:textSize="15dp" />
+
+
+                <TextView
+                    android:id="@+id/tech_signature_path1"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="2dp"

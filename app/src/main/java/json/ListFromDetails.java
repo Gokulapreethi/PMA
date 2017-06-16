@@ -64,6 +64,7 @@ public class ListFromDetails {
     String mobileNo;
     String groups;
     String roles;
+    String oracleStatus;
 
     public int getId() {
         return id;
@@ -520,6 +521,14 @@ public class ListFromDetails {
 
     public void setProfileImageExt(String profileImageExt) {
         this.profileImageExt = profileImageExt;
+    }
+
+    public String getOracleStatus() {
+        return oracleStatus;
+    }
+
+    public void setOracleStatus(String oracleStatus) {
+        this.oracleStatus = oracleStatus;
     }
 }
 

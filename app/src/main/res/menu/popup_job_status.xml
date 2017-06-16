@@ -28,5 +28,9 @@
         android:id="@+id/completed_job"
         android:title="Completed"
         android:icon="@drawable/completed"/>
+    <item
+        android:id="@+id/DeAssign_job"
+        android:title="DeAssign"
+        android:icon="@drawable/deassign_job"/>
 
 </menu>

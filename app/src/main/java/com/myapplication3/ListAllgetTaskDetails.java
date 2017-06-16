@@ -2,6 +2,7 @@ package com.myapplication3;
 
 import com.google.gson.annotations.SerializedName;
 import com.myapplication3.Bean.Group;
+import com.myapplication3.Bean.ListTaskTransaction;
 
 import java.util.ArrayList;
 
@@ -68,6 +69,7 @@ public class ListAllgetTaskDetails {
         ArrayList<taskFiles> taskfiles;*/
     ArrayList<ListTaskFiles> listTaskFiles;
     ArrayList<ListTaskConversation> listTaskConversation;
+    ArrayList<ListTaskTransaction> listTaskTransaction;
     ArrayList<ListMember> listTaskToUser;
     String taskPriority;
     String taskOverDue;
@@ -517,5 +519,13 @@ public class ListAllgetTaskDetails {
 
     public void setTaskCategory(String taskCategory) {
         this.taskCategory = taskCategory;
+    }
+
+    public ArrayList<ListTaskTransaction> getListTaskTransaction() {
+        return listTaskTransaction;
+    }
+
+    public void setListTaskTransaction(ArrayList<ListTaskTransaction> listTaskTransaction) {
+        this.listTaskTransaction = listTaskTransaction;
     }
 }

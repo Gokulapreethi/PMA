@@ -466,25 +466,27 @@ public class AddTaskReassign extends Activity implements View.OnClickListener, W
             JSONObject taskid = new JSONObject();
             TaskDetailsBean taskDetailsBean = new TaskDetailsBean();
             try {
-                taskid.put("id", taskId);
+                taskid.put("id", Integer.valueOf(taskId));
                 taskDetailsBean.setTaskId(taskId);
                 oracleProject_object.put("task", taskid);
                 oracleProject_object.put("fromId", Appreference.loginuserdetails.getId());
                 taskDetailsBean.setFromUserId(String.valueOf(Appreference.loginuserdetails.getId()));
                 oracleProject_object.put("projectId", Integer.parseInt(detailsBean.getProjectId()));
                 taskDetailsBean.setProjectId(detailsBean.getProjectId());
-                oracleProject_object.put("estimatedTravelHours", "");
+//                oracleProject_object.put("estimatedTravelHours", "");
                 taskDetailsBean.setEstimatedTravel("");
                 taskDetailsBean.setEstimatedActivity("");
-                oracleProject_object.put("estimatedActivityHours", "");
+//                oracleProject_object.put("estimatedActivityHours", "");
                 JSONArray jsonArray = new JSONArray();
 //                String SelectedUserList = null;
                 for (int position = 0; position < contactList.size(); position++) {
                     ContactBean item = contactList.get(position);
+                    int checkPos=0;
                     JSONObject usersList = new JSONObject();
                     if (item.getIscheck()) {
-                        usersList.put("id", String.valueOf(item.getUserid()));
-                        jsonArray.put(position, usersList);
+                        usersList.put("id", item.getUserid());
+                        jsonArray.put(checkPos, usersList);
+                        checkPos++;
                         if (SelectedUserList != null) {
                             SelectedUserList = SelectedUserList + "," + item.getUsername();
                             SelectedUsersId = SelectedUsersId + "," + item.getUserid();
