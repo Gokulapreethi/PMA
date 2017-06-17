@@ -31,7 +31,6 @@ import com.myapplication3.DB.VideoCallDataBase;
 import com.myapplication3.RandomNumber.Utility;
 
 import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 import org.pjsip.pjsua2.SendInstantMessageParam;
 import org.pjsip.pjsua2.app.MainActivity;
@@ -562,8 +561,9 @@ public class AddTaskReassign extends Activity implements View.OnClickListener, W
             ArrayList<Integer> selectedUsersId = new ArrayList<>();
 
             showDialog();
-            boolean check = false;
+//            boolean check = false;
             AssignMmber_OracleProject();
+/*
             for (int position = 0; position < contactList.size(); position++) {
                 ContactBean item = contactList.get(position);
                 if (item.getIscheck()) {
@@ -632,15 +632,16 @@ public class AddTaskReassign extends Activity implements View.OnClickListener, W
 
                 }
             }
-            if (!check) {
-                handler.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        dialog.dismiss();
-                        Toast.makeText(getApplicationContext(), "Please select the contact", Toast.LENGTH_SHORT).show();
-                    }
-                });
-            }
+*/
+//            if (!check) {
+//                handler.post(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        dialog.dismiss();
+//                        Toast.makeText(getApplicationContext(), "Please select the contact", Toast.LENGTH_SHORT).show();
+//                    }
+//                });
+//            }
 
 
         } catch (Exception e) {
@@ -816,6 +817,7 @@ public class AddTaskReassign extends Activity implements View.OnClickListener, W
             handler.post(new Runnable() {
                 @Override
                 public void run() {
+                    Log.d("output123", "task RESULT_OK addtaskressign  == ");
 
                     Intent intent = new Intent();
                     intent.putExtra("taskRemover", RemoveUser);
@@ -823,7 +825,6 @@ public class AddTaskReassign extends Activity implements View.OnClickListener, W
                     intent.putExtra("taskBean", detailsBean);
                     setResult(RESULT_OK, intent);
                     finish();
-
                 }
             });
             finish();

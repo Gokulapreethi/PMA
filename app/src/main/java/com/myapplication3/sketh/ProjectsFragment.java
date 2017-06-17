@@ -1,7 +1,9 @@
 package com.myapplication3.sketh;
 
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -546,13 +548,14 @@ public class ProjectsFragment extends Fragment implements WebServiceInterface {
                 ImageView project_icon = (ImageView) finalConView.findViewById(R.id.selected);
                 View viewforparent = (View) finalConView.findViewById(R.id.viewforparent);
                 ImageView dependency_icon = (ImageView) finalConView.findViewById(R.id.dependency_icon);
+                ImageView completed_status = (ImageView) finalConView.findViewById(R.id.completed_status);
                 viewforparent.setVisibility(View.GONE);
                 project_icon.setVisibility(View.GONE);
                 project_status.setVisibility(View.GONE);
                 percent_update.setVisibility(View.GONE);
                 dependency_icon.setVisibility(View.GONE);
+                completed_status.setVisibility(View.GONE);
                 Log.i("job123","project name8*********** "+projectDetailsBean.getProjectName());
-
                 project_id.setText("Oracle Project ID  : " + projectDetailsBean.getOracleProjectId());
                 project_name.setText("Project Name  : " +projectDetailsBean.getProjectName());
                 String pjt_owner = null;
@@ -561,6 +564,10 @@ public class ProjectsFragment extends Fragment implements WebServiceInterface {
                     pjt_owner = projectDetailsBean.getProject_ownerName().replace("@", "_");
                 } else {
                     pjt_owner = projectDetailsBean.getProject_ownerName();
+                }
+                Log.i("Fragment", "pjt_owner ==> " + pjt_owner);
+                if (pjt_owner != null && pjt_owner.equalsIgnoreCase(Appreference.loginuserdetails.getUsername())) {
+                    completed_status.setVisibility(View.GONE);
                 }
                 if (pjt_owner != null && pjt_owner.equalsIgnoreCase(Appreference.loginuserdetails.getUsername())) {
                     pjt_owner = "Project Owner : Me";
@@ -602,6 +609,37 @@ public class ProjectsFragment extends Fragment implements WebServiceInterface {
                     dependency_icon.setVisibility(View.GONE);
                     Log.i("attention", "resolved 2 " + projectDetailsBean.getRequestStatus());
                 }
+                completed_status.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        AlertDialog.Builder saveDialog = new AlertDialog.Builder(classContext);
+                        saveDialog.setTitle("Projecct Completion");
+                        saveDialog.setMessage("Do you want to Complete this Project?");
+                        saveDialog.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                try {
+                                    List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
+                                    nameValuePairs.add(new BasicNameValuePair("projectId", projectDetailsBean.getId()));
+                                    nameValuePairs.add(new BasicNameValuePair("userId", String.valueOf(Appreference.loginuserdetails.getId())));
+                                    Log.i("completed_status","ProjectId()====>"+ projectDetailsBean.getId());
+                                    Log.i("completed_status", " userId()=====>" + String.valueOf(Appreference.loginuserdetails.getId()));
+                                    Appreference.jsonRequestSender.projectCompleted(EnumJsonWebservicename.projectCompleted, nameValuePairs, ProjectsFragment.this);
+//                                    showprogress();
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
+                                Toast.makeText(getContext(), "Project Completed", Toast.LENGTH_LONG).show();
+                            }
+                        });
+                        saveDialog.setNegativeButton("Cancel",
+                                new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        dialog.cancel();
+                                    }
+                                });
+                        saveDialog.show();
+                    }
+                });
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -989,6 +1027,10 @@ public class ProjectsFragment extends Fragment implements WebServiceInterface {
 
                                     VideoCallDataBase.getDB(classContext).insertProject_history(pdb);
                                     VideoCallDataBase.getDB(classContext).insert_updateProjectStatus(pdb);
+
+                                    ProjectHistory projectHistory = (ProjectHistory) Appreference.context_table.get("projecthistory");
+                                    if(projectHistory!=null)
+                                    projectHistory.stopRefreshListener();
                                 }
                             } catch (Exception e) {
                                 e.printStackTrace();
@@ -1007,6 +1049,9 @@ public class ProjectsFragment extends Fragment implements WebServiceInterface {
                                     intent.putExtra("fromOracle",false);
                                 startActivity(intent);
                             }
+                        } else if (s2.equalsIgnoreCase("projectCompleted")) {
+                            Log.i("projectCompleted", "******projectCompleted********** Response String " + s1);
+                            Toast.makeText(getContext(), "Project Completed successfull", Toast.LENGTH_LONG).show();
                         }
                     } catch (Exception e) {
                         e.printStackTrace();

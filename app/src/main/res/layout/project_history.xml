@@ -191,12 +191,17 @@
                 android:layout_below="@id/History_Search"
                 android:textColor="@color/black"
                 android:textSize="14sp" />
+            <android.support.v4.widget.SwipeRefreshLayout
+                android:id="@+id/swipe_refresh_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
 
             <com.baoyz.swipemenulistview.SwipeMenuListView
                 android:id="@+id/lv_taskHistory"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_below="@+id/Noresult" />
+            </android.support.v4.widget.SwipeRefreshLayout>
 
             <LinearLayout
                 android:id="@+id/spinner_layout"

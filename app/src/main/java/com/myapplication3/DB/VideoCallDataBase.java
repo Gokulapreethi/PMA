@@ -1153,15 +1153,23 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
                 }
                 cv.put("mimeType", "text");
                 if (!DuplicateChecker(signal_id, String.valueOf(bean.getId()))) {
-                    Log.d("subType_getTask", "value## ");
-                    cv.put("subType", "taskDescription");
+                    if (bean.getTaskCategory().equalsIgnoreCase("chat")) {
+                        cv.put("subType", "normal");
+                    } else {
+                        Log.d("subType_getTask", "value## ");
+                        cv.put("subType", "taskDescription");
+                    }
                     Log.i("getTask-date", "signalid 2 " + signal_id + "task description " + bean.getDescription() + "taskno " + bean.getTaskNo() + "subType ");
                     row_id = (int) db.insert("taskDetailsInfo", null, cv);
                     Appreference.printLog("sipregister", "dp insertion" + signal_id, "DEBUG", null);
                     Log.e("TaskTable", "getSignalid" + signal_id);
                 } else {
-                    Log.d("subType_getTask", "value## else ");
-                    cv.put("subType", "taskDescription");
+                    if (bean.getTaskCategory().equalsIgnoreCase("chat")) {
+                        cv.put("subType", "normal");
+                    } else {
+                        Log.d("subType_getTask", "value## else ");
+                        cv.put("subType", "taskDescription");
+                    }
                     Log.i("send_syn_txt", "signalid 1 " + signal_id + "task signalid " + bean.getDescription() + "parentId " + bean.getTaskNo());
                     row_id = (int) db.update("taskDetailsInfo", cv, "signalid='" + signal_id + "'", null);
                 }
@@ -1305,7 +1313,11 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
 
                     Log.i("++", "Insert first entry for files ");
                     if (!DuplicateChecker(signal_id, String.valueOf(bean.getId()))) {
-                        cv.put("subType", "taskDescription");
+                        if (bean.getTaskCategory().equalsIgnoreCase("chat")) {
+                            cv.put("subType", "normal");
+                        } else {
+                            cv.put("subType", "taskDescription");
+                        }
                         row_id = (int) db.insert("taskDetailsInfo", null, cv);
                         Appreference.printLog("sipregister", "dp insertion" + signal_id, "DEBUG", null);
                         Log.e("TaskTable inside ", "getSignalid " + signal_id);
@@ -1313,7 +1325,11 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
 //                    if (listTaskFiles.getFileType().equalsIgnoreCase("image")||listTaskFiles.getFileType().equalsIgnoreCase("audio")||listTaskFiles.getFileType().equalsIgnoreCase("video")||listTaskFiles.getFileType().equalsIgnoreCase("document")){
 //
 //                    }else {
-                        cv.put("subType", "taskDescription");
+                        if (bean.getTaskCategory().equalsIgnoreCase("chat")) {
+                            cv.put("subType", "normal");
+                        } else {
+                            cv.put("subType", "taskDescription");
+                        }
                         row_id = (int) db.update("taskDetailsInfo", cv, "signalid='" + signal_id + "'", null);
                         Log.e("TaskTable else ", "getSignalid " + signal_id);
 //                    }
@@ -4280,6 +4296,35 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
         }
     }
 
+    /*
+        public int getchatUnReadMsgCount(String chatid) {
+            ArrayList<ChatBean> arrayList = new ArrayList<>();
+            Cursor cur;
+            Log.i("chat", "opened-2 ** ");
+            if (db == null)
+                db = getReadableDatabase();
+            try {
+                if (db != null) {
+                    if (!db.isOpen())
+                        openDatabase();
+                    cur = db.rawQuery("select * from taskDetailsInfo where taskId='" + chatid + "'", null);
+                    cur.moveToFirst();
+                    while (!cur.isAfterLast()) {
+                        ChatBean chatBean = new ChatBean();
+                        Log.i("chat", "opened-2 ");
+                        chatBean.setOpened(cur.getString(cur.getColumnIndex("readStatus")));
+                        arrayList.add(chatBean);
+                        cur.moveToNext();
+                    }
+                    cur.close();
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            } finally {
+                return arrayList.size();
+            }
+        }
+    */
     public int getchatUnReadMsgCount(String chatid) {
         ArrayList<ChatBean> arrayList = new ArrayList<>();
         Cursor cur;
@@ -4290,7 +4335,7 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
             if (db != null) {
                 if (!db.isOpen())
                     openDatabase();
-                cur = db.rawQuery("select * from taskDetailsInfo where taskId='" + chatid + "'", null);
+                cur = db.rawQuery("select * from taskDetailsInfo where taskId='" + chatid + "' and readStatus!='0'", null);
                 cur.moveToFirst();
                 while (!cur.isAfterLast()) {
                     ChatBean chatBean = new ChatBean();
@@ -4425,9 +4470,9 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
         }
     }
 
-    public int getAllChatUnReadMsgCount() {
+       public int getAllChatUnReadMsgCount() {
         ArrayList<ChatBean> arrayList = new ArrayList<>();
-        Cursor cur;
+        Cursor cur, cur1;
         if (db == null)
             db = getReadableDatabase();
         try {
@@ -4436,15 +4481,25 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
                     openDatabase();
                 Log.i("chat", "DB name " + MainActivity.username);
 //                cur = db.rawQuery("select * from chat where username='" + MainActivity.username + "' and  opened='1'", null);
-                cur = db.rawQuery("select * from taskDetailsInfo where loginuser='" + Appreference.loginuserdetails.getEmail() + "' group by taskId", null);
-                cur.moveToFirst();
-                while (!cur.isAfterLast()) {
+                cur1 = db.rawQuery("select * from taskHistoryInfo where loginuser='" + Appreference.loginuserdetails.getEmail() + "' and category = 'chat'", null);
+                cur1.moveToFirst();
+                while (!cur1.isAfterLast()) {
                     ChatBean chatBean = new ChatBean();
-                    chatBean.setOpened(cur.getString(cur.getColumnIndex("readStatus")));
-                    arrayList.add(chatBean);
-                    cur.moveToNext();
+                    String chatid = cur1.getString(cur1.getColumnIndex("taskId"));
+                    cur = db.rawQuery("select * from taskDetailsInfo where taskId='" + chatid + "' and readStatus!='0' group by taskId", null);
+                    cur.moveToFirst();
+                    Log.i("chat", "DB name ## ==> ");
+                    while (!cur.isAfterLast()) {
+                        chatBean.setOpened(cur.getString(cur.getColumnIndex("readStatus")));
+                        Log.i("chat", "DB name ## " + chatBean.getOpened());
+                        arrayList.add(chatBean);
+                        cur.moveToNext();
+                    }
+                    cur.close();
+                    cur1.moveToNext();
                 }
-                cur.close();
+                cur1.close();
+                Log.i("chat", "DB name @# " + arrayList.size());
             }
         } catch (Exception e) {
             e.printStackTrace();

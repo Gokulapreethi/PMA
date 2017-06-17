@@ -3,7 +3,6 @@ package com.myapplication3;
 import android.app.Activity;
 import android.app.AlarmManager;
 import android.app.AlertDialog;
-import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.DownloadManager;
 import android.app.PendingIntent;
@@ -56,7 +55,6 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.Button;
-import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.ImageButton;
@@ -304,8 +302,10 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
     boolean restart_work;
     boolean completed_work;
     boolean Self_assign=false;
+	boolean isLocation = false;
     boolean isTaskCompleted=false;
     boolean isForOracleProject=false;
+    boolean isDivertedON=false;
     ArrayList<String> custom_1MediaList;
     String TravelStartdate, TravelEnddate, observationStatus,status_signature,photo_signature,tech_signature,PickDate;
     String FromTravelStart,FromTravelEnd,ActivityStartdate, ActivityEnddate,TotravelStart,ToTravelEnd;
@@ -4166,6 +4166,14 @@ private String getDatefromPicker()
         popup.getMenu().getItem(6).setVisible(false);
         String query="select status from projectStatus where projectId='" + projectId + "' and userId='" + Appreference.loginuserdetails.getId() + "' and taskId= '" + webtaskId + "'";
         int current_status=VideoCallDataBase.getDB(context).getCurrentStatus(query);
+
+        if(current_status==7)
+        {
+            String query123="select status from projectStatus where projectId='" + projectId + "' and userId='" + Appreference.loginuserdetails.getId() + "' and taskId= '" + webtaskId + "' order by id DESC LIMIT 2";
+            int last_beforeStatus=VideoCallDataBase.getDB(context).getCurrentStatus(query123);
+            Log.i("output123", "project CurrentStatus from DB====>" + last_beforeStatus);
+            current_status=last_beforeStatus;
+        }
         /*Log.i("status123", "currentStatus========================>" + taskStatus);
         int current_status = -1;
         if (taskStatus.equalsIgnoreCase("inprogress"))
@@ -4190,6 +4198,7 @@ private String getDatefromPicker()
         Log.i("ws123", "project CurrentStatus from DB====>" + current_status);
         if (current_status == -1)
             popup.getMenu().getItem(0).setVisible(true);
+            popup.getMenu().getItem(6).setVisible(true);
         if (current_status == 0) {
             Start_work = true;
             popup.getMenu().getItem(0).setVisible(false);
@@ -4757,6 +4766,27 @@ private String getDatefromPicker()
             taskDetailsBean.setSendStatus("0");
             taskDetailsBean.setTaskType(taskType);
             taskDetailsBean.setMimeType("text");
+            Log.i("send_status", "owneroftask" + ownerOfTask);
+            Log.i("send_status", "taskReceiver" + taskReceiver);
+            Log.i("send_status", "project_toUsers" + project_toUsers);
+            Log.i("send_status","taskName "+taskName +" category==>"+category);
+            taskDetailsBean.setOwnerOfTask(ownerOfTask);
+            taskDetailsBean.setTaskReceiver(taskReceiver);
+            taskDetailsBean.setTaskName(taskName);
+            taskDetailsBean.setCatagory(category);
+            if (project) {
+                taskDetailsBean.setProjectId(projectId);
+                if (category != null && category.equalsIgnoreCase("issue")) {
+                    taskDetailsBean.setParentTaskId(issueId);
+                } else {
+                    taskDetailsBean.setParentTaskId(parentTaskId);
+                }
+                if (projectGroup_Mems != null) {
+                    taskDetailsBean.setGroupTaskMembers(projectGroup_Mems);
+                }
+            }
+            taskDetailsBean.setSubType("normal");
+            taskDetailsBean.setTaskRequestType("normal");
            /* taskDetailsBean.setCustomerSignature(status_signature);
             taskDetailsBean.setTechnicianSignature(tech_signature);
             taskDetailsBean.setPhotoPath(photo_signature); */
@@ -4770,9 +4800,6 @@ private String getDatefromPicker()
                 taskDetailsBean.setPhotoPath(photo_path.getText().toString());
             }
             Log.i("status","DeAssign "+Appreference.loginuserdetails.getUsername());
-           /* Log.i("output123","signature ========================> "+signature_path.getText().toString());
-            Log.i("output123","tech signature ========================> "+tech_signature_path.getText().toString());
-            Log.i("output123","photo signature ========================> "+photo_path.getText().toString());*/
             if(projectCurrentStatus!=null && projectCurrentStatus.equalsIgnoreCase("DeAssign")){
                 taskDetailsBean.setTaskDescription(Appreference.loginuserdetails.getUsername() +" left ");
             }else if(status.equalsIgnoreCase("7")){
@@ -5195,8 +5222,8 @@ private String getDatefromPicker()
                 gridview_text.add("Completion");
                 gridview_thump.add(R.drawable.percent_grid);
 
-               /* gridview_text.add("Custom1");
-                gridview_thump.add(R.drawable.custom);*/
+                gridview_text.add("Custom1");
+                gridview_thump.add(R.drawable.custom);
 
                 if (groupMemberAccess.getRespondDateChange() != null && groupMemberAccess.getRespondDateChange().contains("1")) {
                     Log.i("gridview", "index Dates ");
@@ -5254,7 +5281,7 @@ private String getDatefromPicker()
                 Log.i("gridview", "individual owner " + taskType);
                 gridview_text.add("Private");
                 gridview_text.add("Priority");
-//                gridview_text.add("Custom1");
+                gridview_text.add("Custom1");
                 gridview_text.add("Scheduled");
                 gridview_text.add("Audio");
                 gridview_text.add("Photo");
@@ -7538,7 +7565,16 @@ private String getDatefromPicker()
                         Log.d("ReAssign", "Task remover == " + RemoveUser);
                         Log.d("ReAssign", "Task ProjectId == " + taskDetailsBean.getProjectId());
                         if (isProject != null && isProject.equalsIgnoreCase("Yes")) {
-                            taskReassign(taskDetailsBean, RemoveUser, taskDetailsBean.getTaskReceiver(), 1);
+                            if (isProjectFromOracle) {
+                                Log.d("output123", "task isProjectFromOracle inside  == " + isProjectFromOracle);
+                                if (template) {
+                                    Log.d("output123", "task istemplate inside  == " + template);
+                                    template = false;
+                                    ownerofTasks();
+                                    Arrow.setVisibility(View.VISIBLE);
+                                }
+                            } else
+                                taskReassign(taskDetailsBean, RemoveUser, taskDetailsBean.getTaskReceiver(), 1);
                         } else {
                             taskReassign(taskDetailsBean, RemoveUser, taskDetailsBean.getTaskReceiver(), 0);
                         }
@@ -8530,13 +8566,22 @@ private String getDatefromPicker()
                     }
                 } else if (requestCode == 888) {
                     try {
-                        Log.d("latitude", data.getStringExtra("loc_latitude"));
                         Location = data.getStringExtra("loc_latitude");
                         Log.i("location", "loc_latitude " + Location);
-                        Log.i("task", "extension");
                         String sig_id = Utility.getSessionID();
-                        PercentageWebService("map", Location, "", sig_id, 0);
-                        sendMessage(Location, null, "map", null, null, sig_id, null);
+                        if (isTaskName) {
+                            if (template) {
+                                taskName = "New Template";
+                            } else if (chat) {
+                                taskName = "New Chat";
+                            } else {
+                                taskName = "New Task";
+                            }
+                            PercentageWebService("text", taskName, "", sig_id, 0);
+                            isLocation = true;
+                        } else {
+                            PercentageWebService("map", Location, "", sig_id, 0);
+                        }
                     } catch (Exception e) {
                         e.printStackTrace();
                         Appreference.printLog("NewTaskConversation", "onActivityResult location Exception " + e.getMessage(), "WARN", null);
@@ -10160,7 +10205,7 @@ private String getDatefromPicker()
                         boolean isDeassign=false;
                         final JSONObject jsonObject = new JSONObject(communicationBean.getEmail());
                         if (((String) jsonObject.get("result_text")).equalsIgnoreCase("task started")) {
-                            projectCurrentStatus = "started";
+                            projectCurrentStatus = "start";
                             showToast("Task Started......");
                         } else if (((String) jsonObject.get("result_text")).equalsIgnoreCase("task hold")) {
                             projectCurrentStatus = "hold";
@@ -10170,6 +10215,7 @@ private String getDatefromPicker()
                             showToast("Task resume......");
                         } else if (((String) jsonObject.get("result_text")).equalsIgnoreCase("task pause")) {
                             projectCurrentStatus = "pause";
+                            isDivertedON=true;
                             showToast("Task pause......");
                         } else if (((String) jsonObject.get("result_text")).equalsIgnoreCase("task restart")) {
                             projectCurrentStatus = "restart";
@@ -10216,6 +10262,14 @@ private String getDatefromPicker()
 
                         taskList.add(communicationBean.getTaskDetailsBean());
                         refresh();
+                        if(isDivertedON)
+                        {
+                            isDivertedON=false;
+                            List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
+                            nameValuePairs.add(new BasicNameValuePair("projectId", projectId));
+                            nameValuePairs.add(new BasicNameValuePair("userId", String.valueOf(Appreference.loginuserdetails.getId())));
+                            Appreference.jsonRequestSender.getTaskForJobID(EnumJsonWebservicename.getTaskForJobID, nameValuePairs, ProjectsFragment.getInstance());
+                        }
                         if(isDeassign)
                             NewTaskConversation.this.finish();
                     } else if (WebServiceEnum_Response != null && WebServiceEnum_Response.equalsIgnoreCase(("assignTask"))) {
@@ -10697,6 +10751,11 @@ private String getDatefromPicker()
                                         Log.i("task", "Desc4 " + taskDetailsBean.getTaskDescription());
                                         updateTemplateStatus(taskDetailsBean);
                                     }
+                                }
+                                if (isLocation) {
+                                    isLocation = false;
+                                    String signal_id = Utility.getSessionID();
+                                    PercentageWebService("map", Location, "", signal_id, 0);
                                 }
                             }
                         }
@@ -16163,6 +16222,7 @@ private String getDatefromPicker()
                 }
                 chatBean.setSubType("taskDescription");
                 chatBean.setTaskRequestType("taskDescription");
+                chatBean.setCatagory(category);
                 Log.i("task", "setting task name ");
                 ownerOfTask = Appreference.loginuserdetails.getUsername();
                 taskReceiver = toUserName;
@@ -18260,6 +18320,12 @@ private String getDatefromPicker()
         }
         Log.i("taskconversation", "Reassign task newly added user " + newReceiver + " " + listOfObservers);
         taskList.add(taskDetailsBean);
+        if(template){
+            Log.i("reassign","istemplate==>  "+template);
+            template=false;
+            ownerofTasks();
+            Arrow.setVisibility(View.VISIBLE);
+        }
         sortTaskMessage();
         refresh();
     }

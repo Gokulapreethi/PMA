@@ -9,6 +9,7 @@ import android.graphics.Rect;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Base64;
@@ -40,6 +41,7 @@ import com.google.gson.Gson;
 import com.myapplication3.Bean.ProjectDetailsBean;
 import com.myapplication3.Bean.TaskDetailsBean;
 import com.myapplication3.DB.VideoCallDataBase;
+import com.myapplication3.sketh.ProjectsFragment;
 
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
@@ -65,7 +67,7 @@ import json.WebServiceInterface;
 /**
  * Created by saravanakumar on 7/13/2016.
  */
-public class ProjectHistory extends Activity implements WebServiceInterface {
+public class ProjectHistory extends Activity implements WebServiceInterface, SwipeRefreshLayout.OnRefreshListener {
 
 
     static ProjectHistory projectHistory;
@@ -98,6 +100,7 @@ public class ProjectHistory extends Activity implements WebServiceInterface {
     private Handler handler = new Handler();
     boolean check = true;
     private SwipeMenuListView listView;
+    private SwipeRefreshLayout swipeRefreshLayout;
     LinearLayout History_Search, options;
     EditText Search_EditText;
     ImageView submit_icon, addsubtasks, addnote, view_ProjectMems;
@@ -115,6 +118,8 @@ public class ProjectHistory extends Activity implements WebServiceInterface {
 
     private void setActiveAdapter() {
         try {
+            Log.i("ws123", "Refresh Request  received " );
+
             Log.i("DBQuery", "userName is == " + userName);
             Log.i("DBQuery", "taskType is == " + taskType);
             Log.i("DBQuery", "taskType is == " + project_id);
@@ -156,6 +161,7 @@ public class ProjectHistory extends Activity implements WebServiceInterface {
             }
             buddyArrayAdapter = new TaskArrayAdapter(context, projectDetailsBeans);
             listView.setAdapter(buddyArrayAdapter);
+            swipeRefreshLayout.setRefreshing(false);
             handler.post(new Runnable() {
                 @Override
                 public void run() {
@@ -207,6 +213,17 @@ public class ProjectHistory extends Activity implements WebServiceInterface {
             setContentView(R.layout.project_history);
 
             listView = (SwipeMenuListView) findViewById(R.id.lv_taskHistory);
+            swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh_layout);
+            swipeRefreshLayout.setOnRefreshListener(this);
+          /*  swipeRefreshLayout.post(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            swipeRefreshLayout.setRefreshing(true);
+                                            fetchTaskList();
+                                        }
+                                    }
+            );*/
+
             finish_page = (TextView) findViewById(R.id.finish_page);
             submit_icon = (ImageView) findViewById(R.id.submit_icon);
             addsubtasks = (ImageView) findViewById(R.id.addsubtasks);
@@ -870,6 +887,24 @@ public class ProjectHistory extends Activity implements WebServiceInterface {
             e.printStackTrace();
         }
     }
+    public void onRefresh() {
+        Log.i("ws123", "Refresh Request  received " );
+        setActiveAdapter();
+    }
+
+    private void fetchTaskList() {
+        Log.i("ws123", "Refresh Request  received fetchTaskList" );
+        swipeRefreshLayout.setRefreshing(true);
+        List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
+        nameValuePairs.add(new BasicNameValuePair("projectId", project_id));
+        nameValuePairs.add(new BasicNameValuePair("userId", String.valueOf(Appreference.loginuserdetails.getId())));
+        Appreference.jsonRequestSender.getTaskForJobID(EnumJsonWebservicename.getTaskForJobID, nameValuePairs, ProjectsFragment.getInstance());
+    }
+    public void stopRefreshListener()
+    {
+        Log.i("ws123", "Refresh stop Request  received stopRefreshListener" );
+        swipeRefreshLayout.setRefreshing(false);
+    }
 
     @Override
     protected void onDestroy() {
@@ -890,7 +925,6 @@ public class ProjectHistory extends Activity implements WebServiceInterface {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
     }
 
     public void sendMultiInstantMessage(String msgBody, String[] userlist) {
@@ -1387,9 +1421,12 @@ public class ProjectHistory extends Activity implements WebServiceInterface {
                         } else {
                             parent_enddate.setText("Task End date : NA");
                         }
-                    } else {
+                    } else{
                         task_taker.setVisibility(View.VISIBLE);
-                        task_observer.setVisibility(View.VISIBLE);
+                        if (isFromOracle)
+                            task_observer.setVisibility(View.GONE);
+                        else
+                            task_observer.setVisibility(View.VISIBLE);
                         parent_startdate.setVisibility(View.GONE);
                         parent_enddate.setVisibility(View.GONE);
                         taskName.setTextColor(Color.BLACK);
@@ -1656,7 +1693,6 @@ public class ProjectHistory extends Activity implements WebServiceInterface {
                                 task_observer.setText("Task Observer : NA");
                             }
                         }
-
                     }
                 }
                 String s = null;

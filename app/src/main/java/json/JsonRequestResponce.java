@@ -285,6 +285,8 @@ public class JsonRequestResponce extends Thread {
                                 obj.setFirstname("getRequestType");
                             } else if (obj.getEnumJsonWebservicename().toString().equals("listGroupTaskUsers")) {
                                 obj.setFirstname("listGroupTaskUsers");
+                            }else if (obj.getEnumJsonWebservicename().toString().equals("projectCompleted")) {
+                                obj.setFirstname("projectCompleted");
                             }
 
                             obj.setEmail(responseString);
@@ -326,7 +328,8 @@ public class JsonRequestResponce extends Thread {
                             && !obj.getEnumJsonWebservicename().toString().equals("getProject")
                             && !obj.getEnumJsonWebservicename().toString().equals("getTaskForJobID")
                             && !obj.getEnumJsonWebservicename().toString().equals("getCustomHeaderValue")
-                            && !obj.getEnumJsonWebservicename().toString().equals("getTask")) {
+                            && !obj.getEnumJsonWebservicename().toString().equals("getTask")
+                            && !obj.getEnumJsonWebservicename().toString().equals("projectCompleted")) {
                         Log.i("jsonwebservice", "enum       " + obj.getEnumJsonWebservicename().toString());
                         Log.i("getTask 3", "enum for check ");
                         Log.i("jsonwebservice", "enum    responseString   " + responseString);
@@ -479,6 +482,11 @@ public class JsonRequestResponce extends Thread {
                 break;
             case listGroupTaskUsers:
                 GroupPercentageStatus.getInstance().cancelDialog();
+                inter.ErrorMethod(obj);
+                break;
+            case projectCompleted:
+                ProjectsFragment.getInstance().cancelDialog();
+                ProjectsFragment.getInstance().showToast(result);
                 inter.ErrorMethod(obj);
                 break;
         }
