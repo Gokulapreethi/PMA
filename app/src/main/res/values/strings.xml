@@ -13,7 +13,6 @@
     <string name="task_enable">enable</string>
 
 
-
     // proxy check
 
     <string name="proxyua">disable</string>
@@ -84,16 +83,16 @@
     <string name="title_activity_scheduler">SchedulerActivity</string>
     // if enable A2A working vertical video call orientation if we set disable A2ios working
     properly
-  <!--  <string name="videocall_for_android">disable</string>-->
+    <!--  <string name="videocall_for_android">disable</string>-->
 
-    // if enable A2A working vertical video call orientation if we set disable A2ios working properly
+    // if enable A2A working vertical video call orientation if we set disable A2ios working
+    properly
     <string name="videocall_for_android">disable</string>
 
     <!--Changes should taken below once the server url changes-->
 
 
-
-   <!-- <string name="app_version">3</string>
+    <!-- <string name="app_version">3</string>
     <string name="app_url">https://192.168.1.3:8443/highMessage/</string>
     <string name="server_ip">192.168.1.3</string>
     <string name="file_upload">http://192.168.1.3:8080/uploads/highmessaging/chat/</string>
@@ -119,22 +118,22 @@
     <!--<string name="user_upload">http://122.165.92.171:8080/uploads/highmessaging/user/</string>-->
     <!--<string name="group_profile">http://122.165.92.171:8080/uploads/highmessaging/group/</string>-->
 
-   <!-- <string name="app_version">205</string>
+    <!-- <string name="app_version">205</string>
     <string name="app_url">https://66.109.17.205/highMessage/</string>
     <string name="server_ip">66.109.17.205</string>
     <string name="file_upload">http://66.109.17.205/uploads/highmessaging/chat/</string>
     <string name="task_reminder">http://66.109.17.205/uploads/highmessaging/task/</string>
     <string name="user_upload">http://66.109.17.205/uploads/highmessaging/user/</string>
     <string name="group_profile">http://66.109.17.205/uploads/highmessaging/group/</string>-->
-<!---->
-  <!--  <string name="app_version">204</string>
+    <!---->
+    <!--  <string name="app_version">204</string>
     <string name="app_url">https://66.109.17.204/highMessage/</string>
     <string name="server_ip">66.109.17.204</string>
     <string name="file_upload">http://66.109.17.204/uploads/highmessaging/chat/</string>
     <string name="task_reminder">http://66.109.17.204/uploads/highmessaging/task/</string>
     <string name="user_upload">http://66.109.17.204/uploads/highmessaging/user/</string>
     <string name="group_profile">http://66.109.17.204/uploads/highmessaging/group/</string>-->
-<!---->
+    <!---->
     <!--<string name="app_version">171</string>-->
     <!--<string name="app_url">https://35.162.171.171/highMessage/</string>-->
     <!--<string name="server_ip">35.162.171.171</string>-->

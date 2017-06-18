@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/list_1"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:padding="0dp"
+    android:weightSum="3">
+
+    <TextView
+        android:id="@+id/start_date_1"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1.5"
+        android:gravity="center|center_vertical"
+        android:text="Start"
+        android:textColor="@color/appcolor"
+        android:textSize="15dp" />
+
+    <View
+        android:layout_width="2dp"
+        android:layout_height="25dp"
+        android:layout_weight="0.015"
+        android:background="@color/black" />
+
+
+    <TextView
+        android:id="@+id/end_date_1"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1.5"
+        android:gravity="center|center_vertical"
+        android:text="End"
+        android:textColor="@color/appcolor"
+        android:textSize="15dp" />
+</LinearLayout>

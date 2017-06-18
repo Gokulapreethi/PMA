@@ -329,21 +329,16 @@
         <activity
             android:name=".Forms.AddFormsInWebActivity"
             android:screenOrientation="portrait" />
-
         <activity
             android:name=".AddTaskReassign"
             android:screenOrientation="portrait" />
-
         <activity
             android:name=".Forms.FormAccessControl"
             android:screenOrientation="portrait" />
-
         <activity
             android:name=".activity.SchedulerActivity"
             android:showOnLockScreen="true"
-            android:theme="@style/AppTheme.NoActionBar">
-
-        </activity>
+            android:theme="@style/AppTheme.NoActionBar"></activity>
         <activity
             android:name=".AllTaskList"
             android:screenOrientation="portrait"
@@ -361,35 +356,30 @@
         <activity
             android:name=".Reminder_Responses"
             android:screenOrientation="portrait" />
-
         <activity
             android:name=".escalations.EscalationEntryActivty"
             android:screenOrientation="portrait" />
-
         <activity
             android:name=".escalations.EscalationEditActivity"
             android:screenOrientation="portrait" />
-
         <activity
             android:name=".escalations.EscalationOptionsValuesActivity"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.UserDialog" />
-
         <activity
             android:name=".NotesList"
             android:screenOrientation="portrait" />
-
         <activity
             android:name=".NoteDateUpdate"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
-
-
         <activity
             android:name=".Forwardto"
             android:screenOrientation="portrait" />
-        <!-- ATTENTION: This was auto-generated to add Google Play services to your project for
-             App Indexing.  See https://g.co/AppIndexing/AndroidStudio for more information. -->
+        <!--
+             ATTENTION: This was auto-generated to add Google Play services to your project for
+             App Indexing.  See https://g.co/AppIndexing/AndroidStudio for more information.
+        -->
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
@@ -415,7 +405,10 @@
         <activity
             android:name=".DisplayList"
             android:screenOrientation="portrait"
-            android:theme="@style/Theme.AppCompat.Light.Dialog"/>
+            android:theme="@style/Theme.AppCompat.Light.Dialog" />
+        <activity
+            android:name=".MediaSearch"
+            android:screenOrientation="portrait" />
     </application>
 
 </manifest>

@@ -1,0 +1,207 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.myapplication3.MediaSearch">'
+
+    <RelativeLayout
+        android:id="@+id/rlay_tilte"
+        android:layout_width="fill_parent"
+        android:layout_height="62dp"
+        android:background="@color/white"
+        android:orientation="horizontal"
+        android:visibility="visible">
+
+        <TextView
+            android:id="@+id/back"
+            android:layout_width="50dp"
+            android:layout_height="35dp"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="5dp"
+            android:background="@color/white"
+            android:gravity="center"
+            android:text="Back"
+            android:textColor="@color/appcolor"
+            android:textSize="16dp" />
+
+        <TextView
+            android:id="@+id/project_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:gravity="center"
+            android:text="Search Media"
+            android:textColor="@color/appcolor"
+            android:textSize="20dp"
+            android:textStyle="bold" />
+    </RelativeLayout>
+
+    <LinearLayout
+        android:id="@+id/all_media_Search"
+        android:layout_width="fill_parent"
+        android:layout_height="47dp"
+        android:layout_below="@+id/header"
+        android:background="@color/lightgray"
+        android:orientation="horizontal"
+        android:visibility="visible">
+
+        <TextView
+            android:id="@+id/searchtext"
+            android:layout_width="300dp"
+            android:layout_height="38dp"
+            android:layout_marginTop="2dp"
+            android:layout_weight="1"
+            android:background="#FFFFFF"
+            android:cursorVisible="false"
+            android:drawableLeft="@drawable/search_tr"
+            android:gravity="center"
+            android:hint="Search"></TextView>
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:id="@+id/media_input"
+        android:visibility="gone">
+    <LinearLayout
+        android:id="@+id/user"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="25dp"
+        android:layout_marginRight="25dp"
+        android:layout_marginTop="5dp">
+
+        <EditText
+            android:id="@+id/user_id"
+            android:layout_width="match_parent"
+            android:layout_height="35dp"
+            android:background="@color/audioreceiv"
+            android:drawableLeft="@drawable/user_id"
+            android:gravity="center"
+            android:hint="UserId"
+            android:inputType="textEmailAddress"
+            android:maxLength="50"
+            android:paddingLeft="25dp"
+            android:paddingRight="25dp"
+            android:textSize="15sp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="25dp"
+        android:layout_marginRight="25dp"
+        android:layout_marginTop="5dp">
+
+        <EditText
+            android:id="@+id/job_id"
+            android:layout_width="match_parent"
+            android:layout_height="35dp"
+            android:background="@color/audioreceiv"
+            android:drawableLeft="@drawable/job_card_id"
+            android:gravity="center"
+            android:hint="Oracle Project ID"
+            android:inputType="textEmailAddress"
+            android:maxLength="50"
+            android:paddingLeft="25dp"
+            android:paddingRight="25dp"
+            android:textSize="15sp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="25dp"
+        android:layout_marginRight="25dp"
+        android:layout_marginTop="5dp">
+
+        <EditText
+            android:id="@+id/machine_model"
+            android:layout_width="match_parent"
+            android:layout_height="35dp"
+            android:background="@color/audioreceiv"
+            android:drawableLeft="@drawable/machine_model"
+            android:gravity="center"
+            android:hint="Machine Model"
+            android:inputType="textEmailAddress"
+            android:maxLength="50"
+            android:paddingLeft="25dp"
+            android:paddingRight="25dp"
+            android:textSize="15sp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="25dp"
+        android:layout_marginRight="25dp"
+        android:layout_marginTop="5dp">
+
+        <EditText
+            android:id="@+id/machine_make"
+            android:layout_width="match_parent"
+            android:layout_height="35dp"
+            android:background="@color/audioreceiv"
+            android:drawableLeft="@drawable/machine_make"
+            android:gravity="center"
+            android:hint="Machine Make"
+            android:inputType="textEmailAddress"
+            android:maxLength="50"
+            android:paddingLeft="25dp"
+            android:paddingRight="25dp"
+            android:textSize="15sp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="25dp"
+        android:layout_marginRight="25dp"
+        android:layout_marginTop="5dp">
+
+        <EditText
+            android:id="@+id/machine_number"
+            android:layout_width="match_parent"
+            android:layout_height="35dp"
+            android:background="@color/audioreceiv"
+            android:drawableLeft="@drawable/machine_sr_no"
+            android:gravity="center"
+            android:hint="Machine serial No"
+            android:inputType="textEmailAddress"
+            android:maxLength="50"
+            android:paddingLeft="25dp"
+            android:paddingRight="25dp"
+            android:textSize="15sp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="25dp"
+        android:layout_marginRight="25dp"
+        android:layout_marginTop="20dp">
+
+        <Button
+            android:id="@+id/Search_image"
+            android:layout_width="match_parent"
+            android:layout_height="35dp"
+            android:background="@color/audioreceiv"
+            android:drawableLeft="@drawable/search_tr"
+            android:gravity="center"
+            android:hint="Search Media"
+            android:inputType="textEmailAddress"
+            android:maxLength="50"
+            android:paddingLeft="25dp"
+            android:paddingRight="25dp"
+            android:textSize="15sp" />
+    </LinearLayout>
+    </LinearLayout>
+    <ListView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/media_listview">
+    </ListView>
+
+</LinearLayout>

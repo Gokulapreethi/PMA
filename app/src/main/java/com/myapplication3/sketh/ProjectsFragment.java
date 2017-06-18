@@ -39,6 +39,7 @@ import com.myapplication3.Bean.ListallProjectBean;
 import com.myapplication3.Bean.ProjectDetailsBean;
 import com.myapplication3.DB.VideoCallDataBase;
 import com.myapplication3.ImageLoader;
+import com.myapplication3.MediaSearch;
 import com.myapplication3.ProjectHistory;
 import com.myapplication3.R;
 
@@ -63,6 +64,7 @@ public class ProjectsFragment extends Fragment implements WebServiceInterface {
     public View view;
     private SwipeMenuListView listview_project;
     TextView heading_project, exclation_counter;
+    ImageView image_search;
     public static Context classContext;
     static ProjectsFragment fragment;
     ProgressDialog progress;
@@ -133,6 +135,7 @@ public class ProjectsFragment extends Fragment implements WebServiceInterface {
             listview_project = (SwipeMenuListView) view.findViewById(R.id.listview_project);
             NoResults.setVisibility(View.GONE);
             heading_project = (TextView) view.findViewById(R.id.heading_project);
+            image_search = (ImageView) view.findViewById(R.id.image_search);
             Log.i("task", "project");
             InputMethodManager inputMethodManager = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
             inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), 0);
@@ -414,7 +417,13 @@ public class ProjectsFragment extends Fragment implements WebServiceInterface {
                 }
             });
 
-
+            image_search.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(getActivity(), MediaSearch.class);
+                    startActivity(intent);
+                }
+            });
             ProjectSearch.addTextChangedListener(new TextWatcher() {
 
                 @Override

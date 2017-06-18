@@ -549,6 +549,14 @@ public class JsonRequestSender {
         communicationBean.setAccess(access);
         queue.addMsg(communicationBean);
     }
+    public void getMediaSearch(EnumJsonWebservicename webservicename, List<NameValuePair> valuePair, WebServiceInterface access) {
+
+        CommunicationBean communicationBean = new CommunicationBean();
+        communicationBean.setEnumJsonWebservicename(webservicename);
+        communicationBean.setNameValuePairs(valuePair);
+        communicationBean.setAccess(access);
+        queue.addMsg(communicationBean);
+    }
     public void SaveFormAccessRestrictions(EnumJsonWebservicename servicename, JSONObject jsonObject, WebServiceInterface access) {
         CommunicationBean communicationBean = new CommunicationBean();
         communicationBean.setEnumJsonWebservicename(servicename);

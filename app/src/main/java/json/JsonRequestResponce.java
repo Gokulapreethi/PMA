@@ -13,6 +13,7 @@ import com.myapplication3.Forms.FormsEntryActivity;
 import com.myapplication3.GroupPercentageStatus;
 import com.myapplication3.Leave_Request_dateSent;
 import com.myapplication3.LoginActivity;
+import com.myapplication3.MediaSearch;
 import com.myapplication3.NewBlogActivity;
 import com.myapplication3.NewTaskConversation;
 import com.myapplication3.SettingsFragment;
@@ -279,6 +280,8 @@ public class JsonRequestResponce extends Thread {
                                 obj.setFirstname("taskStatus");
                             }else if (obj.getEnumJsonWebservicename().toString().equals("assignTask")) {
                                 obj.setFirstname("assignTask");
+                            }else if (obj.getEnumJsonWebservicename().toString().equals("searchMedia")) {
+                                obj.setFirstname("searchMedia");
                             } else if (obj.getEnumJsonWebservicename().toString().equals("getTask")) {
                                 obj.setFirstname("getTask");
                             } else if (obj.getEnumJsonWebservicename().toString().equals("getRequestType")) {
@@ -329,7 +332,8 @@ public class JsonRequestResponce extends Thread {
                             && !obj.getEnumJsonWebservicename().toString().equals("getTaskForJobID")
                             && !obj.getEnumJsonWebservicename().toString().equals("getCustomHeaderValue")
                             && !obj.getEnumJsonWebservicename().toString().equals("getTask")
-                            && !obj.getEnumJsonWebservicename().toString().equals("projectCompleted")) {
+                            && !obj.getEnumJsonWebservicename().toString().equals("projectCompleted")
+                            && !obj.getEnumJsonWebservicename().toString().equals("searchMedia")) {
                         Log.i("jsonwebservice", "enum       " + obj.getEnumJsonWebservicename().toString());
                         Log.i("getTask 3", "enum for check ");
                         Log.i("jsonwebservice", "enum    responseString   " + responseString);
@@ -430,6 +434,11 @@ public class JsonRequestResponce extends Thread {
             case assignTask:
                 AddTaskReassign.getInstance().cancelDialog();
                 AddTaskReassign.getInstance().showToast("assignTask error . Try again later");
+                inter.ErrorMethod(obj);
+                break;
+            case searchMedia:
+                MediaSearch.getInstance().cancelDialog();
+                MediaSearch.getInstance().showToast("searchMedia error . Try again later");
                 inter.ErrorMethod(obj);
                 break;
             case leaveRequestOrReject:
@@ -691,6 +700,11 @@ public class JsonRequestResponce extends Thread {
                     case assignTask:
                         obj.setEmail(responseString);
                         obj.setFirstname("assignTask");
+                        inter.ResponceMethod(obj);
+                        break;
+                   case searchMedia:
+                        obj.setEmail(responseString);
+                        obj.setFirstname("searchMedia");
                         inter.ResponceMethod(obj);
                         break;
                     case taskStatus:

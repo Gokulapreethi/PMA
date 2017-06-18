@@ -363,7 +363,7 @@ class ListofFileAdapter extends BaseAdapter {
             filetype.setText(bean.getMimeType());
 
             File directory;
-            switch (bean.getMimeType().toLowerCase().trim()) {
+                switch (bean.getMimeType().toLowerCase().trim()) {
                 case "video":
                     Log.i("group123", "icon clicked video");
 
