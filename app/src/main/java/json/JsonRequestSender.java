@@ -310,12 +310,15 @@ public class JsonRequestSender {
         queue.addMsg(communicationBean);
     }
 
-    public void taskStatus(EnumJsonWebservicename webservicename, JSONObject jsonObject,TaskDetailsBean taskDetailsBean, WebServiceInterface access) {
+    public void taskStatus(EnumJsonWebservicename webservicename, JSONObject jsonObject, ArrayList<TaskDetailsBean> detailsBeanArrayList, TaskDetailsBean taskDetailsBean,WebServiceInterface access) {
 
         CommunicationBean communicationBean = new CommunicationBean();
         communicationBean.setEnumJsonWebservicename(webservicename);
         if (jsonObject != null) {
             communicationBean.setJsonObject(jsonObject);
+        }
+        if (detailsBeanArrayList != null) {
+            communicationBean.setGetStatusListForMedia(detailsBeanArrayList);
         }
         if(taskDetailsBean != null){
             communicationBean.setTaskDetailsBean(taskDetailsBean);

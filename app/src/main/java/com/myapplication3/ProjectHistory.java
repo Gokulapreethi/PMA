@@ -161,7 +161,7 @@ public class ProjectHistory extends Activity implements WebServiceInterface, Swi
             }
             buddyArrayAdapter = new TaskArrayAdapter(context, projectDetailsBeans);
             listView.setAdapter(buddyArrayAdapter);
-            swipeRefreshLayout.setRefreshing(false);
+             swipeRefreshLayout.setRefreshing(false);
             handler.post(new Runnable() {
                 @Override
                 public void run() {
@@ -213,8 +213,10 @@ public class ProjectHistory extends Activity implements WebServiceInterface, Swi
             setContentView(R.layout.project_history);
 
             listView = (SwipeMenuListView) findViewById(R.id.lv_taskHistory);
-            swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh_layout);
-            swipeRefreshLayout.setOnRefreshListener(this);
+//            swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh_layout);
+//            swipeRefreshLayout.setOnRefreshListener(this);
+
+
           /*  swipeRefreshLayout.post(new Runnable() {
                                         @Override
                                         public void run() {
@@ -1290,13 +1292,15 @@ public class ProjectHistory extends Activity implements WebServiceInterface, Swi
                 ImageView selectedimage = (ImageView) conView.findViewById(R.id.selected);
                 TextView catagory = (TextView) conView.findViewById(R.id.catagory);
                 ImageView dependency_icon = (ImageView) conView.findViewById(R.id.dependency_icon);
-                ImageView status_oracle = (ImageView) conView.findViewById(R.id.status_oracle);
+                final ImageView status_oracle = (ImageView) conView.findViewById(R.id.status_oracle);
                 if(projectDetailsBean.getTaskType().equalsIgnoreCase("Group")) {
                     status_oracle.setVisibility(View.VISIBLE);
                     task_status.setVisibility(View.GONE);
                 }
                 conView.setBackgroundResource(R.color.white);
                 dependency_icon.setVisibility(View.GONE);
+                String oracle_taskId=VideoCallDataBase.getDB(context).getProjectParentTaskId("select oracleTaskId from projectHistory where projectId='" + project_id + "'");
+                Log.i("oracle_taskId", "oracle_taskId " + oracle_taskId);
                 try{
                     String s = "select * from taskDetailsInfo where taskId='"+projectDetailsBean.getTaskId()+"' and readStatus='1'";
                     ArrayList<ProjectDetailsBean> projectDetailsBeen = VideoCallDataBase.getDB(context).getExclationdetails(s);
@@ -1330,7 +1334,9 @@ public class ProjectHistory extends Activity implements WebServiceInterface, Swi
                             if (isFromOracle)
                             intent.putExtra("isFromOracle",true);
                             startActivity(intent);
-                        }
+                        }else
+                            status_oracle.setVisibility(View.GONE);
+
                     }
                 });
 
@@ -1342,10 +1348,10 @@ public class ProjectHistory extends Activity implements WebServiceInterface, Swi
                         task_taker.setVisibility(View.GONE);
                         task_observer.setVisibility(View.GONE);
                         remain.setVisibility(View.GONE);
-                        Log.i("ws123","taskArrayAdapter values taskID---------->"+projectDetailsBean.getTaskId());
-                        Log.i("ws123","taskArrayAdapter values taskName---------->"+projectDetailsBean.getTaskName());
-
-                        catagory.setText("Task Id: " + projectDetailsBean.getTaskId());
+                        Log.i("ws123", "taskArrayAdapter values taskID---------->" + projectDetailsBean.getTaskId());
+                        Log.i("ws123", "taskArrayAdapter values taskName---------->" + projectDetailsBean.getTaskName());
+                        catagory.setText("Oracle TaskId : " + oracle_taskId);
+//                        catagory.setText("Oracle TaskId : " + projectDetailsBean.getTaskId());
                         if (projectDetailsBean.getTaskName() != null) {
                             taskName.setText("Task Name: " + projectDetailsBean.getTaskName());
                             taskName.setTextColor(Color.BLUE);
@@ -1473,19 +1479,19 @@ public class ProjectHistory extends Activity implements WebServiceInterface, Swi
                         Log.i("ProjectHistory", "projectDetailsBean.getCatagory() " + projectDetailsBean.getCatagory());
                         if (projectDetailsBean.getCatagory() != null && (projectDetailsBean.getCatagory().equalsIgnoreCase("Task") || projectDetailsBean.getCatagory().equalsIgnoreCase("taskCreation"))) {
                             selectedimage.setBackgroundResource(R.drawable.task_icon);
-                            catagory.setText("Task Id: " + projectDetailsBean.getTaskId());
+                            catagory.setText("Oracle TaskId : " + oracle_taskId);
                             taskName.setText("Task Name: " + projectDetailsBean.getTaskName());
                         } else if (projectDetailsBean.getCatagory() != null && projectDetailsBean.getCatagory().equalsIgnoreCase("issue")) {
                             selectedimage.setBackgroundResource(R.drawable.issue_icon);
-                            catagory.setText("Issue Id: " + projectDetailsBean.getTaskId());
+                            catagory.setText("Oracle TaskId : " + oracle_taskId);
                             taskName.setText("Issue Name: " + projectDetailsBean.getTaskName());
                         } else if (projectDetailsBean.getCatagory() != null && projectDetailsBean.getCatagory().equalsIgnoreCase("note")) {
                             selectedimage.setBackgroundResource(R.drawable.ic_note_32_2);
-                            catagory.setText("Note Id: " + projectDetailsBean.getTaskId());
+                            catagory.setText("Oracle TaskId : " + oracle_taskId);
                             taskName.setText("Note Name: " + projectDetailsBean.getTaskName());
                         } else if (projectDetailsBean.getCatagory() != null && projectDetailsBean.getCatagory().equalsIgnoreCase("Template")) {
                             selectedimage.setBackgroundResource(R.drawable.template);
-                            catagory.setText("Template Id: " + projectDetailsBean.getTaskId());
+                            catagory.setText("Oracle TaskId : " + oracle_taskId);
                             taskName.setText("Template Name: " + projectDetailsBean.getTaskName());
                         }
                         Log.i("project_details", "projectDetailsBean getOwnerOfTask() " + projectDetailsBean.getOwnerOfTask());
@@ -1543,7 +1549,7 @@ public class ProjectHistory extends Activity implements WebServiceInterface, Swi
                         }
                         if (projectDetailsBean.getTaskStatus().equalsIgnoreCase("note")) {
                             selectedimage.setBackgroundResource(R.drawable.ic_note_32_2);
-                            catagory.setText("Me : Name");
+                            catagory.setText("Oracle TaskId : Name");
                         } else if (projectDetailsBean.getTaskReceiver() != null && projectDetailsBean.getOwnerOfTask() != null && projectDetailsBean.getTaskReceiver().equalsIgnoreCase(projectDetailsBean.getOwnerOfTask())) {
                             task_taker.setVisibility(View.VISIBLE);
                             task_taker.setText("Me");

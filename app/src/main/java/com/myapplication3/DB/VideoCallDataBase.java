@@ -2579,6 +2579,7 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
                         }
                         cv_1.put("taskStatus", listAllgetTaskDetailses1.getStatus());
                     }
+                    cv_1.put("oracleTaskId",listAllgetTaskDetailses1.getOracleTaskId());
                     if (listAllgetTaskDetailses1.getCreatedDate() != null) {
                         String created_date = listAllgetTaskDetailses1.getCreatedDate();
                         String date_time = created_date.substring(0, 19);

@@ -85,6 +85,7 @@ public class ListAllgetTaskDetails {
     String searchType;
     String replyRequired;
     String isGroupTask;
+	String oracleTaskId;
     @SerializedName("from")
     private ListFromDetails from;
     @SerializedName("toUser")
@@ -527,5 +528,13 @@ public class ListAllgetTaskDetails {
 
     public void setListTaskTransaction(ArrayList<ListTaskTransaction> listTaskTransaction) {
         this.listTaskTransaction = listTaskTransaction;
+    }
+
+    public String getOracleTaskId() {
+        return oracleTaskId;
+    }
+
+    public void setOracleTaskId(String oracleTaskId) {
+        this.oracleTaskId = oracleTaskId;
     }
 }

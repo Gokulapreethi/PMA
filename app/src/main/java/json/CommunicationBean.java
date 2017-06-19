@@ -36,6 +36,7 @@ public class CommunicationBean {
 
 
     ArrayList<TaskDetailsBean> getTaskListforPercentage;
+    ArrayList<TaskDetailsBean> getStatusListForMedia;
     ArrayList<ListofFileds> filedsArrayList;
     private Object message;
 
@@ -207,5 +208,13 @@ public class CommunicationBean {
 
     public void setList_Member_Acces(Object list_Member_Acces) {
         this.list_Member_Acces = list_Member_Acces;
+    }
+
+    public ArrayList<TaskDetailsBean> getGetStatusListForMedia() {
+        return getStatusListForMedia;
+    }
+
+    public void setGetStatusListForMedia(ArrayList<TaskDetailsBean> getStatusListForMedia) {
+        this.getStatusListForMedia = getStatusListForMedia;
     }
 }

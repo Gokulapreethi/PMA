@@ -26,7 +26,7 @@
             android:layout_marginLeft="5dp"
             android:layout_marginTop="8dp"
             android:layout_toRightOf="@+id/selected"
-            android:text="Task" />
+            android:text="Oracle TaskId : " />
 
         <TextView
             android:id="@+id/percent_update"
@@ -38,7 +38,8 @@
             android:singleLine="true"
             android:text="0%"
             android:textSize="12sp"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            android:visibility="invisible"/>
 
         <TextView
             android:id="@+id/project_status"
@@ -71,8 +72,6 @@
             android:background="@drawable/status_oracle1"
             android:visibility="gone"
             />
-
-
     </RelativeLayout>
 
     <RelativeLayout

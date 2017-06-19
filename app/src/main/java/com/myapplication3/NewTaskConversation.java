@@ -3,6 +3,7 @@ package com.myapplication3;
 import android.app.Activity;
 import android.app.AlarmManager;
 import android.app.AlertDialog;
+import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.DownloadManager;
 import android.app.PendingIntent;
@@ -55,6 +56,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.ImageButton;
@@ -307,7 +309,7 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
     boolean isForOracleProject=false;
     boolean isDivertedON=false;
     ArrayList<String> custom_1MediaList;
-    String TravelStartdate, TravelEnddate, observationStatus,status_signature,photo_signature,tech_signature,PickDate;
+    String TravelStartdate, TravelEnddate, observationStatus,status_signature,photo_signature,tech_signature,PickDate,travel_endDate;
     String FromTravelStart,FromTravelEnd,ActivityStartdate, ActivityEnddate,TotravelStart,ToTravelEnd;
 
 
@@ -865,7 +867,7 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
             if(!isTaskCompleted) {
                 status_job.setVisibility(View.VISIBLE);
                 travel_job.setVisibility(View.VISIBLE);
-            }else {
+            }else if(isTaskCompleted || template){
                 status_job.setVisibility(View.GONE);
                 travel_job.setVisibility(View.GONE);
                 sendBtn.setEnabled(false);
@@ -4667,7 +4669,9 @@ private String getDatefromPicker()
             } catch (Exception e) {
                 e.printStackTrace();
             }
+            ArrayList<TaskDetailsBean> status_list=new ArrayList<>();
             TaskDetailsBean taskDetailsBean = new TaskDetailsBean();
+
             Log.i("ws123", "taskID start work===>" + webtaskId);
             JSONObject jsonObject = new JSONObject();
             JSONObject jsonObject1 = new JSONObject();
@@ -4719,6 +4723,9 @@ private String getDatefromPicker()
                 taskDetailsBean.setTravelEndTime(FromTravelEnd);
                 taskDetailsBean.setActivityStartTime(ActivityStartdate);
                 taskDetailsBean.setActivityEndTime(ActivityEnddate);
+                if(FromTravelStart!=null){
+                    travel_endDate= "Task Travel Details : " + "\n" + "FromTravelStart : " + FromTravelStart +"\n" + "ActivityStartdate : " + ActivityStartdate + "\n" + "ActivityEnddate : "+ ActivityEnddate +"\n"  + "FromTravelEnd : "+ FromTravelEnd +"\n"  + "TotravelStart : "+ TotravelStart +"\n" +  "ToTravelEnd : "+ ToTravelEnd;
+                }
 
             } else {
                 jsonObject.put("travelStartTime", taskUTCtime);
@@ -4758,14 +4765,25 @@ private String getDatefromPicker()
             taskDetailsBean.setToUserId("");
             taskDetailsBean.setSignalid(Utility.getSessionID());
             taskDetailsBean.setTaskNo(task_No);
-            taskDetailsBean.setIsRemainderRequired("");
             taskDetailsBean.setPlannedStartDateTime("");
             taskDetailsBean.setPlannedEndDateTime("");
-            taskDetailsBean.setRemainderFrequency("");
             taskDetailsBean.setTaskStatus(projectCurrentStatus);
             taskDetailsBean.setSendStatus("0");
             taskDetailsBean.setTaskType(taskType);
             taskDetailsBean.setMimeType("text");
+
+
+            taskDetailsBean.setUtcPlannedStartDateTime(Appreference.customLocalDateToUTC(null));
+            taskDetailsBean.setUtcplannedEndDateTime(Appreference.customLocalDateToUTC(null));
+            taskDetailsBean.setParentId(getFileName());
+            taskDetailsBean.setTaskPriority("Medium");
+            taskDetailsBean.setCompletedPercentage("");
+            taskDetailsBean.setRequestStatus("requested");
+            taskDetailsBean.setMsg_status(0);
+            taskDetailsBean.setShow_progress(1);
+
+
+
             Log.i("send_status", "owneroftask" + ownerOfTask);
             Log.i("send_status", "taskReceiver" + taskReceiver);
             Log.i("send_status", "project_toUsers" + project_toUsers);
@@ -4808,13 +4826,15 @@ private String getDatefromPicker()
             else{
                 taskDetailsBean.setTaskDescription("Task is " + projectCurrentStatus);
             }
+            status_list.add(taskDetailsBean);
             jsonObject.put("hourMeterReading", "");
+            Log.i("ws123","status update in project History");
             if (!isTaskName)
                 if (isProjectFromOracle)
                     VideoCallDataBase.getDB(context).update_Project_history(taskDetailsBean);
             VideoCallDataBase.getDB(context).insertORupdate_Task_history(taskDetailsBean);
             VideoCallDataBase.getDB(context).insertORupdateStatus(taskDetailsBean);
-            Appreference.jsonRequestSender.taskStatus(EnumJsonWebservicename.taskStatus, jsonObject, taskDetailsBean, NewTaskConversation.this);
+            Appreference.jsonRequestSender.taskStatus(EnumJsonWebservicename.taskStatus, jsonObject, status_list,taskDetailsBean, NewTaskConversation.this);
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -10206,37 +10226,43 @@ private String getDatefromPicker()
                         final JSONObject jsonObject = new JSONObject(communicationBean.getEmail());
                         if (((String) jsonObject.get("result_text")).equalsIgnoreCase("task started")) {
                             projectCurrentStatus = "start";
-                            showToast("Task Started......");
+//                            showToast("Task Started......");
                         } else if (((String) jsonObject.get("result_text")).equalsIgnoreCase("task hold")) {
                             projectCurrentStatus = "hold";
-                            showToast("Task hold......");
+//                            showToast("Task hold......");
                         } else if (((String) jsonObject.get("result_text")).equalsIgnoreCase("task resume")) {
                             projectCurrentStatus = "resume";
-                            showToast("Task resume......");
+//                            showToast("Task resume......");
                         } else if (((String) jsonObject.get("result_text")).equalsIgnoreCase("task pause")) {
                             projectCurrentStatus = "pause";
                             isDivertedON=true;
-                            showToast("Task pause......");
+//                            showToast("Task pause......");
                         } else if (((String) jsonObject.get("result_text")).equalsIgnoreCase("task restart")) {
                             projectCurrentStatus = "restart";
-                            showToast("Task restart......");
+//                            showToast("Task restart......");
                         } else if (((String) jsonObject.get("result_text")).equalsIgnoreCase("task completed")) {
                             projectCurrentStatus = "completed";
-                            showToast("Task completed......");
+//                            showToast("Task completed......");
                         } else if (((String) jsonObject.get("result_text")).equalsIgnoreCase("task deassign")) {
                             projectCurrentStatus = "DeAssign";
-                            showToast("Task DeAssign......");
+//                            showToast("Task DeAssign......");
                             isDeassign=true;
                         }
                         Log.i("output123", "NewTaskConverstaion taskStatus ResponceMethod isDeassign"+isDeassign);
+ 						TaskDetailsBean detailsBean=new TaskDetailsBean();
+                        detailsBean = communicationBean.getTaskDetailsBean();
 
+                      /*  if (detailsBean.getMimeType().equalsIgnoreCase("photo") || detailsBean.getMimeType().equalsIgnoreCase("image") || detailsBean.getMimeType().equalsIgnoreCase("signature")) {
+                            detailsBean.setTaskDescription(detailsBean.getCustomerSignature());
+                            detailsBean.setMimeType("image");
+                        }*/
                         if(projectCurrentStatus.equalsIgnoreCase("completed")) {
-                            TaskDetailsBean detailsBean = communicationBean.getTaskDetailsBean();
+
                             detailsBean.setMimeType("image");
                             detailsBean.setCustomTagVisible(true);
                             for(int i=0;i<custom_1MediaList.size();i++) {
-                                detailsBean.setTaskDescription(custom_1MediaList.get(i));
-                                final String xml = composeChatXML(communicationBean.getTaskDetailsBean());
+                                detailsBean.setTaskDescription(jsonObject.getString("signature"));
+                                final String xml = composeChatXML(detailsBean);
                                 handler.post(new Runnable() {
                                     @Override
                                     public void run() {
@@ -10246,10 +10272,9 @@ private String getDatefromPicker()
                             }
                         }else
                         {
-                            TaskDetailsBean detailsBean = communicationBean.getTaskDetailsBean();
                             detailsBean.setMimeType("text");
                             detailsBean.setCustomTagVisible(true);
-                            final String xml = composeChatXML(communicationBean.getTaskDetailsBean());
+                            final String xml = composeChatXML(detailsBean);
                             handler.post(new Runnable() {
                                 @Override
                                 public void run() {
@@ -10259,8 +10284,14 @@ private String getDatefromPicker()
                         }
 
 
+                        taskList.add(detailsBean);
 
-                        taskList.add(communicationBean.getTaskDetailsBean());
+						 if(detailsBean.getCustomerRemarks()!=null){
+                            sendMessage(detailsBean.getCustomerRemarks(), null, "text", null, null, Utility.getSessionID(), null);
+                        }else if(travel_endDate!=null){
+                             sendMessage(travel_endDate, null, "text", null, null, Utility.getSessionID(), null);
+                         }
+
                         refresh();
                         if(isDivertedON)
                         {
@@ -16150,9 +16181,9 @@ private String getDatefromPicker()
             chatBean.setMsg_status(0);
             chatBean.setWs_send("0");
             chatBean.setCustomTagVisible(true);
-            if ((template && note) || chat) {
-                chatBean.setCatagory(category);
-            }
+//            if ((template && note) || chat) {
+            chatBean.setCatagory(category);
+//            }
             if (getMediaType != null && getMediaType.equalsIgnoreCase("textfile")) {
                 chatBean.setLongmessage("0");
             }
@@ -16222,7 +16253,6 @@ private String getDatefromPicker()
                 }
                 chatBean.setSubType("taskDescription");
                 chatBean.setTaskRequestType("taskDescription");
-                chatBean.setCatagory(category);
                 Log.i("task", "setting task name ");
                 ownerOfTask = Appreference.loginuserdetails.getUsername();
                 taskReceiver = toUserName;
@@ -18127,7 +18157,7 @@ private String getDatefromPicker()
         Log.i("gettask", "get task webservice " + webtaskId);
         List<NameValuePair> nameValuePairs1 = new ArrayList<NameValuePair>(1);
         nameValuePairs1.add(new BasicNameValuePair("taskId", webtaskId));
-        Appreference.jsonRequestSender.getTask(EnumJsonWebservicename.getTask, nameValuePairs1, NewTaskConversation.this);
+        Appreference.jsonRequestSender. getTask(EnumJsonWebservicename.getTask, nameValuePairs1, NewTaskConversation.this);
     }
 
     // insert and update values in table for reassign task

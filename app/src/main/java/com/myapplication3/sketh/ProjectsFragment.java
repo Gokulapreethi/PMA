@@ -564,9 +564,10 @@ public class ProjectsFragment extends Fragment implements WebServiceInterface {
                 percent_update.setVisibility(View.GONE);
                 dependency_icon.setVisibility(View.GONE);
                 completed_status.setVisibility(View.GONE);
+                project_id.setVisibility(view.GONE);
                 Log.i("job123","project name8*********** "+projectDetailsBean.getProjectName());
-                project_id.setText("Oracle Project ID  : " + projectDetailsBean.getOracleProjectId());
-                project_name.setText("Project Name  : " +projectDetailsBean.getProjectName());
+//                project_id.setText("Oracle Project ID  : " + projectDetailsBean.getOracleProjectId());
+                project_name.setText("Job Order NO  : " +projectDetailsBean.getProjectName());
                 String pjt_owner = null;
                 Log.i("Fragment", "projectDetailsBean getProject_ownerName() " + projectDetailsBean.getProject_ownerName());
                 if (projectDetailsBean.getProject_ownerName() != null && projectDetailsBean.getProject_ownerName().contains("@")) {
