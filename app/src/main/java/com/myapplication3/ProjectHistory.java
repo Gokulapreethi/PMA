@@ -41,7 +41,6 @@ import com.google.gson.Gson;
 import com.myapplication3.Bean.ProjectDetailsBean;
 import com.myapplication3.Bean.TaskDetailsBean;
 import com.myapplication3.DB.VideoCallDataBase;
-import com.myapplication3.sketh.ProjectsFragment;
 
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
@@ -123,7 +122,7 @@ public class ProjectHistory extends Activity implements WebServiceInterface, Swi
             Log.i("DBQuery", "userName is == " + userName);
             Log.i("DBQuery", "taskType is == " + taskType);
             Log.i("DBQuery", "taskType is == " + project_id);
-            query = "select * from projectHistory where projectId ='" + project_id + "' order by taskId ASC";
+            query = "select * from projectHistory where projectId ='" + project_id + "' and parentTaskId != taskId order by taskId ASC";
             Log.d("DBQuery", "query is == " + query);
             projectDetailsBeans = VideoCallDataBase.getDB(context).getProjectHistory(query);
             projectDetailsBeanslist_ForSearch = VideoCallDataBase.getDB(context).getProjectHistory(query);
@@ -894,14 +893,14 @@ public class ProjectHistory extends Activity implements WebServiceInterface, Swi
         setActiveAdapter();
     }
 
-    private void fetchTaskList() {
+  /*  private void fetchTaskList() {
         Log.i("ws123", "Refresh Request  received fetchTaskList" );
         swipeRefreshLayout.setRefreshing(true);
         List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
         nameValuePairs.add(new BasicNameValuePair("projectId", project_id));
         nameValuePairs.add(new BasicNameValuePair("userId", String.valueOf(Appreference.loginuserdetails.getId())));
         Appreference.jsonRequestSender.getTaskForJobID(EnumJsonWebservicename.getTaskForJobID, nameValuePairs, ProjectsFragment.getInstance());
-    }
+    }*/
     public void stopRefreshListener()
     {
         Log.i("ws123", "Refresh stop Request  received stopRefreshListener" );
@@ -1341,7 +1340,7 @@ public class ProjectHistory extends Activity implements WebServiceInterface, Swi
                 });
 
                 if (projectDetailsBean.getParentTaskId() != null && projectDetailsBean.getTaskId() != null) {
-                    if (projectDetailsBean.getParentTaskId().equalsIgnoreCase(projectDetailsBean.getTaskId())) {
+                   /* if (projectDetailsBean.getParentTaskId().equalsIgnoreCase(projectDetailsBean.getTaskId())) {
 
                         parent_startdate.setVisibility(View.VISIBLE);
                         parent_enddate.setVisibility(View.VISIBLE);
@@ -1427,7 +1426,7 @@ public class ProjectHistory extends Activity implements WebServiceInterface, Swi
                         } else {
                             parent_enddate.setText("Task End date : NA");
                         }
-                    } else{
+                    } else{*/
                         task_taker.setVisibility(View.VISIBLE);
                         if (isFromOracle)
                             task_observer.setVisibility(View.GONE);
@@ -1699,7 +1698,7 @@ public class ProjectHistory extends Activity implements WebServiceInterface, Swi
                                 task_observer.setText("Task Observer : NA");
                             }
                         }
-                    }
+//                    }
                 }
                 String s = null;
             } catch (Exception e) {

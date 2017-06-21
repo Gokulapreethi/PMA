@@ -282,6 +282,8 @@ public class JsonRequestResponce extends Thread {
                                 obj.setFirstname("assignTask");
                             }else if (obj.getEnumJsonWebservicename().toString().equals("searchMedia")) {
                                 obj.setFirstname("searchMedia");
+                            }else if (obj.getEnumJsonWebservicename().toString().equals("taskNeedAssessmentReport")) {
+                                obj.setFirstname("taskNeedAssessmentReport");
                             } else if (obj.getEnumJsonWebservicename().toString().equals("getTask")) {
                                 obj.setFirstname("getTask");
                             } else if (obj.getEnumJsonWebservicename().toString().equals("getRequestType")) {
@@ -439,6 +441,11 @@ public class JsonRequestResponce extends Thread {
             case searchMedia:
                 MediaSearch.getInstance().cancelDialog();
                 MediaSearch.getInstance().showToast("searchMedia error . Try again later");
+                inter.ErrorMethod(obj);
+                break;
+           case taskNeedAssessmentReport:
+               NewTaskConversation.getInstance().cancelDialog();
+               NewTaskConversation.getInstance().showToast("taskNeedAssessmentReport error . Try again later");
                 inter.ErrorMethod(obj);
                 break;
             case leaveRequestOrReject:
@@ -710,6 +717,11 @@ public class JsonRequestResponce extends Thread {
                     case taskStatus:
                         obj.setEmail(responseString);
                         obj.setFirstname("taskStatus");
+                        inter.ResponceMethod(obj);
+                        break;
+                    case taskNeedAssessmentReport:
+                        obj.setEmail(responseString);
+                        obj.setFirstname("taskNeedAssessmentReport");
                         inter.ResponceMethod(obj);
                         break;
                   /*  case getRequestType:

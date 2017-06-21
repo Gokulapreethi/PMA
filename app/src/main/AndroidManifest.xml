@@ -221,7 +221,8 @@
         <activity
             android:name=".AudioRecorder"
             android:screenOrientation="portrait"
-            android:theme="@style/Theme.AppCompat.Light.Dialog" />
+            android:theme="@android:style/Theme.Translucent.NoTitleBar"
+            android:windowSoftInputMode="stateHidden"/>
         <activity
             android:name=".Task_Percentage_update"
             android:theme="@style/AppTheme.NoActionBar" />
@@ -409,6 +410,10 @@
         <activity
             android:name=".MediaSearch"
             android:screenOrientation="portrait" />
+        <activity
+            android:name=".WebViewActivity"
+            android:screenOrientation="portrait" />
+
     </application>
 
 </manifest>

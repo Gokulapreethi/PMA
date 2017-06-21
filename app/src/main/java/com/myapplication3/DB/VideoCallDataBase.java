@@ -4559,6 +4559,7 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
                     projectDetailsBean.setTaskStatus(cur.getString(cur.getColumnIndex("taskStatus")));
                     projectDetailsBean.setProjectCompletedPercentage(cur.getString(cur.getColumnIndex("completedPercentage")));
                     projectDetailsBean.setOracleProjectId(cur.getString(cur.getColumnIndex("oracleProjectId")));
+                    projectDetailsBean.setIsActiveStatus(cur.getString(cur.getColumnIndex("isActiveStatus")));
                     arrayList.add(projectDetailsBean);
                     cur.moveToNext();
                 }
@@ -8455,5 +8456,30 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
 
             return Members;
         }
+    }
+
+    public String getDivertedProjId(String query) {
+        String project_id=null;
+        Cursor cur;
+        if(db==null)
+            db=getReadableDatabase();
+        try{
+            if(db!=null){
+                if(!db.isOpen())
+                    openDatabase();
+                cur=db.rawQuery(query,null);
+                cur.moveToFirst();
+                while(!cur.isAfterLast()){
+                    project_id=(cur.getString(cur.getColumnIndex("projectId")));
+                    cur.moveToNext();
+                }
+                    cur.close();
+            }
+
+        }catch(Exception e)
+        {
+            e.printStackTrace();
+        }
+        return project_id;
     }
 }

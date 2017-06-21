@@ -162,7 +162,7 @@ import static com.myapplication3.MediaListAdapter.onClick;
 /**
  * Created by saravanakumar on 7/11/2016.
  */
-public class NewTaskConversation extends Activity implements View.OnClickListener, WebServiceInterface,CommonDateTimePicker.DateWatcher {
+public class NewTaskConversation extends Activity implements View.OnClickListener, WebServiceInterface, CommonDateTimePicker.DateWatcher {
     private GestureDetector gestureScanner;
     String taskacceptorreject = "None";
     String Leave_taskid;
@@ -196,7 +196,7 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
     LinearLayout linearforimage;
     TextView replymessage, replymessagesendername;
     String reply_mime_type;
-    ImageView replyimageview, cancelreply, status_job,travel_job;
+    ImageView replyimageview, cancelreply, status_job, travel_job;
     private HashMap<String, Bitmap> cacheBitmap;
     RelativeLayout actorrej;
     TableRow assignFromTemplate, addobserverRow, mute_audio, reassign_tr, percentcompletion_tr, View_Task_TR;
@@ -247,7 +247,7 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
     String task_No, subType = "normal";
     String taskName, ownerOfTask, category, task_catagory, datepattern;
     boolean tem = false, edit = false;
-    boolean template= false, isswipe = false, project = false, note = false, chat = false;
+    boolean template = false, isswipe = false, project = false, note = false, chat = false;
     boolean isNewTemplate = false;
     boolean remove_check = false;
     String percentage = "0";
@@ -263,9 +263,9 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
     LinearLayout ll_networkUI = null, bottom_layout, options, updatingtask_layout = null;
     ProgressBar progress_updating;
     RelativeLayout task_accept_layout;
-    TextView tv_networkstate = null, head, mute, signature_path,photo_path,tech_signature_path;
+    TextView tv_networkstate = null, head, mute, signature_path, photo_path, tech_signature_path;
     public static boolean conflict = false;
-    boolean arrow = false, isTask_Over = false, istask_issue, isNote = false, isProjectFromOracle,isCustomerSign;
+    boolean arrow = false, isTask_Over = false, istask_issue, isNote = false, isProjectFromOracle, isCustomerSign;
     int vie = 0;
     AppSharedpreferences appSharedpreferences;
     public static boolean calender = false;
@@ -303,14 +303,15 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
     boolean pause_work;
     boolean restart_work;
     boolean completed_work;
-    boolean Self_assign=false;
-	boolean isLocation = false;
-    boolean isTaskCompleted=false;
-    boolean isForOracleProject=false;
-    boolean isDivertedON=false;
+    boolean Self_assign = false;
+    boolean isLocation = false;
+    boolean isTaskCompleted = false;
+    boolean isForOracleProject = false;
+    boolean isDivertedON = false;
     ArrayList<String> custom_1MediaList;
-    String TravelStartdate, TravelEnddate, observationStatus,status_signature,photo_signature,tech_signature,PickDate,travel_endDate;
-    String FromTravelStart,FromTravelEnd,ActivityStartdate, ActivityEnddate,TotravelStart,ToTravelEnd;
+    private HashMap<Integer, String> statusCompletedFieldValues = new HashMap<Integer, String>();
+    String TravelStartdate, TravelEnddate, observationStatus, status_signature, photo_signature, tech_signature, PickDate, travel_endDate;
+    String FromTravelStart, FromTravelEnd, ActivityStartdate, ActivityEnddate, TotravelStart, ToTravelEnd;
 
 
     public static NewTaskConversation getInstance() {
@@ -857,22 +858,22 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
             }
         });
         Log.i("ws123", "oracleProjectOwner===>" + oracleProjectOwner);
-        String query="select status from projectStatus where projectId='" + projectId + "' and userId='" + Appreference.loginuserdetails.getId() + "' and taskId= '" + webtaskId + "'";
-        int disable_by_current_status=VideoCallDataBase.getDB(context).getCurrentStatus(query);
-        if(disable_by_current_status==5)
-            isTaskCompleted=true;
+        String query = "select status from projectStatus where projectId='" + projectId + "' and userId='" + Appreference.loginuserdetails.getId() + "' and taskId= '" + webtaskId + "'";
+        int disable_by_current_status = VideoCallDataBase.getDB(context).getCurrentStatus(query);
+        if (disable_by_current_status == 5)
+            isTaskCompleted = true;
 
 
-        if (isProjectFromOracle && (oracleProjectOwner != null && !oracleProjectOwner.equalsIgnoreCase(Appreference.loginuserdetails.getUsername()))){
-            if(!isTaskCompleted) {
+        if (isProjectFromOracle && (oracleProjectOwner != null && !oracleProjectOwner.equalsIgnoreCase(Appreference.loginuserdetails.getUsername()))) {
+            if (!isTaskCompleted) {
                 status_job.setVisibility(View.VISIBLE);
                 travel_job.setVisibility(View.VISIBLE);
-            }else if(isTaskCompleted || template){
+            } else if (isTaskCompleted || template) {
                 status_job.setVisibility(View.GONE);
                 travel_job.setVisibility(View.GONE);
                 sendBtn.setEnabled(false);
             }
-		}
+        }
         status_job.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -1397,7 +1398,22 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                             }
                             break;
                         case "TNA Report":
-                            if (taskType != null && taskType.equalsIgnoreCase("group")) {
+                            JSONObject jsonTNAObject = new JSONObject();
+                            JSONObject jsonObject1 = new JSONObject();
+                            jsonObject1.put("id", Integer.parseInt(webtaskId));
+                            jsonTNAObject.put("task", jsonObject1);
+                            jsonTNAObject.put("fromId", Appreference.loginuserdetails.getId());
+                            jsonTNAObject.put("projectId", projectId);
+                            JSONArray jsonArray = new JSONArray();
+                            JSONObject jsonObject3 = new JSONObject();
+                            jsonObject3.put("id", toUserId);
+                            jsonArray.put(0, jsonObject3);
+                            jsonTNAObject.put("listUser", jsonArray);
+                            Appreference.jsonRequestSender.OracleTNAReport(EnumJsonWebservicename.taskNeedAssessmentReport, jsonTNAObject, NewTaskConversation.this);
+
+
+
+                          /*  if (taskType != null && taskType.equalsIgnoreCase("group")) {
                                 AlertDialog.Builder builderSingle = new AlertDialog.Builder(NewTaskConversation.this);
                                 builderSingle.setIcon(R.drawable.app_icon);
                                 builderSingle.setTitle("Please Select....");
@@ -1436,11 +1452,11 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                                 } else {
                                     showToast("Please fill the Custom1 ");
                                 }
-                            }
+                            }*/
                             break;
                         case "FSR Report":
                             try {
-                                if (!isTaskName) {
+                              /*  if (!isTaskName) {
                                     if (webtaskId != null) {
                                         //Client Side UI and get Values From DB
                                         ArrayList<TaskDetailsBean> report = new ArrayList<>();
@@ -1624,7 +1640,7 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                                     }
                                 } else {
                                     showToast("Please fill the Custom1 ");
-                                }
+                                }*/
                             } catch (Exception e) {
                                 e.printStackTrace();
                                 Appreference.printLog("NewTaskConversation", "Exception " + e.getMessage(), "WARN", null);
@@ -2400,7 +2416,7 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                                    /*if Oracleproject is Group*/
                                 tv_reassign.setVisibility(View.VISIBLE);
                                 tv_reassign.setText("Assign to me");
-                                Self_assign=true;
+                                Self_assign = true;
                                 addobserverRowView.setVisibility(View.GONE);
                                 tv_percompletion.setVisibility(View.GONE);
                                 assignFromTemplateView.setVisibility(View.GONE);
@@ -2453,11 +2469,11 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                                 mute_audio.setVisibility(View.GONE);
                                 View_Task_TR.setVisibility(View.GONE);
                                 View_Task_View.setVisibility(View.GONE);
-                            }else if (isProjectFromOracle && !oracleProjectOwner.equalsIgnoreCase(Appreference.loginuserdetails.getUsername())) {
+                            } else if (isProjectFromOracle && !oracleProjectOwner.equalsIgnoreCase(Appreference.loginuserdetails.getUsername())) {
                                    /*if Oracleproject is Group*/
                                 tv_reassign.setVisibility(View.VISIBLE);
                                 tv_reassign.setText("Assign to me");
-                                Self_assign=true;
+                                Self_assign = true;
                                 addobserverRowView.setVisibility(View.GONE);
                                 tv_percompletion.setVisibility(View.GONE);
                                 assignFromTemplateView.setVisibility(View.GONE);
@@ -2510,8 +2526,8 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
         tv_reassign.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(!Self_assign)
-                addTaskReassignClickEvent();
+                if (!Self_assign)
+                    addTaskReassignClickEvent();
                 else {
                     options.setVisibility(View.GONE);
                     sendAssignTask_webservice();
@@ -2983,12 +2999,11 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
         sendBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(isProjectFromOracle)
-                {
-                    String query="select status from projectStatus where projectId='" + projectId + "' and userId='" + Appreference.loginuserdetails.getId() + "' and taskId= '" + webtaskId + "'";
-                    int disable_by_current_status=VideoCallDataBase.getDB(context).getCurrentStatus(query);
-                    if(disable_by_current_status==5)
-                        Toast.makeText(context,"You cannot send text for completed Task",Toast.LENGTH_SHORT).show();
+                if (isProjectFromOracle) {
+                    String query = "select status from projectStatus where projectId='" + projectId + "' and userId='" + Appreference.loginuserdetails.getId() + "' and taskId= '" + webtaskId + "'";
+                    int disable_by_current_status = VideoCallDataBase.getDB(context).getCurrentStatus(query);
+                    if (disable_by_current_status == 5)
+                        Toast.makeText(context, "You cannot send text for completed Task", Toast.LENGTH_SHORT).show();
                 }
                 TaskDetailsBean task = new TaskDetailsBean();
                 Log.i("task", "isTaskName 2 " + isTaskName);
@@ -3510,10 +3525,10 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                 taskid.put("id", webtaskId);
                 taskDetailsBean.setTaskId(webtaskId);
                 oracleProject_object.put("task", taskid);
-                int getProjOwnerId=VideoCallDataBase.getDB(context).getUserIdForUserName(ownerOfTask);
+                int getProjOwnerId = VideoCallDataBase.getDB(context).getUserIdForUserName(ownerOfTask);
                 oracleProject_object.put("fromId", getProjOwnerId);
                 taskDetailsBean.setFromUserId(String.valueOf(getProjOwnerId));
-                oracleProject_object.put("projectId",projectId);
+                oracleProject_object.put("projectId", projectId);
                 taskDetailsBean.setProjectId(projectId);
                 oracleProject_object.put("estimatedTravelHours", "");
                 taskDetailsBean.setEstimatedTravel("");
@@ -3553,7 +3568,8 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                 taskDetailsBean.setTaskReceiver(Appreference.loginuserdetails.getUsername());
                 taskDetailsBean.setRemark("");
                 taskDetailsBean.setReminderQuote("");
-                taskDetailsBean.setTaskDescription("Task Assigned to " + Appreference.loginuserdetails.getUsername());
+                Log.i("ASE", "userName" + Appreference.loginuserdetails.getFirstName() + " last_name" + Appreference.loginuserdetails.getLastName());
+                taskDetailsBean.setTaskDescription("Task Assigned to " + Appreference.loginuserdetails.getFirstName() + Appreference.loginuserdetails.getLastName());
                 taskDetailsBean.setRepeatFrequency("");
                 taskDetailsBean.setTaskTagName("");
                 taskDetailsBean.setTaskUTCDateTime(dateforrow);
@@ -3627,10 +3643,10 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                             e.printStackTrace();
                         }
                         final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-                        String ToDate=sdf.format(date_from);
-                        Log.i("output123","Todate===>"+ToDate);
+                        String ToDate = sdf.format(date_from);
+                        Log.i("output123", "Todate===>" + ToDate);
                         travel_start.setText(ToDate);
-                        FromTravelStart=ToDate;
+                        FromTravelStart = ToDate;
 //                        PickDate=ToDate;
                         mDateTimeDialog.dismiss();
                     }
@@ -3658,7 +3674,7 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
         travelend_sign.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(travel_start.getText().toString()!=null && travel_start.getText().toString().length()>0) {
+                if (travel_start.getText().toString() != null && travel_start.getText().toString().length() > 0) {
                    /* String dateTime = getDatefromPicker();
                     travel_end.setText(dateTime);*/
                     final Dialog mDateTimeDialog = new Dialog(context);
@@ -3679,10 +3695,10 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                                 e.printStackTrace();
                             }
                             final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-                            String ToDate=sdf.format(date_from);
-                            Log.i("output123","Todate===>"+ToDate);
+                            String ToDate = sdf.format(date_from);
+                            Log.i("output123", "Todate===>" + ToDate);
                             travel_end.setText(ToDate);
-                            FromTravelEnd=ToDate;
+                            FromTravelEnd = ToDate;
 //                        PickDate=ToDate;
                             mDateTimeDialog.dismiss();
                         }
@@ -3705,14 +3721,14 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                     mDateTimeDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
                     mDateTimeDialog.setContentView(mDateTimeDialogView);
                     mDateTimeDialog.show();
-                }else
-                    Toast.makeText(context,"Please fill From Travel Start Date",Toast.LENGTH_SHORT).show();
+                } else
+                    Toast.makeText(context, "Please fill From Travel Start Date", Toast.LENGTH_SHORT).show();
             }
         });
         activitystart_sign.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(travel_start.getText().toString()!=null && travel_start.getText().toString().length()>0) {
+                if (travel_start.getText().toString() != null && travel_start.getText().toString().length() > 0) {
                     /*String dateTime = getDatefromPicker();
                     ActivityStartdate = dateTime;
                     activity_start.setText(dateTime);*/
@@ -3734,10 +3750,10 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                                 e.printStackTrace();
                             }
                             final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-                            String ToDate=sdf.format(date_from);
-                            Log.i("output123","Todate===>"+ToDate);
+                            String ToDate = sdf.format(date_from);
+                            Log.i("output123", "Todate===>" + ToDate);
                             activity_start.setText(ToDate);
-                            ActivityStartdate=ToDate;
+                            ActivityStartdate = ToDate;
 //                        PickDate=ToDate;
                             mDateTimeDialog.dismiss();
                         }
@@ -3760,14 +3776,14 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                     mDateTimeDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
                     mDateTimeDialog.setContentView(mDateTimeDialogView);
                     mDateTimeDialog.show();
-                }else
-                    Toast.makeText(context,"Please fill From  Travel Start Date",Toast.LENGTH_SHORT).show();
+                } else
+                    Toast.makeText(context, "Please fill From  Travel Start Date", Toast.LENGTH_SHORT).show();
             }
         });
         activityend_sign.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(activity_start.getText().toString()!=null && activity_start.getText().toString().length()>0) {
+                if (activity_start.getText().toString() != null && activity_start.getText().toString().length() > 0) {
                   /*  String dateTime = getDatefromPicker();
                     ActivityEnddate = dateTime;
                     activity_end.setText(dateTime);*/
@@ -3789,10 +3805,10 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                                 e.printStackTrace();
                             }
                             final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-                            String ToDate=sdf.format(date_from);
-                            Log.i("output123","Todate===>"+ToDate);
+                            String ToDate = sdf.format(date_from);
+                            Log.i("output123", "Todate===>" + ToDate);
                             activity_end.setText(ToDate);
-                            ActivityEnddate=ToDate;
+                            ActivityEnddate = ToDate;
 //                        PickDate=ToDate;
                             mDateTimeDialog.dismiss();
                         }
@@ -3815,16 +3831,16 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                     mDateTimeDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
                     mDateTimeDialog.setContentView(mDateTimeDialogView);
                     mDateTimeDialog.show();
-                }else
-                    Toast.makeText(context,"Please fill Activity Start Date",Toast.LENGTH_SHORT).show();
+                } else
+                    Toast.makeText(context, "Please fill Activity Start Date", Toast.LENGTH_SHORT).show();
             }
         });
 
         travelstart_sign_end.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(travel_start.getText().toString()!=null && travel_start.getText().toString().length()>0
-                        && activity_start.getText().toString()!=null && activity_start.getText().toString().length()>0) {
+                if (travel_start.getText().toString() != null && travel_start.getText().toString().length() > 0
+                        && activity_start.getText().toString() != null && activity_start.getText().toString().length() > 0) {
                    /* String dateTime = getDatefromPicker();
                     travel_start_end.setText(dateTime);*/
                     final Dialog mDateTimeDialog = new Dialog(context);
@@ -3845,10 +3861,10 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                                 e.printStackTrace();
                             }
                             final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-                            String ToDate=sdf.format(date_from);
-                            Log.i("output123","Todate===>"+ToDate);
+                            String ToDate = sdf.format(date_from);
+                            Log.i("output123", "Todate===>" + ToDate);
                             travel_start_end.setText(ToDate);
-                            TotravelStart=ToDate;
+                            TotravelStart = ToDate;
 //                        PickDate=ToDate;
                             mDateTimeDialog.dismiss();
                         }
@@ -3871,8 +3887,8 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                     mDateTimeDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
                     mDateTimeDialog.setContentView(mDateTimeDialogView);
                     mDateTimeDialog.show();
-                }else
-                    Toast.makeText(context,"Please fill From Travel Start Date",Toast.LENGTH_SHORT).show();
+                } else
+                    Toast.makeText(context, "Please fill From Travel Start Date", Toast.LENGTH_SHORT).show();
             }
         });
         travelend_sign_end.setOnClickListener(new View.OnClickListener() {
@@ -3903,7 +3919,7 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                             String ToDate = sdf.format(date_from);
                             Log.i("output123", "Todate===>" + ToDate);
                             travel_end_return.setText(ToDate);
-                            ToTravelEnd=ToDate;
+                            ToTravelEnd = ToDate;
 //                        PickDate=ToDate;
                             mDateTimeDialog.dismiss();
                         }
@@ -3926,70 +3942,71 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                     mDateTimeDialog.setContentView(mDateTimeDialogView);
                     mDateTimeDialog.show();
                 } else
-                    Toast.makeText(context,"Please fill To Travel Start Date",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context, "Please fill To Travel Start Date", Toast.LENGTH_SHORT).show();
             }
         });
         send_travel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                    Toast.makeText(NewTaskConversation.this, "Send Successfully", Toast.LENGTH_SHORT).show();
-                    sendStatus_webservice("7", "", "", "travel");
-                    dialog.dismiss();
+                Toast.makeText(NewTaskConversation.this, "Send Successfully", Toast.LENGTH_SHORT).show();
+                sendStatus_webservice("7", "", "", "travel");
+                dialog.dismiss();
             }
         });
 
 
     }
-private String getDatefromPicker()
-{
-    final Dialog mDateTimeDialog = new Dialog(context);
-    final RelativeLayout mDateTimeDialogView = (RelativeLayout) getLayoutInflater().inflate(R.layout.date_time_dialog, null);
-    final CommonDateTimePicker mDateTimePicker = (CommonDateTimePicker) mDateTimeDialogView.findViewById(R.id.DateTimePicker);
-    mDateTimePicker.setDateChangedListener(NewTaskConversation.this);
-    ((Button) mDateTimeDialogView.findViewById(R.id.SetDateTime)).setOnClickListener(new View.OnClickListener() {
 
-        public void onClick(View v) {
-            mDateTimePicker.clearFocus();
-            // TODO Auto-generated method stub
-              PickDate = String.valueOf(mDateTimePicker.getYear() + "-" + mDateTimePicker.getMonth() + "-" + String.valueOf(mDateTimePicker.getDay()))
-                    + "  " + String.valueOf(mDateTimePicker.getHour()) + ":" + String.valueOf(mDateTimePicker.getMinute() + ":" + "00");
-            Date date_from = null;
-            try {
-                date_from = new SimpleDateFormat("yyyy-MMM-dd HH:mm:ss").parse(PickDate);
-            } catch (ParseException e) {
-                e.printStackTrace();
+    private String getDatefromPicker() {
+        final Dialog mDateTimeDialog = new Dialog(context);
+        final RelativeLayout mDateTimeDialogView = (RelativeLayout) getLayoutInflater().inflate(R.layout.date_time_dialog, null);
+        final CommonDateTimePicker mDateTimePicker = (CommonDateTimePicker) mDateTimeDialogView.findViewById(R.id.DateTimePicker);
+        mDateTimePicker.setDateChangedListener(NewTaskConversation.this);
+        ((Button) mDateTimeDialogView.findViewById(R.id.SetDateTime)).setOnClickListener(new View.OnClickListener() {
+
+            public void onClick(View v) {
+                mDateTimePicker.clearFocus();
+                // TODO Auto-generated method stub
+                PickDate = String.valueOf(mDateTimePicker.getYear() + "-" + mDateTimePicker.getMonth() + "-" + String.valueOf(mDateTimePicker.getDay()))
+                        + "  " + String.valueOf(mDateTimePicker.getHour()) + ":" + String.valueOf(mDateTimePicker.getMinute() + ":" + "00");
+                Date date_from = null;
+                try {
+                    date_from = new SimpleDateFormat("yyyy-MMM-dd HH:mm:ss").parse(PickDate);
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+                final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                String ToDate = sdf.format(date_from);
+                Log.i("output123", "Todate===>" + ToDate);
+                PickDate = ToDate;
+                mDateTimeDialog.dismiss();
             }
-            final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-             String ToDate=sdf.format(date_from);
-            Log.i("output123","Todate===>"+ToDate);
-            PickDate=ToDate;
-            mDateTimeDialog.dismiss();
-        }
-    });
-    ((Button) mDateTimeDialogView.findViewById(R.id.CancelDialog)).setOnClickListener(new View.OnClickListener() {
+        });
+        ((Button) mDateTimeDialogView.findViewById(R.id.CancelDialog)).setOnClickListener(new View.OnClickListener() {
 
-        public void onClick(View v) {
-            // TODO Auto-generated method stub
-            mDateTimeDialog.cancel();
-        }
-    });
+            public void onClick(View v) {
+                // TODO Auto-generated method stub
+                mDateTimeDialog.cancel();
+            }
+        });
 
-    ((Button) mDateTimeDialogView.findViewById(R.id.ResetDateTime)).setOnClickListener(new View.OnClickListener() {
+        ((Button) mDateTimeDialogView.findViewById(R.id.ResetDateTime)).setOnClickListener(new View.OnClickListener() {
 
-        public void onClick(View v) {
-            // TODO Auto-generated method stub
-            mDateTimePicker.reset();
-        }
-    });
-    mDateTimeDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-    mDateTimeDialog.setContentView(mDateTimeDialogView);
-    mDateTimeDialog.show();
-    return PickDate;
+            public void onClick(View v) {
+                // TODO Auto-generated method stub
+                mDateTimePicker.reset();
+            }
+        });
+        mDateTimeDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        mDateTimeDialog.setContentView(mDateTimeDialogView);
+        mDateTimeDialog.show();
+        return PickDate;
 
-}
+    }
+
     private void showCustom1PopUp() {
 //        ArrayList<TaskDetailsBean> taskDetailsBean = new ArrayList<>();
-        TaskDetailsBean detailsBean;
+        final TaskDetailsBean detailsBean;
         try {
             final Dialog dialog = new Dialog(context);
             dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -4064,6 +4081,7 @@ private String getDatefromPicker()
 //            activity_end.setText(detailsBean.getActivityEndTime());
             signature_path1.setVisibility(View.VISIBLE);
             photo_path1.setVisibility(View.VISIBLE);
+
             tech_signature_path1.setVisibility(View.VISIBLE);
             signature_path1.setText(detailsBean.getCustomerSignature());
             photo_path1.setText(detailsBean.getPhotoPath());
@@ -4102,8 +4120,31 @@ private String getDatefromPicker()
             signature_path1.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    String ImageName = signature_path.getText().toString();
+                    String ImageName = detailsBean.getCustomerSignature();
                     File file = null;
+                    file = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/High Message/" + detailsBean.getCustomerSignature());
+//                    file = new File(ImageName);
+                    if (file.exists()) {
+                        Intent intent = new Intent(context, FullScreenImage.class);
+                        intent.putExtra("image", file.toString());
+                        context.startActivity(intent);
+                    } else {
+                        File file1 = null;
+                        file1 = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/High Message/" + ImageName);
+                        if (file1.exists()) {
+                            Intent intent = new Intent(context, FullScreenImage.class);
+                            intent.putExtra("image", file1.toString());
+                            context.startActivity(intent);
+                        }
+                    }
+                }
+            });
+            photo_path1.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    String ImageName = photo_path.getText().toString();
+                    File file = null;
+
                     file = new File(ImageName);
                     if (file.exists()) {
                         Intent intent = new Intent(context, FullScreenImage.class);
@@ -4118,7 +4159,28 @@ private String getDatefromPicker()
                             context.startActivity(intent);
                         }
                     }
+                }
+            });
+            tech_signature_path1.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    String ImageName = photo_path.getText().toString();
+                    File file = null;
 
+                    file = new File(ImageName);
+                    if (file.exists()) {
+                        Intent intent = new Intent(context, FullScreenImage.class);
+                        intent.putExtra("image", file.toString());
+                        context.startActivity(intent);
+                    } else {
+                        File file1 = null;
+                        file1 = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/High Message/" + ImageName);
+                        if (file1.exists()) {
+                            Intent intent = new Intent(context, FullScreenImage.class);
+                            intent.putExtra("image", file1.toString());
+                            context.startActivity(intent);
+                        }
+                    }
                 }
             });
             back.setOnClickListener(new View.OnClickListener() {
@@ -4135,8 +4197,7 @@ private String getDatefromPicker()
                     }
                 }
             });
-        }catch(Exception e)
-        {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -4166,15 +4227,14 @@ private String getDatefromPicker()
         popup.getMenu().getItem(4).setVisible(false);
         popup.getMenu().getItem(5).setVisible(false);
         popup.getMenu().getItem(6).setVisible(false);
-        String query="select status from projectStatus where projectId='" + projectId + "' and userId='" + Appreference.loginuserdetails.getId() + "' and taskId= '" + webtaskId + "'";
-        int current_status=VideoCallDataBase.getDB(context).getCurrentStatus(query);
+        String query = "select status from projectStatus where projectId='" + projectId + "' and userId='" + Appreference.loginuserdetails.getId() + "' and taskId= '" + webtaskId + "'";
+        int current_status = VideoCallDataBase.getDB(context).getCurrentStatus(query);
 
-        if(current_status==7)
-        {
-            String query123="select status from projectStatus where projectId='" + projectId + "' and userId='" + Appreference.loginuserdetails.getId() + "' and taskId= '" + webtaskId + "' order by id DESC LIMIT 2";
-            int last_beforeStatus=VideoCallDataBase.getDB(context).getCurrentStatus(query123);
+        if (current_status == 7) {
+            String query123 = "select status from projectStatus where projectId='" + projectId + "' and userId='" + Appreference.loginuserdetails.getId() + "' and taskId= '" + webtaskId + "' order by id DESC LIMIT 2";
+            int last_beforeStatus = VideoCallDataBase.getDB(context).getCurrentStatus(query123);
             Log.i("output123", "project CurrentStatus from DB====>" + last_beforeStatus);
-            current_status=last_beforeStatus;
+            current_status = last_beforeStatus;
         }
         /*Log.i("status123", "currentStatus========================>" + taskStatus);
         int current_status = -1;
@@ -4200,7 +4260,7 @@ private String getDatefromPicker()
         Log.i("ws123", "project CurrentStatus from DB====>" + current_status);
         if (current_status == -1)
             popup.getMenu().getItem(0).setVisible(true);
-            popup.getMenu().getItem(6).setVisible(true);
+        popup.getMenu().getItem(6).setVisible(true);
         if (current_status == 0) {
             Start_work = true;
             popup.getMenu().getItem(0).setVisible(false);
@@ -4358,7 +4418,9 @@ private String getDatefromPicker()
 
                     TextView address = (TextView) dialog.findViewById(R.id.address);
                     TextView description = (TextView) dialog.findViewById(R.id.description);
-                    TextView observation = (TextView) dialog.findViewById(R.id.observation);
+                    final EditText observation = (EditText) dialog.findViewById(R.id.observation);
+                    final EditText action_taken = (EditText) dialog.findViewById(R.id.action_taken);
+                    final EditText cust_sign_name = (EditText) dialog.findViewById(R.id.cust_sign_name);
                     TextView proj_activity = (TextView) dialog.findViewById(R.id.proj_activity);
                     final TextView travel_start = (TextView) dialog.findViewById(R.id.travel_start);
                     final TextView travel_end = (TextView) dialog.findViewById(R.id.travel_end);
@@ -4384,9 +4446,9 @@ private String getDatefromPicker()
                         @Override
                         public void onClick(View v) {
                             Intent i = new Intent(getApplicationContext(), DisplayList.class);
-                            i.putExtra("projectId",projectId);
-                            i.putExtra("webtaskId",webtaskId);
-                            i.putExtra("date_type","travel_start");
+                            i.putExtra("projectId", projectId);
+                            i.putExtra("webtaskId", webtaskId);
+                            i.putExtra("date_type", "travel_start");
                             startActivity(i);
                         }
                     });
@@ -4397,7 +4459,7 @@ private String getDatefromPicker()
                             Intent i = new Intent(getApplicationContext(), DisplayList.class);
                             i.putExtra("projectId", projectId);
                             i.putExtra("webtaskId", webtaskId);
-                            i.putExtra("date_type","activity_date");
+                            i.putExtra("date_type", "activity_date");
                             startActivity(i);
                         }
                     });
@@ -4408,7 +4470,7 @@ private String getDatefromPicker()
                             Intent i = new Intent(getApplicationContext(), DisplayList.class);
                             i.putExtra("projectId", projectId);
                             i.putExtra("webtaskId", webtaskId);
-                            i.putExtra("date_type","travel_end");
+                            i.putExtra("date_type", "travel_end");
                             startActivity(i);
                         }
                     });
@@ -4422,8 +4484,10 @@ private String getDatefromPicker()
                     if (taskDetailsBean.size() > 0) {
                         TaskDetailsBean detailsBean = taskDetailsBean.get(0);
                         project_id.setText(detailsBean.getProjectId());
+                        statusCompletedFieldValues.put(1, "Project ID:" + detailsBean.getProjectId());
                         project_name.setText(detailsBean.getProjectName());
                         task_id.setText(detailsBean.getTaskId());
+                        statusCompletedFieldValues.put(2, "Task ID:" + detailsBean.getTaskId());
                         Log.i("ws123", "username or employee name===>" + Appreference.loginuserdetails.getEmail());
 //                        if(detailsBean.getTaskMemberList().contains(Appreference.loginuserdetails.getEmail()))
 //                        employee_name.setText(Appreference.loginuserdetails.getEmail());
@@ -4431,24 +4495,33 @@ private String getDatefromPicker()
 //                            employee_name.setText(" ");
 
                         mcModel.setText(detailsBean.getMcModel());
+                        statusCompletedFieldValues.put(4, "Mc Mode:" + detailsBean.getMcModel());
                         mcSrNo.setText(detailsBean.getMcSrNo());
+                        statusCompletedFieldValues.put(5, "McSrNo:" + detailsBean.getMcSrNo());
                         est_travel.setText(detailsBean.getEstimatedTravel());
+                        statusCompletedFieldValues.put(6, "EstimatedTravel:" + detailsBean.getEstimatedTravel());
                         est_activity.setText(detailsBean.getEstimatedActivity());
+                        statusCompletedFieldValues.put(7, "EstimatedActivity:" + detailsBean.getEstimatedActivity());
                         service_date.setText(detailsBean.getDateTime());
-                        observation.setText(detailsBean.getObservation());
+                        statusCompletedFieldValues.put(8, "ServiceRequest:" + detailsBean.getDateTime());
+//                        observation.setText(detailsBean.getObservation());
                         proj_activity.setText(detailsBean.getActivity());
+                        statusCompletedFieldValues.put(14, "Activity:" + detailsBean.getActivity());
                         address.setText(detailsBean.getAddress());
+                        statusCompletedFieldValues.put(3, "Address:" + detailsBean.getAddress());
                         description.setText(detailsBean.getTaskDescription());
+                        statusCompletedFieldValues.put(12, "Description:" + detailsBean.getTaskDescription());
                         signature_path.setVisibility(View.VISIBLE);
                         photo_path.setVisibility(View.VISIBLE);
                         tech_signature_path.setVisibility(View.VISIBLE);
                     }
 
+
                     skech_receiver.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            isCustomerSign=true;
-                            isForOracleProject=true;
+                            isCustomerSign = true;
+                            isForOracleProject = true;
                             Intent i = new Intent(getApplicationContext(), HandSketchActivity2.class);
                             startActivityForResult(i, 423);
                         }
@@ -4456,8 +4529,8 @@ private String getDatefromPicker()
                     tech_sign_receiver.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            isCustomerSign=false;
-                            isForOracleProject=true;
+                            isCustomerSign = false;
+                            isForOracleProject = true;
                             Intent i = new Intent(getApplicationContext(), HandSketchActivity2.class);
                             startActivityForResult(i, 423);
                         }
@@ -4466,7 +4539,7 @@ private String getDatefromPicker()
                         @Override
                         public void onClick(View v) {
                             try {
-                                isForOracleProject=true;
+                                isForOracleProject = true;
                                 final String path = Environment.getExternalStorageDirectory() + "/High Message/";
                                 File directory = new File(path);
                                 if (!directory.exists())
@@ -4478,8 +4551,7 @@ private String getDatefromPicker()
                                 intent.putExtra("isPhoto", true);
                                 intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
                                 startActivityForResult(intent, 132);
-                            }catch(Exception e)
-                            {
+                            } catch (Exception e) {
                                 e.printStackTrace();
                             }
                         }
@@ -4487,9 +4559,9 @@ private String getDatefromPicker()
                     /*status_signature=signature_path.getText().toString();
                     photo_signature=photo_path.getText().toString();
                     tech_signature=tech_signature_path.getText().toString();*/
-                    Log.i("output123","signature1 ========================> "+status_signature);
-                    Log.i("output123","tech signature1 ========================> "+tech_signature);
-                    Log.i("output123","photo signature1 ========================> "+photo_signature);
+                    Log.i("output123", "signature1 ========================> " + status_signature);
+                    Log.i("output123", "tech signature1 ========================> " + tech_signature);
+                    Log.i("output123", "photo signature1 ========================> " + photo_signature);
                     signature_path.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
@@ -4565,6 +4637,10 @@ private String getDatefromPicker()
                     send_completion.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
+                            statusCompletedFieldValues.put(13, "Observation:" + observation.getText().toString());
+                            statusCompletedFieldValues.put(15, "CustomerRemarks:" + remarks_completion.getText().toString());
+                            statusCompletedFieldValues.put(16, "ActionTaken:" + action_taken.getText().toString());
+                            statusCompletedFieldValues.put(17, "CustomerSignName:" + cust_sign_name.getText().toString());
                             if (remarks_completion.getText().toString() != null && remarks_completion.getText().toString().length() > 0) {
                                 Toast.makeText(NewTaskConversation.this, "Send Successfully", Toast.LENGTH_SHORT).show();
                                 sendStatus_webservice("5", "", remarks_completion.getText().toString(), "Complete");
@@ -4651,28 +4727,16 @@ private String getDatefromPicker()
         try {
 
             SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-            SimpleDateFormat formatDateforstatus = new SimpleDateFormat("d-M-yyyy");
             String dateTime = dateFormat.format(new Date());
             dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
             String dateforrow = dateFormat.format(new Date());
-            long timeInMilliseconds = 0;
             tasktime = dateTime;
-//            String tasktime1 = tasktime.split(" ")[1];
-            Log.i("task", "tasktime" + tasktime);
-            Log.i("UTC", "sendMessage utc time" + dateforrow);
-            Log.i("time", "value");
             taskUTCtime = dateforrow;
 
-            try {
-                Date mDate = dateFormat.parse(tasktime);
-                timeInMilliseconds = mDate.getTime();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            ArrayList<TaskDetailsBean> status_list=new ArrayList<>();
+
+            ArrayList<TaskDetailsBean> status_list = new ArrayList<>();
             TaskDetailsBean taskDetailsBean = new TaskDetailsBean();
 
-            Log.i("ws123", "taskID start work===>" + webtaskId);
             JSONObject jsonObject = new JSONObject();
             JSONObject jsonObject1 = new JSONObject();
             jsonObject1.put("id", Integer.parseInt(projectId));
@@ -4689,26 +4753,7 @@ private String getDatefromPicker()
             taskDetailsBean.setTaskId(webtaskId);
             jsonObject.put("task", jsonObject3);
 
-            JSONObject jsonObject4 = new JSONObject();
-            if (status_signature != null && !status_signature.equalsIgnoreCase(null) && !status_signature.equalsIgnoreCase("")) {
-                jsonObject4.put("fileContent", encodeTobase64(BitmapFactory.decodeFile(status_signature)));
-                jsonObject4.put("taskFileExt", "jpg");
-                jsonObject.put("signatures", jsonObject4);
-            }
 
-            JSONObject jsonObject5 = new JSONObject();
-            if (photo_signature != null && !photo_signature.equalsIgnoreCase(null) && !photo_signature.equalsIgnoreCase("")) {
-                jsonObject5.put("fileContent", encodeTobase64(BitmapFactory.decodeFile(photo_signature)));
-                jsonObject5.put("taskFileExt", "jpg");
-                jsonObject.put("photos", jsonObject5);
-            }
-
-            JSONObject jsonObject6 = new JSONObject();
-            if (tech_signature != null && !tech_signature.equalsIgnoreCase(null) && !tech_signature.equalsIgnoreCase("")) {
-                jsonObject6.put("fileContent", encodeTobase64(BitmapFactory.decodeFile(tech_signature)));
-                jsonObject6.put("taskFileExt", "jpg");
-                jsonObject.put("technicianSignatures", jsonObject6);
-            }
             if (status.equalsIgnoreCase("7")) {
                 jsonObject.put("travelStartTime", FromTravelStart);
                 jsonObject.put("activityStartTime", ActivityStartdate);
@@ -4723,8 +4768,9 @@ private String getDatefromPicker()
                 taskDetailsBean.setTravelEndTime(FromTravelEnd);
                 taskDetailsBean.setActivityStartTime(ActivityStartdate);
                 taskDetailsBean.setActivityEndTime(ActivityEnddate);
-                if(FromTravelStart!=null){
-                    travel_endDate= "Task Travel Details : " + "\n" + "FromTravelStart : " + FromTravelStart +"\n" + "ActivityStartdate : " + ActivityStartdate + "\n" + "ActivityEnddate : "+ ActivityEnddate +"\n"  + "FromTravelEnd : "+ FromTravelEnd +"\n"  + "TotravelStart : "+ TotravelStart +"\n" +  "ToTravelEnd : "+ ToTravelEnd;
+
+                if (FromTravelStart != null) {
+                    travel_endDate = "Task Travel Details : " + "\n" + "FromTravelStart : " + FromTravelStart + "\n" + "ActivityStartdate : " + ActivityStartdate + "\n" + "ActivityEnddate : " + ActivityEnddate + "\n" + "FromTravelEnd : " + FromTravelEnd + "\n" + "TotravelStart : " + TotravelStart + "\n" + "ToTravelEnd : " + ToTravelEnd;
                 }
 
             } else {
@@ -4745,10 +4791,10 @@ private String getDatefromPicker()
             } else
                 jsonObject.put("remarks", "");
             jsonObject.put("status", status);
-            if(observationStatus!=null && observationStatus.length()>0) {
+            if (observationStatus != null && observationStatus.length() > 0) {
                 jsonObject.put("observation", observationStatus);
                 taskDetailsBean.setObservation(observationStatus);
-            }else
+            } else
                 jsonObject.put("observation", "");
 
             jsonObject.put("hourMeterReading", "");
@@ -4763,7 +4809,7 @@ private String getDatefromPicker()
             taskDetailsBean.setToUserName(toUserName);
 //            taskDetailsBean.setToUserId(String.valueOf(toUserId));
             taskDetailsBean.setToUserId("");
-            taskDetailsBean.setSignalid(Utility.getSessionID());
+//            taskDetailsBean.setSignalid(Utility.getSessionID());
             taskDetailsBean.setTaskNo(task_No);
             taskDetailsBean.setPlannedStartDateTime("");
             taskDetailsBean.setPlannedEndDateTime("");
@@ -4783,11 +4829,10 @@ private String getDatefromPicker()
             taskDetailsBean.setShow_progress(1);
 
 
-
             Log.i("send_status", "owneroftask" + ownerOfTask);
             Log.i("send_status", "taskReceiver" + taskReceiver);
             Log.i("send_status", "project_toUsers" + project_toUsers);
-            Log.i("send_status","taskName "+taskName +" category==>"+category);
+            Log.i("send_status", "taskName " + taskName + " category==>" + category);
             taskDetailsBean.setOwnerOfTask(ownerOfTask);
             taskDetailsBean.setTaskReceiver(taskReceiver);
             taskDetailsBean.setTaskName(taskName);
@@ -4808,33 +4853,76 @@ private String getDatefromPicker()
            /* taskDetailsBean.setCustomerSignature(status_signature);
             taskDetailsBean.setTechnicianSignature(tech_signature);
             taskDetailsBean.setPhotoPath(photo_signature); */
-            if(signature_path!=null && signature_path.getText().toString()!=null) {
+            if (signature_path != null && signature_path.getText().toString() != null) {
                 taskDetailsBean.setCustomerSignature(signature_path.getText().toString());
             }
-            if(tech_signature_path!=null && tech_signature_path.getText().toString()!=null) {
+            if (tech_signature_path != null && tech_signature_path.getText().toString() != null) {
                 taskDetailsBean.setTechnicianSignature(tech_signature_path.getText().toString());
             }
-            if(photo_path!=null && photo_path.getText().toString()!=null) {
+            if (photo_path != null && photo_path.getText().toString() != null) {
                 taskDetailsBean.setPhotoPath(photo_path.getText().toString());
             }
-            Log.i("status","DeAssign "+Appreference.loginuserdetails.getUsername());
-            if(projectCurrentStatus!=null && projectCurrentStatus.equalsIgnoreCase("DeAssign")){
-                taskDetailsBean.setTaskDescription(Appreference.loginuserdetails.getUsername() +" left ");
-            }else if(status.equalsIgnoreCase("7")){
+            Log.i("status", "DeAssign " + Appreference.loginuserdetails.getUsername());
+            if (projectCurrentStatus != null && projectCurrentStatus.equalsIgnoreCase("DeAssign")) {
+                taskDetailsBean.setTaskDescription(Appreference.loginuserdetails.getFirstName() + Appreference.loginuserdetails.getLastName() + " left ");
+            } else if (status.equalsIgnoreCase("7")) {
                 taskDetailsBean.setTaskDescription("Task Travel Details sent");
-            }
-            else{
+            } else {
                 taskDetailsBean.setTaskDescription("Task is " + projectCurrentStatus);
             }
-            status_list.add(taskDetailsBean);
+//            status_list.add(taskDetailsBean);
             jsonObject.put("hourMeterReading", "");
-            Log.i("ws123","status update in project History");
+            Log.i("ws123", "status update in project History");
+            for (int level = 0; level < statusCompletedFieldValues.size(); level++) {
+                if (statusCompletedFieldValues.containsKey(level)) {
+                    TaskDetailsBean taskDetailsBean1 = new TaskDetailsBean();
+                    taskDetailsBean1 = taskDetailsBean;
+                    taskDetailsBean1.setSignalid(Utility.getSessionID());
+                    taskDetailsBean1.setMimeType("text");
+                    taskDetailsBean1.setTaskDescription(statusCompletedFieldValues.get(level));
+                    status_list.add(taskDetailsBean1);
+                }
+            }
+            JSONObject jsonObject4 = new JSONObject();
+            if (status_signature != null && !status_signature.equalsIgnoreCase(null) && !status_signature.equalsIgnoreCase("")) {
+                TaskDetailsBean taskDetailsBean1 = new TaskDetailsBean();
+                taskDetailsBean1.setMimeType("image");
+                taskDetailsBean1.setTaskRequestType("signature");
+                jsonObject4.put("fileContent", encodeTobase64(BitmapFactory.decodeFile(status_signature)));
+                jsonObject4.put("taskFileExt", "jpg");
+                jsonObject.put("signatures", jsonObject4);
+                status_list.add(taskDetailsBean1);
+            }
+            JSONObject jsonObject5 = new JSONObject();
+            if (photo_signature != null && !photo_signature.equalsIgnoreCase(null) && !photo_signature.equalsIgnoreCase("")) {
+                TaskDetailsBean taskDetailsBean1 = new TaskDetailsBean();
+                taskDetailsBean1 = taskDetailsBean;
+                taskDetailsBean1.setSignalid(Utility.getSessionID());
+                taskDetailsBean1.setMimeType("image");
+                taskDetailsBean1.setTaskRequestType("photo");
+                jsonObject5.put("fileContent", encodeTobase64(BitmapFactory.decodeFile(photo_signature)));
+                jsonObject5.put("taskFileExt", "jpg");
+                jsonObject.put("signatures", jsonObject5);
+                status_list.add(taskDetailsBean1);
+            }
+            JSONObject jsonObject6 = new JSONObject();
+            if (tech_signature != null && !tech_signature.equalsIgnoreCase(null) && !tech_signature.equalsIgnoreCase("")) {
+                TaskDetailsBean taskDetailsBean1 = new TaskDetailsBean();
+                taskDetailsBean1 = taskDetailsBean;
+                taskDetailsBean1.setSignalid(Utility.getSessionID());
+                taskDetailsBean1.setMimeType("image");
+                taskDetailsBean1.setTaskRequestType("technicianSignature");
+                jsonObject6.put("fileContent", encodeTobase64(BitmapFactory.decodeFile(tech_signature)));
+                jsonObject6.put("taskFileExt", "jpg");
+                jsonObject.put("signatures", jsonObject6);
+                status_list.add(taskDetailsBean1);
+            }
             if (!isTaskName)
                 if (isProjectFromOracle)
                     VideoCallDataBase.getDB(context).update_Project_history(taskDetailsBean);
             VideoCallDataBase.getDB(context).insertORupdate_Task_history(taskDetailsBean);
             VideoCallDataBase.getDB(context).insertORupdateStatus(taskDetailsBean);
-            Appreference.jsonRequestSender.taskStatus(EnumJsonWebservicename.taskStatus, jsonObject, status_list,taskDetailsBean, NewTaskConversation.this);
+            Appreference.jsonRequestSender.taskStatus(EnumJsonWebservicename.taskStatus, jsonObject, status_list, taskDetailsBean, NewTaskConversation.this);
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -8209,9 +8297,9 @@ private String getDatefromPicker()
                 } else if (requestCode == 132) {
                     try {
                         File new_file = new File(strIPath);
-                        if(photo_path!=null) {
+                        if (photo_path != null) {
                             custom_1MediaList.add(strIPath);
-                            photo_signature=strIPath;
+                            photo_signature = strIPath;
                             photo_path.setText(strIPath);
                         }
                         mime_Type = "image";
@@ -8293,8 +8381,8 @@ private String getDatefromPicker()
                             }
                             PrivateMultifileUpload_Webservice(chatBean);
                         } else if (new_file.exists()) {
-                            if(!isForOracleProject)
-                            firstmmfile(mime_Type, "jpg");
+                            if (!isForOracleProject)
+                                firstmmfile(mime_Type, "jpg");
                             refreshListViewCache();
                         }
                     } catch (Exception e) {
@@ -8392,16 +8480,16 @@ private String getDatefromPicker()
                 } else if (requestCode == 423) {
                     try {
                         strIPath = data.getStringExtra("path");
-                        if(isCustomerSign) {
-                            status_signature=strIPath;
+                        if (isCustomerSign) {
+                            status_signature = strIPath;
                             custom_1MediaList.add(strIPath);
                             if (signature_path != null)
                                 signature_path.setText(strIPath);
-                        }else {
-                            tech_signature=strIPath;
+                        } else {
+                            tech_signature = strIPath;
                             custom_1MediaList.add(strIPath);
-                            if(tech_signature_path!=null)
-                            tech_signature_path.setText(strIPath);
+                            if (tech_signature_path != null)
+                                tech_signature_path.setText(strIPath);
                         }
 
                         mime_Type = "image";
@@ -8489,8 +8577,8 @@ private String getDatefromPicker()
                             listLastposition();
                             PrivateMultifileUpload_Webservice(chatBean);
                         } else {
-                            if(!isForOracleProject)
-                            firstmmfile(mime_Type, "jpg");
+                            if (!isForOracleProject)
+                                firstmmfile(mime_Type, "jpg");
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -10222,89 +10310,111 @@ private String getDatefromPicker()
                         }
                     } else if (WebServiceEnum_Response != null && WebServiceEnum_Response.equalsIgnoreCase(("taskStatus"))) {
                         Log.i("output123", "NewTaskConverstaion taskStatus ResponceMethod");
-                        boolean isDeassign=false;
+                        boolean isDeassign = false;
                         final JSONObject jsonObject = new JSONObject(communicationBean.getEmail());
                         if (((String) jsonObject.get("result_text")).equalsIgnoreCase("task started")) {
                             projectCurrentStatus = "start";
-//                            showToast("Task Started......");
                         } else if (((String) jsonObject.get("result_text")).equalsIgnoreCase("task hold")) {
                             projectCurrentStatus = "hold";
-//                            showToast("Task hold......");
                         } else if (((String) jsonObject.get("result_text")).equalsIgnoreCase("task resume")) {
                             projectCurrentStatus = "resume";
-//                            showToast("Task resume......");
                         } else if (((String) jsonObject.get("result_text")).equalsIgnoreCase("task pause")) {
                             projectCurrentStatus = "pause";
-                            isDivertedON=true;
-//                            showToast("Task pause......");
+                            isDivertedON = true;
                         } else if (((String) jsonObject.get("result_text")).equalsIgnoreCase("task restart")) {
                             projectCurrentStatus = "restart";
-//                            showToast("Task restart......");
                         } else if (((String) jsonObject.get("result_text")).equalsIgnoreCase("task completed")) {
                             projectCurrentStatus = "completed";
-//                            showToast("Task completed......");
                         } else if (((String) jsonObject.get("result_text")).equalsIgnoreCase("task deassign")) {
                             projectCurrentStatus = "DeAssign";
-//                            showToast("Task DeAssign......");
-                            isDeassign=true;
+                            isDeassign = true;
                         }
-                        Log.i("output123", "NewTaskConverstaion taskStatus ResponceMethod isDeassign"+isDeassign);
- 						TaskDetailsBean detailsBean=new TaskDetailsBean();
+                        Log.i("output123", "NewTaskConverstaion taskStatus ResponceMethod isDeassign" + isDeassign);
+                        TaskDetailsBean detailsBean = new TaskDetailsBean();
                         detailsBean = communicationBean.getTaskDetailsBean();
 
-                      /*  if (detailsBean.getMimeType().equalsIgnoreCase("photo") || detailsBean.getMimeType().equalsIgnoreCase("image") || detailsBean.getMimeType().equalsIgnoreCase("signature")) {
-                            detailsBean.setTaskDescription(detailsBean.getCustomerSignature());
-                            detailsBean.setMimeType("image");
-                        }*/
-                        if(projectCurrentStatus.equalsIgnoreCase("completed")) {
 
-                            detailsBean.setMimeType("image");
-                            detailsBean.setCustomTagVisible(true);
-                            for(int i=0;i<custom_1MediaList.size();i++) {
-                                detailsBean.setTaskDescription(jsonObject.getString("signature"));
-                                final String xml = composeChatXML(detailsBean);
-                                handler.post(new Runnable() {
+                        if (projectCurrentStatus.equalsIgnoreCase("completed")) {
+                            final ArrayList<TaskDetailsBean> stausMediaPath = communicationBean.getGetStatusListForMedia();
+                            int sec = 1000;
+                            for (int path = 0; path < stausMediaPath.size(); path++) {
+                                Log.i("imges", "send with sec " + sec);
+                                final int finalPath = path;
+                                handler.postDelayed(new Runnable() {
                                     @Override
                                     public void run() {
-                                        sendMultiInstantMessage(xml,listOfObservers, 1);
+                                        try {
+                                            TaskDetailsBean taskDetailsBean = stausMediaPath.get(finalPath);
+                                            taskDetailsBean.setCustomTagVisible(true);
+                                            if (taskDetailsBean.getMimeType().equalsIgnoreCase("text")) {
+                                                taskDetailsBean.setTaskDescription(taskDetailsBean.getTaskDescription());
+                                            } else if (taskDetailsBean.getMimeType().equalsIgnoreCase("image")) {
+                                                if (taskDetailsBean.getTaskRequestType().equalsIgnoreCase(jsonObject.getString("signature"))) {
+                                                    taskDetailsBean.setTaskDescription(jsonObject.getString("signature"));
+                                                    taskDetailsBean.setMimeType("image");
+                                                } else if (taskDetailsBean.getTaskRequestType().equalsIgnoreCase(jsonObject.getString("photo"))) {
+                                                    taskDetailsBean.setTaskDescription(jsonObject.getString("photo"));
+                                                    taskDetailsBean.setMimeType("image");
+                                                } else if (taskDetailsBean.getTaskRequestType().equalsIgnoreCase(jsonObject.getString("technicianSignature"))) {
+                                                    taskDetailsBean.setTaskDescription(jsonObject.getString("technicianSignature"));
+                                                    taskDetailsBean.setMimeType("image");
+                                                }
+                                            }
+                                            final String xml = composeChatXML(taskDetailsBean);
+                                            Log.i("imges", "send with composed mimeType " + taskDetailsBean.getMimeType());
+                                            sendMultiInstantMessage(xml, listOfObservers, 1);
+                                        } catch (Exception e) {
+                                            e.printStackTrace();
+                                        }
                                     }
-                                });
+                                }, sec);
+
+                              /*  handler.post(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        sendMultiInstantMessage(xml, listOfObservers, 1);
+                                    }
+                                });*/
                             }
-                        }else
-                        {
+
+                        } else {
                             detailsBean.setMimeType("text");
                             detailsBean.setCustomTagVisible(true);
                             final String xml = composeChatXML(detailsBean);
                             handler.post(new Runnable() {
                                 @Override
                                 public void run() {
-                                    sendMultiInstantMessage(xml,listOfObservers, 1);
+                                    sendMultiInstantMessage(xml, listOfObservers, 1);
                                 }
                             });
                         }
-
-
                         taskList.add(detailsBean);
-
-						 if(detailsBean.getCustomerRemarks()!=null){
+                        Log.i("ws123", "travel_endDate=====>" + travel_endDate);
+                        if (detailsBean.getCustomerRemarks() != null) {
                             sendMessage(detailsBean.getCustomerRemarks(), null, "text", null, null, Utility.getSessionID(), null);
-                        }else if(travel_endDate!=null){
-                             sendMessage(travel_endDate, null, "text", null, null, Utility.getSessionID(), null);
-                         }
+                        } else if (travel_endDate != null) {
+                            sendMessage(travel_endDate, null, "text", null, null, Utility.getSessionID(), null);
+                        }
+                       /* for(int row=0;row<statusCompletedFieldValues.size();row++){
+                            sendMessage(statusCompletedFieldValues.get(row), null, "text", null, null, Utility.getSessionID(), null);
+
+                        }*/
 
                         refresh();
-                        if(isDivertedON)
-                        {
-                            isDivertedON=false;
+                        if (isDivertedON) {
+                            isDivertedON = false;
+                            String query = "select projectId from projectDetails where isActiveStatus = 1 ";
+                            String diverted_project_id = VideoCallDataBase.getDB(context).getDivertedProjId(query);
+
                             List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
-                            nameValuePairs.add(new BasicNameValuePair("projectId", projectId));
+                            nameValuePairs.add(new BasicNameValuePair("projectId", diverted_project_id));
                             nameValuePairs.add(new BasicNameValuePair("userId", String.valueOf(Appreference.loginuserdetails.getId())));
                             Appreference.jsonRequestSender.getTaskForJobID(EnumJsonWebservicename.getTaskForJobID, nameValuePairs, ProjectsFragment.getInstance());
                         }
-                        if(isDeassign)
+                        if (isDeassign)
                             NewTaskConversation.this.finish();
                     } else if (WebServiceEnum_Response != null && WebServiceEnum_Response.equalsIgnoreCase(("assignTask"))) {
-                        Log.i("output123", "NewTaskConv AssignTask Responce Received" +server_Response_string);
+                        Log.i("output123", "NewTaskConv AssignTask Responce Received" + server_Response_string);
                         TaskDetailsBean detailsBean1 = null;
                         detailsBean1 = communicationBean.getTaskDetailsBean();
                         // db insert method
@@ -10312,7 +10422,19 @@ private String getDatefromPicker()
                         VideoCallDataBase.getDB(context).insertORupdate_Task_history(detailsBean1);
                         VideoCallDataBase.getDB(context).insertORupdateStatus(detailsBean1);
                         finish();
-                    }else if (WebServiceEnum_Response != null && WebServiceEnum_Response.equalsIgnoreCase("getRequestType")) {
+                    } else if (WebServiceEnum_Response != null && WebServiceEnum_Response.equalsIgnoreCase(("taskNeedAssessmentReport"))) {
+                        Log.i("output123", "NewTaskConv taskNeedAssessmentReport  Responce Received" + server_Response_string);
+                        final JSONObject jsonObject = new JSONObject(communicationBean.getEmail());
+                        if (((String) jsonObject.get("result_text")).equalsIgnoreCase("Task_Need_assessment_report created completed ")) {
+                            Log.i("output123", " Filename" + jsonObject.getString("filename"));
+                            Intent intent = new Intent(context, WebViewActivity.class);
+                            intent.putExtra("ReportFileName", jsonObject.getString("filename"));
+                            startActivity(intent);
+                            showToast("Task_Need_assessment_report created completed");
+                        }
+
+
+                    } else if (WebServiceEnum_Response != null && WebServiceEnum_Response.equalsIgnoreCase("getRequestType")) {
                         Log.i("taskresponse123", "getRequestType");
                         ArrayList<MoreFieldsBean> beanArrayList = new ArrayList<MoreFieldsBean>();
                         {
@@ -15907,8 +16029,6 @@ private String getDatefromPicker()
     }
 
 
-
-
     public void ignoremenu(final TaskDetailsBean mediaListBean, View view, final Context adapter_context) {
 
         try {
@@ -18157,7 +18277,7 @@ private String getDatefromPicker()
         Log.i("gettask", "get task webservice " + webtaskId);
         List<NameValuePair> nameValuePairs1 = new ArrayList<NameValuePair>(1);
         nameValuePairs1.add(new BasicNameValuePair("taskId", webtaskId));
-        Appreference.jsonRequestSender. getTask(EnumJsonWebservicename.getTask, nameValuePairs1, NewTaskConversation.this);
+        Appreference.jsonRequestSender.getTask(EnumJsonWebservicename.getTask, nameValuePairs1, NewTaskConversation.this);
     }
 
     // insert and update values in table for reassign task
@@ -18350,9 +18470,9 @@ private String getDatefromPicker()
         }
         Log.i("taskconversation", "Reassign task newly added user " + newReceiver + " " + listOfObservers);
         taskList.add(taskDetailsBean);
-        if(template){
-            Log.i("reassign","istemplate==>  "+template);
-            template=false;
+        if (template) {
+            Log.i("reassign", "istemplate==>  " + template);
+            template = false;
             ownerofTasks();
             Arrow.setVisibility(View.VISIBLE);
         }
@@ -18486,7 +18606,7 @@ private String getDatefromPicker()
             intent.putExtra("Taker", "Assigned Task");
             if (isProjectFromOracle)
                 intent.putExtra("isProjectFromOracle1", true);
-            if(Self_assign)
+            if (Self_assign)
                 intent.putExtra("selfAssign", true);
 
             if (taskType != null && taskType.equalsIgnoreCase("Group")) {

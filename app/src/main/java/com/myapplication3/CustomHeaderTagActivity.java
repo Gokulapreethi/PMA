@@ -1937,6 +1937,7 @@ public class CustomHeaderTagActivity extends Activity implements DialogInterface
                 fieldValue.setVisibility(View.VISIBLE);
                 fieldValue.setTag(bean.getDataType());
                 fieldValue.setInputType(InputType.TYPE_CLASS_NUMBER);
+
                 fieldValue.setContentDescription(bean.getClientId());
                 fieldValuesMap.put(bean.getName(), bean);
 //                fieldValue.setImeOptions(EditorInfo.IME_ACTION_NEXT);

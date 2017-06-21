@@ -5,7 +5,6 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.Handler;
@@ -56,6 +55,10 @@ import java.util.List;
 import json.CommunicationBean;
 import json.EnumJsonWebservicename;
 import json.WebServiceInterface;
+
+import static android.graphics.Color.RED;
+import static android.graphics.Color.WHITE;
+import static android.graphics.Color.rgb;
 
 /**
  * Created by prasanth on 12/7/2016.
@@ -167,7 +170,7 @@ public class ProjectsFragment extends Fragment implements WebServiceInterface {
                             SwipeMenuItem openItem = new SwipeMenuItem(
                                     classContext.getApplicationContext());
                             // set item background
-                            openItem.setBackground(new ColorDrawable(Color.rgb(0xff, 0x91,
+                            openItem.setBackground(new ColorDrawable(rgb(0xff, 0x91,
                                     0x11)));
                             // set item width
                             openItem.setWidth(dp2px(90));
@@ -176,7 +179,7 @@ public class ProjectsFragment extends Fragment implements WebServiceInterface {
                             // set item title fontsize
                             openItem.setTitleSize(18);
                             // set item title font color
-                            openItem.setTitleColor(Color.WHITE);
+                            openItem.setTitleColor(WHITE);
                             // add to menu
                             menu.addMenuItem(openItem);
        /* }
@@ -219,7 +222,7 @@ public class ProjectsFragment extends Fragment implements WebServiceInterface {
                             SwipeMenuItem openItem2 = new SwipeMenuItem(
                                     classContext.getApplicationContext());
                             // set item background
-                            openItem2.setBackground(new ColorDrawable(Color.rgb(0x00, 0xff,
+                            openItem2.setBackground(new ColorDrawable(rgb(0x00, 0xff,
                                     0x11)));
                             // set item width
                             openItem2.setWidth(dp2px(90));
@@ -228,7 +231,7 @@ public class ProjectsFragment extends Fragment implements WebServiceInterface {
                             // set item title fontsize
                             openItem2.setTitleSize(18);
                             // set item title font color
-                            openItem2.setTitleColor(Color.WHITE);
+                            openItem2.setTitleColor(WHITE);
                             // add to menu
                             menu.addMenuItem(openItem2);
        /* }
@@ -256,7 +259,7 @@ public class ProjectsFragment extends Fragment implements WebServiceInterface {
                             SwipeMenuItem openItem1 = new SwipeMenuItem(
                                     classContext.getApplicationContext());
                             // set item background
-                            openItem1.setBackground(new ColorDrawable(Color.rgb(0x00, 0xff,
+                            openItem1.setBackground(new ColorDrawable(rgb(0x00, 0xff,
                                     0x11)));
                             // set item width
                             openItem1.setWidth(dp2px(90));
@@ -265,7 +268,7 @@ public class ProjectsFragment extends Fragment implements WebServiceInterface {
                             // set item title fontsize
                             openItem1.setTitleSize(18);
                             // set item title font color
-                            openItem1.setTitleColor(Color.WHITE);
+                            openItem1.setTitleColor(WHITE);
                             // add to menu
                             menu.addMenuItem(openItem1);
 
@@ -546,6 +549,7 @@ public class ProjectsFragment extends Fragment implements WebServiceInterface {
                 final View finalConView = conView;
 
                 final ProjectDetailsBean projectDetailsBean = arrayBuddyList.get(pos);
+                LinearLayout proj_layout=(LinearLayout)finalConView.findViewById(R.id.project_layout);
                 TextView project_name = (TextView) finalConView.findViewById(R.id.project_name);
                 TextView project_id = (TextView) finalConView.findViewById(R.id.project_id);
                 TextView task_giver = (TextView) finalConView.findViewById(R.id.task_giver);
@@ -566,6 +570,13 @@ public class ProjectsFragment extends Fragment implements WebServiceInterface {
                 completed_status.setVisibility(View.GONE);
                 project_id.setVisibility(view.GONE);
                 Log.i("job123","project name8*********** "+projectDetailsBean.getProjectName());
+                Log.i("job123","projct Status isActivestatus*********** "+projectDetailsBean.getProjectName()+"isAcvtiveStatus===>"+projectDetailsBean.getIsActiveStatus());
+
+               /* if(projectDetailsBean.getIsActiveStatus()!=null && projectDetailsBean.getIsActiveStatus().equalsIgnoreCase("1")) {
+                    proj_layout.setBackgroundResource(R.color.lightgray);
+                }else
+                    proj_layout.setBackgroundResource(R.color.white);*/
+
 //                project_id.setText("Oracle Project ID  : " + projectDetailsBean.getOracleProjectId());
                 project_name.setText("Job Order NO  : " +projectDetailsBean.getProjectName());
                 String pjt_owner = null;
@@ -600,7 +611,7 @@ public class ProjectsFragment extends Fragment implements WebServiceInterface {
                 } else {
                     percent_update.setText("0%");
                 }
-                percent_update.setTextColor(Color.RED);
+                percent_update.setTextColor(RED);
                 int project_unReadMsg_count = VideoCallDataBase.getDB(classContext).getProjectsUnReadMsgCount(projectDetailsBean.getId());
                 if (project_unReadMsg_count == 0) {
                     Log.d("ProjectHistory", "unRead_project_count is 0");
