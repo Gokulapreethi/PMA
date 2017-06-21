@@ -26,7 +26,7 @@
             android:layout_marginLeft="5dp"
             android:layout_marginTop="8dp"
             android:layout_toRightOf="@+id/selected"
-            android:text="Oracle TaskId : " />
+            android:text=" Activity Code : " />
 
         <TextView
             android:id="@+id/percent_update"

@@ -260,7 +260,7 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback,
     private boolean reregisterAlarm_started = false;
     String password = "";
     TabLayout tabLayout;
-    String[] tab_name = {"Contacts", "Recents", "Settings", "Projects"};
+    String[] tab_name = {"Contacts", "Recents", "Settings", "Job Cards"};
     Integer[] tab_icon = {
             R.drawable.ic_contacts_100,
             R.drawable.recent2,

@@ -284,6 +284,8 @@ public class JsonRequestResponce extends Thread {
                                 obj.setFirstname("searchMedia");
                             }else if (obj.getEnumJsonWebservicename().toString().equals("taskNeedAssessmentReport")) {
                                 obj.setFirstname("taskNeedAssessmentReport");
+                            }else if (obj.getEnumJsonWebservicename().toString().equals("fieldServiceReport")) {
+                                obj.setFirstname("fieldServiceReport");
                             } else if (obj.getEnumJsonWebservicename().toString().equals("getTask")) {
                                 obj.setFirstname("getTask");
                             } else if (obj.getEnumJsonWebservicename().toString().equals("getRequestType")) {
@@ -446,6 +448,11 @@ public class JsonRequestResponce extends Thread {
            case taskNeedAssessmentReport:
                NewTaskConversation.getInstance().cancelDialog();
                NewTaskConversation.getInstance().showToast("taskNeedAssessmentReport error . Try again later");
+                inter.ErrorMethod(obj);
+                break;
+          case fieldServiceReport:
+               NewTaskConversation.getInstance().cancelDialog();
+               NewTaskConversation.getInstance().showToast("fieldServiceReport error . Try again later");
                 inter.ErrorMethod(obj);
                 break;
             case leaveRequestOrReject:
@@ -722,6 +729,11 @@ public class JsonRequestResponce extends Thread {
                     case taskNeedAssessmentReport:
                         obj.setEmail(responseString);
                         obj.setFirstname("taskNeedAssessmentReport");
+                        inter.ResponceMethod(obj);
+                        break;
+                   case fieldServiceReport:
+                        obj.setEmail(responseString);
+                        obj.setFirstname("fieldServiceReport");
                         inter.ResponceMethod(obj);
                         break;
                   /*  case getRequestType:

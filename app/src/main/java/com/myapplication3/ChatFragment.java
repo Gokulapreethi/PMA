@@ -28,14 +28,11 @@ import com.myapplication3.Bean.TaskDetailsBean;
 import com.myapplication3.DB.VideoCallDataBase;
 import com.myapplication3.call_list.Call_History;
 import com.myapplication3.call_list.Call_ListBean;
-import com.myapplication3.chat.ChatActivity;
-import com.myapplication3.chat.ChatBean;
 
 import org.pjsip.pjsua2.app.MainActivity;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Vector;
 
 /**
  * Created by Amuthan on 22/03/2016.
@@ -260,7 +257,7 @@ public class ChatFragment extends Fragment {
             public boolean onMenuItemClick(int position, SwipeMenu menu, int index) {
                 Log.i("chat", "ChatFragment listViewmenuitem for call ");
                 Call_ListBean chatBean = call_list.get(position);
-                String Query = "delete from call where start_time=" + chatBean.getStart_time() + ";";
+                String Query = "delete from call where start_time='" + chatBean.getStart_time() + "';";
                 VideoCallDataBase.getDB(getContext()).getTaskHistory(Query);
                 call_list.remove(position);
                 adapter1.notifyDataSetChanged();

@@ -600,6 +600,15 @@ public class JsonRequestSender {
         communicationBean.setAccess(access);
         queue.addMsg(communicationBean);
     }
+    public void OracleFSRReport(EnumJsonWebservicename webservicename, JSONObject jsonObject, WebServiceInterface access) {
+        CommunicationBean communicationBean = new CommunicationBean();
+        communicationBean.setEnumJsonWebservicename(webservicename);
+        if (jsonObject != null) {
+            communicationBean.setJsonObject(jsonObject);
+        }
+        communicationBean.setAccess(access);
+        queue.addMsg(communicationBean);
+    }
     /*public void listMembersInGroup(EnumJsonWebservicename webservicename, List<NameValuePair> valuePair, WebServiceInterface access){
 
         CommunicationBean communicationBean=new CommunicationBean();

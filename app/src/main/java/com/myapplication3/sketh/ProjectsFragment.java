@@ -568,7 +568,8 @@ public class ProjectsFragment extends Fragment implements WebServiceInterface {
                 percent_update.setVisibility(View.GONE);
                 dependency_icon.setVisibility(View.GONE);
                 completed_status.setVisibility(View.GONE);
-                project_id.setVisibility(view.GONE);
+                project_name.setVisibility(view.GONE);
+                task_giver.setVisibility(View.GONE);
                 Log.i("job123","project name8*********** "+projectDetailsBean.getProjectName());
                 Log.i("job123","projct Status isActivestatus*********** "+projectDetailsBean.getProjectName()+"isAcvtiveStatus===>"+projectDetailsBean.getIsActiveStatus());
 
@@ -577,8 +578,8 @@ public class ProjectsFragment extends Fragment implements WebServiceInterface {
                 }else
                     proj_layout.setBackgroundResource(R.color.white);*/
 
-//                project_id.setText("Oracle Project ID  : " + projectDetailsBean.getOracleProjectId());
-                project_name.setText("Job Order NO  : " +projectDetailsBean.getProjectName());
+                project_id.setText("Job Card Number  : " + projectDetailsBean.getOracleProjectId());
+//                project_name.setText("Job Card Number  : " +projectDetailsBean.getProjectName());
                 String pjt_owner = null;
                 Log.i("Fragment", "projectDetailsBean getProject_ownerName() " + projectDetailsBean.getProject_ownerName());
                 if (projectDetailsBean.getProject_ownerName() != null && projectDetailsBean.getProject_ownerName().contains("@")) {

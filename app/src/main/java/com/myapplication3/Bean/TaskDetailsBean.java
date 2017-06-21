@@ -128,6 +128,8 @@ public class TaskDetailsBean implements Serializable {
     private String CustomerName;
     private String photoPath;
     private String technicianSignature;
+    private String customerSignatureName;
+    private String actionTaken;
 
 
     public String getEstimatedTravel() {
@@ -1066,6 +1068,22 @@ private String sender_reply;
 
     public void setTechnicianSignature(String technicianSignature) {
         this.technicianSignature = technicianSignature;
+    }
+
+    public String getCustomerSignatureName() {
+        return customerSignatureName;
+    }
+
+    public void setCustomerSignatureName(String customerSignatureName) {
+        this.customerSignatureName = customerSignatureName;
+    }
+
+    public String getActionTaken() {
+        return actionTaken;
+    }
+
+    public void setActionTaken(String actionTaken) {
+        this.actionTaken = actionTaken;
     }
 }
 
