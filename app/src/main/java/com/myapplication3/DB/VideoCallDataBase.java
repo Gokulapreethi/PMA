@@ -8355,7 +8355,7 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
 
                 while (!cur.isAfterLast()) {
                     TaskDetailsBean taskDetailsBean = new TaskDetailsBean();
-                    taskDetailsBean.setProjectId(cur.getString(cur.getColumnIndex("projectId")));
+                    taskDetailsBean.setProjectId(cur.getString(cur.getColumnIndex("oracleProjectId")));
                     taskDetailsBean.setProjectName(cur.getString(cur.getColumnIndex("projectName")));
                     taskDetailsBean.setTaskId(cur.getString(cur.getColumnIndex("taskId")));
                     taskDetailsBean.setMcModel(cur.getString(cur.getColumnIndex("mcModel")));

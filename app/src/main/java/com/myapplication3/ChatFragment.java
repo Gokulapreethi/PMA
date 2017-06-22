@@ -245,7 +245,7 @@ public class ChatFragment extends Fragment {
             public boolean onMenuItemClick(int position, SwipeMenu menu, int index) {
                 Log.i("chat", "ChatFragment listViewmenuitem for chat ");
                 TaskDetailsBean chatBean = chat_list.get(position);
-                String Query = "delete from taskDetailsInfo where chatid=" + chatBean.getTaskId() + ";";
+                String Query = "delete from taskDetailsInfo where chatid='" + chatBean.getTaskId() + "';";
                 VideoCallDataBase.getDB(getContext()).getTaskHistory(Query);
                 chat_list.remove(position);
                 adapter.notifyDataSetChanged();
@@ -256,11 +256,15 @@ public class ChatFragment extends Fragment {
             @Override
             public boolean onMenuItemClick(int position, SwipeMenu menu, int index) {
                 Log.i("chat", "ChatFragment listViewmenuitem for call ");
-                Call_ListBean chatBean = call_list.get(position);
-                String Query = "delete from call where start_time='" + chatBean.getStart_time() + "';";
-                VideoCallDataBase.getDB(getContext()).getTaskHistory(Query);
-                call_list.remove(position);
-                adapter1.notifyDataSetChanged();
+                try {
+                    Call_ListBean chatBean = call_list.get(position);
+                    String Query = "delete from call where start_time= '" + chatBean.getStart_time() + "';";
+                    VideoCallDataBase.getDB(getContext()).getTaskHistory(Query);
+                    call_list.remove(position);
+                    adapter1.notifyDataSetChanged();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
                 return true;
             }
         });

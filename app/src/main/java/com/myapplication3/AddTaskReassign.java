@@ -5,10 +5,8 @@ package com.myapplication3;
  */
 
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.os.Bundle;
@@ -373,7 +371,9 @@ public class AddTaskReassign extends Activity implements View.OnClickListener, W
                             break;
                         }
                     }
-                    AlertDialog.Builder saveDialog = new AlertDialog.Builder(this);
+                    submitClickEvent();
+
+                  /*  AlertDialog.Builder saveDialog = new AlertDialog.Builder(this);
                     saveDialog.setTitle("Assign To");
                     saveDialog.setMessage("Do You want to assign this template to " + UserName);
                     saveDialog.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
@@ -387,7 +387,7 @@ public class AddTaskReassign extends Activity implements View.OnClickListener, W
                                     dialog.cancel();
                                 }
                             });
-                    saveDialog.show();
+                    saveDialog.show();*/
                 } else {
                     submitClickEvent();
                 }

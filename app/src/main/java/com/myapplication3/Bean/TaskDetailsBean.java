@@ -13,7 +13,14 @@ fromUserId="0" toUserId="0" taskNo="201607011337472648289" plannedStartDateTime=
 isRemainderRequired="1" remainderFrequency="2016-06-24 20:00:00" taskStatus="A"
 signalid="8459926191602335744"</TaskDetails></TaskDetailsinfo>
  */
-public class TaskDetailsBean implements Serializable {
+public class TaskDetailsBean implements Serializable,Cloneable {
+
+
+    @Override
+    public Object clone() throws CloneNotSupportedException {
+        return super.clone();
+    }
+
 
     private String taskName;
     private String taskDescription;

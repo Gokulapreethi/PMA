@@ -39,13 +39,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
-import com.myapplication3.Bean.TaskDetailsBean;
-import com.myapplication3.DB.VideoCallDataBase;
 import com.squareup.picasso.Picasso;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.pjsip.pjsua2.app.MainActivity;
 
 import java.io.BufferedOutputStream;
 import java.io.ByteArrayOutputStream;
@@ -62,7 +59,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 
 import json.CommunicationBean;
 import json.EnumJsonWebservicename;
@@ -427,6 +423,10 @@ public class UpdateProfileActivity extends AppCompatActivity implements WebServi
                 } else {
                     url = new File(ImageName);
                 }
+                Log.i("profile","ImageName ## ==> "+ImageName);
+                Log.i("profile","strIPath ## ==> "+strIPath);
+                Log.i("profile","url ## ==> "+url);
+
                     if (url.exists()) {
                         Uri uri = Uri.fromFile(url);
                         Intent intent = new Intent(Intent.ACTION_VIEW);
@@ -482,44 +482,47 @@ public class UpdateProfileActivity extends AppCompatActivity implements WebServi
                     } else {
                         File file1 = null;
                         file1 = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/High Message/downloads/" + ImageName);
-                        if (file1.exists()) {
-                            Uri uri = Uri.fromFile(file1);
-                            Intent intent = new Intent(Intent.ACTION_VIEW);
-                            if (file1.toString().contains(".doc") || file1.toString().contains(".docx")) {
-                                // Word document
-                                intent.setDataAndType(uri, "application/msword");
-                            } else if (file1.toString().contains(".pdf")) {
-                                // PDF file
-                                intent.setDataAndType(uri, "application/pdf");
-                            } else if (file1.toString().contains(".ppt") || file1.toString().contains(".pptx")) {
-                                // Powerpoint file
-                                intent.setDataAndType(uri, "application/vnd.ms-powerpoint");
-                            } else if (file1.toString().contains(".xls") || file1.toString().contains(".xlsx")) {
-                                // Excel file
-                                intent.setDataAndType(uri, "application/vnd.ms-excel");
-                            } else if (file1.toString().contains(".zip") || file1.toString().contains(".rar")) {
-                                // WAV audio file
-                                intent.setDataAndType(uri, "application/x-wav");
-                            } else if (file1.toString().contains(".rtf")) {
-                                // RTF file
-                                intent.setDataAndType(uri, "application/rtf");
-                            } else if (file1.toString().contains(".wav") || file1.toString().contains(".mp3")) {
-                                // WAV audio file
-                                intent.setDataAndType(uri, "audio/x-wav");
-                            } else if (file1.toString().contains(".gif")) {
-                                // GIF file
-                                intent.setDataAndType(uri, "image/gif");
-                            } else if (file1.toString().contains(".jpg") || file1.toString().contains(".jpeg") || file1.toString().contains(".png")) {
-                                // JPG file
-                                intent.setDataAndType(uri, "image/jpeg");
-                            } else if (file1.toString().contains(".txt")) {
-                                // Text file
-                                intent.setDataAndType(uri, "text/plain");
-                            } else if (file1.toString().contains(".3gp") || file1.toString().contains(".mpg") || file1.toString().contains(".mpeg") || file1.toString().contains(".mpe") || file1.toString().contains(".mp4") || file1.toString().contains(".avi")) {
-                                // Video files
-                                intent.setDataAndType(uri, "video");
-                            } else {
-                                //if you want you can also define the intent type for any other file
+                        Log.i("profile","ImageName==> "+ImageName);
+                        if (ImageName!=null && !ImageName.equalsIgnoreCase("")) {
+                            if (file1.exists()) {
+                                Log.i("profile", "getTextProfile 3 ==> ");
+                                Uri uri = Uri.fromFile(file1);
+                                Intent intent = new Intent(Intent.ACTION_VIEW);
+                                if (file1.toString().contains(".doc") || file1.toString().contains(".docx")) {
+                                    // Word document
+                                    intent.setDataAndType(uri, "application/msword");
+                                } else if (file1.toString().contains(".pdf")) {
+                                    // PDF file
+                                    intent.setDataAndType(uri, "application/pdf");
+                                } else if (file1.toString().contains(".ppt") || file1.toString().contains(".pptx")) {
+                                    // Powerpoint file
+                                    intent.setDataAndType(uri, "application/vnd.ms-powerpoint");
+                                } else if (file1.toString().contains(".xls") || file1.toString().contains(".xlsx")) {
+                                    // Excel file
+                                    intent.setDataAndType(uri, "application/vnd.ms-excel");
+                                } else if (file1.toString().contains(".zip") || file1.toString().contains(".rar")) {
+                                    // WAV audio file
+                                    intent.setDataAndType(uri, "application/x-wav");
+                                } else if (file1.toString().contains(".rtf")) {
+                                    // RTF file
+                                    intent.setDataAndType(uri, "application/rtf");
+                                } else if (file1.toString().contains(".wav") || file1.toString().contains(".mp3")) {
+                                    // WAV audio file
+                                    intent.setDataAndType(uri, "audio/x-wav");
+                                } else if (file1.toString().contains(".gif")) {
+                                    // GIF file
+                                    intent.setDataAndType(uri, "image/gif");
+                                } else if (file1.toString().contains(".jpg") || file1.toString().contains(".jpeg") || file1.toString().contains(".png")) {
+                                    // JPG file
+                                    intent.setDataAndType(uri, "image/jpeg");
+                                } else if (file1.toString().contains(".txt")) {
+                                    // Text file
+                                    intent.setDataAndType(uri, "text/plain");
+                                } else if (file1.toString().contains(".3gp") || file1.toString().contains(".mpg") || file1.toString().contains(".mpeg") || file1.toString().contains(".mpe") || file1.toString().contains(".mp4") || file1.toString().contains(".avi")) {
+                                    // Video files
+                                    intent.setDataAndType(uri, "video");
+                                } else {
+                                    //if you want you can also define the intent type for any other file
 
                                 //additionally use else clause below, to manage other unknown extensions
                                 //in this case, Android will show all applications installed on the device
@@ -528,15 +531,21 @@ public class UpdateProfileActivity extends AppCompatActivity implements WebServi
                             }
                             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 
-                            try {
-                                context.startActivity(intent);
-                            } catch (Exception e) {
-                                Log.e("error", "" + e);
+                                try {
+                                    context.startActivity(intent);
+                                } catch (Exception e) {
+                                    Log.e("error", "" + e);
+                                }
+                            }else {
+                                Log.i("profile", "getTextProfile 4 ==> "+ImageName);
+                                if (ImageName!=null && ImageName.equalsIgnoreCase("")) {
+                                    new DownloadVideo(getResources().getString(R.string.task_reminder) + ImageName).execute();
+                                }
+                                Log.i("can't open", "file");
+                                Toast.makeText(getApplicationContext(), "Downloading...", Toast.LENGTH_SHORT).show();
                             }
-                        }else {
-                            new DownloadVideo(getResources().getString(R.string.task_reminder) + ImageName).execute();
-                            Log.i("can't open", "file");
-                            Toast.makeText(getApplicationContext(), "Downloading...", Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(getApplicationContext(), "Please select any Text Profile ", Toast.LENGTH_SHORT).show();
                         }
                     }
                 }
@@ -562,13 +571,19 @@ public class UpdateProfileActivity extends AppCompatActivity implements WebServi
                 } else {
                     File file1 = null;
                     file1 = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/High Message/downloads/" + ImageName);
-                    if (file1.exists()) {
-                        Intent intent = new Intent(context, VideoPlayer.class);
-                        intent.putExtra("video", file1.getAbsolutePath());
-                        context.startActivity(intent);
+                    if (ImageName!=null && !ImageName.equalsIgnoreCase("")) {
+                        if (file1.exists()) {
+                            Log.i("profile", "getvideoProfile == exists 1 ");
+                            Intent intent = new Intent(context, VideoPlayer.class);
+                            intent.putExtra("video", file1.getAbsolutePath());
+                            context.startActivity(intent);
+                        } else {
+                            Log.i("profile", "getvideoProfile == else 1 ");
+                            new DownloadVideo(getResources().getString(R.string.user_upload) + ImageName).execute();
+                            Toast.makeText(getApplicationContext(), "Downloading...", Toast.LENGTH_SHORT).show();
+                        }
                     } else {
-                        new DownloadVideo(getResources().getString(R.string.user_upload) + ImageName).execute();
-                        Toast.makeText(getApplicationContext(), "Downloading...", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getApplicationContext(), "Please select any video Profile ", Toast.LENGTH_SHORT).show();
                     }
                 }
             }

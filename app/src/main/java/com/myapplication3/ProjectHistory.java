@@ -105,6 +105,8 @@ public class ProjectHistory extends Activity implements WebServiceInterface, Swi
     ImageView submit_icon, addsubtasks, addnote, view_ProjectMems,refresh_task;
     TextView Noresult, view_mems;
     VideoCallDataBase videoCallDataBase;
+    ProgressDialog progress;
+
 
     public static ProjectHistory getInstance() {
         return projectHistory;
@@ -860,9 +862,31 @@ public class ProjectHistory extends Activity implements WebServiceInterface, Swi
         nameValuePairs1.add(new BasicNameValuePair("taskId", webtaskId));
 
         Appreference.jsonRequestSender.getTask(EnumJsonWebservicename.getTask, nameValuePairs1, ProjectHistory.this);
+        showprogress();
 
     }
 
+    private void showprogress() {
+        handler.post(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    Log.i("expand", "inside show progress--------->");
+                    if (progress == null) {
+                        progress = new ProgressDialog(context);
+                        progress.setCancelable(false);
+                        progress.setMessage("Getting task...");
+                        progress.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+                        progress.setProgress(0);
+                        progress.setMax(1000);
+                        progress.show();
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+    }
     public void refresh() {
         String query1;
 
@@ -972,6 +996,7 @@ public class ProjectHistory extends Activity implements WebServiceInterface, Swi
             @Override
             public void run() {
                 Log.i("currentstatus", "Task Details Respons method");
+                cancelDialog();
                 CommunicationBean communicationBean = (CommunicationBean) object;
                 NewTaskConversation newTaskConversation = new NewTaskConversation();
                 JSONObject jsonObject = null;
