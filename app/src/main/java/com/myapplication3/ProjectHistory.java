@@ -107,7 +107,6 @@ public class ProjectHistory extends Activity implements WebServiceInterface, Swi
     VideoCallDataBase videoCallDataBase;
     ProgressDialog progress;
 
-
     public static ProjectHistory getInstance() {
         return projectHistory;
     }
@@ -230,6 +229,8 @@ public class ProjectHistory extends Activity implements WebServiceInterface, Swi
             finish_page = (TextView) findViewById(R.id.finish_page);
             submit_icon = (ImageView) findViewById(R.id.submit_icon);
             addsubtasks = (ImageView) findViewById(R.id.addsubtasks);
+
+
             refresh_task = (ImageView) findViewById(R.id.refresh_task);
             addnote = (ImageView) findViewById(R.id.addnote);
 
@@ -281,9 +282,6 @@ public class ProjectHistory extends Activity implements WebServiceInterface, Swi
             }*/
             if (project_name != null)
                 active_task.setText(project_name);
-//        userName = getIntent().getExtras().getString("userId");
-//        taskType = getIntent().getExtras().getString("taskType");
-//        groupname = userName;
             InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
             inputMethodManager.hideSoftInputFromWindow(Search_EditText.getWindowToken(), 0);
             videoCallDataBase = VideoCallDataBase.getDB(context);
@@ -740,7 +738,8 @@ public class ProjectHistory extends Activity implements WebServiceInterface, Swi
                             //
                             //                    }
 //                            if (taskDetailsBean.getOwnerOfTask().equalsIgnoreCase(Appreference.loginuserdetails.getUsername())) {
-                                Log.i("task", String.valueOf(position));
+                              Log.i("task", String.valueOf(position));
+                                 showDialog();
                                 Intent intent = new Intent(context, NewTaskConversation.class);
                                 intent.putExtra("task", "ProjectTemplateview");
                                 intent.putExtra("project_Temp", "ProjectTemplate");
@@ -761,6 +760,7 @@ public class ProjectHistory extends Activity implements WebServiceInterface, Swi
                         } else if (taskDetailsBean.getTaskType().equalsIgnoreCase("individual")) {
                             if (taskDetailsBean.getTaskReceiver().equalsIgnoreCase(Appreference.loginuserdetails.getUsername()) || taskDetailsBean.getOwnerOfTask().equalsIgnoreCase(Appreference.loginuserdetails.getUsername()) || taskDetailsBean.getTaskObservers().contains(Appreference.loginuserdetails.getUsername())) {
                                 Log.i("task", String.valueOf(position));
+                                showDialog();
                                 Intent intent = new Intent(context, NewTaskConversation.class);
                                 intent.putExtra("task", "projectHistory");
                                 intent.putExtra("projectHistoryBean", taskDetailsBean);
@@ -777,6 +777,7 @@ public class ProjectHistory extends Activity implements WebServiceInterface, Swi
                             Log.i("ListMembers", "projectDetailsBean.getTaskMemberList() " + taskDetailsBean.getTaskMemberList());
                             if ((taskDetailsBean.getTaskMemberList() != null && taskDetailsBean.getTaskMemberList().contains(Appreference.loginuserdetails.getUsername())) || (taskDetailsBean.getOwnerOfTask() != null && taskDetailsBean.getOwnerOfTask().equalsIgnoreCase(Appreference.loginuserdetails.getUsername())) || (taskDetailsBean.getTaskObservers() != null && taskDetailsBean.getTaskObservers().contains(Appreference.loginuserdetails.getUsername()))) {
                                 Log.i("task", String.valueOf(position));
+                                showDialog();
                                 Intent intent = new Intent(context, NewTaskConversation.class);
                                 intent.putExtra("task", "projectHistory");
                                 intent.putExtra("projectHistoryBean", taskDetailsBean);
@@ -942,6 +943,7 @@ public class ProjectHistory extends Activity implements WebServiceInterface, Swi
     protected void onDestroy() {
         super.onDestroy();
         Appreference.context_table.remove("projecthistory");
+
     }
 
     @Override
@@ -1094,6 +1096,10 @@ public class ProjectHistory extends Activity implements WebServiceInterface, Swi
 
     }
 
+    public void setProgressBarInvisible()
+    {
+        this.cancelDialog();
+    }
     public void load() {
         Intent intent = new Intent(context, NewTaskConversation.class);
         intent.putExtra("task", "taskhistory");

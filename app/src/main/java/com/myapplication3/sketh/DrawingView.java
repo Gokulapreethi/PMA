@@ -190,6 +190,8 @@ public class DrawingView extends View {
 
 	// start new drawing
 	public void startNew() {
+		if(paths.size()>0)
+			paths.clear();
 		drawCanvas.drawColor(0, PorterDuff.Mode.CLEAR);
 		invalidate();
 	}

@@ -2641,6 +2641,65 @@ public class MediaListAdapter extends ArrayAdapter<TaskDetailsBean> {
                                 Log.i("MediaListAdapter", "CustomeAttribute----> 3 " + custom_tag);
                                 holder.txt_des.setText(custom_tag);
                                 holder.txt_des.setTextColor(Color.BLACK);
+                            } else if (gcBean.getTaskDescription() != null && gcBean.getTaskDescription().contains("Task Assigned to ")) {
+                                Log.i("MediaList ", "gcBean.getTaskDescription()==>  " + gcBean.getTaskDescription());
+                                String list_mem = "";
+                                String mem_list = gcBean.getTaskDescription().split(" ")[3];
+                                Log.i("MediaList ", "mem_list ##==>  " + mem_list);
+                                int counter = 0;
+                                for (int i = 0; i < mem_list.length(); i++) {
+                                    if (mem_list.charAt(i) == ',') {
+                                        counter++;
+                                    }
+                                }
+                                for (int j = 0; j < counter + 1; j++) {
+                                    if (counter == 0) {
+                                        if (!mem_list.equalsIgnoreCase(Appreference.loginuserdetails.getUsername())) {
+                                            String Name = VideoCallDataBase.getDB(context).getName(mem_list);
+//                                            list_mem = list_mem + Name + ",";
+                                            list_mem = Name;
+                                        } else {
+//                                            list_mem = "Me," + list_mem;
+                                            list_mem = "You";
+                                        }
+                                    }else {
+                                        String Mem_name = mem_list.split(",")[j];
+                                        Log.i("MediaList ", "value==>  " + Mem_name);
+                                        if (!Mem_name.equalsIgnoreCase(Appreference.loginuserdetails.getUsername())) {
+                                            String Name = VideoCallDataBase.getDB(context).getName(Mem_name);
+                                            list_mem = list_mem + Name + ",";
+                                        } else {
+                                            list_mem = "You," + list_mem;
+                                        }
+                                    }
+                                }
+                                if (list_mem != null && list_mem.contains(",")) {
+                                    list_mem = list_mem.substring(0, list_mem.length() - 1);
+                                }
+                                Log.i("MediaList ", "list_mem==>  " + list_mem);
+                                String dec_value = "Task Assigned to " + list_mem;
+                                Log.i("MediaList ", "dec_value==>  " + dec_value);
+                                holder.txt_des_under.setBackgroundResource(R.drawable.in_message_bg);
+                                holder.txt_des.setText(dec_value);
+                                String dd51 = "";
+                                dd51 = setConversationTime(gcBean);
+                                holder.time_under_text_receiver.setText(dd51);
+                            } else if (gcBean.getSubType() != null && gcBean.getSubType().contains("DeAssign")) {
+                                Log.i("MediaList ", "mem_list ### ==>  " + gcBean.getTaskDescription());
+                                String mem_list = gcBean.getTaskDescription().split(" Left")[0];
+                                Log.i("MediaList ", "mem_list ### ==>  " + mem_list);
+                                if (mem_list != null && mem_list.equalsIgnoreCase(Appreference.loginuserdetails.getUsername())) {
+                                    mem_list = "You Left";
+                                } else {
+                                    String list1 = VideoCallDataBase.getDB(context).getName(mem_list);
+                                    mem_list = list1 + " Left";
+                                    Log.i("MediaList ", "Name ### ==>  " + list1 + " mem_list==> "+mem_list);
+                                }
+                                holder.txt_des_under.setBackgroundResource(R.drawable.in_message_bg);
+                                holder.txt_des.setText(mem_list);
+                                String dd51 = "";
+                                dd51 = setConversationTime(gcBean);
+                                holder.time_under_text_receiver.setText(dd51);
                             } else {
                                 holder.txt_des_under.setBackgroundResource(R.drawable.in_message_bg);
                                 holder.txt_des.setText(gcBean.getTaskDescription());
@@ -2956,6 +3015,73 @@ public class MediaListAdapter extends ArrayAdapter<TaskDetailsBean> {
                                         Log.i("MediaListAdapter", "taskDescription 1 ");
                                         holder.receiver_side_description_layout.setBackgroundResource(R.drawable.yellowreceiver1);
                                         holder.rcv_des.setText(gcBean.getTaskDescription());
+                                        String dd51 = "";
+                                        dd51 = setConversationTime(gcBean);
+                                        holder.time_under_text_receiver.setText(dd51);
+                                        holder.receiver_name.setText(holder.receiver_name_name);
+                                        holder.dateChangeRequest_icon.setVisibility(View.GONE);
+                                        holder.dateChangeApproval_icon.setVisibility(View.GONE);
+                                    } else if (gcBean.getTaskDescription() != null && gcBean.getTaskDescription().contains("Task Assigned to ")) {
+                                        Log.i("MediaList ", "gcBean.getTaskDescription()==> else  " + gcBean.getTaskDescription());
+                                        String list_mem = "";
+                                        String mem_list = gcBean.getTaskDescription().split(" ")[3];
+                                        Log.i("MediaList ", "mem_list ##==> else  " + mem_list);
+                                        int counter = 0;
+                                        for (int i = 0; i < mem_list.length(); i++) {
+                                            if (mem_list.charAt(i) == ',') {
+                                                counter++;
+                                            }
+                                        }
+                                        for (int j = 0; j < counter + 1; j++) {
+                                            if (counter == 0) {
+                                                if (!mem_list.equalsIgnoreCase(Appreference.loginuserdetails.getUsername())) {
+                                                    String Name = VideoCallDataBase.getDB(context).getName(mem_list);
+//                                            list_mem = list_mem + Name + ",";
+                                                    list_mem = Name;
+                                                } else {
+//                                            list_mem = "Me," + list_mem;
+                                                    list_mem = "You";
+                                                }
+                                            } else {
+                                                String Mem_name = mem_list.split(",")[j];
+                                                Log.i("MediaList ", "value==> else  " + Mem_name);
+                                                if (!Mem_name.equalsIgnoreCase(Appreference.loginuserdetails.getUsername())) {
+                                                    String Name = VideoCallDataBase.getDB(context).getName(Mem_name);
+                                                    list_mem = list_mem + Name + ",";
+                                                } else {
+                                                    list_mem = "You," + list_mem;
+                                                }
+                                            }
+                                        }
+                                        if (list_mem != null && list_mem.contains(",")) {
+                                            list_mem = list_mem.substring(0, list_mem.length() - 1);
+                                        }
+                                        Log.i("MediaList ", "list_mem==> else " + list_mem);
+                                        String dec_value = "Task Assigned to " + list_mem;
+                                        Log.i("MediaList ", "dec_value==>  " + dec_value);
+                                        holder.receiver_side_description_layout.setBackgroundResource(R.drawable.grey_im);
+                                        holder.rcv_des.setText(dec_value);
+                                        holder.rcv_des.setTextColor(Color.BLACK);
+                                        String dd51 = "";
+                                        dd51 = setConversationTime(gcBean);
+                                        holder.time_under_text_receiver.setText(dd51);
+                                        holder.receiver_name.setText(holder.receiver_name_name);
+                                        holder.dateChangeRequest_icon.setVisibility(View.GONE);
+                                        holder.dateChangeApproval_icon.setVisibility(View.GONE);
+                                    } else if (gcBean.getSubType() != null && gcBean.getSubType().contains("DeAssign")) {
+                                        Log.i("MediaList ", "mem_list ### ==> @@ " + gcBean.getTaskDescription());
+                                        String mem_list = gcBean.getTaskDescription().split(" Left")[0];
+                                        Log.i("MediaList ", "mem_list ### ==> @@  " + mem_list);
+                                        if (mem_list != null && mem_list.equalsIgnoreCase(Appreference.loginuserdetails.getUsername())) {
+                                            mem_list = "You Left";
+                                        } else {
+                                            String list1 = VideoCallDataBase.getDB(context).getName(mem_list);
+                                            mem_list = list1 + " Left";
+                                            Log.i("MediaList ", "Name ### ==> @@ " + list1 + " mem_list==> "+mem_list);
+                                        }
+                                        holder.receiver_side_description_layout.setBackgroundResource(R.drawable.grey_im);
+                                        holder.rcv_des.setText(mem_list);
+                                        holder.rcv_des.setTextColor(Color.BLACK);
                                         String dd51 = "";
                                         dd51 = setConversationTime(gcBean);
                                         holder.time_under_text_receiver.setText(dd51);

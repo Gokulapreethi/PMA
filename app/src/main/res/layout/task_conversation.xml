@@ -49,6 +49,15 @@
                 android:textColor="@color/appcolor"
                 android:textSize="15sp"
                 android:textStyle="bold" />
+            <ImageView
+                android:id="@+id/showMy_ID"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginRight="10dp"
+                android:layout_weight="0.11"
+                android:src="@drawable/id_image"
+                android:visibility="visible" />
+
 
 
             <!--<ImageView-->
@@ -395,20 +404,20 @@
                 android:layout_marginEnd="46dp" />
             <ImageView
                 android:id="@+id/status_job"
-                android:layout_width="20dp"
-                android:layout_height="20dp"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
                 android:background="@drawable/status_info"
                 android:textColor="@color/red"
                 android:visibility="gone"
                 android:layout_marginRight="2dp"
-                android:layout_marginEnd="6dp"
+                android:layout_marginEnd="10dp"
                 android:layout_centerVertical="true"
                 android:layout_alignParentRight="true"
                 android:layout_alignParentEnd="true" />
             <ImageView
                 android:id="@+id/travel_job"
-                android:layout_width="20dp"
-                android:layout_height="20dp"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
                 android:background="@drawable/plus_blue_custom1"
                 android:textColor="@color/red"
                 android:visibility="gone"
@@ -417,7 +426,7 @@
                 android:layout_toLeftOf="@+id/status_job"
                 android:layout_toStartOf="@+id/status_job"
                 android:layout_marginRight="12dp"
-                android:layout_marginEnd="12dp" />
+                android:layout_marginEnd="16dp" />
 
         </RelativeLayout>
 
