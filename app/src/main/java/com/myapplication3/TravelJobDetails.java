@@ -1,0 +1,1794 @@
+package com.myapplication3;
+
+import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.app.ProgressDialog;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.os.Bundle;
+import android.os.Handler;
+import android.support.v7.widget.PopupMenu;
+import android.util.Base64;
+import android.util.Log;
+import android.view.Gravity;
+import android.view.MenuItem;
+import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.ListView;
+import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import com.myapplication3.Bean.ProjectDetailsBean;
+import com.myapplication3.Bean.TaskDetailsBean;
+import com.myapplication3.DB.VideoCallDataBase;
+import com.myapplication3.RandomNumber.Utility;
+import com.myapplication3.sketh.ProjectsFragment;
+
+import org.apache.http.NameValuePair;
+import org.apache.http.message.BasicNameValuePair;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.pjsip.pjsua2.Buddy;
+import org.pjsip.pjsua2.BuddyConfig;
+import org.pjsip.pjsua2.SendInstantMessageParam;
+import org.pjsip.pjsua2.app.MainActivity;
+import org.pjsip.pjsua2.app.MyBuddy;
+
+import java.io.ByteArrayOutputStream;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+import java.nio.charset.Charset;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.TimeZone;
+
+import json.CommunicationBean;
+import json.EnumJsonWebservicename;
+import json.WebServiceInterface;
+
+/**
+ * Created by prasanth on 6/24/2017.
+ */
+public class TravelJobDetails extends Activity implements View.OnClickListener, CommonDateTimePicker.DateWatcher, WebServiceInterface {
+    ImageView showMy_ID, submit, status_job, travel_job, drop_down;
+    TextView cancel, head, text11, text12, text13, tv_networksate, updatingtask, item_counter, tv_reassign;
+    LinearLayout linear1, header_menu, ll_networkstate, updatingtask_layout;
+    ProgressBar progress_updating;
+    ListView list_all;
+    String taskName, projectId, webtaskId, strIPath, mime_Type, projectCurrentStatus;
+    public static MediaListAdapter medialistadapter;
+    Context context;
+    TextView signature_path, photo_path, tech_signature_path;
+    boolean isCustomerSign, isProjectFromOracle;
+    static TravelJobDetails travelJobDetails;
+    ProgressDialog progress;
+    boolean Start_work;
+    boolean hold_work;
+    boolean resume_work;
+    boolean pause_work;
+    boolean restart_work;
+    boolean completed_work;
+    boolean Self_assign = false;
+    boolean isLocation = false;
+    boolean isTaskCompleted = false;
+    boolean isForOracleProject = false;
+    boolean isDivertedON = false;
+    boolean isDeassign = false;
+    boolean isTaskName = false, project;
+    ArrayList<String> custom_1MediaList;
+    private HashMap<Integer, String> statusCompletedFieldValues = new HashMap<Integer, String>();
+    String TravelStartdate, TravelEnddate, status_signature, photo_signature, tech_signature, PickDate, travel_endDate;
+    String FromTravelStart, FromTravelEnd, ActivityStartdate, ActivityEnddate, TotravelStart, ToTravelEnd;
+    String observationStatus, actiontakenStatus, custsignnameStatus, HMReadingStatus;
+    ArrayList<String> travel_date_details;
+    String tasktime = null, taskUTCtime, oracleProjectOwner = "", OracleParentTaskId, groupname;
+    String toUserName, taskType, task_No, ownerOfTask, taskReceiver, category, issueId, parentTaskId, projectGroup_Mems, taskStatus, project_toUsers = "";
+    private static Handler handler = new Handler();
+    private String quotes = "\"";
+    public static ArrayList<String> listOfObservers;
+    static ArrayList<TaskDetailsBean> taskList = new ArrayList<>();
+    LinearLayout ll_networkUI = null;
+    RelativeLayout ll_2;
+    TextView tv_networkstate = null;
+    int toUserId;
+    VideoCallDataBase dataBase;
+    String tab="TravelJobDetails";
+
+
+    private String proxy_user = "proxyua_highmessaging.com";
+    //        private String proxy_user = "proxydev_highmessaging.com";
+//    private String proxy_user = "proxyua_highmessaging.org";
+
+    public static void clearMediaList(int position) {
+        taskList.remove(position);
+        if (taskList.size() == 0) {
+            taskList.clear();
+        }
+        medialistadapter.notifyDataSetChanged();
+    }
+
+    public static TravelJobDetails getInstance() {
+        return travelJobDetails;
+    }
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.traveldetails_conversation);
+
+        showMy_ID = (ImageView) findViewById(R.id.showMy_ID);
+        submit = (ImageView) findViewById(R.id.submit);
+        status_job = (ImageView) findViewById(R.id.status_job);
+        travel_job = (ImageView) findViewById(R.id.travel_job);
+        drop_down = (ImageView) findViewById(R.id.drop_down);
+
+        cancel = (TextView) findViewById(R.id.cancel);
+        head = (TextView) findViewById(R.id.head);
+        text11 = (TextView) findViewById(R.id.text11);
+        text12 = (TextView) findViewById(R.id.text12);
+        text13 = (TextView) findViewById(R.id.text13);
+        tv_networksate = (TextView) findViewById(R.id.tv_networksate);
+        updatingtask = (TextView) findViewById(R.id.updatingtask);
+        item_counter = (TextView) findViewById(R.id.item_counter);
+        tv_reassign = (TextView) findViewById(R.id.tv_reassign);
+        linear1 = (LinearLayout) findViewById(R.id.linear1);
+        header_menu = (LinearLayout) findViewById(R.id.header_menu);
+        ll_networkstate = (LinearLayout) findViewById(R.id.ll_networkstate);
+        updatingtask_layout = (LinearLayout) findViewById(R.id.updatingtask_layout);
+        ll_2 = (RelativeLayout) findViewById(R.id.ll_2);
+
+        progress_updating = (ProgressBar) findViewById(R.id.progress_updating);
+        list_all = (ListView) findViewById(R.id.list_all);
+        list_all.setAdapter(medialistadapter);
+        context = this;
+        custom_1MediaList = new ArrayList<>();
+        listOfObservers = new ArrayList<>();
+        dataBase = VideoCallDataBase.getDB(context);
+        String conversation_In = "";
+
+        if (getIntent() != null) {
+            if (getIntent().getExtras() != null) {
+                conversation_In = getIntent().getExtras().getString("task");
+                oracleProjectOwner = getIntent().getExtras().getString("oracleProjectOwner");
+                isProjectFromOracle = getIntent().getBooleanExtra("ProjectFromOracle", false);
+                Log.i("ws123", "oracleProjectOwner===>" + oracleProjectOwner + " logged in by===>" + Appreference.loginuserdetails.getUsername());
+            }
+        }
+        Log.i(tab, "onCreate");
+        if (conversation_In != null && conversation_In.equalsIgnoreCase("projectHistory")) {
+            final ProjectDetailsBean projectDetailsBean = (ProjectDetailsBean) getIntent().getSerializableExtra("projectHistoryBean");
+            OracleParentTaskId = projectDetailsBean.getParentTaskId();
+            groupname = projectDetailsBean.getToUserName();
+            webtaskId = projectDetailsBean.getTaskId();
+            task_No = projectDetailsBean.getTaskNo();
+            taskName = projectDetailsBean.getTaskName();
+            toUserId = Integer.parseInt(projectDetailsBean.getToUserId());
+            toUserName = projectDetailsBean.getToUserName();
+            ownerOfTask = projectDetailsBean.getOwnerOfTask();
+            projectId = projectDetailsBean.getId();
+            parentTaskId = projectDetailsBean.getParentTaskId();
+            taskReceiver = projectDetailsBean.getTaskReceiver();
+            category = "task";
+            projectGroup_Mems = projectDetailsBean.getTaskMemberList();
+            taskStatus = projectDetailsBean.getTaskStatus();
+        } else if (conversation_In != null && conversation_In.equalsIgnoreCase("ProjectTemplateview")) {
+            final ProjectDetailsBean projectDetailsBean = (ProjectDetailsBean) getIntent().getSerializableExtra("projectHistoryBean");
+            OracleParentTaskId = projectDetailsBean.getParentTaskId();
+            groupname = projectDetailsBean.getToUserName();
+            webtaskId = projectDetailsBean.getTaskId();
+            task_No = projectDetailsBean.getTaskNo();
+            taskName = projectDetailsBean.getTaskName();
+            toUserId = Integer.parseInt(projectDetailsBean.getToUserId());
+            toUserName = projectDetailsBean.getToUserName();
+            ownerOfTask = projectDetailsBean.getOwnerOfTask();
+            projectId = projectDetailsBean.getId();
+            parentTaskId = projectDetailsBean.getParentTaskId();
+            taskReceiver = projectDetailsBean.getTaskReceiver();
+            category = "task";
+            projectGroup_Mems = projectDetailsBean.getTaskMemberList();
+            taskStatus = projectDetailsBean.getTaskStatus();
+        }
+        if (taskStatus != null && taskStatus.equalsIgnoreCase("inprogress")) {
+            ll_2.setVisibility(View.VISIBLE);
+        } else {
+            ll_2.setVisibility(View.GONE);
+        }
+        if (oracleProjectOwner != null && oracleProjectOwner.equalsIgnoreCase(Appreference.loginuserdetails.getUsername())) {
+            tv_reassign.setText("Assign Task");
+        } else {
+            tv_reassign.setText("Assign to me");
+            Self_assign = true;
+        }
+        tv_reassign.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.i(tab, "tv_reassign "+Self_assign);
+                if (!Self_assign)
+                    addTaskReassignClickEvent();
+                else {
+                    sendAssignTask_webservice();
+                }
+            }
+        });
+
+//        head.setText(taskName);
+        cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ProjectHistory projectHistory = (ProjectHistory) Appreference.context_table.get("projecthistory");
+                if (projectHistory != null)
+                    projectHistory.setProgressBarInvisible();
+                Appreference.webview_refresh = true;
+                Log.i("onKeyDown", "back layout  ");
+                Intent intent = new Intent();
+                setResult(RESULT_OK, intent);
+                finish();
+            }
+        });
+
+        showMy_ID.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final Dialog dialog = new Dialog(TravelJobDetails.this);
+                dialog.setContentView(R.layout.project_task_id);
+                dialog.setTitle(taskName);
+                TextView project_id_show = (TextView) dialog.findViewById(R.id.project_id_show);
+                TextView task_id_show = (TextView) dialog.findViewById(R.id.task_id_show);
+                Button dialogButtonOK = (Button) dialog.findViewById(R.id.dialogButtonOK);
+                project_id_show.setText(projectId);
+                task_id_show.setText(webtaskId);
+                dialogButtonOK.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        dialog.dismiss();
+                    }
+                });
+                dialog.show();
+            }
+        });
+
+        submit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(getApplication(), "Details sesnd ", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        status_job.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showStatusPopupWindow(v);
+            }
+
+        });
+
+        travel_job.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showtravelTimePopup(v);
+            }
+
+        });
+    }
+
+    private void showtravelTimePopup(View v) {
+        final Dialog dialog = new Dialog(context);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.start_end_time_show);
+        WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
+        lp.copyFrom(dialog.getWindow().getAttributes());
+        lp.width = WindowManager.LayoutParams.MATCH_PARENT;
+        lp.height = WindowManager.LayoutParams.MATCH_PARENT;
+        lp.horizontalMargin = 15;
+        Window window = dialog.getWindow();
+        window.setBackgroundDrawableResource((R.color.white));
+        window.setAttributes(lp);
+        window.setGravity(Gravity.BOTTOM);
+        dialog.show();
+        Button travelstart_sign = (Button) dialog.findViewById(R.id.travelstart_sign);
+        Button travelend_sign = (Button) dialog.findViewById(R.id.travelend_sign);
+
+
+        final TextView project_name = (TextView) dialog.findViewById(R.id.project_name);
+        final TextView travel_start = (TextView) dialog.findViewById(R.id.travel_start);
+        final TextView travel_end = (TextView) dialog.findViewById(R.id.travel_end);
+        final TextView back = (TextView) dialog.findViewById(R.id.back);
+        final TextView send_travel = (TextView) dialog.findViewById(R.id.send_travel_completion);
+        back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+        project_name.setText(taskName);
+        travelstart_sign.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final Dialog mDateTimeDialog = new Dialog(context);
+                final RelativeLayout mDateTimeDialogView = (RelativeLayout) getLayoutInflater().inflate(R.layout.date_time_dialog, null);
+                final CommonDateTimePicker mDateTimePicker = (CommonDateTimePicker) mDateTimeDialogView.findViewById(R.id.DateTimePicker);
+                mDateTimePicker.setDateChangedListener(TravelJobDetails.this);
+                ((Button) mDateTimeDialogView.findViewById(R.id.SetDateTime)).setOnClickListener(new View.OnClickListener() {
+
+                    public void onClick(View v) {
+                        mDateTimePicker.clearFocus();
+                        // TODO Auto-generated method stub
+                        PickDate = String.valueOf(mDateTimePicker.getYear() + "-" + mDateTimePicker.getMonth() + "-" + String.valueOf(mDateTimePicker.getDay()))
+                                + "  " + String.valueOf(mDateTimePicker.getHour()) + ":" + String.valueOf(mDateTimePicker.getMinute() + ":" + "00");
+                        Date date_from = null;
+                        try {
+                            date_from = new SimpleDateFormat("yyyy-MMM-dd HH:mm:ss").parse(PickDate);
+                        } catch (ParseException e) {
+                            e.printStackTrace();
+                        }
+                        final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                        String ToDate = sdf.format(date_from);
+                        Log.i("output123", "Todate===>" + ToDate);
+                        travel_start.setText(ToDate);
+                        FromTravelStart = ToDate;
+//                        PickDate=ToDate;
+                        mDateTimeDialog.dismiss();
+                    }
+                });
+                ((Button) mDateTimeDialogView.findViewById(R.id.CancelDialog)).setOnClickListener(new View.OnClickListener() {
+
+                    public void onClick(View v) {
+                        // TODO Auto-generated method stub
+                        mDateTimeDialog.cancel();
+                    }
+                });
+
+                ((Button) mDateTimeDialogView.findViewById(R.id.ResetDateTime)).setOnClickListener(new View.OnClickListener() {
+
+                    public void onClick(View v) {
+                        // TODO Auto-generated method stub
+                        mDateTimePicker.reset();
+                    }
+                });
+                mDateTimeDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                mDateTimeDialog.setContentView(mDateTimeDialogView);
+                mDateTimeDialog.show();
+            }
+        });
+        travelend_sign.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (travel_start.getText().toString() != null && travel_start.getText().toString().length() > 0) {
+                    final Dialog mDateTimeDialog = new Dialog(context);
+                    final RelativeLayout mDateTimeDialogView = (RelativeLayout) getLayoutInflater().inflate(R.layout.date_time_dialog, null);
+                    final CommonDateTimePicker mDateTimePicker = (CommonDateTimePicker) mDateTimeDialogView.findViewById(R.id.DateTimePicker);
+                    mDateTimePicker.setDateChangedListener(TravelJobDetails.this);
+                    ((Button) mDateTimeDialogView.findViewById(R.id.SetDateTime)).setOnClickListener(new View.OnClickListener() {
+
+                        public void onClick(View v) {
+                            mDateTimePicker.clearFocus();
+                            // TODO Auto-generated method stub
+                            PickDate = String.valueOf(mDateTimePicker.getYear() + "-" + mDateTimePicker.getMonth() + "-" + String.valueOf(mDateTimePicker.getDay()))
+                                    + "  " + String.valueOf(mDateTimePicker.getHour()) + ":" + String.valueOf(mDateTimePicker.getMinute() + ":" + "00");
+                            Date date_from = null;
+                            try {
+                                date_from = new SimpleDateFormat("yyyy-MMM-dd HH:mm:ss").parse(PickDate);
+                            } catch (ParseException e) {
+                                e.printStackTrace();
+                            }
+                            final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                            String ToDate = sdf.format(date_from);
+                            Log.i("output123", "Todate===>" + ToDate);
+                            travel_end.setText(ToDate);
+                            FromTravelEnd = ToDate;
+//                        PickDate=ToDate;
+                            mDateTimeDialog.dismiss();
+                        }
+                    });
+                    ((Button) mDateTimeDialogView.findViewById(R.id.CancelDialog)).setOnClickListener(new View.OnClickListener() {
+
+                        public void onClick(View v) {
+                            // TODO Auto-generated method stub
+                            mDateTimeDialog.cancel();
+                        }
+                    });
+
+                    ((Button) mDateTimeDialogView.findViewById(R.id.ResetDateTime)).setOnClickListener(new View.OnClickListener() {
+
+                        public void onClick(View v) {
+                            // TODO Auto-generated method stub
+                            mDateTimePicker.reset();
+                        }
+                    });
+                    mDateTimeDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                    mDateTimeDialog.setContentView(mDateTimeDialogView);
+                    mDateTimeDialog.show();
+                } else
+                    Toast.makeText(context, "Please fill From Travel Start Date", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        send_travel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(TravelJobDetails.this, "Send Successfully", Toast.LENGTH_SHORT).show();
+                sendStatus_webservice("7", "", "", "travel");
+                dialog.dismiss();
+            }
+        });
+
+
+    }
+
+    private void showStatusPopupWindow(View view) {
+        final PopupMenu popup = new PopupMenu(TravelJobDetails.this, view);
+        try {
+            Field[] fields = popup.getClass().getDeclaredFields();
+            for (Field field : fields) {
+                if ("mPopup".equals(field.getName())) {
+                    field.setAccessible(true);
+                    Object menuPopupHelper = field.get(popup);
+                    Class<?> classPopupHelper = Class.forName(menuPopupHelper.getClass().getName());
+                    Method setForceIcons = classPopupHelper.getMethod("setForceShowIcon", boolean.class);
+                    setForceIcons.invoke(menuPopupHelper, true);
+                    break;
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        popup.getMenuInflater().inflate(R.menu.popup_job_status, popup.getMenu());
+        popup.getMenu().getItem(1).setVisible(false);
+
+        String query = "select status from projectStatus where projectId='" + projectId + "' and userId='" + Appreference.loginuserdetails.getId() + "' and taskId= '" + webtaskId + "'";
+        int current_status = VideoCallDataBase.getDB(context).getCurrentStatus(query);
+
+
+        Log.i("ws123", "project CurrentStatus from DB====>" + current_status);
+        if (current_status == -1) {
+            popup.getMenu().getItem(0).setVisible(true);
+            popup.getMenu().getItem(1).setVisible(false);
+            popup.getMenu().getItem(2).setVisible(false);
+            popup.getMenu().getItem(3).setVisible(false);
+            popup.getMenu().getItem(4).setVisible(false);
+            popup.getMenu().getItem(5).setVisible(true);
+            popup.getMenu().getItem(6).setVisible(true);
+        }
+//        popup.getMenu().getItem(6).setVisible(true);
+        if (current_status == 0) {
+//            Start_work = true;
+            popup.getMenu().getItem(0).setVisible(false);
+            popup.getMenu().getItem(1).setVisible(false);
+            popup.getMenu().getItem(2).setVisible(false);
+            popup.getMenu().getItem(3).setVisible(false);
+            popup.getMenu().getItem(4).setVisible(false);
+            popup.getMenu().getItem(5).setVisible(true);
+            popup.getMenu().getItem(6).setVisible(true);
+        } else if (current_status == 5) {
+            completed_work = true;
+            popup.getMenu().getItem(0).setVisible(false);
+            popup.getMenu().getItem(1).setVisible(false);
+            popup.getMenu().getItem(2).setVisible(false);
+            popup.getMenu().getItem(3).setVisible(false);
+            popup.getMenu().getItem(4).setVisible(false);
+            popup.getMenu().getItem(5).setVisible(false);
+            popup.getMenu().getItem(6).setVisible(false);
+            Toast.makeText(getApplicationContext(), "Task has been Completed", Toast.LENGTH_SHORT).show();
+        } else if (current_status == 6) {
+            popup.getMenu().getItem(0).setVisible(false);
+            popup.getMenu().getItem(1).setVisible(false);
+            popup.getMenu().getItem(2).setVisible(false);
+            popup.getMenu().getItem(3).setVisible(false);
+            popup.getMenu().getItem(4).setVisible(false);
+            popup.getMenu().getItem(5).setVisible(false);
+            popup.getMenu().getItem(6).setVisible(false);
+            Toast.makeText(getApplicationContext(), "Task has been DeAssigned", Toast.LENGTH_SHORT).show();
+        }
+
+        popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+
+            public boolean onMenuItemClick(MenuItem item) {
+//                Toast.makeText(getApplicationContext(), "You Clicked : " + item.getTitle(), Toast.LENGTH_SHORT).show();
+                if (item.getTitle().toString().equalsIgnoreCase("Start")) {
+                    sendStatus_webservice("0", "", "", "Started ");
+                }
+
+                if (item.getTitle().toString().equalsIgnoreCase("Completed")) {
+                    AlertDialog.Builder saveDialog = new AlertDialog.Builder(context);
+                    saveDialog.setTitle("Completion");
+                    saveDialog.setMessage("Are You sure want to complete this job ");
+                    saveDialog.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            sendStatus_webservice("5", "", "", "Complete");
+                        }
+                    });
+                    saveDialog.setNegativeButton("Cancel",
+                            new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.cancel();
+                                }
+                            });
+                    saveDialog.show();
+                }
+                if (item.getTitle().toString().equalsIgnoreCase("DeAssign")) {
+                    final Dialog dialog1 = new Dialog(context);
+                    dialog1.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                    dialog1.setContentView(R.layout.task_remarks);
+                    TextView header = (TextView) dialog1.findViewById(R.id.template_header);
+                    TextView yes = (TextView) dialog1.findViewById(R.id.save);
+                    TextView no = (TextView) dialog1.findViewById(R.id.no);
+                    final EditText name = (EditText) dialog1.findViewById(R.id.remarks);
+                    header.setText("Enter Remarks ");
+                    yes.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            dialog1.dismiss();
+                            Log.i("ws123", "remarks for DeAssign====>" + name.getText().toString());
+                            sendStatus_webservice("8", "", name.getText().toString(), "DeAssign");
+                        }
+                    });
+                    no.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            dialog1.dismiss();
+                        }
+                    });
+                    dialog1.show();
+                }
+                return true;
+            }
+        });
+        popup.show();
+    }
+
+    private void sendStatus_webservice(String status, String path, String remarks, String projectCurrentStatus) {
+        try {
+
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            String dateTime = dateFormat.format(new Date());
+            dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
+            String dateforrow = dateFormat.format(new Date());
+            tasktime = dateTime;
+            taskUTCtime = dateforrow;
+
+
+            ArrayList<TaskDetailsBean> status_list = new ArrayList<>();
+            TaskDetailsBean taskDetailsBean = new TaskDetailsBean();
+
+            JSONObject jsonObject = new JSONObject();
+            JSONObject jsonObject1 = new JSONObject();
+            jsonObject1.put("id", Integer.parseInt(projectId));
+            taskDetailsBean.setProjectId(projectId);
+            jsonObject.put("project", jsonObject1);
+
+            JSONObject jsonObject2 = new JSONObject();
+            jsonObject2.put("id", Appreference.loginuserdetails.getId());
+            taskDetailsBean.setFromUserId(String.valueOf(Appreference.loginuserdetails.getId()));
+            jsonObject.put("from", jsonObject2);
+
+            JSONObject jsonObject3 = new JSONObject();
+            jsonObject3.put("id", Integer.parseInt(webtaskId));
+            taskDetailsBean.setTaskId(webtaskId);
+            jsonObject.put("task", jsonObject3);
+            jsonObject.put("travelStartTime", taskUTCtime);
+            jsonObject.put("activityStartTime", taskUTCtime);
+            jsonObject.put("activityEndTime", taskUTCtime);
+            jsonObject.put("travelEndTime", taskUTCtime);
+            jsonObject.put("toTravelStartDateTime", taskUTCtime);
+            jsonObject.put("toTravelEndDateTime", taskUTCtime);
+
+            taskDetailsBean.setActivityEndTime(taskUTCtime);
+            taskDetailsBean.setActivityStartTime(taskUTCtime);
+
+            if (remarks != null) {
+                jsonObject.put("remarks", remarks);
+                taskDetailsBean.setCustomerRemarks(remarks);
+            } else
+                jsonObject.put("remarks", "");
+            jsonObject.put("status", status);
+
+//            if (observationStatus != null && observationStatus.length() > 0) {
+//                jsonObject.put("observation", observationStatus);
+//                taskDetailsBean.setObservation(observationStatus);
+//            } else
+//                jsonObject.put("observation", "");
+//            if (custsignnameStatus != null && custsignnameStatus.length() > 0) {
+//                jsonObject.put("customerSignatureName", custsignnameStatus);
+//                taskDetailsBean.setCustomerSignatureName(custsignnameStatus);
+//            } else
+//                jsonObject.put("customerSignatureName", "");
+//            if (HMReadingStatus != null && HMReadingStatus.length() > 0) {
+//                jsonObject.put("hourMeterReading", HMReadingStatus);
+//                taskDetailsBean.setHMReading(HMReadingStatus);
+//            } else
+//                jsonObject.put("hourMeterReading", "");
+//            if (actiontakenStatus != null && actiontakenStatus.length() > 0)
+//                taskDetailsBean.setActionTaken(actiontakenStatus);
+
+            taskDetailsBean.setProjectStatus(status);
+            taskDetailsBean.setTaskUTCDateTime(dateforrow);
+            taskDetailsBean.setDateTime(dateTime);
+            taskDetailsBean.setTasktime(tasktime);
+            taskDetailsBean.setTaskUTCTime(taskUTCtime);
+            taskDetailsBean.setFromUserId(String.valueOf(Appreference.loginuserdetails.getId()));
+            taskDetailsBean.setFromUserName(Appreference.loginuserdetails.getUsername());
+            taskDetailsBean.setToUserName(toUserName);
+//            taskDetailsBean.setToUserId(String.valueOf(toUserId));
+            taskDetailsBean.setToUserId("");
+            taskDetailsBean.setSignalid(Utility.getSessionID());
+            taskDetailsBean.setTaskNo(task_No);
+            taskDetailsBean.setPlannedStartDateTime("");
+            taskDetailsBean.setPlannedEndDateTime("");
+            taskDetailsBean.setTaskStatus(projectCurrentStatus);
+            taskDetailsBean.setSendStatus("0");
+            taskDetailsBean.setTaskType(taskType);
+            taskDetailsBean.setMimeType("text");
+
+
+            taskDetailsBean.setUtcPlannedStartDateTime(Appreference.customLocalDateToUTC(null));
+            taskDetailsBean.setUtcplannedEndDateTime(Appreference.customLocalDateToUTC(null));
+            taskDetailsBean.setParentId(getFileName());
+            taskDetailsBean.setTaskPriority("Medium");
+            taskDetailsBean.setCompletedPercentage("");
+            taskDetailsBean.setRequestStatus("requested");
+            taskDetailsBean.setMsg_status(0);
+            taskDetailsBean.setShow_progress(1);
+
+            taskDetailsBean.setOwnerOfTask(ownerOfTask);
+            taskDetailsBean.setTaskReceiver(taskReceiver);
+            taskDetailsBean.setTaskName(taskName);
+            taskDetailsBean.setCatagory(category);
+            if (project) {
+                taskDetailsBean.setProjectId(projectId);
+//                if (category != null && category.equalsIgnoreCase("issue")) {
+//                    taskDetailsBean.setParentTaskId(issueId);
+//                } else {
+                taskDetailsBean.setParentTaskId(parentTaskId);
+//                }
+                if (projectGroup_Mems != null) {
+                    taskDetailsBean.setGroupTaskMembers(projectGroup_Mems);
+                }
+            }
+            taskDetailsBean.setSubType("normal");
+            taskDetailsBean.setTaskRequestType("normal");
+//            if (signature_path != null && signature_path.getText().toString() != null) {
+//                taskDetailsBean.setCustomerSignature(signature_path.getText().toString());
+//            }
+//            if (tech_signature_path != null && tech_signature_path.getText().toString() != null) {
+//                taskDetailsBean.setTechnicianSignature(tech_signature_path.getText().toString());
+//            }
+//            if (photo_path != null && photo_path.getText().toString() != null) {
+//                taskDetailsBean.setPhotoPath(photo_path.getText().toString());
+//            }
+            Log.i("status", "DeAssign " + Appreference.loginuserdetails.getUsername());
+            if (projectCurrentStatus != null && projectCurrentStatus.equalsIgnoreCase("DeAssign")) {
+                isDeassign = true;
+                taskDetailsBean.setTaskDescription(Appreference.loginuserdetails.getUsername() + " Left");
+                taskDetailsBean.setSubType("DeAssign");
+            } else {
+                taskDetailsBean.setTaskDescription("Task is " + projectCurrentStatus);
+            }
+            jsonObject.put("hourMeterReading", "");
+            Log.i("ws123", "status update in project History");
+            /*for (int level = 0; level < statusCompletedFieldValues.size(); level++) {
+                try {
+                    if (statusCompletedFieldValues.containsKey(level)) {
+                        TaskDetailsBean taskDetailsBean1 = (TaskDetailsBean) taskDetailsBean.clone();
+                        Log.i("ws123", "taskDetailsBean1 reference signalID +++>>>   " + taskDetailsBean1.getSignalid());
+                        Log.i("ws123", "taskDetailsBean1 reference  signalID+++>>>   " + taskDetailsBean1.getSignalid());
+                        taskDetailsBean1.setMimeType("text");
+                        Log.i("desc123", "hashmap values ===>" + "level===>" + level + "===>" + statusCompletedFieldValues.get(level));
+                        taskDetailsBean1.setTaskDescription(statusCompletedFieldValues.get(level));
+                        Log.i("ws123", "taskDetailsBean1 reference  +++>>>   " + taskDetailsBean1);
+                        status_list.add(taskDetailsBean1);
+                    }
+                } catch (CloneNotSupportedException e) {
+                    e.printStackTrace();
+                }
+            }
+            JSONObject jsonObject4 = new JSONObject();
+            if (status_signature != null && !status_signature.equalsIgnoreCase(null) && !status_signature.equalsIgnoreCase("")) {
+                try {
+                    TaskDetailsBean taskbean = (TaskDetailsBean) taskDetailsBean.clone();
+                    Log.i("ws123", "taskDetailsBean1 reference signalID +++>>>   " + taskbean.getSignalid());
+                    Log.i("ws123", "taskDetailsBean1 reference signalID +++>>>   " + taskbean.getSignalid());
+                    taskbean.setMimeType("image");
+                    taskbean.setTaskRequestType("signature");
+                    jsonObject4.put("fileContent", encodeTobase64(BitmapFactory.decodeFile(status_signature)));
+                    jsonObject4.put("taskFileExt", "jpg");
+                    jsonObject.put("signatures", jsonObject4);
+                    status_list.add(taskbean);
+                } catch (CloneNotSupportedException e) {
+                    e.printStackTrace();
+                }
+            }
+            JSONObject jsonObject5 = new JSONObject();
+            if (photo_signature != null && !photo_signature.equalsIgnoreCase(null) && !photo_signature.equalsIgnoreCase("")) {
+                try {
+                    TaskDetailsBean taskbean1 = (TaskDetailsBean) taskDetailsBean.clone();
+                    taskbean1.setMimeType("image");
+                    taskbean1.setTaskRequestType("photo");
+                    jsonObject5.put("fileContent", encodeTobase64(BitmapFactory.decodeFile(photo_signature)));
+                    jsonObject5.put("taskFileExt", "jpg");
+                    jsonObject.put("signatures", jsonObject5);
+                    status_list.add(taskbean1);
+                } catch (CloneNotSupportedException e) {
+                    e.printStackTrace();
+                }
+            }
+            JSONObject jsonObject6 = new JSONObject();
+            if (tech_signature != null && !tech_signature.equalsIgnoreCase(null) && !tech_signature.equalsIgnoreCase("")) {
+                try {
+                    TaskDetailsBean taskbean2 = (TaskDetailsBean) taskDetailsBean.clone();
+                    taskbean2.setMimeType("image");
+                    taskbean2.setTaskRequestType("technicianSignature");
+                    jsonObject6.put("fileContent", encodeTobase64(BitmapFactory.decodeFile(tech_signature)));
+                    jsonObject6.put("taskFileExt", "jpg");
+                    jsonObject.put("signatures", jsonObject6);
+                    status_list.add(taskbean2);
+                } catch (CloneNotSupportedException e) {
+                    e.printStackTrace();
+                }
+            }*/
+//            if (!isTaskName)
+            if (isProjectFromOracle)
+                VideoCallDataBase.getDB(context).update_Project_history(taskDetailsBean);
+            VideoCallDataBase.getDB(context).insertORupdate_Task_history(taskDetailsBean);
+            VideoCallDataBase.getDB(context).insertORupdateStatus(taskDetailsBean);
+            taskList.add(taskDetailsBean);
+            /*for (TaskDetailsBean bean : status_list) {
+                Log.i("ws123", "taskDetailsBean1 reference  +++>>>   " + bean.getSignalid() + "    ====   task Description  ===  >>  " + bean.getTaskDescription());
+            }*/
+            Appreference.jsonRequestSender.taskStatus(EnumJsonWebservicename.taskStatus, jsonObject, status_list, taskDetailsBean, TravelJobDetails.this);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public String getFileName() {
+        String strFilename = null;
+        try {
+            SimpleDateFormat dateFormat = new SimpleDateFormat("ddMMyyyyHHmmss");
+            Date date = new Date();
+            strFilename = dateFormat.format(date);
+        } catch (Exception e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+            Appreference.printLog("NewTaskConversation", "getFileName Exception " + e.getMessage(), "WARN", null);
+        }
+        return strFilename;
+    }
+
+    private String encodeTobase64(Bitmap image) {
+        Bitmap immagex = image;
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        immagex.compress(Bitmap.CompressFormat.JPEG, 75, baos);
+        byte[] b = baos.toByteArray();
+        String imageEncoded = Base64.encodeToString(b, Base64.DEFAULT);
+        return imageEncoded;
+    }
+
+    public String composeChatXML(TaskDetailsBean cmbean) {
+        StringBuffer buffer = new StringBuffer();
+        byte[] data_1;
+        String base_64 = null;
+        try {
+            byte[] data = cmbean.getTaskDescription().trim().getBytes("UTF-8");
+            Log.d("base64value", "base64 before " + cmbean.getTaskDescription());
+            String base64 = Base64.encodeToString(data, Base64.DEFAULT);
+            if (cmbean.getServerFileName() != null) {
+                data_1 = cmbean.getServerFileName().trim().getBytes("UTF-8");
+                Log.d("base64value", "base64 before " + cmbean.getServerFileName());
+                base_64 = Base64.encodeToString(data_1, Base64.DEFAULT);
+            }
+            buffer.append("<?xml version=\"1.0\"?>" + "<TaskDetailsinfo><TaskDetails");
+
+            if (cmbean.getTaskObservers() != null) {
+                buffer.append(" taskAddObservers=" + quotes + cmbean.getTaskObservers() + quotes);
+            }
+
+            if (cmbean.getTaskRemoveObservers() != null) {
+                buffer.append(" taskRemoveObservers=" + quotes + cmbean.getTaskRemoveObservers() + quotes);
+            }
+
+            if (cmbean.getTaskName() != null && !cmbean.getTaskName().equalsIgnoreCase("") && !cmbean.getTaskName().equalsIgnoreCase(null)) {
+                String taskName = cmbean.getTaskName();
+                if (taskName.contains("&") || taskName.contains("<") || taskName.contains("\"")) {
+                    if (taskName.contains("<")) {
+                        taskName = taskName.replaceAll("<", "&lt;");
+                    }
+                    if (taskName.contains("&")) {
+                        taskName = taskName.replaceAll("&", "&amp;");
+                    }
+                    if (taskName.contains("\"")) {
+                        taskName = taskName.replaceAll("\"", "&quot;");
+                    }
+                    buffer.append(" taskName=" + quotes + taskName + quotes);
+                    Log.i("URL", "value " + taskName);
+                } else {
+                    buffer.append(" taskName=" + quotes + cmbean.getTaskName() + quotes);
+                }
+//                buffer.append(" taskName=" + quotes + cmbean.getTaskName() + quotes);
+            } else {
+                buffer.append(" taskName=" + quotes + "New Task" + quotes);
+            }
+            if (!cmbean.getMimeType().equalsIgnoreCase("text") && !cmbean.getMimeType().equalsIgnoreCase("url")) {
+                if ((cmbean.getServerFileName() != null) && (!cmbean.getServerFileName().equalsIgnoreCase(null)) && (!cmbean.getServerFileName().equalsIgnoreCase(""))) {
+                    Log.i("URL", "SaveFilename-->" + base_64.trim());
+                    buffer.append(" taskDescription=" + quotes + base_64.trim() + quotes);
+                } else {
+                    Log.i("URL", "TaskDes-->" + base64);
+                    buffer.append(" taskDescription=" + quotes + base64.trim() + quotes);
+                }
+            } else {
+                Log.i("URL", "value * " + cmbean.getTaskDescription());
+                if (base64 != null) {
+                    String s = base64.trim();
+                    if (s.contains("&") || s.contains("<") || s.contains("\"")) {
+                        if (s.contains("<")) {
+                            s = s.replaceAll("<", "&lt;");
+                        }
+                        if (s.contains("&")) {
+                            s = s.replaceAll("&", "&amp;");
+                        }
+                        if (s.contains("\"")) {
+                            s = s.replaceAll("\"", "&quot;");
+                        }
+                        buffer.append(" taskDescription=" + quotes + s + quotes);
+                        Log.i("URL", "value " + s);
+                    } else {
+                        buffer.append(" taskDescription=" + quotes + base64.trim() + quotes);
+                    }
+                }
+            }
+            buffer.append(" fromUserId=" + quotes + cmbean.getFromUserId() + quotes);
+            buffer.append(" fromUserName=" + quotes + cmbean.getFromUserName() + quotes);
+            if (!getResources().getString(R.string.proxyua).equalsIgnoreCase("enable")) {
+                buffer.append(" toUserId=" + quotes + cmbean.getToUserId() + quotes);
+                buffer.append(" toUserName=" + quotes + cmbean.getToUserName() + quotes);
+            } else {
+                if (project) {
+                    buffer.append(" toUserId=" + quotes + "" + quotes);
+                    buffer.append(" toUserName=" + quotes + "" + quotes);
+                } else {
+                    buffer.append(" toUserId=" + quotes + cmbean.getToUserId() + quotes);
+                    buffer.append(" toUserName=" + quotes + cmbean.getToUserName() + quotes);
+                }
+            }
+            buffer.append(" taskNo=" + quotes + cmbean.getTaskNo() + quotes);
+            buffer.append(" taskId=" + quotes + cmbean.getTaskId() + quotes);
+            buffer.append(" taskType=" + quotes + cmbean.getTaskType() + quotes);
+            buffer.append(" plannedStartDateTime=" + quotes + cmbean.getUtcPlannedStartDateTime() + quotes);
+            buffer.append(" plannedEndDateTime=" + quotes + cmbean.getUtcplannedEndDateTime() + quotes);
+            buffer.append(" isRemainderRequired=" + quotes + cmbean.getIsRemainderRequired() + quotes);
+            Log.i("newtaskconversation", "remainderDateTime " + cmbean.getUtcPemainderFrequency());
+            if (cmbean.getUtcPemainderFrequency() == null || (cmbean.getUtcPemainderFrequency() != null && cmbean.getUtcPemainderFrequency().equalsIgnoreCase(""))) {
+                cmbean.setUtcPemainderFrequency("");
+            }
+            buffer.append(" remainderDateTime=" + quotes + cmbean.getUtcPemainderFrequency() + quotes);
+            if (cmbean.getCompletedPercentage() != null && !cmbean.getCompletedPercentage().equalsIgnoreCase("") && Integer.parseInt(cmbean.getCompletedPercentage()) == 100) {
+                if (cmbean.getTaskStatus() != null && cmbean.getTaskStatus().equalsIgnoreCase("Closed")) {
+                    Log.i("newtaskconversation", " compose taskStatus 1 " + cmbean.getTaskStatus());
+                    buffer.append(" taskStatus=" + quotes + "Closed" + quotes);
+                } else {
+                    Log.i("newtaskconversation", " compose taskStatus 2 " + cmbean.getTaskStatus());
+                    if (cmbean.getOwnerOfTask().equalsIgnoreCase(Appreference.loginuserdetails.getUsername())) {
+                        buffer.append(" taskStatus=" + quotes + "Closed" + quotes);
+                    } else {
+                        buffer.append(" taskStatus=" + quotes + "Completed" + quotes);
+                    }
+//                    buffer.append(" taskStatus=" + quotes + "Completed" + quotes);
+                }
+            } else {
+                Log.i("newtaskconversation", " compose taskStatus 3 " + cmbean.getTaskStatus());
+                Log.i("Accept", "value taskStatus after compose " + cmbean.getTaskStatus());
+                buffer.append(" taskStatus=" + quotes + cmbean.getTaskStatus() + quotes);
+            }
+            buffer.append(" signalid=" + quotes + cmbean.getSignalid() + quotes);
+            buffer.append(" parentId=" + quotes + cmbean.getParentId() + quotes);
+            buffer.append(" taskRequestType=" + quotes + cmbean.getTaskRequestType() + quotes);
+            buffer.append(" dateFrequency=" + quotes + cmbean.getDateFrequency() + quotes);
+            String TimeFrequency = "", ReminderQuotes = "";
+            if (cmbean.getFromUserName() != null && cmbean.getFromUserName().equalsIgnoreCase(ownerOfTask)) {
+                Log.i("newtaskconversation", "cmbean.getTimeFrequency() " + cmbean.getTimeFrequency() + " is reminderrequired " + cmbean.getIsRemainderRequired());
+                if (cmbean.getTimeFrequency() != null && (cmbean.getIsRemainderRequired() != null && cmbean.getIsRemainderRequired().equalsIgnoreCase("Y"))) {
+                    TimeFrequency = TimeFrequencyCalculation(cmbean.getTimeFrequency());
+                } else {
+                    TimeFrequency = "";
+                }
+            } else {
+                if (cmbean.getTimeFrequency() != null && (cmbean.getIsRemainderRequired() != null && cmbean.getIsRemainderRequired().equalsIgnoreCase("Y"))) {
+                    TimeFrequency = TimeFrequencyCalculation(cmbean.getTimeFrequency());
+                } else {
+                    TimeFrequency = "";
+                }
+            }
+            buffer.append(" timeFrequency=" + quotes + TimeFrequency + quotes);
+            buffer.append(" taskOwner=" + quotes + cmbean.getOwnerOfTask() + quotes);
+            buffer.append(" mimeType=" + quotes + cmbean.getMimeType() + quotes);
+            buffer.append(" dateTime=" + quotes + cmbean.getTaskUTCDateTime() + quotes);
+            buffer.append(" taskPriority=" + quotes + cmbean.getTaskPriority() + quotes);
+            buffer.append(" completedPercentage=" + quotes + cmbean.getCompletedPercentage() + quotes);
+            buffer.append(" remainderQuotes=" + quotes + cmbean.getReminderQuote() + quotes);
+            buffer.append(" remark=" + quotes + cmbean.getRemark() + quotes);
+            buffer.append(" taskReceiver=" + quotes + cmbean.getTaskReceiver() + quotes);
+            if (project) {
+                buffer.append(" taskToUsersList=" + quotes + cmbean.getTaskMemberList() + quotes);
+            } else {
+                buffer.append(" taskToUsersList=" + quotes + cmbean.getGroupTaskMembers() + quotes);
+            }
+            buffer.append(" requestStatus=" + quotes + cmbean.getRequestStatus() + quotes);
+            buffer.append(" subType=" + quotes + cmbean.getSubType() + quotes);
+            buffer.append(" daysOfTheWeek=" + quotes + cmbean.getDaysOfTheWeek() + quotes);
+            buffer.append(" repeatFrequency=" + quotes + cmbean.getRepeatFrequency() + quotes);
+            buffer.append(" taskTagName=" + quotes + cmbean.getTaskTagName() + quotes);
+            buffer.append(" taskTagId=" + quotes + cmbean.getCustomTagId() + quotes);
+            buffer.append(" taskTagGroupId=" + quotes + cmbean.getCustomSetId() + quotes);
+            buffer.append(" isShowOnUI=" + quotes + cmbean.isCustomTagVisible() + quotes);
+            Log.i("taskconversation", "Leave Project id 3 " + projectId);
+            buffer.append(" projectId=" + quotes + cmbean.getProjectId() + quotes);
+            buffer.append(" taskCategory=" + quotes + cmbean.getCatagory() + quotes);
+            Log.i("taskconversation", "Leave Project id 4 " + projectId);
+            buffer.append(" parentTaskId=" + quotes + cmbean.getIssueId() + quotes);
+            if (cmbean.getDaysOfTheWeek() != null && !cmbean.getDaysOfTheWeek().equalsIgnoreCase("") && !cmbean.getDaysOfTheWeek().equalsIgnoreCase(null)) {
+                buffer.append(" isRepeatTask=" + quotes + "Y" + quotes);
+            }
+            buffer.append(" />");
+            buffer.append("</TaskDetailsinfo>");
+            Log.d("xml", "composed xml for chat======>" + buffer.toString());
+            Log.d("xml", "composed xml for encode data======>" + Charset.forName("UTF-8").encode(":-)").toString());
+//            Log.i("xml", "composed xml for listofabservers " + listOfObservers);
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            return buffer.toString();
+        }
+    }
+
+    public String TimeFrequencyCalculation(String timeFrequency) {
+        String time = timeFrequency;
+        String remainder_Frequency = "", rem_freq_min, rem_frq;
+        long total_mins;
+        if (getResources().getString(R.string.TASKNOTIFICATION_FROM_SERVER).equalsIgnoreCase("0")) {
+//            Log.i("task", "Reminder Freq Local Changed to Lower case " + reminderfreq.toLowerCase());
+            switch (time.toLowerCase()) {
+                case "none":
+                    remainder_Frequency = "0";
+                    break;
+                case "every minute":
+                    total_mins = 60000;
+                    remainder_Frequency = String.valueOf(total_mins);
+                    break;
+                case "every 10 min":
+                    total_mins = 10 * 60000;
+                    remainder_Frequency = String.valueOf(total_mins);
+                    break;
+                case "hourly":
+                    total_mins = 60 * 60000;
+                    remainder_Frequency = String.valueOf(total_mins);
+                    break;
+                case "daily":
+                    total_mins = 1440 * 60000;
+                    remainder_Frequency = String.valueOf(total_mins);
+                    break;
+                case "week day":
+                    total_mins = 10080 * 60000;
+                    remainder_Frequency = String.valueOf(total_mins);
+                    break;
+                case "monthly":
+                    total_mins = 43200 * 60000;
+                    remainder_Frequency = String.valueOf(total_mins);
+                    break;
+                case "yearly":
+                    total_mins = 525600 * 60000;
+                    remainder_Frequency = String.valueOf(total_mins);
+                    break;
+                default:
+                    remainder_Frequency = "0";
+                    break;
+            }
+        } else {
+            Log.i("Request", "timeFrequency " + time);  // 1 Minute
+            rem_freq_min = time.split(" ")[0];   // 1
+            rem_frq = time.split(" ")[1];   // Minute
+            Log.i("task", "Reminder Freq Minutes " + rem_freq_min);
+            switch (rem_frq.toLowerCase()) {
+                case "minutes":
+                    total_mins = Long.parseLong(rem_freq_min) * 60000;
+                    Log.i("task", "Reminder miniute Milliseconds " + total_mins);
+                    remainder_Frequency = String.valueOf(total_mins);
+                    break;
+                case "hours":
+                    total_mins = Long.parseLong(rem_freq_min) * (60 * 60000);
+                    Log.i("task", "Reminder hour Milliseconds " + total_mins);
+                    remainder_Frequency = String.valueOf(total_mins);
+                    break;
+                case "days":
+                    long day_s = Long.parseLong(rem_freq_min);
+                    total_mins = day_s * (1440 * 60000);
+                    Log.i("task", "Reminder day Milliseconds " + day_s + " " + total_mins);
+                    remainder_Frequency = String.valueOf(total_mins);
+                    break;
+                default:
+                    remainder_Frequency = "0";
+                    break;
+            }
+        }
+        return remainder_Frequency;
+    }
+
+    public void sendMultiInstantMessage(String msgBody, ArrayList<String> userlist, int sendTo) {
+        for (String name : userlist) {
+            Log.i("taskConversation", "sendMultiInstantMessage 1  ");
+            Log.i("task observer", "observer 1 " + name);
+            Log.i("task observer", "MainActivity.account.buddyList.size()" + MainActivity.account.buddyList.size());
+        }
+        if ((taskType != null && !taskType.equalsIgnoreCase("Group")) || project) {
+            Log.i("groupMemberAccess", "!group ");
+            Log.i("taskConversation", "sendMultiInstantMessage 2  ");
+//        if (!getResources().getString(R.string.proxyua).equalsIgnoreCase("enable") || !taskType.equalsIgnoreCase("Group")) {
+            if (!getResources().getString(R.string.proxyua).equalsIgnoreCase("enable") || sendTo == 1) {
+                Log.i("taskConversation", "sendMultiInstantMessage 3  ");
+                for (int i = 0; i < MainActivity.account.buddyList.size(); i++) {
+                    Log.i("taskConversation", "sendMultiInstantMessage 4  ");
+                    String name = MainActivity.account.buddyList.get(i).cfg.getUri();
+                    Log.i("task", "buddyname-->  " + name);
+                    for (String username : userlist) {
+                        Log.i("taskConversation", "sendMultiInstantMessage 5  ");
+                        Log.i("task", "taskObservers Name--> " + username);
+                        String nn = "sip:" + username + "@" + getResources().getString(R.string.server_ip);
+                        Log.i("task", "selected user--> " + nn);
+                        if (nn.equalsIgnoreCase(name)) {
+                            Log.i("taskConversation", "sendMultiInstantMessage 6  ");
+                            Log.i("task", "both users are same ");
+                            Appreference.printLog("Sipmessage", msgBody, "DEBUG", null);
+                            MyBuddy myBuddy = MainActivity.account.buddyList.get(i);
+                            SendInstantMessageParam prm = new SendInstantMessageParam();
+                            prm.setContent(msgBody);
+
+                            boolean valid = myBuddy.isValid();
+                            Log.i("task", "valid ======= " + valid);
+                            try {
+                                Log.i("taskConversation", "sendMultiInstantMessage 7  ");
+                                myBuddy.sendInstantMessage(prm);
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                            break;
+                        }
+                    }
+                }
+            } else {
+                Log.i("taskConversation", "sendMultiInstantMessage 8  ");
+                BuddyConfig bCfg = new BuddyConfig();
+                bCfg.setUri("sip:" + proxy_user + "@" + getResources().getString(R.string.server_ip));
+                bCfg.setSubscribe(false);
+//            MainActivity.account.addBuddy(bCfg);
+                Buddy myBuddy = new Buddy();
+                try {
+                    Log.i("taskConversation", "sendMultiInstantMessage 9  ");
+                    myBuddy.create(MainActivity.account, bCfg);
+//                MainActivity.account.addBuddy(myBuddy);
+                    Log.i("task", "proxybuddy " + bCfg.getUri());
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                SendInstantMessageParam prm = new SendInstantMessageParam();
+                prm.setContent(msgBody);
+
+                boolean valid = myBuddy.isValid();
+                Log.i("task", "valid ======= " + valid);
+                try {
+                    Log.i("taskConversation", "sendMultiInstantMessage 10  ");
+                    myBuddy.sendInstantMessage(prm);
+                    myBuddy.delete();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+            }
+        } else {
+            Log.i("groupMemberAccess", "getRespondTask==1 ");
+            Log.i("taskConversation", "sendMultiInstantMessage 19  ");
+            if (!getResources().getString(R.string.proxyua).equalsIgnoreCase("enable")) {
+                Log.i("taskConversation", "sendMultiInstantMessage 20  ");
+                for (int i = 0; i < MainActivity.account.buddyList.size(); i++) {
+                    String name = MainActivity.account.buddyList.get(i).cfg.getUri();
+                    Log.i("task", "buddyname-->  " + name);
+                    Log.i("taskConversation", "sendMultiInstantMessage 21  ");
+                    for (String username : userlist) {
+                        Log.i("taskConversation", "sendMultiInstantMessage 22  ");
+                        Log.i("task", "taskObservers Name--> " + username);
+                        String nn = "sip:" + username + "@" + getResources().getString(R.string.server_ip);
+                        Log.i("task", "selected user--> " + nn);
+                        if (nn.equalsIgnoreCase(name)) {
+                            Log.i("taskConversation", "sendMultiInstantMessage 23  ");
+                            Log.i("task", "both users are same ");
+                            Appreference.printLog("Sipmessage", msgBody, "DEBUG", null);
+                            MyBuddy myBuddy = MainActivity.account.buddyList.get(i);
+                            SendInstantMessageParam prm = new SendInstantMessageParam();
+                            prm.setContent(msgBody);
+
+                            boolean valid = myBuddy.isValid();
+                            Log.i("task", "valid ======= " + valid);
+                            try {
+                                Log.i("taskConversation", "sendMultiInstantMessage 24  ");
+                                myBuddy.sendInstantMessage(prm);
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                            break;
+                        }
+                    }
+                }
+            } else {
+                Log.i("taskConversation", "sendMultiInstantMessage 25  ");
+                BuddyConfig bCfg = new BuddyConfig();
+                bCfg.setUri("sip:" + proxy_user + "@" + getResources().getString(R.string.server_ip));
+                bCfg.setSubscribe(false);
+//            MainActivity.account.addBuddy(bCfg);
+                Buddy myBuddy = new Buddy();
+                try {
+                    Log.i("taskConversation", "sendMultiInstantMessage 26  ");
+                    myBuddy.create(MainActivity.account, bCfg);
+//                MainActivity.account.addBuddy(myBuddy);
+                    Log.i("task", "proxybuddy " + bCfg.getUri());
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                SendInstantMessageParam prm = new SendInstantMessageParam();
+                prm.setContent(msgBody);
+
+                boolean valid = myBuddy.isValid();
+                Log.i("task", "valid ======= " + valid);
+                try {
+                    Log.i("taskConversation", "sendMultiInstantMessage 27  ");
+                    myBuddy.sendInstantMessage(prm);
+                    myBuddy.delete();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+            }
+        }
+    }
+
+    public void cancelDialog() {
+        try {
+            if (progress != null && progress.isShowing()) {
+                Log.i("register", "--progress bar end-----");
+                progress.dismiss();
+                Appreference.isRequested_date = false;
+                progress = null;
+            }
+        } catch (Exception e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+    }
+
+    public void refresh() {
+        handler.post(new Runnable() {
+            @Override
+            public void run() {
+                medialistadapter.notifyDataSetChanged();
+                Log.i("NewTaskConversation", "Refresh Handled here");
+            }
+        });
+    }
+
+    public void showNetworkStateUI() {
+        if (ll_networkUI != null && tv_networkstate != null) {
+            if (Appreference.networkState) {
+                if (Appreference.sipRegistrationState) {
+                } else if (!Appreference.sipRegistrationState) {
+                    ll_networkUI.setVisibility(View.VISIBLE);
+                    ll_networkUI.setBackgroundColor(getResources().getColor(R.color.orange));
+                    tv_networkstate.setText("Connecting...");
+                }
+            } else if (!Appreference.networkState) {
+                ll_networkUI.setVisibility(View.VISIBLE);
+                ll_networkUI.setBackgroundColor(getResources().getColor(R.color.red_color));
+                tv_networkstate.setText("No Internet Connection");
+            }
+        }
+    }
+
+    public void addTaskReassignClickEvent() {
+        try {
+            Intent intent = new Intent(context, AddTaskReassign.class);
+            intent.putExtra("taskId", webtaskId);
+            intent.putExtra("taskType", taskType);
+            intent.putExtra("Taker", "Assigned Task");
+            if (isProjectFromOracle)
+                intent.putExtra("isProjectFromOracle1", true);
+            if (Self_assign)
+                intent.putExtra("selfAssign", true);
+
+            if (taskType != null && taskType.equalsIgnoreCase("Group")) {
+                TaskDetailsBean taskDetailsBean = new TaskDetailsBean();
+                taskDetailsBean.setOwnerOfTask(ownerOfTask);
+                taskDetailsBean.setTaskReceiver(taskReceiver);
+                taskDetailsBean.setTaskName(taskName);
+                taskDetailsBean.setTaskNo(task_No);
+                taskDetailsBean.setTaskType(taskType);
+                taskDetailsBean.setCatagory(category);
+                taskDetailsBean.setTaskId(webtaskId);
+                taskDetailsBean.setTaskStatus(taskStatus);
+                taskDetailsBean.setParentTaskId(OracleParentTaskId);
+
+                if (toUserId > -1) {
+                    intent.putExtra("groupname", String.valueOf(toUserId));
+                } else {
+                    intent.putExtra("groupname", groupname);
+                }
+                if (project) {
+                    intent.putExtra("isProject", "Yes");
+                    taskDetailsBean.setProjectId(projectId);
+                } else {
+                    intent.putExtra("isProject", "No");
+                }
+                intent.putExtra("taskReceiver", taskReceiver);
+                intent.putExtra("taskBean", taskDetailsBean);
+            } else {
+                Log.i("taskConversation", "projectId reassign else");
+                TaskDetailsBean taskDetailsBean = new TaskDetailsBean();
+                taskDetailsBean.setOwnerOfTask(ownerOfTask);
+                taskDetailsBean.setTaskReceiver(taskReceiver);
+                taskDetailsBean.setTaskName(taskName);
+                taskDetailsBean.setTaskNo(task_No);
+                taskDetailsBean.setTaskType(taskType);
+                taskDetailsBean.setCatagory(category);
+                taskDetailsBean.setTaskId(webtaskId);
+                taskDetailsBean.setTaskStatus(taskStatus);
+                taskDetailsBean.setParentTaskId(OracleParentTaskId);
+                if (project) {
+                    taskDetailsBean.setProjectId(projectId);
+                    intent.putExtra("isProject", "Yes");
+                } else {
+                    intent.putExtra("isProject", "No");
+                }
+                intent.putExtra("taskReceiver", taskReceiver);
+                if (taskDetailsBean != null)
+                    Log.i("ws123", "Bean============4411" + taskDetailsBean.getParentTaskId() + "getProjectId=========>" + taskDetailsBean.getProjectId());
+                else
+                    Log.i("ws123", "Bean null============> 4411");
+
+                intent.putExtra("taskBean", taskDetailsBean);
+                Log.i("taskConversation", "projectId " + taskDetailsBean.getProjectId());
+            }
+            startActivityForResult(intent, 105);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Appreference.printLog("NewTaskConversation", "Exception " + e.getMessage(), "WARN", null);
+        }
+    }
+
+    public void taskAssign(TaskDetailsBean taskDetailsBean, String removeUser, String newReceiver, int isProject) {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        String dateTime = dateFormat.format(new Date());
+        dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
+        String dateforrow = dateFormat.format(new Date());
+        tasktime = dateTime;
+        tasktime = tasktime.split(" ")[1];
+        Log.i("task", "tasktime" + tasktime);
+        Log.i("ASE", "sendMessage utc time" + dateforrow);
+        Log.i("ASE", "removeUser " + removeUser);
+        Log.i("ASE", "newReceiver " + newReceiver);
+        Log.i("ASE", "isProject " + isProject);
+        taskUTCtime = dateforrow;
+        taskDetailsBean.setRead_status(0);
+        taskDetailsBean.setFromUserId(String.valueOf(Appreference.loginuserdetails.getId()));
+        taskDetailsBean.setFromUserName(Appreference.loginuserdetails.getUsername());
+        taskDetailsBean.setSendStatus("0");
+        taskDetailsBean.setWs_send("1");
+        taskDetailsBean.setMsg_status(0);
+        taskDetailsBean.setTaskUTCDateTime(dateforrow);
+        taskDetailsBean.setDateTime(dateTime);
+        taskDetailsBean.setTasktime(tasktime);
+        taskDetailsBean.setTaskUTCTime(taskUTCtime);
+        taskDetailsBean.setCustomTagVisible(false);
+
+        String reassignUser1 = "";
+        Log.i("ASE", "reassignUser1 ==> " + reassignUser1);
+
+        if (taskDetailsBean.getSignalid() == null || taskDetailsBean.getSignalid().trim().equals("")) {
+            taskDetailsBean.setSignalid(Utility.getSessionID());
+        }
+        Log.i("ASE_NTC ", "reassignUser " + taskDetailsBean.getSignalid());
+
+        if (!listOfObservers.contains(removeUser)) {
+            listOfObservers.add(removeUser);
+        }
+
+        Log.i("taskconversation", "Reassign task removed user " + removeUser + " " + listOfObservers);
+
+        taskDetailsBean.setCustomTagVisible(true);
+        Log.i("ASE", "project_toUsers " + taskDetailsBean.getTaskMemberList());
+        String Mem_name = "";
+        String reassignUser = "";
+        project_toUsers = "";
+        if (!taskDetailsBean.getTaskType().equalsIgnoreCase("Group")) {
+//            reassignUser = VideoCallDataBase.getDB(context).getname(taskDetailsBean.getTaskReceiver());
+            Mem_name = taskDetailsBean.getTaskReceiver();
+            project_toUsers = taskDetailsBean.getTaskReceiver();
+        } else if (taskDetailsBean.getTaskMemberList() != null) {
+            Mem_name = taskDetailsBean.getTaskMemberList();
+            project_toUsers = taskDetailsBean.getTaskMemberList();
+        }
+        Log.i("ASE", "reassignUser " + reassignUser);
+        Log.i("ASE", "project_toUsers ?? " + project_toUsers);
+        Log.i("ASE", "Mem_name ?? " + Mem_name);
+
+        if (isProject == 0) {
+            Log.i("ASE_NTC ", "reassignUser " + reassignUser);
+            taskDetailsBean.setTaskDescription("Task Reassigned to " + reassignUser);
+        } else {
+            taskDetailsBean.setTaskDescription("Task Assigned to " + Mem_name);
+        }
+
+        if (taskDetailsBean.getTaskMemberList() != null && taskDetailsBean.getTaskMemberList().contains(",")) {
+            Log.i("ASE_NTC ", "reassignUser ** ");
+            taskDetailsBean.setTaskType("Group");
+            taskDetailsBean.setTaskMemberList(taskDetailsBean.getTaskMemberList());
+            taskDetailsBean.setToUserId("");
+            taskDetailsBean.setTaskReceiver("");
+        } else {
+            Log.i("ASE_NTC ", "reassignUser ** ");
+            taskDetailsBean.setTaskReceiver(newReceiver);
+            taskDetailsBean.setToUserName(taskDetailsBean.getTaskReceiver());
+            taskDetailsBean.setTaskType("individual");
+            taskDetailsBean.setToUserId(VideoCallDataBase.getDB(getApplication()).getProjectParentTaskId("select userid from contact where username = '" + taskDetailsBean.getTaskReceiver() + "'"));
+        }
+
+        taskDetailsBean.setMimeType("text");
+        taskDetailsBean.setTaskRequestType("normal");
+        taskDetailsBean.setSubType("normal");
+
+        if (taskDetailsBean.getCatagory() != null && taskDetailsBean.getCatagory().equalsIgnoreCase("note")) {
+            if (taskDetailsBean.getOwnerOfTask().equalsIgnoreCase(taskDetailsBean.getTaskReceiver())) {
+                taskDetailsBean.setMsg_status(1);
+            }
+        }
+        if (taskDetailsBean.getCatagory() != null && taskDetailsBean.getCatagory().equalsIgnoreCase("note")) {
+            taskDetailsBean.setCatagory("note");
+        } else {
+            taskDetailsBean.setCatagory("Task");
+        }
+//        taskDetailsBean.setCatagory("Task");
+        Log.i("taskconversation", "db updated projectId " + taskDetailsBean.getProjectId());
+        if (taskDetailsBean.getProjectId() != null) {
+            taskDetailsBean.setTaskStatus("inprogress");
+            if (taskDetailsBean.getTaskMemberList() != null && taskDetailsBean.getTaskMemberList().contains(",")) {
+                taskDetailsBean.setGroupTaskMembers(taskDetailsBean.getTaskMemberList());
+            } else {
+                taskDetailsBean.setGroupTaskMembers(taskDetailsBean.getTaskReceiver());
+            }
+            dataBase.update_Project_history(taskDetailsBean);
+            Log.i("taskconversation", "db updated 2");
+        } else {
+            dataBase.insertORupdate_TaskHistoryInfo(taskDetailsBean);
+        }
+        dataBase.insertORupdate_Task_history(taskDetailsBean);
+//        dataBase.insertORupdate_TaskHistoryInfo(taskDetailsBean);
+
+        String xml1 = composeChatXML(taskDetailsBean);
+        if (!listOfObservers.contains(newReceiver)) {
+            listOfObservers.add(newReceiver);
+        }
+        String query1 = "select * from taskHistoryInfo where loginuser ='" + Appreference.loginuserdetails.getEmail() + "' and taskId='" + taskDetailsBean.getTaskId() + "' order by id";
+        Log.d("TaskObserver", "get Observer query  " + query1);
+        ArrayList<TaskDetailsBean> arrayList;
+        arrayList = VideoCallDataBase.getDB(context).getTaskHistoryInfo(query1);
+        Log.d("TaskObserver", "Task Observer list size is == " + arrayList.size());
+        if (arrayList.size() > 0) {
+            TaskDetailsBean taskDetailsBean1 = arrayList.get(0);
+            String taskObservers = taskDetailsBean1.getTaskObservers();
+            int counter = 0;
+            Log.d("TaskObserver", "2 Task Observer  == " + taskObservers);
+            if (taskObservers != null) {
+                for (int i = 0; i < taskObservers.length(); i++) {
+                    if (taskObservers.charAt(i) == ',') {
+                        counter++;
+                    }
+                }
+                ArrayList<String> listOfObservers = new ArrayList<>();
+                for (int j = 0; j < counter + 1; j++) {
+                    if (counter == 0) {
+                        if (Appreference.loginuserdetails.getUsername().equalsIgnoreCase(taskObservers) || newReceiver.equalsIgnoreCase(taskObservers)) {
+                            listOfObservers.remove(taskObservers);
+                            Log.d("TaskRemovedObserver", "Task Removed  Observer name 1 == " + taskObservers);
+                        }
+                    }
+                    if (!Appreference.loginuserdetails.getUsername().equalsIgnoreCase(taskObservers.split(",")[j]) && !newReceiver.equalsIgnoreCase(taskObservers.split(",")[j])) {
+                        if (!listOfObservers.contains(taskObservers.split(",")[j]))
+                            listOfObservers.add(taskObservers.split(",")[j]);
+                        Log.d("TaskObserver", "Task Observer name not in same user== " + taskObservers.split(",")[j]);
+                    }
+                }
+                String name = "";
+                for (String s : listOfObservers) {
+                    name = name.concat(s) + ",";
+                }
+                if (name != null && !name.equalsIgnoreCase(""))
+                    name = name.substring(0, name.length() - 1);
+
+                VideoCallDataBase.getDB(context).updateaccept("update taskHistoryInfo set taskObservers='" + name + "' where taskId='" + taskDetailsBean.getTaskId() + "'");
+                Log.i("mainactivity", "taskObservers updated " + name);
+            }
+        }
+        Log.i("Rassign", "values " + taskDetailsBean.getToUserId() + " " + taskDetailsBean.getToUserName());
+        if (taskDetailsBean.getToUserId() != null && !taskDetailsBean.getToUserId().equalsIgnoreCase("")) {
+            toUserId = Integer.parseInt(taskDetailsBean.getToUserId());
+        }
+        if (taskDetailsBean.getToUserName() != null && !taskDetailsBean.getToUserName().equalsIgnoreCase("")) {
+            toUserName = taskDetailsBean.getToUserName();
+            taskReceiver = taskDetailsBean.getToUserName();
+        } else {
+            taskReceiver = project_toUsers;
+        }
+        if (project) {
+            VideoCallDataBase.getDB(context).updateaccept("update taskDetailsInfo set mimeType='dates' where taskid='" + taskDetailsBean.getTaskId() + "' and mimeType='date' and duration!='' and durationunit!=''");
+            VideoCallDataBase.getDB(context).updateaccept("update taskDetailsInfo set taskStatus='inprogress' where taskid='" + taskDetailsBean.getTaskId() + "'");
+            Log.i("Rassign", "project template updated" + taskDetailsBean.getTaskId());
+        }
+
+        Log.i("TaskConversation", " Task Reassign View listOfObservers -----><----- " + listOfObservers);
+
+        // get project total members
+
+
+        final ArrayList<String> arrayList1 = new ArrayList<>();
+        String projectMembers = VideoCallDataBase.getDB(context).getProjectParentTaskId("select taskMemberList from projectHistory where projectId ='" + taskDetailsBean.getProjectId() + "' and parentTaskId==taskId");
+
+        if (projectMembers != null) {
+            int counter_1 = 0;
+            for (int i = 0; i < projectMembers.length(); i++) {
+                if (projectMembers.charAt(i) == ',') {
+                    counter_1++;
+                }
+                Log.i("taskConversation", "project_details Task Mem's counter size is == " + counter_1);
+            }
+            Log.i("taskConversation", "projectBean.getFromUserName() " + projectMembers);
+            for (int j = 0; j < counter_1 + 1; j++) {
+                //                Log.i("taskConversation", "project_details Task Mem's and position == " + observers.split(",")[j] + " " + j);
+                if (counter_1 == 0) {
+                    if (!arrayList1.contains(projectMembers)) {
+                        arrayList1.add(projectMembers);
+                    }
+                } else {
+                    if (!arrayList1.contains(projectMembers.split(",")[j])) {
+                        arrayList1.add(projectMembers.split(",")[j]);
+                    }
+                }
+            }
+        }
+        if (!Appreference.loginuserdetails.getUsername().equalsIgnoreCase(taskDetailsBean.getOwnerOfTask())) {
+            if (!arrayList1.contains(taskDetailsBean.getOwnerOfTask())) {
+                arrayList1.add(taskDetailsBean.getOwnerOfTask());
+            }
+        }
+        if (!Appreference.loginuserdetails.getUsername().equalsIgnoreCase(taskReceiver)) {
+            if (!arrayList1.contains(taskReceiver)) {
+                arrayList1.add(taskReceiver);
+            }
+        }
+        if (arrayList1.size() > 0) {
+            listOfObservers = arrayList1;
+        }
+        Log.i("ASE", "arrayList1 ==> " + arrayList1.size() + " listOfObservers ==>" + listOfObservers.size());
+        if (taskDetailsBean.getCatagory() != null && taskDetailsBean.getCatagory().equalsIgnoreCase("note")) {
+            if (!taskDetailsBean.getOwnerOfTask().equalsIgnoreCase(taskDetailsBean.getTaskReceiver())) {
+                sendMultiInstantMessage(xml1, listOfObservers, 0);
+            }
+        } else {
+            if (getResources().getString(R.string.proxyua).equalsIgnoreCase("enable")) {
+                sendMultiInstantMessage(xml1, listOfObservers, 1);
+            } else {
+//                sendMultiInstantMessage(xml1, listOfObservers, 0);
+                Log.i("ASE", "project total meber list size in Reassign Method is == " + arrayList1.size());
+                sendMultiInstantMessage(xml1, arrayList1, 1);
+            }
+        }
+        if (listOfObservers.contains(removeUser)) {
+            Log.d("TaskRemovedObserver", "Task Removed  Observer name 2 == " + removeUser);
+            listOfObservers.remove(removeUser);
+//            listObservers.remove(removeUser);
+        }
+        Log.i("taskconversation", "Reassign task newly added user " + newReceiver + " " + listOfObservers);
+        taskList.add(taskDetailsBean);
+        tv_reassign.setVisibility(View.GONE);
+        sortTaskMessage();
+        refresh();
+    }
+
+    public void sortTaskMessage() {
+        try {
+            Collections.sort(taskList, new Comparator<TaskDetailsBean>() {
+                public int compare(TaskDetailsBean o1, TaskDetailsBean o2) {
+                    if (o1.getDateTime() == null || o2.getDateTime() == null)
+                        return 0;
+                    Log.i("sortmessage", "TASK HISTORY List size  = " + taskList.size() + "  ==" + o2.getDateTime().compareTo(o1.getDateTime()));
+                    Log.i("sortmessage", "TASK HISTORY List size  = " + taskList.size() + "  ==" + o1.getDateTime() + " ==1 " + " ==2 " + (o2.getDateTime()));
+                    return o1.getDateTime().compareTo(o2.getDateTime());
+                }
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+            Log.d("Sorting", "Sorting problem");
+        }
+        refresh();
+    }
+
+    private void sendAssignTask_webservice() {
+        if (isProjectFromOracle) {
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            String dateTime = dateFormat.format(new Date());
+            dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
+            String dateforrow = dateFormat.format(new Date());
+            Log.i("ws123", "inside wservice AssignTask request");
+            JSONObject oracleProject_object = new JSONObject();
+            JSONObject taskid = new JSONObject();
+            TaskDetailsBean taskDetailsBean = new TaskDetailsBean();
+            try {
+                taskid.put("id", webtaskId);
+                taskDetailsBean.setTaskId(webtaskId);
+                oracleProject_object.put("task", taskid);
+                int getProjOwnerId = VideoCallDataBase.getDB(context).getUserIdForUserName(ownerOfTask);
+                oracleProject_object.put("fromId", getProjOwnerId);
+                taskDetailsBean.setFromUserId(String.valueOf(getProjOwnerId));
+                oracleProject_object.put("projectId", projectId);
+                taskDetailsBean.setProjectId(projectId);
+                oracleProject_object.put("estimatedTravelHours", "");
+                taskDetailsBean.setEstimatedTravel("");
+                taskDetailsBean.setEstimatedActivity("");
+                oracleProject_object.put("estimatedActivityHours", "");
+
+                JSONArray jsonArray = new JSONArray();
+                JSONObject usersList = new JSONObject();
+                usersList.put("id", String.valueOf(Appreference.loginuserdetails.getId()));
+                jsonArray.put(0, usersList);
+                oracleProject_object.put("listUser", jsonArray);
+
+                taskDetailsBean.setFromUserName(ownerOfTask);
+                taskDetailsBean.setToUserName(Appreference.loginuserdetails.getUsername());
+                taskDetailsBean.setToUserId(String.valueOf(Appreference.loginuserdetails.getId()));
+                taskDetailsBean.setTaskName(taskName);
+                taskDetailsBean.setTaskNo(task_No);
+                taskDetailsBean.setCatagory("");
+                taskDetailsBean.setIssueId("");
+                taskDetailsBean.setParentId(getFileName());
+                taskDetailsBean.setIsRemainderRequired("");
+                taskDetailsBean.setCompletedPercentage("");
+                taskDetailsBean.setPlannedStartDateTime("");
+                taskDetailsBean.setPlannedEndDateTime("");
+                taskDetailsBean.setRemainderFrequency("");
+                taskDetailsBean.setSignalid(Utility.getSessionID());
+                taskDetailsBean.setDateTime(dateforrow);
+                taskDetailsBean.setSendStatus("0");
+                taskDetailsBean.setTaskStatus("inprogress");
+//                taskDetailsBean.setOwnerOfTask(detailsBean.getOwnerOfTask());
+
+                taskDetailsBean.setTaskType("individual");
+                taskDetailsBean.setTaskPriority("medium");
+                taskDetailsBean.setParentTaskId(parentTaskId);
+                taskDetailsBean.setSubType("normal");
+                taskDetailsBean.setTaskMemberList("");
+                taskDetailsBean.setTaskReceiver(Appreference.loginuserdetails.getUsername());
+                taskDetailsBean.setRemark("");
+                taskDetailsBean.setReminderQuote("");
+                Log.i("ASE", "userName" + Appreference.loginuserdetails.getFirstName() + " last_name" + Appreference.loginuserdetails.getLastName());
+//                taskDetailsBean.setTaskDescription("Task Assigned to " + Appreference.loginuserdetails.getFirstName() + Appreference.loginuserdetails.getLastName());
+                taskDetailsBean.setTaskDescription("Task Assigned to " + Appreference.loginuserdetails.getUsername());
+                taskDetailsBean.setRepeatFrequency("");
+                taskDetailsBean.setTaskTagName("");
+                taskDetailsBean.setTaskUTCDateTime(dateforrow);
+                taskDetailsBean.setMimeType("text");
+                taskDetailsBean.setCatagory("Task");
+                taskDetailsBean.setCustomTagVisible(true);
+
+                toUserName = Appreference.loginuserdetails.getUsername();
+                taskReceiver = Appreference.loginuserdetails.getUsername();
+                taskType = "individual";
+                category = "Task";
+                taskStatus = "inprogress";
+                toUserId = Appreference.loginuserdetails.getId();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            Appreference.jsonRequestSender.OracleAssignTask(EnumJsonWebservicename.assignTask, oracleProject_object, taskDetailsBean, TravelJobDetails.this);
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Log.i(tab, "onResume");
+        showNetworkStateUI();
+        if (Appreference.main_Activity_context.openPinActivity) {
+            Appreference.main_Activity_context.reRegister_onAppResume();
+        }
+    }
+
+    @Override
+    public void onDateChanged(Calendar c) {
+
+    }
+
+    @Override
+    public void onClick(View v) {
+
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == RESULT_OK) {
+            if (requestCode == 105) {
+                try {
+                    TaskDetailsBean taskDetailsBean = (TaskDetailsBean) data.getSerializableExtra("taskBean");
+                    String RemoveUser = data.getStringExtra("taskRemover");
+                    String isProject = data.getStringExtra("isProject");
+                    Log.d("ReAssign", "Task  == " + isProject);
+                    Log.d("ReAssign", "Task remover == " + RemoveUser);
+                    Log.d("ReAssign", "Task ProjectId == " + taskDetailsBean.getProjectId());
+                    if (isProject != null && isProject.equalsIgnoreCase("Yes")) {
+                        if (isProjectFromOracle) {
+                            Log.d("output123", "task isProjectFromOracle inside  == " + isProjectFromOracle);
+                            taskAssign(taskDetailsBean, RemoveUser, taskDetailsBean.getTaskReceiver(), 1);
+                        }
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    Appreference.printLog("NewTaskConversation", "onActivityResult reassign Exception " + e.getMessage(), "WARN", null);
+                }
+
+            }
+        }
+    }
+
+    @Override
+    public void ResponceMethod(Object object) {
+        CommunicationBean communicationBean = (CommunicationBean) object;
+        cancelDialog();
+        String server_Response_string = communicationBean.getEmail();
+        Log.d("Task2", "Response Email" + server_Response_string);
+        String WebServiceEnum_Response = communicationBean.getFirstname();
+        Log.d("Task2", "name   == " + WebServiceEnum_Response);
+
+        if (WebServiceEnum_Response != null && WebServiceEnum_Response.equalsIgnoreCase(("taskStatus"))) {
+            Log.i("output123", "NewTaskConverstaion taskStatus ResponceMethod");
+            try {
+                final JSONObject jsonObject = new JSONObject(communicationBean.getEmail());
+                if (((String) jsonObject.get("result_text")).equalsIgnoreCase("task started")) {
+                    projectCurrentStatus = "start";
+                } else if (((String) jsonObject.get("result_text")).equalsIgnoreCase("task hold")) {
+                    projectCurrentStatus = "hold";
+                } else if (((String) jsonObject.get("result_text")).equalsIgnoreCase("task resume")) {
+                    projectCurrentStatus = "resume";
+                } else if (((String) jsonObject.get("result_text")).equalsIgnoreCase("task pause")) {
+                    projectCurrentStatus = "pause";
+                    isDivertedON = true;
+                } else if (((String) jsonObject.get("result_text")).equalsIgnoreCase("task restart")) {
+                    projectCurrentStatus = "restart";
+                } else if (((String) jsonObject.get("result_text")).equalsIgnoreCase("task completed")) {
+                    projectCurrentStatus = "completed";
+                } else if (((String) jsonObject.get("result_text")).equalsIgnoreCase("task deassign")) {
+                    projectCurrentStatus = "DeAssign";
+                }
+                TaskDetailsBean detailsBean = new TaskDetailsBean();
+                detailsBean = communicationBean.getTaskDetailsBean();
+
+
+                if (projectCurrentStatus.equalsIgnoreCase("completed")) {
+                    final ArrayList<TaskDetailsBean> stausMediaPath = communicationBean.getGetStatusListForMedia();
+                    int sec = 0;
+                    for (int path = 0; path < stausMediaPath.size(); path++) {
+                        sec = 2000;
+                        final int finalPath = path;
+                        handler.postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                try {
+                                    TaskDetailsBean taskDetailsBean = stausMediaPath.get(finalPath);
+                                    taskDetailsBean.setCustomTagVisible(true);
+                                    if (taskDetailsBean.getMimeType().equalsIgnoreCase("text")) {
+                                        taskDetailsBean.setSignalid(Utility.getSessionID());
+                                        taskDetailsBean.setTaskDescription(taskDetailsBean.getTaskDescription());
+                                    } else if (taskDetailsBean.getMimeType().equalsIgnoreCase("image")) {
+                                        taskDetailsBean.setSignalid(Utility.getSessionID());
+                                        if (taskDetailsBean.getTaskRequestType().equalsIgnoreCase("signature")) {
+                                            taskDetailsBean.setTaskDescription(jsonObject.getString("signature"));
+                                            taskDetailsBean.setMimeType("image");
+                                        } else if (taskDetailsBean.getTaskRequestType().equalsIgnoreCase("photo")) {
+                                            taskDetailsBean.setTaskDescription(jsonObject.getString("photo"));
+                                            taskDetailsBean.setMimeType("image");
+                                        } else if (taskDetailsBean.getTaskRequestType().equalsIgnoreCase("technicianSignature")) {
+                                            taskDetailsBean.setTaskDescription(jsonObject.getString("technicianSignature"));
+                                            taskDetailsBean.setMimeType("image");
+                                        }
+                                    }
+                                    taskList.add(taskDetailsBean);
+                                    VideoCallDataBase.getDB(context).insertORupdate_Task_history(taskDetailsBean);
+                                    final String xml = composeChatXML(taskDetailsBean);
+                                    sendMultiInstantMessage(xml, listOfObservers, 1);
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                        }, sec);
+                    }
+
+                } else {
+                    detailsBean.setMimeType("text");
+                    detailsBean.setCustomTagVisible(true);
+                    final String xml = composeChatXML(detailsBean);
+                    handler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            sendMultiInstantMessage(xml, listOfObservers, 1);
+                        }
+                    });
+                }
+
+
+                taskList.add(detailsBean);
+//                Log.i("responce", "travel_endDate " + travel_endDate + " Remarks==> " + detailsBean.getCustomerRemarks());
+               /* if (detailsBean.getCustomerRemarks() != null) {
+                    sendMessage(detailsBean.getCustomerRemarks(), null, "text", null, null, Utility.getSessionID(), null);
+                }
+                if (travel_date_details.size() > 0) {
+                    int sec = 0;
+                    for (final String travel : travel_date_details) {
+                        sec = sec + 2000;
+                        handler.postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                sendMessage(travel, null, "text", null, null, Utility.getSessionID(), null);
+                            }
+                        }, sec);
+                    }
+                }*/
+//                refresh();
+                if (isDivertedON) {
+                    isDivertedON = false;
+                    String query = "select projectId from projectDetails where isActiveStatus = 1 ";
+                    String diverted_project_id = VideoCallDataBase.getDB(context).getDivertedProjId(query);
+
+                    List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
+                    nameValuePairs.add(new BasicNameValuePair("projectId", diverted_project_id));
+                    nameValuePairs.add(new BasicNameValuePair("userId", String.valueOf(Appreference.loginuserdetails.getId())));
+                    Appreference.jsonRequestSender.getTaskForJobID(EnumJsonWebservicename.getTaskForJobID, nameValuePairs, ProjectsFragment.getInstance());
+                }
+                Log.i("desc123", "isDeassign==>" + isDeassign);
+                if (isDeassign) {
+                    isDeassign = false;
+                    TravelJobDetails.this.finish();
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                Log.i("output123", "NewTaskConv sip responce a jsonobject Exception*******" + e);
+            }
+
+        }
+    }
+
+    @Override
+    public void ErrorMethod(Object object) {
+
+    }
+}

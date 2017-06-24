@@ -213,18 +213,6 @@ public class ProjectHistory extends Activity implements WebServiceInterface, Swi
             setContentView(R.layout.project_history);
 
             listView = (SwipeMenuListView) findViewById(R.id.lv_taskHistory);
-//            swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh_layout);
-//            swipeRefreshLayout.setOnRefreshListener(this);
-
-
-          /*  swipeRefreshLayout.post(new Runnable() {
-                                        @Override
-                                        public void run() {
-                                            swipeRefreshLayout.setRefreshing(true);
-                                            fetchTaskList();
-                                        }
-                                    }
-            );*/
 
             finish_page = (TextView) findViewById(R.id.finish_page);
             submit_icon = (ImageView) findViewById(R.id.submit_icon);
@@ -633,6 +621,15 @@ public class ProjectHistory extends Activity implements WebServiceInterface, Swi
             refresh_task.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    final ProgressDialog dialog1 = ProgressDialog.show(ProjectHistory.this, "", "Refreshing...",
+                            true);
+                    dialog1.show();
+                    Handler handler = new Handler();
+                    handler.postDelayed(new Runnable() {
+                        public void run() {
+                           dialog1.dismiss();
+                        }
+                    }, 1000);
                     setActiveAdapter();
                 }
             });
