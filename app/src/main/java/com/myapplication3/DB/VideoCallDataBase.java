@@ -2448,7 +2448,9 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
                         cv_1.put("taskType", "Individual");
                         ListFromDetails listToDetails1 = new ListFromDetails();
                         listToDetails1 = listAllgetTaskDetailses1.getToUser();
+                        if(listToDetails1.getId()>0){
                         cv.put("toUserId", listToDetails1.getId());
+                        }
                         taskDetailsBean.setToUserId(String.valueOf(listToDetails1.getId()));
                         taskDetailsBean.setTaskType("Individual");
                         cv_1.put("toUserId", listToDetails1.getId());
@@ -8488,5 +8490,32 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
             e.printStackTrace();
         }
         return project_id;
+    }
+
+    public TaskDetailsBean getActivityTimeFromStatus(String query) {
+        TaskDetailsBean taskDetailsBean = new TaskDetailsBean();
+        Cursor cur;
+        if (db == null)
+            db = getReadableDatabase();
+        try {
+            if (db != null) {
+                if (!db.isOpen())
+                    openDatabase();
+                cur = db.rawQuery(query, null);
+                cur.moveToFirst();
+
+                while (!cur.isAfterLast()) {
+                    taskDetailsBean.setActivityStartTime(cur.getString(cur.getColumnIndex("activityStartTime")));
+                    taskDetailsBean.setActivityEndTime(cur.getString(cur.getColumnIndex("activityEndTime")));
+                    cur.moveToNext();
+                }
+                cur.close();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+
+        } finally {
+            return taskDetailsBean;
+        }
     }
 }

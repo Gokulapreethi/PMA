@@ -7,8 +7,14 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.myapplication3.Appreference;
+import com.myapplication3.Bean.TaskDetailsBean;
+import com.myapplication3.DB.VideoCallDataBase;
+import com.myapplication3.NewTaskConversation;
 import com.myapplication3.R;
+import com.myapplication3.TravelJobDetails;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -18,13 +24,21 @@ import java.util.Date;
 public class CustomTravelPickerActivity extends Activity {
 
     private Context context;
-    String taskNameshow;
+    String taskNameshow,projectIDshow,taskIDshow;
+    String StartDate,EndDate;
+    boolean isTravel=false;
+    boolean isStartEndFilled=false;
+    boolean isStartOnlyFilled=false;
+    boolean isValidDate=false;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.start_end_time_show);
         context=this;
         taskNameshow=getIntent().getStringExtra("taskName");
+        projectIDshow=getIntent().getStringExtra("projectID");
+        taskIDshow=getIntent().getStringExtra("taskID");
+        isTravel=getIntent().getBooleanExtra("isTravel",false);
         final java.sql.Date todayDate = new java.sql.Date(System.currentTimeMillis());
         Button travelstart_sign = (Button) findViewById(R.id.travelstart_sign);
         Button travelend_sign = (Button) findViewById(R.id.travelend_sign);
@@ -42,6 +56,21 @@ public class CustomTravelPickerActivity extends Activity {
             }
         });
         project_name.setText(taskNameshow);
+        String query = "select * from projectStatus where projectId='" + projectIDshow + "' and userId='" + Appreference.loginuserdetails.getId() + "' and taskId= '" + taskIDshow + "'";
+        TaskDetailsBean bean = VideoCallDataBase.getDB(context).getActivityTimeFromStatus(query);
+        if(bean!=null){
+            if(bean.getActivityStartTime()!=null && bean.getActivityEndTime()!=null)
+            {
+                isStartEndFilled=true;
+            }else if(bean.getActivityStartTime()!=null && bean.getActivityEndTime()==null)
+            {
+                isStartOnlyFilled=true;
+                StartDate=bean.getActivityStartTime();
+                travel_start.setText(bean.getActivityStartTime());
+                travelstart_sign.setEnabled(false);
+            }
+        }
+
         travelstart_sign.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -51,21 +80,29 @@ public class CustomTravelPickerActivity extends Activity {
                         @Override
                         public void onDatePickCompleted(int month, int day, int year, int hour, int minute, String am, String dateDesc) {
                             Log.i("desc123","inside onDatePickedCompleted");
-                            String inputPattern = "M-dd-yyyy HH:mm aa";
-                            String outputPattern = "yyyy-MM-dd HH:mm aa";
+
+                            String inputPattern = "M-dd-yyyy hh:mm aa";
+                            String outputPattern = "yyyy-MM-dd HH:mm:ss";
                             SimpleDateFormat inputFormat = new SimpleDateFormat(inputPattern);
                             SimpleDateFormat outputFormat = new SimpleDateFormat(outputPattern);
 
-                            Date date = null;
+                            Date date123 = null;
                             String str = null;
 
                             try {
-                                date = inputFormat.parse(dateDesc);
-                                str = outputFormat.format(date);
+                                date123 = inputFormat.parse(dateDesc);
+                                str = outputFormat.format(date123);
                             } catch (ParseException e) {
                                 e.printStackTrace();
                             }
-                            travel_start.setText(str);
+                            StartDate=str;
+                            if(str!=null) {
+                                if(date123.after(todayDate))
+                                    travel_start.setText(str);
+                                else
+                                    Toast.makeText(CustomTravelPickerActivity.this,"Please Select Correct DateTime",Toast.LENGTH_SHORT).show();
+                            }
+
                         }
                     }).textConfirm("DONE") //text of confirm button
                             .textCancel("CANCEL") //text of cancel button
@@ -95,7 +132,27 @@ public class CustomTravelPickerActivity extends Activity {
                         public void onDatePickCompleted(int month, int day, int year, int hour, int minute, String am, String dateDesc) {
 
                             Log.i("desc123","inside onDatePickedCompleted");
-                            travel_end.setText(dateDesc);
+                            String inputPattern = "M-dd-yyyy hh:mm aa";
+                            String outputPattern = "yyyy-MM-dd HH:mm:ss";
+                            SimpleDateFormat inputFormat = new SimpleDateFormat(inputPattern);
+                            SimpleDateFormat outputFormat = new SimpleDateFormat(outputPattern);
+
+                            Date date123 = null;
+                            String str = null;
+
+                            try {
+                                date123 = inputFormat.parse(dateDesc);
+                                str = outputFormat.format(date123);
+                            } catch (ParseException e) {
+                                e.printStackTrace();
+                            }
+                            EndDate=str;
+                            if(StartDate!=null) {
+                                if(isValidDate(StartDate,str))
+                                travel_end.setText(str);
+                                else
+                                    Toast.makeText(CustomTravelPickerActivity.this,"Please Select Correct DateTime",Toast.LENGTH_SHORT).show();
+                            }
                         }
                     }).textConfirm("DONE") //text of confirm button
                             .textCancel("CANCEL") //text of cancel button
@@ -117,8 +174,54 @@ public class CustomTravelPickerActivity extends Activity {
         send_travel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+               /* Intent intentMessage=new Intent();
+                if(StartDate!=null)
+                intentMessage.putExtra("DateStart",StartDate);
+                if(EndDate!=null)
+                intentMessage.putExtra("DateEnd",EndDate);
+                setResult(120,intentMessage);*/
+                NewTaskConversation newTaskConversation = (NewTaskConversation) Appreference.context_table.get("taskcoversation");
+                if(!isTravel && newTaskConversation!=null) {
+                    if (isStartOnlyFilled)
+                        newTaskConversation.getEnteredTravelTime("", EndDate);
+                    else
+                        newTaskConversation.getEnteredTravelTime(StartDate, EndDate);
+                }else
+                {
+                    TravelJobDetails travelJobDetails=(TravelJobDetails)Appreference.context_table.get("traveljobdetails");
+                    if(travelJobDetails!=null && isTravel){
+                        if (isStartOnlyFilled)
+                            travelJobDetails.getEnteredTravelTime("", EndDate);
+                        else
+                            travelJobDetails.getEnteredTravelTime(StartDate, EndDate);
+                    }
+                }
+                finish();
             }
         });
+    }
+
+    private boolean isValidDate(String start,String UserGivenDate) {
+        boolean isValid=false;
+        final SimpleDateFormat myFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        Date date1 = null;
+        Date date2 = null;
+        try {
+            date1 = myFormat.parse(start);
+            date2 = myFormat.parse(UserGivenDate);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        if (date1.compareTo(date2)<0)
+        {
+            isValid=true;
+        }else if(date1.compareTo(date2)==0)
+        {
+            isValid=true;
+        }else if(date1.compareTo(date2)>0)
+        {
+            isValid=false;
+        }
+       return isValid;
     }
 }

@@ -3,7 +3,6 @@ package json;
 import android.util.Log;
 
 import com.myapplication3.AddObserver;
-import com.myapplication3.AddTaskReassign;
 import com.myapplication3.Appreference;
 import com.myapplication3.AudioRecorder;
 import com.myapplication3.ChangePassword;
@@ -117,8 +116,8 @@ public class JsonRequestResponce extends Thread {
 //                        HttpPost httppost = new HttpPost("https://122.165.92.171:8443/kamailioWeb/" + obj.getEnumJsonWebservicename());
 //                        HttpPost httppost = new HttpPost("https://66.109.17.204/highMessage/" + obj.getEnumJsonWebservicename());//
 
-                          HttpPost httppost = new HttpPost("https://192.168.1.3:8443/ASE/" + obj.getEnumJsonWebservicename());
-//                          HttpPost httppost = new HttpPost("http://151.253.12.203/ASE/" + obj.getEnumJsonWebservicename());
+//                          HttpPost httppost = new HttpPost("https://192.168.1.3:8443/ASE/" + obj.getEnumJsonWebservicename());
+                          HttpPost httppost = new HttpPost("http://151.253.12.203/ASE/" + obj.getEnumJsonWebservicename());
 
 //                        HttpPost httppost = new HttpPost("https://66.109.17.204/highMessage/" + obj.getEnumJsonWebservicename());//
 //                        HttpPost httppost = new HttpPost("https://66.109.17.205/highMessage/" + obj.getEnumJsonWebservicename());//
@@ -439,9 +438,9 @@ public class JsonRequestResponce extends Thread {
                 inter.ErrorMethod(obj);
                 break;
             case assignTask:
-                AddTaskReassign.getInstance().cancelDialog();
+                /*AddTaskReassign.getInstance().cancelDialog();
                 AddTaskReassign.getInstance().showToast("assignTask error . Try again later");
-                inter.ErrorMethod(obj);
+                inter.ErrorMethod(obj);*/
                 break;
             case searchMedia:
                 MediaSearch.getInstance().cancelDialog();

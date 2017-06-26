@@ -261,7 +261,8 @@
                 android:layout_marginLeft="2dp"
                 android:layout_marginRight="2dp"
                 android:layout_marginTop="2dp"
-                android:orientation="horizontal" >
+                android:orientation="horizontal"
+                android:visibility="gone">
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
@@ -290,7 +291,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="1.20dp"
                 android:layout_marginTop="10dp"
-                android:background="@color/gray" />
+                android:background="@color/gray"
+                android:visibility="gone"/>
             <LinearLayout
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
@@ -369,7 +371,8 @@
                 android:layout_marginLeft="2dp"
                 android:layout_marginRight="2dp"
                 android:layout_marginTop="2dp"
-                android:orientation="horizontal" >
+                android:orientation="horizontal"
+                android:visibility="gone">
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
@@ -385,8 +388,7 @@
                     android:layout_width="30dp"
                     android:layout_height= "30dp"
                     android:id="@+id/travelstart_sign"
-                    android:background="@drawable/ic_date_chang_request"
-                    />
+                    android:background="@drawable/ic_date_chang_request" />
                 <TextView
                     android:id="@+id/travel_start"
                     android:layout_width="0dp"
@@ -404,7 +406,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="1.20dp"
                 android:layout_marginTop="10dp"
-                android:background="@color/gray" />
+                android:background="@color/gray"
+                android:visibility="gone"/>
             <LinearLayout
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
@@ -481,6 +484,7 @@
                     android:layout_marginRight="2dp"
                     android:layout_marginTop="4dp"
                     android:layout_weight="1"
+                    android:hint="click here to view activity details"
                     android:gravity="center_vertical"
                     android:maxLength="100"
                     android:textColor="#808080"
@@ -497,7 +501,8 @@
                 android:layout_marginLeft="2dp"
                 android:layout_marginRight="2dp"
                 android:layout_marginTop="2dp"
-                android:orientation="horizontal" >
+                android:orientation="horizontal"
+                android:visibility="gone">
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
@@ -532,7 +537,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="1.20dp"
                 android:layout_marginTop="10dp"
-                android:background="@color/gray" />
+                android:background="@color/gray"
+                android:visibility="gone"/>
             <LinearLayout
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"

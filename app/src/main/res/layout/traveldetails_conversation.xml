@@ -101,7 +101,9 @@
             android:id="@+id/task_giverlayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:layout_below="@+id/ll_2"
+            >
 
             <TextView
                 android:id="@+id/text11"

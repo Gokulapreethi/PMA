@@ -413,7 +413,9 @@
         <activity
             android:name=".WebViewActivity"
             android:screenOrientation="portrait" />
+        <activity android:name=".TravelJobDetails"></activity>
         <activity android:name=".DatePicker.CustomTravelPickerActivity"></activity>
+
     </application>
 
 </manifest>

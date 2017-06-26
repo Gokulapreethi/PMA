@@ -261,7 +261,8 @@
                 android:layout_marginLeft="2dp"
                 android:layout_marginRight="2dp"
                 android:layout_marginTop="2dp"
-                android:orientation="horizontal" >
+                android:orientation="horizontal"
+                android:visibility="gone">
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
@@ -290,7 +291,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="1.20dp"
                 android:layout_marginTop="10dp"
-                android:background="@color/gray" />
+                android:background="@color/gray"
+                android:visibility="gone"/>
             <LinearLayout
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
@@ -369,7 +371,8 @@
                 android:layout_marginLeft="2dp"
                 android:layout_marginRight="2dp"
                 android:layout_marginTop="2dp"
-                android:orientation="horizontal" >
+                android:orientation="horizontal"
+                android:visibility="gone">
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
@@ -400,7 +403,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="1.20dp"
                 android:layout_marginTop="10dp"
-                android:background="@color/gray" />
+                android:background="@color/gray"
+                android:visibility="gone"/>
             <LinearLayout
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
@@ -438,14 +442,16 @@
                 android:layout_width="wrap_content"
                 android:layout_height="1.20dp"
                 android:layout_marginTop="10dp"
-                android:background="@color/gray" />
+                android:background="@color/gray"
+                android:visibility="gone"/>
             <LinearLayout
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="2dp"
                 android:layout_marginRight="2dp"
                 android:layout_marginTop="2dp"
-                android:orientation="horizontal" >
+                android:orientation="horizontal"
+                android:visibility="gone">
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"

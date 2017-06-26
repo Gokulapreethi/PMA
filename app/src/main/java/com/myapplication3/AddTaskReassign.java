@@ -562,7 +562,7 @@ public class AddTaskReassign extends Activity implements View.OnClickListener, W
                 taskDetailsBean.setRepeatFrequency("");
                 taskDetailsBean.setTaskTagName("");
                 taskDetailsBean.setTaskUTCDateTime(dateforrow);
-                taskDetailsBean.setMimeType("text");
+                taskDetailsBean.setMimeType("assigntask");
                 taskDetailsBean.setCatagory("Task");
                 taskDetailsBean.setCustomTagVisible(true);
 
