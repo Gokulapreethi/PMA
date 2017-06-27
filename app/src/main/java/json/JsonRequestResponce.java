@@ -116,8 +116,8 @@ public class JsonRequestResponce extends Thread {
 //                        HttpPost httppost = new HttpPost("https://122.165.92.171:8443/kamailioWeb/" + obj.getEnumJsonWebservicename());
 //                        HttpPost httppost = new HttpPost("https://66.109.17.204/highMessage/" + obj.getEnumJsonWebservicename());//
 
-//                          HttpPost httppost = new HttpPost("https://192.168.1.3:8443/ASE/" + obj.getEnumJsonWebservicename());
-                          HttpPost httppost = new HttpPost("http://151.253.12.203/ASE/" + obj.getEnumJsonWebservicename());
+                          HttpPost httppost = new HttpPost("https://192.168.1.3:8443/ASE/" + obj.getEnumJsonWebservicename());
+//                          HttpPost httppost = new HttpPost("http://151.253.12.203/ASE/" + obj.getEnumJsonWebservicename());
 
 //                        HttpPost httppost = new HttpPost("https://66.109.17.204/highMessage/" + obj.getEnumJsonWebservicename());//
 //                        HttpPost httppost = new HttpPost("https://66.109.17.205/highMessage/" + obj.getEnumJsonWebservicename());//
@@ -288,6 +288,8 @@ public class JsonRequestResponce extends Thread {
                                 obj.setFirstname("taskNeedAssessmentReport");
                             }else if (obj.getEnumJsonWebservicename().toString().equals("fieldServiceReport")) {
                                 obj.setFirstname("fieldServiceReport");
+                            } else if (obj.getEnumJsonWebservicename().toString().equals("fieldServiceReportJobWise")) {
+                                obj.setFirstname("fieldServiceReportJobWise");
                             } else if (obj.getEnumJsonWebservicename().toString().equals("getTask")) {
                                 obj.setFirstname("getTask");
                             } else if (obj.getEnumJsonWebservicename().toString().equals("getRequestType")) {
@@ -455,6 +457,11 @@ public class JsonRequestResponce extends Thread {
           case fieldServiceReport:
                NewTaskConversation.getInstance().cancelDialog();
                NewTaskConversation.getInstance().showToast("fieldServiceReport error . Try again later");
+                inter.ErrorMethod(obj);
+                break;
+            case fieldServiceReportJobWise:
+                ProjectsFragment.getInstance().cancelDialog();
+                ProjectsFragment.getInstance().showToast(result);
                 inter.ErrorMethod(obj);
                 break;
             case leaveRequestOrReject:
@@ -736,6 +743,11 @@ public class JsonRequestResponce extends Thread {
                    case fieldServiceReport:
                         obj.setEmail(responseString);
                         obj.setFirstname("fieldServiceReport");
+                        inter.ResponceMethod(obj);
+                        break;
+                   case fieldServiceReportJobWise:
+                        obj.setEmail(responseString);
+                        obj.setFirstname("fieldServiceReportJobWise");
                         inter.ResponceMethod(obj);
                         break;
                   /*  case getRequestType:

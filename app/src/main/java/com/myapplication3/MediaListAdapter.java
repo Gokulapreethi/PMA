@@ -89,7 +89,7 @@ public class MediaListAdapter extends ArrayAdapter<TaskDetailsBean> {
     ArrayList<TaskDetailsBean> detailsBeanArrayList, taskList_4;
     TaskDetailsBean bean;
     NewTaskConversation newTaskConversation;
-    Handler handler = new Handler();
+    Handler handler;
     String StartDate, EndDate, FromId, ToId, Leave_Signal_Id, check, min, sec, category;
     public static Runnable updatetime = null;
     public static boolean stop = true;
@@ -119,6 +119,7 @@ public class MediaListAdapter extends ArrayAdapter<TaskDetailsBean> {
         this.category = s2;
         inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         this.listener = listener;
+        handler=new Handler();
         swipeDetector = new SwipeListview();
         ft = new SimpleDateFormat("E yyyy.MM.dd 'at' hh:mm:ss.SSS a zzz");
         progressListener = Appreference.main_Activity_context;

@@ -8505,8 +8505,8 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
                 cur.moveToFirst();
 
                 while (!cur.isAfterLast()) {
-                    taskDetailsBean.setActivityStartTime(cur.getString(cur.getColumnIndex("activityStartTime")));
-                    taskDetailsBean.setActivityEndTime(cur.getString(cur.getColumnIndex("activityEndTime")));
+                    taskDetailsBean.setActivityStartTime(cur.getString(cur.getColumnIndex("travelStartTime")));
+                    taskDetailsBean.setActivityEndTime(cur.getString(cur.getColumnIndex("travelEndTime")));
                     cur.moveToNext();
                 }
                 cur.close();

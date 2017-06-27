@@ -1,20 +1,23 @@
 package com.myapplication3.sketh;
 
-import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.PopupMenu;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
@@ -78,7 +81,7 @@ public class ProjectsFragment extends Fragment implements WebServiceInterface {
     private ProjectFilter filter;
     private ProjectArrayAdapter projectArrayAdapter;
     Handler handler = new Handler();
-    String project_id, project_name, parentTask_Id, groupuser_Id, project_owner,oracleProjectId;
+    String project_id, project_name, parentTask_Id, groupuser_Id, project_owner, oracleProjectId;
     boolean isCurrentlyActivie = false;
     static ProjectsFragment projectsFragment;
 
@@ -478,14 +481,14 @@ public class ProjectsFragment extends Fragment implements WebServiceInterface {
                         project_name = projectDetailsBean.getProjectName();
                         //                parentTask_Id = projectDetailsBean.getParentTaskId();
                         project_owner = projectDetailsBean.getProject_ownerName();
-                        oracleProjectId=projectDetailsBean.getOracleProjectId();
+                        oracleProjectId = projectDetailsBean.getOracleProjectId();
                         groupuser_Id = projectDetailsBean.getToUserId();
                         List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
                         nameValuePairs.add(new BasicNameValuePair("projectId", projectDetailsBean.getId()));
                         nameValuePairs.add(new BasicNameValuePair("userId", String.valueOf(Appreference.loginuserdetails.getId())));
 //                        Appreference.jsonRequestSender.getProject(EnumJsonWebservicename.getProject, nameValuePairs, ProjectsFragment.this);
-                        Log.i("ws123"," projectDetailsBean.getOracleProjectId()=========>"+ projectDetailsBean.getId());
-                        Log.i("ws123"," projectDetailsBean.userId()=========>"+ String.valueOf(Appreference.loginuserdetails.getId()));
+                        Log.i("ws123", " projectDetailsBean.getOracleProjectId()=========>" + projectDetailsBean.getId());
+                        Log.i("ws123", " projectDetailsBean.userId()=========>" + String.valueOf(Appreference.loginuserdetails.getId()));
                         Appreference.jsonRequestSender.getTaskForJobID(EnumJsonWebservicename.getTaskForJobID, nameValuePairs, ProjectsFragment.this);
                         showprogress();
                     } catch (Exception e) {
@@ -549,7 +552,7 @@ public class ProjectsFragment extends Fragment implements WebServiceInterface {
                 final View finalConView = conView;
 
                 final ProjectDetailsBean projectDetailsBean = arrayBuddyList.get(pos);
-                LinearLayout proj_layout=(LinearLayout)finalConView.findViewById(R.id.project_layout);
+                LinearLayout proj_layout = (LinearLayout) finalConView.findViewById(R.id.project_layout);
                 TextView project_name = (TextView) finalConView.findViewById(R.id.project_name);
                 TextView project_id = (TextView) finalConView.findViewById(R.id.project_id);
                 TextView task_giver = (TextView) finalConView.findViewById(R.id.task_giver);
@@ -561,7 +564,7 @@ public class ProjectsFragment extends Fragment implements WebServiceInterface {
                 ImageView project_icon = (ImageView) finalConView.findViewById(R.id.selected);
                 View viewforparent = (View) finalConView.findViewById(R.id.viewforparent);
                 ImageView dependency_icon = (ImageView) finalConView.findViewById(R.id.dependency_icon);
-                ImageView completed_status = (ImageView) finalConView.findViewById(R.id.completed_status);
+                final ImageView completed_status = (ImageView) finalConView.findViewById(R.id.completed_status);
                 viewforparent.setVisibility(View.GONE);
                 project_icon.setVisibility(View.GONE);
                 project_status.setVisibility(View.GONE);
@@ -570,8 +573,8 @@ public class ProjectsFragment extends Fragment implements WebServiceInterface {
                 completed_status.setVisibility(View.GONE);
                 project_name.setVisibility(view.GONE);
                 task_giver.setVisibility(View.GONE);
-                Log.i("job123","project name8*********** "+projectDetailsBean.getProjectName());
-                Log.i("job123","projct Status isActivestatus*********** "+projectDetailsBean.getProjectName()+"isAcvtiveStatus===>"+projectDetailsBean.getIsActiveStatus());
+                Log.i("job123", "project name8*********** " + projectDetailsBean.getProjectName());
+                Log.i("job123", "projct Status isActivestatus*********** " + projectDetailsBean.getProjectName() + "isAcvtiveStatus===>" + projectDetailsBean.getIsActiveStatus());
 
                /* if(projectDetailsBean.getIsActiveStatus()!=null && projectDetailsBean.getIsActiveStatus().equalsIgnoreCase("1")) {
                     proj_layout.setBackgroundResource(R.color.lightgray);
@@ -589,7 +592,7 @@ public class ProjectsFragment extends Fragment implements WebServiceInterface {
                 }
                 Log.i("Fragment", "pjt_owner ==> " + pjt_owner);
                 if (pjt_owner != null && pjt_owner.equalsIgnoreCase(Appreference.loginuserdetails.getUsername())) {
-                    completed_status.setVisibility(View.GONE);
+                    completed_status.setVisibility(View.VISIBLE);
                 }
                 if (pjt_owner != null && pjt_owner.equalsIgnoreCase(Appreference.loginuserdetails.getUsername())) {
                     pjt_owner = "Project Owner : Me";
@@ -634,34 +637,55 @@ public class ProjectsFragment extends Fragment implements WebServiceInterface {
                 completed_status.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        AlertDialog.Builder saveDialog = new AlertDialog.Builder(classContext);
-                        saveDialog.setTitle("Projecct Completion");
-                        saveDialog.setMessage("Do you want to Complete this Project?");
-                        saveDialog.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int which) {
-                                try {
+                        PopupMenu popup = new PopupMenu(getActivity(), completed_status);
+                        popup.getMenuInflater().inflate(R.menu.project_pop_menu, popup.getMenu());
+
+                        popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                            public boolean onMenuItemClick(MenuItem item) {
+                                /*Toast.makeText(getActivity(),
+                                        "Clicked popup menu item " + item.getTitle(),
+                                        Toast.LENGTH_SHORT).show();*/
+                                if (item.getTitle().toString().equalsIgnoreCase("FSR Report")) {
                                     List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
                                     nameValuePairs.add(new BasicNameValuePair("projectId", projectDetailsBean.getId()));
-                                    nameValuePairs.add(new BasicNameValuePair("userId", String.valueOf(Appreference.loginuserdetails.getId())));
-                                    Log.i("completed_status","ProjectId()====>"+ projectDetailsBean.getId());
-                                    Log.i("completed_status", " userId()=====>" + String.valueOf(Appreference.loginuserdetails.getId()));
-                                    Appreference.jsonRequestSender.projectCompleted(EnumJsonWebservicename.projectCompleted, nameValuePairs, ProjectsFragment.this);
-//                                    showprogress();
-                                } catch (Exception e) {
-                                    e.printStackTrace();
+                                    Appreference.jsonRequestSender.OracleFSRJOBReport(EnumJsonWebservicename.fieldServiceReportJobWise, nameValuePairs, ProjectsFragment.this);
+
+                                } else if (item.getTitle().toString().equalsIgnoreCase("Complete")) {
+                                    AlertDialog.Builder saveDialog = new AlertDialog.Builder(classContext);
+                                    saveDialog.setTitle("Project Completion");
+                                    saveDialog.setMessage("Are you sure want to Complete this Project?");
+                                    saveDialog.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            try {
+                                                List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
+                                                nameValuePairs.add(new BasicNameValuePair("projectId", projectDetailsBean.getId()));
+                                                nameValuePairs.add(new BasicNameValuePair("userId", String.valueOf(Appreference.loginuserdetails.getId())));
+                                                Log.i("completed_status", "ProjectId()====>" + projectDetailsBean.getId());
+                                                Log.i("completed_status", " userId()=====>" + String.valueOf(Appreference.loginuserdetails.getId()));
+                                                Appreference.jsonRequestSender.projectCompleted(EnumJsonWebservicename.projectCompleted, nameValuePairs, ProjectsFragment.this);
+//                                                showprogress();
+                                            } catch (Exception e) {
+                                                e.printStackTrace();
+                                            }
+//                                            Toast.makeText(getContext(), "Project Completed", Toast.LENGTH_LONG).show();
+                                        }
+                                    });
+                                    saveDialog.setNegativeButton("Cancel",
+                                            new DialogInterface.OnClickListener() {
+                                                public void onClick(DialogInterface dialog, int which) {
+                                                    dialog.cancel();
+                                                }
+                                            });
+                                    saveDialog.show();
                                 }
-                                Toast.makeText(getContext(), "Project Completed", Toast.LENGTH_LONG).show();
+                                return true;
                             }
                         });
-                        saveDialog.setNegativeButton("Cancel",
-                                new DialogInterface.OnClickListener() {
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        dialog.cancel();
-                                    }
-                                });
-                        saveDialog.show();
+                        popup.show();
                     }
                 });
+
+
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -1032,15 +1056,15 @@ public class ProjectsFragment extends Fragment implements WebServiceInterface {
                             }
                         } else if (s2.equalsIgnoreCase("getTaskForJobID")) {
                             Log.i("ws123", "******getTaskForJobID********** Response String " + s1);
-                            boolean Success=true;
+                            boolean Success = true;
                             try {
                                 final JSONObject jsonObject = new JSONObject(opr.getEmail());
-                                if (((String) jsonObject.get("result_text")).equalsIgnoreCase("pls send ur details") ) {
+                                if (((String) jsonObject.get("result_text")).equalsIgnoreCase("pls send ur details")) {
                                     showToast("Please Send Correct Details!....");
-                                    Success=false;
-                                }else {
-                                    Success=true;
-                                    Log.i("ws123","getTaskForJobID Response String---------->"+s1);
+                                    Success = false;
+                                } else {
+                                    Success = true;
+                                    Log.i("ws123", "getTaskForJobID Response String---------->" + s1);
 
                                     Type collectionType = new TypeToken<ListallProjectBean>() {
                                     }.getType();
@@ -1058,22 +1082,41 @@ public class ProjectsFragment extends Fragment implements WebServiceInterface {
                                 e.printStackTrace();
                             }
                             cancelDialog();
-                            if(Success) {
+                            if (Success) {
                                 Intent intent = new Intent(getActivity(), ProjectHistory.class);
                                 intent.putExtra("projectId", project_id);
                                 intent.putExtra("projectName", project_name);
                                 //                intent.putExtra("parentTaskId", parentTask_Id);
                                 intent.putExtra("projectOwner", project_owner);
                                 intent.putExtra("groupUserId", groupuser_Id);
-                                if(oracleProjectId!=null)
-                                intent.putExtra("fromOracle",true);
+                                if (oracleProjectId != null)
+                                    intent.putExtra("fromOracle", true);
                                 else
-                                    intent.putExtra("fromOracle",false);
+                                    intent.putExtra("fromOracle", false);
                                 startActivity(intent);
                             }
                         } else if (s2.equalsIgnoreCase("projectCompleted")) {
                             Log.i("projectCompleted", "******projectCompleted********** Response String " + s1);
-                            Toast.makeText(getContext(), "Project Completed successfull", Toast.LENGTH_LONG).show();
+                            final JSONObject jsonObject = new JSONObject(opr.getEmail());
+                            String result = (String) jsonObject.get("result_text");
+                            Toast.makeText(getContext(), result, Toast.LENGTH_LONG).show();
+                          /*  if (((String) jsonObject.get("result_text")).equalsIgnoreCase("project task not completed")) {
+                                String result= (String) jsonObject.get("result_text");
+                                 Toast.makeText(getContext(),result, Toast.LENGTH_LONG).show();
+                            }*/
+                        } else if (s2 != null && s2.equalsIgnoreCase(("fieldServiceReportJobWise"))) {
+                            Log.i("output123", "projectFragment fieldServiceReportJobWise  Responce Received" + s1);
+                            final JSONObject jsonObject = new JSONObject(opr.getEmail());
+                            if (((String) jsonObject.get("result_text")).equalsIgnoreCase("Field_servicce_report job successed")) {
+                                Log.i("output123", " Filename" + jsonObject.getString("File Name"));
+                                String pdfURL = getResources().getString(R.string.task_reminder) + jsonObject.getString("File Name");
+                                Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(pdfURL));
+                                startActivity(browserIntent);
+                                /*Intent intent = new Intent(getActivity(), WebViewActivity.class);
+                                intent.putExtra("ReportFileName", jsonObject.getString("File Name"));
+                                startActivity(intent);*/
+                                showToast("Task_Need_assessment_report created ");
+                            }
                         }
                     } catch (Exception e) {
                         e.printStackTrace();

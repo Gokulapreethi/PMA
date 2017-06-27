@@ -609,6 +609,14 @@ public class JsonRequestSender {
         communicationBean.setAccess(access);
         queue.addMsg(communicationBean);
     }
+    public void OracleFSRJOBReport(EnumJsonWebservicename webservicename, List<NameValuePair> valuePair, WebServiceInterface access) {
+        CommunicationBean communicationBean = new CommunicationBean();
+        communicationBean.setEnumJsonWebservicename(webservicename);
+        communicationBean.setNameValuePairs(valuePair);
+        communicationBean.setAccess(access);
+        queue.addMsg(communicationBean);
+    }
+
     /*public void listMembersInGroup(EnumJsonWebservicename webservicename, List<NameValuePair> valuePair, WebServiceInterface access){
 
         CommunicationBean communicationBean=new CommunicationBean();

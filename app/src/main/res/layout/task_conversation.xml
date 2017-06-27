@@ -56,7 +56,7 @@
                 android:layout_marginRight="10dp"
                 android:layout_weight="0.11"
                 android:src="@drawable/id_image"
-                android:visibility="visible" />
+                android:visibility="gone" />
 
 
 

@@ -3892,27 +3892,6 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
             Log.i("output123", "project CurrentStatus from DB====>" + last_beforeStatus);
             current_status = last_beforeStatus;
         }
-        /*Log.i("status123", "currentStatus========================>" + taskStatus);
-        int current_status = -1;
-        if (taskStatus.equalsIgnoreCase("inprogress"))
-            current_status = -1;
-        else if(taskStatus.equalsIgnoreCase("assigned"))
-            current_status = -1;
-        else if (taskStatus.equalsIgnoreCase("start"))
-            current_status = 0;
-        else if(taskStatus.equalsIgnoreCase("hold"))
-            current_status = 1;
-        else if(taskStatus.equalsIgnoreCase("resume"))
-            current_status = 2;
-        else if(taskStatus.equalsIgnoreCase("pause"))
-            current_status = 3;
-        else if(taskStatus.equalsIgnoreCase("restart"))
-            current_status = 4;
-        else if(taskStatus.equalsIgnoreCase("completed"))
-            current_status = 5;
-        else if (taskStatus.equalsIgnoreCase("DeAssign"))
-            current_status = 6;*/
-
         Log.i("ws123", "project CurrentStatus from DB====>" + current_status);
         if (current_status == -1)
             popup.getMenu().getItem(0).setVisible(true);
@@ -4166,10 +4145,10 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                     if (taskDetailsBean.size() > 0) {
                         TaskDetailsBean detailsBean = taskDetailsBean.get(0);
                         project_id.setText(detailsBean.getProjectId());
-                        statusCompletedFieldValues.put(1, "Project ID :" + detailsBean.getProjectId());
+                        statusCompletedFieldValues.put(1, "JobCardNo :" + detailsBean.getProjectId());
                         project_name.setText(detailsBean.getProjectName());
                         task_id.setText(detailsBean.getTaskId());
-                        statusCompletedFieldValues.put(2, "Task ID :" + detailsBean.getTaskId());
+                        statusCompletedFieldValues.put(2, "ActivityCode :" + detailsBean.getTaskId());
                         Log.i("ws123", "username or employee name===>" + Appreference.loginuserdetails.getEmail());
                         mcModel.setText(detailsBean.getMcModel());
                         statusCompletedFieldValues.put(4, "McModel :" + detailsBean.getMcModel());
@@ -4455,8 +4434,8 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
 //                taskDetailsBean.setToTravelEndTime(ToTravelEnd);
 //                taskDetailsBean.setTravelStartTime(FromTravelStart);
 //                taskDetailsBean.setTravelEndTime(FromTravelEnd);
-                taskDetailsBean.setActivityStartTime(ActivityStartdate);
-                taskDetailsBean.setActivityEndTime(ActivityEnddate);
+                taskDetailsBean.setTravelStartTime(ActivityStartdate);
+                taskDetailsBean.setTravelEndTime(ActivityEnddate);
                 travel_date_details = new ArrayList<>();
                 if (FromTravelStart != null) {
                     travel_date_details.add("travelStartTime : " + FromTravelStart);
