@@ -2448,12 +2448,12 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
                         cv_1.put("taskType", "Individual");
                         ListFromDetails listToDetails1 = new ListFromDetails();
                         listToDetails1 = listAllgetTaskDetailses1.getToUser();
-                        if(listToDetails1.getId()>0){
-                        cv.put("toUserId", listToDetails1.getId());
+                        if (listToDetails1 != null && listToDetails1.getId() > 0) {
+                            cv.put("toUserId", listToDetails1.getId());
+                            cv_1.put("toUserId", listToDetails1.getId());
+                            taskDetailsBean.setToUserId(String.valueOf(listToDetails1.getId()));
                         }
-                        taskDetailsBean.setToUserId(String.valueOf(listToDetails1.getId()));
                         taskDetailsBean.setTaskType("Individual");
-                        cv_1.put("toUserId", listToDetails1.getId());
                         cv.put("toUserName", listToDetails1.getUsername());
                         cv_1.put("toUserName", listToDetails1.getUsername());
 //                        cv.put("taskReceiver", listToDetails1.getUsername());
@@ -4647,7 +4647,6 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
             if (db != null) {
                 if (!db.isOpen())
                     openDatabase();
-                Log.i("task", "loginuser " + Appreference.loginuserdetails.getEmail());
                 Log.i("task", "taskid " + taskId);
                 Log.i("TaskHistory", "setActiveAdapter 3" + " 1***** " + " ********");
                 cur = db.rawQuery("select * from taskDetailsInfo where  loginuser='" + Appreference.loginuserdetails.getEmail() + "'and  (readStatus='1' or readStatus='2') and taskId='" + taskId + "'", null);

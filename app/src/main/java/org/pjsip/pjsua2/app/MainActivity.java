@@ -111,6 +111,7 @@ import com.myapplication3.SettingsFragment;
 import com.myapplication3.TaskHistory;
 import com.myapplication3.TaskNotification;
 import com.myapplication3.TasksFragment;
+import com.myapplication3.TravelJobDetails;
 import com.myapplication3.activity.SchedulerActivity;
 import com.myapplication3.call_list.Call_ListBean;
 import com.myapplication3.chat.ChatActivity;
@@ -399,7 +400,11 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback,
             String acc_id = "sip:" + username + "@" + getResources().getString(R.string.server_ip);
             String registrar = "sip:" + getResources().getString(R.string.server_ip);
 //        String proxy = "sip:" + getResources().getString(R.string.server_ip);
-            String proxy = "sip:" + getResources().getString(R.string.server_ip) + ";transport=tls;hide";
+
+
+//            String proxy = "sip:" + getResources().getString(R.string.server_ip) + ";transport=tls;hide";
+            String proxy = "sip:" + getResources().getString(R.string.server_ip) +":8444"+ ";transport=tls;hide";
+
 
             Appreference.printLog("SipRegister", "Sip Registeration", "DEBUG", null);
             Appreference.printLog("SipRegister", "Sip Registeration username-->" + acc_id, "DEBUG", null);
@@ -2711,6 +2716,10 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback,
                     taskDetailsBean.setSubType("normal");
                     newTaskConversation.notifyTaskReceived(taskDetailsBean);
                     newTaskConversation.refresh();
+                } else if (Appreference.context_table.containsKey("traveljobdetails")) {
+                    TravelJobDetails travelJobDetails = (TravelJobDetails) Appreference.context_table.get("traveljobdetails");
+                    travelJobDetails.notifyTaskReceived(taskDetailsBean);
+                    travelJobDetails.refresh();
                 } else if (Appreference.context_table.containsKey("taskhistory")) {
                     Log.i("taskobserver", "was obs1 ---> ");
                     if (taskDetailsBean.getRejectedObserver() != null && !taskDetailsBean.getRejectedObserver().equalsIgnoreCase(" ") && !taskDetailsBean.getRejectedObserver().equalsIgnoreCase(null) && !taskDetailsBean.getRejectedObserver().equalsIgnoreCase("null") && !taskDetailsBean.getRejectedObserver().equalsIgnoreCase("(null)") && !taskDetailsBean.getRejectedObserver().equalsIgnoreCase(null) && taskDetailsBean.getRejectedObserver().length() > 4) {
@@ -3569,6 +3578,11 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback,
                             newTaskConversation.notifyTaskReceived(detailsBeanForRemind);
                         }*/
                         Log.d("Mainactivity", "Value true ");
+                    } else if (Appreference.context_table.containsKey("traveljobdetails")) {
+                        Log.i("taskobserver", "traveljobdetails ---> " + taskDetailsBean.getTaskId());
+                        Log.i("taskobserver", "traveljobdetails.getTaskId()##  ---> " + taskDetailsBean.getTaskId());
+                        TravelJobDetails travelJobDetails = (TravelJobDetails) Appreference.context_table.get("traveljobdetails");
+                        travelJobDetails.notifyTaskReceived(taskDetailsBean);
                     } else if (Appreference.context_table.containsKey("taskhistory") && taskDetailsBean.getCatagory() != null && !taskDetailsBean.getCatagory().equalsIgnoreCase("chat")) {
                         Log.i("Mainactivity", "taskhistory reference ");
                         if (!VideoCallDataBase.getDB(context).DuplicateChecker(taskDetailsBean.getSignalid(), taskDetailsBean.getTaskId()) || (taskDetailsBean.getTaskRequestType() != null && taskDetailsBean.getTaskRequestType().equalsIgnoreCase("customeAttributeRequest"))) {
@@ -3730,6 +3744,10 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback,
                             NewTaskConversation newTaskConversation = (NewTaskConversation) Appreference.context_table.get("taskcoversation");
                             Log.i("Mainactivity", "fileName--2 " + taskDetailsBean.getTaskDescription());
                             newTaskConversation.notifyTaskReceived(taskDetailsBean);
+                        } else if (Appreference.context_table.containsKey("traveljobdetails")) {
+                            TravelJobDetails travelJobDetails = (TravelJobDetails) Appreference.context_table.get("traveljobdetails");
+                            travelJobDetails.notifyTaskReceived(taskDetailsBean);
+                            travelJobDetails.refresh();
                         } else if (Appreference.context_table.containsKey("chatfragment")) {
                             ChatFragment contactsFragment = (ChatFragment) Appreference.context_table.get("chatfragment");
                             dataBase.insertORupdate_Task_history(taskDetailsBean);
@@ -4227,6 +4245,7 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback,
                     } else if (messagebody.contains("<TaskDetailsinfo>")) {
                         TaskDetailsBean taskDetailsBean = xmlparser
                                 .parseTaskDetailsSIPMessage(messagebody);
+                        Log.i("sipmessage", "Main Activity notifySipMessage");
                         if (taskDetailsBean != null && taskDetailsBean.getSignalid() != null) {
                             if (response_code == 200 || response_code == 202) {
                                 VideoCallDataBase.getDB(context).updateTaskSentStatus(taskDetailsBean.getSignalid(), "1");
@@ -4248,9 +4267,14 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback,
                                 if (newTaskConversation != null) {
                                     newTaskConversation.updateMessageStatus(taskDetailsBean);
                                 }
+                            } else if (Appreference.context_table.containsKey("traveljobdetails")) {
+                                TravelJobDetails travelJobDetails = (TravelJobDetails) Appreference.context_table.get("traveljobdetails");
+                                if (travelJobDetails != null) {
+                                    Log.i("travelJobDetails ", "updateMessageStatus==> ");
+                                    travelJobDetails.updateMessageStatus(taskDetailsBean);
+                                }
                             }
                         }
-
                     } else if (messagebody.contains("<TaskDetailsAddObserver>")) {
                         TaskDetailsBean taskDetailsBean = xmlparser
                                 .parseObserverDetailsSIPMessage(messagebody);

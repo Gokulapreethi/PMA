@@ -20,6 +20,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.TimeZone;
 
 public class CustomTravelPickerActivity extends Activity {
 
@@ -89,21 +90,22 @@ public class CustomTravelPickerActivity extends Activity {
                             String outputPattern = "yyyy-MM-dd HH:mm:ss";
                             SimpleDateFormat inputFormat = new SimpleDateFormat(inputPattern);
                             SimpleDateFormat outputFormat = new SimpleDateFormat(outputPattern);
-
+                            SimpleDateFormat outputFormatUI = new SimpleDateFormat(outputPattern);
+                            outputFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
                             Date date123 = null;
                             String str = null;
 
                             try {
                                 date123 = inputFormat.parse(dateDesc);
-                                str = outputFormat.format(date123);
+                                str = outputFormatUI.format(date123);
                             } catch (ParseException e) {
                                 e.printStackTrace();
                             }
-                            StartDate = str;
                             if (str != null) {
-                                if (date123 != null && (date123.compareTo(todayDate) < 0 || date123.compareTo(todayDate) == 0))
+                                if (date123 != null && (date123.compareTo(todayDate) < 0 || date123.compareTo(todayDate) == 0)) {
                                     travel_start.setText(str);
-                                else
+                                    StartDate = str;
+                                }else
                                     Toast.makeText(CustomTravelPickerActivity.this, "Please Select Correct DateTime", Toast.LENGTH_SHORT).show();
                             }
 
@@ -140,23 +142,27 @@ public class CustomTravelPickerActivity extends Activity {
                             String outputPattern = "yyyy-MM-dd HH:mm:ss";
                             SimpleDateFormat inputFormat = new SimpleDateFormat(inputPattern);
                             SimpleDateFormat outputFormat = new SimpleDateFormat(outputPattern);
+                            SimpleDateFormat outputFormatUI = new SimpleDateFormat(outputPattern);
+                            outputFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
 
                             Date date123 = null;
                             String str = null;
 
                             try {
                                 date123 = inputFormat.parse(dateDesc);
-                                str = outputFormat.format(date123);
+                                str = outputFormatUI.format(date123);
                             } catch (ParseException e) {
                                 e.printStackTrace();
                             }
-                            EndDate = str;
-                            if (StartDate != null) {
-                                    if (isValidDate(StartDate, str))
+                            if (StartDate != null && !StartDate.equalsIgnoreCase("")) {
+                                    if (isValidDate(StartDate, str)) {
                                         travel_end.setText(str);
-                                    else
+                                        EndDate = str;
+                                    } else
                                         Toast.makeText(CustomTravelPickerActivity.this, "Please Select Correct DateTime", Toast.LENGTH_SHORT).show();
-                            }
+                            }else
+                                Toast.makeText(CustomTravelPickerActivity.this, "Please Enter Start DateTime", Toast.LENGTH_SHORT).show();
+
                         }
                     }).textConfirm("DONE") //text of confirm button
                             .textCancel("CANCEL") //text of cancel button
@@ -184,22 +190,33 @@ public class CustomTravelPickerActivity extends Activity {
                 if(EndDate!=null)
                 intentMessage.putExtra("DateEnd",EndDate);
                 setResult(120,intentMessage);*/
-                NewTaskConversation newTaskConversation = (NewTaskConversation) Appreference.context_table.get("taskcoversation");
-                if (!isTravel && newTaskConversation != null) {
-                    if (isStartOnlyFilled)
-                        newTaskConversation.getEnteredTravelTime("", EndDate);
-                    else
-                        newTaskConversation.getEnteredTravelTime(StartDate, EndDate);
-                } else {
-                    TravelJobDetails travelJobDetails = (TravelJobDetails) Appreference.context_table.get("traveljobdetails");
-                    if (travelJobDetails != null && isTravel) {
-                        if (isStartOnlyFilled)
-                            travelJobDetails.getEnteredTravelTime("", EndDate);
-                        else
-                            travelJobDetails.getEnteredTravelTime(StartDate, EndDate);
+                if(StartDate!=null || EndDate!=null) {
+                    NewTaskConversation newTaskConversation = (NewTaskConversation) Appreference.context_table.get("taskcoversation");
+                    if (!isTravel && newTaskConversation != null) {
+                        if (isStartOnlyFilled && EndDate!=null && !EndDate.equalsIgnoreCase("")) {
+                            newTaskConversation.getEnteredTravelTime("", EndDate);
+                            finish();
+                        }else if(!isStartOnlyFilled && StartDate!=null && !StartDate.equalsIgnoreCase("") || EndDate!=null && !EndDate.equalsIgnoreCase("")) {
+                            newTaskConversation.getEnteredTravelTime(StartDate, EndDate);
+                            finish();
+                        }else
+                            Toast.makeText(CustomTravelPickerActivity.this, "Please Enter DateTime to send", Toast.LENGTH_SHORT).show();
+
+                    } else {
+                        TravelJobDetails travelJobDetails = (TravelJobDetails) Appreference.context_table.get("traveljobdetails");
+                        if (travelJobDetails != null && isTravel) {
+                            if (isStartOnlyFilled && EndDate!=null && !EndDate.equalsIgnoreCase("")) {
+                                travelJobDetails.getEnteredTravelTime("", EndDate);
+                                finish();
+                            }else if( !isStartOnlyFilled  && StartDate!=null && !StartDate.equalsIgnoreCase("") || EndDate!=null && !EndDate.equalsIgnoreCase("")) {
+                                travelJobDetails.getEnteredTravelTime(StartDate, EndDate);
+                                finish();
+                            } else
+                                Toast.makeText(CustomTravelPickerActivity.this, "Please Enter DateTime to send", Toast.LENGTH_SHORT).show();
+                        }
                     }
-                }
-                finish();
+                }else
+                    Toast.makeText(CustomTravelPickerActivity.this, "Please Enter DateTime to send", Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -216,11 +233,11 @@ public class CustomTravelPickerActivity extends Activity {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        if (date1.compareTo(date2) < 0 && date2.compareTo(todayDate)<0) {
+        if (date2.compareTo(date1) > 0 && date2.compareTo(todayDate)<0) {
             isValid = true;
-        } else if (date1.compareTo(date2) == 0 &&  date2.compareTo(todayDate)==0) {
+        } else if (date2.compareTo(date1) == 0 &&  date2.compareTo(todayDate)==0) {
             isValid = true;
-        } else if (date1.compareTo(date2) > 0) {
+        } else if (date2.compareTo(date1) < 0) {
             isValid = false;
         }
         return isValid;

@@ -2136,7 +2136,7 @@ public class MediaListAdapter extends ArrayAdapter<TaskDetailsBean> {
                     holder.iv_mmstatus.setImageResource(R.drawable.off_line);
                 }
             }
-            if (gcBean.getMimeType() != null && (!gcBean.getMimeType().equalsIgnoreCase("text") && !gcBean.getMimeType().equalsIgnoreCase("url") && !gcBean.getMimeType().equalsIgnoreCase("date") && !gcBean.getMimeType().equalsIgnoreCase("observer") && !gcBean.getMimeType().equalsIgnoreCase("Reassign") && !gcBean.getMimeType().equalsIgnoreCase("Remove"))) {
+            if (gcBean.getMimeType() != null && (!gcBean.getMimeType().equalsIgnoreCase("text") && !gcBean.getMimeType().equalsIgnoreCase("url") && !gcBean.getMimeType().equalsIgnoreCase("date") && !gcBean.getMimeType().equalsIgnoreCase("observer") && !gcBean.getMimeType().equalsIgnoreCase("Reassign") && !gcBean.getMimeType().equalsIgnoreCase("Remove")) && !gcBean.getMimeType().equalsIgnoreCase("assigntask")) {
                 if (gcBean.getFromUserName() != null && !gcBean.getFromUserName().equalsIgnoreCase(Appreference.loginuserdetails.getUsername())) {
                     if (gcBean.getShow_progress() == 0) {
                         holder.ls_thumb_image.setBackgroundResource(R.drawable.icon404);
@@ -2525,7 +2525,7 @@ public class MediaListAdapter extends ArrayAdapter<TaskDetailsBean> {
                         }
                     }
                     holder.date_header_text.setText(Datetype);
-                } else if (gcBean.getMimeType() != null && (gcBean.getMimeType().equalsIgnoreCase("text") || gcBean.getMimeType().equalsIgnoreCase("overdue") || gcBean.getMimeType().equalsIgnoreCase("url") || gcBean.getMimeType().equalsIgnoreCase("date") || gcBean.getMimeType().equalsIgnoreCase("observer") || gcBean.getMimeType().equalsIgnoreCase("Reassign") || gcBean.getMimeType().equalsIgnoreCase("Remove") || gcBean.getMimeType().equalsIgnoreCase("note"))) {
+                } else if (gcBean.getMimeType() != null && (gcBean.getMimeType().equalsIgnoreCase("text") || gcBean.getMimeType().equalsIgnoreCase("overdue") || gcBean.getMimeType().equalsIgnoreCase("url") || gcBean.getMimeType().equalsIgnoreCase("date") || gcBean.getMimeType().equalsIgnoreCase("observer") || gcBean.getMimeType().equalsIgnoreCase("Reassign") || gcBean.getMimeType().equalsIgnoreCase("Remove") || gcBean.getMimeType().equalsIgnoreCase("note")) || gcBean.getMimeType().equalsIgnoreCase("assigntask")) {
                     String imageFile = gcBean.getTaskDescription();
                     holder.both_side_list_image.setGravity(View.GONE);
                     holder.sender_side_list_image.setVisibility(View.GONE);

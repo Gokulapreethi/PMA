@@ -226,8 +226,8 @@ public class MyApp {
 		e.printStackTrace();
 	}
 
-		sipTpConfig.setPort(SIP_PORT+1);
-//		sipTpConfig.setPort(8444);
+//		sipTpConfig.setPort(SIP_PORT+1);
+		sipTpConfig.setPort(8444);
 		try {
 			ep.transportCreate(pjsip_transport_type_e.PJSIP_TRANSPORT_TLS,
 					sipTpConfig);

@@ -560,7 +560,8 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                     } else {
 //                        gettaskwebservicewithtimestamp();
                     }
-                    headerName.setText(projectBean.getTaskName());
+//                    headerName.setText(projectBean.getTaskName());
+                    headerName.setText("JobCodeNo :"+projectBean.getId() +"/n"+"ActivityCode :"+projectBean.getTaskId());
                     Log.i("taskConversation", "sendTemplate.setVisibility 5 ");
                     options.setClickable(false);
                     taskName = projectBean.getTaskName();
@@ -890,9 +891,10 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
             public void onClick(View v) {
                 String query = "select status from projectStatus where projectId='" + projectId + "' and userId='" + Appreference.loginuserdetails.getId() + "' and taskId= '" + webtaskId + "'";
                 int current_status = VideoCallDataBase.getDB(context).getCurrentStatus(query);
-                if (current_status== -1)
-                    travel_job.setEnabled(false);
-                else {
+                if (current_status== -1) {
+//                    travel_job.setEnabled(false);
+                    showToast("The Task has not yet started...");
+                } else {
                     travel_job.setEnabled(true);
                     showtravelTimePopup(v);
                 }
@@ -1477,7 +1479,7 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                                 jsonObject4.put("id", toUserId);
                                 jsonArray1.put(0, jsonObject4);
                                 jsonFSRObject.put("listUser", jsonArray1);
-                                Appreference.jsonRequestSender.OracleFSRReport(EnumJsonWebservicename.fieldServiceReport, jsonFSRObject, NewTaskConversation.this);
+//                                Appreference.jsonRequestSender.OracleFSRReport(EnumJsonWebservicename.fieldServiceReport, jsonFSRObject, NewTaskConversation.this);
 
                               /*  if (!isTaskName) {
                                     if (webtaskId != null) {
@@ -3652,7 +3654,7 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
         Log.i("desc123","inside getEnteredTravelTime ========>"+startTime+"==>"+EndTime);
         ActivityStartdate=startTime;
         ActivityEnddate=EndTime;
-        if(startTime!=null)
+        if(startTime!=null && !startTime.equalsIgnoreCase(""))
             sendStatus_webservice("7","","","travel");
         else
             sendStatus_webservice("9","","","travel");
@@ -3949,7 +3951,7 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
             popup.getMenu().getItem(5).setVisible(false);
             popup.getMenu().getItem(6).setVisible(false);
             Toast.makeText(getApplicationContext(), "Task has been Completed", Toast.LENGTH_SHORT).show();
-        } else if (current_status == 6) {
+        } else if (current_status == 8) {
             popup.getMenu().getItem(0).setVisible(false);
             popup.getMenu().getItem(1).setVisible(false);
             popup.getMenu().getItem(2).setVisible(false);
@@ -4398,6 +4400,12 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
             String dateTime = dateFormat.format(new Date());
             dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
             String dateforrow = dateFormat.format(new Date());
+
+            String StartDateUTC = "",EndDateUTC="";
+            if(ActivityStartdate!=null && !ActivityStartdate.equalsIgnoreCase(""))
+                StartDateUTC= dateFormat.format(ActivityStartdate);
+            if(ActivityEnddate!=null && !ActivityEnddate.equalsIgnoreCase(""))
+                EndDateUTC= dateFormat.format(ActivityEnddate);
             tasktime = dateTime;
             taskUTCtime = dateforrow;
             travel_date_details=null;
@@ -4423,10 +4431,14 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
 
 
             if (status.equalsIgnoreCase("7") || status.equalsIgnoreCase("9")) {
-                jsonObject.put("travelStartTime", ActivityStartdate);
+                try {
+                    if (ActivityStartdate != null && !ActivityStartdate.equalsIgnoreCase(""))
+                        jsonObject.put("travelStartTime", StartDateUTC);
+                    jsonObject.put("travelEndTime", EndDateUTC);
+
+
 //                jsonObject.put("activityStartTime", ActivityStartdate);
 //                jsonObject.put("activityEndTime", ActivityEnddate);
-                jsonObject.put("travelEndTime", ActivityEnddate);
 //                jsonObject.put("toTravelStartDateTime", TotravelStart);
 //                jsonObject.put("toTravelEndDateTime", ToTravelEnd);
 
@@ -4434,19 +4446,19 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
 //                taskDetailsBean.setToTravelEndTime(ToTravelEnd);
 //                taskDetailsBean.setTravelStartTime(FromTravelStart);
 //                taskDetailsBean.setTravelEndTime(FromTravelEnd);
-                taskDetailsBean.setTravelStartTime(ActivityStartdate);
-                taskDetailsBean.setTravelEndTime(ActivityEnddate);
-                travel_date_details = new ArrayList<>();
-                if (FromTravelStart != null) {
+                    taskDetailsBean.setTravelStartTime(ActivityStartdate);
+                    taskDetailsBean.setTravelEndTime(ActivityEnddate);
+                    travel_date_details = new ArrayList<>();
+               /* if (FromTravelStart != null) {
                     travel_date_details.add("travelStartTime : " + FromTravelStart);
-                }
-                if (ActivityStartdate != null) {
-                    travel_date_details.add("activityStartTime : " + ActivityStartdate);
-                }
-                if (ActivityEnddate != null) {
-                    travel_date_details.add("activityEndTime : " + ActivityEnddate);
-                }
-                if (FromTravelEnd != null) {
+                }*/
+                    if (ActivityStartdate != null && !ActivityStartdate.equalsIgnoreCase("")) {
+                        travel_date_details.add("StartTime : " + ActivityStartdate);
+                    }
+                    if (ActivityEnddate != null && !ActivityEnddate.equalsIgnoreCase("")) {
+                        travel_date_details.add("EndTime : " + ActivityEnddate);
+                    }
+               /* if (FromTravelEnd != null) {
                     travel_date_details.add("travelEndTime : " + FromTravelEnd);
                 }
                 if (TotravelStart != null) {
@@ -4454,8 +4466,10 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                 }
                 if (ToTravelEnd != null) {
                     travel_date_details.add("toTravelEndDateTime : " + ToTravelEnd);
+                }*/
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
-
             } else{
                 jsonObject.put("travelStartTime", taskUTCtime);
                 jsonObject.put("activityStartTime", "");
@@ -4490,8 +4504,13 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                 taskDetailsBean.setHMReading(HMReadingStatus);
             } else
                 jsonObject.put("hourMeterReading", "");
-            if (actiontakenStatus != null && actiontakenStatus.length() > 0)
+            if (actiontakenStatus != null && actiontakenStatus.length() > 0) {
                 taskDetailsBean.setActionTaken(actiontakenStatus);
+                jsonObject.put("actionTaken", actiontakenStatus);
+            }else
+                jsonObject.put("actionTaken", "");
+
+
 
             taskDetailsBean.setProjectStatus(status);
             taskDetailsBean.setTaskUTCDateTime(dateforrow);
@@ -4554,7 +4573,7 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                 taskDetailsBean.setTaskDescription(Appreference.loginuserdetails.getUsername() + " Left");
                 taskDetailsBean.setSubType("deassign");
             } else if (status.equalsIgnoreCase("7")) {
-                taskDetailsBean.setTaskDescription("Task Travel Details sent");
+                taskDetailsBean.setTaskDescription("Details sent");
             } else {
                 taskDetailsBean.setTaskDescription("Task is " + projectCurrentStatus);
             }
@@ -10155,6 +10174,8 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                                                  projectCurrentStatus = "restart";
                                              } else if (((String) jsonObject.get("result_text")).equalsIgnoreCase("task completed")) {
                                                  projectCurrentStatus = "completed";
+                                                 status_job.setVisibility(View.GONE);
+                                                 travel_job.setVisibility(View.GONE);
                                              } else if (((String) jsonObject.get("result_text")).equalsIgnoreCase("task deassign")) {
                                                  projectCurrentStatus = "DeAssign";
                                              }
@@ -10303,7 +10324,7 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                                              status_job.setVisibility(View.VISIBLE);
                                              travel_job.setVisibility(View.VISIBLE);
                                          }
-                                         sendMessage("Task Assigned to " + Appreference.loginuserdetails.getUsername(), null, "text", null, null, Utility.getSessionID(), null);
+                                         sendMessage("Task Assigned to " + Appreference.loginuserdetails.getUsername(), null, "assigntask", null, null, Utility.getSessionID(), null);
                                          refresh();
                                      } else if (WebServiceEnum_Response != null && WebServiceEnum_Response.equalsIgnoreCase(("taskNeedAssessmentReport"))) {
                                          Log.i("output123", "NewTaskConv taskNeedAssessmentReport  Responce Received" + server_Response_string);
@@ -11530,10 +11551,19 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                 headerName.setText("Me");
             }*/
 
+
                 if (projectBean.getTaskName() != null) {
-                    headerName.setText(projectBean.getTaskName());
+                    if(isProjectFromOracle)
+                    headerName.setText("JobCodeNo :"+projectId +"\n"+"ActivityCode :"+webtaskId);
+                    else
+                        headerName.setText(projectBean.getTaskName());
+
                 } else if (taskName != null) {
-                    headerName.setText(taskName);
+                    if(isProjectFromOracle)
+                        headerName.setText("JobCodeNo :"+projectId +"\n"+"ActivityCode :"+webtaskId);
+                    else
+                        headerName.setText(taskName);
+
                 } else {
                     headerName.setText("projectTask");
                 }

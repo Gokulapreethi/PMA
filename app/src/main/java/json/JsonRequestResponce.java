@@ -116,8 +116,8 @@ public class JsonRequestResponce extends Thread {
 //                        HttpPost httppost = new HttpPost("https://122.165.92.171:8443/kamailioWeb/" + obj.getEnumJsonWebservicename());
 //                        HttpPost httppost = new HttpPost("https://66.109.17.204/highMessage/" + obj.getEnumJsonWebservicename());//
 
-                          HttpPost httppost = new HttpPost("https://192.168.1.3:8443/ASE/" + obj.getEnumJsonWebservicename());
-//                          HttpPost httppost = new HttpPost("http://151.253.12.203/ASE/" + obj.getEnumJsonWebservicename());
+//                          HttpPost httppost = new HttpPost("https://192.168.1.3:8443/ASE/" + obj.getEnumJsonWebservicename());
+                          HttpPost httppost = new HttpPost("http://151.253.12.203/ASE/" + obj.getEnumJsonWebservicename());
 
 //                        HttpPost httppost = new HttpPost("https://66.109.17.204/highMessage/" + obj.getEnumJsonWebservicename());//
 //                        HttpPost httppost = new HttpPost("https://66.109.17.205/highMessage/" + obj.getEnumJsonWebservicename());//
@@ -192,7 +192,8 @@ public class JsonRequestResponce extends Thread {
                                     || obj.getEnumJsonWebservicename().toString().equalsIgnoreCase("customTagValueEntry")
                                     || obj.getEnumJsonWebservicename().toString().equalsIgnoreCase("saveCustomHeaderTagValue")
                                     || obj.getEnumJsonWebservicename().toString().equalsIgnoreCase("deleteCustomMasterValue")
-                                    || obj.getEnumJsonWebservicename().toString().equalsIgnoreCase("editCustomMasterValue")) {
+                                    || obj.getEnumJsonWebservicename().toString().equalsIgnoreCase("editCustomMasterValue")
+                                    || obj.getEnumJsonWebservicename().toString().equalsIgnoreCase("assignTask")) {
 
                                 Log.d("jsonwebservice", "Inside if    " +
                                         "" + obj.getEnumJsonWebservicename().toString());
@@ -721,9 +722,9 @@ public class JsonRequestResponce extends Thread {
 //                        GroupPercentageStatus.getInstance().cancelDialog();
                         break;
                     case assignTask:
-                        obj.setEmail(responseString);
+                        /*obj.setEmail(responseString);
                         obj.setFirstname("assignTask");
-                        inter.ResponceMethod(obj);
+                        inter.ResponceMethod(obj);*/
                         break;
                    case searchMedia:
                         obj.setEmail(responseString);

@@ -79,7 +79,7 @@
                     android:background="#FFFFFF"
                     android:gravity="left"
                     android:padding="7dp"
-                    android:text="Project ID"
+                    android:text="JobCodeNo"
                     android:singleLine="true"
                     android:textColor="@color/black"
                     android:textSize="15dp" />
@@ -116,7 +116,7 @@
                     android:background="#FFFFFF"
                     android:gravity="left"
                     android:padding="7dp"
-                    android:text="Task ID"
+                    android:text="ActivityCode"
                     android:singleLine="true"
                     android:textColor="@color/black"
                     android:textSize="15dp" />
