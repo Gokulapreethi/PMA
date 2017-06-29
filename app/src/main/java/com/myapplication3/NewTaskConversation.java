@@ -33,6 +33,7 @@ import android.os.CountDownTimer;
 import android.os.Environment;
 import android.os.Handler;
 import android.provider.MediaStore;
+import android.provider.OpenableColumns;
 import android.support.v7.widget.PopupMenu;
 import android.text.Editable;
 import android.text.TextUtils;
@@ -3888,11 +3889,18 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
         String query = "select status from projectStatus where projectId='" + projectId + "' and userId='" + Appreference.loginuserdetails.getId() + "' and taskId= '" + webtaskId + "'";
         int current_status = VideoCallDataBase.getDB(context).getCurrentStatus(query);
 
-        if (current_status == 7) {
-            String query123 = "select status from projectStatus where projectId='" + projectId + "' and userId='" + Appreference.loginuserdetails.getId() + "' and taskId= '" + webtaskId + "' order by id DESC LIMIT 2";
+        if (current_status == 7 ||current_status == 9) {
+            /*String query123 = "select status from projectStatus where projectId='" + projectId + "' and userId='" + Appreference.loginuserdetails.getId() + "' and taskId= '" + webtaskId + "' order by id DESC LIMIT 2";
             int last_beforeStatus = VideoCallDataBase.getDB(context).getCurrentStatus(query123);
             Log.i("output123", "project CurrentStatus from DB====>" + last_beforeStatus);
-            current_status = last_beforeStatus;
+            current_status = last_beforeStatus;*/
+            String status_info="select status from projectStatus where projectId='" + projectId + "' and userId='" + Appreference.loginuserdetails.getId() + "' and taskId= '" + webtaskId + "' and status!='7' and status!= '9' order by id DESC";
+            ArrayList<String> status_all = VideoCallDataBase.getDB(context).getAllCurrentStatus(status_info);
+            Log.i("output123", "project CurrentStatus from DB====>" + status_all.size());
+            if(status_all.size()>0) {
+                current_status = Integer.parseInt(status_all.get(0));
+                Log.i("output123", "project CurrentStatus from current_status " + current_status);
+            }
         }
         Log.i("ws123", "project CurrentStatus from DB====>" + current_status);
         if (current_status == -1)
@@ -3951,7 +3959,7 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
             popup.getMenu().getItem(5).setVisible(false);
             popup.getMenu().getItem(6).setVisible(false);
             Toast.makeText(getApplicationContext(), "Task has been Completed", Toast.LENGTH_SHORT).show();
-        } else if (current_status == 8) {
+        } else if (current_status ==6) {
             popup.getMenu().getItem(0).setVisible(false);
             popup.getMenu().getItem(1).setVisible(false);
             popup.getMenu().getItem(2).setVisible(false);
@@ -4125,7 +4133,7 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                             Intent i = new Intent(getApplicationContext(), DisplayList.class);
                             i.putExtra("projectId", projectId);
                             i.putExtra("webtaskId", webtaskId);
-                            i.putExtra("date_type", "activity_date");
+                            i.putExtra("date_type", "travel_start");
                             startActivity(i);
                         }
                     });
@@ -4166,7 +4174,7 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                         statusCompletedFieldValues.put(14, "Activity :" + detailsBean.getActivity());
                         address.setText(detailsBean.getAddress());
                         statusCompletedFieldValues.put(3, "Address :" + detailsBean.getAddress());
-                        description.setText(detailsBean.getTaskDescription());
+                        description.setText(taskName);
                         statusCompletedFieldValues.put(12, "Description :" + detailsBean.getTaskDescription());
                         signature_path.setVisibility(View.VISIBLE);
                         photo_path.setVisibility(View.VISIBLE);
@@ -4313,7 +4321,7 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                                 HMReadingStatus = "";
                             if (remarks_completion.getText().toString() != null && remarks_completion.getText().toString().length() > 0) {
                                 Toast.makeText(NewTaskConversation.this, "Send Successfully", Toast.LENGTH_SHORT).show();
-                                sendStatus_webservice("5", "", remarks_completion.getText().toString(), "Complete");
+                                sendStatus_webservice("5", "", remarks_completion.getText().toString(), "Completed");
                                 dialog.dismiss();
                             } else
                                 Toast.makeText(NewTaskConversation.this, "Please type Remarks", Toast.LENGTH_SHORT).show();
@@ -4397,15 +4405,28 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
             Log.i("desc123","inside 120  status ========>"+status);
 
             SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            SimpleDateFormat dateParse = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
             String dateTime = dateFormat.format(new Date());
             dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
             String dateforrow = dateFormat.format(new Date());
-
+            Date date=null;
+            Date date1=null;
             String StartDateUTC = "",EndDateUTC="";
             if(ActivityStartdate!=null && !ActivityStartdate.equalsIgnoreCase(""))
-                StartDateUTC= dateFormat.format(ActivityStartdate);
+                try {
+                    date=dateParse.parse(ActivityStartdate);
+                    StartDateUTC = dateFormat.format(date);
+                }catch (Exception e)
+                {
+                    e.printStackTrace();
+                }
             if(ActivityEnddate!=null && !ActivityEnddate.equalsIgnoreCase(""))
-                EndDateUTC= dateFormat.format(ActivityEnddate);
+                try {
+                    date1=dateParse.parse(ActivityEnddate);
+                    EndDateUTC= dateFormat.format(date1);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             tasktime = dateTime;
             taskUTCtime = dateforrow;
             travel_date_details=null;
@@ -4641,7 +4662,7 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                     e.printStackTrace();
                 }
             }
-            if (!isTaskName)
+           /* if (!isTaskName)
                 if (isProjectFromOracle)
                     VideoCallDataBase.getDB(context).update_Project_history(taskDetailsBean);
             for (int level = 0; level < status_list.size(); level++) {
@@ -4654,8 +4675,20 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-            }
+            }*/
             VideoCallDataBase.getDB(context).insertORupdateStatus(taskDetailsBean);
+
+            String query = "select * from projectStatus where projectId='" + projectId+ "' and userId='" + Appreference.loginuserdetails.getId() + "' and taskId= '" + webtaskId + "'";
+            TaskDetailsBean bean = VideoCallDataBase.getDB(context).getActivityTimeFromStatus(query);
+            if (bean != null) {
+             if (!ActivityEnddate.equalsIgnoreCase("")) {
+                 Log.i("output123","projectUpdate travel====>"+bean.getActivityStartTime());
+                 Log.i("output123","projectUpdate travel====>"+bean.getActivityEndTime());
+                    String queryUpdate = "update projectStatus set travelEndTime='" + ActivityEnddate + "' where projectId='" + projectId+ "' and userId='" + Appreference.loginuserdetails.getId() + "' and taskId= '" + webtaskId + "' and travelEndTime IS NULL";
+                 Log.i("output123","projectUpdate query "+queryUpdate);
+                    VideoCallDataBase.getDB(context).updateaccept(queryUpdate);
+                }
+            }
             Appreference.jsonRequestSender.taskStatus(EnumJsonWebservicename.taskStatus, jsonObject, status_list, taskDetailsBean, NewTaskConversation.this);
         } catch (JSONException e) {
             e.printStackTrace();
@@ -7903,130 +7936,151 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                         try {
                             Log.i("AAA", "New activity 33*************");
                             Uri selectedImageUri = data.getData();
-                            strIPath = getRealPathFromURI(selectedImageUri);
-                            mime_Type = "video";
-                            final String path = Environment.getExternalStorageDirectory() + "/High Message/" + getFileName() + ".mp4";
-                            Log.i("AAA", "New activity " + strIPath);
-                            strIPath = path;
-                            Log.i("AAA", "New activity " + strIPath);
-                            try {
-                                FileInputStream fin = (FileInputStream) getContentResolver().openInputStream(selectedImageUri);
-                                ByteArrayOutputStream straam = new ByteArrayOutputStream();
-                                byte[] content = new byte[1024];
-                                int bytesread;
-                                while ((bytesread = fin.read(content)) != -1) {
-                                    straam.write(content, 0, bytesread);
+                            String uri_path = selectedImageUri.getPath();
+                            Log.i("AAA", "uri_path :" + uri_path);
+                            File myFile = new File(selectedImageUri.getPath());
+                            Log.i("AAA", "2 uri_path :" + myFile.length());
+
+                            Cursor cursor = context.getContentResolver().query(selectedImageUri,
+                                    null, null, null, null);
+                            cursor.moveToFirst();
+                            long size = cursor.getLong(cursor.getColumnIndex(OpenableColumns.SIZE));
+                            cursor.close();
+
+                            long fileSize = (size / 1024) / 1024;
+
+                            Log.i("AAA", "2 uri_path size :" + (size / 1024) / 1024);
+                            Log.i("AAA", "New activity selectedImageUri: " + selectedImageUri);
+
+                            if (fileSize <=10) {
+                                strIPath = getRealPathFromURI(selectedImageUri);
+                                mime_Type = "video";
+                                final String path = Environment.getExternalStorageDirectory() + "/High Message/" + getFileName() + ".mp4";
+                                Log.i("AAA", "1 New activity strIPath : " + strIPath);
+                                strIPath = path;
+                                Log.i("AAA", "2 New activity strIPath :" + strIPath);
+                                try {
+                                    FileInputStream fin = (FileInputStream) getContentResolver().openInputStream(selectedImageUri);
+                                    ByteArrayOutputStream straam = new ByteArrayOutputStream();
+                                    byte[] content = new byte[1024];
+                                    int bytesread;
+                                    while ((bytesread = fin.read(content)) != -1) {
+                                        straam.write(content, 0, bytesread);
+                                    }
+                                    byte[] bytes = straam.toByteArray();
+                                    FileOutputStream fout = new FileOutputStream(strIPath);
+                                    straam.flush();
+                                    straam.close();
+                                    straam = null;
+                                    fin.close();
+                                    fin = null;
+                                    fout.write(bytes);
+                                    fout.flush();
+                                    fout.close();
+                                    fout = null;
+                                } catch (IOException e) {
+                                    e.printStackTrace();
                                 }
-                                byte[] bytes = straam.toByteArray();
-                                FileOutputStream fout = new FileOutputStream(strIPath);
-                                straam.flush();
-                                straam.close();
-                                straam = null;
-                                fin.close();
-                                fin = null;
-                                fout.write(bytes);
-                                fout.flush();
-                                fout.close();
-                                fout = null;
-                            } catch (IOException e) {
-                                e.printStackTrace();
-                            }
-                            File file = new File(strIPath);
+                                File file = new File(strIPath);
 // Get length of file in bytes
-                            long fileSizeInBytes = file.length();
+                                long fileSizeInBytes = file.length();
 // Convert the bytes to Kilobytes (1 KB = 1024 Bytes)
-                            long fileSizeInKB = fileSizeInBytes / 1024;
+                                long fileSizeInKB = fileSizeInBytes / 1024;
 // Convert the KB to MegaBytes (1 MB = 1024 KBytes)
-                            long fileSizeInMB = fileSizeInKB / 1024;
-                            Log.i("filesize", "Files size bytes--->" + fileSizeInBytes);
-                            Log.i("filesize", "Files size kb--->" + fileSizeInKB);
-                            Log.i("filesize", "Files size mb--->" + fileSizeInMB);
-                            if (fileSizeInMB < 10) {
-                                if (subType != null && subType.equalsIgnoreCase("private")) {
-                                    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-                                    String dateTime = dateFormat.format(new Date());
-                                    dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
-                                    String dateforrow = dateFormat.format(new Date());
-                                    tasktime = dateTime;
-                                    tasktime = tasktime.split(" ")[1];
-                                    Log.i("task", "tasktime" + tasktime);
-                                    Log.i("UTC", "sendMessage utc time" + dateforrow);
-                                    taskUTCtime = dateforrow;
-                                    final TaskDetailsBean chatBean = new TaskDetailsBean();
-                                    chatBean.setPrivate_Member(private_member);
-                                    chatBean.setFromUserId(String.valueOf(Appreference.loginuserdetails.getId()));
-                                    chatBean.setFromUserName(Appreference.loginuserdetails.getUsername());
-                                    chatBean.setSelect(false);
-                                    chatBean.setToUserName(toUserName);
-                                    chatBean.setToUserId(String.valueOf(toUserId));
-                                    if (isTaskName) {
-                                        taskName = "New Task";
-                                        Log.i("taskconversation", "headername  24 ");
-                                        chatBean.setTaskName(taskName);
-                                    } else {
-                                        chatBean.setTaskName(taskName);
-                                        Log.e("task", "taskname " + taskName);
-                                        Log.i("taskconversation", "headername  25 ");
-                                    }
-                                    chatBean.setTaskDescription(strIPath);
-                                    chatBean.setSignalid(Utility.getSessionID());
-                                    chatBean.setTaskNo(task_No);
-                                    if (!template && !note) {
-                                        chatBean.setCatagory(category);
-                                    }
-                                    chatBean.setIssueId(issueId);
-                                    chatBean.setParentId(getFileName());
-                                    chatBean.setTaskType(taskType);
-                                    chatBean.setTaskPriority("Medium");
-                                    chatBean.setIsRemainderRequired("");
-                                    chatBean.setCompletedPercentage(percentage);
-                                    chatBean.setPlannedStartDateTime("");
-                                    chatBean.setPlannedEndDateTime("");
-                                    chatBean.setRemainderFrequency("");
-                                    chatBean.setTaskUTCDateTime(dateforrow);
-                                    chatBean.setDateTime(dateTime);
-                                    chatBean.setTaskReceiver(taskReceiver);
-                                    chatBean.setTasktime(tasktime);
-                                    chatBean.setTaskUTCTime(taskUTCtime);
-                                    chatBean.setMimeType("video");
-                                    chatBean.setTaskId(webtaskId);
-                                    chatBean.setOwnerOfTask(ownerOfTask);
-                                    chatBean.setCustomTagVisible(true);
-                                    chatBean.setTaskStatus(taskStatus);
-                                    chatBean.setSendStatus("0");
-                                    chatBean.setMsg_status(0);
-                                    chatBean.setShow_progress(0);
-                                    chatBean.setSubType(subType);
-                                    if (project) {
-                                        chatBean.setProjectId(projectId);
-                                        if (projectGroup_Mems != null) {
-                                            chatBean.setGroupTaskMembers(projectGroup_Mems);
-                                        }
-                                    }
-                                    if (!isTaskName) {
-                                        if (project) {
-                                            VideoCallDataBase.getDB(context).update_Project_history(chatBean);
+                                long fileSizeInMB = fileSizeInKB / 1024;
+                                Log.i("filesize", "Files size bytes--->" + fileSizeInBytes);
+                                Log.i("filesize", "Files size kb--->" + fileSizeInKB);
+                                Log.i("filesize", "Files size mb--->" + fileSizeInMB);
+                                if (fileSizeInMB < 10) {
+                                    if (subType != null && subType.equalsIgnoreCase("private")) {
+                                        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                                        String dateTime = dateFormat.format(new Date());
+                                        dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
+                                        String dateforrow = dateFormat.format(new Date());
+                                        tasktime = dateTime;
+                                        tasktime = tasktime.split(" ")[1];
+                                        Log.i("task", "tasktime" + tasktime);
+                                        Log.i("UTC", "sendMessage utc time" + dateforrow);
+                                        taskUTCtime = dateforrow;
+                                        final TaskDetailsBean chatBean = new TaskDetailsBean();
+                                        chatBean.setPrivate_Member(private_member);
+                                        chatBean.setFromUserId(String.valueOf(Appreference.loginuserdetails.getId()));
+                                        chatBean.setFromUserName(Appreference.loginuserdetails.getUsername());
+                                        chatBean.setSelect(false);
+                                        chatBean.setToUserName(toUserName);
+                                        chatBean.setToUserId(String.valueOf(toUserId));
+                                        if (isTaskName) {
+                                            taskName = "New Task";
+                                            Log.i("taskconversation", "headername  24 ");
+                                            chatBean.setTaskName(taskName);
                                         } else {
-                                            dataBase.insertORupdate_TaskHistoryInfo(chatBean);
+                                            chatBean.setTaskName(taskName);
+                                            Log.e("task", "taskname " + taskName);
+                                            Log.i("taskconversation", "headername  25 ");
                                         }
-                                        Log.i("taskconversation", "CusTome ---->>><<< 11 ");
-                                        dataBase.insertORupdate_Task_history(chatBean);
+                                        chatBean.setTaskDescription(strIPath);
+                                        chatBean.setSignalid(Utility.getSessionID());
+                                        chatBean.setTaskNo(task_No);
+                                        if (!template && !note) {
+                                            chatBean.setCatagory(category);
+                                        }
+                                        chatBean.setIssueId(issueId);
+                                        chatBean.setParentId(getFileName());
+                                        chatBean.setTaskType(taskType);
+                                        chatBean.setTaskPriority("Medium");
+                                        chatBean.setIsRemainderRequired("");
+                                        chatBean.setCompletedPercentage(percentage);
+                                        chatBean.setPlannedStartDateTime("");
+                                        chatBean.setPlannedEndDateTime("");
+                                        chatBean.setRemainderFrequency("");
+                                        chatBean.setTaskUTCDateTime(dateforrow);
+                                        chatBean.setDateTime(dateTime);
+                                        chatBean.setTaskReceiver(taskReceiver);
+                                        chatBean.setTasktime(tasktime);
+                                        chatBean.setTaskUTCTime(taskUTCtime);
+                                        chatBean.setMimeType("video");
+                                        chatBean.setTaskId(webtaskId);
+                                        chatBean.setOwnerOfTask(ownerOfTask);
+                                        chatBean.setCustomTagVisible(true);
+                                        chatBean.setTaskStatus(taskStatus);
+                                        chatBean.setSendStatus("0");
+                                        chatBean.setMsg_status(0);
+                                        chatBean.setShow_progress(0);
+                                        chatBean.setSubType(subType);
+                                        if (project) {
+                                            chatBean.setProjectId(projectId);
+                                            if (projectGroup_Mems != null) {
+                                                chatBean.setGroupTaskMembers(projectGroup_Mems);
+                                            }
+                                        }
+                                        if (!isTaskName) {
+                                            if (project) {
+                                                VideoCallDataBase.getDB(context).update_Project_history(chatBean);
+                                            } else {
+                                                dataBase.insertORupdate_TaskHistoryInfo(chatBean);
+                                            }
+                                            Log.i("taskconversation", "CusTome ---->>><<< 11 ");
+                                            dataBase.insertORupdate_Task_history(chatBean);
 //                                        dataBase.insertORupdate_TaskHistoryInfo(chatBean);
-                                        if (chatBean.isCustomTagVisible()) {
-                                            taskList.add(chatBean);
+                                            if (chatBean.isCustomTagVisible()) {
+                                                taskList.add(chatBean);
+                                            }
+                                            sortTaskMessage();
+                                            refresh();
+                                            refreshListViewCache();
                                         }
-                                        sortTaskMessage();
-                                        refresh();
+                                        listLastposition();
+                                        PrivateMultifileUpload_Webservice(chatBean);
+                                    } else {
+                                        firstmmfile(mime_Type, "mp4");
                                         refreshListViewCache();
                                     }
-                                    listLastposition();
-                                    PrivateMultifileUpload_Webservice(chatBean);
                                 } else {
-                                    firstmmfile(mime_Type, "mp4");
-                                    refreshListViewCache();
+                                    showToast("Video File is Large,cannot send this video");
                                 }
+
                             } else {
-                                showToast("Pick less than 10 MB Video");
+                                showToast("Video File is Large,cannot send this video");
                             }
                         } catch (Exception e) {
                             e.printStackTrace();
@@ -9942,15 +9996,20 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
             String[] proj = {MediaStore.Images.Media.DATA};
             Cursor cursor = context.getContentResolver().query(contentUri,
                     proj, null, null, null);
+
             int column_index = cursor
                     .getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
-            cursor.moveToFirst();
+//            cursor.moveToFirst();
+//            Log.i("profile", "===> inside cursor.getString(column_index) : "+cursor.getString(column_index));
             return cursor.getString(column_index);
         } catch (IllegalArgumentException e) {
             // TODO Auto-generated catch block
             Log.e("profile", "====> " + e.getMessage());
             e.printStackTrace();
             Appreference.printLog("NewTaskConversation", "getRealPathFromURI Exception " + e.getMessage(), "WARN", null);
+            return null;
+        } catch (Exception e) {
+            e.printStackTrace();
             return null;
         }
 
@@ -10173,7 +10232,7 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                                              } else if (((String) jsonObject.get("result_text")).equalsIgnoreCase("task restart")) {
                                                  projectCurrentStatus = "restart";
                                              } else if (((String) jsonObject.get("result_text")).equalsIgnoreCase("task completed")) {
-                                                 projectCurrentStatus = "completed";
+                                                 projectCurrentStatus = "Completed";
                                                  status_job.setVisibility(View.GONE);
                                                  travel_job.setVisibility(View.GONE);
                                              } else if (((String) jsonObject.get("result_text")).equalsIgnoreCase("task deassign")) {
@@ -10184,7 +10243,7 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
 
 //                                             final TaskDetailsBean finalDetailsBean = (TaskDetailsBean) detailsBean.clone();
 
-                                             if (projectCurrentStatus!=null && projectCurrentStatus.equalsIgnoreCase("completed")) {
+                                        /*     if (projectCurrentStatus!=null && projectCurrentStatus.equalsIgnoreCase("completed")) {
                                                  final ArrayList<TaskDetailsBean> stausMediaPath = communicationBean.getGetStatusListForMedia();
                                                  int sec = 0;
                                                  for (int path = 0; path < stausMediaPath.size(); path++) {
@@ -10221,8 +10280,7 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                                                          }
                                                      }, sec);
                                                  }
-
-                                             } else {
+                                             } else {*/
                                                  detailsBean.setMimeType("text");
                                                  detailsBean.setCustomTagVisible(true);
                                                  final String xml = composeChatXML(detailsBean);
@@ -10232,13 +10290,16 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                                                          sendMultiInstantMessage(xml, listOfObservers, 1);
                                                      }
                                                  });
-                                                 taskList.add(detailsBean);
-                                             }
+//                                                 taskList.add(detailsBean);
+                                                 PercentageWebService("text",detailsBean.getTaskDescription(),"",detailsBean.getSignalid(),0);
+//                                             }
 
 
                                              Log.i("responce", "travel_endDate " + travel_endDate + " Remarks==> " + detailsBean.getCustomerRemarks());
-                                             if (detailsBean.getCustomerRemarks() != null) {
-                                                 sendMessage(detailsBean.getCustomerRemarks(), null, "text", null, null, Utility.getSessionID(), null);
+                                             if (detailsBean.getCustomerRemarks() != null && !detailsBean.getCustomerRemarks().equalsIgnoreCase("") && !detailsBean.getCustomerRemarks().equalsIgnoreCase("null")) {
+//                                                 sendMessage(detailsBean.getCustomerRemarks(), null, "text", null, null, Utility.getSessionID(), null);
+                                                 PercentageWebService("text",detailsBean.getCustomerRemarks(),"",Utility.getSessionID(),0);
+
                                              }
                                              if (travel_date_details!=null && travel_date_details.size() > 0) {
                                                  int sec = 0;

@@ -20,13 +20,12 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.TimeZone;
 
 public class CustomTravelPickerActivity extends Activity {
 
     private Context context;
     String taskNameshow, projectIDshow, taskIDshow;
-    String StartDate, EndDate;
+    String StartDate, EndDate="";
     boolean isTravel = false;
     boolean isStartEndFilled = false;
     boolean isStartOnlyFilled = false;
@@ -65,10 +64,12 @@ public class CustomTravelPickerActivity extends Activity {
         project_name.setText(taskNameshow);
         String query = "select * from projectStatus where projectId='" + projectIDshow + "' and userId='" + Appreference.loginuserdetails.getId() + "' and taskId= '" + taskIDshow + "'";
         TaskDetailsBean bean = VideoCallDataBase.getDB(context).getActivityTimeFromStatus(query);
+        Log.i("travel123","Travel Details"+bean.getActivityStartTime() +""+bean.getActivityEndTime());
         if (bean != null) {
-            if (bean.getActivityStartTime() != null && bean.getActivityEndTime() != null) {
+            if (bean.getActivityStartTime() != null  && !bean.getActivityStartTime().equalsIgnoreCase("")
+                    && bean.getActivityEndTime() != null && !bean.getActivityEndTime().equalsIgnoreCase("")) {
                 isStartEndFilled = true;
-            } else if (bean.getActivityStartTime() != null && bean.getActivityEndTime() == null) {
+            } else if (bean.getActivityStartTime() != null) {
                 isStartOnlyFilled = true;
                 StartDate = bean.getActivityStartTime();
                 travel_start.setText(bean.getActivityStartTime());
@@ -90,14 +91,13 @@ public class CustomTravelPickerActivity extends Activity {
                             String outputPattern = "yyyy-MM-dd HH:mm:ss";
                             SimpleDateFormat inputFormat = new SimpleDateFormat(inputPattern);
                             SimpleDateFormat outputFormat = new SimpleDateFormat(outputPattern);
-                            SimpleDateFormat outputFormatUI = new SimpleDateFormat(outputPattern);
-                            outputFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
+//                            outputFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
                             Date date123 = null;
                             String str = null;
 
                             try {
                                 date123 = inputFormat.parse(dateDesc);
-                                str = outputFormatUI.format(date123);
+                                str = outputFormat.format(date123);
                             } catch (ParseException e) {
                                 e.printStackTrace();
                             }
@@ -142,15 +142,14 @@ public class CustomTravelPickerActivity extends Activity {
                             String outputPattern = "yyyy-MM-dd HH:mm:ss";
                             SimpleDateFormat inputFormat = new SimpleDateFormat(inputPattern);
                             SimpleDateFormat outputFormat = new SimpleDateFormat(outputPattern);
-                            SimpleDateFormat outputFormatUI = new SimpleDateFormat(outputPattern);
-                            outputFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
+//                            outputFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
 
                             Date date123 = null;
                             String str = null;
 
                             try {
                                 date123 = inputFormat.parse(dateDesc);
-                                str = outputFormatUI.format(date123);
+                                str = outputFormat.format(date123);
                             } catch (ParseException e) {
                                 e.printStackTrace();
                             }

@@ -1108,8 +1108,8 @@ public class ProjectsFragment extends Fragment implements WebServiceInterface {
                             Log.i("output123", "projectFragment fieldServiceReportJobWise  Responce Received" + s1);
                             final JSONObject jsonObject = new JSONObject(opr.getEmail());
                             if (((String) jsonObject.get("result_text")).equalsIgnoreCase("Field_servicce_report job successed")) {
-                                Log.i("output123", " Filename" + jsonObject.getString("File Name"));
-                                String pdfURL = getResources().getString(R.string.task_reminder) + jsonObject.getString("File Name");
+                                Log.i("output123", " Filename" + jsonObject.getString("filename"));
+                                String pdfURL = getResources().getString(R.string.task_reminder) + jsonObject.getString("filename");
                                 Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(pdfURL));
                                 startActivity(browserIntent);
                                 /*Intent intent = new Intent(getActivity(), WebViewActivity.class);

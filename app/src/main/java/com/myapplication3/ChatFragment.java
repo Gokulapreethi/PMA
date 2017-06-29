@@ -421,6 +421,12 @@ public class ChatFragment extends Fragment {
             Log.i("chat", "chatFragment " + MainActivity.username);
             Log.i("chat", "chatFragment " + Appreference.loginuserdetails.getUsername());
             Log.i("chat", "chatFragment " + Appreference.is_chat);
+        }else {
+            listView.setVisibility(View.GONE);
+            listView_call.setVisibility(View.VISIBLE);
+            call_list = VideoCallDataBase.getDB(getContext()).getCallHistoty(Appreference.loginuserdetails.getUsername());
+            adapter1 = new CallAdapter(getContext(), call_list);
+            listView_call.setAdapter(adapter1);
         }
     }
 

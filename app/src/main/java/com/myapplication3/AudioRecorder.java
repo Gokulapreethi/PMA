@@ -23,8 +23,6 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import org.json.JSONObject;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -54,7 +52,7 @@ public class AudioRecorder extends Activity implements WebServiceInterface {
     private Handler handlerSeek = new Handler();
     private MediaRecorder myAudioRecorder;
     private AudioRecord recorder = null;
-    boolean isRecording = false, isPlaying = false;
+    boolean isRecording = false, isPlaying = false,isPause;
     private int bufferSize = 0;
     private String outputFile = null;
     private static final String AUDIO_RECORDER_TEMP_FILE = "record_temp.mp3";
@@ -80,11 +78,16 @@ public class AudioRecorder extends Activity implements WebServiceInterface {
     }
 
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.audio_record_activity);
+        Appreference.context_table.put("audiorecorder", this);
+//        Typeface roboto_regular = Typeface.createFromAsset(getAssets(), "roboto.regular.ttf");
+//        Typeface roboto_medium = Typeface.createFromAsset(getAssets(), "roboto.medium.ttf");
+//        Typeface roboto_bold = Typeface.createFromAsset(getAssets(), "roboto.bold.ttf");
         heading = (TextView) findViewById(R.id.txtView01);
         cancel = (Button) findViewById(R.id.cancel);
         submit = (Button) findViewById(R.id.submit);
@@ -93,7 +96,7 @@ public class AudioRecorder extends Activity implements WebServiceInterface {
 //        rc_stop=(ImageButton)findViewById(R.id.btn_stop);
         audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
 //        send=(ImageButton)findViewById(R.id.)
-
+//        heading.setTypeface(roboto_medium);
         bufferSize = AudioRecord.getMinBufferSize(44100, AudioFormat.CHANNEL_IN_STEREO, AudioFormat.ENCODING_PCM_16BIT);
         progress = (SeekBar) findViewById(R.id.audio_seekbar);
 
@@ -152,46 +155,49 @@ public class AudioRecorder extends Activity implements WebServiceInterface {
                         mRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AAC);
                         if (isdateset == true) {
                             mRecorder.setMaxDuration(10000);
-                            mRecorder.setOnInfoListener(new MediaRecorder.OnInfoListener() {
+                        } else {
+                            mRecorder.setMaxDuration(60000);
+                        }
+                        mRecorder.setOnInfoListener(new MediaRecorder.OnInfoListener() {
 
-                                @Override
-                                public void onInfo(MediaRecorder mr, int what, int extra) {
-                                    // TODO Auto-generated method stub
-                                    if (what == MediaRecorder.MEDIA_RECORDER_INFO_MAX_DURATION_REACHED) {
-                                        // mr.stop();
-                                        cm.stop();
-                                        Toast.makeText(getApplicationContext(),
-                                                "Duration limit reached", Toast.LENGTH_LONG)
-                                                .show();
-                                        mRecorder.stop();
-                                        mRecorder.release();
-                                        mRecorder = null;
-                                        record.setVisibility(View.GONE);
-                                        play.setVisibility(View.VISIBLE);
-                                        progress.setVisibility(View.VISIBLE);
-                                        submit.setVisibility(View.VISIBLE);
-                                        submit.setText("save");
+                            @Override
+                            public void onInfo(MediaRecorder mr, int what, int extra) {
+                                // TODO Auto-generated method stub
+                                if (what == MediaRecorder.MEDIA_RECORDER_INFO_MAX_DURATION_REACHED) {
+                                    // mr.stop();
+                                    cm.stop();
+                                    Toast.makeText(getApplicationContext(),
+                                            "Duration limit reached", Toast.LENGTH_LONG)
+                                            .show();
+                                    mRecorder.stop();
+                                    mRecorder.release();
+                                    mRecorder = null;
+                                    record.setVisibility(View.GONE);
+                                    play.setVisibility(View.VISIBLE);
+                                    progress.setVisibility(View.VISIBLE);
+                                    submit.setVisibility(View.VISIBLE);
+                                    submit.setText("save");
 //                                        save_audio.setVisibility(View.VISIBLE);
-                                        isRecording = false;
-                                        if (cm != null) {
-                                            cm.stop();
-                                        }
-                                        try {
-                                            m.setDataSource(outputFile);
-                                            m.setLooping(false);
-                                            m.prepare();
-                                        } catch (IOException e) {
-                                            e.printStackTrace();
-                                            Appreference.printLog("AudioRecorder Oncreate","Exception "+e.getMessage(),"WARN",null);
-                                        }
+                                    isRecording = false;
+                                    if (cm != null) {
+                                        cm.stop();
+                                    }
+                                    try {
+                                        m.setDataSource(outputFile);
+                                        m.setLooping(false);
+                                        m.prepare();
+                                    } catch (IOException e) {
+                                        e.printStackTrace();
+                                        Appreference.printLog("AudioRecorder Oncreate", "Exception " + e.getMessage(), "WARN", null);
                                     }
                                 }
-                            });
-                        }
+                            }
+                        });
+
                     }
                 } catch (IllegalStateException e) {
                     e.printStackTrace();
-                    Appreference.printLog("AudioRecorder Oncreate","Exception "+e.getMessage(),"WARN",null);
+                    Appreference.printLog("AudioRecorder Oncreate", "Exception " + e.getMessage(), "WARN", null);
                 }
                 try {
                     mRecorder.prepare();
@@ -203,7 +209,7 @@ public class AudioRecorder extends Activity implements WebServiceInterface {
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
-                    Appreference.printLog("AudioRecorder Oncreate","Exception "+e.getMessage(),"WARN",null);
+                    Appreference.printLog("AudioRecorder Oncreate", "Exception " + e.getMessage(), "WARN", null);
                 }
             }
         } else {
@@ -241,6 +247,7 @@ public class AudioRecorder extends Activity implements WebServiceInterface {
                     m.stop();
                 }
                 finish();
+//                overridePendingTransition(R.anim.slide_in_down, R.anim.slide_out_down);
             }
         });
         submit.setOnClickListener(new View.OnClickListener() {
@@ -261,9 +268,12 @@ public class AudioRecorder extends Activity implements WebServiceInterface {
                         m = null;
                         Log.i("audio", "relesed");
                         finish();
+//                        overridePendingTransition(R.anim.slide_in_down, R.anim.slide_out_down);
                     }
-                }catch (Exception e){e.printStackTrace();
-                    Appreference.printLog("AudioRecorder Submit.setOnClickListener","Exception "+e.getMessage(),"WARN",null);}
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    Appreference.printLog("AudioRecorder Submit.setOnClickListener", "Exception " + e.getMessage(), "WARN", null);
+                }
             }
         });
 
@@ -411,8 +421,8 @@ public class AudioRecorder extends Activity implements WebServiceInterface {
                     Log.i("valueof", "2 intvalue setOnCompletionListener");
                     if (m != null) {
                         m.reset();
-                            m.setDataSource(outputFile);
-                            m.prepare();
+                        m.setDataSource(outputFile);
+                        m.prepare();
 
                     }
 
@@ -423,11 +433,11 @@ public class AudioRecorder extends Activity implements WebServiceInterface {
                     cm.setText(hms);
                 } catch (IOException e) {
                     e.printStackTrace();
-                    Appreference.printLog("AudioRecorder m.setOncompletionListener","Exception "+e.getMessage(),"WARN",null);
+                    Appreference.printLog("AudioRecorder m.setOncompletionListener", "Exception " + e.getMessage(), "WARN", null);
                 } catch (Exception e) {
                     // TODO Auto-generated catch block
                     e.printStackTrace();
-                    Appreference.printLog("AudioRecorder m.setOnCompletionListener","Exception "+e.getMessage(),"WARN",null);
+                    Appreference.printLog("AudioRecorder m.setOnCompletionListener", "Exception " + e.getMessage(), "WARN", null);
                 }
             }
         });
@@ -458,9 +468,21 @@ public class AudioRecorder extends Activity implements WebServiceInterface {
 //                            }
                         m.setLooping(false);
                         m.prepare();
+                        if (outputFile != null) {
+                            isPlayCompleted = false;
+                            Log.d("audio", "outputFile " + outputFile);
+                            Appreference.printLog("pstnrecord", "record playing", "DEBUG", null);
+                            finalTime = m.getDuration();
+                            startTime = m.getCurrentPosition();
+                            Log.d("audio", "startTime " + startTime);
+                            Log.d("audio", "finalTime " + finalTime);
+                            progress.setProgress((int) startTime);
+                            progress.setMax((int) finalTime);
+                            startPlayProgressUpdater();
+                        }
                     } catch (IOException e) {
                         e.printStackTrace();
-                        Appreference.printLog("AudioRecorder record.setOnClickListener","Exception "+e.getMessage(),"WARN",null);
+                        Appreference.printLog("AudioRecorder record.setOnClickListener", "Exception " + e.getMessage(), "WARN", null);
                     }
                 }
             }
@@ -479,9 +501,11 @@ public class AudioRecorder extends Activity implements WebServiceInterface {
                         Appreference.printLog("pstnrecord", "record playing", "DEBUG", null);
                         finalTime = m.getDuration();
                         startTime = m.getCurrentPosition();
+                        Log.d("audio", "startTime " + startTime);
+                        Log.d("audio", "finalTime " + finalTime);
                         progress.setProgress((int) startTime);
                         progress.setMax((int) finalTime);
-//                            startPlayProgressUpdater();
+                            startPlayProgressUpdater();
                         if (!m.isPlaying()) {
                             Toast.makeText(getApplicationContext(), "Playing sound", Toast.LENGTH_SHORT).show();
                             int currentPosition = (progress.getProgress());
@@ -514,22 +538,68 @@ public class AudioRecorder extends Activity implements WebServiceInterface {
                 } catch (Exception e) {
 //                    Appreference.printLog(null, e.getMessage(), null, e);
                     e.printStackTrace();
-                    Appreference.printLog("AudioRecorder play.setOnClickListener","Exception "+e.getMessage(),"WARN",null);
+                    Appreference.printLog("AudioRecorder play.setOnClickListener", "Exception " + e.getMessage(), "WARN", null);
                 }
 //                Toast.makeText(getApplicationContext(), "Playing audio", Toast.LENGTH_LONG).show();
             }
         });
-
     }
 
+    @Override
+    protected void onPause() {
+        super.onPause();
+        try {
+            myHandler.post(new Runnable() {
+                @Override
+                public void run() {
+                    if (isRecording) {
+                        stopRecording();
+                        isRecording = false;
+                        record.setBackgroundResource(R.drawable.record_blue);
+                        record.setVisibility(View.GONE);
+                        play.setVisibility(View.VISIBLE);
+                        if (isdateset) {
+                            submit.setText("save");
+                        }
+                        progress.setVisibility(View.VISIBLE);
+                        submit.setVisibility(View.VISIBLE);
+//                    save_audio.setVisibility(View.VISIBLE);
+
+                        if (cm != null) {
+                            cm.stop();
+                        }
+                        try {
+                            m.setDataSource(outputFile);
+//                            }
+                            m.setLooping(false);
+                            m.prepare();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                            Appreference.printLog("AudioRecorder record.setOnClickListener", "Exception " + e.getMessage(), "WARN", null);
+                        }
+                        Log.i("AudioRecorder", "Recording stopped");
+                    }
+                }
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        if(isPause){
+            cm.start();
+        }
+    }
 
     private Runnable UpdateSongTime = new Runnable() {
         public void run() {
 
             if (m != null) {
-                if (isPlayCompleted) {
-
-                } else {
+                if (!isPlayCompleted) {
                     startTime = m.getCurrentPosition();
                     String hms = String.format("%02d:%02d",
                             TimeUnit.MILLISECONDS.toMinutes((long) startTime) - TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours((long) startTime)),
@@ -552,7 +622,7 @@ public class AudioRecorder extends Activity implements WebServiceInterface {
         } catch (Exception e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
-            Appreference.printLog("AudioRecorder getFileNameinAudio","Exception "+e.getMessage(),"WARN",null);
+            Appreference.printLog("AudioRecorder getFileNameinAudio", "Exception " + e.getMessage(), "WARN", null);
         }
         return strFilename;
     }
@@ -570,7 +640,7 @@ public class AudioRecorder extends Activity implements WebServiceInterface {
                                 startPlayProgressUpdater();
                             } catch (Exception e) {
                                 e.printStackTrace();
-                                Appreference.printLog("AudioRecorder startPlayProgressUpdater","Exception "+e.getMessage(),"WARN",null);
+                                Appreference.printLog("AudioRecorder startPlayProgressUpdater", "Exception " + e.getMessage(), "WARN", null);
                             }
                         }
                     };
@@ -608,7 +678,7 @@ public class AudioRecorder extends Activity implements WebServiceInterface {
         } catch (Exception e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
-            Appreference.printLog("AudioRecorder startPlayProgressUpdater","Exception "+e.getMessage(),"WARN",null);
+            Appreference.printLog("AudioRecorder startPlayProgressUpdater", "Exception " + e.getMessage(), "WARN", null);
         }
     }
 
@@ -639,7 +709,7 @@ public class AudioRecorder extends Activity implements WebServiceInterface {
 
         } catch (IOException e) {
             e.printStackTrace();
-            Appreference.printLog("AudioRecorder encodeAudioVideoToBase64","Exception "+e.getMessage(),"WARN",null);
+            Appreference.printLog("AudioRecorder encodeAudioVideoToBase64", "Exception " + e.getMessage(), "WARN", null);
         }
 
         return strFile;
@@ -657,12 +727,48 @@ public class AudioRecorder extends Activity implements WebServiceInterface {
         } catch (IllegalStateException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
-            Appreference.printLog("AudioRecorder StopRecording","Exception "+e.getMessage(),"WARN",null);
-        } finally {
-
+            Appreference.printLog("AudioRecorder StopRecording", "Exception " + e.getMessage(), "WARN", null);
         }
     }
 
+    public void stopRecordingWhileCall() {
+        try {
+            myHandler.post(new Runnable() {
+                @Override
+                public void run() {
+                    if (isRecording) {
+                        stopRecording();
+                        isRecording = false;
+                        record.setBackgroundResource(R.drawable.record_blue);
+                        record.setVisibility(View.GONE);
+                        play.setVisibility(View.VISIBLE);
+                        if (isdateset) {
+                            submit.setText("save");
+                        }
+                        progress.setVisibility(View.VISIBLE);
+                        submit.setVisibility(View.VISIBLE);
+//                    save_audio.setVisibility(View.VISIBLE);
+
+                        if (cm != null) {
+                            cm.stop();
+                        }
+                        try {
+                            m.setDataSource(outputFile);
+//                            }
+                            m.setLooping(false);
+                            m.prepare();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                            Appreference.printLog("AudioRecorder record.setOnClickListener", "Exception " + e.getMessage(), "WARN", null);
+                        }
+                        Log.i("AudioRecorder", "Recording stopped");
+                    }
+                }
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
     @Override
     public void ResponceMethod(final Object object) {
@@ -676,33 +782,8 @@ public class AudioRecorder extends Activity implements WebServiceInterface {
 
     public void notifypostEntryResponse(final String values) {
         Log.i("postEntry", "NewTaskactivity  notifypostEntryResponse method");
-//        cancelDialog();
-//        Appreference.webview_refresh = true;
         finish();
-
-       /* if(Appreference.context_table.containsKey("contactsfragment")){
-            ContactsFragment contactsFragment=(ContactsFragment)Appreference.context_table.get("contactsfragment");
-            contactsFragment.replaceTaskFragment();
-        }*/
-        try {
-            JSONObject json = new JSONObject(values);
-           /* if(values.contains("result_code")) {
-                int resultCode = json.getInt("result_code");
-                final String text = json.getString("result_text");
-                *//*handler.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        showToast(text);
-                    }
-                });*//*
-            }else
-                showToast("Task failed");
-                }
-        }*/
-        } catch (Exception e) {
-            e.printStackTrace();
-            Appreference.printLog("AudioRecorder notifypostEntryResponse","Exception "+e.getMessage(),"WARN",null);
-        }
+//        overridePendingTransition(R.anim.slide_in_down, R.anim.slide_out_down);
     }
 
     private class PlaybackUpdater implements Runnable {
@@ -752,6 +833,7 @@ public class AudioRecorder extends Activity implements WebServiceInterface {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        Appreference.context_table.remove("audiorecorder");
         if (isdateset) {
             if (m != null && m.isPlaying())
                 m.reset();

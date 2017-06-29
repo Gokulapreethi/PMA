@@ -1,5 +1,6 @@
 package com.myapplication3;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
@@ -207,8 +208,7 @@ public class CustomVideoCamera extends Activity {
 
     public static byte[] decrypt(String seed, byte[] encrypted) throws Exception {
         byte[] rawKey = seed.getBytes();// getRawKey(seed.getBytes());
-        byte[] result = decrypt(rawKey, encrypted);
-        return result;
+        return decrypt(rawKey, encrypted);
     }
 
     private static byte[] decrypt(byte[] raw, byte[] encrypted) throws Exception {
@@ -216,8 +216,7 @@ public class CustomVideoCamera extends Activity {
         IvParameterSpec ivParameterSpec = new IvParameterSpec(raw);
         Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
         cipher.init(Cipher.DECRYPT_MODE, skeySpec, ivParameterSpec);
-        byte[] decrypted = cipher.doFinal(encrypted);
-        return decrypted;
+        return cipher.doFinal(encrypted);
     }
 
     @Override
@@ -236,7 +235,7 @@ public class CustomVideoCamera extends Activity {
             isPhoto = getIntent().getBooleanExtra("isPhoto", false);
         } catch (Exception e) {
             e.printStackTrace();
-            Appreference.printLog("CustomVideoCamera oncreate","Exception "+e.getMessage(),"WARN",null);
+            Appreference.printLog("CustomVideoCamera oncreate", "Exception " + e.getMessage(), "WARN", null);
             Log.i("camera", "error" + filepath);
             Log.i("camera", "error" + isPhoto);
             isPhoto = true;
@@ -420,7 +419,7 @@ public class CustomVideoCamera extends Activity {
 
                             } catch (Exception e) {
                                 e.printStackTrace();
-                                Appreference.printLog("CustomVideoCamera usePhoto.setOnClickListener","Exception "+e.getMessage(),"WARN",null);
+                                Appreference.printLog("CustomVideoCamera usePhoto.setOnClickListener", "Exception " + e.getMessage(), "WARN", null);
                             } finally {
                                 try {
                                     if (out != null) {
@@ -565,6 +564,7 @@ public class CustomVideoCamera extends Activity {
 
     }
 
+    @SuppressLint("HandlerLeak")
     private Handler splashHandler = new Handler() {
 
         @Override
@@ -892,16 +892,18 @@ public class CustomVideoCamera extends Activity {
                     mediaRecorder.stop(); // stop the recording
                 chronometer.stop();
                 myButton.setBackgroundResource(R.drawable.start_recording);
-                Intent intent = new Intent();
+                /*Intent intent = new Intent();
                 int pos = getIntent().getExtras().getInt("others", 0);
                 String path = getIntent().getStringExtra("filePath");
                 intent.putExtra("others", pos);
                 intent.putExtra("filePath", path);
-                setResult(RESULT_OK, intent);
+                setResult(RESULT_OK, intent);*/
+                usevideo.setVisibility(View.VISIBLE);
+                retake.setVisibility(View.VISIBLE);
             }
             releaseMediaRecorder();
             releaseCamera();
-            finish();
+//            finish();
         } catch (Exception e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
@@ -1313,11 +1315,11 @@ public class CustomVideoCamera extends Activity {
 
             } catch (Exception e) {
                 e.printStackTrace();
-                Appreference.printLog("CustomVideoCamera surfaceChanged","Exception "+e.getMessage(),"WARN",null);
+                Appreference.printLog("CustomVideoCamera surfaceChanged", "Exception " + e.getMessage(), "WARN", null);
             }
-            if (!isPhoto) {
+//            if (!isPhoto) {
 //			    startRecording();
-            }
+//            }
         }
 
         @Override
@@ -1356,7 +1358,7 @@ public class CustomVideoCamera extends Activity {
                 mCamera.startPreview();
             } catch (IOException e) {
                 e.printStackTrace();
-                Appreference.printLog("CustomVideoCamera SurfaceCreated","Exception "+e.getMessage(),"WARN",null);
+                Appreference.printLog("CustomVideoCamera SurfaceCreated", "Exception " + e.getMessage(), "WARN", null);
             }
         }
 
@@ -1371,7 +1373,7 @@ public class CustomVideoCamera extends Activity {
 
         @Override
         protected Void doInBackground(byte[]... data) {
-            FileOutputStream outStream = null;
+            FileOutputStream outStream;
 
             // Write to SD Card
             try {
@@ -1382,8 +1384,7 @@ public class CustomVideoCamera extends Activity {
                 outStream.close();
             } catch (Exception e) {
                 e.printStackTrace();
-                Appreference.printLog("CustomVideoCamera SaveImageTask","Exception "+e.getMessage(),"WARN",null);
-            } finally {
+                Appreference.printLog("CustomVideoCamera SaveImageTask", "Exception " + e.getMessage(), "WARN", null);
             }
 
             return null;
@@ -1411,14 +1412,14 @@ public class CustomVideoCamera extends Activity {
                             Bitmap bitmapsimplesize = Bitmap.createScaledBitmap(bitmapOriginal, bitmapOriginal.getWidth() / size, bitmapOriginal.getHeight() / size, true);
                             bitmapOriginal.recycle();
                             image.setImageBitmap(bitmapsimplesize);
-
+                            Log.i("CustomCamera","bitmapsimplesize==> "+bitmapsimplesize);
                         }
                     } catch (OutOfMemoryError error) {
                         error.printStackTrace();
-                        Appreference.printLog("CustomVideoCamera onPostExecute","Exception "+error.getMessage(),"WARN",null);
+                        Appreference.printLog("CustomVideoCamera onPostExecute", "Exception " + error.getMessage(), "WARN", null);
                     } catch (Exception e) {
                         e.printStackTrace();
-                        Appreference.printLog("CustomVideoCamera onPostExecute","Exception "+e.getMessage(),"WARN",null);
+                        Appreference.printLog("CustomVideoCamera onPostExecute", "Exception " + e.getMessage(), "WARN", null);
                     }
 
                     newmyCameraPreview.removeView(image);
@@ -1508,7 +1509,7 @@ public class CustomVideoCamera extends Activity {
             progress.show();
         } catch (Exception e) {
             e.printStackTrace();
-            Appreference.printLog("CustomVideoCamera showProgress","Exception "+e.getMessage(),"WARN",null);
+            Appreference.printLog("CustomVideoCamera showProgress", "Exception " + e.getMessage(), "WARN", null);
 //                        SingleInstance.printLog(null, e.getMessage(), null, e);
         }
 //            }
@@ -1518,8 +1519,7 @@ public class CustomVideoCamera extends Activity {
     }
 
     public static String getDeviceName() {
-        String reqString = Build.MANUFACTURER
+        return Build.MANUFACTURER
                 + " " + Build.MODEL;
-        return reqString;
     }
 }

@@ -36,6 +36,8 @@ public class IncomingCallAlert extends Activity {
     String part;
     String call_strtime = null;
     private Handler handler;
+    String callType;
+    TextView tv_title;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,6 +50,7 @@ public class IncomingCallAlert extends Activity {
         this.setFinishOnTouchOutside(false);
         Appreference.context_table.put("incomingcallalert", this);
         hostname = getIntent().getStringExtra("hostname");
+        callType = getIntent().getStringExtra("callType");
         final String part1 = Appreference.loginuserdetails.getFirstName() + " " + Appreference.loginuserdetails.getLastName();
         Log.i("MainCall", "host " + hostname);
         Log.i("MainCall", "participant " + part1);
@@ -55,9 +58,11 @@ public class IncomingCallAlert extends Activity {
         part = VideoCallDataBase.getDB(context).getName(hostname);
         Log.i("MainCall", "host Name " + part);
         tv_buddyname = (TextView) findViewById(R.id.buddy_name);
+        tv_title = (TextView) findViewById(R.id.tv_title);
         if (hostname != null) {
             tv_buddyname.setText(part);
         }
+        tv_title.setText(" Incoming "+ callType);
         btn_reject = (Button) findViewById(R.id.layout_decline);
         btn_accept = (Button) findViewById(R.id.layout_accept);
         final String finalPart = part;

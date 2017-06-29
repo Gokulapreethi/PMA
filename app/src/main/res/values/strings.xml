@@ -100,8 +100,8 @@
     <string name="user_upload">http://192.168.1.3:8080/uploads/highmessaging/user/</string>
     <string name="group_profile">http://192.168.1.3:8080/uploads/highmessaging/group/</string>-->
 
-  <!-- <string name="app_version">3</string>
-    <string name="app_versionDate">28June17_1.3</string>
+   <!-- <string name="app_version">3</string>
+    <string name="app_versionDate">29June17_1.3</string>
     <string name="app_url">https://192.168.1.3:8443/ASE/</string>
     <string name="server_ip">192.168.1.3</string>
     <string name="file_upload">http://192.168.1.3:8080/uploads/highmessaging/chat/</string>
@@ -110,14 +110,13 @@
     <string name="group_profile">http://192.168.1.3:8080/uploads/highmessaging/group/</string>-->
 
     <string name="app_version">203</string>
-    <string name="app_versionDate">28June17_203_port8444</string>
+    <string name="app_versionDate">29June17_203_port8444</string>
     <string name="app_url">http://151.253.12.203/ASE/</string>
     <string name="server_ip">151.253.12.203</string>
     <string name="file_upload">http://151.253.12.203/uploads/highmessaging/chat/</string>
     <string name="task_reminder">http://151.253.12.203/uploads/highmessaging/task/</string>
     <string name="user_upload">http://151.253.12.203/uploads/highmessaging/user/</string>
     <string name="group_profile">http://151.253.12.203/uploads/highmessaging/group/</string>
-
 
     <!--<string name="app_version">171</string>-->
     <!--<string name="app_url">https://122.165.92.171:8443/highMessage/</string>-->

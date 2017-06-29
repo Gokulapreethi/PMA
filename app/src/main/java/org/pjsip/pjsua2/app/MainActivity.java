@@ -88,6 +88,7 @@ import com.google.gson.reflect.TypeToken;
 import com.myapplication3.AllTaskList;
 import com.myapplication3.AppSharedpreferences;
 import com.myapplication3.Appreference;
+import com.myapplication3.AudioRecorder;
 import com.myapplication3.Bean.ListAllTaskBean;
 import com.myapplication3.Bean.ProjectDetailsBean;
 import com.myapplication3.Bean.SipNotification;
@@ -373,9 +374,22 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback,
                     "incomingcall");
 
             mWakeLock.acquire();
+             String callType = "Audio Call";
+            try {
 
-            Intent intent = new Intent(this, IncomingCallAlert.class);
+                CallInfo callInfo = call.getInfo();
+                Log.i("SipVideo", "incomingcall differ is audio ---> callInfo.getRemAudioCount() ====  " + callInfo.getRemAudioCount()+"\n"+
+                        "incomingcall differ is video---> callInfo.getRemVideoCount() ====  " + callInfo.getRemVideoCount() );
+
+                if(callInfo.getRemAudioCount() == 1 && callInfo.getRemVideoCount() == 1 ){
+                    callType = "Video Call";
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+             Intent intent = new Intent(this, IncomingCallAlert.class);
             intent.putExtra("hostname", name);
+            intent.putExtra("callType", callType);
             startActivity(intent);
         } catch (SecurityException e) {
             e.printStackTrace();
@@ -4090,6 +4104,11 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback,
                     } else {
                         Log.i("broadcastcall", "Appreference.received_broadcastcall -->false");
                         Appreference.received_broadcastcall = false;
+                    }
+                    if (Appreference.context_table.containsKey("audiorecorder")) {
+                        AudioRecorder audioRecorder = (AudioRecorder) Appreference.context_table.get("audiorecorder");
+                        if (audioRecorder != null)
+                            audioRecorder.stopRecordingWhileCall();
                     }
 
                     /*if (Appreference.context_table.containsKey("callactivity")) {

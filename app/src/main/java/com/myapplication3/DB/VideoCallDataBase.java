@@ -1147,7 +1147,7 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
                 cv.put("taskStatus", bean.getStatus());
             }
 //            if (listTaskFiles1.size() == 0 && listTaskConversations.size() == 0) {
-            if (listTaskFiles1.size() == 0) {
+            /*if (listTaskFiles1.size() == 0) {
                 if (bean.getName() != null && !bean.getName().equalsIgnoreCase("")) {
                     cv.put("taskDescription", bean.getName());
                 }
@@ -1173,7 +1173,7 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
                     Log.i("send_syn_txt", "signalid 1 " + signal_id + "task signalid " + bean.getDescription() + "parentId " + bean.getTaskNo());
                     row_id = (int) db.update("taskDetailsInfo", cv, "signalid='" + signal_id + "'", null);
                 }
-            }
+            }*/
 
             if (bean.getStatus() != null && bean.getStatus().equalsIgnoreCase("draft")) {
                 cv.put("duration", bean.getDuration());
@@ -5226,7 +5226,7 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
                 Log.i("chat", "DB-getChatname");
                 if (!db.isOpen())
                     openDatabase();
-                cur = db.rawQuery("select * from taskHistoryInfo where loginuser='" + Appreference.loginuserdetails.getEmail() + "' and ((ownerOfTask='" + Appreference.loginuserdetails.getUsername() + "' or taskReceiver='" + Appreference.loginuserdetails.getUsername() + "') or taskType='group') and (ownerOfTask='" + str + "' or taskReceiver='" + str + "') and category='chat'", null);
+                cur = db.rawQuery("select * from taskHistoryInfo where loginuser='" + Appreference.loginuserdetails.getEmail() + "' and ((ownerOfTask='" + Appreference.loginuserdetails.getUsername() + "' or taskReceiver='" + Appreference.loginuserdetails.getUsername() + "') or taskType='group' or taskType='Group') and (ownerOfTask='" + str + "' or taskReceiver='" + str + "') and category='chat'", null);
                 cur.moveToFirst();
                 while (!cur.isAfterLast()) {
                     Log.i("chat", "while loop " + (cur.getString(cur.getColumnIndex("taskId"))));
@@ -8516,5 +8516,27 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
         } finally {
             return taskDetailsBean;
         }
+    }
+    public ArrayList<String> getAllCurrentStatus(String Query) {
+        Cursor cur;
+        ArrayList<String> status_all = new ArrayList<String>();
+        if (db == null)
+            db = getReadableDatabase();
+        try {
+            if (!db.isOpen())
+                openDatabase();
+            cur = db.rawQuery(Query,null);
+            cur.moveToFirst();
+            while (!cur.isAfterLast()) {
+                if(cur.getString(cur.getColumnIndex("status"))!=null) {
+                        status_all.add(cur.getString(cur.getColumnIndex("status")));
+                }
+                cur.moveToNext();
+            }
+            cur.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return status_all;
     }
 }
