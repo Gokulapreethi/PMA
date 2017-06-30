@@ -1376,7 +1376,7 @@ public class ProjectHistory extends Activity implements WebServiceInterface, Swi
                 }
                 conView.setBackgroundResource(R.color.white);
                 dependency_icon.setVisibility(View.GONE);
-                String oracle_taskId = VideoCallDataBase.getDB(context).getProjectParentTaskId("select oracleTaskId from projectHistory where projectId='" + project_id + "'");
+                String oracle_taskId = VideoCallDataBase.getDB(context).getProjectParentTaskId("select oracleTaskId from projectHistory where projectId='" + project_id + "' and taskId='" + projectDetailsBean.getTaskId() + "'");
                 Log.i("oracle_taskId", "oracle_taskId " + oracle_taskId);
                 try {
                     String s = "select * from taskDetailsInfo where taskId='" + projectDetailsBean.getTaskId() + "' and readStatus='1'";
@@ -1567,7 +1567,7 @@ public class ProjectHistory extends Activity implements WebServiceInterface, Swi
                     } else if (projectDetailsBean.getCatagory() != null && projectDetailsBean.getCatagory().equalsIgnoreCase("Template")) {
                         selectedimage.setBackgroundResource(R.drawable.template);
                         catagory.setText("Activity Code : " + oracle_taskId);
-                        taskName.setText("Template Name: " + projectDetailsBean.getTaskName());
+                        taskName.setText("Task Name : " + projectDetailsBean.getTaskName());
                     }
                     Log.i("project_details", "projectDetailsBean getOwnerOfTask() " + projectDetailsBean.getOwnerOfTask());
                     if (projectDetailsBean.getOwnerOfTask() != null) {

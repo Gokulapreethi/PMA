@@ -24,8 +24,8 @@ import java.util.Date;
 public class CustomTravelPickerActivity extends Activity {
 
     private Context context;
-    String taskNameshow, projectIDshow, taskIDshow;
-    String StartDate, EndDate="";
+    String taskNameshow, projectIDshow, taskIDshow,jobcodeno,activitycode;
+    String StartDate, EndDate,StartDateFilled;
     boolean isTravel = false;
     boolean isStartEndFilled = false;
     boolean isStartOnlyFilled = false;
@@ -39,6 +39,8 @@ public class CustomTravelPickerActivity extends Activity {
         taskNameshow = getIntent().getStringExtra("taskName");
         projectIDshow = getIntent().getStringExtra("projectID");
         taskIDshow = getIntent().getStringExtra("taskID");
+        jobcodeno = getIntent().getStringExtra("jobcodeno");
+        activitycode = getIntent().getStringExtra("activitycode");
         isTravel = getIntent().getBooleanExtra("isTravel", false);
         final java.sql.Date todayDate = new java.sql.Date(System.currentTimeMillis());
         Calendar c = Calendar.getInstance();
@@ -61,7 +63,8 @@ public class CustomTravelPickerActivity extends Activity {
                 finish();
             }
         });
-        project_name.setText(taskNameshow);
+//        project_name.setText(taskNameshow);
+        project_name.setText("JobCodeNo : "+ jobcodeno +"\nActivityCode : "+activitycode);
         String query = "select * from projectStatus where projectId='" + projectIDshow + "' and userId='" + Appreference.loginuserdetails.getId() + "' and taskId= '" + taskIDshow + "'";
         TaskDetailsBean bean = VideoCallDataBase.getDB(context).getActivityTimeFromStatus(query);
         Log.i("travel123","Travel Details"+bean.getActivityStartTime() +""+bean.getActivityEndTime());
@@ -72,6 +75,7 @@ public class CustomTravelPickerActivity extends Activity {
             } else if (bean.getActivityStartTime() != null) {
                 isStartOnlyFilled = true;
                 StartDate = bean.getActivityStartTime();
+                StartDateFilled=bean.getActivityStartTime();
                 travel_start.setText(bean.getActivityStartTime());
                 travelstart_sign.setEnabled(false);
             }
@@ -193,10 +197,10 @@ public class CustomTravelPickerActivity extends Activity {
                     NewTaskConversation newTaskConversation = (NewTaskConversation) Appreference.context_table.get("taskcoversation");
                     if (!isTravel && newTaskConversation != null) {
                         if (isStartOnlyFilled && EndDate!=null && !EndDate.equalsIgnoreCase("")) {
-                            newTaskConversation.getEnteredTravelTime("", EndDate);
+                            newTaskConversation.getEnteredTravelTime(StartDateFilled, EndDate,"9");
                             finish();
                         }else if(!isStartOnlyFilled && StartDate!=null && !StartDate.equalsIgnoreCase("") || EndDate!=null && !EndDate.equalsIgnoreCase("")) {
-                            newTaskConversation.getEnteredTravelTime(StartDate, EndDate);
+                            newTaskConversation.getEnteredTravelTime(StartDate, EndDate,"7");
                             finish();
                         }else
                             Toast.makeText(CustomTravelPickerActivity.this, "Please Enter DateTime to send", Toast.LENGTH_SHORT).show();
@@ -205,10 +209,10 @@ public class CustomTravelPickerActivity extends Activity {
                         TravelJobDetails travelJobDetails = (TravelJobDetails) Appreference.context_table.get("traveljobdetails");
                         if (travelJobDetails != null && isTravel) {
                             if (isStartOnlyFilled && EndDate!=null && !EndDate.equalsIgnoreCase("")) {
-                                travelJobDetails.getEnteredTravelTime("", EndDate);
+                                travelJobDetails.getEnteredTravelTime(StartDateFilled, EndDate,"9");
                                 finish();
                             }else if( !isStartOnlyFilled  && StartDate!=null && !StartDate.equalsIgnoreCase("") || EndDate!=null && !EndDate.equalsIgnoreCase("")) {
-                                travelJobDetails.getEnteredTravelTime(StartDate, EndDate);
+                                travelJobDetails.getEnteredTravelTime(StartDate, EndDate,"7");
                                 finish();
                             } else
                                 Toast.makeText(CustomTravelPickerActivity.this, "Please Enter DateTime to send", Toast.LENGTH_SHORT).show();

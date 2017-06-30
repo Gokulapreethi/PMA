@@ -798,19 +798,14 @@
                     android:textColor="@color/black"
                     android:textSize="15dp" />
 
-
-                <TextView
+                <ImageView
                     android:id="@+id/signature_path1"
-                    android:layout_width="0dp"
+                    android:layout_width="50dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="2dp"
-                    android:layout_marginRight="2dp"
-                    android:layout_marginTop="4dp"
-                    android:layout_weight="1"
-                    android:gravity="center_vertical"
-                    android:maxLength="100"
-                    android:textColor="#808080"
+                    android:layout_marginTop="5dp"
+                    android:background="@drawable/complete_status"
                     android:visibility="gone" />
+
             </LinearLayout>
             <View
                 android:layout_width="wrap_content"
@@ -836,19 +831,15 @@
                     android:textColor="@color/black"
                     android:textSize="15dp" />
 
-
-                <TextView
+                <ImageView
                     android:id="@+id/photo_path1"
-                    android:layout_width="0dp"
+                    android:layout_width="50dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="2dp"
-                    android:layout_marginRight="2dp"
-                    android:layout_marginTop="4dp"
-                    android:layout_weight="1"
-                    android:gravity="center_vertical"
-                    android:maxLength="100"
-                    android:textColor="#808080"
+                    android:layout_marginTop="5dp"
+                    android:background="@drawable/complete_status"
                     android:visibility="gone" />
+
+
             </LinearLayout>
             <View
                 android:layout_width="wrap_content"
@@ -874,19 +865,14 @@
                     android:textColor="@color/black"
                     android:textSize="15dp" />
 
-
-                <TextView
+                <ImageView
                     android:id="@+id/tech_signature_path1"
-                    android:layout_width="0dp"
+                    android:layout_width="50dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="2dp"
-                    android:layout_marginRight="2dp"
-                    android:layout_marginTop="4dp"
-                    android:layout_weight="1"
-                    android:gravity="center_vertical"
-                    android:maxLength="100"
-                    android:textColor="#808080"
+                    android:layout_marginTop="5dp"
+                    android:background="@drawable/complete_status"
                     android:visibility="gone" />
+
             </LinearLayout>
         </LinearLayout>
     </ScrollView>

@@ -119,6 +119,35 @@
             android:layout_below="@+id/header_menu"
             android:background="@color/common_action_bar_splitter" />
 
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:id="@+id/assign_taskview"
+            android:background="@color/appcolor"
+            android:visibility="gone"
+            >
+
+            <ImageView
+                android:id="@+id/iv_reassign"
+                android:layout_width="wrap_content"
+                android:layout_height="30dp"
+                android:background="@drawable/reassign_task_new"
+                android:paddingRight="20dp" />
+
+            <TextView
+                android:id="@+id/tv_reassign"
+                android:layout_marginTop="6dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginLeft="50dp"
+                android:text="Reassign Task"
+                android:textColor="@color/white"
+                android:textStyle="bold" />
+
+        </RelativeLayout>
+
         <LinearLayout
             android:id="@+id/options"
             android:layout_width="match_parent"
@@ -265,14 +294,14 @@
                         android:textStyle="bold" />
                 </TableRow>
 
-                <View
+                <!--<View
                     android:id="@+id/addReassignRowView"
                     android:layout_width="wrap_content"
                     android:layout_height="1dp"
                     android:layout_marginLeft="55dp"
-                    android:background="@color/common_action_bar_splitter" />
+                    android:background="@color/common_action_bar_splitter" />-->
 
-                <TableRow
+<!--                <TableRow
                     android:id="@+id/reassign_tr"
                     android:padding="4dp">
 
@@ -292,7 +321,7 @@
                         android:text="Reassign Task"
                         android:textColor="@color/white"
                         android:textStyle="bold" />
-                </TableRow>
+                </TableRow>-->
 
                 <View
                     android:id="@+id/percentcompletionview"

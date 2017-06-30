@@ -2172,7 +2172,7 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
             cv_1.put("projectId", projectDetailsBean.getId());
 
             //Added For ASE
-            cv_1.put("oracleTaskId",projectDetailsBean.getOracleTaskId());
+//            cv_1.put("oracleTaskId",projectDetailsBean.getOracleTaskId());
             cv_1.put("estimatedTravelHrs",projectDetailsBean.getEstimatedTravelHrs());
             cv_1.put("estimatedActivityHrs",projectDetailsBean.getEstimatedActivityHrs());
             cv_1.put("activity",projectDetailsBean.getActivity());
@@ -2510,7 +2510,7 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
                         cv_1.put("toUserName", listAllgetTaskDetailses1.getName());
 //                        cv.put("taskReceiver", listAllgetTaskDetailses1.getName());
                         cv_1.put("taskReceiver", listAllgetTaskDetailses1.getName());
-                    } else if (listAllgetTaskDetailses1.getStatus() != null && listAllgetTaskDetailses1.getStatus().equalsIgnoreCase("draft")) {
+                    }/* else if (listAllgetTaskDetailses1.getStatus() != null && listAllgetTaskDetailses1.getStatus().equalsIgnoreCase("draft")) {
                         cv.put("taskType", "Individual");
                         cv_1.put("taskType", "Individual");
                         cv_1.put("taskMemberList", "");
@@ -2520,7 +2520,7 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
                         cv_1.put("toUserName", "");
 //                        cv.put("taskReceiver", listAllgetTaskDetailses1.getName());
                         cv_1.put("taskReceiver", "");
-                    }
+                    }*/
 //                    cv.put("parentId", listAllgetTaskDetailses1.getParentId());
                     cv.put("taskNo", listAllgetTaskDetailses1.getTaskNo());
                     taskDetailsBean.setTaskNo(listAllgetTaskDetailses1.getTaskNo());
@@ -4588,10 +4588,12 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
                     TaskDetailsBean taskDetailsBean = new TaskDetailsBean();
                     taskDetailsBean.setTravelStartTime(cur.getString(cur.getColumnIndex("travelStartTime")));
                     taskDetailsBean.setTravelEndTime(cur.getString(cur.getColumnIndex("travelEndTime")));
-                    taskDetailsBean.setActivityStartTime(cur.getString(cur.getColumnIndex("activityStartTime")));
-                    taskDetailsBean.setActivityEndTime(cur.getString(cur.getColumnIndex("activityEndTime")));
-                    taskDetailsBean.setToTravelStartTime(cur.getString(cur.getColumnIndex("totravelstartdatetime")));
-                    taskDetailsBean.setToTravelEndTime(cur.getString(cur.getColumnIndex("totravelenddatetime")));
+//                    taskDetailsBean.setActivityStartTime(cur.getString(cur.getColumnIndex("activityStartTime")));
+//                    taskDetailsBean.setActivityEndTime(cur.getString(cur.getColumnIndex("activityEndTime")));
+//                    taskDetailsBean.setToTravelStartTime(cur.getString(cur.getColumnIndex("totravelstartdatetime")));
+//                    taskDetailsBean.setToTravelEndTime(cur.getString(cur.getColumnIndex("totravelenddatetime")));
+                    if(taskDetailsBean.getTravelStartTime()!=null && !taskDetailsBean.getTravelStartTime().equalsIgnoreCase("")
+                            && taskDetailsBean.getTravelEndTime()!=null && !taskDetailsBean.getTravelEndTime().equalsIgnoreCase(""))
                     arrayList.add(taskDetailsBean);
                     cur.moveToNext();
                 }

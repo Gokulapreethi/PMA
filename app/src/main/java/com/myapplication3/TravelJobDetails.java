@@ -112,6 +112,7 @@ public class TravelJobDetails extends Activity implements View.OnClickListener, 
     String tab = "TravelJobDetails";
     AppSharedpreferences appSharedpreferences;
     public static MediaListAdapter.ViewHolder holder;
+    String JobCodeNo,ActivityCode;
 
 
     private String proxy_user = "proxyua_highmessaging.com";
@@ -249,8 +250,17 @@ public class TravelJobDetails extends Activity implements View.OnClickListener, 
         if (Appreference.loginuserdetails.getUsername().equalsIgnoreCase(ownerOfTask)) {
             text12.setText("Me");
         } else {
-            text12.setVisibility(View.GONE);
-            text11.setVisibility(View.GONE);
+            Log.i("task", "ownerOfTask -->  ");
+            if (taskReceiver != null) {
+                String task_giver = VideoCallDataBase.getDB(context).getname(ownerOfTask);
+                Log.i("task", "task_giver -->  " + task_giver);
+                Log.i("task", "taskReceiver -->  " + taskReceiver);
+                if (task_giver == null || task_giver.equalsIgnoreCase("") || task_giver.equals(null)) {
+                    text12.setText(taskReceiver.split("_")[0]);
+                } else {
+                    text12.setText(task_giver);
+                }
+            }
         }
 
         if (taskStatus != null && taskStatus.equalsIgnoreCase("draft")) {
@@ -281,9 +291,14 @@ public class TravelJobDetails extends Activity implements View.OnClickListener, 
                 }
             }
         });
-
+        String qury = "select oracleProjectId from projectHistory where projectId='" + projectId + "' and taskId= '" + webtaskId + "'";
+        String qury_1= "select oracleTaskId from projectHistory where projectId='" + projectId + "' and taskId= '" + webtaskId + "'";
+        JobCodeNo=VideoCallDataBase.getDB(getApplication()).getProjectParentTaskId(qury);
+        ActivityCode =VideoCallDataBase.getDB(getApplication()).getProjectParentTaskId(qury_1);
+        Log.i(tab, "JobCodeNo==> " + JobCodeNo);
+        Log.i(tab, "ActivityCode==> " + ActivityCode);
 //        head.setText(taskName);
-        head.setText("JobCodeNo :"+projectId+"\nActivityCode :"+webtaskId);
+        head.setText("JobCodeNo :" + JobCodeNo + "\nActivityCode :" + ActivityCode);
 
         cancel.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -473,18 +488,20 @@ public class TravelJobDetails extends Activity implements View.OnClickListener, 
         intent.putExtra("projectID", projectId);
         intent.putExtra("isTravel", true);
         intent.putExtra("taskID", webtaskId);
+        intent.putExtra("jobcodeno", JobCodeNo);
+        intent.putExtra("activitycode", ActivityCode);
         startActivityForResult(intent, 120);
     }
 
-    public void getEnteredTravelTime(String startTime, String EndTime) {
+    public void getEnteredTravelTime(String startTime, String EndTime,String status) {
         Log.i("desc123", "inside getEnteredTravelTime ========>" + startTime + "==>" + EndTime);
 
         ActivityStartdate = startTime;
         ActivityEnddate = EndTime;
         if(startTime!=null && !startTime.equalsIgnoreCase(""))
-            sendStatus_webservice("7","","","travel");
+            sendStatus_webservice(status,"","","travel");
         else
-            sendStatus_webservice("9","","","travel");
+            sendStatus_webservice(status,"","","travel");
 
     }
 
@@ -618,6 +635,7 @@ public class TravelJobDetails extends Activity implements View.OnClickListener, 
         try {
 
             SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            SimpleDateFormat dateParse = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
             String dateTime = dateFormat.format(new Date());
             dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
             String dateforrow = dateFormat.format(new Date());
@@ -625,7 +643,25 @@ public class TravelJobDetails extends Activity implements View.OnClickListener, 
             taskUTCtime = dateforrow;
             travel_date_details=null;
             tasktime = tasktime.split(" ")[1];
-
+            Date date=null;
+            Date date1=null;
+            String StartDateUTC = "",EndDateUTC="";
+            if(ActivityStartdate!=null && !ActivityStartdate.equalsIgnoreCase("")) {
+                try {
+                    date = dateParse.parse(ActivityStartdate);
+                    StartDateUTC = dateFormat.format(date);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+            if(ActivityEnddate!=null && !ActivityEnddate.equalsIgnoreCase("")) {
+                try {
+                    date1 = dateParse.parse(ActivityEnddate);
+                    EndDateUTC = dateFormat.format(date1);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
             ArrayList<TaskDetailsBean> status_list = new ArrayList<>();
             TaskDetailsBean taskDetailsBean = new TaskDetailsBean();
 
@@ -645,12 +681,15 @@ public class TravelJobDetails extends Activity implements View.OnClickListener, 
             taskDetailsBean.setTaskId(webtaskId);
             jsonObject.put("task", jsonObject3);
             if (status.equalsIgnoreCase("7") || status.equalsIgnoreCase("9")) {
-                jsonObject.put("travelStartTime", ActivityStartdate);
-                jsonObject.put("travelEndTime", ActivityEnddate);
+                if(!status.equalsIgnoreCase("9")) {
+                    jsonObject.put("travelStartTime", StartDateUTC);
+                }else
+                    jsonObject.put("travelStartTime", "");
+                jsonObject.put("travelEndTime", EndDateUTC);
                 taskDetailsBean.setTravelStartTime(ActivityStartdate);
                 taskDetailsBean.setTravelEndTime(ActivityEnddate);
                 travel_date_details = new ArrayList<>();
-                if (ActivityStartdate != null && !ActivityStartdate.equalsIgnoreCase("")) {
+                if (ActivityStartdate != null && !ActivityStartdate.equalsIgnoreCase("") && !status.equalsIgnoreCase("9")) {
                     travel_date_details.add("StartTime : " + ActivityStartdate);
                 }
                 if (ActivityEnddate != null && !ActivityEnddate.equalsIgnoreCase("")) {
@@ -1252,6 +1291,8 @@ public class TravelJobDetails extends Activity implements View.OnClickListener, 
             intent.putExtra("taskId", webtaskId);
             intent.putExtra("taskType", taskType);
             intent.putExtra("Taker", "Assigned Task");
+            intent.putExtra("jobcodeno", JobCodeNo);
+            intent.putExtra("activitycode", ActivityCode);
             if (isProjectFromOracle)
                 intent.putExtra("isProjectFromOracle1", true);
             if (Self_assign)

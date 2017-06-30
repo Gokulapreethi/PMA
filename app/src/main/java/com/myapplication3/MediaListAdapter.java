@@ -4297,6 +4297,7 @@ public class MediaListAdapter extends ArrayAdapter<TaskDetailsBean> {
             resend_ll.setVisibility(View.GONE);
             withdraw_ll.setVisibility(View.GONE);
             cancel_ll.setVisibility(View.GONE);
+            edit_ll.setVisibility(View.GONE);
             reply_ll.setVisibility(View.VISIBLE);
             isreceiver = false;
         }
@@ -4320,6 +4321,10 @@ public class MediaListAdapter extends ArrayAdapter<TaskDetailsBean> {
         }
         if (mediaListBean.getTaskDescription() != null && mediaListBean.getTaskDescription().equalsIgnoreCase("Message has been Removed")) {
             withdraw_ll.setVisibility(View.GONE);
+        }
+        if(mediaListBean.getProjectId()!=null){
+            delete_ll.setVisibility(View.GONE);
+            reply_ll.setVisibility(View.GONE);
         }
         cancel_ll.setOnClickListener(new View.OnClickListener() {
             @Override

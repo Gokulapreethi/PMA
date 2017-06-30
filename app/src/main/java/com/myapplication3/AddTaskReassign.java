@@ -59,7 +59,7 @@ public class AddTaskReassign extends Activity implements View.OnClickListener, W
             newTaskNo,/*newTaskDescription,*/
             dateforDate, percentage = "0";
     ArrayList<String> chatUsers, chatUsersName, listOfObservers;
-    String taskType, groupname, taskReceiver, projectid, listMembers, RemoveUser, isReassignNote;
+    String taskType, groupname, taskReceiver, projectid, listMembers, RemoveUser, isReassignNote,jobcodeno,activitycode;
     boolean isTemplate = false, isProjectFromOracle,Self_Assign;
     String SelectedUserList = null,SelectedUserList1="";
     String SelectedUsersId = null;
@@ -115,6 +115,8 @@ public class AddTaskReassign extends Activity implements View.OnClickListener, W
             isReassignNote = getIntent().getExtras().getString("Note");
             isProjectFromOracle = getIntent().getBooleanExtra("isProjectFromOracle1", false);
             Self_Assign = getIntent().getBooleanExtra("selfAssign", false);
+            jobcodeno = getIntent().getStringExtra("jobcodeno");
+            activitycode = getIntent().getStringExtra("activitycode");
             Log.i("ws123", "  AssignTask isProjectFromOracle ====>" + isProjectFromOracle);
             Log.i("add observer", "task type " + taskType);
             if (taskType != null)
@@ -139,20 +141,22 @@ public class AddTaskReassign extends Activity implements View.OnClickListener, W
                 //            newSubType=getIntent().getExtras().getString("subType");
                 //            newTaskDescription=getIntent().getExtras().getString("taskDescription");
                 title = (TextView) findViewById(R.id.txtView01);
-                title.setText("Assign Task To");
+//                title.setText("Assign Task To");
+                title.setText("JobCodeNo : "+ jobcodeno +"\nActivityCode : "+activitycode);
                 //submit.setBackgroundResource(android.R.drawable.btn_default);
                 //submit.setText("Assign");
                 isTemplate = true;
-
             } else if (getIntent().getExtras().getString("Taker") != null && getIntent().getExtras().getString("Taker").toString().equalsIgnoreCase("Assigned Task")) {
                 title = (TextView) findViewById(R.id.txtView01);
                 isProject = getIntent().getExtras().getString("isProject");
                 if (getIntent().getExtras().getString("isProject") != null && getIntent().getExtras().getString("isProject").toString().equalsIgnoreCase("Yes")) {
-                    title.setText("Assign To");
+//                    title.setText("Assign To");
+                    title.setText("JobCodeNo : "+ jobcodeno +"\nActivityCode : "+activitycode);
                 } else {
                     title.setText("Assign Task To");
                 }
             }
+            title.setText("JobCodeNo : "+ jobcodeno +"\nActivityCode : "+activitycode);
             Log.i("add observer", "group name --> 0 " + groupname);
         /*handler.post(new Runnable() {
             @Override

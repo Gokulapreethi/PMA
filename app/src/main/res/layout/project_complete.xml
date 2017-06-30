@@ -581,7 +581,8 @@
                 android:layout_marginLeft="2dp"
                 android:layout_marginRight="2dp"
                 android:layout_marginTop="2dp"
-                android:orientation="horizontal" >
+                android:orientation="horizontal"
+                android:visibility="gone">
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
@@ -610,7 +611,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="1.20dp"
                 android:layout_marginTop="10dp"
-                android:background="@color/gray" />
+                android:background="@color/gray"
+                android:visibility="gone"/>
             <LinearLayout
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
@@ -749,7 +751,7 @@
                     android:background="#FFFFFF"
                     android:gravity="left"
                     android:padding="7dp"
-                    android:text="Customer Remarks"
+                    android:text="Customer Remarks*"
                     android:singleLine="true"
                     android:textColor="@color/black"
                     android:textSize="15dp" />
@@ -819,121 +821,122 @@
                 android:layout_marginTop="2dp"
                 android:orientation="horizontal" >
                 <TextView
-                    android:layout_width="180dp"
-                    android:layout_height="wrap_content"
                     android:id="@+id/sign"
+                    android:layout_width="180dp"
+                    android:layout_height="wrap_content"
                     android:background="#FFFFFF"
                     android:gravity="left"
                     android:padding="7dp"
+                    android:singleLine="true"
                     android:text="Customer Sign"
-                    android:singleLine="true"
                     android:textColor="@color/black"
                     android:textSize="15dp" />
+
                 <Button
-                    android:layout_width="30dp"
-                    android:layout_height= "30dp"
                     android:id="@+id/my_sign"
-                    android:background="@drawable/gallery_pic"
-                    />
-
-                <TextView
-                    android:id="@+id/signature_path"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="2dp"
-                    android:layout_marginRight="2dp"
-                    android:layout_marginTop="4dp"
-                    android:layout_weight="1"
-                    android:gravity="center_vertical"
-                    android:maxLength="100"
-                    android:textColor="#808080"
-                    android:visibility="gone" />
-            </LinearLayout>
-            <View
-                android:layout_width="wrap_content"
-                android:layout_height="1.20dp"
-                android:layout_marginTop="10dp"
-                android:background="@color/gray" />
-            <LinearLayout
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="2dp"
-                android:layout_marginRight="2dp"
-                android:layout_marginTop="2dp"
-                android:orientation="horizontal" >
-                <TextView
-                    android:layout_width="180dp"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/photo_custom1"
-                    android:background="#FFFFFF"
-                    android:gravity="left"
-                    android:padding="7dp"
-                    android:text="Photo"
-                    android:singleLine="true"
-                    android:textColor="@color/black"
-                    android:textSize="15dp" />
-                <Button
-                    android:layout_width="40dp"
-                    android:layout_height= "40dp"
-                    android:id="@+id/my_photo"
-                    android:background="@drawable/ic_compact_camera_100"
-                    />
-
-                <TextView
-                    android:id="@+id/photo_path"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="2dp"
-                    android:layout_marginRight="2dp"
-                    android:layout_marginTop="4dp"
-                    android:layout_weight="1"
-                    android:gravity="center_vertical"
-                    android:maxLength="100"
-                    android:textColor="#808080"
-                    android:visibility="gone" />
-            </LinearLayout>
-            <View
-                android:layout_width="wrap_content"
-                android:layout_height="1.20dp"
-                android:layout_marginTop="10dp"
-                android:background="@color/gray" />
-            <LinearLayout
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="2dp"
-                android:layout_marginRight="2dp"
-                android:layout_marginTop="2dp"
-                android:orientation="horizontal" >
-                <TextView
-                    android:layout_width="180dp"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/tech_sign"
-                    android:background="#FFFFFF"
-                    android:gravity="left"
-                    android:padding="7dp"
-                    android:text="Technician Sign"
-                    android:singleLine="true"
-                    android:textColor="@color/black"
-                    android:textSize="15dp" />
-                <Button
                     android:layout_width="30dp"
-                    android:layout_height= "30dp"
-                    android:id="@+id/tech_sign_btn"
-                    android:background="@drawable/gallery_pic"
-                    />
+                    android:layout_height="30dp"
+                    android:background="@drawable/gallery_pic" />
+
+                <ImageView
+                    android:id="@+id/signature_path"
+                    android:layout_width="50dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginEnd="10dp"
+                    android:background="@drawable/complete_status"
+                    android:visibility="gone" />
+
+            </LinearLayout>
+
+            <View
+                android:layout_width="wrap_content"
+                android:layout_height="1.20dp"
+                android:layout_marginTop="10dp"
+                android:background="@color/gray" />
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="2dp"
+                android:layout_marginRight="2dp"
+                android:layout_marginTop="2dp"
+                android:orientation="horizontal">
 
                 <TextView
-                    android:id="@+id/tech_signature_path"
-                    android:layout_width="0dp"
+                    android:id="@+id/photo_custom1"
+                    android:layout_width="180dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="2dp"
-                    android:layout_marginRight="2dp"
-                    android:layout_marginTop="4dp"
-                    android:layout_weight="1"
-                    android:gravity="center_vertical"
-                    android:maxLength="100"
-                    android:textColor="#808080"
+                    android:background="#FFFFFF"
+                    android:gravity="left"
+                    android:padding="7dp"
+                    android:singleLine="true"
+                    android:text="Photo"
+                    android:textColor="@color/black"
+                    android:textSize="15dp" />
+
+                <Button
+                    android:id="@+id/my_photo"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:background="@drawable/ic_compact_camera_100" />
+
+                <ImageView
+                    android:id="@+id/photo_path"
+                    android:layout_width="50dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginEnd="10dp"
+                    android:background="@drawable/complete_status"
                     android:visibility="gone" />
+            </LinearLayout>
+            <View
+                android:layout_width="wrap_content"
+                android:layout_height="1.20dp"
+                android:layout_marginTop="10dp"
+                android:background="@color/gray" />
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="2dp"
+                android:layout_marginRight="2dp"
+                android:layout_marginTop="2dp"
+                android:orientation="horizontal" >
+                <TextView
+                    android:id="@+id/tech_sign"
+                    android:layout_width="180dp"
+                    android:layout_height="wrap_content"
+                    android:background="#FFFFFF"
+                    android:gravity="left"
+                    android:padding="7dp"
+                    android:singleLine="true"
+                    android:text="Technician Sign"
+                    android:textColor="@color/black"
+                    android:textSize="15dp" />
+                <Button
+                    android:id="@+id/tech_sign_btn"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:background="@drawable/gallery_pic" />
+
+                <ImageView
+                    android:id="@+id/tech_signature_path"
+                    android:layout_width="50dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginEnd="5dp"
+                    android:background="@drawable/complete_status"
+                    android:visibility="gone" />
+                <View
+                    android:layout_width="wrap_content"
+                    android:layout_height="1.20dp"
+                    android:layout_marginTop="10dp"
+                    android:background="@color/gray"
+                    android:visibility="visible"/>
+
             </LinearLayout>
         </LinearLayout>
     </ScrollView>

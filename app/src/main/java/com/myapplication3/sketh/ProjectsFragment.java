@@ -836,7 +836,7 @@ public class ProjectsFragment extends Fragment implements WebServiceInterface {
                     if (progress == null) {
                         progress = new ProgressDialog(classContext);
                         progress.setCancelable(false);
-                        progress.setMessage("Getting project...");
+                        progress.setMessage("Getting ActivityCode...");
                         progress.setProgressStyle(ProgressDialog.STYLE_SPINNER);
                         progress.setProgress(0);
                         progress.setMax(1000);

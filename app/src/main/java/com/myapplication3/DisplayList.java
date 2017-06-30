@@ -82,11 +82,11 @@ public class DisplayList extends Activity {
 
             TextView tvName = (TextView) rowView.findViewById(R.id.start_date_1);
             TextView tvHome = (TextView) rowView.findViewById(R.id.end_date_1);
-            Log.i("DisplayList", "Time_start " + user.getActivityStartTime());
-            Log.i("DisplayList", "Time_end " + user.getActivityEndTime());
+            Log.i("DisplayList", "Time_start ===========>" + user.getActivityStartTime());
+            Log.i("DisplayList", "Time_end ===========>" + user.getActivityEndTime());
             if (date_type!=null && date_type.equalsIgnoreCase("travel_start")) {
-                tvName.setText(user.getTravelStartTime());
-                tvHome.setText(user.getTravelEndTime());
+                    tvName.setText(user.getTravelStartTime());
+                    tvHome.setText(user.getTravelEndTime());
             }else if(date_type!=null && date_type.equalsIgnoreCase("activity_date")){
                 tvName.setText(user.getActivityStartTime());
                 tvHome.setText(user.getActivityEndTime());
