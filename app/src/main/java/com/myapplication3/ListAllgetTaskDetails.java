@@ -86,6 +86,8 @@ public class ListAllgetTaskDetails {
     String replyRequired;
     String isGroupTask;
 	String oracleTaskId;
+    String estimatedTravelHrs;
+
     @SerializedName("from")
     private ListFromDetails from;
     @SerializedName("toUser")
@@ -536,5 +538,13 @@ public class ListAllgetTaskDetails {
 
     public void setOracleTaskId(String oracleTaskId) {
         this.oracleTaskId = oracleTaskId;
+    }
+
+    public String getEstimatedTravelHrs() {
+        return estimatedTravelHrs;
+    }
+
+    public void setEstimatedTravelHrs(String estimatedTravelHrs) {
+        this.estimatedTravelHrs = estimatedTravelHrs;
     }
 }

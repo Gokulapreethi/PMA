@@ -284,6 +284,7 @@ public class TravelJobDetails extends Activity implements View.OnClickListener, 
             @Override
             public void onClick(View v) {
                 Log.i(tab, "tv_reassign " + Self_assign);
+                ll_2.setVisibility(View.GONE);
                 if (!Self_assign)
                     addTaskReassignClickEvent();
                 else {
@@ -449,7 +450,7 @@ public class TravelJobDetails extends Activity implements View.OnClickListener, 
                 handler.post(new Runnable() {
                     @Override
                     public void run() {
-                       tv_reassign.setVisibility(View.GONE);
+                        ll_2.setVisibility(View.GONE);
                     }
                 });
             }
@@ -759,8 +760,8 @@ public class TravelJobDetails extends Activity implements View.OnClickListener, 
                 isDeassign = true;
                 taskDetailsBean.setTaskDescription(Appreference.loginuserdetails.getUsername() + " Left");
                 taskDetailsBean.setSubType("deassign");
-            } else if (status.equalsIgnoreCase("7")) {
-                taskDetailsBean.setTaskDescription("Details sent");
+            } else if (status.equalsIgnoreCase("7") ||status.equalsIgnoreCase("9")) {
+                taskDetailsBean.setTaskDescription("Gathering Details...");
             } else {
                 taskDetailsBean.setTaskDescription("Task is " + projectCurrentStatus);
             }

@@ -3226,6 +3226,43 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback,
                     //            TaskDetailsBean detailsBeanForRemind = null;
                     TaskDetailsBean taskDetailsBean = xmlParser
                             .parseTaskDetailsSIPMessage(message);
+
+
+
+                    if(taskDetailsBean.getProjectId()!=null && taskDetailsBean.getTaskId()!=null){
+                        if(Appreference.context_table.containsKey("projecthistory") && Appreference.context_table.containsKey("taskcoversation")) {
+                            NewTaskConversation newTaskConversation=(NewTaskConversation)Appreference.context_table.get("taskcoversation");
+                            final ProjectHistory projectHistory=(ProjectHistory)Appreference.context_table.get("projecthistory");
+                            if(newTaskConversation!=null){
+                                if(newTaskConversation.webtaskId!=null && newTaskConversation.projectId!=null){
+                                    if(taskDetailsBean.getTaskId().equalsIgnoreCase(newTaskConversation.webtaskId) &&
+                                            taskDetailsBean.getProjectId().equalsIgnoreCase(newTaskConversation.projectId)){
+                                        if(taskDetailsBean.getDescription()!=null){
+                                            if(taskDetailsBean.getDescription().equalsIgnoreCase("Task is Started") ||
+                                                    taskDetailsBean.getDescription().equalsIgnoreCase("Task is hold")||
+                                                    taskDetailsBean.getDescription().equalsIgnoreCase("Task is Resumed")||
+                                                    taskDetailsBean.getDescription().equalsIgnoreCase("Task is Restarted")||
+                                                    taskDetailsBean.getDescription().equalsIgnoreCase("Task is Paused")||
+                                                    taskDetailsBean.getDescription().equalsIgnoreCase("Task is Completed")){
+                                                if(projectHistory!=null){
+                                                    if (projectHistory.projectDetailsBeans != null && projectHistory.projectDetailsBeans.size() > 0 && projectHistory.buddyArrayAdapter != null) {
+                                                        ProjectDetailsBean projectDetailsBean = projectHistory.projectDetailsBeans.get(projectHistory.ListViewCurrentPosition);
+                                                        projectDetailsBean.setTaskStatus(taskDetailsBean.getDescription());
+                                                        handler1.post(new Runnable() {
+                                                            @Override
+                                                            public void run() {
+                                                                projectHistory.buddyArrayAdapter.notifyDataSetChanged();
+                                                            }
+                                                        });
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
                     Log.i("Main--->", " Main 4 " + taskDetailsBean.getTaskDescription());
                     if (taskDetailsBean.getTaskTagName() != null && taskDetailsBean.getTaskTagName().equalsIgnoreCase("Conference Start Time")) {
                         Log.i("Main--->", " Main 5 " + taskDetailsBean.getTaskDescription());

@@ -77,7 +77,7 @@ public class ProjectHistory extends Activity implements WebServiceInterface, Swi
     NewTaskConversation newTaskConversation;
     // ListView listView;
     ArrayList<TaskDetailsBean> taskDetailsBeen, taskDetailsBeen1, non_activebean;
-    ArrayList<ProjectDetailsBean> projectDetailsBeans, projectDetailsBeanslist_ForSearch, filterbuddy;
+    public ArrayList<ProjectDetailsBean> projectDetailsBeans, projectDetailsBeanslist_ForSearch, filterbuddy;
     private ProjectHistoryFilter filter;
     String userName, taskType, project_id, project_name, parent_TaskId, group_UserId, project_Owner;
     boolean isFromOracle;
@@ -87,7 +87,7 @@ public class ProjectHistory extends Activity implements WebServiceInterface, Swi
     static TaskHistory taskHistory;
     int rem;
     TextView finish_page, active_task;
-    TaskArrayAdapter buddyArrayAdapter, non_activetask;
+    public TaskArrayAdapter buddyArrayAdapter, non_activetask;
     String quotes = "\"", query;
     ProgressDialog dialog;
     ImageView fill;
@@ -106,6 +106,8 @@ public class ProjectHistory extends Activity implements WebServiceInterface, Swi
     TextView Noresult, view_mems;
     VideoCallDataBase videoCallDataBase;
     ProgressDialog progress;
+    boolean isFromNewTaskConv=false;
+    public int ListViewCurrentPosition;
 
     public static ProjectHistory getInstance() {
         return projectHistory;
@@ -258,6 +260,8 @@ public class ProjectHistory extends Activity implements WebServiceInterface, Swi
                 group_UserId = getIntent().getExtras().getString("groupUserId");
                 project_Owner = getIntent().getExtras().getString("projectOwner");
                 isFromOracle = getIntent().getBooleanExtra("fromOracle", false);
+                isFromNewTaskConv = getIntent().getBooleanExtra("isFromNewTaskConv", false);
+
                 if (isFromOracle)
                     addsubtasks.setVisibility(View.GONE);
             }
@@ -719,7 +723,7 @@ public class ProjectHistory extends Activity implements WebServiceInterface, Swi
 
                     try {
                         taskDetailsBean = projectDetailsBeans.get(position);
-
+                        ListViewCurrentPosition=position;
 
                         Log.d("ProjectHistory", "project id  ==  " + taskDetailsBean.getId() + "task id  == " + taskDetailsBean.getTaskId());
                         VideoCallDataBase.getDB(context).updateBadgeStatus("0", taskDetailsBean.getId());
@@ -742,6 +746,7 @@ public class ProjectHistory extends Activity implements WebServiceInterface, Swi
                                 intent.putExtra("task", "ProjectTemplateview");
                                 intent.putExtra("project_Temp", "ProjectTemplate");
                                 intent.putExtra("isTemplate",true);
+                                intent.putExtra("position",position);
                                 intent.putExtra("projectHistoryBean", taskDetailsBean);
                                 if (taskDetailsBean.getOracleProjectId() != null) {
                                     /*if task is template*/
@@ -756,6 +761,7 @@ public class ProjectHistory extends Activity implements WebServiceInterface, Swi
                                 intent.putExtra("task", "ProjectTemplateview");
                                 intent.putExtra("project_Temp", "ProjectTemplate");
                                 intent.putExtra("projectHistoryBean", taskDetailsBean);
+                                intent.putExtra("position",position);
                                 if (taskDetailsBean.getOracleProjectId() != null) {
                                     /*if task is template*/
                                     intent.putExtra("oracleProjectOwner", taskDetailsBean.getOwnerOfTask());
@@ -778,6 +784,7 @@ public class ProjectHistory extends Activity implements WebServiceInterface, Swi
                                     intent.putExtra("task", "projectHistory");
                                     intent.putExtra("projectHistoryBean", taskDetailsBean);
                                     intent.putExtra("isTemplate",false);
+                                    intent.putExtra("position",position);
                                     if (taskDetailsBean.getOracleProjectId() != null) {
                                         intent.putExtra("oracleProjectOwner", taskDetailsBean.getOwnerOfTask());
                                         intent.putExtra("ProjectFromOracle", true);
@@ -788,6 +795,7 @@ public class ProjectHistory extends Activity implements WebServiceInterface, Swi
                                     Intent intent = new Intent(context, NewTaskConversation.class);
                                     intent.putExtra("task", "projectHistory");
                                     intent.putExtra("projectHistoryBean", taskDetailsBean);
+                                    intent.putExtra("position",position);
                                     if (taskDetailsBean.getOracleProjectId() != null) {
                                         intent.putExtra("oracleProjectOwner", taskDetailsBean.getOwnerOfTask());
                                         intent.putExtra("ProjectFromOracle", true);
@@ -796,7 +804,7 @@ public class ProjectHistory extends Activity implements WebServiceInterface, Swi
                                     startActivity(intent);
                                 }
                             } else {
-                                Toast.makeText(getApplicationContext(), "You are not in individual project subtask", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(getApplicationContext(), "This Task does not assigned to you", Toast.LENGTH_SHORT).show();
                             }
                         } else if (taskDetailsBean.getTaskType().equalsIgnoreCase("Group")) {
                             Log.i("ListMembers", "projectDetailsBean.getTaskMemberList() " + taskDetailsBean.getTaskMemberList());
@@ -818,6 +826,7 @@ public class ProjectHistory extends Activity implements WebServiceInterface, Swi
                                     Intent intent = new Intent(context, NewTaskConversation.class);
                                     intent.putExtra("task", "projectHistory");
                                     intent.putExtra("projectHistoryBean", taskDetailsBean);
+                                    intent.putExtra("position",position);
                                     if (taskDetailsBean.getOracleProjectId() != null) {
                                         intent.putExtra("oracleProjectOwner", taskDetailsBean.getOwnerOfTask());
                                         intent.putExtra("ProjectFromOracle", true);
@@ -982,6 +991,7 @@ public class ProjectHistory extends Activity implements WebServiceInterface, Swi
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        if(!isFromNewTaskConv)
         Appreference.context_table.remove("projecthistory");
 
     }
@@ -994,7 +1004,7 @@ public class ProjectHistory extends Activity implements WebServiceInterface, Swi
             if (check) {
                 Log.i("DBQuery", "check " + check);
                 Log.i("DBQuery", "check1111 " + check);
-                setActiveAdapter();
+//                setActiveAdapter();
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -1614,7 +1624,8 @@ public class ProjectHistory extends Activity implements WebServiceInterface, Swi
                         task_status.setTextColor(getResources().getColor(R.color.green));
                     } else if (projectDetailsBean.getTaskStatus() != null && projectDetailsBean.getTaskStatus().equalsIgnoreCase("draft")) {
                         Log.i("ProjectHistory", "projectDetailsBean.getTaskStatus() 7 " + projectDetailsBean.getTaskStatus());
-                        task_status.setText("Template");
+//                        task_status.setText("Template");
+                        task_status.setText("Unassigned");
                     } else if (projectDetailsBean.getTaskStatus() != null) {
                         Log.i("ProjectHistory", "projectDetailsBean.getTaskStatus() 8 " + projectDetailsBean.getTaskStatus());
                         task_status.setText(projectDetailsBean.getTaskStatus());
@@ -1646,6 +1657,7 @@ public class ProjectHistory extends Activity implements WebServiceInterface, Swi
                                 task_taker.setText("Me Taker : NA");
                             }
                         } else {
+                            Log.i("receiver123","TaskReceiver List1111=====>"+projectDetailsBean.getTaskReceiver());
                             if (projectDetailsBean.getTaskReceiver() != null && !projectDetailsBean.getTaskReceiver().equalsIgnoreCase(null) && !projectDetailsBean.getTaskReceiver().equalsIgnoreCase("") && !projectDetailsBean.getTaskReceiver().equalsIgnoreCase("null") && !projectDetailsBean.getTaskReceiver().equalsIgnoreCase("(null)")) {
                                 if (projectDetailsBean.getTaskReceiver().equalsIgnoreCase(Appreference.loginuserdetails.getUsername())) {
                                     task_taker.setText("Task Taker : Me");
@@ -1687,6 +1699,8 @@ public class ProjectHistory extends Activity implements WebServiceInterface, Swi
                         if (projectDetailsBean.getTaskStatus() != null && projectDetailsBean.getTaskStatus().equalsIgnoreCase("note")) {
                             task_taker.setText("Me Taker : " + Pjt_mem);
                         } else {
+                            Log.i("receiver123","TaskReceiver List2222=====>"+Pjt_mem);
+
                             task_taker.setText("Task Taker : " + Pjt_mem);
                             Log.i("project_details", "projectDetailsBean getTaskMem's() " + Pjt_mem);
                         }
@@ -1773,10 +1787,14 @@ public class ProjectHistory extends Activity implements WebServiceInterface, Swi
                         } else {
                             task_observer.setText("Task Observer : NA");
                         }
+
                     }
 //                    }
                 }
                 String s = null;
+              /*  if (projectDetailsBean.getTaskStatus() != null && projectDetailsBean.getTaskStatus().equalsIgnoreCase("draft")){
+                    task_taker.setText("Task Taker : NA");
+                }*/
             } catch (Exception e) {
                 e.printStackTrace();
             }

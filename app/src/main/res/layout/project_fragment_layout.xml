@@ -62,7 +62,7 @@
             android:gravity="center"
             android:hint="Search"
             android:imeOptions="actionSearch"
-            android:inputType="textPersonName"></EditText>
+            android:inputType="number"></EditText>
 
         <!--<Button
             android:id="@+id/search_button"

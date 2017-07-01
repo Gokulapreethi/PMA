@@ -640,7 +640,6 @@
                     android:layout_marginTop="4dp"
                     android:layout_weight="1"
                     android:gravity="center_vertical"
-                    android:maxLength="100"
                     android:textColor="#808080"
                     android:visibility="visible">
                 </EditText>
@@ -689,7 +688,6 @@
                     android:layout_marginTop="4dp"
                     android:layout_weight="1"
                     android:gravity="center_vertical"
-                    android:maxLength="100"
                     android:textColor="#808080"
                     android:visibility="visible">
                 </EditText>
@@ -764,7 +762,6 @@
                     android:layout_marginTop="4dp"
                     android:layout_weight="1"
                     android:gravity="center_vertical"
-                    android:maxLength="100"
                     android:textColor="#808080"
                     android:visibility="visible">
                 </EditText>
@@ -841,11 +838,10 @@
                 <ImageView
                     android:id="@+id/signature_path"
                     android:layout_width="50dp"
-                    android:layout_height="wrap_content"
+                    android:layout_height="50dp"
                     android:layout_marginTop="5dp"
                     android:layout_marginRight="10dp"
                     android:layout_marginEnd="10dp"
-                    android:background="@drawable/complete_status"
                     android:visibility="gone" />
 
             </LinearLayout>
@@ -885,11 +881,10 @@
                 <ImageView
                     android:id="@+id/photo_path"
                     android:layout_width="50dp"
-                    android:layout_height="wrap_content"
+                    android:layout_height="50dp"
                     android:layout_marginTop="5dp"
                     android:layout_marginRight="10dp"
                     android:layout_marginEnd="10dp"
-                    android:background="@drawable/complete_status"
                     android:visibility="gone" />
             </LinearLayout>
             <View
@@ -924,20 +919,19 @@
                 <ImageView
                     android:id="@+id/tech_signature_path"
                     android:layout_width="50dp"
-                    android:layout_height="wrap_content"
+                    android:layout_height="50dp"
                     android:layout_marginTop="5dp"
                     android:layout_marginRight="10dp"
                     android:layout_marginEnd="5dp"
-                    android:background="@drawable/complete_status"
                     android:visibility="gone" />
-                <View
-                    android:layout_width="wrap_content"
-                    android:layout_height="1.20dp"
-                    android:layout_marginTop="10dp"
-                    android:background="@color/gray"
-                    android:visibility="visible"/>
 
             </LinearLayout>
+            <View
+                android:layout_width="wrap_content"
+                android:layout_height="1.20dp"
+                android:layout_marginTop="10dp"
+                android:background="@color/gray"
+                android:visibility="visible"/>
         </LinearLayout>
     </ScrollView>
 </RelativeLayout>

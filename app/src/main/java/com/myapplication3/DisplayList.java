@@ -49,7 +49,7 @@ public class DisplayList extends Activity {
         webtaskId = getIntent().getStringExtra("webtaskId");
         date_type = getIntent().getStringExtra("date_type");
 
-        list_date = VideoCallDataBase.getDB(context).getTravelDetails("Select * from projectStatus where projectId ='" + projectId + "' and taskId = '" + webtaskId + "' and status ='7'");
+        list_date = VideoCallDataBase.getDB(context).getTravelDetails("Select * from projectStatus where projectId ='" + projectId + "' and taskId = '" + webtaskId + "' and (status ='7' or status='9')");
         Log.i("DisplayList", "list_date " + list_date.size());
         adapter = new ListAct(context,list_date);
         list.setAdapter(adapter);

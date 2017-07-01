@@ -603,7 +603,8 @@
                 android:layout_marginLeft="2dp"
                 android:layout_marginRight="2dp"
                 android:layout_marginTop="2dp"
-                android:orientation="horizontal" >
+                android:orientation="horizontal"
+                android:visibility="gone">
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
@@ -632,7 +633,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="1.20dp"
                 android:layout_marginTop="10dp"
-                android:background="@color/gray" />
+                android:background="@color/gray"
+                android:visibility="gone"/>
             <LinearLayout
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
@@ -801,9 +803,8 @@
                 <ImageView
                     android:id="@+id/signature_path1"
                     android:layout_width="50dp"
-                    android:layout_height="wrap_content"
+                    android:layout_height="50dp"
                     android:layout_marginTop="5dp"
-                    android:background="@drawable/complete_status"
                     android:visibility="gone" />
 
             </LinearLayout>
@@ -834,9 +835,8 @@
                 <ImageView
                     android:id="@+id/photo_path1"
                     android:layout_width="50dp"
-                    android:layout_height="wrap_content"
+                    android:layout_height="50dp"
                     android:layout_marginTop="5dp"
-                    android:background="@drawable/complete_status"
                     android:visibility="gone" />
 
 
@@ -868,12 +868,17 @@
                 <ImageView
                     android:id="@+id/tech_signature_path1"
                     android:layout_width="50dp"
-                    android:layout_height="wrap_content"
+                    android:layout_height="50dp"
                     android:layout_marginTop="5dp"
-                    android:background="@drawable/complete_status"
                     android:visibility="gone" />
 
             </LinearLayout>
+            <View
+                android:layout_width="wrap_content"
+                android:layout_height="1.20dp"
+                android:layout_marginTop="10dp"
+                android:background="@color/gray"
+                android:visibility="visible"/>
         </LinearLayout>
     </ScrollView>
 </RelativeLayout>

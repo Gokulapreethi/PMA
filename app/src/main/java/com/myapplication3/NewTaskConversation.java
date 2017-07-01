@@ -140,8 +140,10 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.TimeZone;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -211,6 +213,7 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
     String projectGroup_Mems, OracleParentTaskId;
     String Old_signalId;
     String filter, percentage_value, private_member, project_temp;
+    int clickPosition;
     String[] dates;
     String isRemainderRequired;
     String today, startdate, enddate, reminderdate, duration, durationunit, repeatfreq, reminderquote, remindertone, reminderfreq, ch_remarks, date_header, percent = null, final_date = null;
@@ -233,7 +236,7 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
     ArrayList<ContactBean> project_toUser;
     ArrayList<Integer> toUserListOfId;
     ProgressDialog progress;
-    String toUserName, from_UserName, taskReceiver, taskType, taskStatus, projectId, parentTaskId, isParentTask = "N";
+    public String toUserName, from_UserName, taskReceiver, taskType, taskStatus, projectId, parentTaskId, isParentTask = "N";
     TextView headerName, savetemplate;
     GridView gridview, gridview_taker, gridview_observer;
     boolean check_spinner, isGrp_Percent = false;
@@ -311,12 +314,14 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
     boolean isForOracleProject = false;
     boolean isDivertedON = false;
     boolean isDeassign = false;
+    boolean isFromPauseClick=false;
     ArrayList<String> custom_1MediaList;
     private HashMap<Integer, String> statusCompletedFieldValues = new HashMap<Integer, String>();
     String TravelStartdate, TravelEnddate, status_signature, photo_signature, tech_signature, PickDate, travel_endDate;
     String FromTravelStart, FromTravelEnd, ActivityStartdate, ActivityEnddate, TotravelStart, ToTravelEnd;
     String observationStatus, actiontakenStatus, custsignnameStatus, HMReadingStatus;
     ArrayList<String> travel_date_details;
+    String dir_path = Environment.getExternalStorageDirectory() + "/High Message/downloads/";
 
     public static NewTaskConversation getInstance() {
         return newTaskConversation;
@@ -555,6 +560,7 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                     taskType = "individual";
                     setTemplate_StaticVariables();
                     project_temp = getIntent().getStringExtra("project_Temp");
+                    clickPosition = getIntent().getIntExtra("position",0);
                     Log.i("taskConversation", "project_temp " + project_temp);
                     projectId = projectBean.getId();
                     Log.i("TemplateList", "project templatehistory");
@@ -712,6 +718,7 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                     break;
                 case "projectHistory":
                     final ProjectDetailsBean projectDetailsBean = (ProjectDetailsBean) getIntent().getSerializableExtra("projectHistoryBean");
+                    clickPosition = getIntent().getIntExtra("position",0);
                     Log.i("task280317", "after project notify press getTaskObservers " + projectDetailsBean.getTaskObservers());
                     setProjectHistory_StaticVariable(projectDetailsBean);
                     ShowApproveIcon();
@@ -1086,7 +1093,29 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                             break;
                         case "Custom1":
                             try {
-                                showCustom1PopUp();
+                                final TaskDetailsBean detailsBean;
+                                String Querystatus = "Select * from projectStatus where projectId ='" + projectId + "' and taskId = '" + webtaskId + "'";
+                                detailsBean = VideoCallDataBase.getDB(context).getStatusCompletedProjectDetails(Querystatus);
+
+                                if (detailsBean.getPhotoPath() != null) {
+                                    Appreference.taskMultimediaDownload.put(detailsBean.getPhotoPath(), detailsBean);
+                                    Log.i("profiledownload", "fileName--2 " + detailsBean.getPhotoPath());
+                                    Log.i("task", "1 image" + detailsBean.getPhotoPath());
+                                    new DownloadCustomImage(getResources().getString(R.string.task_reminder) + detailsBean.getPhotoPath(), detailsBean.getPhotoPath()).execute();
+                                }
+                                if (detailsBean.getCustomerSignature() != null) {
+                                    Appreference.taskMultimediaDownload.put(detailsBean.getCustomerSignature(), detailsBean);
+                                    Log.i("profiledownload", "fileName--2 " + detailsBean.getCustomerSignature());
+                                    Log.i("task", "1 image" + detailsBean.getCustomerSignature());
+                                    new DownloadCustomImage(getResources().getString(R.string.task_reminder) + detailsBean.getCustomerSignature(), detailsBean.getCustomerSignature()).execute();
+                                }
+                                if (detailsBean.getTechnicianSignature() != null) {
+                                    Appreference.taskMultimediaDownload.put(detailsBean.getTechnicianSignature(), detailsBean);
+                                    Log.i("profiledownload", "fileName--2 " + detailsBean.getTechnicianSignature());
+                                    Log.i("task", "1 image" + detailsBean.getTechnicianSignature());
+                                    new DownloadCustomImage(getResources().getString(R.string.task_reminder) + detailsBean.getTechnicianSignature(), detailsBean.getTechnicianSignature()).execute();
+                                }
+                                showCustom1PopUp(detailsBean);
 
                                 /*if (taskType != null && taskType.equalsIgnoreCase("group")) {
                                     if (!isTaskName) {
@@ -2016,7 +2045,29 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                             break;
                         case "Custom1":
                             try {
-                                showCustom1PopUp();
+                                final TaskDetailsBean detailsBean;
+                                String Querystatus = "Select * from projectStatus where projectId ='" + projectId + "' and taskId = '" + webtaskId + "'";
+                                detailsBean = VideoCallDataBase.getDB(context).getStatusCompletedProjectDetails(Querystatus);
+
+                                if (detailsBean.getPhotoPath() != null) {
+                                    Appreference.taskMultimediaDownload.put(detailsBean.getPhotoPath(), detailsBean);
+                                    Log.i("profiledownload", "fileName--2 " + detailsBean.getPhotoPath());
+                                    Log.i("task", "1 image" + detailsBean.getPhotoPath());
+                                    new DownloadCustomImage(getResources().getString(R.string.task_reminder) + detailsBean.getPhotoPath(), detailsBean.getPhotoPath()).execute();
+                                }
+                                if (detailsBean.getCustomerSignature() != null) {
+                                    Appreference.taskMultimediaDownload.put(detailsBean.getCustomerSignature(), detailsBean);
+                                    Log.i("profiledownload", "fileName--2 " + detailsBean.getCustomerSignature());
+                                    Log.i("task", "1 image" + detailsBean.getCustomerSignature());
+                                    new DownloadCustomImage(getResources().getString(R.string.task_reminder) + detailsBean.getCustomerSignature(), detailsBean.getCustomerSignature()).execute();
+                                }
+                                if (detailsBean.getTechnicianSignature() != null) {
+                                    Appreference.taskMultimediaDownload.put(detailsBean.getTechnicianSignature(), detailsBean);
+                                    Log.i("profiledownload", "fileName--2 " + detailsBean.getTechnicianSignature());
+                                    Log.i("task", "1 image" + detailsBean.getTechnicianSignature());
+                                    new DownloadCustomImage(getResources().getString(R.string.task_reminder) + detailsBean.getTechnicianSignature(), detailsBean.getTechnicianSignature()).execute();
+                                }
+                                showCustom1PopUp(detailsBean);
                                /* if (taskType != null && taskType.equalsIgnoreCase("group")) {
                                     if (!isTaskName) {
                                         showprogressforpriority("Setting Custom Tags");
@@ -2621,6 +2672,7 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
         tv_reassign.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                assign_taskview.setVisibility(View.GONE);
                 if (!Self_assign)
                     addTaskReassignClickEvent();
                 else {
@@ -3713,9 +3765,9 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
 
     }
 
-    private void showCustom1PopUp() {
+    private void showCustom1PopUp(final TaskDetailsBean detailsBean) {
 //        ArrayList<TaskDetailsBean> taskDetailsBean = new ArrayList<>();
-        final TaskDetailsBean detailsBean;
+
         try {
             final Dialog dialog = new Dialog(context);
             dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -3782,18 +3834,45 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                 description.setText(existing_entry.getTaskDescription());
             }
 //        String Querystatus= "Select * from projectStatus where projectId ='" + projectId + "' and taskId = '" + webtaskId + "' and status = '"+ queryStatus + "'";
-            String Querystatus = "Select * from projectStatus where projectId ='" + projectId + "' and taskId = '" + webtaskId + "'";
-            detailsBean = VideoCallDataBase.getDB(context).getStatusCompletedProjectDetails(Querystatus);
+
             remarks_completion.setText(detailsBean.getRemark());
             observation.setText(detailsBean.getObservation());
             action_taken_show.setText(detailsBean.getActionTaken());
             cust_sign_name_show.setText(detailsBean.getCustomerSignatureName());
             HM_Reading_show.setText(detailsBean.getHMReading());
 
-            signature_path1.setVisibility(View.VISIBLE);
-            photo_path1.setVisibility(View.VISIBLE);
 
-            tech_signature_path1.setVisibility(View.VISIBLE);
+            Log.i("custom1", "signature--> " + detailsBean.getCustomerSignature());
+            Log.i("custom1", "photo--> " + detailsBean.getPhotoPath());
+            Log.i("custom1", "techsignature--> " + detailsBean.getTechnicianSignature());
+
+            if (detailsBean.getCustomerSignature()!=null && !detailsBean.getCustomerSignature().equalsIgnoreCase("")) {
+                String ImageName = detailsBean.getCustomerSignature();
+                File file = new File(dir_path + detailsBean.getCustomerSignature());
+                if (file.exists()) {
+                    Bitmap myBitmap = BitmapFactory.decodeFile(file.getAbsolutePath());
+                    signature_path1.setImageBitmap(myBitmap);
+                    signature_path1.setVisibility(View.VISIBLE);
+                }
+            }
+            if (detailsBean.getPhotoPath() != null && !detailsBean.getPhotoPath().equalsIgnoreCase("")) {
+                String ImageName = detailsBean.getPhotoPath();
+                File file = new File(dir_path+ "/High Message/" +detailsBean.getPhotoPath());
+                if (file.exists()) {
+                    Bitmap myBitmap = BitmapFactory.decodeFile(file.getAbsolutePath());
+                    photo_path1.setImageBitmap(myBitmap);
+                    photo_path1.setVisibility(View.VISIBLE);
+                }
+            }
+            if (detailsBean.getTechnicianSignature() != null && !detailsBean.getTechnicianSignature().equalsIgnoreCase("")) {
+                String ImageName = detailsBean.getTechnicianSignature();
+                File file = new File(dir_path+ "/High Message/" + detailsBean.getTechnicianSignature());
+                if (file.exists()) {
+                    Bitmap myBitmap = BitmapFactory.decodeFile(file.getAbsolutePath());
+                    tech_signature_path1.setImageBitmap(myBitmap);
+                    tech_signature_path1.setVisibility(View.VISIBLE);
+                }
+            }
 //            signature_path1.setText(detailsBean.getCustomerSignature());
 //            photo_path1.setText(detailsBean.getPhotoPath());
 //            tech_signature_path1.setText(detailsBean.getTechnicianSignature());
@@ -3831,74 +3910,34 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
             signature_path1.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if (detailsBean.getCustomerSignature()!=null && !detailsBean.getCustomerSignature().equalsIgnoreCase("")) {
+                    Log.i("custom1", "signature_path1--> " + detailsBean.getCustomerSignature());
+                    if (detailsBean.getCustomerSignature() != null && !detailsBean.getCustomerSignature().equalsIgnoreCase("")) {
                         String ImageName = detailsBean.getCustomerSignature();
-                        File file = null;
-                        file = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/High Message/" + detailsBean.getCustomerSignature());
-//                    file = new File(ImageName);
-                        if (file.exists()) {
                             Intent intent = new Intent(context, FullScreenImage.class);
-                            intent.putExtra("image", file.toString());
+                            intent.putExtra("image", dir_path + detailsBean.getCustomerSignature());
                             context.startActivity(intent);
-                        } else {
-                            File file1 = null;
-                            file1 = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/High Message/" + ImageName);
-                            if (file1.exists()) {
-                                Intent intent = new Intent(context, FullScreenImage.class);
-                                intent.putExtra("image", file1.toString());
-                                context.startActivity(intent);
-                            }
-                        }
                     }
                 }
             });
             photo_path1.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-//                    String ImageName = photo_path.getText().toString();
-                    if (photo_signature != null && !photo_signature.equalsIgnoreCase("")) {
-                        String ImageName = photo_signature;
-                        File file = null;
-
-                        file = new File(ImageName);
-                        if (file.exists()) {
-                            Intent intent = new Intent(context, FullScreenImage.class);
-                            intent.putExtra("image", file.toString());
-                            context.startActivity(intent);
-                        } else {
-                            File file1 = null;
-                            file1 = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/High Message/" + ImageName);
-                            if (file1.exists()) {
-                                Intent intent = new Intent(context, FullScreenImage.class);
-                                intent.putExtra("image", file1.toString());
-                                context.startActivity(intent);
-                            }
-                        }
+                    Log.i("custom1", "photo_path1--> " + detailsBean.getPhotoPath());
+                    if (detailsBean.getPhotoPath() != null && !detailsBean.getPhotoPath().equalsIgnoreCase("")) {
+                        Intent intent = new Intent(context, FullScreenImage.class);
+                        intent.putExtra("image", dir_path + detailsBean.getPhotoPath());
+                        context.startActivity(intent);
                     }
                 }
             });
             tech_signature_path1.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-//                    String ImageName = photo_path.getText().toString();
-                    if (photo_signature != null && !photo_signature.equalsIgnoreCase("")) {
-                        String ImageName = photo_signature;
-                        File file = null;
-
-                        file = new File(ImageName);
-                        if (file.exists()) {
-                            Intent intent = new Intent(context, FullScreenImage.class);
-                            intent.putExtra("image", file.toString());
-                            context.startActivity(intent);
-                        } else {
-                            File file1 = null;
-                            file1 = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/High Message/" + ImageName);
-                            if (file1.exists()) {
-                                Intent intent = new Intent(context, FullScreenImage.class);
-                                intent.putExtra("image", file1.toString());
-                                context.startActivity(intent);
-                            }
-                        }
+                    Log.i("custom1", "tech_signature_path1--> " + detailsBean.getTechnicianSignature());
+                    if (detailsBean.getTechnicianSignature() != null && !detailsBean.getTechnicianSignature().equalsIgnoreCase("")) {
+                        Intent intent = new Intent(context, FullScreenImage.class);
+                        intent.putExtra("image", dir_path + detailsBean.getTechnicianSignature());
+                        context.startActivity(intent);
                     }
                 }
             });
@@ -3918,6 +3957,184 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
             });
         } catch (Exception e) {
             e.printStackTrace();
+        }
+    }
+
+    public class DownloadImage extends AsyncTask<String, Void, String> {
+        String downloadImageurl;
+        TaskDetailsBean detailsBean = null;
+        String namevalue = "";
+
+        public DownloadImage(String url, String name) {
+            this.downloadImageurl = url;
+            namevalue = name;
+        }
+
+        public DownloadImage(TaskDetailsBean name) {
+            detailsBean = name;
+            this.downloadImageurl = getResources().getString(R.string.task_reminder) + name.getTaskDescription();
+            namevalue = name.getTaskDescription();
+        }
+
+        @Override
+        protected String doInBackground(String... urls) {
+            String response = "";
+            try {
+                Log.i("profiledownload", "downloadImageurl " + downloadImageurl);
+                if (isNetworkAvailable()) {
+//                    String url ="http://122.165.92.171:8080/uploads/highmessaging/user/";
+                    Log.i("profiledownload", "profile download ");
+                    String profile1 = null;
+                    if (downloadImageurl != null) {
+                        if (downloadImageurl.contains("task"))
+                            profile1 = downloadImageurl.split("task/")[1];
+                        else
+                            profile1 = downloadImageurl.split("chat/")[1];
+                        Log.i("profiledownload", "profile1  " + profile1);
+                        File extStore = Environment.getExternalStorageDirectory();
+                        File myFile = new File(extStore.getAbsolutePath() + "/High Message/downloads/" + profile1);
+                        Log.i("profiledownload", "file " + myFile.toString());
+                        if (!myFile.exists()) {
+                            try {
+                                 /*  HostnameVerifier hostnameVerifier = new HostnameVerifier() {
+                                        @Override
+                                        public boolean verify(String hostname, SSLSession session) {
+                                            HostnameVerifier hv =
+                                                    HttpsURLConnection.getDefaultHostnameVerifier();
+                                            return hv.verify("example.com", session);
+                                        }
+                                    };*/
+
+// Tell the URLConnection to use our HostnameVerifier
+
+
+
+                                   /* Log.i("profiledownload", "file not exit--->" + profile);
+                                    URL bishowtmap = new URL(url + profile);
+//                                    HostnameVerifier hostnameVerifier = org.apache.http.conn.ssl.SSLSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER;
+//                                    HttpsURLConnection.setDefaultHostnameVerifier(hostnameVerifier);
+                                    HttpsURLConnection connection = (HttpsURLConnection) bitmap
+                                            .openConnection();
+//                                    connection.setDefaultHostnameVerifier(hostnameVerifier);
+                                    connection.setDoInput(true);*/
+                                URL bitmap = new URL(downloadImageurl);
+
+                                Log.i("profiledownload", "profile bitmap " + bitmap);
+                                HttpURLConnection connection =
+                                        (HttpURLConnection) bitmap.openConnection();
+//                                    connection.setHostnameVerifier(hostnameVerifier);
+                                InputStream in = connection.getInputStream();
+//                                    copyInputStreamToOutputStream(in, System.out);
+                                connection.connect();
+                                if (connection.getInputStream() != null) {
+                                    InputStream inputStream = connection.getInputStream();
+                                    String dir_path = Environment.getExternalStorageDirectory()
+                                            + "/High Message/downloads";
+                                    Log.i("profiledownload", "profile dir_path" + dir_path);
+                                    File directory = new File(dir_path);
+                                    if (!directory.exists())
+                                        directory.mkdir();
+                                    String filePath = Environment.getExternalStorageDirectory()
+                                            .getAbsolutePath()
+                                            + "/High Message/downloads/"
+                                            + profile1;
+
+                                    Log.d("profiledownload", "my file path is---->" + filePath);
+
+                                    File file_name = new File(filePath);
+                                    BufferedOutputStream bos = new BufferedOutputStream(
+                                            new FileOutputStream(file_name));
+                                    int inByte;
+                                    while ((inByte = inputStream.read()) != -1) {
+                                        bos.write(inByte);
+                                    }
+                                    bos.close();
+
+                                    //** For  Avatar download
+                                    //Start
+                                    Log.d("profiledownload", "check ");
+                                    Bitmap btmap = BitmapFactory.decodeStream(inputStream);
+                                    if (connection.getContentLength() <= 0 && btmap == null) {
+                                        Log.i("downavatar", "avatar download faild contact name-->");
+
+                                    } else {
+                                        Log.i("downavatar", "avatar download success contact name-->");
+                                    }
+                                    //End
+//                                        Appreference.profile_image.put(profile, filePath);
+                                }
+                            } catch (FileNotFoundException e) {
+                                e.printStackTrace();
+                                Appreference.printLog("MainActivity", "DownloadImage Exception: " + e.getMessage(), "WARN", null);
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                                Appreference.printLog("MainActivity", "DownloadImage Exception: " + e.getMessage(), "WARN", null);
+                            }
+                        } else {
+//                                Appreference.profile_image.put(profile, myFile.toString());
+//                            Log.i("profiledownload", "file exit--->" + profile);
+                        }
+                    }
+
+                }
+
+
+            } catch (Exception e) {
+                e.printStackTrace();
+                Appreference.printLog("MainActivity", "DownloadImage Exception: " + e.getMessage(), "WARN", null);
+            }
+            return response;
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            try {
+                Log.i("Template creation", "mm1 ** " + namevalue);
+                Log.i("Template creation", "TaskDescription1 ** ");
+                Log.i("Template creation", "TaskDescription1 ** " + Appreference.taskMultimediaDownload.size());
+
+                if (Appreference.taskMultimediaDownload != null && Appreference.taskMultimediaDownload.size() > 0) {
+                    Iterator iterator1 = Appreference.taskMultimediaDownload.entrySet()
+                            .iterator();
+                    Log.i("Template creation", "mm11 " + namevalue);
+                    //                Log.i("Template creation", "TaskDescription1 " + detailsBean.getTaskDescription());
+                    while (iterator1.hasNext()) {
+                        Map.Entry mapEntry = (Map.Entry) iterator1.next();
+                        if (namevalue.equalsIgnoreCase(((TaskDetailsBean) mapEntry.getValue()).getTaskDescription())) {
+                            Log.i("Template creation", "mm " + namevalue);
+                            //                        Log.i("Template creation", "TaskDescription " + detailsBean.getTaskDescription());
+                            detailsBean = (TaskDetailsBean) mapEntry.getValue();
+                            File imageFile = new File(Environment.getExternalStorageDirectory()
+                                    + "/High Message/downloads/" + detailsBean.getTaskDescription());
+                            if (imageFile.exists()) {
+                                Log.i("Template creation", "TaskDescription11 " + detailsBean.getTaskDescription());
+                                if (detailsBean.getSignalid() != null) {
+                                    VideoCallDataBase.getDB(context).updateTaskProgressStatus(detailsBean.getSignalid());
+                                }
+                            }
+                        }
+                    }
+                }
+
+                if (Appreference.context_table.containsKey("taskcoversation")) {
+
+                    if (detailsBean != null) {
+                        Log.i("Template creation", "TaskDescription111 ");
+                        NewTaskConversation.getInstance().MMdownloadCompleted(detailsBean);
+                    }
+                    /*NewTaskConversation  newTaskConversation = new NewTaskConversation();
+                    newTaskConversation.loadUI();*/
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                Appreference.printLog("MainActivity onPostExecute", "DownloadImage Exception: " + e.getMessage(), "WARN", null);
+            }
+        }
+
+        @Override
+        protected void onPreExecute() {
+
+            super.onPreExecute();
         }
     }
 
@@ -4099,6 +4316,7 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                                 public void onClick(View v) {
                                     dialog1.dismiss();
                                     Log.i("ws123", "remarks for Hold====>" + name.getText().toString());
+                                    isFromPauseClick=true;
                                     sendStatus_webservice("3", "", "Pause Remarks :"+name.getText().toString(), "Paused ");
 
                                 }
@@ -4238,9 +4456,9 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                         statusCompletedFieldValues.put(3, "Address :" + detailsBean.getAddress());
                         description.setText(taskName);
                         statusCompletedFieldValues.put(12, "Description :" + detailsBean.getTaskDescription());
-                        signature_path.setVisibility(View.VISIBLE);
-                        photo_path.setVisibility(View.VISIBLE);
-                        tech_signature_path.setVisibility(View.VISIBLE);
+                        signature_path.setVisibility(View.GONE);
+                        photo_path.setVisibility(View.GONE);
+                        tech_signature_path.setVisibility(View.GONE);
                     }
 
 
@@ -4492,7 +4710,24 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
     private void sendStatus_webservice(String status, String path, String remarks, String projectCurrentStatus) {
         try {
             Log.i("desc123","inside 120  status ========>"+status);
+            ProjectHistory projectHistory = (ProjectHistory) Appreference.context_table.get("projecthistory");
+            if(projectHistory!=null)
+            {
+                Log.i("ProjectHistory","inside refresh  status projectHistory ========>"+projectHistory.projectDetailsBeans + "size bean "+projectHistory.projectDetailsBeans.size()+"buddayArrayAdapteer==>"+projectHistory.buddyArrayAdapter);
 
+                if (projectHistory.projectDetailsBeans != null && projectHistory.projectDetailsBeans.size() > 0 && projectHistory.buddyArrayAdapter != null) {
+
+                    ProjectDetailsBean projectDetailsBean = projectHistory.projectDetailsBeans.get(clickPosition);
+                    if (projectCurrentStatus.equalsIgnoreCase("DeAssign")) {
+                        projectDetailsBean.setTaskStatus("Unassigned");
+                        projectDetailsBean.setTaskReceiver("NA");
+                    }else
+                        projectDetailsBean.setTaskStatus(projectCurrentStatus);
+
+                    Log.i("ProjectHistory", "inside refresh  status NewTaskConveratio ========>" + projectCurrentStatus);
+                    projectHistory.buddyArrayAdapter.notifyDataSetChanged();
+                }
+            }
             SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
             SimpleDateFormat dateParse = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
             String dateTime = dateFormat.format(new Date());
@@ -4664,7 +4899,8 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                 taskDetailsBean.setTaskDescription(Appreference.loginuserdetails.getUsername() + " Left");
                 taskDetailsBean.setSubType("deassign");
             } else if (status.equalsIgnoreCase("7") || status.equalsIgnoreCase("9")) {
-                taskDetailsBean.setTaskDescription("Details sent");
+                taskDetailsBean.setTaskDescription("Gathering Details...");
+                taskDetailsBean.setCustomTagVisible(false);
             } else {
                 taskDetailsBean.setTaskDescription("Task is " + projectCurrentStatus);
             }
@@ -5246,7 +5482,7 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                 gridview_text.add("ReminderResponses");
                 gridview_text.add("RemindMe");
                 gridview_text.add("TNA Report");
-                gridview_text.add("FSR Report");
+//                gridview_text.add("FSR Report");
                 gridview_text.add("moreFields");
                 if (category != null && category.equalsIgnoreCase("issue")) {
                     gridview_text.add("ViewTask");
@@ -5271,7 +5507,7 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                 gridview_thump.add(R.drawable.reassign_task_new);
                 gridview_thump.add(R.mipmap.ic_reminder_icon);
                 gridview_thump.add(R.drawable.remind_me);
-                gridview_thump.add(R.drawable.leave);
+//                gridview_thump.add(R.drawable.leave);
                 gridview_thump.add(R.drawable.share);
                 gridview_thump.add(R.drawable.ic_rectangle_filled_100);
                 if (category != null && category.equalsIgnoreCase("issue")) {
@@ -8265,6 +8501,14 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                         if (photo_path != null) {
                             custom_1MediaList.add(strIPath);
                             photo_signature = strIPath;
+                            if(photo_path!=null) {
+                                File imgFile = new File(photo_signature);
+                                if (imgFile.exists()) {
+                                    Bitmap myBitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
+                                    photo_path.setImageBitmap(myBitmap);
+                                }
+                                photo_path.setVisibility(View.VISIBLE);
+                            }
 //                            photo_path.setText(strIPath);
                         }
                         mime_Type = "image";
@@ -8447,11 +8691,27 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                         strIPath = data.getStringExtra("path");
                         if (isCustomerSign) {
                             status_signature = strIPath;
+                            if(signature_path!=null){
+                                File imgFile = new  File(status_signature);
+                                if(imgFile.exists()){
+                                    Bitmap myBitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
+                                    signature_path.setImageBitmap(myBitmap);
+                                }
+                                signature_path.setVisibility(View.VISIBLE);
+                            }
                             custom_1MediaList.add(strIPath);
 //                            if (signature_path != null)
 //                                signature_path.setText(strIPath);
                         } else {
                             tech_signature = strIPath;
+                            if(tech_signature_path!=null) {
+                                File imgFile = new File(tech_signature);
+                                if (imgFile.exists()) {
+                                    Bitmap myBitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
+                                    tech_signature_path.setImageBitmap(myBitmap);
+                                }
+                                tech_signature_path.setVisibility(View.VISIBLE);
+                            }
                             custom_1MediaList.add(strIPath);
 //                            if (tech_signature_path != null)
 //                                tech_signature_path.setText(strIPath);
@@ -10317,9 +10577,9 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                                                  projectCurrentStatus = "DeAssign";
                                              }
 
-                                             String StatusUpdateInHistory = "update projectHistory set taskStatus='" + projectCurrentStatus + "' where projectId='" + projectId+ "' and taskId= '" + webtaskId + "'";
+                                          /*   String StatusUpdateInHistory = "update projectHistory set taskStatus='" + projectCurrentStatus + "' where projectId='" + projectId+ "' and taskId= '" + webtaskId + "'";
                                              Log.i("status123","projectUpdate query "+StatusUpdateInHistory);
-                                             VideoCallDataBase.getDB(context).updateaccept(StatusUpdateInHistory);
+                                             VideoCallDataBase.getDB(context).updateaccept(StatusUpdateInHistory);*/
 
                                              TaskDetailsBean detailsBean = new TaskDetailsBean();
                                              detailsBean = communicationBean.getTaskDetailsBean();
@@ -10381,6 +10641,7 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                                              Log.i("responce", "travel_endDate " + travel_endDate + " Remarks==> " + detailsBean.getCustomerRemarks());
                                              if (detailsBean.getCustomerRemarks() != null && !detailsBean.getCustomerRemarks().equalsIgnoreCase("") && !detailsBean.getCustomerRemarks().equalsIgnoreCase("null")) {
 //                                                 sendMessage(detailsBean.getCustomerRemarks(), null, "text", null, null, Utility.getSessionID(), null);
+                                                 if(projectCurrentStatus!=null && !projectCurrentStatus.equalsIgnoreCase("Completed"))
                                                  PercentageWebService("text",detailsBean.getCustomerRemarks(),"",Utility.getSessionID(),0);
 
                                              }
@@ -10397,8 +10658,9 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                                                  }
                                              }
                                              refresh();
-                                             if (isDivertedON) {
+                                             if (isDivertedON && isFromPauseClick) {
                                                  isDivertedON = false;
+                                                 isFromPauseClick=false;
                                                  String query = "select projectId from projectDetails where isActiveStatus = '1' ";
                                                  String diverted_project_id = VideoCallDataBase.getDB(context).getDivertedProjId(query);
                                                  if(diverted_project_id!=null) {
@@ -10408,6 +10670,7 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                                                      Appreference.jsonRequestSender.getTaskForJobID(EnumJsonWebservicename.getTaskForJobID, nameValuePairs, ProjectsFragment.getInstance());*/
                                                      Intent intent = new Intent(NewTaskConversation.this, ProjectHistory.class);
                                                      intent.putExtra("projectId", diverted_project_id);
+                                                     intent.putExtra("isFromNewTaskConv",true);
 //                                                     intent.putExtra("projectName", project_name);
                                                      //                intent.putExtra("parentTaskId", parentTask_Id);
 //                                                     intent.putExtra("projectOwner", project_owner);
@@ -10439,7 +10702,7 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                                          Log.i("assignTask", "description " + detailsBean1.getTaskDescription());
                                          VideoCallDataBase.getDB(context).insertORupdateStatus(detailsBean1);
 
-                                         tv_reassign.setVisibility(View.GONE);
+                                         assign_taskview.setVisibility(View.GONE);
                                          Log.i("reassign", "istemplate==>  " + taskStatus);
                                          listOfObservers.clear();
                                          String projectMembers = VideoCallDataBase.getDB(context).getProjectParentTaskId("select taskMemberList from projectHistory where projectId ='" + detailsBean1.getProjectId() + "' and parentTaskId==taskId");
@@ -18117,7 +18380,7 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
 
     public void taskIdWebservice(TaskDetailsBean taskDetailsBean) {
         try {
-            Log.d("taskIdW/S", "taskType is == " + taskType);
+
             JSONObject jsonObject = new JSONObject();
             jsonObject.put("name", taskName);
             jsonObject.put("description", taskName);
@@ -18897,7 +19160,7 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
         }
         Log.i("taskconversation", "Reassign task newly added user " + newReceiver + " " + listOfObservers);
         taskList.add(taskDetailsBean);
-        tv_reassign.setVisibility(View.GONE);
+        assign_taskview.setVisibility(View.GONE);
         options.setVisibility(View.GONE);
         if (template) {
             Log.i("reassign", "istemplate==>  " + template);
@@ -19563,79 +19826,160 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
 
     }
 
-    public class DownloadImage extends AsyncTask<String, Void, String> {
+    public class DownloadCustomImage extends AsyncTask<String, Void, String> {
         String downloadImageurl;
+        TaskDetailsBean detailsBean = null;
+        String namevalue = "";
 
-        public DownloadImage(String url) {
+        public DownloadCustomImage(String url, String name) {
             this.downloadImageurl = url;
+            namevalue = name;
+        }
+
+        public DownloadCustomImage(TaskDetailsBean name) {
+            detailsBean = name;
+            this.downloadImageurl = getResources().getString(R.string.task_reminder) + name.getPhotoPath();
+            namevalue = name.getPhotoPath();
         }
 
         @Override
         protected String doInBackground(String... urls) {
             String response = "";
             try {
-                Log.i("profiledownload", "profile download");
+                Log.i("profiledownload", "downloadImageurl " + downloadImageurl);
                 if (isNetworkAvailable()) {
+//                    String url ="http://122.165.92.171:8080/uploads/highmessaging/user/";
+                    Log.i("profiledownload", "profile download ");
+                    String profile1 = null;
                     if (downloadImageurl != null) {
-                        String profile = downloadImageurl.split(".")[1];
+                        if (downloadImageurl.contains("task"))
+                            profile1 = downloadImageurl.split("task/")[1];
+                        else
+                            profile1 = downloadImageurl.split("chat/")[1];
+                        Log.i("profiledownload", "profile1  " + profile1);
                         File extStore = Environment.getExternalStorageDirectory();
-                        File myFile = new File(extStore.getAbsolutePath() + "/HighMessage/downloads/" + profile);
+                        File myFile = new File(extStore.getAbsolutePath() + "/High Message/downloads/" + profile1);
                         Log.i("profiledownload", "file " + myFile.toString());
                         if (!myFile.exists()) {
                             try {
+
                                 URL bitmap = new URL(downloadImageurl);
-                                Log.i("profiledownload", "profile bitmap" + bitmap);
-                                HttpURLConnection connection = (HttpURLConnection) bitmap.openConnection();
+
+                                Log.i("profiledownload", "profile bitmap " + bitmap);
+                                HttpURLConnection connection =
+                                        (HttpURLConnection) bitmap.openConnection();
+//                                    connection.setHostnameVerifier(hostnameVerifier);
                                 InputStream in = connection.getInputStream();
+//                                    copyInputStreamToOutputStream(in, System.out);
                                 connection.connect();
                                 if (connection.getInputStream() != null) {
                                     InputStream inputStream = connection.getInputStream();
-                                    String dir_path = Environment.getExternalStorageDirectory() + "/HighMessage/downloads";
+                                    String dir_path = Environment.getExternalStorageDirectory()
+                                            + "/High Message/downloads";
                                     Log.i("profiledownload", "profile dir_path" + dir_path);
                                     File directory = new File(dir_path);
                                     if (!directory.exists())
                                         directory.mkdir();
-                                    String filePath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/HighMessage/downloads/" + profile;
+                                    String filePath = Environment.getExternalStorageDirectory()
+                                            .getAbsolutePath()
+                                            + "/High Message/downloads/"
+                                            + profile1;
+
                                     Log.d("profiledownload", "my file path is---->" + filePath);
+
                                     File file_name = new File(filePath);
-                                    BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(file_name));
+                                    BufferedOutputStream bos = new BufferedOutputStream(
+                                            new FileOutputStream(file_name));
                                     int inByte;
                                     while ((inByte = inputStream.read()) != -1) {
                                         bos.write(inByte);
                                     }
                                     bos.close();
+
                                     //** For  Avatar download
                                     //Start
+                                    Log.d("profiledownload", "check ");
                                     Bitmap btmap = BitmapFactory.decodeStream(inputStream);
                                     if (connection.getContentLength() <= 0 && btmap == null) {
                                         Log.i("downavatar", "avatar download faild contact name-->");
+
                                     } else {
                                         Log.i("downavatar", "avatar download success contact name-->");
                                     }
                                     //End
+//                                        Appreference.profile_image.put(profile, filePath);
                                 }
                             } catch (FileNotFoundException e) {
                                 e.printStackTrace();
+                                Appreference.printLog("MainActivity", "DownloadImage Exception: " + e.getMessage(), "WARN", null);
                             } catch (Exception e) {
                                 e.printStackTrace();
+                                Appreference.printLog("MainActivity", "DownloadImage Exception: " + e.getMessage(), "WARN", null);
                             }
                         } else {
-                            Log.i("profiledownload", "file exit---> " + profile);
+//                                Appreference.profile_image.put(profile, myFile.toString());
+//                            Log.i("profiledownload", "file exit--->" + profile);
                         }
                     }
+
                 }
+
+
             } catch (Exception e) {
                 e.printStackTrace();
+                Appreference.printLog("MainActivity", "DownloadImage Exception: " + e.getMessage(), "WARN", null);
             }
             return response;
         }
 
         @Override
         protected void onPostExecute(String result) {
+            try {
+                Log.i("Template creation", "mm1 ** " + namevalue);
+                Log.i("Template creation", "TaskDescription1 ** ");
+                Log.i("Template creation", "TaskDescription1 ** " + Appreference.taskMultimediaDownload.size());
+
+                if (Appreference.taskMultimediaDownload != null && Appreference.taskMultimediaDownload.size() > 0) {
+                    Iterator iterator1 = Appreference.taskMultimediaDownload.entrySet()
+                            .iterator();
+                    Log.i("Template creation", "mm11 " + namevalue);
+                    //                Log.i("Template creation", "TaskDescription1 " + detailsBean.getTaskDescription());
+                    while (iterator1.hasNext()) {
+                        Map.Entry mapEntry = (Map.Entry) iterator1.next();
+                        if (namevalue.equalsIgnoreCase(((TaskDetailsBean) mapEntry.getValue()).getCustomerSignature())) {
+                            Log.i("Template creation", "mm " + namevalue);
+                            //                        Log.i("Template creation", "TaskDescription " + detailsBean.getTaskDescription());
+                            detailsBean = (TaskDetailsBean) mapEntry.getValue();
+                            File imageFile = new File(Environment.getExternalStorageDirectory()
+                                    + "/High Message/downloads/" + detailsBean.getCustomerSignature());
+//                            if (imageFile.exists()) {
+//                                Log.i("Template creation", "TaskDescription11 " + detailsBean.getTaskDescription());
+//                                if (detailsBean.getSignalid() != null) {
+//                                    VideoCallDataBase.getDB(context).updateTaskProgressStatus(detailsBean.getSignalid());
+//                                }
+//                            }
+                        }
+                    }
+                }
+
+               /* if (Appreference.context_table.containsKey("taskcoversation")) {
+
+                    if (detailsBean != null) {
+                        Log.i("Template creation", "TaskDescription111 ");
+                        NewTaskConversation.getInstance().MMdownloadCompleted(detailsBean);
+                    }
+                    *//*NewTaskConversation  newTaskConversation = new NewTaskConversation();
+                    newTaskConversation.loadUI();*//*
+                }*/
+            } catch (Exception e) {
+                e.printStackTrace();
+                Appreference.printLog("MainActivity onPostExecute", "DownloadImage Exception: " + e.getMessage(), "WARN", null);
+            }
         }
 
         @Override
         protected void onPreExecute() {
+
             super.onPreExecute();
         }
     }
