@@ -222,6 +222,7 @@ public class ProjectHistory extends Activity implements WebServiceInterface, Swi
 
 
             refresh_task = (ImageView) findViewById(R.id.refresh_task);
+//            refresh_task.setEnabled(false);
             addnote = (ImageView) findViewById(R.id.addnote);
 
 
@@ -634,7 +635,17 @@ public class ProjectHistory extends Activity implements WebServiceInterface, Swi
                             dialog1.dismiss();
                         }
                     }, 1000);
-                    setActiveAdapter();
+//                    setActiveAdapter();
+
+
+                   /* List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
+                    nameValuePairs.add(new BasicNameValuePair("projectId", project_id));
+                    nameValuePairs.add(new BasicNameValuePair("userId", String.valueOf(Appreference.loginuserdetails.getId())));
+//                        Appreference.jsonRequestSender.getProject(EnumJsonWebservicename.getProject, nameValuePairs, ProjectsFragment.this);
+                    Log.i("ws123", " projectDetailsBean.getOracleProjectId()=========>" + project_id);
+                    Log.i("ws123", " projectDetailsBean.userId()=========>" + String.valueOf(Appreference.loginuserdetails.getId()));
+                    Appreference.jsonRequestSender.getTaskForJobID(EnumJsonWebservicename.getTaskForJobID, nameValuePairs, ProjectsFragment.getInstance());
+//                    showprogress();*/
                 }
             });
             addnote.setOnClickListener(new View.OnClickListener() {
@@ -815,6 +826,7 @@ public class ProjectHistory extends Activity implements WebServiceInterface, Swi
                                     Intent intent = new Intent(context, TravelJobDetails.class);
                                     intent.putExtra("task", "projectHistory");
                                     intent.putExtra("projectHistoryBean", taskDetailsBean);
+                                    intent.putExtra("position",position);
                                     intent.putExtra("isTemplate",false);
                                     if (taskDetailsBean.getOracleProjectId() != null) {
                                         intent.putExtra("oracleProjectOwner", taskDetailsBean.getOwnerOfTask());
@@ -911,7 +923,7 @@ public class ProjectHistory extends Activity implements WebServiceInterface, Swi
         nameValuePairs1.add(new BasicNameValuePair("taskId", webtaskId));
 
         Appreference.jsonRequestSender.getTask(EnumJsonWebservicename.getTask, nameValuePairs1, ProjectHistory.this);
-        showprogress();
+//        showprogress();
 
     }
 

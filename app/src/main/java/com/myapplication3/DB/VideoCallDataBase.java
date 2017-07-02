@@ -2173,7 +2173,7 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
 
             //Added For ASE
 //            cv_1.put("oracleTaskId",projectDetailsBean.getOracleTaskId());
-            cv_1.put("estimatedTravelHrs",projectDetailsBean.getEstimatedTravelHrs());
+            cv_1.put("estimatedTravelHrs",projectDetailsBean.getEstimatedTravelHours());
             cv_1.put("estimatedActivityHrs",projectDetailsBean.getEstimatedActivityHrs());
             cv_1.put("activity",projectDetailsBean.getActivity());
             cv_1.put("oracleProjectId", projectDetailsBean.getOracleProjectId());
@@ -2582,7 +2582,7 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
                         cv_1.put("taskStatus", listAllgetTaskDetailses1.getStatus());
                     }
                     cv_1.put("oracleTaskId",listAllgetTaskDetailses1.getOracleTaskId());
-//                    cv_1.put("estimatedTravelHrs",listAllgetTaskDetailses1.getEstimatedTravelHrs());
+                    cv_1.put("estimatedTravelHrs",listAllgetTaskDetailses1.getEstimatedTravelHours());
                     if (listAllgetTaskDetailses1.getCreatedDate() != null) {
                         String created_date = listAllgetTaskDetailses1.getCreatedDate();
                         String date_time = created_date.substring(0, 19);
@@ -4014,7 +4014,7 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
                     projectDetailsBean.setIssueParentId(cur.getString(cur.getColumnIndex("issueParentId")));
                     projectDetailsBean.setRequestStatus(cur.getString(cur.getColumnIndex("requestStatus")));
                     projectDetailsBean.setOracleTaskId((cur.getString(cur.getColumnIndex("oracleTaskId"))));
-                    projectDetailsBean.setEstimatedTravelHrs((cur.getString(cur.getColumnIndex("estimatedTravelHrs"))));
+                    projectDetailsBean.setEstimatedTravelHours((cur.getString(cur.getColumnIndex("estimatedTravelHrs"))));
                     projectDetailsBean.setEstimatedActivityHrs((cur.getString(cur.getColumnIndex("estimatedActivityHrs"))));
                     projectDetailsBean.setOracleProjectId(cur.getString(cur.getColumnIndex("oracleProjectId")));
                     projectDetailsBean.setCustomerName(cur.getString(cur.getColumnIndex("customerName")));
@@ -5876,6 +5876,7 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
         String name = null;
         Log.i("task", "string value " + username);
         Cursor cur;
+
         if (db == null)
             db = getReadableDatabase();
         try {
@@ -8265,13 +8266,17 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
                                 cv.put("totravelenddatetime", listTaskTransaction.getTravelEndTime());
                             }
                             cv.put("status", listTaskTransaction.getStatus());
-                            cv.put("customersignature", listTaskTransaction.getSignature());
-                            cv.put("remarks", listTaskTransaction.getRemarks());
-//                            cv.put("observation", listTaskTransaction.getObservation());
-                            cv.put("hourMeterReading", listTaskTransaction.getHourMeterReading());
+                            cv.put("observation", listTaskTransaction.getObservation());
+                            cv.put("actionTaken", listTaskTransaction.getActionTaken());
                             cv.put("customersignaturename", listTaskTransaction.getCustomerSignatureName());
+                            cv.put("hourMeterReading", listTaskTransaction.getHourMeterReading());
+                            cv.put("remarks", listTaskTransaction.getRemarks());
+                            cv.put("customersignature", listTaskTransaction.getSignature());
                             cv.put("photo", listTaskTransaction.getPhoto());
                             cv.put("techniciansignature", listTaskTransaction.getTechnicianSignature());
+
+
+
 
                             Log.i("Listtransation", "value===> " + cv);
                             if (IstaskIdExist(task_id, project_id) && !is_delete) {

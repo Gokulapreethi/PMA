@@ -38,7 +38,7 @@ public class ProjectDetailsBean implements Serializable {
     private String activity;
     private String processFlag;
     private String oracleTaskId;
-    private String estimatedTravelHrs;
+    private String estimatedTravelHours;
     private String estimatedActivityHrs;
 
 
@@ -481,13 +481,6 @@ public class ProjectDetailsBean implements Serializable {
         this.oracleTaskId = oracleTaskId;
     }
 
-    public String getEstimatedTravelHrs() {
-        return estimatedTravelHrs;
-    }
-
-    public void setEstimatedTravelHrs(String estimatedTravelHrs) {
-        this.estimatedTravelHrs = estimatedTravelHrs;
-    }
 
     public String getEstimatedActivityHrs() {
         return estimatedActivityHrs;
@@ -527,5 +520,13 @@ public class ProjectDetailsBean implements Serializable {
 
     public void setMachineMake(String machineMake) {
         this.machineMake = machineMake;
+    }
+
+    public String getEstimatedTravelHours() {
+        return estimatedTravelHours;
+    }
+
+    public void setEstimatedTravelHours(String estimatedTravelHours) {
+        this.estimatedTravelHours = estimatedTravelHours;
     }
 }

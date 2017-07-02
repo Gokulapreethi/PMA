@@ -61,7 +61,7 @@
     <RelativeLayout
         android:id="@+id/task_namedatails"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
+        android:layout_height="50dp">
 
         <TextView
             android:id="@+id/project_id"
@@ -79,10 +79,10 @@
 
         <ImageView
             android:id="@+id/completed_status"
-            android:layout_width="25dp"
-            android:layout_height="25dp"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
             android:layout_alignParentRight="true"
-            android:layout_marginRight="10dp"
+            android:layout_marginRight="40dp"
             android:layout_centerVertical="true"
             android:background="@drawable/status_info"
             android:visibility="visible"

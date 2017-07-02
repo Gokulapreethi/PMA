@@ -24,6 +24,7 @@ import android.widget.Toast;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import com.myapplication3.Bean.ProjectDetailsBean;
 import com.myapplication3.Bean.TaskDetailsBean;
 import com.myapplication3.DB.VideoCallDataBase;
 import com.myapplication3.RandomNumber.Utility;
@@ -64,6 +65,7 @@ public class AddTaskReassign extends Activity implements View.OnClickListener, W
     String SelectedUserList = null,SelectedUserList1="";
     String SelectedUsersId = null;
     ProgressDialog dialog;
+    int Clickposition;
     //For ASE
     String[] dates;
     private NumberPicker datePicker, hourPicker, minutePicker, am_pmPicker;
@@ -117,6 +119,7 @@ public class AddTaskReassign extends Activity implements View.OnClickListener, W
             Self_Assign = getIntent().getBooleanExtra("selfAssign", false);
             jobcodeno = getIntent().getStringExtra("jobcodeno");
             activitycode = getIntent().getStringExtra("activitycode");
+            Clickposition = getIntent().getIntExtra("Clickposition",0);
             Log.i("ws123", "  AssignTask isProjectFromOracle ====>" + isProjectFromOracle);
             Log.i("add observer", "task type " + taskType);
             if (taskType != null)
@@ -506,7 +509,20 @@ public class AddTaskReassign extends Activity implements View.OnClickListener, W
 //                taskDetailsBean.setToUserName(SelectedUserList);
                 oracleProject_object.put("listUser", jsonArray);
 
+                ProjectHistory projectHistory = (ProjectHistory) Appreference.context_table.get("projecthistory");
+                if(projectHistory!=null)
+                {
+                    Log.i("ProjectHistory","inside refresh  status projectHistory ========>"+projectHistory.projectDetailsBeans + "size bean "+projectHistory.projectDetailsBeans.size()+"buddayArrayAdapteer==>"+projectHistory.buddyArrayAdapter);
 
+                    if (projectHistory.projectDetailsBeans != null && projectHistory.projectDetailsBeans.size() > 0 && projectHistory.buddyArrayAdapter != null) {
+
+                        ProjectDetailsBean projectDetailsBean = projectHistory.projectDetailsBeans.get(Clickposition);
+                        projectDetailsBean.setTaskStatus("assigned");
+                        projectDetailsBean.setTaskReceiver(SelectedUserList);
+
+                        projectHistory.buddyArrayAdapter.notifyDataSetChanged();
+                    }
+                }
 //                taskDetailsBean.setFromUserId(String.valueOf(Appreference.loginuserdetails.getId()));
                 taskDetailsBean.setFromUserName(Appreference.loginuserdetails.getUsername());
                 taskDetailsBean.setTaskName(detailsBean.getTaskName());

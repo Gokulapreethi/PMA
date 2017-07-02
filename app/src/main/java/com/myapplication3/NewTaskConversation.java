@@ -874,6 +874,7 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                     break;
                 default:
                     break;
+
             }
         } catch (NumberFormatException e) {
             e.printStackTrace();
@@ -887,6 +888,7 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
         }
 
         Log.i("groupMemberAccess", "toUserId " + toUserId);
+        downLoadcustom1();
 
         cancelreply.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -1096,26 +1098,66 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                                 final TaskDetailsBean detailsBean;
                                 String Querystatus = "Select * from projectStatus where projectId ='" + projectId + "' and taskId = '" + webtaskId + "'";
                                 detailsBean = VideoCallDataBase.getDB(context).getStatusCompletedProjectDetails(Querystatus);
-
-                                if (detailsBean.getPhotoPath() != null) {
-                                    Appreference.taskMultimediaDownload.put(detailsBean.getPhotoPath(), detailsBean);
-                                    Log.i("profiledownload", "fileName--2 " + detailsBean.getPhotoPath());
-                                    Log.i("task", "1 image" + detailsBean.getPhotoPath());
-                                    new DownloadCustomImage(getResources().getString(R.string.task_reminder) + detailsBean.getPhotoPath(), detailsBean.getPhotoPath()).execute();
-                                }
-                                if (detailsBean.getCustomerSignature() != null) {
-                                    Appreference.taskMultimediaDownload.put(detailsBean.getCustomerSignature(), detailsBean);
-                                    Log.i("profiledownload", "fileName--2 " + detailsBean.getCustomerSignature());
-                                    Log.i("task", "1 image" + detailsBean.getCustomerSignature());
-                                    new DownloadCustomImage(getResources().getString(R.string.task_reminder) + detailsBean.getCustomerSignature(), detailsBean.getCustomerSignature()).execute();
-                                }
-                                if (detailsBean.getTechnicianSignature() != null) {
-                                    Appreference.taskMultimediaDownload.put(detailsBean.getTechnicianSignature(), detailsBean);
-                                    Log.i("profiledownload", "fileName--2 " + detailsBean.getTechnicianSignature());
-                                    Log.i("task", "1 image" + detailsBean.getTechnicianSignature());
-                                    new DownloadCustomImage(getResources().getString(R.string.task_reminder) + detailsBean.getTechnicianSignature(), detailsBean.getTechnicianSignature()).execute();
-                                }
                                 showCustom1PopUp(detailsBean);
+
+                           /*     final TaskDetailsBean detailsBean;
+                                String Querystatus = "Select * from projectStatus where projectId ='" + projectId + "' and taskId = '" + webtaskId + "'";
+                                detailsBean = VideoCallDataBase.getDB(context).getStatusCompletedProjectDetails(Querystatus);
+                                Log.i("custom1", "signature --> ! " + detailsBean.getCustomerSignature());
+                                Log.i("custom1", "photo --> ! " + detailsBean.getPhotoPath());
+                                Log.i("custom1", "techsignature --> ! " + detailsBean.getTechnicianSignature());
+
+                                if (detailsBean.getCustomerSignature()!=null  && !detailsBean.getCustomerSignature().equalsIgnoreCase("")) {
+                                    File custom_sig = new File(detailsBean.getCustomerSignature());
+                                    if (custom_sig.exists()) {
+                                        Log.i("custom1", "signature --> 11!@==> " + detailsBean.getCustomerSignature());
+                                    } else {
+                                        Log.i("custom1", "signature --> 100!@==> " + detailsBean.getCustomerSignature());
+                                        if (detailsBean.getCustomerSignature() != null) {
+                                            Appreference.taskMultimediaDownload.put(detailsBean.getCustomerSignature(), detailsBean);
+                                            Log.i("profiledownload", "fileName--2 " + detailsBean.getCustomerSignature());
+                                            Log.i("task", "1 image" + detailsBean.getCustomerSignature());
+                                            new DownloadCustomImage(getResources().getString(R.string.task_reminder) + detailsBean.getCustomerSignature(), detailsBean.getCustomerSignature()).execute();
+                                        }
+                                    }
+                                }
+
+                                if (detailsBean.getPhotoPath()!=null  && !detailsBean.getPhotoPath().equalsIgnoreCase("")) {
+                                    File photo_path = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/High Message/" + detailsBean.getPhotoPath());
+                                    if (photo_path.exists()) {
+                                    }else{
+                                        if (detailsBean.getPhotoPath() != null) {
+                                            Appreference.taskMultimediaDownload.put(detailsBean.getPhotoPath(), detailsBean);
+                                            Log.i("profiledownload", "fileName--2 " + detailsBean.getPhotoPath());
+                                            Log.i("task", "1 image" + detailsBean.getPhotoPath());
+                                            new DownloadCustomImage(getResources().getString(R.string.task_reminder) + detailsBean.getPhotoPath(), detailsBean.getPhotoPath()).execute();
+                                        }
+                                    }
+                                }
+
+                                if ( detailsBean.getTechnicianSignature()!=null  && !detailsBean.getTechnicianSignature().equalsIgnoreCase("")) {
+                                    File tech_sig = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/High Message/" + detailsBean.getTechnicianSignature());
+                                    if (tech_sig.exists()) {
+                                    }else{
+                                        if (detailsBean.getTechnicianSignature() != null) {
+//                                            showStatusprogress();
+                                            Appreference.taskMultimediaDownload.put(detailsBean.getTechnicianSignature(), detailsBean);
+                                            Log.i("profiledownload", "fileName--2 " + detailsBean.getTechnicianSignature());
+                                            Log.i("task", "1 image" + detailsBean.getTechnicianSignature());
+                                            new DownloadCustomImage(getResources().getString(R.string.task_reminder) + detailsBean.getTechnicianSignature(), detailsBean.getTechnicianSignature()).execute();
+                                        }
+                                    }
+                                }
+                                int sec = 0;
+                                    sec = sec + 5000;
+                                    handler.postDelayed(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            showCustom1PopUp(detailsBean);
+
+                                        }
+                                    }, sec);*/
+
 
                                 /*if (taskType != null && taskType.equalsIgnoreCase("group")) {
                                     if (!isTaskName) {
@@ -2048,27 +2090,51 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                                 final TaskDetailsBean detailsBean;
                                 String Querystatus = "Select * from projectStatus where projectId ='" + projectId + "' and taskId = '" + webtaskId + "'";
                                 detailsBean = VideoCallDataBase.getDB(context).getStatusCompletedProjectDetails(Querystatus);
-
-                                if (detailsBean.getPhotoPath() != null) {
-                                    Appreference.taskMultimediaDownload.put(detailsBean.getPhotoPath(), detailsBean);
-                                    Log.i("profiledownload", "fileName--2 " + detailsBean.getPhotoPath());
-                                    Log.i("task", "1 image" + detailsBean.getPhotoPath());
-                                    new DownloadCustomImage(getResources().getString(R.string.task_reminder) + detailsBean.getPhotoPath(), detailsBean.getPhotoPath()).execute();
-                                }
-                                if (detailsBean.getCustomerSignature() != null) {
-                                    Appreference.taskMultimediaDownload.put(detailsBean.getCustomerSignature(), detailsBean);
-                                    Log.i("profiledownload", "fileName--2 " + detailsBean.getCustomerSignature());
-                                    Log.i("task", "1 image" + detailsBean.getCustomerSignature());
-                                    new DownloadCustomImage(getResources().getString(R.string.task_reminder) + detailsBean.getCustomerSignature(), detailsBean.getCustomerSignature()).execute();
-                                }
-                                if (detailsBean.getTechnicianSignature() != null) {
-                                    Appreference.taskMultimediaDownload.put(detailsBean.getTechnicianSignature(), detailsBean);
-                                    Log.i("profiledownload", "fileName--2 " + detailsBean.getTechnicianSignature());
-                                    Log.i("task", "1 image" + detailsBean.getTechnicianSignature());
-                                    new DownloadCustomImage(getResources().getString(R.string.task_reminder) + detailsBean.getTechnicianSignature(), detailsBean.getTechnicianSignature()).execute();
-                                }
                                 showCustom1PopUp(detailsBean);
-                               /* if (taskType != null && taskType.equalsIgnoreCase("group")) {
+
+
+                              /*  if (detailsBean.getCustomerSignature()!=null && !detailsBean.getCustomerSignature().equalsIgnoreCase("")) {
+                                    File cus_sig1 = new File(detailsBean.getCustomerSignature());
+                                    if (cus_sig1.exists()) {
+                                    } else {
+                                        if (detailsBean.getCustomerSignature() != null) {
+                                            Appreference.taskMultimediaDownload.put(detailsBean.getCustomerSignature(), detailsBean);
+                                            new DownloadCustomImage(getResources().getString(R.string.task_reminder) + detailsBean.getCustomerSignature(), detailsBean.getCustomerSignature()).execute();
+                                        }
+                                    }
+                                }
+
+                                if (detailsBean.getPhotoPath()!=null && !detailsBean.getPhotoPath().equalsIgnoreCase("")) {
+                                    File photo_path1 = new File(detailsBean.getPhotoPath());
+                                    if (photo_path1.exists()) {
+                                    } else {
+                                        if (detailsBean.getPhotoPath() != null) {
+                                            Appreference.taskMultimediaDownload.put(detailsBean.getPhotoPath(), detailsBean);
+                                            new DownloadCustomImage(getResources().getString(R.string.task_reminder) + detailsBean.getPhotoPath(), detailsBean.getPhotoPath()).execute();
+                                        }
+                                    }
+                                }
+                                if (detailsBean.getTechnicianSignature()!=null && !detailsBean.getTechnicianSignature().equalsIgnoreCase("")) {
+                                    File tech_sig1 = new File(detailsBean.getTechnicianSignature());
+                                    if (tech_sig1.exists()) {
+                                    } else {
+                                        if (detailsBean.getTechnicianSignature() != null) {
+                                            showStatusprogress();
+                                            Appreference.taskMultimediaDownload.put(detailsBean.getTechnicianSignature(), detailsBean);
+                                            new DownloadCustomImage(getResources().getString(R.string.task_reminder) + detailsBean.getTechnicianSignature(), detailsBean.getTechnicianSignature()).execute();
+                                        }
+                                    }
+                                }
+                                int sec = 0;
+                                sec = sec + 5000;
+                                handler.postDelayed(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        showCustom1PopUp(detailsBean);
+
+                                    }
+                                }, sec);*/
+                                /* if (taskType != null && taskType.equalsIgnoreCase("group")) {
                                     if (!isTaskName) {
                                         showprogressforpriority("Setting Custom Tags");
                                         List<NameValuePair> tagNameValuePairs = new ArrayList<NameValuePair>();
@@ -3661,8 +3727,63 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
         });
     }
 
+    private void downLoadcustom1() {
+        final TaskDetailsBean detailsBean;
+        String Querystatus = "Select * from projectStatus where projectId ='" + projectId + "' and taskId = '" + webtaskId + "'";
+        detailsBean = VideoCallDataBase.getDB(context).getStatusCompletedProjectDetails(Querystatus);
+
+
+        if (detailsBean.getCustomerSignature()!=null && !detailsBean.getCustomerSignature().equalsIgnoreCase("")) {
+            File cus_sig1 = new File(detailsBean.getCustomerSignature());
+            if (cus_sig1.exists()) {
+            } else {
+                if (detailsBean.getCustomerSignature() != null) {
+                    Appreference.taskMultimediaDownload.put(detailsBean.getCustomerSignature(), detailsBean);
+                    new DownloadCustomImage(getResources().getString(R.string.task_reminder) + detailsBean.getCustomerSignature(), detailsBean.getCustomerSignature()).execute();
+                }
+            }
+        }
+
+        if (detailsBean.getPhotoPath()!=null && !detailsBean.getPhotoPath().equalsIgnoreCase("")) {
+            File photo_path1 = new File(detailsBean.getPhotoPath());
+            if (photo_path1.exists()) {
+            } else {
+                if (detailsBean.getPhotoPath() != null) {
+                    Appreference.taskMultimediaDownload.put(detailsBean.getPhotoPath(), detailsBean);
+                    new DownloadCustomImage(getResources().getString(R.string.task_reminder) + detailsBean.getPhotoPath(), detailsBean.getPhotoPath()).execute();
+                }
+            }
+        }
+        if (detailsBean.getTechnicianSignature()!=null && !detailsBean.getTechnicianSignature().equalsIgnoreCase("")) {
+            File tech_sig1 = new File(detailsBean.getTechnicianSignature());
+            if (tech_sig1.exists()) {
+            } else {
+                if (detailsBean.getTechnicianSignature() != null) {
+                    Appreference.taskMultimediaDownload.put(detailsBean.getTechnicianSignature(), detailsBean);
+                    new DownloadCustomImage(getResources().getString(R.string.task_reminder) + detailsBean.getTechnicianSignature(), detailsBean.getTechnicianSignature()).execute();
+                }
+            }
+        }
+    }
+
     private void sendAssignTask_webservice() {
         if (isProjectFromOracle) {
+            showStatusprogress();
+            ProjectHistory projectHistory = (ProjectHistory) Appreference.context_table.get("projecthistory");
+            if(projectHistory!=null)
+            {
+                Log.i("ProjectHistory","inside refresh  status projectHistory ========>"+projectHistory.projectDetailsBeans + "size bean "+projectHistory.projectDetailsBeans.size()+"buddayArrayAdapteer==>"+projectHistory.buddyArrayAdapter);
+
+                if (projectHistory.projectDetailsBeans != null && projectHistory.projectDetailsBeans.size() > 0 && projectHistory.buddyArrayAdapter != null) {
+
+                    ProjectDetailsBean projectDetailsBean = projectHistory.projectDetailsBeans.get(clickPosition);
+                    projectDetailsBean.setTaskStatus("assigned");
+                    projectDetailsBean.setTaskReceiver("Me");
+
+                    Log.i("ProjectHistory", "inside refresh  status NewTaskConveratio ========>" + projectCurrentStatus);
+                    projectHistory.buddyArrayAdapter.notifyDataSetChanged();
+                }
+            }
             SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
             String dateTime = dateFormat.format(new Date());
             dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
@@ -3782,6 +3903,19 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
             window.setAttributes(lp);
             window.setGravity(Gravity.BOTTOM);
             dialog.show();
+            dialog.setOnKeyListener(new Dialog.OnKeyListener() {
+
+                @Override
+                public boolean onKey(DialogInterface arg0, int keyCode,
+                                     KeyEvent event) {
+                    // TODO Auto-generated method stub
+                    if (keyCode == KeyEvent.KEYCODE_BACK) {
+//                        finish();
+                        dialog.dismiss();
+                    }
+                    return true;
+                }
+            });
 
             TextView project_id = (TextView) dialog.findViewById(R.id.project_id);
             TextView project_name = (TextView) dialog.findViewById(R.id.project_name);
@@ -3846,28 +3980,43 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
             Log.i("custom1", "photo--> " + detailsBean.getPhotoPath());
             Log.i("custom1", "techsignature--> " + detailsBean.getTechnicianSignature());
 
-            if (detailsBean.getCustomerSignature()!=null && !detailsBean.getCustomerSignature().equalsIgnoreCase("")) {
-                String ImageName = detailsBean.getCustomerSignature();
-                File file = new File(dir_path + detailsBean.getCustomerSignature());
-                if (file.exists()) {
+            if (detailsBean.getCustomerSignature() != null && !detailsBean.getCustomerSignature().equalsIgnoreCase("")) {
+                String cus_signature = detailsBean.getCustomerSignature();
+                File file = new File(dir_path + cus_signature);
+                File file1 = new File(cus_signature);
+                if (file1.exists()) {
+                    Bitmap myBitmap = BitmapFactory.decodeFile(file1.getAbsolutePath());
+                    signature_path1.setImageBitmap(myBitmap);
+                    signature_path1.setVisibility(View.VISIBLE);
+                } else if (file.exists()) {
                     Bitmap myBitmap = BitmapFactory.decodeFile(file.getAbsolutePath());
                     signature_path1.setImageBitmap(myBitmap);
                     signature_path1.setVisibility(View.VISIBLE);
                 }
             }
             if (detailsBean.getPhotoPath() != null && !detailsBean.getPhotoPath().equalsIgnoreCase("")) {
-                String ImageName = detailsBean.getPhotoPath();
-                File file = new File(dir_path+ "/High Message/" +detailsBean.getPhotoPath());
-                if (file.exists()) {
+                String Photo_Path = detailsBean.getPhotoPath();
+                File file = new File(dir_path + Photo_Path);
+                File file1 = new File(Photo_Path);
+                if (file1.exists()) {
+                    Bitmap myBitmap = BitmapFactory.decodeFile(file1.getAbsolutePath());
+                    photo_path1.setImageBitmap(myBitmap);
+                    photo_path1.setVisibility(View.VISIBLE);
+                } else if (file.exists()) {
                     Bitmap myBitmap = BitmapFactory.decodeFile(file.getAbsolutePath());
                     photo_path1.setImageBitmap(myBitmap);
                     photo_path1.setVisibility(View.VISIBLE);
                 }
             }
             if (detailsBean.getTechnicianSignature() != null && !detailsBean.getTechnicianSignature().equalsIgnoreCase("")) {
-                String ImageName = detailsBean.getTechnicianSignature();
-                File file = new File(dir_path+ "/High Message/" + detailsBean.getTechnicianSignature());
-                if (file.exists()) {
+                String Techn_Signature = detailsBean.getTechnicianSignature();
+                File file = new File(dir_path + Techn_Signature);
+                File file1 = new File(Techn_Signature);
+                if (file1.exists()) {
+                    Bitmap myBitmap = BitmapFactory.decodeFile(file1.getAbsolutePath());
+                    tech_signature_path1.setImageBitmap(myBitmap);
+                    tech_signature_path1.setVisibility(View.VISIBLE);
+                } else if (file.exists()) {
                     Bitmap myBitmap = BitmapFactory.decodeFile(file.getAbsolutePath());
                     tech_signature_path1.setImageBitmap(myBitmap);
                     tech_signature_path1.setVisibility(View.VISIBLE);
@@ -3910,10 +4059,13 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
             signature_path1.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Log.i("custom1", "signature_path1--> " + detailsBean.getCustomerSignature());
+                    Log.i("custom1", "signature_path1-->$ " + detailsBean.getCustomerSignature());
                     if (detailsBean.getCustomerSignature() != null && !detailsBean.getCustomerSignature().equalsIgnoreCase("")) {
-                        String ImageName = detailsBean.getCustomerSignature();
-                            Intent intent = new Intent(context, FullScreenImage.class);
+                        File signatue_path = new File(detailsBean.getCustomerSignature());
+                        Intent intent = new Intent(context, FullScreenImage.class);
+                        if (signatue_path.exists())
+                            intent.putExtra("image", detailsBean.getCustomerSignature());
+                        else
                             intent.putExtra("image", dir_path + detailsBean.getCustomerSignature());
                             context.startActivity(intent);
                     }
@@ -3922,10 +4074,14 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
             photo_path1.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Log.i("custom1", "photo_path1--> " + detailsBean.getPhotoPath());
+                    Log.i("custom1", "photo_path1-->$ " + detailsBean.getPhotoPath());
                     if (detailsBean.getPhotoPath() != null && !detailsBean.getPhotoPath().equalsIgnoreCase("")) {
+                        File photo_path1 = new File(detailsBean.getPhotoPath());
                         Intent intent = new Intent(context, FullScreenImage.class);
-                        intent.putExtra("image", dir_path + detailsBean.getPhotoPath());
+                        if (photo_path1.exists())
+                            intent.putExtra("image", detailsBean.getPhotoPath());
+                        else
+                            intent.putExtra("image", dir_path + detailsBean.getPhotoPath());
                         context.startActivity(intent);
                     }
                 }
@@ -3933,10 +4089,14 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
             tech_signature_path1.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Log.i("custom1", "tech_signature_path1--> " + detailsBean.getTechnicianSignature());
+                    Log.i("custom1", "tech_signature_path1-->$ " + detailsBean.getTechnicianSignature());
                     if (detailsBean.getTechnicianSignature() != null && !detailsBean.getTechnicianSignature().equalsIgnoreCase("")) {
+                        File tech_signature_path1 = new File(detailsBean.getTechnicianSignature());
                         Intent intent = new Intent(context, FullScreenImage.class);
-                        intent.putExtra("image", dir_path + detailsBean.getTechnicianSignature());
+                        if (tech_signature_path1.exists())
+                            intent.putExtra("image",detailsBean.getTechnicianSignature());
+                        else
+                            intent.putExtra("image", dir_path + detailsBean.getTechnicianSignature());
                         context.startActivity(intent);
                     }
                 }
@@ -4506,10 +4666,9 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                     signature_path.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                                String ImageName = status_signature;
-//                            String ImageName = signature_path.getText().toString();
+                            String ImageName = status_signature;
                             File file = null;
-                            if(ImageName!=null && !ImageName.equalsIgnoreCase("")) {
+                            if (ImageName != null && !ImageName.equalsIgnoreCase("")) {
                                 file = new File(ImageName);
                                 if (file.exists()) {
                                     Intent intent = new Intent(context, FullScreenImage.class);
@@ -4524,7 +4683,7 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                                         context.startActivity(intent);
                                     }
                                 }
-                            }else
+                            } else
                                 Toast.makeText(NewTaskConversation.this, "Please Set any Image to View", Toast.LENGTH_SHORT).show();
 
 
@@ -4533,10 +4692,9 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                     tech_signature_path.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-//                            String ImageName = tech_signature_path.getText().toString();
-                                String ImageName = tech_signature;
+                            String ImageName = tech_signature;
                             File file = null;
-                            if(ImageName!=null && !ImageName.equalsIgnoreCase("")) {
+                            if (ImageName != null && !ImageName.equalsIgnoreCase("")) {
                                 file = new File(ImageName);
                                 if (file.exists()) {
                                     Intent intent = new Intent(context, FullScreenImage.class);
@@ -4551,7 +4709,7 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                                         context.startActivity(intent);
                                     }
                                 }
-                            }else
+                            } else
                                 Toast.makeText(NewTaskConversation.this, "Please Set any Image to View", Toast.LENGTH_SHORT).show();
 
                         }
@@ -4559,10 +4717,9 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                     photo_path.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-//                            String ImageName = photo_path.getText().toString();
-                                String ImageName = photo_signature;
+                            String ImageName = photo_signature;
                             File file = null;
-                            if(ImageName!=null && !ImageName.equalsIgnoreCase("")) {
+                            if (ImageName != null && !ImageName.equalsIgnoreCase("")) {
                                 file = new File(ImageName);
                                 if (file.exists()) {
                                     Intent intent = new Intent(context, FullScreenImage.class);
@@ -4577,7 +4734,7 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                                         context.startActivity(intent);
                                     }
                                 }
-                            }else
+                            } else
                                 Toast.makeText(NewTaskConversation.this, "Please Set any Image to View", Toast.LENGTH_SHORT).show();
 
                         }
@@ -4600,6 +4757,32 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                                     }
                                 });
                                 saveDialog.show();
+                        }
+                    });
+                    dialog.setOnKeyListener(new Dialog.OnKeyListener() {
+
+                        @Override
+                        public boolean onKey(DialogInterface arg0, int keyCode,
+                                             KeyEvent event) {
+                            // TODO Auto-generated method stub
+                            if (keyCode == KeyEvent.KEYCODE_BACK) {
+                                Log.i("onKeyDown","Dialog keyDown");
+                                AlertDialog.Builder saveDialog = new AlertDialog.Builder(context);
+                                saveDialog.setTitle("JobCode Completion");
+                                saveDialog.setMessage("Are you sure want to go back?");
+                                saveDialog.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog1, int which) {
+                                        dialog.dismiss();
+                                    }
+                                });
+                                saveDialog.setNegativeButton("No",
+                                        new DialogInterface.OnClickListener() {
+                                            public void onClick(DialogInterface dialog1, int which) {
+                                            }
+                                        });
+                                saveDialog.show();
+                            }
+                            return true;
                         }
                     });
                     send_completion.setOnClickListener(new View.OnClickListener() {
@@ -4627,7 +4810,7 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                             else
                                 HMReadingStatus = "";
                             if (remarks_completion.getText().toString() != null && remarks_completion.getText().toString().length() > 0) {
-                                Toast.makeText(NewTaskConversation.this, "Send Successfully", Toast.LENGTH_SHORT).show();
+//                                Toast.makeText(NewTaskConversation.this, "Send Successfully", Toast.LENGTH_SHORT).show();
                                 sendStatus_webservice("5", "", remarks_completion.getText().toString(), "Completed");
                                 dialog.dismiss();
                             } else
@@ -4710,6 +4893,7 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
     private void sendStatus_webservice(String status, String path, String remarks, String projectCurrentStatus) {
         try {
             Log.i("desc123","inside 120  status ========>"+status);
+            showStatusprogress();
             ProjectHistory projectHistory = (ProjectHistory) Appreference.context_table.get("projecthistory");
             if(projectHistory!=null)
             {
@@ -4721,7 +4905,7 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                     if (projectCurrentStatus.equalsIgnoreCase("DeAssign")) {
                         projectDetailsBean.setTaskStatus("Unassigned");
                         projectDetailsBean.setTaskReceiver("NA");
-                    }else
+                    }else if(!projectCurrentStatus.equalsIgnoreCase("travel"))
                         projectDetailsBean.setTaskStatus(projectCurrentStatus);
 
                     Log.i("ProjectHistory", "inside refresh  status NewTaskConveratio ========>" + projectCurrentStatus);
@@ -4825,6 +5009,7 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                 taskDetailsBean.setCustomerSignatureName(custsignnameStatus);
             } else
                 jsonObject.put("customerSignatureName", "");
+            Log.i("desc123","HourMeterReading ========>"+HMReadingStatus);
             if (HMReadingStatus != null && HMReadingStatus.length() > 0) {
                 jsonObject.put("hourMeterReading", HMReadingStatus);
                 taskDetailsBean.setHMReading(HMReadingStatus);
@@ -4904,7 +5089,6 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
             } else {
                 taskDetailsBean.setTaskDescription("Task is " + projectCurrentStatus);
             }
-            jsonObject.put("hourMeterReading", "");
             Log.i("ws123", "status update in project History");
             for (int level = 0; level < statusCompletedFieldValues.size(); level++) {
                 try {
@@ -10652,7 +10836,9 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                                                      handler.postDelayed(new Runnable() {
                                                          @Override
                                                          public void run() {
-                                                             sendMessage(travel, null, "text", null, null, Utility.getSessionID(), null);
+//                                                             sendMessage(travel, null, "text", null, null, Utility.getSessionID(), null);
+                                                             PercentageWebService("text",travel ,"",Utility.getSessionID(),0);
+
                                                          }
                                                      }, sec);
                                                  }
@@ -10745,6 +10931,7 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                                          }
                                          sendMessage("Task Assigned to " + Appreference.loginuserdetails.getUsername(), null, "assigntask", null, null, Utility.getSessionID(), null);
                                          refresh();
+                                         cancelDialog();
                                      } else if (WebServiceEnum_Response != null && WebServiceEnum_Response.equalsIgnoreCase(("taskNeedAssessmentReport"))) {
                                          Log.i("output123", "NewTaskConv taskNeedAssessmentReport  Responce Received" + server_Response_string);
                                          final JSONObject jsonObject = new JSONObject(communicationBean.getEmail());
@@ -11717,7 +11904,27 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
         }
         Log.i("Task", "AlarmId start " + unicid);
     }
-
+    private void showStatusprogress() {
+        handler.post(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    Log.i("expand", "inside show progress--------->");
+                    if (progress == null) {
+                        progress = new ProgressDialog(context);
+                        progress.setCancelable(false);
+                        progress.setMessage("Sending...");
+                        progress.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+                        progress.setProgress(0);
+                        progress.setMax(1000);
+                        progress.show();
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+    }
     private void showprogress() {
         handler.post(new Runnable() {
             @Override
@@ -12841,26 +13048,6 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
         }
     }
 
-
-    public void Mediashowprogress() {
-        handler.post(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    Log.i("login123", "inside showProgressDialog");
-                    if (progress == null)
-                        progress = new ProgressDialog(context);
-                    progress.setCancelable(false);
-                    progress.setMessage("Checking Conflict.");
-                    progress.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-                    progress.setProgress(0);
-                    progress.setMax(100);
-                    progress.show();
-                } catch (Exception e) {
-                }
-            }
-        });
-    }
 
     private void showprogressforpriority(final String name) {
         handler.post(new Runnable() {
@@ -16748,6 +16935,7 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                     if (VideoCallDataBase.getDB(context).insertORupdate_Task_history(chatBean)) {
                         if (chatBean.isCustomTagVisible()) {
                             taskList.add(chatBean);
+                            cancelDialog();
                         }
                         Log.i("task", "msg Status " + chatBean.getMsg_status());
                         refresh();
@@ -18348,13 +18536,32 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
             e.printStackTrace();
         }
     }
+    @Override
+    public void onBackPressed() {
+        Log.i("onKeyDown", "onBackPressed ");
 
+        /*new AlertDialog.Builder(this)
+                .setTitle("Really Exit?")
+                .setMessage("Are you sure you want to exit?")
+                .setNegativeButton(android.R.string.no, null)
+                .setPositiveButton(android.R.string.yes, new OnClickListener() {
+
+                    public void onClick(DialogInterface arg0, int arg1) {
+                        WelcomeActivity.super.onBackPressed();
+                    }
+                }).create().show();*/
+    }
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         Log.i("onKeyDown", "onKeyDown ");
         if (keyCode == KeyEvent.KEYCODE_BACK) {
+            Log.i("onKeyDown", "onKeyDown ");
+
             Intent intent = new Intent();
             setResult(RESULT_OK, intent);
+            ProjectHistory projectHistory = (ProjectHistory) Appreference.context_table.get("projecthistory");
+            if(projectHistory!=null)
+                projectHistory.setProgressBarInvisible();
             finish();
         }
         return super.onKeyDown(keyCode, event);
@@ -19298,6 +19505,7 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
             intent.putExtra("taskType", taskType);
             intent.putExtra("Taker", "Assigned Task");
             intent.putExtra("jobcodeno", JobCodeNo);
+            intent.putExtra("Clickposition",clickPosition);
             intent.putExtra("activitycode", ActivityCode);
             if (isProjectFromOracle)
                 intent.putExtra("isProjectFromOracle1", true);

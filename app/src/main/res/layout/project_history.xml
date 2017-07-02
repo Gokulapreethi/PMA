@@ -39,8 +39,9 @@
                 android:ellipsize="end"
                 android:singleLine="true"
                 android:text="Project"
+                android:textStyle="bold"
                 android:textColor="@color/appcolor"
-                android:textSize="14sp" />
+                android:textSize="20sp" />
             <ImageView
                 android:id="@+id/addnote"
                 android:layout_width="40dp"
