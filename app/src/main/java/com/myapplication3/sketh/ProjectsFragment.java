@@ -1,5 +1,6 @@
 package com.myapplication3.sketh;
 
+import android.app.DatePickerDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -23,10 +24,13 @@ import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Filter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -41,6 +45,7 @@ import com.myapplication3.Bean.ListallProjectBean;
 import com.myapplication3.Bean.ProjectDetailsBean;
 import com.myapplication3.DB.VideoCallDataBase;
 import com.myapplication3.ImageLoader;
+import com.myapplication3.ListAllgetTaskDetails;
 import com.myapplication3.MediaSearch;
 import com.myapplication3.ProjectHistory;
 import com.myapplication3.R;
@@ -53,10 +58,12 @@ import org.pjsip.pjsua2.app.MainActivity;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import json.CommunicationBean;
 import json.EnumJsonWebservicename;
+import json.ListMember;
 import json.WebServiceInterface;
 
 import static android.graphics.Color.RED;
@@ -66,24 +73,27 @@ import static android.graphics.Color.rgb;
 /**
  * Created by prasanth on 12/7/2016.
  */
-public class ProjectsFragment extends Fragment implements WebServiceInterface {
+public class ProjectsFragment extends Fragment implements View.OnClickListener, WebServiceInterface {
     public View view;
     private SwipeMenuListView listview_project;
     TextView heading_project, exclation_counter;
-    ImageView image_search;
+    ImageView image_search, reportdetails;
     public static Context classContext;
     static ProjectsFragment fragment;
     ProgressDialog progress;
     public ArrayList<ProjectDetailsBean> projectList, projectSearchList, filterbuddy;
     LinearLayout History_Search;
     EditText ProjectSearch;
-    TextView NoResults;
+    TextView NoResults, activity_start, activity_end;
     private ProjectFilter filter;
     private ProjectArrayAdapter projectArrayAdapter;
     Handler handler = new Handler();
     String project_id, project_name, parentTask_Id, groupuser_Id, project_owner, oracleProjectId;
     boolean isCurrentlyActivie = false;
     static ProjectsFragment projectsFragment;
+    int tna_count;
+    RelativeLayout all_report_title;
+    Button submit_button;
 
     public static ProjectsFragment getInstance() {
         return projectsFragment;
@@ -148,6 +158,12 @@ public class ProjectsFragment extends Fragment implements WebServiceInterface {
             projectsFragment = this;
             exclation_counter = (TextView) view.findViewById(R.id.exclation_counter);
 
+            activity_start = (TextView) view.findViewById(R.id.activity_start);
+            activity_end = (TextView) view.findViewById(R.id.activity_end);
+            submit_button= (Button) view.findViewById(R.id.submit_button);
+            all_report_title = (RelativeLayout) view.findViewById(R.id.all_report_title);
+            reportdetails = (ImageView) view.findViewById(R.id.reportdetails);
+            reportdetails.setOnClickListener(this);
             try {
                 String s = "select * from taskDetailsInfo where readStatus='1'";
                 ArrayList<ProjectDetailsBean> projectDetailsBeen = VideoCallDataBase.getDB(getContext()).getExclationdetails(s);
@@ -159,7 +175,66 @@ public class ProjectsFragment extends Fragment implements WebServiceInterface {
             } catch (Exception e) {
                 e.printStackTrace();
             }
+            reportdetails.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (tna_count == 0) {
+                        all_report_title.setVisibility(View.VISIBLE);
+                        tna_count = 1;
+                    } else {
+                        all_report_title.setVisibility(View.GONE);
+                        tna_count = 0;
+                    }
+                }
+            });
+            activity_start.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    final Calendar c = Calendar.getInstance();
 
+                    DatePickerDialog dpd = new DatePickerDialog(classContext,
+                            new DatePickerDialog.OnDateSetListener() {
+
+                                @Override
+                                public void onDateSet(DatePicker view, int year,
+                                                      int monthOfYear, int dayOfMonth) {
+                                    activity_start.setText(dayOfMonth + "-"
+                                            + (monthOfYear + 1) + "-" + year);
+//                                    TravelStartdate = dayOfMonth + "-"
+//                                            + (monthOfYear + 1) + "-" + year;
+                                }
+                            }, c.get(Calendar.YEAR), c.get(Calendar.MONTH), c.get(Calendar.DATE));
+                    dpd.show();
+                }
+            });
+
+            activity_end.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    final Calendar c = Calendar.getInstance();
+
+                    DatePickerDialog dpd = new DatePickerDialog(classContext,
+                            new DatePickerDialog.OnDateSetListener() {
+
+                                @Override
+                                public void onDateSet(DatePicker view, int year,
+                                                      int monthOfYear, int dayOfMonth) {
+                                    activity_end.setText(dayOfMonth + "-"
+                                            + (monthOfYear + 1) + "-" + year);
+//                                    TravelStartdate = dayOfMonth + "-"
+//                                            + (monthOfYear + 1) + "-" + year;
+                                }
+                            }, c.get(Calendar.YEAR), c.get(Calendar.MONTH), c.get(Calendar.DATE));
+                    dpd.show();
+
+                }
+            });
+            submit_button.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                }
+            });
             final SwipeMenuCreator creator = new SwipeMenuCreator() {
 
                 @Override
@@ -503,6 +578,13 @@ public class ProjectsFragment extends Fragment implements WebServiceInterface {
         return view;
     }
 
+    @Override
+    public void onClick(View v) {
+
+    }
+
+
+
     public class ProjectArrayAdapter extends ArrayAdapter<ProjectDetailsBean> {
 
         ArrayList<ProjectDetailsBean> arrayBuddyList;
@@ -804,7 +886,7 @@ public class ProjectsFragment extends Fragment implements WebServiceInterface {
     public void onResume() {
         super.onResume();
         try {
-            String query_1 = "select * from projectDetails where loginuser = '" + Appreference.loginuserdetails.getEmail() + "'";
+            String query_1 = "select * from projectDetails where loginuser = '" + Appreference.loginuserdetails.getEmail() + "'and projectcompletedstatus NOT IN (select projectcompletedstatus where projectcompletedstatus like '1')";
             projectList = new ArrayList<>();
             projectSearchList = new ArrayList<>();
             projectList = VideoCallDataBase.getDB(classContext).getProjectdetails(query_1);
@@ -859,7 +941,7 @@ public class ProjectsFragment extends Fragment implements WebServiceInterface {
                         if (classContext != null) {
                             progress = new ProgressDialog(classContext);
                             progress.setCancelable(false);
-                            progress.setMessage("Listing project...");
+                            progress.setMessage("Listing JobCards...");
                             progress.setProgressStyle(ProgressDialog.STYLE_SPINNER);
                             progress.setProgress(0);
                             progress.setMax(1000);
@@ -915,7 +997,7 @@ public class ProjectsFragment extends Fragment implements WebServiceInterface {
             @Override
             public void run() {
                 try {
-                    String query_1 = "select * from projectDetails where loginuser = '" + Appreference.loginuserdetails.getEmail() + "'";
+                    String query_1 = "select * from projectDetails where loginuser = '" + Appreference.loginuserdetails.getEmail() + "'and projectcompletedstatus NOT IN (select projectcompletedstatus where projectcompletedstatus like '1')";
                     projectList = new ArrayList<>();
                     projectSearchList = new ArrayList<>();
                     projectList = VideoCallDataBase.getDB(classContext).getProjectdetails(query_1);
@@ -1002,7 +1084,7 @@ public class ProjectsFragment extends Fragment implements WebServiceInterface {
                                         }
                                     }
                                 }
-                                String query_1 = "select * from projectDetails where loginuser = '" + Appreference.loginuserdetails.getEmail() + "'";
+                                String query_1 = "select * from projectDetails where loginuser = '" + Appreference.loginuserdetails.getEmail() + "'and projectcompletedstatus NOT IN (select projectcompletedstatus where projectcompletedstatus like '1')";
                                 projectList = new ArrayList<>();
                                 projectSearchList = new ArrayList<>();
                                 projectList = VideoCallDataBase.getDB(classContext).getProjectdetails(query_1);
@@ -1017,7 +1099,6 @@ public class ProjectsFragment extends Fragment implements WebServiceInterface {
                         } else if (s2.equalsIgnoreCase("getAllJobDetails")) {
                             Log.i("ws123", "inside Response of json webservice**************************");
                             Log.i("ws123", "getAllJobDetails response-->" + s1);
-                            cancelDialog();
                             try {
                                 JSONArray jr = new JSONArray(s1);
                                 if (jr.length() > 0) {
@@ -1042,7 +1123,7 @@ public class ProjectsFragment extends Fragment implements WebServiceInterface {
                                         }
                                     }
                                 }
-                                String query_1 = "select * from projectDetails where loginuser = '" + Appreference.loginuserdetails.getEmail() + "'";
+                                String query_1 = "select * from projectDetails where loginuser = '" + Appreference.loginuserdetails.getEmail() + "'and projectcompletedstatus NOT IN (select projectcompletedstatus where projectcompletedstatus like '1')";
                                 projectList = new ArrayList<>();
                                 projectSearchList = new ArrayList<>();
                                 projectList = VideoCallDataBase.getDB(classContext).getProjectdetails(query_1);
@@ -1051,6 +1132,7 @@ public class ProjectsFragment extends Fragment implements WebServiceInterface {
                                 projectArrayAdapter = new ProjectArrayAdapter(getActivity(), projectList);
                                 listview_project.setAdapter(projectArrayAdapter);
                                 projectArrayAdapter.notifyDataSetChanged();
+                                cancelDialog();
                             } catch (Exception e) {
                                 e.printStackTrace();
                             }
@@ -1069,14 +1151,26 @@ public class ProjectsFragment extends Fragment implements WebServiceInterface {
                                     Type collectionType = new TypeToken<ListallProjectBean>() {
                                     }.getType();
                                     ListallProjectBean pdb = new Gson().fromJson(s1, collectionType);
-//                                    Log.i("Response", "getProject name " + pdb.getProjectName());
 
                                     VideoCallDataBase.getDB(classContext).insertProject_history(pdb);
                                     VideoCallDataBase.getDB(classContext).insert_updateProjectStatus(pdb);
 
-                                    /*ProjectHistory projectHistory = (ProjectHistory) Appreference.context_table.get("projecthistory");
-                                    if(projectHistory!=null)
-                                    projectHistory.stopRefreshListener();*/
+                                    ProjectDetailsBean projectDetailsBean=pdb.getProjectDTO();
+                                    project_id=projectDetailsBean.getId();
+                                    project_name=projectDetailsBean.getProjectName();
+                                    ListMember listMember_2 = projectDetailsBean.getProjectOwner();
+                                    project_owner= listMember_2.getUsername();
+
+                                    ArrayList<ListAllgetTaskDetails> listAllgetTaskDetailses;
+
+                                    listAllgetTaskDetailses = projectDetailsBean.getListSubTask();
+
+                                    if (listAllgetTaskDetailses.size() > 0) {
+                                        for (int i = 0; i < listAllgetTaskDetailses.size(); i++) {
+                                            ListAllgetTaskDetails listAllgetTaskDetailses1 = listAllgetTaskDetailses.get(i);
+                                            groupuser_Id=String.valueOf(listAllgetTaskDetailses1.getId());
+                                        }
+                                    }
                                 }
                             } catch (Exception e) {
                                 e.printStackTrace();
@@ -1098,12 +1192,15 @@ public class ProjectsFragment extends Fragment implements WebServiceInterface {
                         } else if (s2.equalsIgnoreCase("projectCompleted")) {
                             Log.i("projectCompleted", "******projectCompleted********** Response String " + s1);
                             final JSONObject jsonObject = new JSONObject(opr.getEmail());
-                            String result = (String) jsonObject.get("result_text");
-                            Toast.makeText(getContext(), result, Toast.LENGTH_LONG).show();
-                          /*  if (((String) jsonObject.get("result_text")).equalsIgnoreCase("project task not completed")) {
+//                            String result = (String) jsonObject.get("result_text");
+//                            Toast.makeText(getContext(), result, Toast.LENGTH_LONG).show();
+                            if (((String) jsonObject.get("result_text")).equalsIgnoreCase("project task not completed")) {
                                 String result= (String) jsonObject.get("result_text");
-                                 Toast.makeText(getContext(),result, Toast.LENGTH_LONG).show();
-                            }*/
+                                 Toast.makeText(getContext(),"JobCards Tasks Not Completed", Toast.LENGTH_LONG).show();
+                            }else if(((String) jsonObject.get("result_text")).equalsIgnoreCase("Job Completed")) {
+                                String result= (String) jsonObject.get("result_text");
+                                Toast.makeText(getContext(),"JobCard Completed Successfully", Toast.LENGTH_LONG).show();
+                            }
                         } else if (s2 != null && s2.equalsIgnoreCase(("fieldServiceReportJobWise"))) {
                             Log.i("output123", "projectFragment fieldServiceReportJobWise  Responce Received" + s1);
                             final JSONObject jsonObject = new JSONObject(opr.getEmail());

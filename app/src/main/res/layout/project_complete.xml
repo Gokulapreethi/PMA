@@ -837,10 +837,10 @@
                     android:layout_width="30dp"
                     android:layout_height="30dp"
                     android:background="@drawable/gallery_pic" />
-                <TextView
-                    android:layout_width="180dp"
+               <!-- <TextView
+                    android:layout_width="40dp"
                     android:layout_height="wrap_content"
-                    android:text=""/>
+                    android:text=""/>-->
 
                 <ImageView
                     android:id="@+id/signature_path"
@@ -885,10 +885,10 @@
                     android:layout_width="40dp"
                     android:layout_height="40dp"
                     android:background="@drawable/ic_compact_camera_100" />
-                <TextView
-                    android:layout_width="180dp"
+               <!-- <TextView
+                    android:layout_width="40dp"
                     android:layout_height="wrap_content"
-                    android:text=""/>
+                    android:text=""/>-->
                 <ImageView
                     android:id="@+id/photo_path"
                     android:layout_width="50dp"
@@ -927,10 +927,10 @@
                     android:layout_width="30dp"
                     android:layout_height="30dp"
                     android:background="@drawable/gallery_pic" />
-                <TextView
-                    android:layout_width="180dp"
+                <!--<TextView
+                    android:layout_width="40dp"
                     android:layout_height="wrap_content"
-                    android:text=""/>
+                    android:text=""/>-->
                 <ImageView
                     android:id="@+id/tech_signature_path"
                     android:layout_width="80dp"

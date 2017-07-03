@@ -566,12 +566,12 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                     Log.i("TemplateList", "project templatehistory");
                     if (projectBean.getOwnerOfTask() != null)
                         ownerOfTask = projectBean.getOwnerOfTask();
-                    if (!appSharedpreferences.getBoolean("syncTask" + webtaskId)) {
+                    /*if (!appSharedpreferences.getBoolean("syncTask" + webtaskId)) {
                         gettaskwebservice();
                         Log.i("taskConversation", "templatehistory - Gettaskwebservice called for taskId is " + webtaskId);
                     } else {
 //                        gettaskwebservicewithtimestamp();
-                    }
+                    }*/
                     String quryJob1 = "select oracleProjectId from projectHistory where projectId='" + projectId + "' and taskId= '" + webtaskId + "'";
                     String quryActivity1 = "select oracleTaskId from projectHistory where projectId='" + projectId + "' and taskId= '" + webtaskId + "'";
                     JobCodeNo = VideoCallDataBase.getDB(getApplication()).getProjectParentTaskId(quryJob1);
@@ -3796,7 +3796,10 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                 taskid.put("id", webtaskId);
                 taskDetailsBean.setTaskId(webtaskId);
                 oracleProject_object.put("task", taskid);
-                int getProjOwnerId = VideoCallDataBase.getDB(context).getUserIdForUserName(ownerOfTask);
+                Log.i("assign123", "inside wservice AssignTask ownerOfTask==>"+oracleProjectOwner);
+                int getProjOwnerId = VideoCallDataBase.getDB(context).getUserIdForUserName(oracleProjectOwner);
+                Log.i("assign123", "inside wservice AssignTask getProjOwnerId==>"+getProjOwnerId);
+
                 oracleProject_object.put("fromId", getProjOwnerId);
                 taskDetailsBean.setFromUserId(String.valueOf(getProjOwnerId));
                 oracleProject_object.put("projectId", projectId);
@@ -3957,7 +3960,7 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                 project_id.setText(existing_entry.getProjectId());
 //                project_name.setText(existing_entry.getProjectName());
                 project_name.setText("JobCodeNo :" + JobCodeNo + "\nActivityCode :" + ActivityCode);
-                task_id.setText(existing_entry.getTaskId());
+                task_id.setText(ActivityCode);
                 mcModel.setText(existing_entry.getMcModel());
                 mcSrNo.setText(existing_entry.getMcSrNo());
                 service_date.setText(existing_entry.getDateTime());
@@ -3965,7 +3968,7 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                 est_activity.setText(existing_entry.getEstimatedTravel());
                 proj_activity.setText(existing_entry.getActivity());
                 address.setText(existing_entry.getAddress());
-                description.setText(existing_entry.getTaskDescription());
+                description.setText(existing_entry.getTaskName());
             }
 //        String Querystatus= "Select * from projectStatus where projectId ='" + projectId + "' and taskId = '" + webtaskId + "' and status = '"+ queryStatus + "'";
 
@@ -4052,7 +4055,7 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                     Intent i = new Intent(getApplicationContext(), DisplayList.class);
                     i.putExtra("projectId", projectId);
                     i.putExtra("webtaskId", webtaskId);
-                    i.putExtra("date_type", "activity_date");
+                    i.putExtra("date_type", "travel_start");
                     startActivity(i);
                 }
             });
@@ -4767,6 +4770,9 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                             // TODO Auto-generated method stub
                             if (keyCode == KeyEvent.KEYCODE_BACK) {
                                 Log.i("onKeyDown","Dialog keyDown");
+                                if (event.getAction()!=KeyEvent.ACTION_DOWN)
+                                    return true;
+
                                 AlertDialog.Builder saveDialog = new AlertDialog.Builder(context);
                                 saveDialog.setTitle("JobCode Completion");
                                 saveDialog.setMessage("Are you sure want to go back?");
@@ -4788,6 +4794,8 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                     send_completion.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
+                            int travelentry =VideoCallDataBase.getDB(context).CheckTravelEntryDetails("select * from projectStatus where projectId ='" + projectId + "' and taskId = '" + webtaskId + "' and travelStartTime IS NOT NULL and travelEndTime IS NULL");
+                           Log.i("conv123","TravelEntry==>"+travelentry);
                             statusCompletedFieldValues.put(13, "Observation :" + observation.getText().toString());
                             statusCompletedFieldValues.put(15, "CustomerRemarks :" + remarks_completion.getText().toString());
                             statusCompletedFieldValues.put(16, "ActionTaken :" + action_taken.getText().toString());
@@ -4811,8 +4819,13 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                                 HMReadingStatus = "";
                             if (remarks_completion.getText().toString() != null && remarks_completion.getText().toString().length() > 0) {
 //                                Toast.makeText(NewTaskConversation.this, "Send Successfully", Toast.LENGTH_SHORT).show();
-                                sendStatus_webservice("5", "", remarks_completion.getText().toString(), "Completed");
-                                dialog.dismiss();
+                                if (travelentry == 0) {
+                                    sendStatus_webservice("5", "", remarks_completion.getText().toString(), "Completed");
+                                    dialog.dismiss();
+                                }
+                                else
+                                    Toast.makeText(NewTaskConversation.this, "You not completed travel Entry", Toast.LENGTH_SHORT).show();
+
                             } else
                                 Toast.makeText(NewTaskConversation.this, "Please type Remarks", Toast.LENGTH_SHORT).show();
                         }
@@ -5166,19 +5179,25 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                     e.printStackTrace();
                 }
             }*/
-            VideoCallDataBase.getDB(context).insertORupdateStatus(taskDetailsBean);
+//            VideoCallDataBase.getDB(context).insertORupdateStatus(taskDetailsBean);
 
-            /*String query = "select * from projectStatus where projectId='" + projectId+ "' and userId='" + Appreference.loginuserdetails.getId() + "' and taskId= '" + webtaskId + "'";
-            TaskDetailsBean bean = VideoCallDataBase.getDB(context).getActivityTimeFromStatus(query);
-            if (bean != null) {
-             if (!ActivityEnddate.equalsIgnoreCase("")) {
-                 Log.i("output123","projectUpdate travel====>"+bean.getActivityStartTime());
-                 Log.i("output123","projectUpdate travel====>"+bean.getActivityEndTime());
-                    String queryUpdate = "update projectStatus set travelEndTime='" + ActivityEnddate + "' where projectId='" + projectId+ "' and userId='" + Appreference.loginuserdetails.getId() + "' and taskId= '" + webtaskId + "' and travelEndTime IS NULL";
-                 Log.i("output123","projectUpdate query "+queryUpdate);
-                    VideoCallDataBase.getDB(context).updateaccept(queryUpdate);
+
+            if (status.equalsIgnoreCase("9")) {
+                String query = "select * from projectStatus where projectId='" + projectId + "' and userId='" + Appreference.loginuserdetails.getId() + "' and taskId= '" + webtaskId + "' and status = '7'";
+                TaskDetailsBean bean = VideoCallDataBase.getDB(context).getActivityTimeFromStatus(query);
+                if (bean != null) {
+                    if (ActivityEnddate!=null && !ActivityEnddate.equalsIgnoreCase("")) {
+                        Log.i("output123", "projectUpdate travel====>" + bean.getActivityStartTime());
+                        Log.i("output123", "projectUpdate travel====>" + bean.getActivityEndTime());
+                        String queryUpdate = "update projectStatus set travelEndTime='" + ActivityEnddate + "' where projectId='" + projectId + "' and userId='" + Appreference.loginuserdetails.getId() + "' and taskId= '" + webtaskId + "' and travelStartTime IS NOT NULL and travelEndTime IS NULL";
+                        Log.i("output123", "projectUpdate query " + queryUpdate);
+                        VideoCallDataBase.getDB(context).updateaccept(queryUpdate);
+                    }
                 }
-            }*/
+            } else {
+                VideoCallDataBase.getDB(context).insertORupdateStatus(taskDetailsBean);
+            }
+
             Appreference.jsonRequestSender.taskStatus(EnumJsonWebservicename.taskStatus, jsonObject, status_list, taskDetailsBean, NewTaskConversation.this);
         } catch (JSONException e) {
             e.printStackTrace();
@@ -5605,8 +5624,8 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                 }
                 if (groupMemberAccess.getAddObserver() != null && groupMemberAccess.getAddObserver().contains("1")) {
                     Log.i("gridview", "index AddObserver ");
-                    gridview_text.add("AddObserver");
-                    gridview_thump.add(R.drawable.observer_grid);
+//                    gridview_text.add("AddObserver");
+//                    gridview_thump.add(R.drawable.observer_grid);
                 }
                 if (groupMemberAccess.getChatAccess() != null && groupMemberAccess.getChatAccess().contains("1")) {
                     Log.i("gridview", "index Chat ");
@@ -5620,13 +5639,13 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                 }
                 if (groupMemberAccess.getAccessForms() != null && groupMemberAccess.getAccessForms().contains("1")) {
                     Log.i("gridview", "index Forms ");
-                    gridview_text.add("Forms");
-                    gridview_thump.add(R.drawable.forms);
+//                    gridview_text.add("Forms");
+//                    gridview_thump.add(R.drawable.forms);
                 }
                 if (groupMemberAccess.getReassignTask() != null && groupMemberAccess.getReassignTask().contains("1")) {
                     Log.i("gridview", "index ReassignTask ");
-                    gridview_text.add("ReassignTask");
-                    gridview_thump.add(R.drawable.reassign_task_new);
+//                    gridview_text.add("ReassignTask");
+//                    gridview_thump.add(R.drawable.reassign_task_new);
                 }
                 if (groupMemberAccess.getAccessReminder() != null && groupMemberAccess.getAccessReminder().contains("1")) {
                     Log.i("gridview", "index ReminderResponce ");
@@ -5642,8 +5661,8 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                     gridview_text.add("ViewTask");
                     gridview_thump.add(R.drawable.ic_view_task);
                 }
-                gridview_text.add("TNA Report");
-                gridview_thump.add(R.drawable.leave);
+//                gridview_text.add("TNA Report");
+//                gridview_thump.add(R.drawable.leave);
             } else {
                 Log.i("gridview", "individual owner " + taskType);
                 gridview_text.add("Private");
@@ -5658,16 +5677,16 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                 gridview_text.add("Dates");
                 gridview_text.add("Completion");
                 gridview_text.add("Call");
-                gridview_text.add("AddObserver");
+//                gridview_text.add("AddObserver");
                 gridview_text.add("Chat");
                 gridview_text.add("Description");
-                gridview_text.add("Forms");
-                gridview_text.add("ReassignTask");
+//                gridview_text.add("Forms");
+//                gridview_text.add("ReassignTask");
                 gridview_text.add("ReminderResponses");
                 gridview_text.add("RemindMe");
-                gridview_text.add("TNA Report");
+//                gridview_text.add("TNA Report");
 //                gridview_text.add("FSR Report");
-                gridview_text.add("moreFields");
+//                gridview_text.add("moreFields");
                 if (category != null && category.equalsIgnoreCase("issue")) {
                     gridview_text.add("ViewTask");
                 }
@@ -5684,16 +5703,16 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                 gridview_thump.add(R.drawable.date_grid);
                 gridview_thump.add(R.drawable.percent_grid);
                 gridview_thump.add(R.drawable.call_grid);
-                gridview_thump.add(R.drawable.observer_grid);
+//                gridview_thump.add(R.drawable.observer_grid);
                 gridview_thump.add(R.drawable.chat_grid1);
                 gridview_thump.add(R.drawable.desceiption_grid);
-                gridview_thump.add(R.drawable.forms);
-                gridview_thump.add(R.drawable.reassign_task_new);
+//                gridview_thump.add(R.drawable.forms);
+//                gridview_thump.add(R.drawable.reassign_task_new);
                 gridview_thump.add(R.mipmap.ic_reminder_icon);
                 gridview_thump.add(R.drawable.remind_me);
 //                gridview_thump.add(R.drawable.leave);
-                gridview_thump.add(R.drawable.share);
-                gridview_thump.add(R.drawable.ic_rectangle_filled_100);
+//                gridview_thump.add(R.drawable.share);
+//                gridview_thump.add(R.drawable.ic_rectangle_filled_100);
                 if (category != null && category.equalsIgnoreCase("issue")) {
                     gridview_thump.add(R.drawable.ic_view_task);
                 }
@@ -5759,8 +5778,8 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
 
                 if (groupMemberAccess.getAccessForms() != null && groupMemberAccess.getAccessForms().contains("1")) {
                     Log.i("gridview", "index Forms ");
-                    gridviewtaker_text.add("Forms");
-                    gridviewtaker_thump.add(R.drawable.forms);
+//                    gridviewtaker_text.add("Forms");
+//                    gridviewtaker_thump.add(R.drawable.forms);
                 }
 
                 if (groupMemberAccess.getAccessReminder() != null && groupMemberAccess.getAccessReminder().contains("1")) {
@@ -5784,9 +5803,9 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                 gridviewtaker_text.add("File");
                 gridviewtaker_text.add("Completion");
                 gridviewtaker_text.add("Call");
-                gridviewtaker_text.add("Forms");
+//                gridviewtaker_text.add("Forms");
                 gridviewtaker_text.add("ReminderResponses");
-                gridviewtaker_text.add("moreFields");
+//                gridviewtaker_text.add("moreFields");
                 gridviewtaker_text.add("Custom1");
                 if (category != null && category.equalsIgnoreCase("issue")) {
                     gridviewtaker_text.add("ViewTask");
@@ -5805,7 +5824,7 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                 gridviewtaker_thump.add(R.drawable.call_grid);
                 gridviewtaker_thump.add(R.drawable.forms);
                 gridviewtaker_thump.add(R.mipmap.ic_reminder_icon);
-                gridviewtaker_thump.add(R.drawable.ic_rectangle_filled_100);
+//                gridviewtaker_thump.add(R.drawable.ic_rectangle_filled_100);
                 gridviewtaker_thump.add(R.drawable.custom);
                 if (category != null && category.equalsIgnoreCase("issue")) {
                     gridviewtaker_thump.add(R.drawable.ic_view_task);
@@ -10850,11 +10869,12 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                                                  String query = "select projectId from projectDetails where isActiveStatus = '1' ";
                                                  String diverted_project_id = VideoCallDataBase.getDB(context).getDivertedProjId(query);
                                                  if(diverted_project_id!=null) {
-                                                    /* List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
+                                                     List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
                                                      nameValuePairs.add(new BasicNameValuePair("projectId", diverted_project_id));
                                                      nameValuePairs.add(new BasicNameValuePair("userId", String.valueOf(Appreference.loginuserdetails.getId())));
-                                                     Appreference.jsonRequestSender.getTaskForJobID(EnumJsonWebservicename.getTaskForJobID, nameValuePairs, ProjectsFragment.getInstance());*/
-                                                     Intent intent = new Intent(NewTaskConversation.this, ProjectHistory.class);
+                                                     Appreference.jsonRequestSender.getTaskForJobID(EnumJsonWebservicename.getTaskForJobID, nameValuePairs, ProjectsFragment.getInstance());
+
+                                                    /* Intent intent = new Intent(NewTaskConversation.this, ProjectHistory.class);
                                                      intent.putExtra("projectId", diverted_project_id);
                                                      intent.putExtra("isFromNewTaskConv",true);
 //                                                     intent.putExtra("projectName", project_name);
@@ -10865,7 +10885,7 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                                                          intent.putExtra("fromOracle", true);
                                                      else
                                                          intent.putExtra("fromOracle", false);
-                                                     startActivity(intent);
+                                                     startActivity(intent);*/
                                                  }
                                              }
                                              Log.i("desc123", "isDeassign==>" + isDeassign);
@@ -15887,7 +15907,7 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
             gridviewObserver.add("Video");
             gridviewObserver.add("File");
             gridviewObserver.add("Call");
-            gridviewObserver.add("Forms");
+//            gridviewObserver.add("Forms");
             if (category != null && category.equalsIgnoreCase("issue")) {
                 gridviewObserver.add("ViewTask");
             }
@@ -20433,15 +20453,16 @@ class ImageTakerAdapter extends BaseAdapter {
     public View getView(int position, View convertView, ViewGroup parent) {
         View grid;
         LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        Log.i("NewTaskConversation", "ImageTakerAdapter If " + gridtaker_texts[position]);
         Log.i("gridview", "view position " + position);
         grid = inflater.inflate(R.layout.gridviewsingle, null);
         TextView textView = (TextView) grid.findViewById(R.id.grid_text);
         ImageView imageView = (ImageView) grid.findViewById(R.id.grid_image);
-        Log.i("grid", "text value " + gridtaker_texts[position]);
-        textView.setText(gridtaker_texts[position]);
-        Log.i("grid", "text value " + gridtaker_mThumbIds[position]);
-        imageView.setImageResource(gridtaker_mThumbIds[position]);
+        try {
+            textView.setText(gridtaker_texts[position]);
+            imageView.setImageResource(gridtaker_mThumbIds[position]);
+        }catch (ArrayIndexOutOfBoundsException e){
+            e.printStackTrace();
+        }
         return grid;
     }
 

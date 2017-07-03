@@ -159,7 +159,8 @@
             android:src="@drawable/report"
             android:layout_alignTop="@+id/notes"
             android:layout_toLeftOf="@+id/notes"
-            android:layout_toStartOf="@+id/notes" />
+            android:layout_toStartOf="@+id/notes"
+            android:visibility="gone"/>
 
         <TextView
             android:id="@+id/add"

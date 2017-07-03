@@ -621,7 +621,7 @@ public class ContactsFragment extends Fragment implements View.OnClickListener, 
                 indexLayout1.setVisibility(View.GONE);
                 indexLayout.setVisibility(View.GONE);
                 alpha.setVisibility(View.GONE);
-                reportdetails.setVisibility(View.VISIBLE);
+//                reportdetails.setVisibility(View.VISIBLE);
                 alpha1.setVisibility(View.GONE);
                 t1.setVisibility(View.GONE);
                 t2.setVisibility(View.GONE);
@@ -745,7 +745,7 @@ public class ContactsFragment extends Fragment implements View.OnClickListener, 
                 alpha1.setVisibility(View.GONE);
                 template.setVisibility(View.GONE);
                 chat.setVisibility(View.GONE);
-                reportdetails.setVisibility(View.VISIBLE);
+//                reportdetails.setVisibility(View.VISIBLE);
                 notes.setVisibility(View.GONE);
                 audio_call.setVisibility(View.GONE);
                 group_batch.setVisibility(View.GONE);

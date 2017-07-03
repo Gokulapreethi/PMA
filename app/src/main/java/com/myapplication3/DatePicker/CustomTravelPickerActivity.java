@@ -79,7 +79,7 @@ public class CustomTravelPickerActivity extends Activity implements DateTimePick
         });
 //        project_name.setText(taskNameshow);
         project_name.setText("JobCodeNo : "+ jobcodeno +"\nActivityCode : "+activitycode);
-        String query = "select * from projectStatus where projectId='" + projectIDshow + "' and userId='" + Appreference.loginuserdetails.getId() + "' and taskId= '" + taskIDshow + "'";
+        String query = "select * from projectStatus where projectId='" + projectIDshow + "' and userId='" + Appreference.loginuserdetails.getId() + "' and taskId= '" + taskIDshow + "' and status = '7'";
         TaskDetailsBean bean = VideoCallDataBase.getDB(context).getActivityTimeFromStatus(query);
         Log.i("travel123","Travel Details"+bean.getTravelStartTime() +""+bean.getTravelEndTime());
         if (bean != null) {
@@ -111,48 +111,6 @@ public class CustomTravelPickerActivity extends Activity implements DateTimePick
             @Override
             public void onClick(View v) {
                 try {
-                    /*DatePickerPopWin pickerPopWin = new DatePickerPopWin.Builder(context, true, new DatePickerPopWin.OnDatePickedListener() {
-
-                        @Override
-                        public void onDatePickCompleted(int month, int day, int year, int hour, int minute, String am, String dateDesc) {
-                            Log.i("desc123", "inside onDatePickedCompleted");
-
-                            String inputPattern = "M-dd-yyyy hh:mm aa";
-                            String outputPattern = "yyyy-MM-dd HH:mm:ss";
-                            SimpleDateFormat inputFormat = new SimpleDateFormat(inputPattern);
-                            SimpleDateFormat outputFormat = new SimpleDateFormat(outputPattern);
-//                            outputFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
-                            Date date123 = null;
-                            String str = null;
-
-                            try {
-                                date123 = inputFormat.parse(dateDesc);
-                                str = outputFormat.format(date123);
-                            } catch (ParseException e) {
-                                e.printStackTrace();
-                            }
-                            if (str != null) {
-                                if (date123 != null && (date123.compareTo(todayDate) < 0 || date123.compareTo(todayDate) == 0)) {
-                                    travel_start.setText(str);
-                                    StartDate = str;
-                                }else
-                                    Toast.makeText(CustomTravelPickerActivity.this, "Please Select Correct DateTime", Toast.LENGTH_SHORT).show();
-                            }
-
-                        }
-                    }).textConfirm("DONE") //text of confirm button
-                            .textCancel("CANCEL") //text of cancel button
-                            .btnTextSize(16) // button text size
-                            .viewTextSize(25) // pick view text size
-                            .minYear(Calendar.getInstance().get(Calendar.YEAR)) //min year in loop
-                            .maxYear(2550) // max year in loop
-                            .dateChose(todayDate.toString()) // date chose when init popwindow
-                            .currenttime(currentDateTimeString)
-                            .build();
-                    Log.i("desc123", "inside DatePickerPopWin.Builder");
-
-                    pickerPopWin.showPopWin(CustomTravelPickerActivity.this);*/
-
                     //New Code Start
                     final Dialog mDateTimeDialog = new Dialog(context);
                     // Inflate the root layout
@@ -263,52 +221,8 @@ public class CustomTravelPickerActivity extends Activity implements DateTimePick
             @Override
             public void onClick(View v) {
                 try {
-                    /*DatePickerPopWin pickerPopWin = new DatePickerPopWin.Builder(context, true, new DatePickerPopWin.OnDatePickedListener() {
 
-                        @Override
-                        public void onDatePickCompleted(int month, int day, int year, int hour, int minute, String am, String dateDesc) {
-
-                            Log.i("desc123", "inside onDatePickedCompleted");
-                            String inputPattern = "M-dd-yyyy hh:mm aa";
-                            String outputPattern = "yyyy-MM-dd HH:mm:ss";
-                            SimpleDateFormat inputFormat = new SimpleDateFormat(inputPattern);
-                            SimpleDateFormat outputFormat = new SimpleDateFormat(outputPattern);
-//                            outputFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
-
-                            Date date123 = null;
-                            String str = null;
-
-                            try {
-                                date123 = inputFormat.parse(dateDesc);
-                                str = outputFormat.format(date123);
-                            } catch (ParseException e) {
-                                e.printStackTrace();
-                            }
-                            if (StartDate != null && !StartDate.equalsIgnoreCase("")) {
-                                    if (isValidDate(StartDate, str)) {
-                                        travel_end.setText(str);
-                                        EndDate = str;
-                                    } else
-                                        Toast.makeText(CustomTravelPickerActivity.this, "Please Select Correct DateTime", Toast.LENGTH_SHORT).show();
-                            }else
-                                Toast.makeText(CustomTravelPickerActivity.this, "Please Enter Start DateTime", Toast.LENGTH_SHORT).show();
-
-                        }
-                    }).textConfirm("DONE") //text of confirm button
-                            .textCancel("CANCEL") //text of cancel button
-                            .btnTextSize(16) // button text size
-                            .viewTextSize(25) // pick view text size
-                            .minYear(Calendar.getInstance().get(Calendar.YEAR)) //min year in loop
-                            .maxYear(2550) // max year in loop
-                            .dateChose(todayDate.toString()) // date chose when init popwindow
-                            .currenttime(currentDateTimeString).build();
-                    Log.i("desc123", "inside DatePickerPopWin.Builder");
-
-                    pickerPopWin.showPopWin(CustomTravelPickerActivity.this);*/
                     // Create the dialog
-
-
-
                     //New Code Start
                     final Dialog mDateTimeDialog = new Dialog(context);
                     // Inflate the root layout

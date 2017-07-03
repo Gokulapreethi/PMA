@@ -1403,7 +1403,7 @@ public class CustomVideoCamera extends Activity {
             if (getDeviceName().equalsIgnoreCase("motorola MotoG3")) {
                 File file = new File(filepath);
                 if (file.exists()) {
-                    Toast.makeText(CustomVideoCamera.this, "File Exits", Toast.LENGTH_LONG).show();
+//                    Toast.makeText(CustomVideoCamera.this, "File Exits", Toast.LENGTH_LONG).show();
                     ImageView image = (ImageView) findViewById(R.id.image_preview);//
                     int size = 10;
                     try {
