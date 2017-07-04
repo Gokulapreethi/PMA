@@ -657,6 +657,7 @@ public class ProjectHistory extends Activity implements WebServiceInterface, Swi
                     intent.putExtra("projectid", project_id);
                     Log.i("newprojectnote", "project_id " + project_id);
                     startActivityForResult(intent, 404);
+                    overridePendingTransition(R.anim.right_anim, R.anim.left_anim);
                 }
             });
             final SwipeMenuCreator creator = new SwipeMenuCreator() {
@@ -782,12 +783,17 @@ public class ProjectHistory extends Activity implements WebServiceInterface, Swi
                                 }
                                 check = true;
                                 startActivity(intent);
+                                overridePendingTransition(R.anim.right_anim, R.anim.left_anim);
+
                             }
 //                            } else {
 //                                Toast.makeText(getApplicationContext(), "You are not allowed for this Template", Toast.LENGTH_SHORT).show();
 //                            }
                         } else if (taskDetailsBean.getTaskType().equalsIgnoreCase("individual")) {
-                            if (taskDetailsBean.getTaskReceiver().equalsIgnoreCase(Appreference.loginuserdetails.getUsername()) || taskDetailsBean.getOwnerOfTask().equalsIgnoreCase(Appreference.loginuserdetails.getUsername()) || taskDetailsBean.getTaskObservers().contains(Appreference.loginuserdetails.getUsername())) {
+                            if (taskDetailsBean != null &&
+                                    (taskDetailsBean.getTaskReceiver() != null && taskDetailsBean.getTaskReceiver().equalsIgnoreCase(Appreference.loginuserdetails.getUsername())) ||
+                                    (taskDetailsBean.getOwnerOfTask()!=null && taskDetailsBean.getOwnerOfTask().equalsIgnoreCase(Appreference.loginuserdetails.getUsername())) ||
+                                    (taskDetailsBean.getTaskObservers()!=null && taskDetailsBean.getTaskObservers().contains(Appreference.loginuserdetails.getUsername()))) {
                                 Log.i("task", String.valueOf(position));
                                 showDialog();
                                 if (taskDetailsBean.getTaskName() != null && taskDetailsBean.getTaskName().equalsIgnoreCase("Travel Time")) {
@@ -813,6 +819,7 @@ public class ProjectHistory extends Activity implements WebServiceInterface, Swi
                                     }
                                     check = true;
                                     startActivity(intent);
+                                    overridePendingTransition(R.anim.right_anim, R.anim.left_anim);
                                 }
                             } else {
                                 Toast.makeText(getApplicationContext(), "This Task does not assigned to you", Toast.LENGTH_SHORT).show();
@@ -845,6 +852,7 @@ public class ProjectHistory extends Activity implements WebServiceInterface, Swi
                                     }
                                     check = true;
                                     startActivity(intent);
+                                    overridePendingTransition(R.anim.right_anim, R.anim.left_anim);
                                 }
                             } else {
                                 Toast.makeText(getApplicationContext(), "You are not in group project task", Toast.LENGTH_SHORT).show();
@@ -863,8 +871,10 @@ public class ProjectHistory extends Activity implements WebServiceInterface, Swi
                 public void onClick(View v) {
                     Appreference.is_reload = true;
                     finish();
+                    overridePendingTransition(R.anim.left_to_right,R.anim.right_to_left);
                 }
             });
+
 
             submit_icon.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -908,7 +918,13 @@ public class ProjectHistory extends Activity implements WebServiceInterface, Swi
         }
 
     }
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
 
+        finish();
+        overridePendingTransition(R.anim.left_to_right,R.anim.right_to_left);
+    }
     public void showToast(final String result) {
         handler.post(new Runnable() {
             @Override
@@ -1167,6 +1183,8 @@ public class ProjectHistory extends Activity implements WebServiceInterface, Swi
         intent.putExtra("task", "taskhistory");
         intent.putExtra("taskHistoryBean", taskDetailsBean);
         startActivity(intent);
+        overridePendingTransition(R.anim.right_anim, R.anim.left_anim);
+
         check = true;
     }
 
@@ -1392,9 +1410,12 @@ public class ProjectHistory extends Activity implements WebServiceInterface, Swi
                 TextView catagory = (TextView) conView.findViewById(R.id.catagory);
                 ImageView dependency_icon = (ImageView) conView.findViewById(R.id.dependency_icon);
                 final ImageView status_oracle = (ImageView) conView.findViewById(R.id.status_oracle);
-                if (projectDetailsBean.getTaskType().equalsIgnoreCase("Group")) {
+                if (projectDetailsBean.getTaskType().equalsIgnoreCase("Group") || projectDetailsBean.getTaskType().equalsIgnoreCase("group") ) {
                     status_oracle.setVisibility(View.VISIBLE);
                     task_status.setVisibility(View.GONE);
+                }else{
+                    status_oracle.setVisibility(View.GONE);
+                    task_status.setVisibility(View.VISIBLE);
                 }
                 conView.setBackgroundResource(R.color.white);
                 dependency_icon.setVisibility(View.GONE);
@@ -1625,7 +1646,7 @@ public class ProjectHistory extends Activity implements WebServiceInterface, Swi
 
                     if (projectDetailsBean.getTaskStatus() != null && projectDetailsBean.getTaskStatus().equalsIgnoreCase("reminder")) {
                         Log.i("ProjectHistory", "projectDetailsBean.getTaskStatus() 4 " + projectDetailsBean.getTaskStatus());
-                        task_status.setText("inprogress");
+                        task_status.setText("assigned");
                     } else if (projectDetailsBean.getTaskStatus() != null && projectDetailsBean.getTaskStatus().equalsIgnoreCase("overdue")) {
                         Log.i("ProjectHistory", "projectDetailsBean.getTaskStatus() 5 " + projectDetailsBean.getTaskStatus());
                         task_status.setText(projectDetailsBean.getTaskStatus());
@@ -1635,6 +1656,14 @@ public class ProjectHistory extends Activity implements WebServiceInterface, Swi
                         task_status.setText(projectDetailsBean.getTaskStatus());
                         task_status.setTextColor(getResources().getColor(R.color.green));
                     } else if (projectDetailsBean.getTaskStatus() != null && projectDetailsBean.getTaskStatus().equalsIgnoreCase("draft")) {
+                        Log.i("ProjectHistory", "projectDetailsBean.getTaskStatus() 7 " + projectDetailsBean.getTaskStatus());
+//                        task_status.setText("Template");
+                        task_status.setText("Unassigned");
+                    }else if (projectDetailsBean.getTaskStatus() != null && projectDetailsBean.getTaskStatus().equalsIgnoreCase("inprogress")) {
+                        Log.i("ProjectHistory", "projectDetailsBean.getTaskStatus() 7 " + projectDetailsBean.getTaskStatus());
+//                        task_status.setText("Template");
+                        task_status.setText("assigned");
+                    }else if (projectDetailsBean.getTaskStatus() != null && projectDetailsBean.getTaskStatus().equalsIgnoreCase("DeAssign")) {
                         Log.i("ProjectHistory", "projectDetailsBean.getTaskStatus() 7 " + projectDetailsBean.getTaskStatus());
 //                        task_status.setText("Template");
                         task_status.setText("Unassigned");

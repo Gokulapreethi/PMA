@@ -3,6 +3,8 @@ package com.myapplication3.DatePicker;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -75,6 +77,7 @@ public class CustomTravelPickerActivity extends Activity implements DateTimePick
             @Override
             public void onClick(View v) {
                 finish();
+                overridePendingTransition(R.anim.left_to_right,R.anim.right_to_left);
             }
         });
 //        project_name.setText(taskNameshow);
@@ -334,48 +337,53 @@ public class CustomTravelPickerActivity extends Activity implements DateTimePick
                 intentMessage.putExtra("DateEnd",EndDate);
                 setResult(120,intentMessage);*/
                try {
-                   //New Code Start
-                   SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MMM-yyyy HH:mm");
-                   SimpleDateFormat originalFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-                   Date dt_temp;
-                   if (travel_start.getText().toString().length() > 0) {
-                       dt_temp = dateFormat.parse(travel_start.getText().toString());
-                       StartDate=originalFormat.format(dt_temp);
-                   }
-                   if (travel_end.getText().toString().length() > 0) {
-                       dt_temp = dateFormat.parse(travel_end.getText().toString());
-                       EndDate=originalFormat.format(dt_temp);
-                   }
 
-                   //New Code End
+                   if (getNetworkState()) {
+                       //New Code Start
+                       SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MMM-yyyy HH:mm");
+                       SimpleDateFormat originalFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                       Date dt_temp;
+                       if (travel_start.getText().toString().length() > 0) {
+                           dt_temp = dateFormat.parse(travel_start.getText().toString());
+                           StartDate=originalFormat.format(dt_temp);
+                       }
+                       if (travel_end.getText().toString().length() > 0) {
+                           dt_temp = dateFormat.parse(travel_end.getText().toString());
+                           EndDate=originalFormat.format(dt_temp);
+                       }
 
-                   if (StartDate != null || EndDate != null) {
-                       NewTaskConversation newTaskConversation = (NewTaskConversation) Appreference.context_table.get("taskcoversation");
-                       if (!isTravel && newTaskConversation != null) {
-                           if (isStartOnlyFilled && EndDate != null && !EndDate.equalsIgnoreCase("")) {
-                               newTaskConversation.getEnteredTravelTime(StartDateFilled, EndDate,"9");
-                               finish();
-                           } else if (!isStartOnlyFilled && StartDate != null && !StartDate.equalsIgnoreCase("") || EndDate != null && !EndDate.equalsIgnoreCase("")) {
-                               newTaskConversation.getEnteredTravelTime(StartDate, EndDate,"7");
-                               finish();
-                           } else
-                               Toast.makeText(CustomTravelPickerActivity.this, "Please Enter DateTime to send", Toast.LENGTH_SHORT).show();
+                       //New Code End
 
-                       } else {
-                           TravelJobDetails travelJobDetails = (TravelJobDetails) Appreference.context_table.get("traveljobdetails");
-                           if (travelJobDetails != null && isTravel) {
+                       if (StartDate != null || EndDate != null) {
+                           NewTaskConversation newTaskConversation = (NewTaskConversation) Appreference.context_table.get("taskcoversation");
+                           if (!isTravel && newTaskConversation != null) {
                                if (isStartOnlyFilled && EndDate != null && !EndDate.equalsIgnoreCase("")) {
-                                   travelJobDetails.getEnteredTravelTime(StartDateFilled, EndDate,"9");
+                                   newTaskConversation.getEnteredTravelTime(StartDateFilled, EndDate,"9");
                                    finish();
                                } else if (!isStartOnlyFilled && StartDate != null && !StartDate.equalsIgnoreCase("") || EndDate != null && !EndDate.equalsIgnoreCase("")) {
-                                   travelJobDetails.getEnteredTravelTime(StartDate, EndDate,"7");
+                                   newTaskConversation.getEnteredTravelTime(StartDate, EndDate,"7");
                                    finish();
                                } else
                                    Toast.makeText(CustomTravelPickerActivity.this, "Please Enter DateTime to send", Toast.LENGTH_SHORT).show();
+
+                           } else {
+                               TravelJobDetails travelJobDetails = (TravelJobDetails) Appreference.context_table.get("traveljobdetails");
+                               if (travelJobDetails != null && isTravel) {
+                                   if (isStartOnlyFilled && EndDate != null && !EndDate.equalsIgnoreCase("")) {
+                                       travelJobDetails.getEnteredTravelTime(StartDateFilled, EndDate,"9");
+                                       finish();
+                                   } else if (!isStartOnlyFilled && StartDate != null && !StartDate.equalsIgnoreCase("") || EndDate != null && !EndDate.equalsIgnoreCase("")) {
+                                       travelJobDetails.getEnteredTravelTime(StartDate, EndDate,"7");
+                                       finish();
+                                   } else
+                                       Toast.makeText(CustomTravelPickerActivity.this, "Please Enter DateTime to send", Toast.LENGTH_SHORT).show();
+                               }
                            }
-                       }
-                   } else
-                       Toast.makeText(CustomTravelPickerActivity.this, "Please Enter DateTime to send", Toast.LENGTH_SHORT).show();
+                       } else
+                           Toast.makeText(CustomTravelPickerActivity.this, "Please Enter DateTime to send", Toast.LENGTH_SHORT).show();
+                   }else
+                       Toast.makeText(CustomTravelPickerActivity.this, "Check your internet connection", Toast.LENGTH_SHORT).show();
+
                }catch (Exception e){
                    e.printStackTrace();
                }
@@ -405,7 +413,26 @@ public class CustomTravelPickerActivity extends Activity implements DateTimePick
         return isValid;
     }
 
+    private boolean getNetworkState()
+    {
+        boolean isNetwork=false;
+        ConnectivityManager ConnectionManager=(ConnectivityManager)getSystemService(Context.CONNECTIVITY_SERVICE);
+        if(ConnectionManager!=null) {
+            NetworkInfo networkInfo = ConnectionManager.getActiveNetworkInfo();
+            if (networkInfo != null && networkInfo.isConnected() == true)
+                isNetwork= true;
+            else
+                isNetwork= false;
+        }
+        return isNetwork;
+    }
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
 
+        finish();
+        overridePendingTransition(R.anim.left_to_right,R.anim.right_to_left);
+    }
     @Override
     public void onDateChanged(Calendar c) {
         Log.i("TrendsActivity","Month :" + c.get(Calendar.MONTH) + "Day :" + c.get(Calendar.DAY_OF_MONTH) + "Year :" + c.get(Calendar.YEAR));

@@ -6,6 +6,8 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -123,13 +125,17 @@ public class ProjectsFragment extends Fragment implements View.OnClickListener, 
         isCurrentlyActivie = isVisibleToUser;
         if (isVisibleToUser) {
             try {
-                showprogress_1();
-                List<NameValuePair> tagNameValuePairs = new ArrayList<NameValuePair>();
-                tagNameValuePairs.add(new BasicNameValuePair("userId", String.valueOf(Appreference.loginuserdetails.getId())));
+                if (getNetworkState()) {
+                    showprogress_1();
+                    List<NameValuePair> tagNameValuePairs = new ArrayList<NameValuePair>();
+                    tagNameValuePairs.add(new BasicNameValuePair("userId", String.valueOf(Appreference.loginuserdetails.getId())));
 //                Appreference.jsonRequestSender.listAllProject(EnumJsonWebservicename.listAllProject, tagNameValuePairs, this);
 //                Appreference.jsonRequestSender.listAllMyProject(EnumJsonWebservicename.listAllMyProject, tagNameValuePairs, this);
-                Log.i("ws123", "getAllJobDetails request");
-                Appreference.jsonRequestSender.getAllJobDetails(EnumJsonWebservicename.getAllJobDetails, tagNameValuePairs, this);
+                    Log.i("ws123", "getAllJobDetails request");
+                    Appreference.jsonRequestSender.getAllJobDetails(EnumJsonWebservicename.getAllJobDetails, tagNameValuePairs, this);
+                }else
+                    Toast.makeText(getActivity(), "Check your internet connection", Toast.LENGTH_SHORT).show();
+
 
             } catch (Exception e) {
                 e.printStackTrace();
@@ -558,14 +564,19 @@ public class ProjectsFragment extends Fragment implements View.OnClickListener, 
                         project_owner = projectDetailsBean.getProject_ownerName();
                         oracleProjectId = projectDetailsBean.getOracleProjectId();
                         groupuser_Id = projectDetailsBean.getToUserId();
-                        List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
-                        nameValuePairs.add(new BasicNameValuePair("projectId", projectDetailsBean.getId()));
-                        nameValuePairs.add(new BasicNameValuePair("userId", String.valueOf(Appreference.loginuserdetails.getId())));
+
+                        if (getNetworkState()) {
+                            List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
+                            nameValuePairs.add(new BasicNameValuePair("projectId", projectDetailsBean.getId()));
+                            nameValuePairs.add(new BasicNameValuePair("userId", String.valueOf(Appreference.loginuserdetails.getId())));
 //                        Appreference.jsonRequestSender.getProject(EnumJsonWebservicename.getProject, nameValuePairs, ProjectsFragment.this);
-                        Log.i("ws123", " projectDetailsBean.getOracleProjectId()=========>" + projectDetailsBean.getId());
-                        Log.i("ws123", " projectDetailsBean.userId()=========>" + String.valueOf(Appreference.loginuserdetails.getId()));
-                        Appreference.jsonRequestSender.getTaskForJobID(EnumJsonWebservicename.getTaskForJobID, nameValuePairs, ProjectsFragment.this);
-                        showprogress();
+                            Log.i("ws123", " projectDetailsBean.getOracleProjectId()=========>" + projectDetailsBean.getId());
+                            Log.i("ws123", " projectDetailsBean.userId()=========>" + String.valueOf(Appreference.loginuserdetails.getId()));
+                            Appreference.jsonRequestSender.getTaskForJobID(EnumJsonWebservicename.getTaskForJobID, nameValuePairs, ProjectsFragment.this);
+                            showprogress();
+                        }else
+                            Toast.makeText(getActivity(), "Check your internet connection", Toast.LENGTH_SHORT).show();
+
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -1012,7 +1023,19 @@ public class ProjectsFragment extends Fragment implements View.OnClickListener, 
             }
         });
     }
-
+    private boolean getNetworkState()
+    {
+        boolean isNetwork=false;
+        ConnectivityManager ConnectionManager=(ConnectivityManager)getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
+        if(ConnectionManager!=null) {
+            NetworkInfo networkInfo = ConnectionManager.getActiveNetworkInfo();
+            if (networkInfo != null && networkInfo.isConnected() == true)
+                isNetwork= true;
+            else
+                isNetwork= false;
+        }
+        return isNetwork;
+    }
 //    public void notifyNewProjectReceived() {
 //        try {
 //            handler.post(new Runnable() {
@@ -1188,6 +1211,7 @@ public class ProjectsFragment extends Fragment implements View.OnClickListener, 
                                 else
                                     intent.putExtra("fromOracle", false);
                                 startActivity(intent);
+                                getActivity().overridePendingTransition(R.anim.right_anim, R.anim.left_anim);
                             }
                         } else if (s2.equalsIgnoreCase("projectCompleted")) {
                             Log.i("projectCompleted", "******projectCompleted********** Response String " + s1);

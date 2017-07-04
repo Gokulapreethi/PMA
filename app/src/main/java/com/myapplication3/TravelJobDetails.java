@@ -71,7 +71,7 @@ public class TravelJobDetails extends Activity implements View.OnClickListener, 
     LinearLayout linear1, header_menu, ll_networkstate, updatingtask_layout;
     ProgressBar progress_updating;
     ListView list_all;
-    String taskName, projectId, webtaskId, strIPath, mime_Type, projectCurrentStatus;
+    public String taskName, projectId, webtaskId, strIPath, mime_Type, projectCurrentStatus;
     public static MediaListAdapter medialistadapter;
     Context context;
     TextView signature_path, photo_path, tech_signature_path;
@@ -287,7 +287,6 @@ public class TravelJobDetails extends Activity implements View.OnClickListener, 
             @Override
             public void onClick(View v) {
                 Log.i(tab, "tv_reassign " + Self_assign);
-                ll_2.setVisibility(View.GONE);
                 if (!Self_assign)
                     addTaskReassignClickEvent();
                 else {
@@ -367,7 +366,8 @@ public class TravelJobDetails extends Activity implements View.OnClickListener, 
                 String query = "select status from projectStatus where projectId='" + projectId + "' and userId='" + Appreference.loginuserdetails.getId() + "' and taskId= '" + webtaskId + "'";
                 int current_status = VideoCallDataBase.getDB(context).getCurrentStatus(query);
                 if (current_status == -1)
-                    travel_job.setEnabled(false);
+//                    travel_job.setEnabled(false);
+                    Toast.makeText(TravelJobDetails.this,"The Task has not yet started...",Toast.LENGTH_SHORT).show();
                 else {
                     travel_job.setEnabled(true);
                     showtravelTimePopup(v);
@@ -503,9 +503,9 @@ public class TravelJobDetails extends Activity implements View.OnClickListener, 
         ActivityStartdate = startTime;
         ActivityEnddate = EndTime;
         if(startTime!=null && !startTime.equalsIgnoreCase(""))
-            sendStatus_webservice(status,"","","travel");
+            sendStatus_webservice(status,"","","travel","");
         else
-            sendStatus_webservice(status,"","","travel");
+            sendStatus_webservice(status,"","","travel","");
 
     }
 
@@ -562,16 +562,7 @@ public class TravelJobDetails extends Activity implements View.OnClickListener, 
             popup.getMenu().getItem(5).setVisible(false);
             popup.getMenu().getItem(6).setVisible(false);
             Toast.makeText(getApplicationContext(), "Task has been Completed", Toast.LENGTH_SHORT).show();
-        } else if (current_status == 8) {
-            popup.getMenu().getItem(0).setVisible(false);
-            popup.getMenu().getItem(1).setVisible(false);
-            popup.getMenu().getItem(2).setVisible(false);
-            popup.getMenu().getItem(3).setVisible(false);
-            popup.getMenu().getItem(4).setVisible(false);
-            popup.getMenu().getItem(5).setVisible(false);
-            popup.getMenu().getItem(6).setVisible(false);
-            Toast.makeText(getApplicationContext(), "Task has been DeAssigned", Toast.LENGTH_SHORT).show();
-        }else if (current_status == 7) {
+        } else if (current_status == 7) {
             popup.getMenu().getItem(0).setVisible(false);
             popup.getMenu().getItem(1).setVisible(false);
             popup.getMenu().getItem(2).setVisible(false);
@@ -585,7 +576,7 @@ public class TravelJobDetails extends Activity implements View.OnClickListener, 
 
             public boolean onMenuItemClick(MenuItem item) {
                 if (item.getTitle().toString().equalsIgnoreCase("Start")) {
-                    sendStatus_webservice("0", "", "", "Started");
+                    sendStatus_webservice("0", "", "", "Started","start");
                 }
                 if (item.getTitle().toString().equalsIgnoreCase("Completed")) {
                     AlertDialog.Builder saveDialog = new AlertDialog.Builder(context);
@@ -593,7 +584,7 @@ public class TravelJobDetails extends Activity implements View.OnClickListener, 
                     saveDialog.setMessage("Are You sure want to complete this job ");
                     saveDialog.setPositiveButton("OK", new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
-                            sendStatus_webservice("5", "", "", "Completed");
+                            sendStatus_webservice("5", "", "", "Completed","complete");
                         }
                     });
                     saveDialog.setNegativeButton("Cancel",
@@ -618,7 +609,7 @@ public class TravelJobDetails extends Activity implements View.OnClickListener, 
                         public void onClick(View v) {
                             dialog1.dismiss();
                             Log.i("ws123", "remarks for DeAssign====>" + name.getText().toString());
-                            sendStatus_webservice("8", "", name.getText().toString(), "DeAssign");
+                            sendStatus_webservice("8", "", name.getText().toString(), "DeAssign","");
                         }
                     });
                     no.setOnClickListener(new View.OnClickListener() {
@@ -635,7 +626,7 @@ public class TravelJobDetails extends Activity implements View.OnClickListener, 
         popup.show();
     }
 
-    private void sendStatus_webservice(String status, String path, String remarks, String projectCurrentStatus) {
+    private void sendStatus_webservice(String status, String path, String remarks, String projectCurrentStatus,String statusUI) {
         try {
             showStatusprogress();
             ProjectHistory projectHistory = (ProjectHistory) Appreference.context_table.get("projecthistory");
@@ -650,7 +641,7 @@ public class TravelJobDetails extends Activity implements View.OnClickListener, 
                         projectDetailsBean.setTaskStatus("Unassigned");
                         projectDetailsBean.setTaskReceiver("NA");
                     }else if(!projectCurrentStatus.equalsIgnoreCase("travel"))
-                        projectDetailsBean.setTaskStatus(projectCurrentStatus);
+                        projectDetailsBean.setTaskStatus(statusUI);
 
                     Log.i("ProjectHistory", "inside refresh  status NewTaskConveratio ========>" + projectCurrentStatus);
                     projectHistory.buddyArrayAdapter.notifyDataSetChanged();
@@ -787,27 +778,31 @@ public class TravelJobDetails extends Activity implements View.OnClickListener, 
                 taskDetailsBean.setTaskDescription("Task is " + projectCurrentStatus);
             }
             jsonObject.put("hourMeterReading", "");
-            Log.i("ws123", "status update in project History " + taskDetailsBean.getTaskDescription());
-            Log.i(tab, "projectCurrentStatus **  " + projectCurrentStatus);
-            Log.i(tab, "project === >  **  " + project);
             listOfObservers.clear();
-            Log.i(tab, "listOfObservers --> before **  " + listOfObservers);
-            Log.i(tab, "ownerOfTask## -->**  " + ownerOfTask);
             if (ownerOfTask != null && !ownerOfTask.equalsIgnoreCase(Appreference.loginuserdetails.getUsername())) {
-                Log.i(tab, "ownerOfTask## -->**  " + ownerOfTask);
                 listOfObservers.add(ownerOfTask);
                 project_toUsers=ownerOfTask;
             } else {
-                Log.i(tab, "project_toUsers ##-->**  " + project_toUsers);
                 listOfObservers.add(project_toUsers);
             }
-            Log.i(tab, "project_toUsers -->**  " + project_toUsers);
-            Log.i(tab, "listOfObservers --> **  " + listOfObservers);
-            Log.i(tab, "listOfObservers --> **  " + isProjectFromOracle);
+
 
             VideoCallDataBase.getDB(context).update_Project_history(taskDetailsBean);
             VideoCallDataBase.getDB(context).insertORupdate_Task_history(taskDetailsBean);
-            VideoCallDataBase.getDB(context).insertORupdateStatus(taskDetailsBean);
+
+//            VideoCallDataBase.getDB(context).insertORupdateStatus(taskDetailsBean);
+            if (status.equalsIgnoreCase("9")) {
+                String query = "select * from projectStatus where projectId='" + projectId + "' and userId='" + Appreference.loginuserdetails.getId() + "' and taskId= '" + webtaskId + "' and status = '7'";
+                TaskDetailsBean bean = VideoCallDataBase.getDB(context).getActivityTimeFromStatus(query);
+                if (bean != null) {
+                    if (ActivityEnddate!=null  && !ActivityEnddate.equalsIgnoreCase("")) {
+                        String queryUpdate = "update projectStatus set travelEndTime='" + ActivityEnddate + "' where projectId='" + projectId + "' and userId='" + Appreference.loginuserdetails.getId() + "' and taskId= '" + webtaskId + "' and travelStartTime IS NOT NULL and travelEndTime IS NULL";
+                        VideoCallDataBase.getDB(context).updateaccept(queryUpdate);
+                    }
+                }
+            } else {
+                VideoCallDataBase.getDB(context).insertORupdateStatus(taskDetailsBean);
+            }
             Appreference.jsonRequestSender.taskStatus(EnumJsonWebservicename.taskStatus, jsonObject, status_list, taskDetailsBean, TravelJobDetails.this);
         } catch (JSONException e) {
             e.printStackTrace();
@@ -2011,6 +2006,16 @@ public class TravelJobDetails extends Activity implements View.OnClickListener, 
                             taskAssign(taskDetailsBean, RemoveUser, taskDetailsBean.getTaskReceiver(), 1);
                         }
                     }
+
+                    try {
+                        runOnUiThread(new Runnable() {
+                            public void run() {
+                                ll_2.setVisibility(View.GONE);
+                            }
+                        });
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 } catch (Exception e) {
                     e.printStackTrace();
                     Appreference.printLog("NewTaskConversation", "onActivityResult reassign Exception " + e.getMessage(), "WARN", null);
@@ -2032,18 +2037,8 @@ public class TravelJobDetails extends Activity implements View.OnClickListener, 
             try {
                 final JSONObject jsonObject = new JSONObject(communicationBean.getEmail());
                 if (((String) jsonObject.get("result_text")).equalsIgnoreCase("task started")) {
-                    travel_job.setEnabled(true);
                     projectCurrentStatus = "start";
-                }/* else if (((String) jsonObject.get("result_text")).equalsIgnoreCase("task hold")) {
-                    projectCurrentStatus = "hold";
-                } else if (((String) jsonObject.get("result_text")).equalsIgnoreCase("task resume")) {
-                    projectCurrentStatus = "resume";
-                } else if (((String) jsonObject.get("result_text")).equalsIgnoreCase("task pause")) {
-                    projectCurrentStatus = "pause";
-                    isDivertedON = true;
-                } else if (((String) jsonObject.get("result_text")).equalsIgnoreCase("task restart")) {
-                    projectCurrentStatus = "restart";
-                }*/ else if (((String) jsonObject.get("result_text")).equalsIgnoreCase("task completed")) {
+                } else if (((String) jsonObject.get("result_text")).equalsIgnoreCase("task completed")) {
                     projectCurrentStatus = "completed";
                 } else if (((String) jsonObject.get("result_text")).equalsIgnoreCase("task assigned")) {
                     projectCurrentStatus = "DeAssign";
@@ -2082,16 +2077,19 @@ public class TravelJobDetails extends Activity implements View.OnClickListener, 
                     }
                 }
 
-                /*if (isDivertedON) {
-                    isDivertedON = false;
-                    String query = "select projectId from projectDetails where isActiveStatus = 1 ";
-                    String diverted_project_id = VideoCallDataBase.getDB(context).getDivertedProjId(query);
-
-                    List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
-                    nameValuePairs.add(new BasicNameValuePair("projectId", diverted_project_id));
-                    nameValuePairs.add(new BasicNameValuePair("userId", String.valueOf(Appreference.loginuserdetails.getId())));
-                    Appreference.jsonRequestSender.getTaskForJobID(EnumJsonWebservicename.getTaskForJobID, nameValuePairs, ProjectsFragment.getInstance());
-                }*/
+                try {
+                    runOnUiThread(new Runnable() {
+                        public void run() {
+                            travel_job.setEnabled(true);
+                            if(projectCurrentStatus.equalsIgnoreCase("completed")){
+                                status_job.setVisibility(View.GONE);
+                                travel_job.setVisibility(View.GONE);
+                            }
+                        }
+                    });
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
                 if (isDeassign) {
                     isDeassign = false;
                     handler.post(new Runnable() {

@@ -2937,11 +2937,16 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback,
                             //                    List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
                             //                    nameValuePairs.add(new BasicNameValuePair("projectId", projectDetailsBean.getId()));
                             //                    Appreference.jsonRequestSender.getProject(EnumJsonWebservicename.getProject, nameValuePairs, MainActivity.this);
-                            List<NameValuePair> tagNameValuePairs = new ArrayList<NameValuePair>();
-                            tagNameValuePairs.add(new BasicNameValuePair("userId", String.valueOf(Appreference.loginuserdetails.getId())));
-                            //                Appreference.jsonRequestSender.listAllProject(EnumJsonWebservicename.listAllProject, tagNameValuePairs, this);
+
+                            if (isNetworkAvailable()) {
+                                List<NameValuePair> tagNameValuePairs = new ArrayList<NameValuePair>();
+                                tagNameValuePairs.add(new BasicNameValuePair("userId", String.valueOf(Appreference.loginuserdetails.getId())));
+                                //                Appreference.jsonRequestSender.listAllProject(EnumJsonWebservicename.listAllProject, tagNameValuePairs, this);
 //                            Appreference.jsonRequestSender.listAllMyProject(EnumJsonWebservicename.listAllMyProject, tagNameValuePairs, this);
-                            Appreference.jsonRequestSender.getAllJobDetails(EnumJsonWebservicename.getAllJobDetails, tagNameValuePairs, this);
+                                Appreference.jsonRequestSender.getAllJobDetails(EnumJsonWebservicename.getAllJobDetails, tagNameValuePairs, this);
+                            }else
+                                Toast.makeText(MainActivity.this, "Check your internet connection", Toast.LENGTH_SHORT).show();
+
 
                         } else if (notification.getAlert_sub_type().equalsIgnoreCase("Member Added")) {
                             ProjectDetailsBean taskDetailsBean = notification.getProjectDetailsBean();
@@ -3228,26 +3233,68 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback,
                             .parseTaskDetailsSIPMessage(message);
 
 
-
-                    if(taskDetailsBean.getProjectId()!=null && taskDetailsBean.getTaskId()!=null){
-                        if(Appreference.context_table.containsKey("projecthistory") && Appreference.context_table.containsKey("taskcoversation")) {
-                            NewTaskConversation newTaskConversation=(NewTaskConversation)Appreference.context_table.get("taskcoversation");
-                            final ProjectHistory projectHistory=(ProjectHistory)Appreference.context_table.get("projecthistory");
-                            if(newTaskConversation!=null){
-                                if(newTaskConversation.webtaskId!=null && newTaskConversation.projectId!=null){
-                                    if(taskDetailsBean.getTaskId().equalsIgnoreCase(newTaskConversation.webtaskId) &&
-                                            taskDetailsBean.getProjectId().equalsIgnoreCase(newTaskConversation.projectId)){
-                                        if(taskDetailsBean.getDescription()!=null){
-                                            if(taskDetailsBean.getDescription().equalsIgnoreCase("Task is Started") ||
-                                                    taskDetailsBean.getDescription().equalsIgnoreCase("Task is hold")||
-                                                    taskDetailsBean.getDescription().equalsIgnoreCase("Task is Resumed")||
-                                                    taskDetailsBean.getDescription().equalsIgnoreCase("Task is Restarted")||
-                                                    taskDetailsBean.getDescription().equalsIgnoreCase("Task is Paused")||
-                                                    taskDetailsBean.getDescription().equalsIgnoreCase("Task is Completed")){
-                                                if(projectHistory!=null){
+                    if (taskDetailsBean.getProjectId() != null && taskDetailsBean.getTaskId() != null) {
+                        Log.i("notifyreceived", "status ==> $ " + Appreference.context_table.containsKey("projecthistory"));
+                        Log.i("notifyreceived", "status ==> $ " + Appreference.context_table.containsKey("taskcoversation"));
+                        if (Appreference.context_table.containsKey("projecthistory") && Appreference.context_table.containsKey("taskcoversation")) {
+                            NewTaskConversation newTaskConversation = (NewTaskConversation) Appreference.context_table.get("taskcoversation");
+                            final ProjectHistory projectHistory = (ProjectHistory) Appreference.context_table.get("projecthistory");
+                            if (newTaskConversation != null) {
+                                Log.i("notifyreceived", "status ==  ");
+                                if (newTaskConversation.webtaskId != null && newTaskConversation.projectId != null) {
+                                    if (taskDetailsBean.getTaskId().equalsIgnoreCase(newTaskConversation.webtaskId) &&
+                                            taskDetailsBean.getProjectId().equalsIgnoreCase(newTaskConversation.projectId)) {
+                                        Log.i("notifyreceived", "status " + taskDetailsBean.getTaskDescription());
+                                        if (taskDetailsBean.getTaskDescription() != null) {
+                                            if (taskDetailsBean.getTaskDescription().equalsIgnoreCase("Task is Started") ||
+                                                    taskDetailsBean.getTaskDescription().equalsIgnoreCase("Task is hold") ||
+                                                    taskDetailsBean.getTaskDescription().equalsIgnoreCase("Task is Resumed") ||
+                                                    taskDetailsBean.getTaskDescription().equalsIgnoreCase("Task is Restarted") ||
+                                                    taskDetailsBean.getTaskDescription().equalsIgnoreCase("Task is Paused") ||
+                                                    taskDetailsBean.getTaskDescription().equalsIgnoreCase("Task is Completed") ||
+                                                    taskDetailsBean.getMimeType().equalsIgnoreCase("assigntask") ||
+                                                    taskDetailsBean.getTaskDescription().equalsIgnoreCase("Gathering Details...") ||
+                                                    taskDetailsBean.getTaskDescription().equalsIgnoreCase("Hold Remarks :") ||
+                                                    taskDetailsBean.getSubType().equalsIgnoreCase("deassign")) {
+                                                if (projectHistory != null) {
                                                     if (projectHistory.projectDetailsBeans != null && projectHistory.projectDetailsBeans.size() > 0 && projectHistory.buddyArrayAdapter != null) {
                                                         ProjectDetailsBean projectDetailsBean = projectHistory.projectDetailsBeans.get(projectHistory.ListViewCurrentPosition);
-                                                        projectDetailsBean.setTaskStatus(taskDetailsBean.getDescription());
+                                                        Log.i("notifyreceived", "getTaskStatus==>  " + taskDetailsBean.getTaskStatus());
+                                                        projectDetailsBean.setTaskStatus(taskDetailsBean.getTaskStatus());
+                                                        handler1.post(new Runnable() {
+                                                            @Override
+                                                            public void run() {
+                                                                projectHistory.buddyArrayAdapter.notifyDataSetChanged();
+                                                            }
+                                                        });
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }else if (Appreference.context_table.containsKey("projecthistory") && Appreference.context_table.containsKey("traveljobdetails")) {
+                            TravelJobDetails travelJobDetails = (TravelJobDetails) Appreference.context_table.get("traveljobdetails");
+                            final ProjectHistory projectHistory = (ProjectHistory) Appreference.context_table.get("projecthistory");
+                            if (travelJobDetails != null) {
+                                Log.i("notifyreceived", "traveljobdetails status ==  ");
+                                if (travelJobDetails.webtaskId != null && travelJobDetails.projectId != null) {
+                                    if (taskDetailsBean.getTaskId().equalsIgnoreCase(travelJobDetails.webtaskId) &&
+                                            taskDetailsBean.getProjectId().equalsIgnoreCase(travelJobDetails.projectId)) {
+                                        Log.i("notifyreceived", "traveljobdetails status " + taskDetailsBean.getTaskDescription());
+                                        if (taskDetailsBean.getTaskDescription() != null) {
+                                            if (taskDetailsBean.getTaskDescription().equalsIgnoreCase("Task is Started") ||
+                                                    taskDetailsBean.getTaskDescription().equalsIgnoreCase("Task is Completed") ||
+                                                    taskDetailsBean.getTaskDescription().equalsIgnoreCase("Gathering Details...") ||
+                                                    taskDetailsBean.getTaskDescription().equalsIgnoreCase("Hold Remarks :") ||
+                                                    taskDetailsBean.getMimeType().equalsIgnoreCase("assigntask") ||
+                                                    taskDetailsBean.getSubType().equalsIgnoreCase("deassign")) {
+                                                if (projectHistory != null) {
+                                                    if (projectHistory.projectDetailsBeans != null && projectHistory.projectDetailsBeans.size() > 0 && projectHistory.buddyArrayAdapter != null) {
+                                                        ProjectDetailsBean projectDetailsBean = projectHistory.projectDetailsBeans.get(projectHistory.ListViewCurrentPosition);
+                                                        Log.i("notifyreceived", "traveljobdetails getTaskStatus==>  " + taskDetailsBean.getTaskStatus());
+                                                        projectDetailsBean.setTaskStatus(taskDetailsBean.getTaskStatus());
                                                         handler1.post(new Runnable() {
                                                             @Override
                                                             public void run() {
@@ -3993,7 +4040,7 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback,
                             }
                             ProjectHistory projectHistory = (ProjectHistory) Appreference.context_table.get("projecthistory");
                             if (projectHistory != null) {
-                                Log.d("Mainactivity", "Value true refreshed-4");
+                                Log.d("Mainactivity", "Value true refreshed-4 ** ");
                                 projectHistory.refresh();
                             }
                     /*
@@ -4122,6 +4169,46 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback,
                             }
                         }
                     }
+/*
+                    if (Appreference.context_table.containsKey("projecthistory")) {
+                        Log.i("notifyreceived", "projecthistory status == $$$$  ");
+                        final ProjectHistory projectHistory = (ProjectHistory) Appreference.context_table.get("projecthistory");
+                        if (projectHistory != null) {
+                            Log.i("notifyreceived", "projecthistory  ==  "+taskDetailsBean.getTaskDescription());
+                            if (taskDetailsBean.getTaskDescription() != null) {
+                                if (taskDetailsBean.getTaskDescription().equalsIgnoreCase("Task is Started") ||
+                                        taskDetailsBean.getTaskDescription().equalsIgnoreCase("Task is hold") ||
+                                        taskDetailsBean.getTaskDescription().equalsIgnoreCase("Task is Resumed") ||
+                                        taskDetailsBean.getTaskDescription().equalsIgnoreCase("Task is Restarted") ||
+                                        taskDetailsBean.getTaskDescription().equalsIgnoreCase("Task is Paused") ||
+                                        taskDetailsBean.getTaskDescription().equalsIgnoreCase("Task is Completed") ||
+                                        taskDetailsBean.getTaskDescription().equalsIgnoreCase("Hold Remarks :") ||
+                                        taskDetailsBean.getTaskDescription().equalsIgnoreCase("Gathering Details...") ||
+                                        taskDetailsBean.getMimeType().equalsIgnoreCase("assigntask") ||
+                                        taskDetailsBean.getSubType().equalsIgnoreCase("deassign")) {
+                                    if (projectHistory.projectDetailsBeans != null && projectHistory.projectDetailsBeans.size() > 0 && projectHistory.buddyArrayAdapter != null) {
+                                        Log.i("notifyreceived", "getTaskStatus==> 3 " + taskDetailsBean.getTaskStatus());
+                                        for (ProjectDetailsBean detailsBean: projectHistory.projectDetailsBeans){
+                                            if(detailsBean.getId()!=null && detailsBean.getTaskId()!=null &&
+                                                    detailsBean.getId().equalsIgnoreCase(taskDetailsBean.getProjectId()) &&
+                                                    detailsBean.getTaskId().equalsIgnoreCase(taskDetailsBean.getTaskId())){
+                                                Log.i("notifyreceived", "for getTaskStatus==> 4  " + taskDetailsBean.getTaskStatus());
+                                                detailsBean.setTaskStatus(taskDetailsBean.getTaskStatus());
+                                            }
+                                        }
+                                        handler1.post(new Runnable() {
+                                            @Override
+                                            public void run() {
+                                                projectHistory.buddyArrayAdapter.notifyDataSetChanged();
+                                            }
+                                        });
+                                    }
+                                }
+                            }
+
+                        }
+                    }
+*/
                 } catch (Resources.NotFoundException e) {
                     e.printStackTrace();
                     Appreference.printLog("MainActivity", "notifyChat_Received Exception: " + e.getMessage(), "WARN", null);

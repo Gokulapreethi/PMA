@@ -1175,6 +1175,7 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
                 }
             }*/
 
+/*
             if (bean.getStatus() != null && bean.getStatus().equalsIgnoreCase("draft")) {
                 cv.put("duration", bean.getDuration());
                 String duration_unit = "\"" + bean.getDurationWords() + "\"";
@@ -1212,6 +1213,7 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
 //                    }
                 }
             }
+*/
             if (0 < listTaskFiles1.size()) {
                 for (int i = 0; i < listTaskFiles1.size(); i++) {
                     ListTaskFiles listTaskFiles = listTaskFiles1.get(i);
@@ -1479,7 +1481,7 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
                     }
 //                cv.put("toUserId", listToDetails1.getId());
 //                    cv.put("signalid", signal_id);
-                    if (listTaskConversationFile.getFileType().equals("text") || listTaskConversationFile.getFileType().equals("map") || listTaskConversationFile.getFileType().equals("date") || listTaskConversationFile.getFileType().equals("Reassign")) {
+                    if (listTaskConversationFile.getFileType().equals("text") || listTaskConversationFile.getFileType().equals("map") || listTaskConversationFile.getFileType().equals("date") || listTaskConversationFile.getFileType().equals("Reassign") || listTaskConversationFile.getFileType().equals("assigntask")) {
                         if (bean.getProjectId() != null) {
 //                            signal_id = signal_id.concat(listTaskConversationFile.getDescription());
 //                            cv.put("signalid", signal_id);
@@ -2464,7 +2466,7 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
                         Log.i("Response", "projectDetailsBean listToDetails1.getUsername() subtask " + listToDetails1.getUsername());
                         ArrayList<String> grouplist_2 = VideoCallDataBase.getDB(context).selectGroupmembers("select * from contact", "username");
                         if (grouplist_2.size() > 0) {
-                            if (!listToDetails1.getUsername().equalsIgnoreCase(Appreference.loginuserdetails.getUsername())) {
+                            if (listToDetails1!=null && listToDetails1.getUsername()!=null && !listToDetails1.getUsername().equalsIgnoreCase(Appreference.loginuserdetails.getUsername())) {
                                 if (!grouplist_2.contains(listToDetails1.getUsername())) {
                                     ListMember listMember = new ListMember();
                                     listMember.setEmail(listToDetails1.getEmail());
@@ -2703,7 +2705,7 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
                             }
                         }
                     }
-                    if (listAllgetTaskDetailses1.getDuration() != null && listAllgetTaskDetailses1.getDurationWords() != null && (listAllgetTaskDetailses1.getTimeFrequency() != null)) {
+                    /*if (listAllgetTaskDetailses1.getDuration() != null && listAllgetTaskDetailses1.getDurationWords() != null && (listAllgetTaskDetailses1.getTimeFrequency() != null)) {
                         cv.put("duration", listAllgetTaskDetailses1.getDuration());
                         String duration_unit = "\"" + listAllgetTaskDetailses1.getDurationWords() + "\"";
                         cv.put("durationunit", duration_unit);
@@ -2760,7 +2762,7 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
                             row_id = (int) db.update("taskDetailsInfo", cv, "signalid" + "='" + signal_id + "'", null);
                             Log.d("Response", "projectDetailsBean inside else TaskHistory subtask template date");
                         }
-                    }
+                    }*/
                     Log.i("videocalldatabase", "is_value  taskId and listTaskFile.size() before " + listTaskFile.size());
                     if (listTaskFile.size() == 0) {
 //                        if (listAllgetTaskDetailses1.getPlannedStartDateTime() == null && listAllgetTaskDetailses1.getPlannedEndDateTime() == null && listAllgetTaskDetailses1.getRemainderDateTime() == null) {
@@ -8229,10 +8231,11 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
                     Boolean is_delete = false;
                     ArrayList<ListTaskTransaction> listAlltaskTransactions;
                     listAlltaskTransactions = listAllgetTaskDetails.getListTaskTransaction();
+                    Log.i("conv123","TaskTrasaction Size===>"+listAlltaskTransactions.size());
                     if (listAlltaskTransactions.size() > 0) {
                         for (int k = 0; k < listAlltaskTransactions.size(); k++) {
                             ListTaskTransaction listTaskTransaction = listAlltaskTransactions.get(k);
-
+                            Log.i("conv123","TaskTrasaction currentBean position===>"+k);
                             Task task_trans = listTaskTransaction.getTask();
                             cv.put("taskId", task_trans.getId());
                             task_id = String.valueOf(task_trans.getId());
@@ -8248,26 +8251,36 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
 //                            cv.put("travelEndTime", listTaskTransaction.getTravelEndTime());
 //                            cv.put("totravelstartdatetime", listTaskTransaction.getTravelEndTime());
 //                            cv.put("totravelenddatetime", listTaskTransaction.getTravelEndTime());
-                            Log.i("conv123","travelStartTime====>"+listTaskTransaction.getTravelStartTime());
-                            Log.i("conv123","travelEndTime====>"+listTaskTransaction.getTravelEndTime());
-                            if(listTaskTransaction.getTravelStartTime()!=null && Appreference.utcToLocalTime(listTaskTransaction.getTravelStartTime())!=null){
+                            Log.i("conv123","================================================"+k);
+                            Log.i("conv123","travelStartTime====>"+Appreference.utcToLocalTime(listTaskTransaction.getTravelStartTime()));
+                            Log.i("conv123","travelEndTime====>"+Appreference.utcToLocalTime(listTaskTransaction.getTravelEndTime()));
+                            Log.i("conv123","================================================="+k);
+
+                                cv.put("travelStartTime", Appreference.utcToLocalTime(listTaskTransaction.getTravelStartTime()));
+                                cv.put("activityStartTime", listTaskTransaction.getActivityStartTime());
+                                cv.put("activityEndTime", listTaskTransaction.getActivityEndTime());
+                                cv.put("travelEndTime", Appreference.utcToLocalTime(listTaskTransaction.getTravelEndTime()));
+                                cv.put("totravelstartdatetime", listTaskTransaction.getToTravelStartDateTime());
+                                cv.put("totravelenddatetime", listTaskTransaction.getToTravelEndDateTime());
+
+                          /*  if(listTaskTransaction.getTravelStartTime()!=null && !listTaskTransaction.getTravelStartTime().equalsIgnoreCase("") && Appreference.utcToLocalTime(listTaskTransaction.getTravelStartTime())!=null){
                                 cv.put("travelStartTime", Appreference.utcToLocalTime(listTaskTransaction.getTravelStartTime()));
                             }
-                            if(listTaskTransaction.getActivityStartTime()!=null && Appreference.utcToLocalTime(listTaskTransaction.getActivityStartTime())!=null) {
+                            if(listTaskTransaction.getActivityStartTime()!=null && !listTaskTransaction.getActivityStartTime().equalsIgnoreCase("") && Appreference.utcToLocalTime(listTaskTransaction.getActivityStartTime())!=null) {
                                 cv.put("activityStartTime", listTaskTransaction.getActivityStartTime());
                             }
-                            if(listTaskTransaction.getActivityEndTime()!=null && Appreference.utcToLocalTime(listTaskTransaction.getActivityEndTime())!=null) {
+                            if(listTaskTransaction.getActivityEndTime()!=null && !listTaskTransaction.getActivityEndTime().equalsIgnoreCase("") && Appreference.utcToLocalTime(listTaskTransaction.getActivityEndTime())!=null) {
                                 cv.put("activityEndTime", listTaskTransaction.getActivityEndTime());
                             }
-                            if(listTaskTransaction.getTravelEndTime()!=null && Appreference.utcToLocalTime(listTaskTransaction.getTravelEndTime())!=null) {
+                            if(listTaskTransaction.getTravelEndTime()!=null  && !listTaskTransaction.getTravelEndTime().equalsIgnoreCase("") && Appreference.utcToLocalTime(listTaskTransaction.getTravelEndTime())!=null) {
                                 cv.put("travelEndTime", Appreference.utcToLocalTime(listTaskTransaction.getTravelEndTime()));
                             }
-                            if(listTaskTransaction.getTravelEndTime()!=null && Appreference.utcToLocalTime(listTaskTransaction.getToTravelStartDateTime())!=null) {
+                            if(listTaskTransaction.getToTravelStartDateTime()!=null && !listTaskTransaction.getToTravelStartDateTime().equalsIgnoreCase("") && Appreference.utcToLocalTime(listTaskTransaction.getToTravelStartDateTime())!=null) {
                                 cv.put("totravelstartdatetime", listTaskTransaction.getToTravelStartDateTime());
                             }
-                            if(listTaskTransaction.getTravelEndTime()!=null && Appreference.utcToLocalTime(listTaskTransaction.getToTravelEndDateTime())!=null) {
+                            if(listTaskTransaction.getToTravelEndDateTime()!=null && !listTaskTransaction.getToTravelEndDateTime().equalsIgnoreCase("") && Appreference.utcToLocalTime(listTaskTransaction.getToTravelEndDateTime())!=null) {
                                 cv.put("totravelenddatetime", listTaskTransaction.getToTravelEndDateTime());
-                            }
+                            }*/
                             cv.put("status", listTaskTransaction.getStatus());
                             cv.put("observation", listTaskTransaction.getObservation());
                             cv.put("actionTaken", listTaskTransaction.getActionTaken());
@@ -8586,6 +8599,26 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
                     row++;
                     cur.moveToNext();
                 }
+                cur.close();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            return row;
+        }
+    }
+
+    public int getCountForTravelEntry(String query) {
+        Cursor cur;
+        int row=0;
+        if (db == null)
+            db = getReadableDatabase();
+        try {
+            if (db != null) {
+                if (!db.isOpen())
+                    openDatabase();
+                cur = db.rawQuery(query, null);
+                 row = cur.getCount();
                 cur.close();
             }
         } catch (Exception e) {

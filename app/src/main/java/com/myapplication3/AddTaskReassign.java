@@ -9,6 +9,8 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Base64;
@@ -466,139 +468,156 @@ public class AddTaskReassign extends Activity implements View.OnClickListener, W
 
 
     private void AssignMmber_OracleProject() {
-        if (isProjectFromOracle) {
-            Log.i("ws123", "inside wservice AssignTask request");
-            JSONObject oracleProject_object = new JSONObject();
-            JSONObject taskid = new JSONObject();
-            TaskDetailsBean taskDetailsBean = new TaskDetailsBean();
-            try {
-                taskid.put("id", Integer.valueOf(taskId));
-                taskDetailsBean.setTaskId(taskId);
-                oracleProject_object.put("task", taskid);
-                oracleProject_object.put("fromId", Appreference.loginuserdetails.getId());
-                taskDetailsBean.setFromUserId(String.valueOf(Appreference.loginuserdetails.getId()));
-                oracleProject_object.put("projectId", Integer.parseInt(detailsBean.getProjectId()));
-                taskDetailsBean.setProjectId(detailsBean.getProjectId());
-                oracleProject_object.put("estimatedTravelHours", "");
-                taskDetailsBean.setEstimatedTravel("");
-                taskDetailsBean.setEstimatedActivity("");
-                oracleProject_object.put("estimatedActivityHours", "");
-                JSONArray jsonArray = new JSONArray();
-//                String SelectedUserList = null;
-                int checkPos=0;
-                for (int position = 0; position < contactList.size(); position++) {
-                    ContactBean item = contactList.get(position);
-                    if (item.getIscheck()) {
-                        JSONObject usersList = new JSONObject();
-                        usersList.put("id", item.getUserid());
-                        Log.i("Assign", "usersList ==> " + usersList);
-                        jsonArray.put(checkPos, usersList);
-                        checkPos++;
-                        Log.i("ASE", " SelectedUserList before ====>  " + SelectedUserList);
-                        if (SelectedUserList != null) {
-                            SelectedUserList = SelectedUserList + "," + item.getUsername();
-                            SelectedUsersId = SelectedUsersId + "," + item.getUserid();
-                        } else {
-                            SelectedUserList = item.getUsername();
-                            SelectedUsersId = item.getUserid() + "";
-                        }
-                    }
-
-                }
-                Log.i("ws123", "AssignTask SelectedUserList=====>  " + SelectedUserList);
-//                taskDetailsBean.setToUserName(SelectedUserList);
-                oracleProject_object.put("listUser", jsonArray);
-
-                ProjectHistory projectHistory = (ProjectHistory) Appreference.context_table.get("projecthistory");
-                if(projectHistory!=null)
-                {
-                    Log.i("ProjectHistory","inside refresh  status projectHistory ========>"+projectHistory.projectDetailsBeans + "size bean "+projectHistory.projectDetailsBeans.size()+"buddayArrayAdapteer==>"+projectHistory.buddyArrayAdapter);
-
-                    if (projectHistory.projectDetailsBeans != null && projectHistory.projectDetailsBeans.size() > 0 && projectHistory.buddyArrayAdapter != null) {
-
-                        ProjectDetailsBean projectDetailsBean = projectHistory.projectDetailsBeans.get(Clickposition);
-                        projectDetailsBean.setTaskStatus("assigned");
-                        projectDetailsBean.setTaskReceiver(SelectedUserList);
-
-                        projectHistory.buddyArrayAdapter.notifyDataSetChanged();
-                    }
-                }
-//                taskDetailsBean.setFromUserId(String.valueOf(Appreference.loginuserdetails.getId()));
-                taskDetailsBean.setFromUserName(Appreference.loginuserdetails.getUsername());
-                taskDetailsBean.setTaskName(detailsBean.getTaskName());
-                taskDetailsBean.setTaskNo(detailsBean.getTaskNo());
-                taskDetailsBean.setCatagory(detailsBean.getCatagory());
-                taskDetailsBean.setIssueId(detailsBean.getIssueId());
-                taskDetailsBean.setParentId(getFileName());
-                taskDetailsBean.setIsRemainderRequired("");
-                taskDetailsBean.setCompletedPercentage(detailsBean.getCompletedPercentage());
-                taskDetailsBean.setPlannedStartDateTime("");
-                taskDetailsBean.setPlannedEndDateTime("");
-                taskDetailsBean.setRemainderFrequency("");
-                taskDetailsBean.setSignalid(Utility.getSessionID());
-                taskDetailsBean.setDateTime(dateforrow);
-                taskDetailsBean.setSendStatus("0");
-                taskDetailsBean.setTaskStatus("inprogress");
-                taskDetailsBean.setOwnerOfTask(detailsBean.getOwnerOfTask());
-                Log.i("ASE", "Signalid " + taskDetailsBean.getSignalid());
-                Log.i("ASE", "SelectedUserList " + SelectedUserList);
-                if (SelectedUserList.contains(",")){
-                    taskDetailsBean.setTaskType("Group");
-                    taskDetailsBean.setTaskMemberList(SelectedUserList);
-                }
-                else{
-                    taskDetailsBean.setTaskType("individual");
-                    taskDetailsBean.setToUserName(SelectedUserList);
-                    taskDetailsBean.setToUserId(SelectedUsersId);
-                    taskDetailsBean.setTaskReceiver(SelectedUserList);
-                }
-                taskDetailsBean.setTaskPriority("medium");
-                taskDetailsBean.setParentTaskId(detailsBean.getParentTaskId());
-                taskDetailsBean.setSubType("normal");
-                taskDetailsBean.setRemark("");
-                taskDetailsBean.setReminderQuote("");
-                Log.i("ASE", "TaskType " + taskDetailsBean.getTaskType());
-                Log.i("ASE", "SelectedUserList ==> " + SelectedUserList);
-                if (SelectedUserList != null && !SelectedUserList.equalsIgnoreCase("")) {
-                    int counter = 0;
-                    for (int i = 0; i < SelectedUserList.length(); i++) {
-                        if (SelectedUserList.charAt(i) == ',') {
-                            counter++;
+        if (getNetworkState()) {
+            if (isProjectFromOracle) {
+                Log.i("ws123", "inside wservice AssignTask request");
+                JSONObject oracleProject_object = new JSONObject();
+                JSONObject taskid = new JSONObject();
+                TaskDetailsBean taskDetailsBean = new TaskDetailsBean();
+                try {
+                    taskid.put("id", Integer.valueOf(taskId));
+                    taskDetailsBean.setTaskId(taskId);
+                    oracleProject_object.put("task", taskid);
+                    oracleProject_object.put("fromId", Appreference.loginuserdetails.getId());
+                    taskDetailsBean.setFromUserId(String.valueOf(Appreference.loginuserdetails.getId()));
+                    oracleProject_object.put("projectId", Integer.parseInt(detailsBean.getProjectId()));
+                    taskDetailsBean.setProjectId(detailsBean.getProjectId());
+                    oracleProject_object.put("estimatedTravelHours", "");
+                    taskDetailsBean.setEstimatedTravel("");
+                    taskDetailsBean.setEstimatedActivity("");
+                    oracleProject_object.put("estimatedActivityHours", "");
+                    JSONArray jsonArray = new JSONArray();
+    //                String SelectedUserList = null;
+                    int checkPos=0;
+                    for (int position = 0; position < contactList.size(); position++) {
+                        ContactBean item = contactList.get(position);
+                        if (item.getIscheck()) {
+                            JSONObject usersList = new JSONObject();
+                            usersList.put("id", item.getUserid());
+                            Log.i("Assign", "usersList ==> " + usersList);
+                            jsonArray.put(checkPos, usersList);
+                            checkPos++;
+                            Log.i("ASE", " SelectedUserList before ====>  " + SelectedUserList);
+                            if (SelectedUserList != null) {
+                                SelectedUserList = SelectedUserList + "," + item.getUsername();
+                                SelectedUsersId = SelectedUsersId + "," + item.getUserid();
+                            } else {
+                                SelectedUserList = item.getUsername();
+                                SelectedUsersId = item.getUserid() + "";
+                            }
                         }
 
-                        Log.d("project_details", "Task Mem's counter size is == " + counter);
                     }
-                    for (int j = 0; j < counter + 1; j++) {
-                        String Mem_name = SelectedUserList.split(",")[j];
-                        Log.i("project_details", "Task Mem's and position == " + Mem_name + " " + j);
-                        String Memberlist = "";
-                        Memberlist = VideoCallDataBase.getDB(context).getname(Mem_name);
-                        SelectedUserList1 = Memberlist + ",";
+                    Log.i("ws123", "AssignTask SelectedUserList=====>  " + SelectedUserList);
+    //                taskDetailsBean.setToUserName(SelectedUserList);
+                    oracleProject_object.put("listUser", jsonArray);
+
+                    ProjectHistory projectHistory = (ProjectHistory) Appreference.context_table.get("projecthistory");
+                    if(projectHistory!=null)
+                    {
+                        Log.i("ProjectHistory","inside refresh  status projectHistory ========>"+projectHistory.projectDetailsBeans + "size bean "+projectHistory.projectDetailsBeans.size()+"buddayArrayAdapteer==>"+projectHistory.buddyArrayAdapter);
+
+                        if (projectHistory.projectDetailsBeans != null && projectHistory.projectDetailsBeans.size() > 0 && projectHistory.buddyArrayAdapter != null) {
+
+                            ProjectDetailsBean projectDetailsBean = projectHistory.projectDetailsBeans.get(Clickposition);
+                            projectDetailsBean.setTaskStatus("assigned");
+                            projectDetailsBean.setTaskReceiver(SelectedUserList);
+
+                            projectHistory.buddyArrayAdapter.notifyDataSetChanged();
+                        }
                     }
-                    SelectedUserList1 = SelectedUserList1.substring(0, SelectedUserList1.length() - 1);
+    //                taskDetailsBean.setFromUserId(String.valueOf(Appreference.loginuserdetails.getId()));
+                    taskDetailsBean.setFromUserName(Appreference.loginuserdetails.getUsername());
+                    taskDetailsBean.setTaskName(detailsBean.getTaskName());
+                    taskDetailsBean.setTaskNo(detailsBean.getTaskNo());
+                    taskDetailsBean.setCatagory(detailsBean.getCatagory());
+                    taskDetailsBean.setIssueId(detailsBean.getIssueId());
+                    taskDetailsBean.setParentId(getFileName());
+                    taskDetailsBean.setIsRemainderRequired("");
+                    taskDetailsBean.setCompletedPercentage(detailsBean.getCompletedPercentage());
+                    taskDetailsBean.setPlannedStartDateTime("");
+                    taskDetailsBean.setPlannedEndDateTime("");
+                    taskDetailsBean.setRemainderFrequency("");
+                    taskDetailsBean.setSignalid(Utility.getSessionID());
+                    taskDetailsBean.setDateTime(dateforrow);
+                    taskDetailsBean.setSendStatus("0");
+                    taskDetailsBean.setTaskStatus("inprogress");
+                    taskDetailsBean.setOwnerOfTask(detailsBean.getOwnerOfTask());
+                    Log.i("ASE", "Signalid " + taskDetailsBean.getSignalid());
+                    Log.i("ASE", "SelectedUserList " + SelectedUserList);
+                    if (SelectedUserList.contains(",")){
+                        taskDetailsBean.setTaskType("Group");
+                        taskDetailsBean.setTaskMemberList(SelectedUserList);
+                    }
+                    else{
+                        taskDetailsBean.setTaskType("individual");
+                        taskDetailsBean.setToUserName(SelectedUserList);
+                        taskDetailsBean.setToUserId(SelectedUsersId);
+                        taskDetailsBean.setTaskReceiver(SelectedUserList);
+                    }
+                    taskDetailsBean.setTaskPriority("medium");
+                    taskDetailsBean.setParentTaskId(detailsBean.getParentTaskId());
+                    taskDetailsBean.setSubType("normal");
+                    taskDetailsBean.setRemark("");
+                    taskDetailsBean.setReminderQuote("");
+                    Log.i("ASE", "TaskType " + taskDetailsBean.getTaskType());
+                    Log.i("ASE", "SelectedUserList ==> " + SelectedUserList);
+                    if (SelectedUserList != null && !SelectedUserList.equalsIgnoreCase("")) {
+                        int counter = 0;
+                        for (int i = 0; i < SelectedUserList.length(); i++) {
+                            if (SelectedUserList.charAt(i) == ',') {
+                                counter++;
+                            }
+
+                            Log.d("project_details", "Task Mem's counter size is == " + counter);
+                        }
+                        for (int j = 0; j < counter + 1; j++) {
+                            String Mem_name = SelectedUserList.split(",")[j];
+                            Log.i("project_details", "Task Mem's and position == " + Mem_name + " " + j);
+                            String Memberlist = "";
+                            Memberlist = VideoCallDataBase.getDB(context).getname(Mem_name);
+                            SelectedUserList1 = Memberlist + ",";
+                        }
+                        SelectedUserList1 = SelectedUserList1.substring(0, SelectedUserList1.length() - 1);
+                    }
+                    Log.i("ASE", "SelectedUserList1 ==> " + SelectedUserList1);
+                    taskDetailsBean.setTaskDescription("Task Assigned to " + SelectedUserList1);
+                    taskDetailsBean.setRepeatFrequency("");
+                    taskDetailsBean.setTaskTagName("");
+                    taskDetailsBean.setTaskUTCDateTime(dateforrow);
+                    taskDetailsBean.setMimeType("assigntask");
+                    taskDetailsBean.setCatagory("Task");
+                    taskDetailsBean.setCustomTagVisible(true);
+
+                    if (taskDetailsBean != null)
+                        Log.i("ws123", "Bean============> 11" + detailsBean.getParentTaskId() + "getProjectId=========>" + taskDetailsBean.getProjectId());
+                    else
+                        Log.i("ws123", "Bean null============> 11");
+
+                    Appreference.jsonRequestSender.OracleAssignTask(EnumJsonWebservicename.assignTask, oracleProject_object, taskDetailsBean, AddTaskReassign.this);
+
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
-                Log.i("ASE", "SelectedUserList1 ==> " + SelectedUserList1);
-                taskDetailsBean.setTaskDescription("Task Assigned to " + SelectedUserList1);
-                taskDetailsBean.setRepeatFrequency("");
-                taskDetailsBean.setTaskTagName("");
-                taskDetailsBean.setTaskUTCDateTime(dateforrow);
-                taskDetailsBean.setMimeType("assigntask");
-                taskDetailsBean.setCatagory("Task");
-                taskDetailsBean.setCustomTagVisible(true);
 
-                if (taskDetailsBean != null)
-                    Log.i("ws123", "Bean============> 11" + detailsBean.getParentTaskId() + "getProjectId=========>" + taskDetailsBean.getProjectId());
-                else
-                    Log.i("ws123", "Bean null============> 11");
 
-                Appreference.jsonRequestSender.OracleAssignTask(EnumJsonWebservicename.assignTask, oracleProject_object, taskDetailsBean, AddTaskReassign.this);
-
-            } catch (Exception e) {
-                e.printStackTrace();
             }
+        }else
+            Toast.makeText(AddTaskReassign.this, "Check your internet connection", Toast.LENGTH_SHORT).show();
 
-
+    }
+    private boolean getNetworkState()
+    {
+        boolean isNetwork=false;
+        ConnectivityManager ConnectionManager=(ConnectivityManager)getSystemService(Context.CONNECTIVITY_SERVICE);
+        if(ConnectionManager!=null) {
+            NetworkInfo networkInfo = ConnectionManager.getActiveNetworkInfo();
+            if (networkInfo != null && networkInfo.isConnected() == true)
+                isNetwork= true;
+            else
+                isNetwork= false;
         }
+        return isNetwork;
     }
 
     public void submitClickEvent() {
