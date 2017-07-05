@@ -3260,6 +3260,7 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback,
                                                     if (projectHistory.projectDetailsBeans != null && projectHistory.projectDetailsBeans.size() > 0 && projectHistory.buddyArrayAdapter != null) {
                                                         ProjectDetailsBean projectDetailsBean = projectHistory.projectDetailsBeans.get(projectHistory.ListViewCurrentPosition);
                                                         Log.i("notifyreceived", "getTaskStatus==>  " + taskDetailsBean.getTaskStatus());
+                                                        if(!taskDetailsBean.getTaskStatus().equalsIgnoreCase(""))
                                                         projectDetailsBean.setTaskStatus(taskDetailsBean.getTaskStatus());
                                                         handler1.post(new Runnable() {
                                                             @Override
@@ -4169,7 +4170,6 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback,
                             }
                         }
                     }
-/*
                     if (Appreference.context_table.containsKey("projecthistory")) {
                         Log.i("notifyreceived", "projecthistory status == $$$$  ");
                         final ProjectHistory projectHistory = (ProjectHistory) Appreference.context_table.get("projecthistory");
@@ -4188,27 +4188,30 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback,
                                         taskDetailsBean.getSubType().equalsIgnoreCase("deassign")) {
                                     if (projectHistory.projectDetailsBeans != null && projectHistory.projectDetailsBeans.size() > 0 && projectHistory.buddyArrayAdapter != null) {
                                         Log.i("notifyreceived", "getTaskStatus==> 3 " + taskDetailsBean.getTaskStatus());
-                                        for (ProjectDetailsBean detailsBean: projectHistory.projectDetailsBeans){
-                                            if(detailsBean.getId()!=null && detailsBean.getTaskId()!=null &&
-                                                    detailsBean.getId().equalsIgnoreCase(taskDetailsBean.getProjectId()) &&
-                                                    detailsBean.getTaskId().equalsIgnoreCase(taskDetailsBean.getTaskId())){
-                                                Log.i("notifyreceived", "for getTaskStatus==> 4  " + taskDetailsBean.getTaskStatus());
-                                                detailsBean.setTaskStatus(taskDetailsBean.getTaskStatus());
+                                        if(taskDetailsBean.getTaskStatus()!=null && !taskDetailsBean.getTaskStatus().equalsIgnoreCase("")) {
+                                            for (ProjectDetailsBean detailsBean : projectHistory.projectDetailsBeans) {
+                                                if (detailsBean.getId() != null && detailsBean.getTaskId() != null &&
+                                                        detailsBean.getId().equalsIgnoreCase(taskDetailsBean.getProjectId()) &&
+                                                        detailsBean.getTaskId().equalsIgnoreCase(taskDetailsBean.getTaskId())) {
+                                                    Log.i("notifyreceived", "for getTaskStatus==> 4  " + taskDetailsBean.getTaskStatus());
+                                                    detailsBean.setTaskStatus(taskDetailsBean.getTaskStatus());
+                                                    Appreference.old_status.put(detailsBean.getTaskId(), taskDetailsBean.getTaskStatus());
+                                                    break;
+                                                }
                                             }
+                                          /*  handler1.post(new Runnable() {
+                                                @Override
+                                                public void run() {
+                                                    projectHistory.buddyArrayAdapter.notifyDataSetChanged();
+                                                }
+                                            });*/
                                         }
-                                        handler1.post(new Runnable() {
-                                            @Override
-                                            public void run() {
-                                                projectHistory.buddyArrayAdapter.notifyDataSetChanged();
-                                            }
-                                        });
                                     }
                                 }
                             }
 
                         }
                     }
-*/
                 } catch (Resources.NotFoundException e) {
                     e.printStackTrace();
                     Appreference.printLog("MainActivity", "notifyChat_Received Exception: " + e.getMessage(), "WARN", null);

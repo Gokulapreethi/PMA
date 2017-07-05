@@ -359,6 +359,7 @@ public class JsonRequestResponce extends Thread {
 
     public void errorResponse(final EnumJsonWebservicename serviceName, String result) {
         Log.i("jsonwebservice", "Json error Response " + result);
+        Appreference.isPauseStartFrom=false;
         switch (serviceName) {
             case loginMobile:
                 LoginActivity.getInstance().cancelDialog();

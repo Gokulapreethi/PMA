@@ -1166,6 +1166,7 @@ public class ProjectsFragment extends Fragment implements View.OnClickListener, 
                                 final JSONObject jsonObject = new JSONObject(opr.getEmail());
                                 if (((String) jsonObject.get("result_text")).equalsIgnoreCase("pls send ur details")) {
                                     showToast("Please Send Correct Details!....");
+                                    Appreference.isPauseStartFrom=false;
                                     Success = false;
                                 } else {
                                     Success = true;
@@ -1204,6 +1205,12 @@ public class ProjectsFragment extends Fragment implements View.OnClickListener, 
                                 intent.putExtra("projectId", project_id);
                                 intent.putExtra("projectName", project_name);
                                 //                intent.putExtra("parentTaskId", parentTask_Id);
+                                if(Appreference.isPauseStartFrom){
+                                    Appreference.isPauseStartFrom=false;
+                                    intent.putExtra("isFromNewTaskConv", true);}
+                                else{
+                                    intent.putExtra("isFromNewTaskConv", false);}
+
                                 intent.putExtra("projectOwner", project_owner);
                                 intent.putExtra("groupUserId", groupuser_Id);
                                 if (oracleProjectId != null)

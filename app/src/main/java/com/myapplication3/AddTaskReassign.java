@@ -520,7 +520,7 @@ public class AddTaskReassign extends Activity implements View.OnClickListener, W
                         if (projectHistory.projectDetailsBeans != null && projectHistory.projectDetailsBeans.size() > 0 && projectHistory.buddyArrayAdapter != null) {
 
                             ProjectDetailsBean projectDetailsBean = projectHistory.projectDetailsBeans.get(Clickposition);
-                            projectDetailsBean.setTaskStatus("assigned");
+                            projectDetailsBean.setTaskStatus("Assigned");
                             projectDetailsBean.setTaskReceiver(SelectedUserList);
 
                             projectHistory.buddyArrayAdapter.notifyDataSetChanged();

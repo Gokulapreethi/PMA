@@ -1427,7 +1427,10 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
 //                        row_id = (int) db.update("taskDetailsInfo", cv, "signalid='" + signal_id + "'", null);
 //                    }
                 }
-                if ((listTaskConversation.getRequestType() != null && (listTaskConversation.getRequestType().equalsIgnoreCase("percentageCompleted") || listTaskConversation.getRequestType().equalsIgnoreCase("taskDateChangedRequest")) && listTaskConversation.getPercentageCompleted() != null)) {
+
+                //Percentage completion cmd code
+                //start
+                /*if ((listTaskConversation.getRequestType() != null && (listTaskConversation.getRequestType().equalsIgnoreCase("percentageCompleted") || listTaskConversation.getRequestType().equalsIgnoreCase("taskDateChangedRequest")) && listTaskConversation.getPercentageCompleted() != null)) {
                     cv.put("taskDescription", "Completed Percentage " + listTaskConversation.getPercentageCompleted() + "%");
                     cv.put("mimeType", "text");
                     cv.put("taskStatus", listTaskConversation.getTaskStatus());
@@ -1442,7 +1445,10 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
                         Log.i("send_syn_txt", "signalid 1 " + signal_id + "task signalid " + listTaskConversation.getDescription() + "parentId " + listTaskConversation.getTaskNo());
                         row_id = (int) db.update("taskDetailsInfo", cv, "signalid='" + signal_id + "'", null);
                     }
-                }
+                }*/
+                //Percentage completion cmd code
+                //End
+
                 ArrayList<ListTaskConversationFiles> listTaskConversationFiles = listTaskConversation.getListTaskConversationFiles();
                /* if (listTaskConversationFiles.size() == 0) {
                     cv.put("taskDescription", listTaskConversation.getName());
@@ -4033,6 +4039,9 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
                     projectDetailsBean.setIsActiveStatus(cur.getString(cur.getColumnIndex("isActiveStatus")));
                     projectDetailsBean.setJobCardType(cur.getString(cur.getColumnIndex("jobCardType")));
                     projectDetailsBean.setMachineMake(cur.getString(cur.getColumnIndex("machineMake")));
+                    if(projectDetailsBean.getTaskId()!=null && projectDetailsBean.getTaskStatus()!=null && !projectDetailsBean.getTaskStatus().equalsIgnoreCase("")){
+                        Appreference.old_status.put(projectDetailsBean.getTaskId(),projectDetailsBean.getTaskStatus());
+                    }
                     arrayList.add(projectDetailsBean);
                     cur.moveToNext();
                 }

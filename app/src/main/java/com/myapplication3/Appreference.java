@@ -26,7 +26,6 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
-import java.util.Scanner;
 import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
 
@@ -60,6 +59,11 @@ public class Appreference {
     public static boolean is_reload = false;
     public static String fillter = null;
     public static boolean conflicttask = false;
+    //For ASE
+    public static boolean isPauseStartFrom=false;
+    public static HashMap<String,String> old_status=new HashMap<>();
+
+
     public static boolean isLocation = false;
     public static HashMap<String, Boolean> isRem_Enable_details = new HashMap<>();
     public static HashMap<String, Boolean> isOverdue = new HashMap<>();

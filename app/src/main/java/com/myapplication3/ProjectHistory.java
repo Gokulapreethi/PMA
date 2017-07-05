@@ -207,6 +207,7 @@ public class ProjectHistory extends Activity implements WebServiceInterface, Swi
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if(!Appreference.context_table.containsKey("projecthistory"))
         Appreference.context_table.put("projecthistory", this);
 
         try {
@@ -262,6 +263,7 @@ public class ProjectHistory extends Activity implements WebServiceInterface, Swi
                 project_Owner = getIntent().getExtras().getString("projectOwner");
                 isFromOracle = getIntent().getBooleanExtra("fromOracle", false);
                 isFromNewTaskConv = getIntent().getBooleanExtra("isFromNewTaskConv", false);
+                Log.i("conv123","IsFromNewTaskConv===>"+isFromNewTaskConv);
 
                 if (isFromOracle)
                     addsubtasks.setVisibility(View.GONE);
@@ -741,8 +743,11 @@ public class ProjectHistory extends Activity implements WebServiceInterface, Swi
                         VideoCallDataBase.getDB(context).updateBadgeStatus("0", taskDetailsBean.getId());
 
                         Search_EditText.setText("");
+
                         Log.d("Task1", "task stststts " + taskDetailsBean.getTaskStatus());
-                        if (taskDetailsBean.getTaskStatus() != null && taskDetailsBean.getTaskStatus().equalsIgnoreCase("Template") || (taskDetailsBean.getTaskStatus() != null && taskDetailsBean.getTaskStatus().equalsIgnoreCase("draft"))) {
+                        if (taskDetailsBean.getTaskStatus() != null && taskDetailsBean.getTaskStatus().equalsIgnoreCase("Template")
+                                || (taskDetailsBean.getTaskStatus() != null && taskDetailsBean.getTaskStatus().equalsIgnoreCase("draft"))
+                                || (taskDetailsBean.getTaskStatus() != null && taskDetailsBean.getTaskStatus().equalsIgnoreCase("Unassigned"))) {
                             //                    if (!taskDetailsBean.getOwnerOfTask().equalsIgnoreCase(Appreference.loginuserdetails.getUsername())) {
                             //                        showDialog();
                             //                        webTaskId = taskDetailsBean.getTaskId();
@@ -790,11 +795,16 @@ public class ProjectHistory extends Activity implements WebServiceInterface, Swi
 //                                Toast.makeText(getApplicationContext(), "You are not allowed for this Template", Toast.LENGTH_SHORT).show();
 //                            }
                         } else if (taskDetailsBean.getTaskType().equalsIgnoreCase("individual")) {
+                            Log.i("conv123","taskType====>"+taskDetailsBean.getTaskType());
+                            Log.i("conv123","getTaskReceiver====>"+taskDetailsBean.getTaskReceiver());
+                            Log.i("conv123","getOwnerOfTask====>"+taskDetailsBean.getOwnerOfTask());
+                            Log.i("conv123","getTaskObservers====>"+taskDetailsBean.getTaskObservers());
                             if (taskDetailsBean != null &&
                                     (taskDetailsBean.getTaskReceiver() != null && taskDetailsBean.getTaskReceiver().equalsIgnoreCase(Appreference.loginuserdetails.getUsername())) ||
                                     (taskDetailsBean.getOwnerOfTask()!=null && taskDetailsBean.getOwnerOfTask().equalsIgnoreCase(Appreference.loginuserdetails.getUsername())) ||
                                     (taskDetailsBean.getTaskObservers()!=null && taskDetailsBean.getTaskObservers().contains(Appreference.loginuserdetails.getUsername()))) {
                                 Log.i("task", String.valueOf(position));
+
                                 showDialog();
                                 if (taskDetailsBean.getTaskName() != null && taskDetailsBean.getTaskName().equalsIgnoreCase("Travel Time")) {
                                     Intent intent = new Intent(context, TravelJobDetails.class);
@@ -822,7 +832,7 @@ public class ProjectHistory extends Activity implements WebServiceInterface, Swi
                                     overridePendingTransition(R.anim.right_anim, R.anim.left_anim);
                                 }
                             } else {
-                                Toast.makeText(getApplicationContext(), "This Task does not assigned to you", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(getApplicationContext(), "This task is not assigned to You", Toast.LENGTH_SHORT).show();
                             }
                         } else if (taskDetailsBean.getTaskType().equalsIgnoreCase("Group")) {
                             Log.i("ListMembers", "projectDetailsBean.getTaskMemberList() " + taskDetailsBean.getTaskMemberList());
@@ -1644,9 +1654,10 @@ public class ProjectHistory extends Activity implements WebServiceInterface, Swi
                         }
                     }
 
+                    Log.i("conv123","Status GiverSide===>"+projectDetailsBean.getTaskStatus());
                     if (projectDetailsBean.getTaskStatus() != null && projectDetailsBean.getTaskStatus().equalsIgnoreCase("reminder")) {
                         Log.i("ProjectHistory", "projectDetailsBean.getTaskStatus() 4 " + projectDetailsBean.getTaskStatus());
-                        task_status.setText("assigned");
+                        task_status.setText("Assigned");
                     } else if (projectDetailsBean.getTaskStatus() != null && projectDetailsBean.getTaskStatus().equalsIgnoreCase("overdue")) {
                         Log.i("ProjectHistory", "projectDetailsBean.getTaskStatus() 5 " + projectDetailsBean.getTaskStatus());
                         task_status.setText(projectDetailsBean.getTaskStatus());
@@ -1662,17 +1673,23 @@ public class ProjectHistory extends Activity implements WebServiceInterface, Swi
                     }else if (projectDetailsBean.getTaskStatus() != null && projectDetailsBean.getTaskStatus().equalsIgnoreCase("inprogress")) {
                         Log.i("ProjectHistory", "projectDetailsBean.getTaskStatus() 7 " + projectDetailsBean.getTaskStatus());
 //                        task_status.setText("Template");
-                        task_status.setText("assigned");
+                        task_status.setText("Assigned");
                     }else if (projectDetailsBean.getTaskStatus() != null && projectDetailsBean.getTaskStatus().equalsIgnoreCase("DeAssign")) {
                         Log.i("ProjectHistory", "projectDetailsBean.getTaskStatus() 7 " + projectDetailsBean.getTaskStatus());
 //                        task_status.setText("Template");
                         task_status.setText("Unassigned");
-                    } else if (projectDetailsBean.getTaskStatus() != null) {
+                    } else if (projectDetailsBean.getTaskStatus() != null && !projectDetailsBean.getTaskStatus().equalsIgnoreCase("")) {
                         Log.i("ProjectHistory", "projectDetailsBean.getTaskStatus() 8 " + projectDetailsBean.getTaskStatus());
                         task_status.setText(projectDetailsBean.getTaskStatus());
                     } else {
                         Log.i("ProjectHistory", "projectDetailsBean.getTaskStatus() 9 " + projectDetailsBean.getTaskStatus());
-                        task_status.setText("NA");
+                        if(projectDetailsBean.getTaskId()!=null && Appreference.old_status.containsKey(projectDetailsBean.getTaskId())){
+                        task_status.setText(Appreference.old_status.get(projectDetailsBean.getTaskId()));
+                        }else {
+                            task_status.setText("NA");
+                        }
+
+
                     }
                     if (projectDetailsBean.getTaskStatus().equalsIgnoreCase("note")) {
                         selectedimage.setBackgroundResource(R.drawable.ic_note_32_2);
