@@ -996,7 +996,7 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
             Log.i("time", "TaskHistoryInfo  value");
             Log.i("videcalldatebase", "bean.getGroupTaskMembers() " + bean.getGroupTaskMembers());
             Log.i("TaskArrayAdapter", "New DB OwnerOftask---------> 1 *  " + bean.getGroupTaskMembers());
-            if (bean.getGroupTaskMembers() != null && !bean.getGroupTaskMembers().equalsIgnoreCase("(null)") && !bean.getGroupTaskMembers().equalsIgnoreCase(null) && !bean.getGroupTaskMembers().equalsIgnoreCase("null") && !bean.getGroupTaskMembers().equalsIgnoreCase("")) {
+            if (bean.getGroupTaskMembers() != null && !bean.getGroupTaskMembers().equalsIgnoreCase("(null)") && !bean.getGroupTaskMembers().equalsIgnoreCase(null) && !bean.getGroupTaskMembers().equalsIgnoreCase("null") ) {
                 Log.i("videcalldatebase", "bean.getGroupTaskMembers() inside " + bean.getGroupTaskMembers());
                 cv.put("taskMemberList", bean.getGroupTaskMembers());
             }
@@ -3132,6 +3132,8 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
     public int update_Project_history(TaskDetailsBean bean) {
         int row_id = 0;
         try {
+            Log.i("conv123","update_Project_history DBDBDB=getTaskReceiver=====>"+bean.getTaskReceiver());
+            Log.i("conv123","update_Project_history DBDBDB=getSubType=====>"+bean.getSubType());
             String logginuser = Appreference.loginuserdetails.getEmail();
             if (!db.isOpen())
                 openDatabase();
@@ -3186,7 +3188,7 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
             }
             if (bean.getTaskReceiver() != null)
                 cv.put("taskReceiver", bean.getTaskReceiver());
-            if (bean.getGroupTaskMembers() != null && !bean.getGroupTaskMembers().equalsIgnoreCase("") && !bean.getGroupTaskMembers().equalsIgnoreCase("null") && !bean.getGroupTaskMembers().equalsIgnoreCase(null)) {
+            if (bean.getGroupTaskMembers() != null  && !bean.getGroupTaskMembers().equalsIgnoreCase("null") && !bean.getGroupTaskMembers().equalsIgnoreCase(null)) {
                 cv.put("taskMemberList", bean.getGroupTaskMembers());
             }
             Log.i("TaskTable", "Insert Task Id : " + bean.getTaskId());
@@ -3274,6 +3276,8 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
     public int insert_new_Project_history(TaskDetailsBean bean) {
         int row_id = 0;
         try {
+            Log.i("conv123","insert_new_Project_history DBDBDB=getTaskReceiver=====>"+bean.getTaskReceiver());
+            Log.i("conv123","insert_new_Project_history DBDBDB=getSubType=====>"+bean.getSubType());
             String logginuser = Appreference.loginuserdetails.getEmail();
             String query1 = "select projectName from projectHistory where projectId='" + bean.getProjectId() + "' order by id desc limit 1";
             String projectname = VideoCallDataBase.getDB(context).getProjectParentTaskId(query1);
@@ -3334,7 +3338,7 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
             }
             if (bean.getTaskType() != null && !bean.getTaskType().equalsIgnoreCase("Group")) {
                 cv.put("taskReceiver", bean.getTaskReceiver());
-            } else if (bean.getTaskReceiver() != null) {
+            } else if (bean.getTaskReceiver() != null || bean.getSubType().equalsIgnoreCase("deassign")) {
                 cv.put("taskReceiver", bean.getTaskReceiver());
             }
             cv.put("projectName", projectname);
@@ -3342,7 +3346,7 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
             cv.put("projectId", bean.getProjectId());
             cv.put("parentTaskId", parent_TaskId);
             cv.put("requestStatus", bean.getRequestStatus());
-            if (bean.getGroupTaskMembers() != null && !bean.getGroupTaskMembers().trim().equalsIgnoreCase("") && !bean.getGroupTaskMembers().equalsIgnoreCase("null") && !bean.getGroupTaskMembers().equalsIgnoreCase(null)) {
+            if ((bean.getGroupTaskMembers() != null && !bean.getGroupTaskMembers().trim().equalsIgnoreCase("") && !bean.getGroupTaskMembers().equalsIgnoreCase("null") && !bean.getGroupTaskMembers().equalsIgnoreCase(null))|| bean.getSubType()!=null && bean.getSubType().equalsIgnoreCase("deassign")) {
                 cv.put("taskMemberList", bean.getGroupTaskMembers());
             }
             if (bean.getCatagory() != null && !bean.getCatagory().trim().equalsIgnoreCase("") && !bean.getCatagory().equalsIgnoreCase("null") && !bean.getCatagory().equalsIgnoreCase(null)) {

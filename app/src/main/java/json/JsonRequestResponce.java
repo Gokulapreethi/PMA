@@ -442,9 +442,9 @@ public class JsonRequestResponce extends Thread {
                 inter.ErrorMethod(obj);
                 break;
             case assignTask:
-                /*AddTaskReassign.getInstance().cancelDialog();
-                AddTaskReassign.getInstance().showToast("assignTask error . Try again later");
-                inter.ErrorMethod(obj);*/
+                NewTaskConversation.getInstance().cancelDialog();
+                NewTaskConversation.getInstance().showToast("assignTask error . Try again later");
+                inter.ErrorMethod(obj);
                 break;
             case searchMedia:
                 MediaSearch.getInstance().cancelDialog();

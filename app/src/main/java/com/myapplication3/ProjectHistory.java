@@ -798,6 +798,7 @@ public class ProjectHistory extends Activity implements WebServiceInterface, Swi
                             Log.i("conv123","taskType====>"+taskDetailsBean.getTaskType());
                             Log.i("conv123","getTaskReceiver====>"+taskDetailsBean.getTaskReceiver());
                             Log.i("conv123","getOwnerOfTask====>"+taskDetailsBean.getOwnerOfTask());
+                            Log.i("conv123","LoginUser====>"+Appreference.loginuserdetails.getUsername());
                             Log.i("conv123","getTaskObservers====>"+taskDetailsBean.getTaskObservers());
                             if (taskDetailsBean != null &&
                                     (taskDetailsBean.getTaskReceiver() != null && taskDetailsBean.getTaskReceiver().equalsIgnoreCase(Appreference.loginuserdetails.getUsername())) ||
@@ -1756,7 +1757,9 @@ public class ProjectHistory extends Activity implements WebServiceInterface, Swi
                         Pjt_mem = Pjt_mem.substring(0, Pjt_mem.length() - 1);
                         if (projectDetailsBean.getTaskStatus() != null && projectDetailsBean.getTaskStatus().equalsIgnoreCase("note")) {
                             task_taker.setText("Me Taker : " + Pjt_mem);
-                        } else {
+                        } /*else  if (projectDetailsBean.getTaskStatus() != null && projectDetailsBean.getTaskStatus().equalsIgnoreCase("DeAssign")) {
+                            task_taker.setText("Task Taker : NA");
+                        }*/else {
                             Log.i("receiver123","TaskReceiver List2222=====>"+Pjt_mem);
 
                             task_taker.setText("Task Taker : " + Pjt_mem);

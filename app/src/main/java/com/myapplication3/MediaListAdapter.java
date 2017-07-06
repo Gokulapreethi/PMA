@@ -2642,7 +2642,7 @@ public class MediaListAdapter extends ArrayAdapter<TaskDetailsBean> {
                                 Log.i("MediaListAdapter", "CustomeAttribute----> 3 " + custom_tag);
                                 holder.txt_des.setText(custom_tag);
                                 holder.txt_des.setTextColor(Color.BLACK);
-                            } else if (gcBean.getTaskDescription() != null && gcBean.getTaskDescription().contains("Task Assigned to ")) {
+                            } else if (gcBean.getTaskDescription() != null && gcBean.getTaskDescription().contains("Task Assigned to")) {
                                 Log.i("MediaList ", "gcBean.getTaskDescription()==>  " + gcBean.getTaskDescription());
                                 String list_mem = "";
                                 String mem_list = gcBean.getTaskDescription().split(" ")[3];

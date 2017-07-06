@@ -744,32 +744,36 @@ public class ProjectsFragment extends Fragment implements View.OnClickListener, 
                                     Appreference.jsonRequestSender.OracleFSRJOBReport(EnumJsonWebservicename.fieldServiceReportJobWise, nameValuePairs, ProjectsFragment.this);
 
                                 } else if (item.getTitle().toString().equalsIgnoreCase("Complete")) {
-                                    AlertDialog.Builder saveDialog = new AlertDialog.Builder(classContext);
-                                    saveDialog.setTitle("Project Completion");
-                                    saveDialog.setMessage("Are you sure want to Complete this Project?");
-                                    saveDialog.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                                        public void onClick(DialogInterface dialog, int which) {
-                                            try {
-                                                List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
-                                                nameValuePairs.add(new BasicNameValuePair("projectId", projectDetailsBean.getId()));
-                                                nameValuePairs.add(new BasicNameValuePair("userId", String.valueOf(Appreference.loginuserdetails.getId())));
-                                                Log.i("completed_status", "ProjectId()====>" + projectDetailsBean.getId());
-                                                Log.i("completed_status", " userId()=====>" + String.valueOf(Appreference.loginuserdetails.getId()));
-                                                Appreference.jsonRequestSender.projectCompleted(EnumJsonWebservicename.projectCompleted, nameValuePairs, ProjectsFragment.this);
-//                                                showprogress();
-                                            } catch (Exception e) {
-                                                e.printStackTrace();
-                                            }
-//                                            Toast.makeText(getContext(), "Project Completed", Toast.LENGTH_LONG).show();
-                                        }
-                                    });
-                                    saveDialog.setNegativeButton("Cancel",
-                                            new DialogInterface.OnClickListener() {
-                                                public void onClick(DialogInterface dialog, int which) {
-                                                    dialog.cancel();
+                                    try {
+                                        AlertDialog.Builder saveDialog = new AlertDialog.Builder(classContext);
+                                        saveDialog.setTitle("Project Completion");
+                                        saveDialog.setMessage("Are you sure want to Complete this Project?");
+                                        saveDialog.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                            public void onClick(DialogInterface dialog, int which) {
+                                                try {
+                                                    List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
+                                                    nameValuePairs.add(new BasicNameValuePair("projectId", projectDetailsBean.getId()));
+                                                    nameValuePairs.add(new BasicNameValuePair("userId", String.valueOf(Appreference.loginuserdetails.getId())));
+                                                    Log.i("completed_status", "ProjectId()====>" + projectDetailsBean.getId());
+                                                    Log.i("completed_status", " userId()=====>" + String.valueOf(Appreference.loginuserdetails.getId()));
+                                                    Appreference.jsonRequestSender.projectCompleted(EnumJsonWebservicename.projectCompleted, nameValuePairs, ProjectsFragment.this);
+    //                                                showprogress();
+                                                } catch (Exception e) {
+                                                    e.printStackTrace();
                                                 }
-                                            });
-                                    saveDialog.show();
+    //                                            Toast.makeText(getContext(), "Project Completed", Toast.LENGTH_LONG).show();
+                                            }
+                                        });
+                                        saveDialog.setNegativeButton("Cancel",
+                                                new DialogInterface.OnClickListener() {
+                                                    public void onClick(DialogInterface dialog, int which) {
+                                                        dialog.cancel();
+                                                    }
+                                                });
+                                        saveDialog.show();
+                                    } catch (Exception e) {
+                                        e.printStackTrace();
+                                    }
                                 }
                                 return true;
                             }
@@ -1209,8 +1213,11 @@ public class ProjectsFragment extends Fragment implements View.OnClickListener, 
                                     Appreference.isPauseStartFrom=false;
                                     intent.putExtra("isFromNewTaskConv", true);}
                                 else{
-                                    intent.putExtra("isFromNewTaskConv", false);}
-
+                                    if(Appreference.context_table.containsKey("projecthistory")){
+                                        Appreference.context_table.remove("projecthistory");
+                                    }
+                                        intent.putExtra("isFromNewTaskConv", false);
+                                }
                                 intent.putExtra("projectOwner", project_owner);
                                 intent.putExtra("groupUserId", groupuser_Id);
                                 if (oracleProjectId != null)

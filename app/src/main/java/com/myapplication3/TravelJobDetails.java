@@ -217,7 +217,7 @@ public class TravelJobDetails extends Activity implements View.OnClickListener, 
             taskReceiver = projectDetailsBean.getTaskReceiver();
             category = "task";
             projectGroup_Mems = projectDetailsBean.getTaskMemberList();
-            taskStatus = "assigned";
+            taskStatus = "Assigned";
             oracleProjectOwner = projectDetailsBean.getOwnerOfTask();
             if (!appSharedpreferences.getBoolean("syncTask" + webtaskId)) {
                 gettaskwebservice();
@@ -570,6 +570,14 @@ public class TravelJobDetails extends Activity implements View.OnClickListener, 
             popup.getMenu().getItem(4).setVisible(false);
             popup.getMenu().getItem(5).setVisible(true);
             popup.getMenu().getItem(6).setVisible(true);
+        } else if (current_status == 8) {
+            popup.getMenu().getItem(0).setVisible(true);
+            popup.getMenu().getItem(1).setVisible(false);
+            popup.getMenu().getItem(2).setVisible(false);
+            popup.getMenu().getItem(3).setVisible(false);
+            popup.getMenu().getItem(4).setVisible(false);
+            popup.getMenu().getItem(5).setVisible(false);
+            popup.getMenu().getItem(6).setVisible(false);
         }
 
         popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
@@ -609,7 +617,7 @@ public class TravelJobDetails extends Activity implements View.OnClickListener, 
                         public void onClick(View v) {
                             dialog1.dismiss();
                             Log.i("ws123", "remarks for DeAssign====>" + name.getText().toString());
-                            sendStatus_webservice("8", "", name.getText().toString(), "DeAssign","");
+                            sendStatus_webservice("8", "", name.getText().toString(), "DeAssign","DeAssign");
                         }
                     });
                     no.setOnClickListener(new View.OnClickListener() {
@@ -743,7 +751,7 @@ public class TravelJobDetails extends Activity implements View.OnClickListener, 
             taskDetailsBean.setTaskNo(task_No);
             taskDetailsBean.setPlannedStartDateTime("");
             taskDetailsBean.setPlannedEndDateTime("");
-            taskDetailsBean.setTaskStatus(projectCurrentStatus);
+            taskDetailsBean.setTaskStatus(statusUI);
             taskDetailsBean.setSendStatus("0");
             taskDetailsBean.setTaskType(taskType);
             taskDetailsBean.setMimeType("text");
@@ -1455,7 +1463,7 @@ public class TravelJobDetails extends Activity implements View.OnClickListener, 
 //        taskDetailsBean.setCatagory("Task");
         Log.i("taskconversation", "db updated projectId " + taskDetailsBean.getProjectId());
         if (taskDetailsBean.getProjectId() != null) {
-            taskDetailsBean.setTaskStatus("assigned");
+            taskDetailsBean.setTaskStatus("Assigned");
             if (taskDetailsBean.getTaskMemberList() != null && taskDetailsBean.getTaskMemberList().contains(",")) {
                 taskDetailsBean.setGroupTaskMembers(taskDetailsBean.getTaskMemberList());
             } else {
@@ -1856,8 +1864,8 @@ public class TravelJobDetails extends Activity implements View.OnClickListener, 
                 if (projectHistory.projectDetailsBeans != null && projectHistory.projectDetailsBeans.size() > 0 && projectHistory.buddyArrayAdapter != null) {
 
                     ProjectDetailsBean projectDetailsBean = projectHistory.projectDetailsBeans.get(clickPosition);
-                    projectDetailsBean.setTaskStatus("assigned");
-                    projectDetailsBean.setTaskReceiver("Me");
+                    projectDetailsBean.setTaskStatus("Assigned");
+                    projectDetailsBean.setTaskReceiver(Appreference.loginuserdetails.getUsername());
 
                     Log.i("ProjectHistory", "inside refresh  status NewTaskConveratio ========>" + projectCurrentStatus);
                     projectHistory.buddyArrayAdapter.notifyDataSetChanged();
@@ -1907,7 +1915,7 @@ public class TravelJobDetails extends Activity implements View.OnClickListener, 
                 taskDetailsBean.setSignalid(Utility.getSessionID());
                 taskDetailsBean.setDateTime(dateforrow);
                 taskDetailsBean.setSendStatus("0");
-                taskDetailsBean.setTaskStatus("assigned");
+                taskDetailsBean.setTaskStatus("Assigned");
 //                taskDetailsBean.setOwnerOfTask(detailsBean.getOwnerOfTask());
 
                 taskDetailsBean.setTaskType("individual");
@@ -1933,7 +1941,7 @@ public class TravelJobDetails extends Activity implements View.OnClickListener, 
                 taskReceiver = Appreference.loginuserdetails.getUsername();
                 taskType = "individual";
                 category = "Task";
-                taskStatus = "assigned";
+                taskStatus = "Assigned";
                 toUserId = Appreference.loginuserdetails.getId();
             } catch (Exception e) {
                 e.printStackTrace();
