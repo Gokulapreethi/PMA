@@ -34,11 +34,11 @@
             android:textColor="@color/appcolor"
             android:textSize="20dp"
             android:textStyle="bold" />
-        <TextView
+        <ImageView
             android:id="@+id/send_completion"
-            android:layout_width="wrap_content"
+            android:layout_width="45dp"
             android:layout_height="35dp"
-            android:background="@color/white"
+            android:background="@drawable/ic_arrow_34_xl"
             android:gravity="center"
             android:layout_alignParentRight="true"
             android:text="Send"
@@ -83,7 +83,7 @@
                     android:background="#FFFFFF"
                     android:gravity="left"
                     android:padding="7dp"
-                    android:text="JobCodeNo"
+                    android:text="Job Card No"
                     android:singleLine="true"
                     android:textColor="@color/black"
                     android:textSize="15dp" />

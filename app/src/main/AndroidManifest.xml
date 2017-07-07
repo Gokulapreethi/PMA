@@ -408,7 +408,7 @@
             android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.Light.Dialog" />
         <activity
-            android:name=".MediaSearch"
+            android:name=".SearchMediaWebView"
             android:screenOrientation="portrait" />
         <activity
             android:name=".WebViewActivity"

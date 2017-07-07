@@ -147,7 +147,7 @@ public class AddTaskReassign extends Activity implements View.OnClickListener, W
                 //            newTaskDescription=getIntent().getExtras().getString("taskDescription");
                 title = (TextView) findViewById(R.id.txtView01);
 //                title.setText("Assign Task To");
-                title.setText("JobCodeNo : "+ jobcodeno +"\nActivityCode : "+activitycode);
+                title.setText("Job Card No : "+ jobcodeno +"\nActivity Code : "+activitycode);
                 //submit.setBackgroundResource(android.R.drawable.btn_default);
                 //submit.setText("Assign");
                 isTemplate = true;
@@ -156,12 +156,12 @@ public class AddTaskReassign extends Activity implements View.OnClickListener, W
                 isProject = getIntent().getExtras().getString("isProject");
                 if (getIntent().getExtras().getString("isProject") != null && getIntent().getExtras().getString("isProject").toString().equalsIgnoreCase("Yes")) {
 //                    title.setText("Assign To");
-                    title.setText("JobCodeNo : "+ jobcodeno +"\nActivityCode : "+activitycode);
+                    title.setText("Job Card No : "+ jobcodeno +"\nActivity Code : "+activitycode);
                 } else {
                     title.setText("Assign Task To");
                 }
             }
-            title.setText("JobCodeNo : "+ jobcodeno +"\nActivityCode : "+activitycode);
+            title.setText("Job Card No : "+ jobcodeno +"\nActivity Code : "+activitycode);
             Log.i("add observer", "group name --> 0 " + groupname);
         /*handler.post(new Runnable() {
             @Override

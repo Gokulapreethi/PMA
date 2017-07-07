@@ -266,7 +266,7 @@ public class TravelJobDetails extends Activity implements View.OnClickListener, 
             }
         }
 
-        if (taskStatus != null && taskStatus.equalsIgnoreCase("draft")) {
+        if (taskStatus != null && taskStatus.equalsIgnoreCase("draft")|| taskStatus.equalsIgnoreCase("Unassigned")) {
             ll_2.setVisibility(View.VISIBLE);
             status_job.setVisibility(View.GONE);
             travel_job.setVisibility(View.GONE);
@@ -301,7 +301,7 @@ public class TravelJobDetails extends Activity implements View.OnClickListener, 
         Log.i(tab, "JobCodeNo==> " + JobCodeNo);
         Log.i(tab, "ActivityCode==> " + ActivityCode);
 //        head.setText(taskName);
-        head.setText("JobCodeNo :" + JobCodeNo + "\nActivityCode :" + ActivityCode);
+        head.setText("Job Card No :" + JobCodeNo + "\nActivity Code :" + ActivityCode);
 
         cancel.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -503,9 +503,9 @@ public class TravelJobDetails extends Activity implements View.OnClickListener, 
         ActivityStartdate = startTime;
         ActivityEnddate = EndTime;
         if(startTime!=null && !startTime.equalsIgnoreCase(""))
-            sendStatus_webservice(status,"","","travel","");
+            sendStatus_webservice(status,"","","","");
         else
-            sendStatus_webservice(status,"","","travel","");
+            sendStatus_webservice(status,"","","","");
 
     }
 
@@ -617,7 +617,7 @@ public class TravelJobDetails extends Activity implements View.OnClickListener, 
                         public void onClick(View v) {
                             dialog1.dismiss();
                             Log.i("ws123", "remarks for DeAssign====>" + name.getText().toString());
-                            sendStatus_webservice("8", "", name.getText().toString(), "DeAssign","DeAssign");
+                            sendStatus_webservice("8", "", name.getText().toString(), "DeAssign","draft");
                         }
                     });
                     no.setOnClickListener(new View.OnClickListener() {
@@ -717,15 +717,15 @@ public class TravelJobDetails extends Activity implements View.OnClickListener, 
                     travel_date_details.add("EndTime : " + ActivityEnddate);
                 }
             } else {
-                jsonObject.put("travelStartTime", taskUTCtime);
+                jsonObject.put("travelStartTime", "");
                 jsonObject.put("activityStartTime", "");
                 jsonObject.put("activityEndTime", "");
-                jsonObject.put("travelEndTime", taskUTCtime);
+                jsonObject.put("travelEndTime", "");
                 jsonObject.put("toTravelStartDateTime", "");
                 jsonObject.put("toTravelEndDateTime", "");
 
-                taskDetailsBean.setActivityEndTime(taskUTCtime);
-                taskDetailsBean.setActivityStartTime(taskUTCtime);
+                taskDetailsBean.setActivityEndTime("");
+                taskDetailsBean.setActivityStartTime("");
             }
             if (remarks != null && !remarks.equalsIgnoreCase("")) {
                 jsonObject.put("remarks", remarks);
@@ -751,10 +751,10 @@ public class TravelJobDetails extends Activity implements View.OnClickListener, 
             taskDetailsBean.setTaskNo(task_No);
             taskDetailsBean.setPlannedStartDateTime("");
             taskDetailsBean.setPlannedEndDateTime("");
-            taskDetailsBean.setTaskStatus(statusUI);
             taskDetailsBean.setSendStatus("0");
             taskDetailsBean.setTaskType(taskType);
             taskDetailsBean.setMimeType("text");
+            taskStatus = statusUI;
 
             taskDetailsBean.setUtcPlannedStartDateTime(Appreference.customLocalDateToUTC(null));
             taskDetailsBean.setUtcplannedEndDateTime(Appreference.customLocalDateToUTC(null));
@@ -776,10 +776,13 @@ public class TravelJobDetails extends Activity implements View.OnClickListener, 
             }
             taskDetailsBean.setSubType("normal");
             taskDetailsBean.setTaskRequestType("normal");
+            taskDetailsBean.setTaskStatus(projectCurrentStatus);
             if (projectCurrentStatus != null && projectCurrentStatus.equalsIgnoreCase("DeAssign")) {
                 isDeassign = true;
                 taskDetailsBean.setTaskDescription(Appreference.loginuserdetails.getUsername() + " Left");
                 taskDetailsBean.setSubType("deassign");
+                taskDetailsBean.setTaskStatus("draft");
+                taskDetailsBean.setCatagory("Template");
             } else if (status.equalsIgnoreCase("7") ||status.equalsIgnoreCase("9")) {
                 taskDetailsBean.setTaskDescription("Gathering Details...");
             } else {
@@ -1636,23 +1639,14 @@ public class TravelJobDetails extends Activity implements View.OnClickListener, 
             String dateforrow = dateFormat.format(new Date());
             tasktime = dateTime;
             tasktime = tasktime.split(" ")[1];
-            Log.i("task", "tasktime" + tasktime);
-            Log.i("UTC", "sendMessage utc time" + dateforrow);
-            Log.i("time", "value");
             taskUTCtime = dateforrow;
-//                 TaskDetailsBean chatBean = new TaskDetailsBean();
             if (chatBean == null) {
                 chatBean = new TaskDetailsBean();
             }
-            Log.i("taskConversation", "private sendMessage * 3 ");
             chatBean.setFromUserId(String.valueOf(Appreference.loginuserdetails.getId()));
             chatBean.setToUserId(String.valueOf(toUserId));
-            Log.i("Noteconversation", "sendmessage ### ");
-            Log.i("task", "to user id" + String.valueOf(toUserId));
             chatBean.setFromUserName(Appreference.loginuserdetails.getUsername());
             chatBean.setSelect(false);
-            chatBean.setToUserName(toUserName);
-            chatBean.setTaskReceiver(taskReceiver);
             chatBean.setTaskNo(task_No);
             chatBean.setIssueId(issueId);
             chatBean.setParentId(getFileName());
@@ -1670,33 +1664,14 @@ public class TravelJobDetails extends Activity implements View.OnClickListener, 
             chatBean.setTasktime(tasktime);
             chatBean.setTaskUTCTime(taskUTCtime);
             chatBean.setSignalid(sig_id);
-            chatBean.setCatagory(category);
             chatBean.setCustomTagVisible(true);
-            Log.i("taskconversation", "sendMessage taskStatus " + taskStatus);
             chatBean.setTaskStatus(taskStatus);
-            Log.i("taskconversation", "sendMessage project " + project);
-            if (project) {
-                chatBean.setProjectId(projectId);
-                if (category != null && category.equalsIgnoreCase("issue")) {
-                    chatBean.setParentTaskId(issueId);
-                } else {
-                    chatBean.setParentTaskId(parentTaskId);
-                }
-                if (projectGroup_Mems != null) {
-                    chatBean.setGroupTaskMembers(projectGroup_Mems);
-                }
-            }
-            Log.i("task", "priority0 ---->" + pri);
-            Log.i("task", "taskName ---->" + taskName);
+
 
             chatBean.setTaskDescription(message);
             Log.i("template", "message2 " + chatBean.getTaskDescription());
             chatBean.setTaskPriority("Medium");
             chatBean.setTaskMemberList(project_toUsers);
-            Log.i("taskconversation", "issues " + chatBean.getIssueId());
-            Log.i("taskconversation", "issues " + chatBean.getCatagory());
-            Log.i("taskconversation", "issues " + chatBean.getTaskNo());
-
 
             if (chatBean.getTaskDescription() != null && (chatBean.getTaskDescription().contains("www.") || chatBean.getTaskDescription().contains("https:") || chatBean.getTaskDescription().contains("http:"))) {
                 chatBean.setMimeType("url");
@@ -1707,9 +1682,58 @@ public class TravelJobDetails extends Activity implements View.OnClickListener, 
             chatBean.setOwnerOfTask(ownerOfTask);
             Log.i("taskConversation", "private sendMessage * 5 ");
             chatBean.setSubType("normal");
+            String project_deassignMems = "";
+            if (isDeassign) {
+                chatBean.setTaskReceiver("");
+                chatBean.setToUserName("");
+                chatBean.setToUserId("");
+                chatBean.setSubType("deassign");
+                chatBean.setTaskStatus("draft");
+                chatBean.setCatagory("Template");
+                if (projectGroup_Mems != null) {
+                    int counter = 0;
+                    for (int i = 0; i < projectGroup_Mems.length(); i++) {
+                        if (projectGroup_Mems.charAt(i) == ',') {
+                            counter++;
+                        }
+                    }
+                    for (int j = 0; j < counter + 1; j++) {
+                        if (counter == 0) {
+                            if (!projectGroup_Mems.equalsIgnoreCase(Appreference.loginuserdetails.getUsername())) {
+                                project_deassignMems = projectGroup_Mems;
+                            }
+                        } else {
+                            if (projectGroup_Mems.split(",")[j].equalsIgnoreCase(Appreference.loginuserdetails.getUsername())) {
+                            } else {
+                                project_deassignMems = project_deassignMems.concat(projectGroup_Mems.split(",")[j] + ",");
+                            }
+                        }
+                    }
+                    if (project_deassignMems != null && project_deassignMems.contains(",")) {
+                        project_deassignMems = project_deassignMems.substring(0, project_deassignMems.length() - 1);
+                    }
+                }
+            } else {
+                chatBean.setTaskReceiver(taskReceiver);
+                chatBean.setToUserName(toUserName);
+                chatBean.setToUserId(String.valueOf(toUserId));
+                chatBean.setCatagory(category);
+            }
+            if (project) {
+                chatBean.setProjectId(projectId);
+                if (category != null && category.equalsIgnoreCase("issue")) {
+                    chatBean.setParentTaskId(issueId);
+                } else {
+                    chatBean.setParentTaskId(parentTaskId);
+                }
+                if (isDeassign) {
+                    Log.i("taskConversation", "project_deassignMems success");
+                    chatBean.setGroupTaskMembers(project_deassignMems);
+                } else if (projectGroup_Mems != null) {
+                    chatBean.setGroupTaskMembers(projectGroup_Mems);
+                }
+            }
 
-            Log.d("task", "tasklist-->" + taskList.size() + " isTaskName-->" + isTaskName);
-            Log.d("task", "task_No is sendMessage  " + task_No + "webtaskId is sendMessage  " + webtaskId);
             if (!isTaskName && chatBean.getTaskId() != null && chatBean.getTaskId().equalsIgnoreCase(webtaskId)) {
                 if (project) {
                     VideoCallDataBase.getDB(context).update_Project_history(chatBean);
@@ -1732,24 +1756,13 @@ public class TravelJobDetails extends Activity implements View.OnClickListener, 
                     e.printStackTrace();
                 }*/
             }
-            Log.d("task", "tasklist-->" + taskList.size());
-            Log.d("task", "task_No is sendMessage  " + task_No + " webtaskId is sendMessage  " + webtaskId);
-            Log.i("taskConversation", "private sendMessage * 10 ");
-            Log.i("Accept", "value taskStatus before compose " + chatBean.getTaskStatus());
-            Log.i("Accept", "value taskStatus before compose " + chatBean.getMimeType());
-            Log.d("TaskObserver", "TaskObserver list size is == " + listOfObservers.size() + " listobserver" + listOfObservers);
             if (listOfObservers != null && listOfObservers.size() > 0) {
                 if (getResources().getString(R.string.proxyua).equalsIgnoreCase("enable")) {
-                    Log.i("taskConversation", "private sendMessage * 11 ");
-                    Log.i("taskconversation", " sendMessage taskstatus 123 " + chatBean.getTaskStatus());
                     String xml = composeChatXML(chatBean);
                     sendMultiInstantMessage(xml, listOfObservers, 1);
                 } else {
                     if (listOfObservers.size() == 1) {
-                        Log.i("taskconversation", " sendMessage taskstatus 123 1  " + chatBean.getTaskStatus());
                         String xml = composeChatXML(chatBean);
-                        Log.i("taskConversation", "private sendMessage * 12 ");
-                        Log.i("ListObserver", "buddy_username " + listOfObservers);
                         sendMultiInstantMessage(xml, listOfObservers, 1);
 //                                    sendMultiInstantMessage(xml, listOfObservers, 0);
                     } else {
@@ -2048,7 +2061,7 @@ public class TravelJobDetails extends Activity implements View.OnClickListener, 
                     projectCurrentStatus = "start";
                 } else if (((String) jsonObject.get("result_text")).equalsIgnoreCase("task completed")) {
                     projectCurrentStatus = "completed";
-                } else if (((String) jsonObject.get("result_text")).equalsIgnoreCase("task assigned")) {
+                } else if (((String) jsonObject.get("result_text")).equalsIgnoreCase("task draft")) {
                     projectCurrentStatus = "DeAssign";
                 }
                 TaskDetailsBean detailsBean = new TaskDetailsBean();
@@ -2056,17 +2069,19 @@ public class TravelJobDetails extends Activity implements View.OnClickListener, 
 
                 detailsBean.setMimeType("text");
                 detailsBean.setCustomTagVisible(true);
-                final String xml = composeChatXML(detailsBean);
-                Log.i(tab, "listOfObservers ==> " + listOfObservers);
-                handler.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        sendMultiInstantMessage(xml, listOfObservers, 1);
-                    }
-                });
+//                if (!isDeassign) {
+                    final String xml = composeChatXML(detailsBean);
+                    Log.i(tab, "listOfObservers ==> " + listOfObservers);
+                    handler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            sendMultiInstantMessage(xml, listOfObservers, 1);
+                        }
+                    });
 //                }
-                taskList.add(detailsBean);
-                refresh();
+                    taskList.add(detailsBean);
+                    refresh();
+//                }
                 cancelDialog();
                 if (detailsBean.getCustomerRemarks() != null && !detailsBean.getCustomerRemarks().equalsIgnoreCase("")) {
                     Log.i(tab, "CustomerRemark ==> " + detailsBean.getCustomerRemarks());

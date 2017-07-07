@@ -579,7 +579,7 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                     Log.i("newTask", "JobCodeNo==> " + JobCodeNo);
                     Log.i("newTask", "ActivityCode==> " + ActivityCode);
                     if (isProjectFromOracle) {
-                        headerName.setText("JobCodeNo :" + JobCodeNo + "\nActivityCode :" + ActivityCode);
+                        headerName.setText("Job Card No :" + JobCodeNo + "\nActivity Code :" + ActivityCode);
                     } else {
                         headerName.setText(projectBean.getTaskName());
                     }
@@ -635,7 +635,7 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
 //                        gettaskwebservicewithtimestamp();
                     }
                     if (isProjectFromOracle) {
-                        headerName.setText("JobCodeNo :" + JobCodeNo + "\nActivityCode :" + ActivityCode);
+                        headerName.setText("Job Card No :" + JobCodeNo + "\nActivity Code :" + ActivityCode);
                     } else {
                         headerName.setText(bean.getTaskName());
                     }
@@ -730,7 +730,7 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                     ActivityCode = VideoCallDataBase.getDB(getApplication()).getProjectParentTaskId(quryActivity);
                     Log.i("newTask", "JobCodeNo==> " + JobCodeNo);
                     Log.i("newTask", "ActivityCode==> " + ActivityCode);
-                    head.setText("JobCodeNo :" + JobCodeNo + "\nActivityCode :" + ActivityCode);
+                    head.setText("Job Card No :" + JobCodeNo + "\nActivity Code :" + ActivityCode);
                     isswipe = true;
                     Log.i("taskConversation", "from projectHistory task");
                     Log.i("taskConversation", "after project notify press toUserId  list item click event " + toUserId);
@@ -3964,7 +3964,7 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                 TaskDetailsBean existing_entry = taskDetailsBean.get(0);
                 project_id.setText(existing_entry.getProjectId());
 //                project_name.setText(existing_entry.getProjectName());
-                project_name.setText("JobCodeNo :" + JobCodeNo + "\nActivityCode :" + ActivityCode);
+                project_name.setText("Job Card No :" + JobCodeNo + "\nActivity Code :" + ActivityCode);
                 task_id.setText(ActivityCode);
                 mcModel.setText(existing_entry.getMcModel());
                 mcSrNo.setText(existing_entry.getMcSrNo());
@@ -4559,7 +4559,7 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                     signature_path = (ImageView) dialog.findViewById(R.id.signature_path);
                     tech_signature_path = (ImageView) dialog.findViewById(R.id.tech_signature_path);
                     TextView back = (TextView) dialog.findViewById(R.id.back);
-                    TextView send_completion = (TextView) dialog.findViewById(R.id.send_completion);
+                    ImageView send_completion = (ImageView) dialog.findViewById(R.id.send_completion);
                     Button skech_receiver = (Button) dialog.findViewById(R.id.my_sign);
                     Button photo_receiver = (Button) dialog.findViewById(R.id.my_photo);
                     Button tech_sign_receiver = (Button) dialog.findViewById(R.id.tech_sign_btn);
@@ -4606,7 +4606,7 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                         project_id.setText(detailsBean.getProjectId());
                         statusCompletedFieldValues.put(1, "JobCardNo :" + detailsBean.getProjectId());
 //                        project_name.setText(detailsBean.getProjectName());
-                        project_name.setText("JobCodeNo :" + JobCodeNo + "\nActivityCode :" + ActivityCode);
+                        project_name.setText("Job Card No :" + JobCodeNo + "\nActivity Code :" + ActivityCode);
                         task_id.setText(ActivityCode);
                         statusCompletedFieldValues.put(2, "ActivityCode :" + detailsBean.getTaskId());
                         Log.i("ws123", "username or employee name===>" + Appreference.loginuserdetails.getEmail());
@@ -8087,7 +8087,7 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                             }
                             if (!chat) {
                                 if (isProjectFromOracle) {
-                                    headerName.setText("JobCodeNo :" + JobCodeNo + "\nActivityCode :" + ActivityCode);
+                                    headerName.setText("Job Card No :" + JobCodeNo + "\nActivity Code :" + ActivityCode);
                                 } else {
                                     headerName.setText(taskName);
                                 }
@@ -8119,7 +8119,7 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                                 taskName = "New Note";
                             }
                             if (isProjectFromOracle) {
-                                headerName.setText("JobCodeNo :" + JobCodeNo + "\nActivityCode :" + ActivityCode);
+                                headerName.setText("Job Card No :" + JobCodeNo + "\nActivity Code :" + ActivityCode);
                             } else {
                                 headerName.setText(taskName);
                             }
@@ -12244,13 +12244,13 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
 
                 if (projectBean.getTaskName() != null) {
                     if (isProjectFromOracle)
-                        headerName.setText("JobCodeNo :" + JobCodeNo + "\nActivityCode :" + ActivityCode);
+                        headerName.setText("Job Card No :" + JobCodeNo + "\nActivity Code :" + ActivityCode);
                     else
                         headerName.setText(projectBean.getTaskName());
 
                 } else if (taskName != null) {
                     if (isProjectFromOracle)
-                        headerName.setText("JobCodeNo :" + JobCodeNo + "\nActivityCode :" + ActivityCode);
+                        headerName.setText("Job Card No :" + JobCodeNo + "\nActivity Code :" + ActivityCode);
                     else
                         headerName.setText(taskName);
 
@@ -15420,7 +15420,7 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                         sendTemplate.setVisibility(View.VISIBLE);
                     barchart.setVisibility(View.VISIBLE);
                     if (isProjectFromOracle)
-                        head.setText("JobCodeNo :" + JobCodeNo + "\nActivityCode :" + ActivityCode);
+                        head.setText("Job Card No :" + JobCodeNo + "\nActivity Code :" + ActivityCode);
                     else
                         head.setText(taskName);
 
@@ -15435,7 +15435,7 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                         sendTemplate.setVisibility(View.VISIBLE);
                     update.setEnabled(true);
                     if (isProjectFromOracle)
-                        head.setText("JobCodeNo :" + JobCodeNo + "\nActivityCode :" + ActivityCode);
+                        head.setText("Job Card No :" + JobCodeNo + "\nActivity Code :" + ActivityCode);
                     else
                         head.setText(taskName);
                 } else if (project) {
@@ -16234,14 +16234,14 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                     if (!chat) {
                         if (taskDetailsBean.getTaskName() != null && !taskDetailsBean.getTaskName().equalsIgnoreCase("") && !taskDetailsBean.getTaskName().equalsIgnoreCase(null)) {
                             if (isProjectFromOracle) {
-                                headerName.setText("JobCodeNo :" + JobCodeNo + "\nActivityCode :" + ActivityCode);
+                                headerName.setText("Job Card No :" + JobCodeNo + "\nActivity Code :" + ActivityCode);
                             } else {
                                 headerName.setText(taskDetailsBean.getTaskName());
                             }
                             Log.i("taskconversation", "headername 2 ");
                         } else {
                             if (isProjectFromOracle) {
-                                headerName.setText("JobCodeNo :" + JobCodeNo + "\nActivityCode :" + ActivityCode);
+                                headerName.setText("Job Card No :" + JobCodeNo + "\nActivityCode :" + ActivityCode);
                             } else {
                                 headerName.setText("New Task");
                             }
@@ -16346,14 +16346,14 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                     if (!chat) {
                         if (head_name != null) {
                             if (isProjectFromOracle) {
-                                headerName.setText("JobCodeNo :" + JobCodeNo + "\nActivityCode :" + ActivityCode);
+                                headerName.setText("Job Card No :" + JobCodeNo + "\nActivity Code :" + ActivityCode);
                             } else {
                                 headerName.setText(head_name);
                             }
                             Log.i("taskconversation", "headername  4 ");
                         } else {
                             if (isProjectFromOracle) {
-                                headerName.setText("JobCodeNo :" + JobCodeNo + "\nActivityCode :" + ActivityCode);
+                                headerName.setText("Job Card No :" + JobCodeNo + "\nActivity Code :" + ActivityCode);
                             } else {
                                 headerName.setText("New Task");
                             }
@@ -17834,7 +17834,7 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                                     @Override
                                     public void run() {
                                         if (isProjectFromOracle) {
-                                            headerName.setText("JobCodeNo :" + JobCodeNo + "\nActivityCode :" + ActivityCode);
+                                            headerName.setText("Job Card No :" + JobCodeNo + "\nActivity Code :" + ActivityCode);
                                         } else {
                                             headerName.setText(taskDetailsBean.getTaskName());
                                         }

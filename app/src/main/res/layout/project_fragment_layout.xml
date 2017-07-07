@@ -33,22 +33,33 @@
             android:textSize="12sp"
             android:textStyle="bold" />
 
-        <ImageView
-            android:id="@+id/reportdetails"
-            android:layout_width="40dp"
-            android:layout_height="35dp"
-            android:layout_alignTop="@+id/image_search"
-            android:layout_toLeftOf="@+id/image_search"
-            android:layout_toStartOf="@+id/image_search"
-            android:src="@drawable/report" />
 
-        <ImageView
-            android:id="@+id/image_search"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:background="@drawable/image_search"/>
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true">
+            <ImageView
+                android:id="@+id/reportdetails"
+                android:layout_width="40dp"
+                android:layout_height="35dp"
+                android:layout_alignTop="@+id/image_search"
+                android:layout_toLeftOf="@+id/image_search"
+                android:layout_toStartOf="@+id/image_search"
+                android:src="@drawable/report"
+                android:layout_marginRight="10dp"
+                />
+
+            <ImageView
+                android:id="@+id/image_search"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_marginRight="10dp"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:background="@drawable/image_search"
+                android:visibility="visible"/>
+        </RelativeLayout>
     </RelativeLayout>
 
 

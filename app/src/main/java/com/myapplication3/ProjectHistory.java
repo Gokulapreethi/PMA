@@ -1763,8 +1763,12 @@ public class ProjectHistory extends Activity implements WebServiceInterface, Swi
                             Log.i("receiver123","TaskReceiver List2222=====>"+Pjt_mem);
 
                             task_taker.setText("Task Taker : " + Pjt_mem);
+
                             Log.i("project_details", "projectDetailsBean getTaskMem's() " + Pjt_mem);
                         }
+                        /*if (projectDetailsBean.getTaskStatus() != null && projectDetailsBean.getTaskStatus().equalsIgnoreCase("draft")) {
+                            task_taker.setText("Task Taker : NA");
+                        }*/
                     }
                     Log.i("project_details", "projectDetailsBean getTaskObservers() " + projectDetailsBean.getTaskObservers());
                     if (projectDetailsBean.getTaskStatus() != null && projectDetailsBean.getTaskStatus().equalsIgnoreCase("note")) {

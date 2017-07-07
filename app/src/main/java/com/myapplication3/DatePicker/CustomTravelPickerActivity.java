@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -72,7 +73,7 @@ public class CustomTravelPickerActivity extends Activity implements DateTimePick
         final TextView travel_start = (TextView) findViewById(R.id.travel_start);
         final TextView travel_end = (TextView) findViewById(R.id.travel_end);
         final TextView back = (TextView) findViewById(R.id.back);
-        final TextView send_travel = (TextView) findViewById(R.id.send_travel_completion);
+        final ImageView send_travel = (ImageView) findViewById(R.id.send_travel_completion);
         back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -81,7 +82,7 @@ public class CustomTravelPickerActivity extends Activity implements DateTimePick
             }
         });
 //        project_name.setText(taskNameshow);
-        project_name.setText("JobCodeNo : "+ jobcodeno +"\nActivityCode : "+activitycode);
+        project_name.setText("Job Card No : "+ jobcodeno +"\nActivity Code : "+activitycode);
         String query = "select * from projectStatus where projectId='" + projectIDshow + "' and userId='" + Appreference.loginuserdetails.getId() + "' and taskId= '" + taskIDshow + "' and status = '7'";
         TaskDetailsBean bean = VideoCallDataBase.getDB(context).getActivityTimeFromStatus(query);
         Log.i("travel123","Travel Details"+bean.getTravelStartTime() +""+bean.getTravelEndTime());

@@ -48,9 +48,9 @@ import com.myapplication3.Bean.ProjectDetailsBean;
 import com.myapplication3.DB.VideoCallDataBase;
 import com.myapplication3.ImageLoader;
 import com.myapplication3.ListAllgetTaskDetails;
-import com.myapplication3.MediaSearch;
 import com.myapplication3.ProjectHistory;
 import com.myapplication3.R;
+import com.myapplication3.SearchMediaWebView;
 
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
@@ -151,6 +151,7 @@ public class ProjectsFragment extends Fragment implements View.OnClickListener, 
         view = inflater.inflate(R.layout.project_fragment_layout, container, false);
         try {
             Appreference.context_table.put("projectfragment", this);
+
             History_Search = (LinearLayout) view.findViewById(R.id.History_Search);
             ProjectSearch = (EditText) view.findViewById(R.id.searchtext);
             NoResults = (TextView) view.findViewById(R.id.Noresult);
@@ -158,6 +159,17 @@ public class ProjectsFragment extends Fragment implements View.OnClickListener, 
             NoResults.setVisibility(View.GONE);
             heading_project = (TextView) view.findViewById(R.id.heading_project);
             image_search = (ImageView) view.findViewById(R.id.image_search);
+            reportdetails = (ImageView) view.findViewById(R.id.reportdetails);
+            reportdetails.setOnClickListener(this);
+            if(Appreference.loginuserdetails!=null && Appreference.loginuserdetails.getRoleId()!=null
+                    && Appreference.loginuserdetails.getRoleId().equalsIgnoreCase("2")){
+                image_search.setVisibility(View.VISIBLE);
+                reportdetails.setVisibility(View.VISIBLE);
+            }else{
+                image_search.setVisibility(View.GONE);
+                reportdetails.setVisibility(View.GONE);
+            }
+
             Log.i("task", "project");
             InputMethodManager inputMethodManager = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
             inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), 0);
@@ -168,8 +180,7 @@ public class ProjectsFragment extends Fragment implements View.OnClickListener, 
             activity_end = (TextView) view.findViewById(R.id.activity_end);
             submit_button= (Button) view.findViewById(R.id.submit_button);
             all_report_title = (RelativeLayout) view.findViewById(R.id.all_report_title);
-            reportdetails = (ImageView) view.findViewById(R.id.reportdetails);
-            reportdetails.setOnClickListener(this);
+
             try {
                 String s = "select * from taskDetailsInfo where readStatus='1'";
                 ArrayList<ProjectDetailsBean> projectDetailsBeen = VideoCallDataBase.getDB(getContext()).getExclationdetails(s);
@@ -184,13 +195,17 @@ public class ProjectsFragment extends Fragment implements View.OnClickListener, 
             reportdetails.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if (tna_count == 0) {
-                        all_report_title.setVisibility(View.VISIBLE);
-                        tna_count = 1;
-                    } else {
-                        all_report_title.setVisibility(View.GONE);
-                        tna_count = 0;
-                    }
+//                    if (tna_count == 0) {
+//                        all_report_title.setVisibility(View.VISIBLE);
+//                        tna_count = 1;
+//                    } else {
+//                        all_report_title.setVisibility(View.GONE);
+//                        tna_count = 0;
+//                    }
+                    Intent intent = new Intent(getActivity(), SearchMediaWebView.class);
+                    intent.putExtra("urlload","tnareport");
+                    startActivity(intent);
+                    getActivity().overridePendingTransition(R.anim.right_anim, R.anim.left_anim);
                 }
             });
             activity_start.setOnClickListener(new View.OnClickListener() {
@@ -507,8 +522,11 @@ public class ProjectsFragment extends Fragment implements View.OnClickListener, 
             image_search.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent intent = new Intent(getActivity(), MediaSearch.class);
+                    Intent intent = new Intent(getActivity(), SearchMediaWebView.class);
+                    intent.putExtra("urlload","searchmedia");
                     startActivity(intent);
+                    getActivity().overridePendingTransition(R.anim.right_anim, R.anim.left_anim);
+
                 }
             });
             ProjectSearch.addTextChangedListener(new TextWatcher() {

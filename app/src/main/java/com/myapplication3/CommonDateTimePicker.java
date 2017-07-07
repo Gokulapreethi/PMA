@@ -10,8 +10,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import java.util.Calendar;
 /**
@@ -27,23 +27,23 @@ public class CommonDateTimePicker extends RelativeLayout {
         private View myPickerView;
 
         private Button month_plus;
-        private EditText month_display;
+        private TextView month_display;
         private Button month_minus;
 
         private Button date_plus;
-        private EditText date_display;
+        private TextView date_display;
         private Button date_minus;
 
         private Button year_plus;
-        private EditText year_display;
+        private TextView year_display;
         private Button year_minus;
 
         private Button hour_plus;
-        private EditText hour_display;
+        private TextView hour_display;
         private Button hour_minus;
 
         private Button min_plus;
-        private EditText min_display;
+        private TextView min_display;
         private Button min_minus;
 
         private Calendar cal;
@@ -84,20 +84,20 @@ public class CommonDateTimePicker extends RelativeLayout {
 
         month_plus = (Button) myPickerView.findViewById(R.id.month_plus);
         month_plus.setOnClickListener(month_plus_listener);
-        month_display = (EditText) myPickerView.findViewById(R.id.month_display);
+        month_display = (TextView) myPickerView.findViewById(R.id.month_display);
         month_minus = (Button) myPickerView.findViewById(R.id.month_minus);
         month_minus.setOnClickListener(month_minus_listener);
 
         date_plus = (Button) myPickerView.findViewById(R.id.date_plus);
         date_plus.setOnClickListener(date_plus_listener);
-        date_display = (EditText) myPickerView.findViewById(R.id.date_display);
+        date_display = (TextView) myPickerView.findViewById(R.id.date_display);
         date_display.addTextChangedListener(date_watcher);
         date_minus = (Button) myPickerView.findViewById(R.id.date_minus);
         date_minus.setOnClickListener(date_minus_listener);
 
         year_plus = (Button) myPickerView.findViewById(R.id.year_plus);
         year_plus.setOnClickListener(year_plus_listener);
-        year_display = (EditText) myPickerView.findViewById(R.id.year_display);
+        year_display = (TextView) myPickerView.findViewById(R.id.year_display);
         year_display.setOnFocusChangeListener(mLostFocusYear);
         year_display.addTextChangedListener(year_watcher);
         year_minus = (Button) myPickerView.findViewById(R.id.year_minus);
@@ -106,14 +106,14 @@ public class CommonDateTimePicker extends RelativeLayout {
 
         hour_plus = (Button) myPickerView.findViewById(R.id.hour_plus);
         hour_plus.setOnClickListener(hour_plus_listener);
-        hour_display = (EditText) myPickerView.findViewById(R.id.hour_display);
+        hour_display = (TextView) myPickerView.findViewById(R.id.hour_display);
         hour_display.addTextChangedListener(hour_watcher);
         hour_minus = (Button) myPickerView.findViewById(R.id.hour_minus);
         hour_minus.setOnClickListener(hour_minus_listener);
 
         min_plus = (Button) myPickerView.findViewById(R.id.min_plus);
         min_plus.setOnClickListener(min_plus_listener);
-        min_display = (EditText) myPickerView.findViewById(R.id.min_display);
+        min_display = (TextView) myPickerView.findViewById(R.id.min_display);
         min_display.addTextChangedListener(min_watcher);
         min_minus = (Button) myPickerView.findViewById(R.id.min_minus);
         min_minus.setOnClickListener(min_minus_listener);

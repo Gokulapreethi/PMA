@@ -43,6 +43,8 @@ public class Loginuserdetails {
     String jobCategory4;
     String textProfile;
     String videoProfile;
+    String roleId;
+    String roleName;
 
 //    String roles;
     String profession;
@@ -265,4 +267,20 @@ public class Loginuserdetails {
     public ArrayList<Usergroubdetails> getListGroup(){return listGroup;}
 
     public void setListGroup(ArrayList<Usergroubdetails> listGroup){this.listGroup=listGroup;}
+
+    public String getRoleId() {
+        return roleId;
+    }
+
+    public void setRoleId(String roleId) {
+        this.roleId = roleId;
+    }
+
+    public String getRoleName() {
+        return roleName;
+    }
+
+    public void setRoleName(String roleName) {
+        this.roleName = roleName;
+    }
 }
