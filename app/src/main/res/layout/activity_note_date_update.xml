@@ -1,17 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context="com.myapplication3.NoteDateUpdate">
-
-    <LinearLayout
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
 
         <LinearLayout
-            android:id="@+id/header_menu"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
@@ -52,7 +45,7 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="0dp"
             android:layout_weight="1"
             android:orientation="vertical">
 
@@ -60,7 +53,6 @@
                 android:id="@+id/ll_3"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/ll_2"
                 android:orientation="horizontal"
                 android:paddingRight="10dp">
 
@@ -116,7 +108,6 @@
                 android:paddingRight="10dp" />
 
             <TextView
-                android:id="@+id/rem_tone"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="20sp"
@@ -159,7 +150,6 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:layout_marginLeft="5dp"
-                        android:layout_toRightOf="@+id/play_button"
                         android:text="00:00"
                         android:textColor="@color/blue"
                         android:visibility="visible" />
@@ -171,7 +161,6 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:layout_marginLeft="5dp"
-                        android:layout_toRightOf="@+id/txt_time"
                         android:progressDrawable="@drawable/progress" />
                     <!--android:thumb="@drawable/seek_handler" />-->
 
@@ -182,5 +171,3 @@
         </LinearLayout>
 
     </LinearLayout>
-
-</RelativeLayout>

@@ -101,7 +101,7 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/dialpad_pressed"
+        android:background="@color/lgyellow"
         android:id="@+id/all_report_title"
         android:visibility="gone">
 
@@ -110,14 +110,14 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="30dp"
             android:layout_marginRight="30dp"
-            android:background="@color/dialpad_pressed">
+            android:background="@color/lgyellow">
 
             <LinearLayout
                 android:id="@+id/start_date_details"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/rlay_tilte"
-                android:background="@color/dialpad_pressed"
+                android:background="@color/lgyellow"
                 android:gravity="center"
                 android:visibility="visible">
 
@@ -126,11 +126,11 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="6dp"
-                    android:background="@drawable/edittextstyle"
+                    android:background="@color/lgyellow"
                     android:cursorVisible="false"
                     android:drawableRight="@drawable/ic_date_chang_request"
                     android:gravity="center"
-                    android:hint="Start Date"
+                    android:hint="Start Date    "
                     android:textSize="20dp"
                     android:textColor="#808080" />
 
@@ -138,13 +138,12 @@
                     android:id="@+id/activity_end"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginRight="10dp"
                     android:layout_marginTop="6dp"
-                    android:background="@drawable/edittextstyle"
+                    android:background="@color/lgyellow"
                     android:cursorVisible="false"
                     android:drawableRight="@drawable/ic_date_chang_request"
                     android:gravity="center"
-                    android:hint="End Date"
+                    android:hint="End Date    "
                     android:textSize="20dp"
                     android:textColor="#808080"
                     android:visibility="visible" />

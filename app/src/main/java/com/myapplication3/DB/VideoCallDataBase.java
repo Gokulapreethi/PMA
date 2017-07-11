@@ -6557,6 +6557,36 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
             return name;
         }
     }
+	 public String getusernameWithOutLast(String firstname) {
+        String name = null;
+        Cursor cur;
+        if (db == null)
+            db = getReadableDatabase();
+        try {
+            if (db != null) {
+                if (!db.isOpen())
+                    openDatabase();
+                cur = db.rawQuery("select * from contact where firstname='" + firstname + "'", null);
+                cur.moveToFirst();
+                while (!cur.isAfterLast()) {
+                    name = cur.getString(cur.getColumnIndex("username"));
+                    cur.moveToNext();
+                }
+                cur.close();
+            }
+            if (name == null) {
+                name = firstname;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            if (name == null) {
+                name = firstname;
+            }
+        } finally {
+            return name;
+        }
+    }
+
 
     @SuppressWarnings("finally")
     public String getTemplateTouserName(String username) {

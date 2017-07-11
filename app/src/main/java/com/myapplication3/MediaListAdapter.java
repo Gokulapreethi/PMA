@@ -2685,7 +2685,7 @@ public class MediaListAdapter extends ArrayAdapter<TaskDetailsBean> {
                                 String dd51 = "";
                                 dd51 = setConversationTime(gcBean);
                                 holder.time_under_text_receiver.setText(dd51);
-                            } else if (gcBean.getSubType() != null && gcBean.getSubType().contains("deassign")) {
+                            } else if ((gcBean.getSubType() != null && gcBean.getSubType().contains("deassign")) && (gcBean.getTaskDescription() != null && gcBean.getTaskDescription().contains("Left"))) {
                                 Log.i("MediaList ", "mem_list ### ==>  " + gcBean.getTaskDescription());
                                 String mem_list = gcBean.getTaskDescription().split(" Left")[0];
                                 Log.i("MediaList ", "mem_list ### ==>  " + mem_list);
@@ -3069,7 +3069,7 @@ public class MediaListAdapter extends ArrayAdapter<TaskDetailsBean> {
                                         holder.receiver_name.setText(holder.receiver_name_name);
                                         holder.dateChangeRequest_icon.setVisibility(View.GONE);
                                         holder.dateChangeApproval_icon.setVisibility(View.GONE);
-                                    } else if (gcBean.getSubType() != null && gcBean.getSubType().contains("deassign")) {
+                                    } else if ((gcBean.getSubType() != null && gcBean.getSubType().contains("deassign")) && (gcBean.getTaskDescription() != null && gcBean.getTaskDescription().contains("Left"))) {
                                         Log.i("MediaList ", "mem_list ### ==> @@ " + gcBean.getTaskDescription());
                                         String mem_list = gcBean.getTaskDescription().split(" Left")[0];
                                         Log.i("MediaList ", "mem_list ### ==> @@  " + mem_list);

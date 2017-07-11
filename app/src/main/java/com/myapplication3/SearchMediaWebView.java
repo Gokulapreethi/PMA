@@ -79,6 +79,7 @@ public class SearchMediaWebView extends AppCompatActivity {
             }else if(getIntent()!=null && getIntent().getStringExtra("urlload")!=null &&
                     getIntent().getStringExtra("urlload").equalsIgnoreCase("tnareport")){
                 url = "http://151.253.12.203/ASE/tnaReport";
+                title_header.setText("TNA Report");
             }
             Log.i("webview", "URL-->" + url);
             try {
@@ -152,8 +153,14 @@ public class SearchMediaWebView extends AppCompatActivity {
 
 
         }
-    }
 
+        @Override
+        public boolean shouldOverrideUrlLoading(WebView view, String url) {
+            Log.i("redirect","url--->"+url);
+            return super.shouldOverrideUrlLoading(view, url);
+        }
+
+    }
 
     public boolean isNetworkAvailable() {
         ConnectivityManager connectivityManager = (ConnectivityManager) getApplicationContext().getSystemService(getApplicationContext().CONNECTIVITY_SERVICE);

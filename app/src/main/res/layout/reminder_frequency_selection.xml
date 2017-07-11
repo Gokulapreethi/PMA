@@ -43,7 +43,7 @@
             android:gravity="center"
             android:paddingLeft="15dp"
             android:paddingRight="15dp"
-            android:text="Minutes"
+            android:text="Minute"
             android:textColor="@color/appcolor"
             android:textSize="20dp" />
 
@@ -82,7 +82,7 @@
             android:gravity="center"
             android:paddingLeft="15dp"
             android:paddingRight="15dp"
-            android:text="Hours"
+            android:text="Hour"
             android:textColor="@color/appcolor"
             android:textSize="20dp" />
 
@@ -101,7 +101,7 @@
             android:gravity="center"
             android:paddingLeft="15dp"
             android:paddingRight="15dp"
-            android:text="Days"
+            android:text="Day"
             android:textColor="@color/appcolor"
             android:textSize="20dp" />
 

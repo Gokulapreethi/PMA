@@ -3260,8 +3260,13 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback,
                                                     if (projectHistory.projectDetailsBeans != null && projectHistory.projectDetailsBeans.size() > 0 && projectHistory.buddyArrayAdapter != null) {
                                                         ProjectDetailsBean projectDetailsBean = projectHistory.projectDetailsBeans.get(projectHistory.ListViewCurrentPosition);
                                                         Log.i("notifyreceived123", "getTaskStatus==>  " + taskDetailsBean.getTaskStatus());
-                                                        if(!taskDetailsBean.getTaskStatus().equalsIgnoreCase(""))
-                                                        projectDetailsBean.setTaskStatus(taskDetailsBean.getTaskStatus());
+                                                        if (taskDetailsBean.getTaskStatus() != null && !taskDetailsBean.getTaskStatus().equalsIgnoreCase(""))
+                                                            projectDetailsBean.setTaskStatus(taskDetailsBean.getTaskStatus());
+                                                        if ((taskDetailsBean.getMimeType() != null && taskDetailsBean.getMimeType().equalsIgnoreCase("assigntask")) &&
+                                                                (taskDetailsBean.getTaskReceiver() != null && !taskDetailsBean.getTaskReceiver().equalsIgnoreCase(""))) {
+                                                            projectDetailsBean.setTaskReceiver(taskDetailsBean.getTaskReceiver());
+                                                            projectDetailsBean.setCatagory("Task");
+                                                        }
                                                         handler1.post(new Runnable() {
                                                             @Override
                                                             public void run() {
@@ -3279,11 +3284,11 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback,
                             TravelJobDetails travelJobDetails = (TravelJobDetails) Appreference.context_table.get("traveljobdetails");
                             final ProjectHistory projectHistory = (ProjectHistory) Appreference.context_table.get("projecthistory");
                             if (travelJobDetails != null) {
-                                Log.i("notifyreceived123", "traveljobdetails status ==  ");
+                                Log.i("notifyreceived123", "traveljobdetails status ##  == else  ");
                                 if (travelJobDetails.webtaskId != null && travelJobDetails.projectId != null) {
                                     if (taskDetailsBean.getTaskId().equalsIgnoreCase(travelJobDetails.webtaskId) &&
                                             taskDetailsBean.getProjectId().equalsIgnoreCase(travelJobDetails.projectId)) {
-                                        Log.i("notifyreceived123", "traveljobdetails status " + taskDetailsBean.getTaskDescription());
+                                        Log.i("notifyreceived123", "traveljobdetails status $$ else " + taskDetailsBean.getTaskDescription());
                                         if (taskDetailsBean.getTaskDescription() != null) {
                                             if (taskDetailsBean.getTaskDescription().equalsIgnoreCase("Task is Started") ||
                                                     taskDetailsBean.getTaskDescription().equalsIgnoreCase("Task is Completed") ||
@@ -3294,8 +3299,14 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback,
                                                 if (projectHistory != null) {
                                                     if (projectHistory.projectDetailsBeans != null && projectHistory.projectDetailsBeans.size() > 0 && projectHistory.buddyArrayAdapter != null) {
                                                         ProjectDetailsBean projectDetailsBean = projectHistory.projectDetailsBeans.get(projectHistory.ListViewCurrentPosition);
-                                                        Log.i("notifyreceived123", "traveljobdetails getTaskStatus==>  " + taskDetailsBean.getTaskStatus());
-                                                        projectDetailsBean.setTaskStatus(taskDetailsBean.getTaskStatus());
+                                                        Log.i("notifyreceived123", "traveljobdetails getTaskStatus==> else  " + taskDetailsBean.getTaskStatus());
+                                                        if (taskDetailsBean.getTaskStatus() != null && !taskDetailsBean.getTaskStatus().equalsIgnoreCase(""))
+                                                            projectDetailsBean.setTaskStatus(taskDetailsBean.getTaskStatus());
+                                                        if ((taskDetailsBean.getMimeType() != null && taskDetailsBean.getMimeType().equalsIgnoreCase("assigntask")) &&
+                                                                (taskDetailsBean.getTaskReceiver() != null && !taskDetailsBean.getTaskReceiver().equalsIgnoreCase(""))) {
+                                                            projectDetailsBean.setTaskReceiver(taskDetailsBean.getTaskReceiver());
+                                                            projectDetailsBean.setCatagory("Task");
+                                                        }
                                                         handler1.post(new Runnable() {
                                                             @Override
                                                             public void run() {
@@ -3678,7 +3689,7 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback,
                         }*/
                         Log.d("Mainactivity", "Value true ");
                     } else if (Appreference.context_table.containsKey("traveljobdetails")) {
-                        Log.i("taskobserver", "traveljobdetails ---> " + taskDetailsBean.getTaskId());
+                        Log.i("taskobserver", "traveljobdetails $$ ---> " + taskDetailsBean.getTaskId());
                         Log.i("taskobserver", "traveljobdetails.getTaskId()##  ---> " + taskDetailsBean.getTaskId());
                         TravelJobDetails travelJobDetails = (TravelJobDetails) Appreference.context_table.get("traveljobdetails");
                         travelJobDetails.notifyTaskReceived(taskDetailsBean);

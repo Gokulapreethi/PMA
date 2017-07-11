@@ -291,12 +291,16 @@ public class JsonRequestResponce extends Thread {
                                 obj.setFirstname("fieldServiceReport");
                             } else if (obj.getEnumJsonWebservicename().toString().equals("fieldServiceReportJobWise")) {
                                 obj.setFirstname("fieldServiceReportJobWise");
+                            }else if (obj.getEnumJsonWebservicename().toString().equals("tnaReportForDateWise")) {
+                                obj.setFirstname("tnaReportForDateWise");
                             } else if (obj.getEnumJsonWebservicename().toString().equals("getTask")) {
                                 obj.setFirstname("getTask");
                             } else if (obj.getEnumJsonWebservicename().toString().equals("getRequestType")) {
                                 obj.setFirstname("getRequestType");
                             } else if (obj.getEnumJsonWebservicename().toString().equals("listGroupTaskUsers")) {
                                 obj.setFirstname("listGroupTaskUsers");
+                            } else if (obj.getEnumJsonWebservicename().toString().equals("reactivateStatus")) {
+                                obj.setFirstname("reactivateStatus");
                             }else if (obj.getEnumJsonWebservicename().toString().equals("projectCompleted")) {
                                 obj.setFirstname("projectCompleted");
                             }
@@ -462,6 +466,11 @@ public class JsonRequestResponce extends Thread {
                 inter.ErrorMethod(obj);
                 break;
             case fieldServiceReportJobWise:
+                ProjectsFragment.getInstance().cancelDialog();
+                ProjectsFragment.getInstance().showToast(result);
+                inter.ErrorMethod(obj);
+                break;
+            case tnaReportForDateWise:
                 ProjectsFragment.getInstance().cancelDialog();
                 ProjectsFragment.getInstance().showToast(result);
                 inter.ErrorMethod(obj);
@@ -750,6 +759,11 @@ public class JsonRequestResponce extends Thread {
                    case fieldServiceReportJobWise:
                         obj.setEmail(responseString);
                         obj.setFirstname("fieldServiceReportJobWise");
+                        inter.ResponceMethod(obj);
+                        break;
+                    case tnaReportForDateWise:
+                        obj.setEmail(responseString);
+                        obj.setFirstname("tnaReportForDateWise");
                         inter.ResponceMethod(obj);
                         break;
                   /*  case getRequestType:

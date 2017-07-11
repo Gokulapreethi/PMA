@@ -59,8 +59,10 @@ import org.json.JSONObject;
 import org.pjsip.pjsua2.app.MainActivity;
 
 import java.lang.reflect.Type;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import json.CommunicationBean;
@@ -96,6 +98,7 @@ public class ProjectsFragment extends Fragment implements View.OnClickListener, 
     int tna_count;
     RelativeLayout all_report_title;
     Button submit_button;
+    String TNAReportStart,TNAReportEnd;
 
     public static ProjectsFragment getInstance() {
         return projectsFragment;
@@ -195,17 +198,17 @@ public class ProjectsFragment extends Fragment implements View.OnClickListener, 
             reportdetails.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-//                    if (tna_count == 0) {
-//                        all_report_title.setVisibility(View.VISIBLE);
-//                        tna_count = 1;
-//                    } else {
-//                        all_report_title.setVisibility(View.GONE);
-//                        tna_count = 0;
-//                    }
-                    Intent intent = new Intent(getActivity(), SearchMediaWebView.class);
+                    if (tna_count == 0) {
+                        all_report_title.setVisibility(View.VISIBLE);
+                        tna_count = 1;
+                    } else {
+                        all_report_title.setVisibility(View.GONE);
+                        tna_count = 0;
+                    }
+                  /*  Intent intent = new Intent(getActivity(), SearchMediaWebView.class);
                     intent.putExtra("urlload","tnareport");
                     startActivity(intent);
-                    getActivity().overridePendingTransition(R.anim.right_anim, R.anim.left_anim);
+                    getActivity().overridePendingTransition(R.anim.right_anim, R.anim.left_anim);*/
                 }
             });
             activity_start.setOnClickListener(new View.OnClickListener() {
@@ -213,16 +216,16 @@ public class ProjectsFragment extends Fragment implements View.OnClickListener, 
                 public void onClick(View v) {
                     final Calendar c = Calendar.getInstance();
 
-                    DatePickerDialog dpd = new DatePickerDialog(classContext,
+                    DatePickerDialog dpd = new DatePickerDialog(getActivity(),
                             new DatePickerDialog.OnDateSetListener() {
 
                                 @Override
                                 public void onDateSet(DatePicker view, int year,
                                                       int monthOfYear, int dayOfMonth) {
-                                    activity_start.setText(dayOfMonth + "-"
-                                            + (monthOfYear + 1) + "-" + year);
-//                                    TravelStartdate = dayOfMonth + "-"
-//                                            + (monthOfYear + 1) + "-" + year;
+                                    activity_start.setText(year + "-"
+                                            + (monthOfYear + 1) + "-" + dayOfMonth);
+                                    TNAReportStart = year + "-"
+                                            + (monthOfYear + 1) + "-" + dayOfMonth;
                                 }
                             }, c.get(Calendar.YEAR), c.get(Calendar.MONTH), c.get(Calendar.DATE));
                     dpd.show();
@@ -234,16 +237,16 @@ public class ProjectsFragment extends Fragment implements View.OnClickListener, 
                 public void onClick(View v) {
                     final Calendar c = Calendar.getInstance();
 
-                    DatePickerDialog dpd = new DatePickerDialog(classContext,
+                    DatePickerDialog dpd = new DatePickerDialog(getActivity(),
                             new DatePickerDialog.OnDateSetListener() {
 
                                 @Override
                                 public void onDateSet(DatePicker view, int year,
                                                       int monthOfYear, int dayOfMonth) {
-                                    activity_end.setText(dayOfMonth + "-"
-                                            + (monthOfYear + 1) + "-" + year);
-//                                    TravelStartdate = dayOfMonth + "-"
-//                                            + (monthOfYear + 1) + "-" + year;
+                                    activity_end.setText(year + "-"
+                                            + (monthOfYear + 1) + "-" + dayOfMonth);
+                                    TNAReportEnd = year + "-"
+                                            + (monthOfYear + 1) + "-" + dayOfMonth;
                                 }
                             }, c.get(Calendar.YEAR), c.get(Calendar.MONTH), c.get(Calendar.DATE));
                     dpd.show();
@@ -253,7 +256,40 @@ public class ProjectsFragment extends Fragment implements View.OnClickListener, 
             submit_button.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-
+                    Log.i("report123","-====>startdATE====>"+TNAReportStart);
+                    Log.i("report123","-====>eNDdATE====>"+TNAReportEnd);
+                    all_report_title.setVisibility(View.GONE);
+                    tna_count = 0;
+                    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+                    SimpleDateFormat dateParse = new SimpleDateFormat("yyyy-M-dd");
+//                    dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
+                    Date date = null;
+                    Date date1 = null;
+                    String StartDateUTC = "", EndDateUTC = "";
+                    if (TNAReportStart != null && !TNAReportStart.equalsIgnoreCase("")) {
+                        try {
+                            date = dateParse.parse(TNAReportStart);
+                            StartDateUTC = dateFormat.format(date);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                    if (TNAReportEnd != null && !TNAReportEnd.equalsIgnoreCase("")) {
+                        try {
+                            date1 = dateParse.parse(TNAReportEnd);
+                            EndDateUTC = dateFormat.format(date1);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                    Log.i("report123","-====>startdATE UTC====>"+StartDateUTC);
+                    Log.i("report123","-====>eNDdATE UTC====>"+EndDateUTC);
+                    List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
+                    nameValuePairs.add(new BasicNameValuePair("userId", String.valueOf(Appreference.loginuserdetails.getId())));
+                    nameValuePairs.add(new BasicNameValuePair("travelStartDate", StartDateUTC));
+                    nameValuePairs.add(new BasicNameValuePair("travelEndDate", EndDateUTC));
+                    Appreference.jsonRequestSender.OracleTNAJobReport(EnumJsonWebservicename.tnaReportForDateWise, nameValuePairs, ProjectsFragment.this);
+                    showprogress("Downloading....");
                 }
             });
             final SwipeMenuCreator creator = new SwipeMenuCreator() {
@@ -591,7 +627,7 @@ public class ProjectsFragment extends Fragment implements View.OnClickListener, 
                             Log.i("ws123", " projectDetailsBean.getOracleProjectId()=========>" + projectDetailsBean.getId());
                             Log.i("ws123", " projectDetailsBean.userId()=========>" + String.valueOf(Appreference.loginuserdetails.getId()));
                             Appreference.jsonRequestSender.getTaskForJobID(EnumJsonWebservicename.getTaskForJobID, nameValuePairs, ProjectsFragment.this);
-                            showprogress();
+                            showprogress("Getting ActivityCode...");
                         }else
                             Toast.makeText(getActivity(), "Check your internet connection", Toast.LENGTH_SHORT).show();
 
@@ -760,6 +796,7 @@ public class ProjectsFragment extends Fragment implements View.OnClickListener, 
                                     List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
                                     nameValuePairs.add(new BasicNameValuePair("projectId", projectDetailsBean.getId()));
                                     Appreference.jsonRequestSender.OracleFSRJOBReport(EnumJsonWebservicename.fieldServiceReportJobWise, nameValuePairs, ProjectsFragment.this);
+                                    showprogress("Downloading...");
 
                                 } else if (item.getTitle().toString().equalsIgnoreCase("Complete")) {
                                     try {
@@ -775,7 +812,7 @@ public class ProjectsFragment extends Fragment implements View.OnClickListener, 
                                                     Log.i("completed_status", "ProjectId()====>" + projectDetailsBean.getId());
                                                     Log.i("completed_status", " userId()=====>" + String.valueOf(Appreference.loginuserdetails.getId()));
                                                     Appreference.jsonRequestSender.projectCompleted(EnumJsonWebservicename.projectCompleted, nameValuePairs, ProjectsFragment.this);
-    //                                                showprogress();
+                                                    showprogress("Please wait...");
                                                 } catch (Exception e) {
                                                     e.printStackTrace();
                                                 }
@@ -942,7 +979,7 @@ public class ProjectsFragment extends Fragment implements View.OnClickListener, 
         }
     }
 
-    private void showprogress() {
+    private void showprogress(final String message) {
         handler.post(new Runnable() {
             @Override
             public void run() {
@@ -951,7 +988,7 @@ public class ProjectsFragment extends Fragment implements View.OnClickListener, 
                     if (progress == null) {
                         progress = new ProgressDialog(classContext);
                         progress.setCancelable(false);
-                        progress.setMessage("Getting ActivityCode...");
+                        progress.setMessage(message);
                         progress.setProgressStyle(ProgressDialog.STYLE_SPINNER);
                         progress.setProgress(0);
                         progress.setMax(1000);
@@ -1248,27 +1285,50 @@ public class ProjectsFragment extends Fragment implements View.OnClickListener, 
                         } else if (s2.equalsIgnoreCase("projectCompleted")) {
                             Log.i("projectCompleted", "******projectCompleted********** Response String " + s1);
                             final JSONObject jsonObject = new JSONObject(opr.getEmail());
-//                            String result = (String) jsonObject.get("result_text");
-//                            Toast.makeText(getContext(), result, Toast.LENGTH_LONG).show();
+                            cancelDialog();
                             if (((String) jsonObject.get("result_text")).equalsIgnoreCase("project task not completed")) {
                                 String result= (String) jsonObject.get("result_text");
                                  Toast.makeText(getContext(),"JobCards Tasks Not Completed", Toast.LENGTH_LONG).show();
                             }else if(((String) jsonObject.get("result_text")).equalsIgnoreCase("Job Completed")) {
                                 String result= (String) jsonObject.get("result_text");
                                 Toast.makeText(getContext(),"JobCard Completed Successfully", Toast.LENGTH_LONG).show();
+                            }else {
+                                String result = (String) jsonObject.get("result_text");
+                                Toast.makeText(getContext(), result, Toast.LENGTH_LONG).show();
                             }
                         } else if (s2 != null && s2.equalsIgnoreCase(("fieldServiceReportJobWise"))) {
                             Log.i("output123", "projectFragment fieldServiceReportJobWise  Responce Received" + s1);
                             final JSONObject jsonObject = new JSONObject(opr.getEmail());
+                            cancelDialog();
                             if (((String) jsonObject.get("result_text")).equalsIgnoreCase("Field_servicce_report job successed")) {
                                 Log.i("output123", " Filename" + jsonObject.getString("filename"));
                                 String pdfURL = getResources().getString(R.string.task_reminder) + jsonObject.getString("filename");
                                 Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(pdfURL));
                                 startActivity(browserIntent);
-                                /*Intent intent = new Intent(getActivity(), WebViewActivity.class);
+                               /* Intent intent = new Intent(getActivity(), WebViewActivity.class);
                                 intent.putExtra("ReportFileName", jsonObject.getString("File Name"));
                                 startActivity(intent);*/
                                 showToast("Task_Need_assessment_report created ");
+                            }else {
+                                String result = (String) jsonObject.get("result_text");
+                                Toast.makeText(getContext(), result, Toast.LENGTH_LONG).show();
+                            }
+                        }else if (s2 != null && s2.equalsIgnoreCase(("tnaReportForDateWise"))) {
+                            Log.i("report123", "projectFragment tnaReportForDateWise  Responce Received===>" + s1);
+                            final JSONObject jsonObject = new JSONObject(opr.getEmail());
+                            cancelDialog();
+                            if (((String) jsonObject.get("result_text")).equalsIgnoreCase("TaskNeedAssigment Report Created successfully")) {
+                                Log.i("output123", " Filename" + jsonObject.getString("filename"));
+                                String pdfURL = getResources().getString(R.string.task_reminder) + jsonObject.getString("filename");
+                                Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(pdfURL));
+                                startActivity(browserIntent);
+                                /*Intent intent = new Intent(getActivity(), WebViewActivity.class);
+                                intent.putExtra("ReportFileName", jsonObject.getString("filename"));
+                                startActivity(intent);*/
+                                showToast("Task_Need_assessment_report created ");
+                            }else {
+                                String result = (String) jsonObject.get("result_text");
+                            Toast.makeText(getContext(), result, Toast.LENGTH_LONG).show();
                             }
                         }
                     } catch (Exception e) {

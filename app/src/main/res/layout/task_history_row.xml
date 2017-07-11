@@ -1,169 +1,258 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="vertical">
+    android:layout_height="match_parent"
+    android:layout_marginLeft="5dp"
+    android:paddingBottom="5dp"
+    android:layout_marginRight="5dp">
 
-    <RelativeLayout
-        android:id="@+id/task_namedatails"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
+    <android.support.v7.widget.CardView
+        android:id="@+id/card_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/white"
+        card_view:cardCornerRadius="1dp"
+        card_view:cardElevation="5dp"
+        card_view:cardUseCompatPadding="true">
 
-        <ImageView
-            android:id="@+id/selected"
-            android:layout_width="15dp"
-            android:layout_height="15dp"
-            android:layout_marginLeft="10dp"
-            android:layout_marginTop="8dp"
-            android:background="@drawable/task_icon" />
-
-        <TextView
-            android:id="@+id/catagory"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:id="@+id/lyt_color"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="5dp"
-            android:layout_marginTop="8dp"
-            android:layout_toRightOf="@+id/selected"
-            android:text="TaskId" />
+            android:orientation="vertical">
 
-    </RelativeLayout>
+            <TableLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
 
-    <RelativeLayout
-        android:id="@+id/task_giverdetails"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
+                <TableRow
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
 
-        <TextView
-            android:id="@+id/task_name"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="8dp"
-            android:layout_marginTop="8dp"
-            android:text="Task Name"
-            android:textColor="@color/black"
-            android:textSize="15sp"
-            android:textStyle="bold" />
+                    <ImageView
+                        android:id="@+id/selected"
+                        android:layout_width="12dp"
+                        android:layout_height="12dp"
+                        android:layout_column="1"
+                        android:layout_marginStart="5dp"
+                        android:layout_marginTop="10dp"
+                        android:background="@drawable/task_icon" />
 
-        <TextView
-            android:id="@+id/task_giver"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/task_name"
-            android:layout_marginLeft="10dp"
-            android:layout_marginTop="3dp"
-            android:text="Giver  :"
-            android:textColor="@color/black"
-            android:textSize="15sp" />
+                    <TextView
+                        android:id="@+id/catagory"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_column="2"
+                        android:layout_marginStart="10dp"
+                        android:layout_marginTop="5dp"
+                        android:text="TaskId" />
+                </TableRow>
+            </TableLayout>
 
-        <TextView
-            android:id="@+id/task_taker"
-            android:layout_width="200dp"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/task_giver"
-            android:layout_marginLeft="10dp"
-            android:layout_marginTop="3dp"
-            android:singleLine="true"
-            android:text="Taker :"
-            android:textColor="@color/black"
-            android:textSize="15sp" />
+            <TableLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
 
-        <TextView
-            android:id="@+id/task_observer"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/task_taker"
-            android:layout_marginLeft="10dp"
-            android:layout_marginTop="3dp"
-            android:ellipsize="end"
-            android:singleLine="true"
-            android:text="Observer :"
-            android:textColor="@color/black"
-            android:textSize="15sp" />
+                <TableRow
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
 
-        <ImageView
-            android:id="@+id/dependency_icon"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_toLeftOf="@+id/percent_update"
-            android:background="@drawable/ic_alert_64"
-            android:visibility="gone"
-            />
+                    <TextView
+                        android:id="@+id/task_name"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="5dp"
+                        android:layout_marginTop="5dp"
+                        android:text="Task Name"
+                        android:textColor="@color/black"
+                        android:textStyle="bold"
+                        android:textSize="15sp" />
 
-        <TextView
-            android:id="@+id/percent_update"
-            android:layout_width="35dp"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_toLeftOf="@+id/task_name"
-            android:layout_marginTop="25dp"
-            android:text="0%"
-            android:textSize="12sp"
-            android:textStyle="bold" />
+                </TableRow>
 
-        <TextView
-            android:id="@+id/item_counter"
-            android:layout_width="25dp"
-            android:layout_height="25dp"
-            android:layout_alignParentRight="true"
-            android:layout_marginTop="45dp"
-            android:layout_marginRight="5dp"
-            android:background="@drawable/rectangle1"
-            android:gravity="center"
-            android:text="10"
-            android:textColor="@color/white"
-            android:textSize="12sp"
-            android:textStyle="bold" />
+                <TableLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
 
-        <ImageView
-            android:id="@+id/state"
-            android:layout_width="40dp"
-            android:layout_height="20dp"
-            android:layout_alignParentRight="true"
-            android:layout_marginRight="60dp"
-            android:layout_marginTop="25dp"/>
+                    <TableRow
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content">
 
-        <TextView
-            android:id="@+id/task_status"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_below="@+id/task_giver"
-            android:layout_marginRight="40dp"
-            android:layout_marginTop="2dp"
-            android:layout_toLeftOf="@+id/item_counter"
-            android:paddingRight="25dp"
-            android:singleLine="true"
-            android:text="status"
-            android:textColor="@color/black" />
+                        <TextView
+                            android:id="@+id/task_giver_text"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="5dp"
+                            android:layout_marginTop="5dp"
+                            android:gravity="start"
+                            android:textStyle="bold"
+                            android:text="Giver        : "
+                            android:textColor="@color/black" />
 
-        <TextView
-            android:id="@+id/remain_count"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/task_taker"
-            android:layout_marginLeft="250dp"
-            android:layout_marginTop="3dp"
-            android:background="@color/red"
-            android:paddingRight="10dp"
-            android:singleLine="true"
-            android:text="Remainder :  "
-            android:textColor="@color/white" />
+                        <TextView
+                            android:id="@+id/task_giver"
+                            android:layout_width="150dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="5dp"
+                            android:layout_weight="2"
+                            android:singleLine="true"
+                            android:gravity="start"
+                            android:text="name"
+                            android:textColor="@color/black" />
 
-        <TextView
-            android:id="@+id/exclation_counter"
-            android:layout_width="25dp"
-            android:layout_height="25dp"
-            android:layout_marginRight="5dp"
-            android:layout_marginLeft="10dp"
-            android:layout_marginTop="71dp"
-            android:layout_alignParentRight="true"
-            android:background="@drawable/exclation_counter"
-            android:gravity="center"
-            android:textColor="#FFFFFF"
-            android:textSize="12sp"
-            android:visibility="gone"
-            android:textStyle="bold" />
+                        <ImageView
+                            android:id="@+id/dependency_icon"
+                            android:layout_width="25dp"
+                            android:layout_height="25dp"
+                            android:layout_column="2"
+                            android:layout_marginStart="3dp"
+                            android:layout_weight="0.10"
+                            android:background="@drawable/ic_alert_64"
+                            android:visibility="gone" />
 
-    </RelativeLayout>
+                        <ImageView
+                            android:id="@+id/state"
+                            android:layout_width="30dp"
+                            android:layout_height="20dp"
+                            android:layout_marginStart="1dp"
+                            android:layout_marginTop="5sp"
+                            android:layout_weight="0.11" />
 
-</LinearLayout>
+                        <TextView
+                            android:id="@+id/percent_update"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_column="2"
+                            android:layout_marginTop="2dp"
+                            android:layout_weight="4"
+                            android:gravity="center"
+                            android:text="0%"
+                            android:textSize="12sp"
+                            android:textStyle="bold" />
+                    </TableRow>
+                </TableLayout>
+
+                <TableLayout
+                    android:id="@+id/takertable"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <TableRow
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content">
+                        <TextView
+                            android:id="@+id/task_taker_text"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="5dp"
+                            android:layout_marginTop="5dp"
+                            android:gravity="start"
+                            android:textStyle="bold"
+                            android:text="Taker        : "
+                            android:textColor="@color/black" />
+
+                        <TextView
+                            android:id="@+id/task_taker"
+                            android:layout_width="150dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="5dp"
+                            android:layout_weight="2"
+                            android:singleLine="true"
+                            android:gravity="start"
+                            android:text="name"
+                            android:textColor="@color/black" />
+
+                        <TextView
+                            android:id="@+id/task_status"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_column="2"
+                            android:layout_marginStart="1dp"
+                            android:layout_marginTop="5dp"
+                            android:layout_weight="3"
+                            android:text="status"
+                            android:textColor="@color/black"
+                            android:textDirection="firstStrong" />
+
+                        <TextView
+                            android:id="@+id/item_counter"
+                            android:layout_width="25dp"
+                            android:layout_height="25dp"
+                            android:layout_column="3"
+                            android:layout_marginEnd="5dp"
+                            android:layout_marginTop="5dp"
+                            android:background="@drawable/rectangle1"
+                            android:gravity="center"
+                            android:text="10"
+                            android:textColor="@color/white"
+                            android:textSize="12sp"
+                            android:textStyle="bold"
+                            android:visibility="visible" />
+                    </TableRow>
+                </TableLayout>
+
+                <TableLayout
+                    android:layout_width="match_parent"
+                    android:id="@+id/observertable"
+                    android:layout_height="match_parent">
+
+                    <TableRow
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content">
+
+                        <TextView
+                            android:id="@+id/task_observer_text"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="5dp"
+                            android:layout_marginTop="5dp"
+                            android:gravity="start"
+                            android:textStyle="bold"
+                            android:text="Observer  : "
+                            android:textColor="@color/black" />
+
+                        <TextView
+                            android:id="@+id/task_observer"
+                            android:layout_width="150dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="5dp"
+                            android:layout_weight="2"
+                            android:singleLine="true"
+                            android:gravity="start"
+                            android:text="name"
+                            android:textColor="@color/black" />
+
+                        <TextView
+                            android:id="@+id/remain_count"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_column="2"
+                            android:layout_marginStart="3dp"
+                            android:layout_marginTop="3dp"
+                            android:layout_marginEnd="5dp"
+                            android:background="@color/red"
+                            android:gravity="center"
+                            android:maxLength="20"
+                            android:text="Reminder :"
+                            android:textColor="@color/white" />
+                        <TextView
+                            android:id="@+id/exclation_counter"
+                            android:layout_width="25dp"
+                            android:layout_height="25dp"
+                            android:layout_marginStart="3dp"
+                            android:layout_marginEnd="5dp"
+                            android:layout_marginTop="3dp"
+                            android:background="@drawable/exclation_counter"
+                            android:gravity="center"
+                            android:textColor="#FFFFFF"
+                            android:textSize="12sp"
+                            android:visibility="invisible"
+                            android:textStyle="bold" />
+
+                    </TableRow>
+                </TableLayout>
+            </TableLayout>
+        </LinearLayout>
+    </android.support.v7.widget.CardView>
+</RelativeLayout>

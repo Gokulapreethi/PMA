@@ -357,23 +357,28 @@ public class ProjectHistory extends Activity implements WebServiceInterface, Swi
                     }
                     List<String> categories = new ArrayList<String>();
                     categories.add("Task");
-                    categories.add("issue");
-                    categories.add("note");
+                   /* categories.add("issue");
+                    categories.add("note");*/
                     categories.add("Template");
                     categories.add("All");
                     catestring1 = categories.toArray(new String[categories.size()]);
                     spin1.setAdapter(new MyAdapter1(getApplicationContext(), R.layout.customspin, catestring1));
                     spin1.setPopupBackgroundResource(R.drawable.borderfordialog);
+
                     List<String> status = new ArrayList<String>();
-                    status.add("inprogress");
-                    status.add("assigned");
-                    status.add("closed");
-                    status.add("completed");
-                    status.add("abandoned");
+                    status.add("Unassigned");
+                    status.add("Assigned");
+                    status.add("Start");
+                    status.add("Hold");
+                    status.add("Resume");
+                    status.add("Pause");
+                    status.add("Restart");
+                    status.add("Complete");
                     status.add("All");
                     catestring2 = status.toArray(new String[status.size()]);
                     spin2.setAdapter(new MyAdapter2(context, R.layout.customspin, catestring2));
                     spin2.setPopupBackgroundResource(R.drawable.borderfordialog);
+
                     List<String> categories3 = new ArrayList<String>();
                     String givername = " ";
                     Log.i("projectHistory", "loginuser detail" + Appreference.loginuserdetails.getEmail());
@@ -407,6 +412,7 @@ public class ProjectHistory extends Activity implements WebServiceInterface, Swi
                     catestring3 = categories3.toArray(new String[categories3.size()]);
                     spin3.setAdapter(new MyAdapter3(getApplicationContext(), R.layout.customspin, catestring3));
                     spin3.setPopupBackgroundResource(R.drawable.borderfordialog);
+
                     if (spin1pos == 0 && spin2pos == 0 && spin3pos == 0) {
                         spin1.setSelection(spin1.getBottom());
                         spin2.setSelection(spin2.getBottom());
@@ -503,9 +509,10 @@ public class ProjectHistory extends Activity implements WebServiceInterface, Swi
                             issue_qry = "select * from projectHistory where (projectId='" + project_id + "') and ( taskStatus='" + spinner2 + "') and( category='" + spinner1 + "') and ( ownerOfTask='" + Appreference.loginuserdetails.getUsername() + "')";
                             Log.i("projectHistory", spinner1);
                             Log.i("projectHistory", spinner2);
+                            Log.i("projectHistory", "issue_qry value1111" + issue_qry);
                         } else {
                             issue_qry = "select * from projectHistory where (projectId='" + project_id + "') and ( taskStatus='" + spinner2 + "') and( category='" + spinner1 + "') and ( ownerOfTask='" + spy + "')";
-                            Log.i("projectHistory", "issue_qry value" + issue_qry);
+                            Log.i("projectHistory", "issue_qry value2222" + issue_qry);
                         }
                     } else if (spinner1.equalsIgnoreCase("All")) {
                         Log.i("projectHistory", "Inside category is unselected");
@@ -591,7 +598,7 @@ public class ProjectHistory extends Activity implements WebServiceInterface, Swi
                         public void run() {
                             if (projectDetailsBeans.size() == 0 || listView.getCount() == 0) {
                                 Noresult.setVisibility(View.VISIBLE);
-                                Noresult.setText("No ProjectHistories Available");
+                                Noresult.setText("Not Available");
                             } else {
                                 Noresult.setVisibility(View.GONE);
                                 buddyArrayAdapter.notifyDataSetChanged();
@@ -757,38 +764,45 @@ public class ProjectHistory extends Activity implements WebServiceInterface, Swi
                             //                    }
 //                            if (taskDetailsBean.getOwnerOfTask().equalsIgnoreCase(Appreference.loginuserdetails.getUsername())) {
                             Log.i("task", String.valueOf(position));
-                            showDialog();
                             if (taskDetailsBean.getTaskName() != null && taskDetailsBean.getTaskName().equalsIgnoreCase("Travel Time")) {
-                                Intent intent = new Intent(context, TravelJobDetails.class);
-                                intent.putExtra("task", "ProjectTemplateview");
-                                intent.putExtra("project_Temp", "ProjectTemplate");
-                                intent.putExtra("isTemplate",true);
-                                intent.putExtra("position",position);
-                                intent.putExtra("projectHistoryBean", taskDetailsBean);
-                                if (taskDetailsBean.getOracleProjectId() != null) {
-                                    /*if task is template*/
-                                    intent.putExtra("oracleProjectOwner", taskDetailsBean.getOwnerOfTask());
-                                    intent.putExtra("ProjectFromOracle", true);
+                                if(Appreference.loginuserdetails!=null && Appreference.loginuserdetails.getRoleId()!=null
+                                        && !Appreference.loginuserdetails.getRoleId().equalsIgnoreCase("2")){
+                                    showDialog();
+                                    Intent intent = new Intent(context, TravelJobDetails.class);
+                                    intent.putExtra("task", "ProjectTemplateview");
+                                    intent.putExtra("project_Temp", "ProjectTemplate");
+                                    intent.putExtra("isTemplate",true);
+                                    intent.putExtra("position",position);
+                                    intent.putExtra("projectHistoryBean", taskDetailsBean);
+                                    if (taskDetailsBean.getOracleProjectId() != null) {
+                                        /*if task is template*/
+                                        intent.putExtra("oracleProjectOwner", taskDetailsBean.getOwnerOfTask());
+                                        intent.putExtra("ProjectFromOracle", true);
+                                    }
+                                    check = true;
+                                    startActivity(intent);
                                 }
-                                check = true;
-                                startActivity(intent);
 
                             } else {
-                                Intent intent = new Intent(context, NewTaskConversation.class);
-                                intent.putExtra("task", "ProjectTemplateview");
-                                intent.putExtra("project_Temp", "ProjectTemplate");
-                                intent.putExtra("projectHistoryBean", taskDetailsBean);
-                                intent.putExtra("position",position);
-                                if (taskDetailsBean.getOracleProjectId() != null) {
-                                    /*if task is template*/
-                                    intent.putExtra("oracleProjectOwner", taskDetailsBean.getOwnerOfTask());
-                                    intent.putExtra("ProjectFromOracle", true);
-                                   /* intent.putExtra("projectName",taskDetailsBean.getProjectName());
-                                    intent.putExtra("parentTaskID",taskDetailsBean.getParentTaskId());*/
+                                if(Appreference.loginuserdetails!=null && Appreference.loginuserdetails.getRoleId()!=null
+                                        && !Appreference.loginuserdetails.getRoleId().equalsIgnoreCase("2")){
+                                    showDialog();
+                                    Intent intent = new Intent(context, NewTaskConversation.class);
+                                    intent.putExtra("task", "ProjectTemplateview");
+                                    intent.putExtra("project_Temp", "ProjectTemplate");
+                                    intent.putExtra("projectHistoryBean", taskDetailsBean);
+                                    intent.putExtra("position",position);
+                                    if (taskDetailsBean.getOracleProjectId() != null) {
+                                        /*if task is template*/
+                                        intent.putExtra("oracleProjectOwner", taskDetailsBean.getOwnerOfTask());
+                                        intent.putExtra("ProjectFromOracle", true);
+                                       /* intent.putExtra("projectName",taskDetailsBean.getProjectName());
+                                        intent.putExtra("parentTaskID",taskDetailsBean.getParentTaskId());*/
+                                    }
+                                    check = true;
+                                    startActivity(intent);
+                                    overridePendingTransition(R.anim.right_anim, R.anim.left_anim);
                                 }
-                                check = true;
-                                startActivity(intent);
-                                overridePendingTransition(R.anim.right_anim, R.anim.left_anim);
 
                             }
 //                            } else {
@@ -806,31 +820,38 @@ public class ProjectHistory extends Activity implements WebServiceInterface, Swi
                                     (taskDetailsBean.getTaskObservers()!=null && taskDetailsBean.getTaskObservers().contains(Appreference.loginuserdetails.getUsername()))) {
                                 Log.i("task", String.valueOf(position));
 
-                                showDialog();
                                 if (taskDetailsBean.getTaskName() != null && taskDetailsBean.getTaskName().equalsIgnoreCase("Travel Time")) {
-                                    Intent intent = new Intent(context, TravelJobDetails.class);
-                                    intent.putExtra("task", "projectHistory");
-                                    intent.putExtra("projectHistoryBean", taskDetailsBean);
-                                    intent.putExtra("isTemplate",false);
-                                    intent.putExtra("position",position);
-                                    if (taskDetailsBean.getOracleProjectId() != null) {
-                                        intent.putExtra("oracleProjectOwner", taskDetailsBean.getOwnerOfTask());
-                                        intent.putExtra("ProjectFromOracle", true);
+                                    if(Appreference.loginuserdetails!=null && Appreference.loginuserdetails.getRoleId()!=null
+                                            && !Appreference.loginuserdetails.getRoleId().equalsIgnoreCase("2")){
+                                        showDialog();
+                                        Intent intent = new Intent(context, TravelJobDetails.class);
+                                        intent.putExtra("task", "projectHistory");
+                                        intent.putExtra("projectHistoryBean", taskDetailsBean);
+                                        intent.putExtra("isTemplate",false);
+                                        intent.putExtra("position",position);
+                                        if (taskDetailsBean.getOracleProjectId() != null) {
+                                            intent.putExtra("oracleProjectOwner", taskDetailsBean.getOwnerOfTask());
+                                            intent.putExtra("ProjectFromOracle", true);
+                                        }
+                                        check = true;
+                                        startActivity(intent);
                                     }
-                                    check = true;
-                                    startActivity(intent);
                                 } else {
-                                    Intent intent = new Intent(context, NewTaskConversation.class);
-                                    intent.putExtra("task", "projectHistory");
-                                    intent.putExtra("projectHistoryBean", taskDetailsBean);
-                                    intent.putExtra("position",position);
-                                    if (taskDetailsBean.getOracleProjectId() != null) {
-                                        intent.putExtra("oracleProjectOwner", taskDetailsBean.getOwnerOfTask());
-                                        intent.putExtra("ProjectFromOracle", true);
+                                    if(Appreference.loginuserdetails!=null && Appreference.loginuserdetails.getRoleId()!=null
+                                            && !Appreference.loginuserdetails.getRoleId().equalsIgnoreCase("2")){
+                                        showDialog();
+                                        Intent intent = new Intent(context, NewTaskConversation.class);
+                                        intent.putExtra("task", "projectHistory");
+                                        intent.putExtra("projectHistoryBean", taskDetailsBean);
+                                        intent.putExtra("position",position);
+                                        if (taskDetailsBean.getOracleProjectId() != null) {
+                                            intent.putExtra("oracleProjectOwner", taskDetailsBean.getOwnerOfTask());
+                                            intent.putExtra("ProjectFromOracle", true);
+                                        }
+                                        check = true;
+                                        startActivity(intent);
+                                        overridePendingTransition(R.anim.right_anim, R.anim.left_anim);
                                     }
-                                    check = true;
-                                    startActivity(intent);
-                                    overridePendingTransition(R.anim.right_anim, R.anim.left_anim);
                                 }
                             } else {
                                 Toast.makeText(getApplicationContext(), "This task is not assigned to You", Toast.LENGTH_SHORT).show();
@@ -839,31 +860,38 @@ public class ProjectHistory extends Activity implements WebServiceInterface, Swi
                             Log.i("ListMembers", "projectDetailsBean.getTaskMemberList() " + taskDetailsBean.getTaskMemberList());
                             if ((taskDetailsBean.getTaskMemberList() != null && taskDetailsBean.getTaskMemberList().contains(Appreference.loginuserdetails.getUsername())) || (taskDetailsBean.getOwnerOfTask() != null && taskDetailsBean.getOwnerOfTask().equalsIgnoreCase(Appreference.loginuserdetails.getUsername())) || (taskDetailsBean.getTaskObservers() != null && taskDetailsBean.getTaskObservers().contains(Appreference.loginuserdetails.getUsername()))) {
                                 Log.i("task", String.valueOf(position));
-                                showDialog();
                                 if(taskDetailsBean.getTaskName()!=null && taskDetailsBean.getTaskName().equalsIgnoreCase("Travel Time")){
-                                    Intent intent = new Intent(context, TravelJobDetails.class);
-                                    intent.putExtra("task", "projectHistory");
-                                    intent.putExtra("projectHistoryBean", taskDetailsBean);
-                                    intent.putExtra("position",position);
-                                    intent.putExtra("isTemplate",false);
-                                    if (taskDetailsBean.getOracleProjectId() != null) {
-                                        intent.putExtra("oracleProjectOwner", taskDetailsBean.getOwnerOfTask());
-                                        intent.putExtra("ProjectFromOracle", true);
+                                    if(Appreference.loginuserdetails!=null && Appreference.loginuserdetails.getRoleId()!=null
+                                            && !Appreference.loginuserdetails.getRoleId().equalsIgnoreCase("2")){
+                                        showDialog();
+                                        Intent intent = new Intent(context, TravelJobDetails.class);
+                                        intent.putExtra("task", "projectHistory");
+                                        intent.putExtra("projectHistoryBean", taskDetailsBean);
+                                        intent.putExtra("position",position);
+                                        intent.putExtra("isTemplate",false);
+                                        if (taskDetailsBean.getOracleProjectId() != null) {
+                                            intent.putExtra("oracleProjectOwner", taskDetailsBean.getOwnerOfTask());
+                                            intent.putExtra("ProjectFromOracle", true);
+                                        }
+                                        check = true;
+                                        startActivity(intent);
                                     }
-                                    check = true;
-                                    startActivity(intent);
                                 }else {
-                                    Intent intent = new Intent(context, NewTaskConversation.class);
-                                    intent.putExtra("task", "projectHistory");
-                                    intent.putExtra("projectHistoryBean", taskDetailsBean);
-                                    intent.putExtra("position",position);
-                                    if (taskDetailsBean.getOracleProjectId() != null) {
-                                        intent.putExtra("oracleProjectOwner", taskDetailsBean.getOwnerOfTask());
-                                        intent.putExtra("ProjectFromOracle", true);
+                                    if(Appreference.loginuserdetails!=null && Appreference.loginuserdetails.getRoleId()!=null
+                                            && !Appreference.loginuserdetails.getRoleId().equalsIgnoreCase("2")){
+                                        showDialog();
+                                        Intent intent = new Intent(context, NewTaskConversation.class);
+                                        intent.putExtra("task", "projectHistory");
+                                        intent.putExtra("projectHistoryBean", taskDetailsBean);
+                                        intent.putExtra("position",position);
+                                        if (taskDetailsBean.getOracleProjectId() != null) {
+                                            intent.putExtra("oracleProjectOwner", taskDetailsBean.getOwnerOfTask());
+                                            intent.putExtra("ProjectFromOracle", true);
+                                        }
+                                        check = true;
+                                        startActivity(intent);
+                                        overridePendingTransition(R.anim.right_anim, R.anim.left_anim);
                                     }
-                                    check = true;
-                                    startActivity(intent);
-                                    overridePendingTransition(R.anim.right_anim, R.anim.left_anim);
                                 }
                             } else {
                                 Toast.makeText(getApplicationContext(), "You are not in group project task", Toast.LENGTH_SHORT).show();
@@ -1186,17 +1214,21 @@ public class ProjectHistory extends Activity implements WebServiceInterface, Swi
     }
 
     public void setProgressBarInvisible() {
-        this.cancelDialog();
+        Log.i("conv123","ProgressBarInvisible===>");
+        cancelDialog();
     }
 
     public void load() {
-        Intent intent = new Intent(context, NewTaskConversation.class);
-        intent.putExtra("task", "taskhistory");
-        intent.putExtra("taskHistoryBean", taskDetailsBean);
-        startActivity(intent);
-        overridePendingTransition(R.anim.right_anim, R.anim.left_anim);
+        if(Appreference.loginuserdetails!=null && Appreference.loginuserdetails.getRoleId()!=null
+                && !Appreference.loginuserdetails.getRoleId().equalsIgnoreCase("2")){
+            Intent intent = new Intent(context, NewTaskConversation.class);
+            intent.putExtra("task", "taskhistory");
+            intent.putExtra("taskHistoryBean", taskDetailsBean);
+            startActivity(intent);
+            overridePendingTransition(R.anim.right_anim, R.anim.left_anim);
 
-        check = true;
+            check = true;
+        }
     }
 
     public String composeChatXML(TaskDetailsBean cmbean) {

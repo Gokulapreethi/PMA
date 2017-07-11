@@ -156,7 +156,7 @@
                 android:layout_marginRight="2dp"
                 android:background="@drawable/status_info"
                 android:textColor="@color/red"
-                android:visibility="visible" />
+                android:visibility="gone" />
 
             <ImageView
                 android:id="@+id/travel_job"
@@ -170,7 +170,7 @@
                 android:layout_toStartOf="@+id/status_job"
                 android:background="@drawable/plus_blue_custom1"
                 android:textColor="@color/red"
-                android:visibility="visible" />
+                android:visibility="gone" />
 
         </RelativeLayout>
 

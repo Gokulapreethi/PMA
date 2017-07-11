@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:id="@+id/rl_task_history">
     <!-- <RelativeLayout
          android:layout_width="fill_parent"
          android:background="@color/appcolor"
@@ -39,7 +41,6 @@
             android:id="@+id/finish_page"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:layout_weight="0.2"
             android:drawableLeft="@drawable/back_32"
             android:drawablePadding="-10dp"
             android:gravity="center|start"
@@ -50,7 +51,8 @@
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:layout_marginTop="3dp"
-            android:layout_toLeftOf="@+id/txtView01"
+            android:layout_marginLeft="10dp"
+            android:layout_toRightOf="@+id/finish_page"
             android:background="@drawable/filterdisabled"
             android:id="@+id/fill"
             />
@@ -66,8 +68,20 @@
             android:layout_centerInParent="true"
             android:gravity="center"
             android:text="Active Task List"
+            android:maxLength="26"
+            android:ellipsize="marquee"
             android:textColor="@color/appcolor"
             android:textSize="14sp" />
+
+        <ImageView
+            android:id="@+id/new_note"
+            android:layout_width="wrap_content"
+            android:layout_height="50dp"
+            android:layout_marginLeft="15dp"
+            android:layout_toRightOf="@+id/txtView01"
+            android:foregroundGravity="center"
+            android:src="@drawable/ic_note_32_2"
+            android:visibility="gone"/>
 
         <ImageView
             android:id="@+id/submit_icon"
@@ -75,7 +89,6 @@
             android:layout_height="match_parent"
             android:layout_alignParentRight="true"
             android:layout_alignTop="@+id/finish_page"
-            android:layout_weight="0.1"
             android:background="@drawable/ic_pie_chart_filled_32"
             android:padding="2dp"
             android:textColor="#FFFFFF" />
@@ -90,7 +103,6 @@
         android:background="@color/common_action_bar_splitter" />
 
     <com.baoyz.swipemenulistview.SwipeMenuListView
-        android:id="@+id/non_active"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginTop="45dp"
@@ -112,8 +124,7 @@
         <RelativeLayout
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
-            android:layout_below="@+id/header"
-            >
+            tools:ignore="UselessParent">
             <LinearLayout
                 android:id="@+id/History_Search"
                 android:layout_width="fill_parent"
@@ -124,12 +135,10 @@
 
         <EditText
             android:id="@+id/searchtext"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="38dp"
-            android:layout_alignParentLeft="true"
             android:layout_marginBottom="2dp"
             android:layout_marginTop="2dp"
-            android:layout_toLeftOf="@+id/btnsearch"
             android:layout_weight="1"
             android:background="#FFFFFF"
             android:cursorVisible="false"
@@ -137,7 +146,7 @@
             android:gravity="center"
             android:hint="Search"
             android:imeOptions="actionSearch"
-            android:inputType="textPersonName"></EditText>
+            android:inputType="textPersonName"/>
 
         <!--<Button
             android:id="@+id/search_button"
@@ -157,6 +166,12 @@
         android:layout_below="@id/History_Search"
         android:textColor="@color/black"
         android:textSize="14sp" />
+            <ViewStub
+                android:inflatedId="@+id/panel_import"
+                android:layout="@layout/new_task_activity"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom" />
 
     <com.baoyz.swipemenulistview.SwipeMenuListView
         android:id="@+id/lv_taskHistory"
@@ -177,7 +192,7 @@
                     android:layout_height="match_parent"
                     android:stretchColumns="1"
                     android:layout_marginTop="10dp"
-                    >
+                    tools:ignore="UselessParent">
                     <TableRow
                         android:layout_width="match_parent"
                         android:layout_height="50dp">
@@ -247,10 +262,12 @@
                     <TableLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:stretchColumns="3">
+                        android:stretchColumns="3"
+                        tools:ignore="UselessParent">
                         <TableRow
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content">
+                            android:layout_height="wrap_content"
+                            tools:ignore="UselessParent">
 
                             <TextView
                                 android:id="@+id/cancelbutton"
@@ -261,8 +278,6 @@
                                 android:layout_marginLeft="45dp"
                                 android:layout_gravity="start"
                                 android:textColor="@color/black"
-                                android:layout_alignParentStart="true"
-                                android:layout_alignParentLeft="true"
                                 android:background="@color/audiosender"/>
 
                             <TextView
@@ -284,9 +299,6 @@
                                 android:text="Done"
                                 android:layout_marginLeft="45dp"
                                 android:gravity="center"
-                                android:layout_toRightOf="@id/cancelbutton"
-                                android:layout_alignParentEnd="true"
-                                android:layout_alignParentRight="true"
                                 android:textColor="@color/black"
                                 android:background="@color/audiosender"/>
                         </TableRow>

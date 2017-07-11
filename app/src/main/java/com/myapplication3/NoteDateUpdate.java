@@ -4,7 +4,6 @@ import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Typeface;
 import android.media.MediaMetadataRetriever;
 import android.media.MediaPlayer;
 import android.os.Bundle;
@@ -20,17 +19,13 @@ import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.NumberPicker;
-import android.widget.RadioButton;
-import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.myapplication3.Bean.TaskDetailsBean;
-import com.myapplication3.DB.VideoCallDataBase;
 
 import java.io.IOException;
 import java.text.DateFormat;
@@ -51,44 +46,33 @@ import json.WebServiceInterface;
 public class NoteDateUpdate extends AppCompatActivity implements View.OnClickListener, WebServiceInterface {
 
     public static Runnable time;
-    public static Typeface normal_type;
+//    public static Typeface normal_type;
     private static String ampm = null;
-    TextAdapter textAdapter;
-    int lastpos = 0;
     ArrayList<SwipeBean> beanArrayList;
-    GridView gridView;
-    public String strIPath, fname, CurrentTaskid;
-    public LinearLayout linear1, linear2, linear3, linear4, linear5, linear6, linear7, linear8;
+    public String strIPath, CurrentTaskid;
+    public LinearLayout linear1, linear2, linear3;
     EditText start_date1, end_date1, reminder_date1, Reminder_quote = null, reminder_freq1, duration, duration_unit, repeat_min, temp_min, repeat_frequency, reminder_freq_local;
     ImageView submit, cancel, play_button;
     TextView txt_time, re;
     Button audio;
     Context context;
     String[] dates;
-    String today, strDATE, fromtime, endTime, enDate = null, userName, temp_value, dur_check, remfreq_mins, reminder_date;
-    int yyyy, time1;
-    ArrayList<TaskDetailsBean> dateList, taskList_4;
+    String today, enDate = null, userName, remfreq_mins;
+    int yyyy;
     TaskDetailsBean bean;
     boolean datecheck = false;
     String endDate, clockType;
     private String toas = null;
     private String strTime, enTime;
-    private int SelectedIdx = -1;
-    //    WeekdaysAdaper weekdaysAdaper;
     ArrayList<TaskDetailsBean> list_Array;
     ArrayList<WeekdayBean> weekdayBeanArrayList;
-    String[] colorChange = {"false", "false", "false", "false", "false", "false", "false"};
-    String[] week_days = {"Every Sunday", "Every Monday", "Every Tuesday", "Every Wednesday", "Every Thursday", "Every Friday", "Every Saturday"};
-    RadioGroup radioGroup;
-    RadioButton Week, Month;
-    TextView repeat_enddates;
-    RelativeLayout radiolayout, daysofWeekslayout, repeat_ends;
+    TextView textview1;
+    RelativeLayout radiolayout;
     LinearLayout rem_audio_play;
-    ListView list_daysofWeeks;
     String taskStatus;
     private NumberPicker datePicker, hourPicker, minutePicker, am_pmPicker;
     private String[] mAmPmStrings = null;
-    private boolean startTimeSet = false, endTimeSet = false, flag = false;
+    private boolean endTimeSet = false, flag = false;
     private int start_date, start_time, start_minute, start_am_pm, end_date, end_time, end_minute, end_am_pm;
     private MediaPlayer mPlayer;
     private Handler mHandler = new Handler();
@@ -108,9 +92,6 @@ public class NoteDateUpdate extends AppCompatActivity implements View.OnClickLis
     public static Runnable updatetime = null;
     private Handler handlerSeek = new Handler();
 
-
-    public ArrayList<ConflictCheckBean> conflictobject = new ArrayList<ConflictCheckBean>();
-
     public static NoteDateUpdate getInstance() {
         return noteDateUpdate;
     }
@@ -119,18 +100,20 @@ public class NoteDateUpdate extends AppCompatActivity implements View.OnClickLis
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_note_date_update);
-        String Query = null;
         context = this;
         noteDateUpdate = this;
-
+//        Typeface roboto_regular = Typeface.createFromAsset(getAssets(), "roboto.regular.ttf");
+//        Typeface roboto_medium = Typeface.createFromAsset(getAssets(), "roboto.medium.ttf");
+//        Typeface roboto_bold = Typeface.createFromAsset(getAssets(), "roboto.bold.ttf");
         end_date1 = (EditText) findViewById(R.id.End_Date);
 
         play_button = (ImageView) findViewById(R.id.play_button);
         txt_time = (TextView) findViewById(R.id.txt_time);
+        textview1 = (TextView) findViewById(R.id.textview1);
         Reminder_quote = (EditText) findViewById(R.id.Reminder_quote);
         seekbar = (SeekBar) findViewById(R.id.seekBar1);
         linear2 = (LinearLayout) findViewById(R.id.ll_3);
-
+//        textview1.setTypeface(roboto_medium);
         rem_audio_play = (LinearLayout) findViewById(R.id.rem_audio_play);
         radiolayout = (RelativeLayout) findViewById(R.id.l1_10);
 
@@ -144,8 +127,7 @@ public class NoteDateUpdate extends AppCompatActivity implements View.OnClickLis
         }
 
         String taskId = getIntent().getExtras().getString("taskId");
-        String from = getIntent().getExtras().getString("from");
-        
+
         CurrentTaskid = taskId;
         Log.d("DBValue", "weekday from db *" + taskId);
 
@@ -171,6 +153,7 @@ public class NoteDateUpdate extends AppCompatActivity implements View.OnClickLis
             @Override
             public void onClick(View v) {
                 finish();
+//                overridePendingTransition(R.anim.slide_in_down, R.anim.slide_out_down);
             }
         });
 
@@ -179,13 +162,49 @@ public class NoteDateUpdate extends AppCompatActivity implements View.OnClickLis
         submit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                try {
+                    boolean currenttime;
 
-                {
                     Log.i("task", "Appreference.conflicttask " + Appreference.conflicttask);
                     Log.i("task", "Appreference.conflicttask " + taskType);
 
-                      {
-//
+
+                    SimpleDateFormat day1 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+//                            String strenddate = multimediaFieldValues.get(bean.getClientId()).toString();
+                    Date cur_date = new Date();
+                    String Current_Time;
+                    Current_Time = day1.format(cur_date);
+
+                    String strdate1;
+
+                    if (android.text.format.DateFormat.is24HourFormat(context)) {
+                        strdate1 = Appreference.ChangeOriginalPattern(true, end_date1.getText().toString(), datepattern);
+                    } else {
+                        String ssss = Appreference.ChangeOriginalPattern(false, end_date1.getText().toString(), datepattern);
+                        strdate1 = Appreference.setDateTime(true, ssss);
+                    }
+//                            String strendday = strenddate.split(" ")[0];
+//                            int strendday1 = Integer.parseInt(strendday.split("-")[2]);
+                    Log.i("schedule", "strfromday-->" + end_date1.getText().toString());
+                    Log.i("schedule", "Current_Time-->" + Current_Time);
+                    Log.i("schedule", "strdate1-->" + strdate1);
+                    Log.i("schedule", "strfromday-->" + Current_Time.compareTo(strdate1));
+//                        SimpleDateFormat sdf=new SimpleDateFormat(datepattern);
+//                        try {
+//                            Log.i("schedule","changed format is  "+day1.format(sdf.parse(end_date1.getText().toString())));
+//                            Log.i("schedule","datepattern is  "+strdate1);
+//                            exists_Time =day1.format(sdf.parse(end_date1.getText().toString()));
+//                        } catch (ParseException e) {
+//                            e.printStackTrace();
+//                        }
+                    if (Current_Time.compareTo(strdate1) <= 0) {
+                        currenttime = true;
+                    } else {
+                        currenttime = false;
+                    }
+                    if (!currenttime) {
+                        Toast.makeText(context, "Please enter future date", Toast.LENGTH_SHORT).show();
+                    } else {
                         if (!android.text.format.DateFormat.is24HourFormat(context)) {
                             Intent i = new Intent();
                             i.putExtra("ReminderDate", Appreference.setDateTime(true, Appreference.ChangeOriginalPattern(false, end_date1.getText().toString(), datepattern)));
@@ -202,77 +221,24 @@ public class NoteDateUpdate extends AppCompatActivity implements View.OnClickLis
                             finish();
                         }
                     }
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
-
             }
         });
 
-        Log.i("Taskdateupdate", "failure if ");
-        String queryy = "select * from taskDetailsInfo where (fromUserName='" + Appreference.loginuserdetails.getUsername() + "' or toUserName='" + Appreference.loginuserdetails.getUsername() + "') and loginuser='" + Appreference.loginuserdetails.getEmail() + "'and taskId='" + taskId + "' and mimeType='date' and (requestStatus='approved' or requestStatus='requested' or requestStatus='rejected' or requestStatus='assigned') order by id desc";
-        taskList_4 = VideoCallDataBase.getDB(context).getTaskHistory(queryy);
-        Log.i("task", "taskList_4 size " + taskList_4.size());
-        if (taskList_4.size() > 0) {
-            Log.i("task", "taskList_4 inside if  " + taskList_4.size());
-            TaskDetailsBean taskDetailsBean = taskList_4.get(0);
-            Log.i("task","timefrequency"+taskDetailsBean.getTimeFrequency());
-            if (taskDetailsBean.getRequestStatus().equalsIgnoreCase("rejected")) {
-                queryy = "select * from taskDetailsInfo where (fromUserName='" + Appreference.loginuserdetails.getUsername() + "' or toUserName='" + Appreference.loginuserdetails.getUsername() + "') and loginuser='" + Appreference.loginuserdetails.getEmail() + "'and taskId='" + taskId + "' and mimeType='date' and (requestStatus='approved' or requestStatus='assigned') order by id desc";
-                taskList_4 = VideoCallDataBase.getDB(context).getTaskHistory(queryy);
-                if (taskList_4.size() > 0) {
-                    TaskDetailsBean taskDetailsBean1 = taskList_4.get(0);
-                    if (android.text.format.DateFormat.is24HourFormat(context)) {
-                        end_date1.setText(Appreference.ChangeDevicePattern(true, taskDetailsBean1.getRemainderFrequency(), datepattern));
-                    } else {
-                        Log.i("TaskDateUpdate", "end_date1 value is" + taskDetailsBean1.getRemainderFrequency());
-                        end_date1.setText(Appreference.ChangeDevicePattern(false, Appreference.setDateTime(false, taskDetailsBean1.getRemainderFrequency()), datepattern));
-                    }
+        SimpleDateFormat sdf_1 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        String fromdate1 = sdf_1.format(new Date());
 
-                    Reminder_quote.setText(taskDetailsBean1.getReminderQuote());
-                    if (taskDetailsBean.getServerFileName() != null && !taskDetailsBean.getServerFileName().equalsIgnoreCase(null) && !taskDetailsBean.getServerFileName().equalsIgnoreCase("")) {
-                        strIPath = "/storage/emulated/0/High Message/" + taskDetailsBean1.getServerFileName();
-                    }
-                    Log.i("strIPath 1", "strIPath rejected Intent " + strIPath);
-                }
-            } else {
-                if (android.text.format.DateFormat.is24HourFormat(context)) {
-                    end_date1.setText(Appreference.ChangeDevicePattern(true, taskDetailsBean.getRemainderFrequency(), datepattern));
-                } else {
-                    Log.i("TaskDateUpdate", "end_date2 value is" + taskDetailsBean.getPlannedEndDateTime());
-                    end_date1.setText(Appreference.ChangeDevicePattern(false, Appreference.setDateTime(false, taskDetailsBean.getRemainderFrequency()), datepattern));
-                }
-
-                Reminder_quote.setText(taskDetailsBean.getReminderQuote());
-                if (taskDetailsBean.getServerFileName() != null && !taskDetailsBean.getServerFileName().equalsIgnoreCase(null) && !taskDetailsBean.getServerFileName().equalsIgnoreCase("")) {
-                    strIPath = "/storage/emulated/0/High Message/" + taskDetailsBean.getServerFileName();
-                }
-                Log.i("strIPath 1", "strIPath Intent " + strIPath);
-            }
+        Log.i("Dateand time", "fromdate1 value is " + fromdate1);
+        if (android.text.format.DateFormat.is24HourFormat(context)) {
+            end_date1.setText(Appreference.ChangeDevicePattern(true, fromdate1, datepattern));
         } else {
-            Log.i("task", "taskList_4 inside else " + taskList_4.size());
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-            Date date = new Date();
-
-            SimpleDateFormat sdf_1 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-            String fromdate1 = sdf_1.format(new Date());
-
-            Log.i("Dateand time", "fromdate1 value is " + fromdate1);
-            if (android.text.format.DateFormat.is24HourFormat(context)) {
-                end_date1.setText(Appreference.ChangeDevicePattern(true, fromdate1, datepattern));
-            } else {
-                end_date1.setText(Appreference.ChangeDevicePattern(false, Appreference.setDateTime(false, fromdate1), datepattern));
-                Log.i("TaskDateUpdate", "fromdate1 value is " + fromdate1);
-            }
-            Log.i("task", "endDate second " + endDate + " " + datecheck);
+            end_date1.setText(Appreference.ChangeDevicePattern(false, Appreference.setDateTime(false, fromdate1), datepattern));
+            Log.i("TaskDateUpdate", "fromdate1 value is " + fromdate1);
         }
-        Log.i("task", "endDate three " + endDate + " " + datecheck);
-        if (datecheck) {
-            if (android.text.format.DateFormat.is24HourFormat(context)) {
-                end_date1.setText(Appreference.ChangeDevicePattern(true, endDate, datepattern));
-            } else {
-                end_date1.setText(Appreference.ChangeDevicePattern(false, Appreference.setDateTime(false, endDate), datepattern));
-            }
-            Log.i("task", "endDate four " + endDate + " " + datecheck);
-        }
+        Log.i("task", "endDate second ==>  " + end_date1 + " " + datecheck);
+
         audio.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -356,9 +322,8 @@ public class NoteDateUpdate extends AppCompatActivity implements View.OnClickLis
             @Override
             public void run() {
                 if (mPlayer.isPlaying()) {
-                    if (isPlayCompleted) {
-
-                    } else {
+                    if (!isPlayCompleted) {
+//                    } else {
                         Log.i("valueof ", String.valueOf(mPlayer.getCurrentPosition() / 1000));
                         seekbar.setProgress(mPlayer.getCurrentPosition());
                         handlerSeek.postDelayed(updatetime, 100);
@@ -473,6 +438,7 @@ public class NoteDateUpdate extends AppCompatActivity implements View.OnClickLis
                 setResult(RESULT_OK, i);
                 Appreference.isConflict = false;
                 finish();
+//                overridePendingTransition( R.anim.slide_in_down, R.anim.slide_out_down );
             } else {
                 Intent i = new Intent();
                 i.putExtra("StartDate", start_date1.getText().toString());
@@ -488,6 +454,7 @@ public class NoteDateUpdate extends AppCompatActivity implements View.OnClickLis
                 setResult(RESULT_OK, i);
                 Appreference.isConflict = false;
                 finish();
+//                overridePendingTransition( R.anim.slide_in_down, R.anim.slide_out_down );
             }
         }
     }
@@ -582,7 +549,7 @@ public class NoteDateUpdate extends AppCompatActivity implements View.OnClickLis
             am_pmPicker.setDescendantFocusability(NumberPicker.FOCUS_BLOCK_DESCENDANTS);
             Button set = (Button) dialog
                     .findViewById(R.id.setbtn);
-            set.setTypeface(normal_type);
+//            set.setTypeface(normal_type);
             Log.i("datePicker", "is " + datePicker);
             datePicker.setClickable(false);
             datePicker.setMinValue(0);
@@ -602,7 +569,6 @@ public class NoteDateUpdate extends AppCompatActivity implements View.OnClickLis
             minutePicker.setWrapSelectorWheel(true);
             // ArrayList<String> displayedValues = new ArrayList<String>();
             String[] sdisplayedValues = {"00", "01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30", "31", "32", "33", "34", "35", "36", "37", "38", "39", "40", "41", "42", "43", "44", "45", "46", "47", "48", "49", "50", "51", "52", "53", "54", "55", "56", "57", "58", "59"};
-            List<String> ampmValues = new ArrayList<String>();
             String[] am_pm = {"AM", "PM", "AM", "PM"};
             // for (int i = 0; i < 60; i += 15) {
             // displayedValues.add(String.format("%02d", i));
@@ -625,7 +591,6 @@ public class NoteDateUpdate extends AppCompatActivity implements View.OnClickLis
                 am_pmPicker.setMinValue(0);
                 am_pmPicker.setMaxValue(3);
                 am_pmPicker.setWrapSelectorWheel(true);
-                int am = 0;
                 am_pmPicker.setDisplayedValues(am_pm);
             }
 
@@ -637,10 +602,10 @@ public class NoteDateUpdate extends AppCompatActivity implements View.OnClickLis
             if (startOrEnd == 2) {
                 Log.i("NoteDateUpdate", "end_date1 click event 2 ");
                 String[] values1 = datePicker.getDisplayedValues();
-                String end_hour = "";
-                String en_date = "";
+                String end_hour;
+                String en_date;
                 if (android.text.format.DateFormat.is24HourFormat(context)) {
-                    if(end_date1.getText().toString()!=null) {
+                    if (end_date1.getText().toString() != null) {
                         String date_ptn = Appreference.ChangeOriginalPattern(true, end_date1.getText().toString(), datepattern);
 //                    end_hour = end_date1.getText().toString();
 //                    en_date = end_date1.getText().toString();
@@ -682,7 +647,7 @@ public class NoteDateUpdate extends AppCompatActivity implements View.OnClickLis
                         hourPicker.setValue(endhour);
                     }
                 } else {
-                    if(end_date1.getText().toString()!=null) {
+                    if (end_date1.getText().toString() != null) {
                         String date_ptn = Appreference.ChangeOriginalPattern(false, end_date1.getText().toString(), datepattern);
                         en_date = Appreference.setDateTime(true, date_ptn);
                         end_hour = Appreference.setDateTime(true, date_ptn);
@@ -749,23 +714,10 @@ public class NoteDateUpdate extends AppCompatActivity implements View.OnClickLis
 
             }
 
-            int minute = rightNow.get(Calendar.MINUTE);
-            int nextMinute = 0;
-            if (minute >= 45 && minute <= 59)
-                nextMinute = 3;
-            else if (minute >= 30)
-                nextMinute = 2;
-            else if (minute >= 15)
-                nextMinute = 1;
-            else if (minute > 0 && minute < 15)
-                nextMinute = 0;
-
-
             if (startOrEnd == 2) {
-                String en_min = " ";
+                String en_min;
                 if (android.text.format.DateFormat.is24HourFormat(context)) {
-                    String date_rem = Appreference.ChangeOriginalPattern(true, end_date1.getText().toString(), datepattern);
-                    en_min = date_rem;
+                    en_min = Appreference.ChangeOriginalPattern(true, end_date1.getText().toString(), datepattern);
                 } else {
                     String date_rem = Appreference.ChangeOriginalPattern(false, end_date1.getText().toString(), datepattern);
                     en_min = Appreference.setDateTime(true, date_rem);
@@ -781,14 +733,13 @@ public class NoteDateUpdate extends AppCompatActivity implements View.OnClickLis
 
                 @Override
                 public void onClick(View v) {
-                    String startDATE, endDate = null;
+                    //noinspection UnusedAssignment
                     String[] values1 = datePicker.getDisplayedValues();
                     String[] values2 = hourPicker.getDisplayedValues();
                     String[] values3 = minutePicker.getDisplayedValues();
                     String[] values4 = am_pmPicker.getDisplayedValues();
-                    String tdystr = values1[datePicker.getValue()];
+                    String tdystr;
                     int dateposition = datePicker.getValue();
-                    int hourposition = hourPicker.getValue();
                     if (values1[datePicker.getValue()]
                             .equalsIgnoreCase("today")) {
                         tdystr = today;
@@ -797,7 +748,6 @@ public class NoteDateUpdate extends AppCompatActivity implements View.OnClickLis
                         tdystr = values1[datePicker.getValue()];
                         Log.i("tdystr", "day " + tdystr);
                     }
-                    String am_pmpicker = "";
                     Log.i("tdystr", "hour " + values2[hourPicker.getValue()]);
                     Log.i("tdystr", "min " + values3[minutePicker.getValue()]);
                     //Log.i("tdystr", "am_pm " + values4[am_pmPicker.getValue()]);
@@ -811,14 +761,13 @@ public class NoteDateUpdate extends AppCompatActivity implements View.OnClickLis
                     }
 
                     // int month = dp.getMonth() + 1;
-                    String day = values3[minutePicker.getValue()];// String.valueOf(tp.getCurrentMinute());
                     // if (day.length() == 1) {
                     // day = "0" + day;
                     // }
                     String strDateTime = values2[hourPicker.getValue()] + ":"
                             + values3[minutePicker.getValue()];// tp.getCurrentHour()
                     // + ":" + day;
-                    String tm = null;
+                    String tm;
 
                     SimpleDateFormat time = new SimpleDateFormat("HH:mm");
                     tm = time.format(new Date());
@@ -827,16 +776,16 @@ public class NoteDateUpdate extends AppCompatActivity implements View.OnClickLis
 
 
                     if (startOrEnd == 2) {
-                        String startrem = "";
+                        String startrem;
                         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
                         if (android.text.format.DateFormat.is24HourFormat(context)) {
                             startrem = sdf.format(new Date());
-                            Log.i("NoteDateUpdate","startrem * "+startrem);
+                            Log.i("NoteDateUpdate", "startrem * " + startrem);
                         } else {
                             startrem = Appreference.setDateTime(false, sdf.format(new Date()));
-                            Log.i("NoteDateUpdate","startrem ** "+startrem);
+                            Log.i("NoteDateUpdate", "startrem ** " + startrem);
                         }
-                        Log.i("NoteDateUpdate","startrem *** "+startrem);
+                        Log.i("NoteDateUpdate", "startrem *** " + startrem);
                         String startrem1 = startrem.split(":")[0];  // yyyy-mm-dd hh
                         String starttime = startrem1.split(" ")[1] + ":" + startrem.split(":")[1]; // hh:mm
                         Log.i("starttime", "starttime " + starttime);
@@ -893,11 +842,10 @@ public class NoteDateUpdate extends AppCompatActivity implements View.OnClickLis
                                 enTime = strDateTime;
                             }
                         }
-                        String strfromdate = "";
 
                         String strfromday = startrem.split(" ")[0];
                         Log.i("schedule", "toas-->" + toas);
-                        DateFormat selctedDateformate = null;
+                        DateFormat selctedDateformate;
                         Date date = null;
                         if (!android.text.format.DateFormat.is24HourFormat(context)) {
                             selctedDateformate = new SimpleDateFormat("yyyy MMM dd hh : mm a");
@@ -916,67 +864,73 @@ public class NoteDateUpdate extends AppCompatActivity implements View.OnClickLis
                         }
                         SimpleDateFormat day1 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
                         String strenddate = day1.format(date);
+                        Date cur_date = new Date();
+                        String Current_Time;
+                        Current_Time = day1.format(cur_date);
 
                         String strendday = strenddate.split(" ")[0];
                         int strendday1 = Integer.parseInt(strendday.split("-")[2]);
                         Log.i("schedule", "strfromday-->" + strendday1);
+                        if (Current_Time.compareTo(strenddate) < 0) {
+                            if (strfromday.compareTo(strendday) <= 0) {
+                                if (!android.text.format.DateFormat.is24HourFormat(context)) {
+                                    if (CheckReminderIsValid(
+                                            values4[am_pmPicker.getValue()],
+                                            dateposition, enTime, starttime, true)) {
 
-                        if (strfromday.compareTo(strendday) <= 0) {
-                            if (!android.text.format.DateFormat.is24HourFormat(context)) {
-                                if (CheckReminderIsValid(
-                                        values4[am_pmPicker.getValue()],
-                                        dateposition, enTime, starttime, true)) {
+                                        Log.i("schedule", "entry if");
+                                        Log.i("End", "Date is " + strenddate);
+                                        if (android.text.format.DateFormat.is24HourFormat(context)) {
+                                            end_date1.setText(Appreference.ChangeDevicePattern(true, strenddate, datepattern));
+                                        } else {
+                                            String dddd = Appreference.setDateTime(false, strenddate);
+                                            end_date1.setText(Appreference.ChangeDevicePattern(false, dddd, datepattern));
+                                        }
 
-                                    Log.i("schedule", "entry if");
-                                    Log.i("End", "Date is " + strenddate);
-                                    if (android.text.format.DateFormat.is24HourFormat(context)) {
-                                        end_date1.setText(Appreference.ChangeDevicePattern(true, strenddate, datepattern));
+                                        enDate = values1[datePicker.getValue()];
+
+                                        end_date = dateposition;
+                                        end_time = hourPicker.getValue();
+                                        end_minute = minutePicker.getValue();
+                                        end_am_pm = am_pmPicker.getValue();
+
+                                        endTimeSet = true;
                                     } else {
-                                        String dddd = Appreference.setDateTime(false, strenddate);
-                                        end_date1.setText(Appreference.ChangeDevicePattern(false, dddd, datepattern));
+                                        showToast(context.getString(R.string.Kindly_slct_grt_than_value_from_start_time));
                                     }
-
-                                    enDate = values1[datePicker.getValue()];
-
-                                    end_date = dateposition;
-                                    end_time = hourPicker.getValue();
-                                    end_minute = minutePicker.getValue();
-                                    end_am_pm = am_pmPicker.getValue();
-
-                                    endTimeSet = true;
                                 } else {
-                                    showToast(context.getString(R.string.Kindly_slct_grt_than_value_from_start_time));
+
+                                    String dt = Appreference.setDateTime(false, strenddate);
+                                    if (CheckReminderIsValid(
+                                            dt.split(" ")[2],
+                                            dateposition, enTime, starttime, true)) {
+
+                                        Log.i("schedule", "entry if");
+                                        Log.i("End", "Date is " + strenddate);
+                                        if (android.text.format.DateFormat.is24HourFormat(context)) {
+                                            end_date1.setText(Appreference.ChangeDevicePattern(true, strenddate, datepattern));
+                                        } else {
+                                            end_date1.setText(Appreference.ChangeDevicePattern(false, Appreference.setDateTime(false, strenddate), datepattern));
+                                        }
+
+
+                                        enDate = values1[datePicker.getValue()];
+
+                                        end_date = dateposition;
+                                        end_time = hourPicker.getValue();
+                                        end_minute = minutePicker.getValue();
+                                        // end_am_pm = am_pmPicker.getValue();
+
+                                        endTimeSet = true;
+                                    } else {
+                                        showToast(context.getString(R.string.Kindly_slct_grt_than_value_from_start_time));
+                                    }
                                 }
                             } else {
-
-                                String dt = Appreference.setDateTime(false, strenddate);
-                                if (CheckReminderIsValid(
-                                        dt.split(" ")[2],
-                                        dateposition, enTime, starttime, true)) {
-
-                                    Log.i("schedule", "entry if");
-                                    Log.i("End", "Date is " + strenddate);
-                                    if (android.text.format.DateFormat.is24HourFormat(context)) {
-                                        end_date1.setText(Appreference.ChangeDevicePattern(true, strenddate, datepattern));
-                                    } else {
-                                        end_date1.setText(Appreference.ChangeDevicePattern(false, Appreference.setDateTime(false, strenddate), datepattern));
-                                    }
-
-
-                                    enDate = values1[datePicker.getValue()];
-
-                                    end_date = dateposition;
-                                    end_time = hourPicker.getValue();
-                                    end_minute = minutePicker.getValue();
-                                    // end_am_pm = am_pmPicker.getValue();
-
-                                    endTimeSet = true;
-                                } else {
-                                    showToast(context.getString(R.string.Kindly_slct_grt_than_value_from_start_time));
-                                }
+                                showToast(context.getString(R.string.Kindly_slct_grt_than_value_from_start_date));
                             }
                         } else {
-                            showToast(context.getString(R.string.Kindly_slct_grt_than_value_from_start_date));
+                            showToast(context.getString(R.string.Kindly_slct_future_time));
                         }
                     }
 
@@ -1005,11 +959,6 @@ public class NoteDateUpdate extends AppCompatActivity implements View.OnClickLis
             SimpleDateFormat dateFormat = new SimpleDateFormat("MMM dd", Locale.ENGLISH);
             dates.add("Today");
             today = dateFormat.format(c1.getTime());
-            Calendar c = Calendar.getInstance();
-            SimpleDateFormat df = new SimpleDateFormat("dd-MMM-yyyy");
-            String formattedDate = df.format(c.getTime());
-            String split[] = formattedDate.split("-");
-            String todaydate = split[0] + " " + split[1];
             for (int i = 0; i < 360; i++) {
                 c1.add(Calendar.DATE, 1);
                 dates.add(dateFormat.format(c1.getTime()));
@@ -1034,7 +983,6 @@ public class NoteDateUpdate extends AppCompatActivity implements View.OnClickLis
             Calendar rightNow = Calendar.getInstance(Locale.getDefault());
             int amPM = rightNow.get(Calendar.AM_PM);
 
-            int position = day;
             int startTime = Integer.parseInt(strDate.split(":")[0]);
             int currentTime = Integer.parseInt(date.split(":")[0]);
 
@@ -1049,22 +997,19 @@ public class NoteDateUpdate extends AppCompatActivity implements View.OnClickLis
             Log.i("SCHEDULECALL", "amPM===>" + amPM);
             if (start) {
 
-                if (position > 0 && position < 364) {
+                if (day > 0 && day < 364) {
                     isvalid = true;
-                } else if (position == 0 && startTime > currentTime) {
+                } else if (day == 0 && startTime > currentTime) {
                     isvalid = true;
-                } else if (position == 0 && startTime >= currentTime
+                } else if (day == 0 && startTime >= currentTime
                         && startMin > currentMin) {
                     isvalid = true;
-                } else if (position == 0 && amPM == 0
+                } else if (day == 0 && amPM == 0
                         && am_pm.equalsIgnoreCase("pm")) {
+                    Log.i("note","user");
                 } else if (ampm.equalsIgnoreCase("pm") && am_pm.equalsIgnoreCase("pm")) {
-                    if (startTime >= currentTime
-                            && startMin > currentMin) {
-                        isvalid = true;
-                    } else {
-                        isvalid = false;
-                    }
+                    isvalid = startTime >= currentTime
+                            && startMin > currentMin;
 
                 } else {
 
@@ -1072,12 +1017,7 @@ public class NoteDateUpdate extends AppCompatActivity implements View.OnClickLis
                 }
 
             } else {
-                if (currentTime >= startTime || currentMin > startMin) {
-                    isvalid = true;
-                } else {
-
-                    isvalid = false;
-                }
+                isvalid = currentTime >= startTime || currentMin > startMin;
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -1088,161 +1028,13 @@ public class NoteDateUpdate extends AppCompatActivity implements View.OnClickLis
 
     @Override
     public void ResponceMethod(final Object object) {
-        /*mHandler.post(new Runnable() {
-            @Override
-            public void run() {
-                CommunicationBean bean = (CommunicationBean) object;
-                try {
-                    String str = bean.getEmail();
-                    String s2 = bean.getFirstname();
-                    String test1 = str.toString();
-                    Log.d("conflict", "value " + bean.getFirstname());
-                    Log.d("conflict", "value " + bean.getEmail());
-                    Log.d("conflict", "value " + test1);
-                    if (bean.getFirstname() != null && bean.getFirstname().equalsIgnoreCase("checkConflicts")) {
-                        Gson gson = new Gson();
-                        //JsonArray jsonArray=new JsonArray();
-                        //JsonElement jelement = new JsonParser().parse(str);
-                        Log.i("response", "inside the conflict response");
-                        Log.i("Response conflictTask ", "response " + str);
 
-                        JSONArray jsonArray = new JSONArray(str);
-                        if (jsonArray.length() > 0) {
-                            // jsonArray=jelement.getAsJsonArray();
-                            Log.i("response array", "response size" + jsonArray.length());
-                            conflictobject.clear();
-                            for (int i = 0; i < jsonArray.length(); i++) {
-
-                                //JSONObject jsonObject1= (JSONObject) jsonArray.getJSONObject(i);
-                                Log.i("response ", "objects  " + jsonArray.get(i));
-                                ConflictCheckBean conflictCheck = gson.fromJson(jsonArray.getString(i), ConflictCheckBean.class);
-                                conflictobject.add(conflictCheck);
-                            }
-                            Log.i("size of conflict", "size " + conflictobject.size());
-                            Log.i("NoteDateUpdate ", "conflictobject.size @ " + conflictobject.size());
-                            Intent intent = new Intent(NoteDateUpdate.this, ConflictList.class);
-                            intent.putExtra("LeaveTaskId", CurrentTaskid);
-                            startActivity(intent);
-                        }
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        });*/
     }
 
     @Override
     public void ErrorMethod(Object object) {
 
     }
-
-    private void showprogress() {
-        mHandler.post(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    Log.i("login123", "inside showProgressDialog ");
-                    progress = new ProgressDialog(NoteDateUpdate.this);
-                    progress.setCancelable(false);
-                    if (conflict) {
-                        progress.setMessage("Checking Conflict.");
-                        conflict = false;
-                    }
-                    progress.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-                    progress.setProgress(0);
-                    progress.setMax(100);
-                    progress.show();
-                } catch (Exception e) {
-//                        SingleInstance.printLog(null, e.getMessage(), null, e);
-                }
-            }
-        });
-    }
-
-    public void cancelDialog() {
-        try {
-            if (progress != null && progress.isShowing()) {
-                Log.i("register", "--progress bar end-----");
-                progress.dismiss();
-                progress = null;
-            }
-        } catch (Exception e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-
-    }
-
-
-    /*private class WeekdaysAdaper extends BaseAdapter {
-        ArrayList<WeekdayBean> exdayslist;
-        LayoutInflater inflater = null;
-        Context adapContext;
-
-        public WeekdaysAdaper(NoteDateUpdate context) {
-            this.adapContext = context;
-        }
-
-        public WeekdaysAdaper(ArrayList<WeekdayBean> weekdayBeanArrayList, NoteDateUpdate noteDateUpdate) {
-            this.exdayslist = weekdayBeanArrayList;
-            this.adapContext = noteDateUpdate;
-        }
-
-        @Override
-        public int getCount() {
-            return exdayslist.size();
-        }
-
-        @Override
-        public long getItemId(int position) {
-
-            return position;
-        }
-
-        @Override
-        public String getItem(int position) {
-            return getItem(position);
-        }
-
-        @Override
-        public void notifyDataSetChanged() {
-            super.notifyDataSetChanged();
-        }
-
-        public int getItemViewType(int position) {
-            int value = 0;
-
-            return value;
-        }
-
-        public View getView(int pos, View conView, ViewGroup group) {
-            try {
-                if (conView == null) {
-                    inflater = (LayoutInflater) adapContext
-                            .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-                    conView = inflater.inflate(R.layout.weekdays_list, null,
-                            false);
-                }
-                TextView days = (TextView) conView.findViewById(R.id.label);
-                days.setText(String.valueOf(exdayslist.get(pos).getWeekday()));
-                Log.i("pos", "6" + exdayslist.get(pos).isSelected);
-                if (exdayslist.get(pos).isSelected) {
-                    Log.i("pos", "7");
-                    days.setTextColor(getResources().getColor(R.color.appcolor));
-                } else {
-                    Log.i("pos", "8");
-                    days.setTextColor(getResources().getColor(R.color.black));
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-
-            return conView;
-
-        }
-    }*/
-
 
     public void stopPlayback() {
         mPlayingPosition = -1;
@@ -1291,7 +1083,7 @@ public class NoteDateUpdate extends AppCompatActivity implements View.OnClickLis
         @Override
         public void run() {
             if (isPlayCompleted) {
-
+Log.i("note","user");
             } else if (playtimer) {
                 double sTime = mPlayer.getCurrentPosition();
                 String min, sec;

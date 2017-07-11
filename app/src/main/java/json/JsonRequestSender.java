@@ -578,7 +578,15 @@ public class JsonRequestSender {
         communicationBean.setAccess(access);
         queue.addMsg(communicationBean);
     }
+   public void reactivateStatus(EnumJsonWebservicename webservicename, List<NameValuePair> valuePair, WebServiceInterface access,TaskDetailsBean taskDetailsBean) {
 
+        CommunicationBean communicationBean = new CommunicationBean();
+        communicationBean.setEnumJsonWebservicename(webservicename);
+        communicationBean.setNameValuePairs(valuePair);
+        communicationBean.setTaskDetailsBean(taskDetailsBean);
+        communicationBean.setAccess(access);
+        queue.addMsg(communicationBean);
+    }
     public void OracleAssignTask(EnumJsonWebservicename webservicename, JSONObject jsonObject,TaskDetailsBean taskDetailsBean, WebServiceInterface access) {
         CommunicationBean communicationBean = new CommunicationBean();
         communicationBean.setEnumJsonWebservicename(webservicename);
@@ -616,7 +624,13 @@ public class JsonRequestSender {
         communicationBean.setAccess(access);
         queue.addMsg(communicationBean);
     }
-
+    public void OracleTNAJobReport(EnumJsonWebservicename webservicename, List<NameValuePair> valuePair, WebServiceInterface access) {
+        CommunicationBean communicationBean = new CommunicationBean();
+        communicationBean.setEnumJsonWebservicename(webservicename);
+        communicationBean.setNameValuePairs(valuePair);
+        communicationBean.setAccess(access);
+        queue.addMsg(communicationBean);
+    }
     /*public void listMembersInGroup(EnumJsonWebservicename webservicename, List<NameValuePair> valuePair, WebServiceInterface access){
 
         CommunicationBean communicationBean=new CommunicationBean();

@@ -1558,8 +1558,8 @@ public class ContactsFragment extends Fragment implements View.OnClickListener, 
                 startActivity(intent);
                 break;
             case R.id.notes:
-                Intent intent_notes = new Intent(classContext, NotesList.class);
-//                intent_notes.putExtra("task", "notes");
+                Intent intent_notes = new Intent(classContext, TaskHistory.class);
+                intent_notes.putExtra("note_type", "note");
                 startActivity(intent_notes);
                 break;
             case R.id.allreport:

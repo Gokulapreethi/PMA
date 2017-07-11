@@ -16,33 +16,23 @@ public class ReminderFrequencySelection extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.reminder_frequency_selection);
-        //String title=getIntent().getStringExtra("TimeFrequency");
+
         everyminute = (TextView) findViewById(R.id.everyminute);
-//        every_10_minute = (TextView) findViewById(R.id.every_10_minute);
+
         daily = (TextView) findViewById(R.id.daily);
-//        none = (TextView) findViewById(R.id.none);
+
         hourly = (TextView) findViewById(R.id.hourly);
-//        weekly = (TextView) findViewById(R.id.weekly);
-//        monthly = (TextView) findViewById(R.id.monthly);
-//        yearly = (TextView) findViewById(R.id.yearly);
+
         cancel = (TextView) findViewById(R.id.ca);
 
-        /*none.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
 
-                Intent intent = new Intent();
-                intent.putExtra("TimeFrequency", "None");
-                setResult(RESULT_OK, intent);
-                finish();
-            }
-        });*/
+
         everyminute.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
                 Intent intent = new Intent();
-                intent.putExtra("TimeFrequency", "Minutes");
+                intent.putExtra("TimeFrequency", "Minute");
                 setResult(RESULT_OK, intent);
                 finish();
             }
@@ -52,7 +42,7 @@ public class ReminderFrequencySelection extends Activity {
             public void onClick(View v) {
 
                 Intent intent = new Intent();
-                intent.putExtra("TimeFrequency", "Hours");
+                intent.putExtra("TimeFrequency", "Hour");
                 setResult(RESULT_OK, intent);
                 finish();
             }
@@ -62,52 +52,13 @@ public class ReminderFrequencySelection extends Activity {
             public void onClick(View v) {
 
                 Intent intent = new Intent();
-                intent.putExtra("TimeFrequency", "Days");
-                setResult(RESULT_OK, intent);
-                finish();
-            }
-        });
-        /*every_10_minute.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                Intent intent = new Intent();
-                intent.putExtra("TimeFrequency", "Every 10 min");
+                intent.putExtra("TimeFrequency", "Day");
                 setResult(RESULT_OK, intent);
                 finish();
             }
         });
 
-        weekly.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
 
-                Intent intent = new Intent();
-                intent.putExtra("TimeFrequency", "Week day");
-                setResult(RESULT_OK, intent);
-                finish();
-            }
-        });
-        monthly.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                Intent intent = new Intent();
-                intent.putExtra("TimeFrequency", "Monthly");
-                setResult(RESULT_OK, intent);
-                finish();
-            }
-        });
-        yearly.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                Intent intent = new Intent();
-                intent.putExtra("TimeFrequency", "Yearly");
-                setResult(RESULT_OK, intent);
-                finish();
-            }
-        });*/
         cancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

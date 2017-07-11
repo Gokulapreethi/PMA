@@ -864,6 +864,9 @@ public class AddTaskReassign extends Activity implements View.OnClickListener, W
                         intent.putExtra("taskBean", detailsBean1);
                         setResult(RESULT_OK, intent);
                         finish();
+                    }else {
+                        String result = (String) jsonObject.get("result_text");
+                        Toast.makeText(AddTaskReassign.this, result, Toast.LENGTH_LONG).show();
                     }
 
                     handler.post(new Runnable() {
