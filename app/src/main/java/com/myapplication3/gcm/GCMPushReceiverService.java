@@ -322,7 +322,7 @@ public class GCMPushReceiverService extends FirebaseMessagingService {
                                                         if (task_overdue != null && task_overdue.equalsIgnoreCase("Y")) {
                                                             newTaskConversation.taskReminderMessage(taskDetailsBean, null, "overdue", "overdue", "2");
                                                         } else {
-                                                            newTaskConversation.taskReminderMessage(taskDetailsBean, null, "text", "reminder", "2");
+                                                            newTaskConversation.taskReminderMessage(taskDetailsBean, null, "reminder", "reminder", "2");
                                                         }
                                                         Log.d("gcmMessage7", "if method fire");
                                                     }

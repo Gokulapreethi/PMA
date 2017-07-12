@@ -2,14 +2,19 @@ package com.myapplication3.sketh;
 
 import android.app.DatePickerDialog;
 import android.app.ProgressDialog;
+import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.drawable.ColorDrawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -23,6 +28,7 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -45,6 +51,7 @@ import com.google.gson.reflect.TypeToken;
 import com.myapplication3.Appreference;
 import com.myapplication3.Bean.ListallProjectBean;
 import com.myapplication3.Bean.ProjectDetailsBean;
+import com.myapplication3.Bean.TaskDetailsBean;
 import com.myapplication3.DB.VideoCallDataBase;
 import com.myapplication3.ImageLoader;
 import com.myapplication3.ListAllgetTaskDetails;
@@ -58,7 +65,14 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.pjsip.pjsua2.app.MainActivity;
 
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.InputStream;
 import java.lang.reflect.Type;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -98,7 +112,7 @@ public class ProjectsFragment extends Fragment implements View.OnClickListener, 
     int tna_count;
     RelativeLayout all_report_title;
     Button submit_button;
-    String TNAReportStart,TNAReportEnd;
+    String TNAReportStart, TNAReportEnd;
 
     public static ProjectsFragment getInstance() {
         return projectsFragment;
@@ -136,7 +150,7 @@ public class ProjectsFragment extends Fragment implements View.OnClickListener, 
 //                Appreference.jsonRequestSender.listAllMyProject(EnumJsonWebservicename.listAllMyProject, tagNameValuePairs, this);
                     Log.i("ws123", "getAllJobDetails request");
                     Appreference.jsonRequestSender.getAllJobDetails(EnumJsonWebservicename.getAllJobDetails, tagNameValuePairs, this);
-                }else
+                } else
                     Toast.makeText(getActivity(), "Check your internet connection", Toast.LENGTH_SHORT).show();
 
 
@@ -154,7 +168,7 @@ public class ProjectsFragment extends Fragment implements View.OnClickListener, 
         view = inflater.inflate(R.layout.project_fragment_layout, container, false);
         try {
             Appreference.context_table.put("projectfragment", this);
-
+            getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
             History_Search = (LinearLayout) view.findViewById(R.id.History_Search);
             ProjectSearch = (EditText) view.findViewById(R.id.searchtext);
             NoResults = (TextView) view.findViewById(R.id.Noresult);
@@ -164,11 +178,11 @@ public class ProjectsFragment extends Fragment implements View.OnClickListener, 
             image_search = (ImageView) view.findViewById(R.id.image_search);
             reportdetails = (ImageView) view.findViewById(R.id.reportdetails);
             reportdetails.setOnClickListener(this);
-            if(Appreference.loginuserdetails!=null && Appreference.loginuserdetails.getRoleId()!=null
-                    && Appreference.loginuserdetails.getRoleId().equalsIgnoreCase("2")){
+            if (Appreference.loginuserdetails != null && Appreference.loginuserdetails.getRoleId() != null
+                    && Appreference.loginuserdetails.getRoleId().equalsIgnoreCase("2")) {
                 image_search.setVisibility(View.VISIBLE);
                 reportdetails.setVisibility(View.VISIBLE);
-            }else{
+            } else {
                 image_search.setVisibility(View.GONE);
                 reportdetails.setVisibility(View.GONE);
             }
@@ -181,7 +195,7 @@ public class ProjectsFragment extends Fragment implements View.OnClickListener, 
 
             activity_start = (TextView) view.findViewById(R.id.activity_start);
             activity_end = (TextView) view.findViewById(R.id.activity_end);
-            submit_button= (Button) view.findViewById(R.id.submit_button);
+            submit_button = (Button) view.findViewById(R.id.submit_button);
             all_report_title = (RelativeLayout) view.findViewById(R.id.all_report_title);
 
             try {
@@ -256,8 +270,8 @@ public class ProjectsFragment extends Fragment implements View.OnClickListener, 
             submit_button.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Log.i("report123","-====>startdATE====>"+TNAReportStart);
-                    Log.i("report123","-====>eNDdATE====>"+TNAReportEnd);
+                    Log.i("report123", "-====>startdATE====>" + TNAReportStart);
+                    Log.i("report123", "-====>eNDdATE====>" + TNAReportEnd);
                     all_report_title.setVisibility(View.GONE);
                     tna_count = 0;
                     SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
@@ -282,8 +296,8 @@ public class ProjectsFragment extends Fragment implements View.OnClickListener, 
                             e.printStackTrace();
                         }
                     }
-                    Log.i("report123","-====>startdATE UTC====>"+StartDateUTC);
-                    Log.i("report123","-====>eNDdATE UTC====>"+EndDateUTC);
+                    Log.i("report123", "-====>startdATE UTC====>" + StartDateUTC);
+                    Log.i("report123", "-====>eNDdATE UTC====>" + EndDateUTC);
                     List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
                     nameValuePairs.add(new BasicNameValuePair("userId", String.valueOf(Appreference.loginuserdetails.getId())));
                     nameValuePairs.add(new BasicNameValuePair("travelStartDate", StartDateUTC));
@@ -559,7 +573,7 @@ public class ProjectsFragment extends Fragment implements View.OnClickListener, 
                 @Override
                 public void onClick(View v) {
                     Intent intent = new Intent(getActivity(), SearchMediaWebView.class);
-                    intent.putExtra("urlload","searchmedia");
+                    intent.putExtra("urlload", "searchmedia");
                     startActivity(intent);
                     getActivity().overridePendingTransition(R.anim.right_anim, R.anim.left_anim);
 
@@ -628,7 +642,7 @@ public class ProjectsFragment extends Fragment implements View.OnClickListener, 
                             Log.i("ws123", " projectDetailsBean.userId()=========>" + String.valueOf(Appreference.loginuserdetails.getId()));
                             Appreference.jsonRequestSender.getTaskForJobID(EnumJsonWebservicename.getTaskForJobID, nameValuePairs, ProjectsFragment.this);
                             showprogress("Getting ActivityCode...");
-                        }else
+                        } else
                             Toast.makeText(getActivity(), "Check your internet connection", Toast.LENGTH_SHORT).show();
 
                     } catch (Exception e) {
@@ -647,7 +661,6 @@ public class ProjectsFragment extends Fragment implements View.OnClickListener, 
     public void onClick(View v) {
 
     }
-
 
 
     public class ProjectArrayAdapter extends ArrayAdapter<ProjectDetailsBean> {
@@ -707,6 +720,7 @@ public class ProjectsFragment extends Fragment implements View.OnClickListener, 
                 TextView percent_update = (TextView) finalConView.findViewById(R.id.percent_update);
                 TextView msg_count = (TextView) finalConView.findViewById(R.id.item_counter);
                 TextView project_type = (TextView) finalConView.findViewById(R.id.catagory);
+                LinearLayout layoutcard = (LinearLayout) finalConView.findViewById(R.id.layoutcardview);
                 project_type.setVisibility(View.GONE);
                 ImageView project_icon = (ImageView) finalConView.findViewById(R.id.selected);
                 View viewforparent = (View) finalConView.findViewById(R.id.viewforparent);
@@ -816,7 +830,7 @@ public class ProjectsFragment extends Fragment implements View.OnClickListener, 
                                                 } catch (Exception e) {
                                                     e.printStackTrace();
                                                 }
-    //                                            Toast.makeText(getContext(), "Project Completed", Toast.LENGTH_LONG).show();
+                                                //                                            Toast.makeText(getContext(), "Project Completed", Toast.LENGTH_LONG).show();
                                             }
                                         });
                                         saveDialog.setNegativeButton("Cancel",
@@ -955,6 +969,7 @@ public class ProjectsFragment extends Fragment implements View.OnClickListener, 
     @Override
     public void onResume() {
         super.onResume();
+
         try {
             String query_1 = "select * from projectDetails where loginuser = '" + Appreference.loginuserdetails.getEmail() + "'and projectcompletedstatus NOT IN (select projectcompletedstatus where projectcompletedstatus like '1')";
             projectList = new ArrayList<>();
@@ -974,9 +989,11 @@ public class ProjectsFragment extends Fragment implements View.OnClickListener, 
                 MainActivity mainActivity = (MainActivity) Appreference.context_table.get("mainactivity");
                 mainActivity.BadgeReferece();
             }
+
         } catch (Exception e) {
             e.printStackTrace();
         }
+
     }
 
     private void showprogress(final String message) {
@@ -1082,16 +1099,16 @@ public class ProjectsFragment extends Fragment implements View.OnClickListener, 
             }
         });
     }
-    private boolean getNetworkState()
-    {
-        boolean isNetwork=false;
-        ConnectivityManager ConnectionManager=(ConnectivityManager)getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
-        if(ConnectionManager!=null) {
+
+    private boolean getNetworkState() {
+        boolean isNetwork = false;
+        ConnectivityManager ConnectionManager = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
+        if (ConnectionManager != null) {
             NetworkInfo networkInfo = ConnectionManager.getActiveNetworkInfo();
             if (networkInfo != null && networkInfo.isConnected() == true)
-                isNetwork= true;
+                isNetwork = true;
             else
-                isNetwork= false;
+                isNetwork = false;
         }
         return isNetwork;
     }
@@ -1225,7 +1242,7 @@ public class ProjectsFragment extends Fragment implements View.OnClickListener, 
                                 final JSONObject jsonObject = new JSONObject(opr.getEmail());
                                 if (((String) jsonObject.get("result_text")).equalsIgnoreCase("pls send ur details")) {
                                     showToast("Please Send Correct Details!....");
-                                    Appreference.isPauseStartFrom=false;
+                                    Appreference.isPauseStartFrom = false;
                                     Success = false;
                                 } else {
                                     Success = true;
@@ -1238,11 +1255,11 @@ public class ProjectsFragment extends Fragment implements View.OnClickListener, 
                                     VideoCallDataBase.getDB(classContext).insertProject_history(pdb);
                                     VideoCallDataBase.getDB(classContext).insert_updateProjectStatus(pdb);
 
-                                    ProjectDetailsBean projectDetailsBean=pdb.getProjectDTO();
-                                    project_id=projectDetailsBean.getId();
-                                    project_name=projectDetailsBean.getProjectName();
+                                    ProjectDetailsBean projectDetailsBean = pdb.getProjectDTO();
+                                    project_id = projectDetailsBean.getId();
+                                    project_name = projectDetailsBean.getProjectName();
                                     ListMember listMember_2 = projectDetailsBean.getProjectOwner();
-                                    project_owner= listMember_2.getUsername();
+                                    project_owner = listMember_2.getUsername();
 
                                     ArrayList<ListAllgetTaskDetails> listAllgetTaskDetailses;
 
@@ -1251,7 +1268,7 @@ public class ProjectsFragment extends Fragment implements View.OnClickListener, 
                                     if (listAllgetTaskDetailses.size() > 0) {
                                         for (int i = 0; i < listAllgetTaskDetailses.size(); i++) {
                                             ListAllgetTaskDetails listAllgetTaskDetailses1 = listAllgetTaskDetailses.get(i);
-                                            groupuser_Id=String.valueOf(listAllgetTaskDetailses1.getId());
+                                            groupuser_Id = String.valueOf(listAllgetTaskDetailses1.getId());
                                         }
                                     }
                                 }
@@ -1264,14 +1281,14 @@ public class ProjectsFragment extends Fragment implements View.OnClickListener, 
                                 intent.putExtra("projectId", project_id);
                                 intent.putExtra("projectName", project_name);
                                 //                intent.putExtra("parentTaskId", parentTask_Id);
-                                if(Appreference.isPauseStartFrom){
-                                    Appreference.isPauseStartFrom=false;
-                                    intent.putExtra("isFromNewTaskConv", true);}
-                                else{
-                                    if(Appreference.context_table.containsKey("projecthistory")){
+                                if (Appreference.isPauseStartFrom) {
+                                    Appreference.isPauseStartFrom = false;
+                                    intent.putExtra("isFromNewTaskConv", true);
+                                } else {
+                                    if (Appreference.context_table.containsKey("projecthistory")) {
                                         Appreference.context_table.remove("projecthistory");
                                     }
-                                        intent.putExtra("isFromNewTaskConv", false);
+                                    intent.putExtra("isFromNewTaskConv", false);
                                 }
                                 intent.putExtra("projectOwner", project_owner);
                                 intent.putExtra("groupUserId", groupuser_Id);
@@ -1287,12 +1304,12 @@ public class ProjectsFragment extends Fragment implements View.OnClickListener, 
                             final JSONObject jsonObject = new JSONObject(opr.getEmail());
                             cancelDialog();
                             if (((String) jsonObject.get("result_text")).equalsIgnoreCase("project task not completed")) {
-                                String result= (String) jsonObject.get("result_text");
-                                 Toast.makeText(getContext(),"JobCards Tasks Not Completed", Toast.LENGTH_LONG).show();
-                            }else if(((String) jsonObject.get("result_text")).equalsIgnoreCase("Job Completed")) {
-                                String result= (String) jsonObject.get("result_text");
-                                Toast.makeText(getContext(),"JobCard Completed Successfully", Toast.LENGTH_LONG).show();
-                            }else {
+                                String result = (String) jsonObject.get("result_text");
+                                Toast.makeText(getContext(), "JobCards Tasks Not Completed", Toast.LENGTH_LONG).show();
+                            } else if (((String) jsonObject.get("result_text")).equalsIgnoreCase("Job Completed")) {
+                                String result = (String) jsonObject.get("result_text");
+                                Toast.makeText(getContext(), "JobCard Completed Successfully", Toast.LENGTH_LONG).show();
+                            } else {
                                 String result = (String) jsonObject.get("result_text");
                                 Toast.makeText(getContext(), result, Toast.LENGTH_LONG).show();
                             }
@@ -1309,26 +1326,29 @@ public class ProjectsFragment extends Fragment implements View.OnClickListener, 
                                 intent.putExtra("ReportFileName", jsonObject.getString("File Name"));
                                 startActivity(intent);*/
                                 showToast("Task_Need_assessment_report created ");
-                            }else {
+                            } else {
                                 String result = (String) jsonObject.get("result_text");
                                 Toast.makeText(getContext(), result, Toast.LENGTH_LONG).show();
                             }
-                        }else if (s2 != null && s2.equalsIgnoreCase(("tnaReportForDateWise"))) {
+                        } else if (s2 != null && s2.equalsIgnoreCase(("tnaReportForDateWise"))) {
                             Log.i("report123", "projectFragment tnaReportForDateWise  Responce Received===>" + s1);
                             final JSONObject jsonObject = new JSONObject(opr.getEmail());
                             cancelDialog();
                             if (((String) jsonObject.get("result_text")).equalsIgnoreCase("TaskNeedAssigment Report Created successfully")) {
                                 Log.i("output123", " Filename" + jsonObject.getString("filename"));
                                 String pdfURL = getResources().getString(R.string.task_reminder) + jsonObject.getString("filename");
-                                Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(pdfURL));
-                                startActivity(browserIntent);
+                                String fileName = jsonObject.getString("filename");
+//                                Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(pdfURL));
+//                                startActivity(browserIntent);
                                 /*Intent intent = new Intent(getActivity(), WebViewActivity.class);
                                 intent.putExtra("ReportFileName", jsonObject.getString("filename"));
                                 startActivity(intent);*/
-                                showToast("Task_Need_assessment_report created ");
-                            }else {
+
+                                new DownloadImage(pdfURL, jsonObject.getString("filename")).execute();
+
+                            } else {
                                 String result = (String) jsonObject.get("result_text");
-                            Toast.makeText(getContext(), result, Toast.LENGTH_LONG).show();
+                                Toast.makeText(getContext(), result, Toast.LENGTH_LONG).show();
                             }
                         }
                     } catch (Exception e) {
@@ -1344,6 +1364,125 @@ public class ProjectsFragment extends Fragment implements View.OnClickListener, 
     @Override
     public void ErrorMethod(Object object) {
 
+    }
+
+    public class DownloadImage extends AsyncTask<String, Void, String> {
+        String downloadImageurl;
+        TaskDetailsBean detailsBean = null;
+        String namevalue = "";
+
+        public DownloadImage(String url, String name) {
+            this.downloadImageurl = url;
+            namevalue = name;
+        }
+
+        public DownloadImage(TaskDetailsBean name) {
+            detailsBean = name;
+            this.downloadImageurl = getResources().getString(R.string.task_reminder) + name.getTaskDescription();
+            namevalue = name.getTaskDescription();
+        }
+
+        @Override
+        protected String doInBackground(String... urls) {
+            String response = "";
+            try {
+                if (getNetworkState()) {
+                    showprogress("Downloading xls...");
+                    String profile1 = null;
+                    if (downloadImageurl != null) {
+                        if (downloadImageurl.contains("task"))
+                            profile1 = downloadImageurl.split("task/")[1];
+                        else
+                            profile1 = downloadImageurl.split("chat/")[1];
+                        File extStore = Environment.getExternalStorageDirectory();
+                        File myFile = new File(extStore.getAbsolutePath() + "/High Message/downloads/" + profile1);
+                        if (!myFile.exists()) {
+                            try {
+
+                                URL bitmap = new URL(downloadImageurl);
+
+                                HttpURLConnection connection =
+                                        (HttpURLConnection) bitmap.openConnection();
+                                InputStream in = connection.getInputStream();
+                                connection.connect();
+                                if (connection.getInputStream() != null) {
+                                    InputStream inputStream = connection.getInputStream();
+                                    String dir_path = Environment.getExternalStorageDirectory()
+                                            + "/High Message/downloads";
+                                    Log.i("profiledownload", "profile dir_path" + dir_path);
+                                    File directory = new File(dir_path);
+                                    if (!directory.exists())
+                                        directory.mkdir();
+                                    String filePath = Environment.getExternalStorageDirectory()
+                                            .getAbsolutePath()
+                                            + "/High Message/downloads/"
+                                            + profile1;
+                                    File file_name = new File(filePath);
+                                    BufferedOutputStream bos = new BufferedOutputStream(
+                                            new FileOutputStream(file_name));
+                                    int inByte;
+                                    while ((inByte = inputStream.read()) != -1) {
+                                        bos.write(inByte);
+                                    }
+                                    bos.close();
+
+                                    //** For  Avatar download
+                                    //Start
+                                    Log.d("profiledownload", "check ");
+                                    Bitmap btmap = BitmapFactory.decodeStream(inputStream);
+                                    //End
+                                }
+                            } catch (FileNotFoundException e) {
+                                e.printStackTrace();
+                                Appreference.printLog("MainActivity", "DownloadImage Exception: " + e.getMessage(), "WARN", null);
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                                Appreference.printLog("MainActivity", "DownloadImage Exception: " + e.getMessage(), "WARN", null);
+                            }
+                        }
+                    }
+
+                }
+
+
+            } catch (Exception e) {
+                e.printStackTrace();
+                Appreference.printLog("MainActivity", "DownloadImage Exception: " + e.getMessage(), "WARN", null);
+            }
+            return response;
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            cancelDialog();
+            try {
+                File file;
+                file = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/High Message/downloads/" + namevalue);
+                if (file.exists()) {
+                    Uri path = Uri.fromFile(file);
+                    Intent pdfOpenintent = new Intent(Intent.ACTION_VIEW);
+                    pdfOpenintent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    pdfOpenintent.setDataAndType(path, "application/vnd.ms-excel");
+                    try {
+                        startActivity(pdfOpenintent);
+                    } catch (ActivityNotFoundException e) {
+                        Toast.makeText(getActivity(), "Please Install MS-Excel app to view the file", Toast.LENGTH_SHORT).show();
+                    }
+                } else {
+                    Toast.makeText(getActivity(), "No Pdf Documentation", Toast.LENGTH_SHORT).show();
+                }
+
+            } catch (Exception e) {
+                e.printStackTrace();
+                Appreference.printLog("MainActivity onPostExecute", "DownloadImage Exception: " + e.getMessage(), "WARN", null);
+            }
+        }
+
+        @Override
+        protected void onPreExecute() {
+
+            super.onPreExecute();
+        }
     }
 
 }

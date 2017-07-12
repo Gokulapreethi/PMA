@@ -5,7 +5,7 @@
     <color name="colorAccent">#FF4081</color>
     <color name="pressed_color">#B8F2F5</color>
     <color name="default_color">#E8FEFF</color>
-    <color name="appcolor">#4682B4</color>
+    <color name="appcolor">#0277bd</color> //#4682B4
     <color name="dark_green">#3e8704</color>
     <color name="black">#000000</color>
     <color name="black2">#272829</color>
@@ -41,6 +41,7 @@
     <color name="chat1">#5dc6f0</color>
     <color name="audioreceiv">#E6E9EC</color>
     <color name="audiosender">#93C8FF</color>
+    <color name="reply">#c9cacb</color>
 
     <color name="red_color">#FF0000</color>
     <color name="red_register">#d28989</color>
@@ -92,4 +93,104 @@
 
     <color name="blackdialog">#FF000000</color>
     <color name="whitegrey">#FFF2F2F2</color>
+
+
+    // material design colors
+
+
+    <!--<color name="colorPrimary">#FF03A9F4</color>-->
+    <!--<color name="colorPrimaryDark">#ff0171c9</color>-->
+    <!--<color name="colorAccent">#FF00E5FF</color>-->
+    <!--<color name="colorControlNormal">#FF78909C</color>-->
+    <!--<color name="colorControlActivated">#FF03A9F4</color>-->
+    <!--<color name="colorSwitchThumbNormal">#FF78909C</color>-->
+
+    <color name="colorPrimaryQuarter">#3303A9F4</color>
+    <color name="colorPrimaryHalf">#9003A9F4</color>
+    <!--<color name="colorControlNormalHalf">#9078909C</color>-->
+    <!--<color name="colorControlActivatedHalf">#9003A9F4</color>-->
+    <!--<color name="colorAccentQuarter">#3300E5FF</color>-->
+    <color name="colorAccentHalf">#9000E5FF</color>
+
+    <array name="progress_colors_light">
+        <item>#FF03A9F4</item>
+        <item>#FFD8433C</item>
+        <item>#FFF2AF3A</item>
+        <item>#FF279B5E</item>
+    </array>
+
+
+    <array name="in_colors_light">
+        <item>#4B03A9F4</item>
+        <item>#3303A9F4</item>
+        <item>#1903A9F4</item>
+    </array>
+
+    <array name="in_colors_dark">
+        <item>#4B00E5FF</item>
+        <item>#3300E5FF</item>
+        <item>#1900E5FF</item>
+    </array>
+
+    <!--<array name="progress_colors_light">-->
+        <!--<item>#FF03A9F4</item>-->
+        <!--<item>#FFD8433C</item>-->
+        <!--<item>#FFF2AF3A</item>-->
+        <!--<item>#FF279B5E</item>-->
+    <!--</array>-->
+
+    <!--<array name="progress_colors_dark">-->
+        <!--<item>#FF00E5FF</item>-->
+        <!--<item>#ffd81d5a</item>-->
+        <!--<item>#fff27512</item>-->
+        <!--<item>#ff63bc34</item>-->
+    <!--</array>-->
+
+    <!--<array name="in_colors_light">-->
+        <!--<item>#4B03A9F4</item>-->
+        <!--<item>#3303A9F4</item>-->
+        <!--<item>#1903A9F4</item>-->
+    <!--</array>-->
+
+    <!--<array name="in_colors_dark">-->
+        <!--<item>#4B00E5FF</item>-->
+        <!--<item>#3300E5FF</item>-->
+        <!--<item>#1900E5FF</item>-->
+    <!--</array>-->
+
+    <!--<color name="tpi_checked">#FFFFFFFF</color>-->
+    <!--<color name="tpi_unchecked">#99FFFFFF</color>-->
+
+    <!--<color name="et_divider_focused">@color/colorControlActivated</color>-->
+    <!--<color name="et_divider_not_focused">#FF6D6D6D</color>-->
+    <!--<color name="et_divider_disable">#FFC1C1C1</color>-->
+
+    <color name="fontcolor">#091d2e</color>
+    <color name="newdarkblue">#003760</color>
+    <color name="neworange">#ff5534</color>
+    <color name="newyellow">#fea500</color>
+    <color name="newgreen">#48dc6c</color>
+    <color name="newwhite">#f4f4f4</color>
+    <color name="newskyblue">#0293Fe</color>
+
+
+    <color name="rednew">#b71c1c</color>
+    <color name="pinknew">#880e4f</color>
+    <color name="purplenew">#4a148c</color>
+    <color name="deeppurplenew">#311b92</color>
+    <color name="indigonew">#1a237e</color>
+    <color name="bluenew">#0d47a1</color>
+    <color name="cyannew">#006064</color>
+    <color name="tealnew">#004d40</color>
+    <color name="greennew">#1b5e20</color>
+    <color name="lightgreennew">#33691e</color>
+    <color name="limeneew">#827717</color>
+    <color name="yellownew">#f57f17</color>
+    <color name="ambernew">#ff6f00</color>
+    <color name="orangenew">#e65100</color>
+    <color name="deeporangenew">#bf360c</color>
+    <color name="brownnew">#3e2723</color>
+    <color name="graynew">#424242</color>
+    <color name="bluegraynew">#37474f</color>
+
 </resources>

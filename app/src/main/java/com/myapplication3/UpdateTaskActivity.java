@@ -1,9 +1,11 @@
 package com.myapplication3;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -108,7 +110,7 @@ public class UpdateTaskActivity extends Activity implements SeekBar.OnSeekBarCha
     public GroupMemberAccess groupMember_Access;
 
     Button photo, video, audio, sketch, files, call, update_location;
-    String strIPath = "sam", toUserId, taskType,ownerOfTask,dependency;
+    String strIPath = "sam", toUserId, taskType,ownerOfTask,dependency, category;
     String filePath, Location;
     FrameLayout frameLayout;
     ImageView video_play_icon, ImageView, play_button, xbutton, imageclose;
@@ -168,6 +170,7 @@ public class UpdateTaskActivity extends Activity implements SeekBar.OnSeekBarCha
             toUserId = getIntent().getStringExtra("toUserId");
             ownerOfTask = getIntent().getStringExtra("ownerOfTask");
             dependency = getIntent().getStringExtra("task");
+            category = getIntent().getStringExtra("category");
             taskDetailsBean = (TaskDetailsBean) getIntent().getExtras().getSerializable("TaskBean");
             taskbeanvalue = (TaskDetailsBean) getIntent().getExtras().getSerializable("bean");
             Log.i("Task1", "percentage " + percentage);
@@ -224,7 +227,7 @@ public class UpdateTaskActivity extends Activity implements SeekBar.OnSeekBarCha
         Log.i("groupMemberAccess", "assingNew getRespondAudio ## "+groupMember_Access.getRespondAudio());
         Log.i("groupMemberAccess", "assingNew getRespondTask ## "+groupMember_Access.getRespondTask());
 
-        if ((taskType != null && taskType.equalsIgnoreCase("Group")) && !Appreference.loginuserdetails.getUsername().equalsIgnoreCase(ownerOfTask) && (groupMember_Access.getRespondTask() != null && groupMember_Access.getRespondTask().contains("0"))) {
+        if ((taskType != null && taskType.equalsIgnoreCase("Group")) && (ownerOfTask != null && !Appreference.loginuserdetails.getUsername().equalsIgnoreCase(ownerOfTask)) && (groupMember_Access.getRespondTask() != null && groupMember_Access.getRespondTask().contains("0"))) {
             audio.setVisibility(View.GONE);
             photo.setVisibility(View.GONE);
             sketch.setVisibility(View.GONE);
@@ -232,7 +235,7 @@ public class UpdateTaskActivity extends Activity implements SeekBar.OnSeekBarCha
             files.setVisibility(View.GONE);
             update_location.setVisibility(View.GONE);
             Log.i("groupMemberAccess", "assingNew cant reply !!! ");
-        }  else if ((taskType != null && taskType.equalsIgnoreCase("Group")) && !Appreference.loginuserdetails.getUsername().equalsIgnoreCase(ownerOfTask)) {
+        }  else if ((taskType != null && taskType.equalsIgnoreCase("Group")) && (ownerOfTask != null && !Appreference.loginuserdetails.getUsername().equalsIgnoreCase(ownerOfTask))) {
             if ((taskType != null && taskType.equalsIgnoreCase("Group")) && ((groupMember_Access.getRespondAudio() != null && groupMember_Access.getRespondAudio().equalsIgnoreCase("0")))) {
                 audio.setVisibility(View.GONE);
                 Log.i("groupMemberAccess", "assingNew audio !!! ");
@@ -531,28 +534,23 @@ public class UpdateTaskActivity extends Activity implements SeekBar.OnSeekBarCha
             @Override
             public void onClick(View v) {
 
-                String remark = null;
-                remark = status.getText().toString();
-                if (remark.isEmpty())
-                    remark = "sam";
-                Log.i("String", "value" + demo);
 
-                if (demo != null) {
-                    if (demo.equals("conversation")) {
-                        Intent i = new Intent();
-                        i.putExtra("percentage", percentage);
-                        i.putExtra("media", mediaList);
-                        Log.i("Task1", "Save click listener " + remark);
-                        i.putExtra("remarks", remark);
-                        i.putExtra("bean", taskDetailsBean);
-                        i.putExtra("value",taskbeanvalue);
-//                        Log.i("Resolve", "updatetask getTaskId " + taskbeanvalue.getTaskId());
-//                        Log.i("Resolve", "updatetask getSignalid " + taskbeanvalue.getSignalid());
-                        setResult(RESULT_OK, i);
-                        finish();
+
+            }
+        });
+
+        save.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                try {
+                    if ((percentage != null && percentage.equalsIgnoreCase("100")) && (ownerOfTask != null && ownerOfTask.equalsIgnoreCase(Appreference.loginuserdetails.getUsername()))) {
+                        alertWindow();
+                    } else {
+                        submitAction();
                     }
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
-
             }
         });
     }
@@ -884,6 +882,70 @@ public class UpdateTaskActivity extends Activity implements SeekBar.OnSeekBarCha
             Log.e("update", "values--->" + taskBean.getTaskDescription());
             mediaList.add(taskBean);
             medialistadapter.notifyDataSetChanged();
+        }
+    }
+
+    private void alertWindow() {
+        if (category != null && category.equalsIgnoreCase("issue")) {
+            AlertDialog alertDialog = new AlertDialog.Builder(UpdateTaskActivity.this).create();
+            alertDialog.setTitle("Would you like to close this issue ");
+            alertDialog.setMessage("This issue is set as 100% completed and can be closed. Upon closure you will be unable to add new dates to the issue.");
+            alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "Ignore",
+                    new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+                    });
+
+            alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "Close Issue",
+                    new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            submitAction();
+                        }
+                    });
+            alertDialog.show();
+        } else {
+            AlertDialog alertDialog = new AlertDialog.Builder(UpdateTaskActivity.this).create();
+            alertDialog.setTitle("Would you like to close this task ");
+            alertDialog.setMessage("This task is set as 100% completed and can be closed. Upon closure you will be unable to add new dates to the task. You may raise issues in this task using the Add Issue option");
+            alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "Ignore",
+                    new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+                    });
+
+            alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "Close Task",
+                    new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            submitAction();
+                        }
+                    });
+            alertDialog.show();
+        }
+
+    }
+    private void submitAction() {
+        String remark = null;
+        remark = status.getText().toString();
+        if (remark.isEmpty())
+            remark = "sam";
+        Log.i("String", "value" + demo);
+
+        if (demo != null) {
+            if (demo.equals("conversation")) {
+                Intent i = new Intent();
+                i.putExtra("percentage", percentage);
+                i.putExtra("media", mediaList);
+                Log.i("Task1", "Save click listener " + remark);
+                i.putExtra("remarks", remark);
+                i.putExtra("bean", taskDetailsBean);
+                i.putExtra("value",taskbeanvalue);
+//                        Log.i("Resolve", "updatetask getTaskId " + taskbeanvalue.getTaskId());
+//                        Log.i("Resolve", "updatetask getSignalid " + taskbeanvalue.getSignalid());
+                setResult(RESULT_OK, i);
+                finish();
+            }
         }
     }
 

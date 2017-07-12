@@ -30,6 +30,7 @@ import com.myapplication3.ContactBean;
 import com.myapplication3.Forms.FormAccessBean;
 import com.myapplication3.ListAllgetTaskDetails;
 import com.myapplication3.ListTaskFiles;
+import com.myapplication3.R;
 import com.myapplication3.call_list.Call_ListBean;
 import com.myapplication3.chat.ChatBean;
 
@@ -59,10 +60,18 @@ import json.Loginuserdetails;
 public class VideoCallDataBase extends SQLiteOpenHelper {
 
     public static final int DATABASE_VERSION = 3;
+    /**
+     * DB Inside COMMedia Folder //
+     */
+//    public static final String DATABASE_NAME = Environment
+//            .getExternalStorageDirectory().getAbsolutePath()
+//            + "/High Message/sipvideocall.db";
+    /**
+     * DB inside application
+     */
+    public static final String DATABASE_NAME = Appreference.main_Activity_context
+	 .getResources().getString(R.string.app_name) + ".db";
 
-    public static final String DATABASE_NAME = Environment
-            .getExternalStorageDirectory().getAbsolutePath()
-            + "/High Message/sipvideocall.db";
     Context context;
     public static final String CREATE_TABLE_CHAT = "create table if not exists chat(autoincrement_id integer primary key autoincrement,chattype varchar(100),chatname varchar(100),chatid varchar(100),username varchar(100),fromname varchar(100),toname varchar(100),signalid varchar(100),messagetype varchar(100),message varchar(100),datetime varchar(100),msgstatus varchar(100),imagepath varchar(100),userid varchar(100),opened varchar(50),coordinator varchar(100),chatmembers varchar(500),conferenceuri varchar(100),scheduled varchar(50))";
     public static final String CREATE_TABLE_CONTACTS = "create table if not exists contact(autoincrement_id integer primary key autoincrement,contactemail varchar(100),userid interger,username varchar(100),firstname varchar(100),lastname varchar(100),code varchar(100),title varchar(100),gender varchar(100),profileImage varchar(100),personalInfo varchar(100),loginuser varchar(100),presence varchar(50),job1 varchar(100),job2 varchar(100),job3 varchar(100),job4 varchar(100),textprofile varchar(100),videoprofile varchar(100),userType varchar(100),profession varchar(100),specialization varchar(100),organization varchar(100))";
@@ -5247,6 +5256,77 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
                 if (!db.isOpen())
                     openDatabase();
                 cur = db.rawQuery("select * from taskHistoryInfo where loginuser='" + Appreference.loginuserdetails.getEmail() + "' and ((ownerOfTask='" + Appreference.loginuserdetails.getUsername() + "' or taskReceiver='" + Appreference.loginuserdetails.getUsername() + "') or taskType='group' or taskType='Group') and (ownerOfTask='" + str + "' or taskReceiver='" + str + "') and category='chat'", null);
+                cur.moveToFirst();
+                while (!cur.isAfterLast()) {
+                    Log.i("chat", "while loop " + (cur.getString(cur.getColumnIndex("taskId"))));
+                    TaskDetailsBean taskDetailsBean = new TaskDetailsBean();
+//                    bean.setTaskId(cur.getString(cur.getColumnIndex("taskId")));
+//                    bean.setOwnerOfTask(cur.getString(cur.getColumnIndex("ownerOfTask")));
+//                    bean.setTaskReceiver(cur.getString(cur.getColumnIndex("taskReceiver")));
+                    if (cur.getString(cur.getColumnIndex("dateTime")) != null) {
+                        taskDetailsBean.setDateTime(Appreference.utcToLocalTime(cur.getString(cur.getColumnIndex("dateTime"))));
+                        taskDetailsBean.setTaskUTCDateTime(cur.getString(cur.getColumnIndex("dateTime")));
+                    }
+                    taskDetailsBean.setTaskNo(cur.getString(cur.getColumnIndex("taskNo")));
+                    taskDetailsBean.setTaskName(cur.getString(cur.getColumnIndex("taskName")));
+                    taskDetailsBean.setTaskDescription(cur.getString(cur.getColumnIndex("taskDescription")));
+                    taskDetailsBean.setTaskStatus(cur.getString(cur.getColumnIndex("taskStatus")));
+                    taskDetailsBean.setSignalid(cur.getString(cur.getColumnIndex("signalid")));
+                    taskDetailsBean.setCompletedPercentage(cur.getString(cur.getColumnIndex("completedPercentage")));
+                    taskDetailsBean.setTaskType(cur.getString(cur.getColumnIndex("taskType")));
+                    taskDetailsBean.setOwnerOfTask(cur.getString(cur.getColumnIndex("ownerOfTask")));
+                    taskDetailsBean.setMimeType(cur.getString(cur.getColumnIndex("mimeType")));
+                    taskDetailsBean.setTaskId(cur.getString(cur.getColumnIndex("taskId")));
+                    taskDetailsBean.setCatagory(cur.getString(cur.getColumnIndex("category")));
+                    taskDetailsBean.setTaskReceiver(cur.getString(cur.getColumnIndex("taskReceiver")));
+                    taskDetailsBean.setTasktime(taskDetailsBean.getDateTime().split(" ")[1]);
+                    taskDetailsBean.setTaskUTCTime(cur.getString(cur.getColumnIndex("tasktime")));
+//                    taskDetailsBean.setTaskObservers(cur.getString(cur.getColumnIndex("taskObservers")));
+//                    taskDetailsBean.setGroupTaskMembers(cur.getString(cur.getColumnIndex("taskMemberList")));
+
+
+                    if (taskDetailsBean.getTaskType() != null) {
+                        if (taskDetailsBean.getTaskType() != null && taskDetailsBean.getTaskType().equalsIgnoreCase("Individual")) {
+                            if (taskDetailsBean.getOwnerOfTask() != null && Appreference.loginuserdetails.getUsername().equalsIgnoreCase(taskDetailsBean.getOwnerOfTask())) {
+                                ContactBean contactBean = VideoCallDataBase.getDB(context).getContactObject(taskDetailsBean.getTaskReceiver());
+                                taskDetailsBean.setToUserId(String.valueOf(contactBean.getUserid()));
+                                taskDetailsBean.setToUserName(contactBean.getUsername());
+                            } else {
+                                ContactBean contactBean = VideoCallDataBase.getDB(context).getContactObject(taskDetailsBean.getOwnerOfTask());
+                                taskDetailsBean.setToUserId(String.valueOf(contactBean.getUserid()));
+                                taskDetailsBean.setToUserName(contactBean.getUsername());
+
+                            }
+                        } else {
+                            taskDetailsBean.setToUserId(String.valueOf(VideoCallDataBase.getDB(context).getGroupId(taskDetailsBean.getTaskReceiver())));
+                        }
+                    }
+                    chatlist.add(taskDetailsBean);
+                    cur.moveToNext();
+                }
+                cur.close();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            return chatlist;
+        }
+    }
+ public ArrayList<TaskDetailsBean> getChatnames(String str, String tasktype) {
+        ArrayList<TaskDetailsBean> chatlist = new ArrayList<>();
+        Cursor cur = null;
+        if (db == null)
+            db = getReadableDatabase();
+        try {
+            if (db != null) {
+                Log.i("chat", "DB-getChatname");
+                if (!db.isOpen())
+                    openDatabase();
+                if (tasktype !=null && !tasktype.equalsIgnoreCase("") && tasktype.equalsIgnoreCase("group")) {
+                    cur = db.rawQuery("select * from taskHistoryInfo where loginuser='" + Appreference.loginuserdetails.getEmail() + "' and ((ownerOfTask='" + Appreference.loginuserdetails.getUsername() + "' or taskReceiver='" + Appreference.loginuserdetails.getUsername() + "') and (taskType='group' or taskType='Group')) and (ownerOfTask='" + str + "' or taskReceiver='" + str + "') and category='chat'", null);
+                } else if (tasktype.equalsIgnoreCase("individual")) {
+                    cur = db.rawQuery("select * from taskHistoryInfo where loginuser='" + Appreference.loginuserdetails.getEmail() + "' and ((ownerOfTask='" + Appreference.loginuserdetails.getUsername() + "' or taskReceiver='" + Appreference.loginuserdetails.getUsername() + "') and (taskType='individual' or taskType='Individual')) and (ownerOfTask='" + str + "' or taskReceiver='" + str + "') and category='chat'", null);
+                }
                 cur.moveToFirst();
                 while (!cur.isAfterLast()) {
                     Log.i("chat", "while loop " + (cur.getString(cur.getColumnIndex("taskId"))));

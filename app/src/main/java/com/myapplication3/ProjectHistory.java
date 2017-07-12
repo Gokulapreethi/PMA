@@ -1448,6 +1448,7 @@ public class ProjectHistory extends Activity implements WebServiceInterface, Swi
                 viewforparent.setVisibility(View.GONE);
                 TextView parent_enddate = (TextView) conView.findViewById(R.id.parent_enddate);
                 TextView exclation_counter = (TextView) conView.findViewById(R.id.exclation_counter);
+                LinearLayout layoutcard=(LinearLayout)conView.findViewById(R.id.layoutcardview);
 
                 ImageView selectedimage = (ImageView) conView.findViewById(R.id.selected);
                 TextView catagory = (TextView) conView.findViewById(R.id.catagory);
@@ -1469,7 +1470,7 @@ public class ProjectHistory extends Activity implements WebServiceInterface, Swi
                     ArrayList<ProjectDetailsBean> projectDetailsBeen = VideoCallDataBase.getDB(context).getExclationdetails(s);
                     if (projectDetailsBeen.size() > 0) {
                         exclation_counter.setVisibility(View.VISIBLE);
-                        conView.setBackgroundResource(R.color.lgyellow);
+                        layoutcard.setBackgroundResource(R.color.lgyellow);
                     } else
                         exclation_counter.setVisibility(View.GONE);
 
@@ -1694,7 +1695,7 @@ public class ProjectHistory extends Activity implements WebServiceInterface, Swi
                     } else if (projectDetailsBean.getTaskStatus() != null && projectDetailsBean.getTaskStatus().equalsIgnoreCase("overdue")) {
                         Log.i("ProjectHistory", "projectDetailsBean.getTaskStatus() 5 " + projectDetailsBean.getTaskStatus());
                         task_status.setText(projectDetailsBean.getTaskStatus());
-                        conView.setBackgroundResource(R.color.red_register);
+                            layoutcard.setBackgroundResource(R.color.red_register);
                     } else if (projectDetailsBean.getTaskStatus() != null && projectDetailsBean.getTaskStatus().equalsIgnoreCase("closed")) {
                         Log.i("ProjectHistory", "projectDetailsBean.getTaskStatus() 6 " + projectDetailsBean.getTaskStatus());
                         task_status.setText(projectDetailsBean.getTaskStatus());

@@ -1254,28 +1254,36 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                             break;
                         case "Dates":
                             try {
-                                if (template && !note) {
-                                    Intent intent = new Intent(NewTaskConversation.this, TaskDateUpdate.class);
-                                    intent.putExtra("template", "success");
-                                    intent.putExtra("taskId", webtaskId);
-                                    intent.putExtra("taskType", "template");
-                                    intent.putExtra("toUserIdConflict", String.valueOf(toUserId));
-                                    NewTaskConversation.this.startActivityForResult(intent, 666);
-                                } else if (note) {
-                                    Intent intent = new Intent(NewTaskConversation.this, NoteDateUpdate.class);
-                                    //                                intent.putExtra("template", "success");
-                                    intent.putExtra("taskId", webtaskId);
-                                    intent.putExtra("taskType", "note");
-                                    intent.putExtra("from", "taskconversation");
-                                    //                                intent.putExtra("toUserIdConflict", String.valueOf(toUserId));
-                                    NewTaskConversation.this.startActivityForResult(intent, 555);
+                                if (taskStatus != null && !taskStatus.equalsIgnoreCase("closed")) {
+                                    if (taskStatus != null && !taskStatus.equalsIgnoreCase("abandoned")) {
+                                        if (template && !note) {
+                                            Intent intent = new Intent(NewTaskConversation.this, TaskDateUpdate.class);
+                                            intent.putExtra("template", "success");
+                                            intent.putExtra("taskId", webtaskId);
+                                            intent.putExtra("taskType", "template");
+                                            intent.putExtra("toUserIdConflict", String.valueOf(toUserId));
+                                            NewTaskConversation.this.startActivityForResult(intent, 666);
+                                        } else if (note) {
+                                            Intent intent = new Intent(NewTaskConversation.this, NoteDateUpdate.class);
+                                            //                                intent.putExtra("template", "success");
+                                            intent.putExtra("taskId", webtaskId);
+                                            intent.putExtra("taskType", "note");
+                                            intent.putExtra("from", "taskconversation");
+                                            //                                intent.putExtra("toUserIdConflict", String.valueOf(toUserId));
+                                            NewTaskConversation.this.startActivityForResult(intent, 555);
+                                        } else {
+                                            Intent intent = new Intent(NewTaskConversation.this, TaskDateUpdate.class);
+                                            intent.putExtra("template", "failure");
+                                            intent.putExtra("taskId", webtaskId);
+                                            intent.putExtra("taskType", taskType);
+                                            intent.putExtra("toUserIdConflict", String.valueOf(toUserId));
+                                            NewTaskConversation.this.startActivityForResult(intent, 336);
+                                        }
+                                    } else {
+                                        Toast.makeText(context, "Unable to sent the Date task is in abandoned state ", Toast.LENGTH_SHORT).show();
+                                    }
                                 } else {
-                                    Intent intent = new Intent(NewTaskConversation.this, TaskDateUpdate.class);
-                                    intent.putExtra("template", "failure");
-                                    intent.putExtra("taskId", webtaskId);
-                                    intent.putExtra("taskType", taskType);
-                                    intent.putExtra("toUserIdConflict", String.valueOf(toUserId));
-                                    NewTaskConversation.this.startActivityForResult(intent, 336);
+                                    Toast.makeText(context, "This " + category + " is already Closed ", Toast.LENGTH_SHORT).show();
                                 }
                             } catch (Exception e) {
                                 e.printStackTrace();
@@ -1287,34 +1295,43 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                             break;
                         case "Completion":
                             try {
-                                int a = 0;
-                                if (taskType != null && taskType.equalsIgnoreCase("group")) {
-                                    Log.i("GroupPercentageClick", " groupname 2 " + groupname);
-                                    String percent_sender = VideoCallDataBase.getDB(context).getlastCompletedParcentagesender(webtaskId);
-                                    Log.i("GroupPercentageClick", " groupname 21 " + percent_sender);
-                                    if (percent_sender != null && percent_sender.equalsIgnoreCase(ownerOfTask)) {
-                                        a = Integer.parseInt(VideoCallDataBase.getDB(context).getlastCompletedParcentage(webtaskId));
-                                        Log.i("GroupPercentageClick", " groupname 22 " + a);
+                                if (taskStatus != null && !taskStatus.equalsIgnoreCase("Closed")) {
+                                    if (taskStatus != null && !taskStatus.equalsIgnoreCase("abandoned")) {
+                                        int a = 0;
+                                        if (taskType != null && taskType.equalsIgnoreCase("group")) {
+                                            Log.i("GroupPercentageClick", " groupname 2 " + groupname);
+                                            String percent_sender = VideoCallDataBase.getDB(context).getlastCompletedParcentagesender(webtaskId);
+                                            Log.i("GroupPercentageClick", " groupname 21 " + percent_sender);
+                                            if (percent_sender != null && percent_sender.equalsIgnoreCase(ownerOfTask)) {
+                                                a = Integer.parseInt(VideoCallDataBase.getDB(context).getlastCompletedParcentage(webtaskId));
+                                                Log.i("GroupPercentageClick", " groupname 22 " + a);
+                                            } else {
+                                                a = VideoCallDataBase.getDB(context).GroupPercentageChecker(groupname, webtaskId, ownerOfTask);
+                                                Log.i("GroupPercentageClick", " groupname 23 " + a);
+                                            }
+                                            percentage = String.valueOf(a);
+                                        } else {
+                                            a = VideoCallDataBase.getDB(context).percentagechecker(webtaskId);
+                                            Log.i("Task1", "percentage" + percentage);
+                                            percentage = String.valueOf(a);
+                                        }
+                                        Intent intent = new Intent(NewTaskConversation.this, UpdateTaskActivity.class);
+                                        Log.i("percentage", "UpdateTaskActivity 2  " + ownerOfTask);
+                                        Log.i("percentage", "UpdateTaskActivity 2 " + toUserId);
+                                        intent.putExtra("username", toUserName);
+                                        intent.putExtra("Str", "conversation");
+                                        intent.putExtra("level", percentage);
+                                        intent.putExtra("taskType", taskType);
+                                        intent.putExtra("toUserId", String.valueOf(toUserId));
+                                        intent.putExtra("ownerOfTask", ownerOfTask);
+                                        intent.putExtra("category", category);
+                                        startActivityForResult(intent, 210);
                                     } else {
-                                        a = VideoCallDataBase.getDB(context).GroupPercentageChecker(groupname, webtaskId, ownerOfTask);
-                                        Log.i("GroupPercentageClick", " groupname 23 " + a);
+                                        Toast.makeText(context, "Unable to change the percentage task is in abandoned state ", Toast.LENGTH_SHORT).show();
                                     }
-                                    percentage = String.valueOf(a);
                                 } else {
-                                    a = VideoCallDataBase.getDB(context).percentagechecker(webtaskId);
-                                    Log.i("Task1", "percentage" + percentage);
-                                    percentage = String.valueOf(a);
+                                    Toast.makeText(context, "This " + category + " is already Closed ", Toast.LENGTH_SHORT).show();
                                 }
-                                Intent intent = new Intent(NewTaskConversation.this, UpdateTaskActivity.class);
-                                Log.i("percentage", "UpdateTaskActivity 2  " + ownerOfTask);
-                                Log.i("percentage", "UpdateTaskActivity 2 " + toUserId);
-                                intent.putExtra("username", toUserName);
-                                intent.putExtra("Str", "conversation");
-                                intent.putExtra("level", percentage);
-                                intent.putExtra("taskType", taskType);
-                                intent.putExtra("toUserId", String.valueOf(toUserId));
-                                intent.putExtra("ownerOfTask", ownerOfTask);
-                                startActivityForResult(intent, 210);
                                 gridview.setVisibility(View.GONE);
                                 icons.setVisibility(View.VISIBLE);
                                 arrow = false;
@@ -1936,37 +1953,50 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                             arrow = false;
                             break;
                         case "Completion":
-                            int a = 0;
-                            if (taskType != null && taskType.equalsIgnoreCase("group")) {
-                                Log.i("GroupPercentageClick", " groupname 1 " + groupname);
-                                String percent_sender = VideoCallDataBase.getDB(context).getlastCompletedParcentagesender(webtaskId);
-                                Log.i("GroupPercentageClick", " groupname 11 " + percent_sender);
-                                if (percent_sender != null && percent_sender.equalsIgnoreCase(ownerOfTask)) {
-                                    a = Integer.parseInt(VideoCallDataBase.getDB(context).getlastCompletedParcentage(webtaskId));
-                                    Log.i("GroupPercentageClick", " groupname 12 " + a);
+                            try {
+                                if (taskStatus != null && !taskStatus.equalsIgnoreCase("Closed")) {
+                                    if (taskStatus != null && !taskStatus.equalsIgnoreCase("abandoned")) {
+                                        int a = 0;
+                                        if (taskType != null && taskType.equalsIgnoreCase("group")) {
+                                            Log.i("GroupPercentageClick", " groupname 1 " + groupname);
+                                            String percent_sender = VideoCallDataBase.getDB(context).getlastCompletedParcentagesender(webtaskId);
+                                            Log.i("GroupPercentageClick", " groupname 11 " + percent_sender);
+                                            if (percent_sender != null && percent_sender.equalsIgnoreCase(ownerOfTask)) {
+                                                a = Integer.parseInt(VideoCallDataBase.getDB(context).getlastCompletedParcentage(webtaskId));
+                                                Log.i("GroupPercentageClick", " groupname 12 " + a);
+                                            } else {
+                                                a = VideoCallDataBase.getDB(context).GroupPercentageChecker(groupname, webtaskId, ownerOfTask);
+                                                Log.i("GroupPercentageClick", " groupname 13 " + a);
+                                            }
+                                            percentage = String.valueOf(a);
+                                        } else {
+                                            a = VideoCallDataBase.getDB(context).percentagechecker(webtaskId);
+                                            Log.i("Task1", "percentage" + percentage);
+                                            percentage = String.valueOf(a);
+                                        }
+                                        Intent intent = new Intent(NewTaskConversation.this, UpdateTaskActivity.class);
+                                        Log.i("percentage", "UpdateTaskActivity 3  " + ownerOfTask);
+                                        Log.i("percentage", "UpdateTaskActivity 3 " + toUserId);
+                                        intent.putExtra("username", toUserName);
+                                        intent.putExtra("Str", "conversation");
+                                        intent.putExtra("level", percentage);
+                                        intent.putExtra("taskType", taskType);
+                                        intent.putExtra("toUserId", String.valueOf(toUserId));
+                                        intent.putExtra("ownerOfTask", ownerOfTask);
+                                        intent.putExtra("category", category);
+                                        startActivityForResult(intent, 210);
+                                    } else {
+                                        Toast.makeText(context, "Unable to change percentage task is in abandoned state ", Toast.LENGTH_SHORT).show();
+                                    }
                                 } else {
-                                    a = VideoCallDataBase.getDB(context).GroupPercentageChecker(groupname, webtaskId, ownerOfTask);
-                                    Log.i("GroupPercentageClick", " groupname 13 " + a);
+                                    Toast.makeText(context, "This " + category + " is already Closed ", Toast.LENGTH_SHORT).show();
                                 }
-                                percentage = String.valueOf(a);
-                            } else {
-                                a = VideoCallDataBase.getDB(context).percentagechecker(webtaskId);
-                                Log.i("Task1", "percentage" + percentage);
-                                percentage = String.valueOf(a);
+                                gridview_taker.setVisibility(View.GONE);
+                                icons.setVisibility(View.VISIBLE);
+                                arrow = false;
+                            } catch (NumberFormatException e) {
+                                e.printStackTrace();
                             }
-                            Intent intent = new Intent(NewTaskConversation.this, UpdateTaskActivity.class);
-                            Log.i("percentage", "UpdateTaskActivity 3  " + ownerOfTask);
-                            Log.i("percentage", "UpdateTaskActivity 3 " + toUserId);
-                            intent.putExtra("username", toUserName);
-                            intent.putExtra("Str", "conversation");
-                            intent.putExtra("level", percentage);
-                            intent.putExtra("taskType", taskType);
-                            intent.putExtra("toUserId", String.valueOf(toUserId));
-                            intent.putExtra("ownerOfTask", ownerOfTask);
-                            startActivityForResult(intent, 210);
-                            gridview_taker.setVisibility(View.GONE);
-                            icons.setVisibility(View.VISIBLE);
-                            arrow = false;
                             break;
 
                         case "Call":
@@ -2535,14 +2565,7 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                 handler.post(new Runnable() {
                     @Override
                     public void run() {
-                        taskpercentcomplete();
-                        Log.i("ApproveTask", "percent UI 7 " + taskStatus);
-                        task_approve.setVisibility(View.GONE);
-//                        actorrej.setVisibility(View.GONE);
-                        if (isRem_time) {
-                            counter.cancel();
-                            reminingtime.setVisibility(View.GONE);
-                        }
+                        saveNote();
                     }
                 });
             }
@@ -2975,78 +2998,87 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
         update.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                boolean takerCheck = false;
-                taskList_9 = new ArrayList<>();
-                taskList_10 = new ArrayList<>();
-                Log.i("percents", "taskpercent webtaskId " + webtaskId);
-                if (webtaskId != null && !taskType.equalsIgnoreCase("Group") && (!project)) {
-                    if (ownerOfTask.equalsIgnoreCase(Appreference.loginuserdetails.getUsername())) {
-                        taskList_9 = VideoCallDataBase.getDB(context).getTaskHistory("select * from taskDetailsInfo where taskId='" + webtaskId + "' and taskDescription = '" + category + " accepted' order by id desc");
-                        taskList_10 = VideoCallDataBase.getDB(context).getTaskHistory("select * from taskDetailsInfo where taskId='" + webtaskId + "' and mimeType = 'date' order by id desc");
-                        Log.i("percents", "taskpercent giver size is " + taskList_9.size() + " " + taskList_10.size());
-                    } else if (!ownerOfTask.equalsIgnoreCase(Appreference.loginuserdetails.getUsername())) {
-                        taskList_9 = VideoCallDataBase.getDB(context).getTaskHistory("select * from taskDetailsInfo where taskId='" + webtaskId + "' and taskDescription = '" + category + " accepted' order by id desc");
-                        if (taskStatus.equalsIgnoreCase("assigned") && taskList_9.size() == 0) {
-                            showToast("Please Accept Your Task");
-                            takerCheck = true;
-                        } else {
-                            taskList_9 = VideoCallDataBase.getDB(context).getTaskHistory("select * from taskDetailsInfo where taskId='" + webtaskId + "' and taskDescription = '" + category + " accepted' order by id desc");
-                            taskList_10 = VideoCallDataBase.getDB(context).getTaskHistory("select * from taskDetailsInfo where taskId='" + webtaskId + "' and mimeType = 'date' order by id desc");
-                            Log.i("percents", "taskpercent taker size is " + taskList_9.size() + " " + taskList_10.size());
-                        }
-                    }
-                }
-                if ((taskList_9.size() > 0 || taskList_10.size() > 0) || taskType.equalsIgnoreCase("Group") || project) {
-                    int a = 0;
-                    String name_pass = null;
-                    Log.i("Task1", "groupPercentage" + groupname);
-                    if (taskType != null && taskType.equalsIgnoreCase("Group")) {
-                        if (ownerOfTask.equalsIgnoreCase(Appreference.loginuserdetails.getUsername())) {
-                            if (!project) {
-                                Log.i("GroupPercentageClick", " groupname 3 " + groupname);
-                                String percent_sender = VideoCallDataBase.getDB(context).getlastCompletedParcentagesender(webtaskId);
-                                Log.i("GroupPercentageClick", " groupname 31 " + percent_sender);
-                                if (percent_sender != null && percent_sender.equalsIgnoreCase(ownerOfTask)) {
-                                    a = Integer.parseInt(VideoCallDataBase.getDB(context).getlastCompletedParcentage(webtaskId));
-                                    Log.i("GroupPercentageClick", " groupname 32 " + a);
+                if (taskStatus != null && !taskStatus.equalsIgnoreCase("Closed")) {
+                    if (taskStatus != null && !taskStatus.equalsIgnoreCase("abandoned")) {
+                        boolean takerCheck = false;
+                        taskList_9 = new ArrayList<>();
+                        taskList_10 = new ArrayList<>();
+                        Log.i("percents", "taskpercent webtaskId " + webtaskId);
+                        if (webtaskId != null && !taskType.equalsIgnoreCase("Group") && (!project)) {
+                            if (ownerOfTask.equalsIgnoreCase(Appreference.loginuserdetails.getUsername())) {
+                                taskList_9 = VideoCallDataBase.getDB(context).getTaskHistory("select * from taskDetailsInfo where taskId='" + webtaskId + "' and taskDescription = '" + category + " accepted' order by id desc");
+                                taskList_10 = VideoCallDataBase.getDB(context).getTaskHistory("select * from taskDetailsInfo where taskId='" + webtaskId + "' and mimeType = 'date' order by id desc");
+                                Log.i("percents", "taskpercent giver size is " + taskList_9.size() + " " + taskList_10.size());
+                            } else if (!ownerOfTask.equalsIgnoreCase(Appreference.loginuserdetails.getUsername())) {
+                                taskList_9 = VideoCallDataBase.getDB(context).getTaskHistory("select * from taskDetailsInfo where taskId='" + webtaskId + "' and taskDescription = '" + category + " accepted' order by id desc");
+                                if (taskStatus.equalsIgnoreCase("assigned") && taskList_9.size() == 0) {
+                                    showToast("Please Accept Your Task");
+                                    takerCheck = true;
                                 } else {
-                                    a = VideoCallDataBase.getDB(context).GroupPercentageChecker(groupname, webtaskId, ownerOfTask);
-                                    Log.i("GroupPercentageClick", " groupname 33 " + a);
+                                    taskList_9 = VideoCallDataBase.getDB(context).getTaskHistory("select * from taskDetailsInfo where taskId='" + webtaskId + "' and taskDescription = '" + category + " accepted' order by id desc");
+                                    taskList_10 = VideoCallDataBase.getDB(context).getTaskHistory("select * from taskDetailsInfo where taskId='" + webtaskId + "' and mimeType = 'date' order by id desc");
+                                    Log.i("percents", "taskpercent taker size is " + taskList_9.size() + " " + taskList_10.size());
                                 }
-                                Log.i("percentage", "Inside task if " + a);
-                                percentage = String.valueOf(a);
+                            }
+                        }
+                        if ((taskList_9.size() > 0 || taskList_10.size() > 0) || taskType.equalsIgnoreCase("Group") || project) {
+                            int a = 0;
+                            String name_pass = null;
+                            Log.i("Task1", "groupPercentage" + groupname);
+                            if (taskType != null && taskType.equalsIgnoreCase("Group")) {
+                                if (ownerOfTask.equalsIgnoreCase(Appreference.loginuserdetails.getUsername())) {
+                                    if (!project) {
+                                        Log.i("GroupPercentageClick", " groupname 3 " + groupname);
+                                        String percent_sender = VideoCallDataBase.getDB(context).getlastCompletedParcentagesender(webtaskId);
+                                        Log.i("GroupPercentageClick", " groupname 31 " + percent_sender);
+                                        if (percent_sender != null && percent_sender.equalsIgnoreCase(ownerOfTask)) {
+                                            a = Integer.parseInt(VideoCallDataBase.getDB(context).getlastCompletedParcentage(webtaskId));
+                                            Log.i("GroupPercentageClick", " groupname 32 " + a);
+                                        } else {
+                                            a = VideoCallDataBase.getDB(context).GroupPercentageChecker(groupname, webtaskId, ownerOfTask);
+                                            Log.i("GroupPercentageClick", " groupname 33 " + a);
+                                        }
+                                        Log.i("percentage", "Inside task if " + a);
+                                        percentage = String.valueOf(a);
+                                    } else {
+                                        a = VideoCallDataBase.getDB(context).ProjectGroupPercentageChecker(listOfObservers, webtaskId, ownerOfTask);
+                                        Log.i("percentage", "Inside project if " + a);
+                                        percentage = String.valueOf(a);
+                                    }
+                                } else {
+                                    int percent_1 = VideoCallDataBase.getDB(context).groupPercentageStatus(Appreference.loginuserdetails.getUsername(), webtaskId);
+                                    Log.i("percentage", "Inside else " + percent_1);
+                                    percentage = String.valueOf(percent_1);
+                                }
                             } else {
-                                a = VideoCallDataBase.getDB(context).ProjectGroupPercentageChecker(listOfObservers, webtaskId, ownerOfTask);
-                                Log.i("percentage", "Inside project if " + a);
+                                a = VideoCallDataBase.getDB(context).percentagechecker(webtaskId);
+                                Log.i("Task1", "percentage" + percentage);
                                 percentage = String.valueOf(a);
                             }
-                        } else {
+                        }
+                        if (note) {
                             int percent_1 = VideoCallDataBase.getDB(context).groupPercentageStatus(Appreference.loginuserdetails.getUsername(), webtaskId);
                             Log.i("percentage", "Inside else " + percent_1);
                             percentage = String.valueOf(percent_1);
                         }
+                        if (!isTaskName && !takerCheck) {
+                            Intent intent = new Intent(NewTaskConversation.this, UpdateTaskActivity.class);
+                            Log.i("percentage", "UpdateTaskActivity 1 " + ownerOfTask);
+                            Log.i("percentage", "UpdateTaskActivity 1 " + String.valueOf(toUserId));
+                            intent.putExtra("username", toUserName);
+                            intent.putExtra("Str", "conversation");
+                            intent.putExtra("level", percentage);
+                            intent.putExtra("taskType", taskType);
+                            intent.putExtra("toUserId", String.valueOf(toUserId));
+                            intent.putExtra("ownerOfTask", ownerOfTask);
+                            intent.putExtra("category", category);
+                            startActivityForResult(intent, 210);
+                        }
                     } else {
-                        a = VideoCallDataBase.getDB(context).percentagechecker(webtaskId);
-                        Log.i("Task1", "percentage" + percentage);
-                        percentage = String.valueOf(a);
+                        Toast.makeText(context, "Unable to sent the percentage task is in abandoned state ", Toast.LENGTH_SHORT).show();
                     }
-                }
-                if (note) {
-                    int percent_1 = VideoCallDataBase.getDB(context).groupPercentageStatus(Appreference.loginuserdetails.getUsername(), webtaskId);
-                    Log.i("percentage", "Inside else " + percent_1);
-                    percentage = String.valueOf(percent_1);
-                }
-                if (!isTaskName && !takerCheck) {
-                    Intent intent = new Intent(NewTaskConversation.this, UpdateTaskActivity.class);
-                    Log.i("percentage", "UpdateTaskActivity 1 " + ownerOfTask);
-                    Log.i("percentage", "UpdateTaskActivity 1 " + String.valueOf(toUserId));
-                    intent.putExtra("username", toUserName);
-                    intent.putExtra("Str", "conversation");
-                    intent.putExtra("level", percentage);
-                    intent.putExtra("taskType", taskType);
-                    intent.putExtra("toUserId", String.valueOf(toUserId));
-                    intent.putExtra("ownerOfTask", ownerOfTask);
-                    startActivityForResult(intent, 210);
+                } else {
+                    Toast.makeText(context, "This " + category + " is already Closed ", Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -3400,40 +3432,48 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
             public void onClick(View v) {
                 try {
                     Log.i("datepicker", "outer side");
-                    if (template && !note) {
-                        Log.i("datepicker", "template side");
-                        Intent intent = new Intent(NewTaskConversation.this, TaskDateUpdate.class);
-                        intent.putExtra("template", "success");
-                        intent.putExtra("taskStatus", taskStatus);
-                        intent.putExtra("taskId", webtaskId);
-                        ArrayList<TaskDetailsBean> temp_bean = VideoCallDataBase.getDB(context).getTaskHistory("select * from taskDetailsInfo where taskId='" + webtaskId + "' and mimeType='date' and taskStatus='draft' order by id DESC");
-                        if (temp_bean.size() > 0) {
-                            TaskDetailsBean taskDetailsBean = temp_bean.get(0);
-                            intent.putExtra("duration", taskDetailsBean.getDuration());
-                            intent.putExtra("durationUnit", taskDetailsBean.getDurationUnit());
-                            intent.putExtra("timefreq", taskDetailsBean.getTimeFrequency());
-                        }
-                        intent.putExtra("taskType", "template");
-                        intent.putExtra("toUserIdConflict", String.valueOf(toUserId));
-                        NewTaskConversation.this.startActivityForResult(intent, 666);
-                    } else if (note) {
-                        Log.i("datepicker", "note side");
-                        Intent intent = new Intent(NewTaskConversation.this, NoteDateUpdate.class);
+                    if (taskStatus != null && !taskStatus.equalsIgnoreCase("Closed")) {
+                        if (taskStatus != null && !taskStatus.equalsIgnoreCase("abandoned")) {
+                            if (template && !note) {
+                                Log.i("datepicker", "template side");
+                                Intent intent = new Intent(NewTaskConversation.this, TaskDateUpdate.class);
+                                intent.putExtra("template", "success");
+                                intent.putExtra("taskStatus", taskStatus);
+                                intent.putExtra("taskId", webtaskId);
+                                ArrayList<TaskDetailsBean> temp_bean = VideoCallDataBase.getDB(context).getTaskHistory("select * from taskDetailsInfo where taskId='" + webtaskId + "' and mimeType='date' and taskStatus='draft' order by id DESC");
+                                if (temp_bean.size() > 0) {
+                                    TaskDetailsBean taskDetailsBean = temp_bean.get(0);
+                                    intent.putExtra("duration", taskDetailsBean.getDuration());
+                                    intent.putExtra("durationUnit", taskDetailsBean.getDurationUnit());
+                                    intent.putExtra("timefreq", taskDetailsBean.getTimeFrequency());
+                                }
+                                intent.putExtra("taskType", "template");
+                                intent.putExtra("toUserIdConflict", String.valueOf(toUserId));
+                                NewTaskConversation.this.startActivityForResult(intent, 666);
+                            } else if (note) {
+                                Log.i("datepicker", "note side");
+                                Intent intent = new Intent(NewTaskConversation.this, NoteDateUpdate.class);
 //                                intent.putExtra("template", "success");
-                        intent.putExtra("taskId", webtaskId);
-                        intent.putExtra("taskType", "note");
+                                intent.putExtra("taskId", webtaskId);
+                                intent.putExtra("taskType", "note");
 //                                intent.putExtra("toUserIdConflict", String.valueOf(toUserId));
-                        NewTaskConversation.this.startActivityForResult(intent, 555);
+                                NewTaskConversation.this.startActivityForResult(intent, 555);
+                            } else {
+                                Log.i("datepicker", "date side");
+                                isTaskAccept = true;
+                                Intent intent = new Intent(NewTaskConversation.this, TaskDateUpdate.class);
+                                intent.putExtra("template", "failure");
+                                intent.putExtra("taskId", webtaskId);
+                                intent.putExtra("taskType", taskType);
+                                intent.putExtra("taskStatus", taskStatus);
+                                intent.putExtra("toUserIdConflict", String.valueOf(toUserId));
+                                NewTaskConversation.this.startActivityForResult(intent, 336);
+                            }
+                        } else {
+                            Toast.makeText(context, "Unable to sent the Date task is in abandoned state ", Toast.LENGTH_SHORT).show();
+                        }
                     } else {
-                        Log.i("datepicker", "date side");
-                        isTaskAccept = true;
-                        Intent intent = new Intent(NewTaskConversation.this, TaskDateUpdate.class);
-                        intent.putExtra("template", "failure");
-                        intent.putExtra("taskId", webtaskId);
-                        intent.putExtra("taskType", taskType);
-                        intent.putExtra("taskStatus", taskStatus);
-                        intent.putExtra("toUserIdConflict", String.valueOf(toUserId));
-                        NewTaskConversation.this.startActivityForResult(intent, 336);
+                        Toast.makeText(context, "This " + category + " is already Closed ", Toast.LENGTH_SHORT).show();
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -3446,37 +3486,45 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
             @Override
             public void onClick(View v) {
                 try {
-                    if ((taskType != null && taskType.equalsIgnoreCase("Group") && groupMemberAccess != null && groupMemberAccess.getRespondDateChange() != null && groupMemberAccess.getRespondDateChange().contains("1")) || (taskType != null && taskType.equalsIgnoreCase("individual") || project)) {
-                        taskList_5 = new ArrayList<>();
-                        if (taskType != null && taskType.equalsIgnoreCase("Group")) {
-                            queryy = "select * from taskDetailsInfo where (fromUserId='" + toUserId + "' or toUserId='" + toUserId + "') and loginuser='" + Appreference.loginuserdetails.getEmail() + "'and taskId='" + webtaskId + "' and mimeType='date' and (requestStatus='approved' or requestStatus='assigned') order by id desc";
+                    if (taskStatus != null && !taskStatus.equalsIgnoreCase("Closed")) {
+                        if (taskStatus != null && !taskStatus.equalsIgnoreCase("abandoned")) {
+                            if ((taskType != null && taskType.equalsIgnoreCase("Group") && groupMemberAccess != null && groupMemberAccess.getRespondDateChange() != null && groupMemberAccess.getRespondDateChange().contains("1")) || (taskType != null && taskType.equalsIgnoreCase("individual") || project)) {
+                                taskList_5 = new ArrayList<>();
+                                if (taskType != null && taskType.equalsIgnoreCase("Group")) {
+                                    queryy = "select * from taskDetailsInfo where (fromUserId='" + toUserId + "' or toUserId='" + toUserId + "') and loginuser='" + Appreference.loginuserdetails.getEmail() + "'and taskId='" + webtaskId + "' and mimeType='date' and (requestStatus='approved' or requestStatus='assigned') order by id desc";
+                                } else {
+                                    queryy = "select * from taskDetailsInfo where (fromUserName='" + from_UserName + "' or toUserName='" + from_UserName + "') and loginuser='" + Appreference.loginuserdetails.getEmail() + "'and taskId='" + webtaskId + "' and mimeType='date' and (requestStatus='approved' or requestStatus='assigned') order by id desc";
+                                }
+                                Log.i("task", "Final date from task giver " + queryy);
+                                taskList_5 = VideoCallDataBase.getDB(context).getTaskHistory(queryy);
+                                Log.i("task", "Final date from task giver " + taskList_5.size());
+                                if (taskList_5.size() > 0) {
+                                    TaskDetailsBean taskDetailsBean = taskList_5.get(0);
+                                    Log.i("task", "Final date from task giver " + taskDetailsBean.getTimeFrequency());
+                                    Log.i("task", "Final date from task giver " + taskDetailsBean.getIsRemainderRequired());
+                                    Intent intent = new Intent(NewTaskConversation.this, TaskTakerDateRequest.class);
+                                    intent.putExtra("startdate", taskDetailsBean.getPlannedStartDateTime());
+                                    intent.putExtra("enddate", taskDetailsBean.getPlannedEndDateTime());
+                                    intent.putExtra("reminderdate", taskDetailsBean.getRemainderFrequency());
+                                    intent.putExtra("reminderfreq", taskDetailsBean.getTimeFrequency());
+                                    intent.putExtra("reminderquotes", taskDetailsBean.getReminderQuote());
+                                    intent.putExtra("isRemainderRequired", taskDetailsBean.getIsRemainderRequired());
+                                    intent.putExtra("username", taskDetailsBean.getFromUserName());
+                                    intent.putExtra("taskStatus", taskDetailsBean.getTaskStatus());
+                                    intent.putExtra("taskType", taskDetailsBean.getTaskType());
+                                    intent.putExtra("toUserId", taskDetailsBean.getToUserId());
+                                    intent.putExtra("ownerOfTask", taskDetailsBean.getOwnerOfTask());
+                                    date_header = "requested";
+                                    startActivityForResult(intent, 337);
+                                }
+                            } else {
+                                Toast.makeText(context, "Access Deniedfor DateChangeRequest", Toast.LENGTH_SHORT).show();
+                            }
                         } else {
-                            queryy = "select * from taskDetailsInfo where (fromUserName='" + from_UserName + "' or toUserName='" + from_UserName + "') and loginuser='" + Appreference.loginuserdetails.getEmail() + "'and taskId='" + webtaskId + "' and mimeType='date' and (requestStatus='approved' or requestStatus='assigned') order by id desc";
-                        }
-                        Log.i("task", "Final date from task giver " + queryy);
-                        taskList_5 = VideoCallDataBase.getDB(context).getTaskHistory(queryy);
-                        Log.i("task", "Final date from task giver " + taskList_5.size());
-                        if (taskList_5.size() > 0) {
-                            TaskDetailsBean taskDetailsBean = taskList_5.get(0);
-                            Log.i("task", "Final date from task giver " + taskDetailsBean.getTimeFrequency());
-                            Log.i("task", "Final date from task giver " + taskDetailsBean.getIsRemainderRequired());
-                            Intent intent = new Intent(NewTaskConversation.this, TaskTakerDateRequest.class);
-                            intent.putExtra("startdate", taskDetailsBean.getPlannedStartDateTime());
-                            intent.putExtra("enddate", taskDetailsBean.getPlannedEndDateTime());
-                            intent.putExtra("reminderdate", taskDetailsBean.getRemainderFrequency());
-                            intent.putExtra("reminderfreq", taskDetailsBean.getTimeFrequency());
-                            intent.putExtra("reminderquotes", taskDetailsBean.getReminderQuote());
-                            intent.putExtra("isRemainderRequired", taskDetailsBean.getIsRemainderRequired());
-                            intent.putExtra("username", taskDetailsBean.getFromUserName());
-                            intent.putExtra("taskStatus", taskDetailsBean.getTaskStatus());
-                            intent.putExtra("taskType", taskDetailsBean.getTaskType());
-                            intent.putExtra("toUserId", taskDetailsBean.getToUserId());
-                            intent.putExtra("ownerOfTask", taskDetailsBean.getOwnerOfTask());
-                            date_header = "requested";
-                            startActivityForResult(intent, 337);
+                            Toast.makeText(context, "Unable to sent the Date task is in abandoned state ", Toast.LENGTH_SHORT).show();
                         }
                     } else {
-                        Toast.makeText(context, "Access Deniedfor DateChangeRequest", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(context, "This " + category + " is already Closed ", Toast.LENGTH_SHORT).show();
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -4290,8 +4338,6 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                         Log.i("Template creation", "TaskDescription111 ");
                         NewTaskConversation.getInstance().MMdownloadCompleted(detailsBean);
                     }
-                    /*NewTaskConversation  newTaskConversation = new NewTaskConversation();
-                    newTaskConversation.loadUI();*/
                 }
             } catch (Exception e) {
                 e.printStackTrace();
@@ -10918,6 +10964,11 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                                                  Log.i("desc123", "isDeassign==>" + isDeassign);
                                                  if (isDeassign) {
                                                      isDeassign = false;
+                                                     Log.i("conv123","isDeassign ProgressBarInvisible calling....===>");
+                                                     ProjectHistory projectHistory = (ProjectHistory) Appreference.context_table.get("projecthistory");
+                                                     if (projectHistory != null){
+                                                         Log.i("conv123","isDeassign ProgressBarInvisible  projectHistory not null....===>");
+                                                         projectHistory.setProgressBarInvisible();}
                                                      NewTaskConversation.this.finish();
                                                  }
                                              } catch (Exception e) {
@@ -14107,7 +14158,8 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                     chatBean.setProjectId(taskBean.getProjectId());
                 }
                 chatBean.setTaskStatus(imagename);
-                taskStatus = imagename;
+                if (imagename != null && !imagename.equalsIgnoreCase("reminder"))
+                    taskStatus = imagename;
                 chatBean.setMsg_status(taskBean.getMsg_status());
                 Log.i("task", "overdue--> " + chatBean.getTaskStatus());
                 chatBean.setPlannedStartDateTime(taskBean.getPlannedStartDateTime());
@@ -16575,23 +16627,58 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
     }
 
     private void saveNote() {
-        // save drawing
-        Log.i("alert", "getTask");
-        AlertDialog.Builder saveDialog = new AlertDialog.Builder(this);
-        saveDialog.setTitle("GetTask Conversation");
-        saveDialog.setMessage("Old task are want?");
-        saveDialog.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int which) {
-                gettaskwebservice();
-            }
-        });
-        saveDialog.setNegativeButton("Cancel",
-                new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.cancel();
-                    }
-                });
-        saveDialog.show();
+        if (category != null && category.equalsIgnoreCase("issue")) {
+            AlertDialog alertDialog = new AlertDialog.Builder(NewTaskConversation.this).create();
+            alertDialog.setTitle("Would you like to close this issue");
+            alertDialog.setMessage("This issue is set as 100% completed and can be closed. Upon closure you will be unable to add new dates to the issue");
+            alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "Ignore",
+                    new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+                    });
+            alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "Close Issue",
+                    new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            taskpercentcomplete();
+                            Log.i("ApproveTask", "percent UI 7 " + taskStatus);
+                            task_approve.setVisibility(View.GONE);
+                            //                        actorrej.setVisibility(View.GONE);
+                            if (isRem_time) {
+                                counter.cancel();
+                                reminingtime.setVisibility(View.GONE);
+                            }
+                            isRem_time = false;
+                        }
+                    });
+
+            alertDialog.show();
+        } else {
+            AlertDialog alertDialog = new AlertDialog.Builder(NewTaskConversation.this).create();
+            alertDialog.setTitle("Would you like to close this task");
+            alertDialog.setMessage("This task is set as 100% completed and can be closed. Upon closure you will be unable to add new dates to the task.You may raise issues in this task using the Add Issue option");
+            alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "Ignore",
+                    new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+                    });
+            alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "Close Task",
+                    new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            taskpercentcomplete();
+                            Log.i("ApproveTask", "percent UI 7 " + taskStatus);
+                            task_approve.setVisibility(View.GONE);
+                            //                        actorrej.setVisibility(View.GONE);
+                            if (isRem_time) {
+                                counter.cancel();
+                                reminingtime.setVisibility(View.GONE);
+                            }
+                            isRem_time = false;
+                        }
+                    });
+            alertDialog.show();
+        }
     }
 
     public void accepttask() {

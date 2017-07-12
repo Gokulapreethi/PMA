@@ -84,6 +84,7 @@
             android:layout_weight="1"
             android:background="#FFFFFF"
             android:cursorVisible="false"
+
             android:drawableLeft="@drawable/search_tr"
             android:gravity="center"
             android:hint="Search"
@@ -194,7 +195,8 @@
         <com.baoyz.swipemenulistview.SwipeMenuListView
             android:id="@+id/listview_project"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent"
+            android:divider="@color/white"/>
     </RelativeLayout>
 
 </LinearLayout>

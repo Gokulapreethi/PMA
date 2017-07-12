@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:focusableInTouchMode="true">
@@ -8,10 +9,7 @@
         android:id="@+id/contactHeadingLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#fff"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true">
+        android:background="#fff">
 
         <TextView
             android:id="@+id/exclation_counter"
@@ -28,9 +26,11 @@
 
         <RelativeLayout
             android:id="@+id/head1"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_toRightOf="@+id/exclation_counter">
+            android:layout_marginRight="50dp"
+            android:layout_toRightOf="@+id/exclation_counter"
+            android:layout_toLeftOf="@+id/template">
 
             <TextView
                 android:id="@+id/contactHeading"
@@ -73,7 +73,6 @@
                 android:textSize="18dp" />
 
             <LinearLayout
-                android:id="@+id/ll_loginuserst"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/contactHeading"
@@ -85,24 +84,35 @@
                     android:id="@+id/tv_status"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_below="@+id/contactname"
                     android:layout_marginLeft="10dp"
                     android:layout_marginTop="5dp"
-                    android:layout_toRightOf="@+id/contactimage"
                     android:text="Online"
                     android:textSize="16dp"
                     android:visibility="gone" />
             </LinearLayout>
-
         </RelativeLayout>
+
+
 
         <ImageView
             android:id="@+id/notes"
-            android:layout_width="40dp"
-            android:layout_height="35dp"
+            android:layout_width="47dp"
+            android:layout_height="41dp"
             android:layout_marginTop="7dp"
-            android:layout_toLeftOf="@+id/template"
+            android:layout_marginRight="-5dp"
+            android:layout_toLeftOf="@+id/performance_report"
             android:src="@drawable/ic_note_32_2"
+            />
+
+        <ImageView
+            android:id="@+id/performance_report"
+            android:layout_width="47dp"
+            android:layout_height="41dp"
+            android:layout_marginTop="7dp"
+            android:layout_marginRight="5dp"
+            android:layout_toLeftOf="@+id/template"
+            android:src="@drawable/blue_chart_icon_64"
+            android:visibility="gone"
             />
 
         <ImageView
@@ -146,21 +156,12 @@
 
         <ImageView
             android:id="@+id/new_task"
-            android:layout_width="25dp"
-            android:layout_height="25dp"
+            android:layout_width="30dp"
+            android:layout_height="26dp"
             android:layout_alignParentRight="true"
             android:layout_marginRight="10dp"
             android:layout_marginTop="14dp"
             android:src="@drawable/ic_all_items_filled_32" />
-        <ImageView
-            android:id="@+id/allreport"
-            android:layout_width="40dp"
-            android:layout_height="35dp"
-            android:src="@drawable/report"
-            android:layout_alignTop="@+id/notes"
-            android:layout_toLeftOf="@+id/notes"
-            android:layout_toStartOf="@+id/notes"
-            android:visibility="gone"/>
 
         <TextView
             android:id="@+id/add"
@@ -177,7 +178,6 @@
             android:visibility="gone" />
 
         <TextView
-            android:id="@+id/makecall"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
@@ -188,7 +188,6 @@
             android:textAlignment="center"
             android:textColor="#FFFFFF"
             android:textSize="15sp" />
-
     </RelativeLayout>
 
     <LinearLayout
@@ -204,10 +203,8 @@
             android:id="@+id/searchtext"
             android:layout_width="300dp"
             android:layout_height="38dp"
-            android:layout_alignParentLeft="true"
             android:layout_marginBottom="2dp"
             android:layout_marginTop="2dp"
-            android:layout_toLeftOf="@+id/btnsearch"
             android:layout_weight="1"
             android:background="#FFFFFF"
             android:cursorVisible="false"
@@ -219,7 +216,6 @@
             android:inputType="textPersonName" />
 
         <Button
-            android:id="@+id/enter"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="2"
@@ -233,6 +229,7 @@
         android:layout_below="@+id/main_search1"
         android:layout_marginTop="5dp"
         android:orientation="horizontal"
+        android:baselineAligned="false"
         android:weightSum="2">
 
         <LinearLayout
@@ -256,12 +253,13 @@
 
             <TextView
                 android:id="@+id/contactsearch"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="35dp"
                 android:layout_marginBottom="5dp"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:text="Contacts" />
+                android:text="Contacts"
+                tools:ignore="NestedWeights" />
         </LinearLayout>
 
         <LinearLayout
@@ -285,11 +283,12 @@
 
             <TextView
                 android:id="@+id/groupsearch"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="35dp"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:text="Groups" />
+                android:text="Groups"
+                tools:ignore="NestedWeights" />
         </LinearLayout>
     </LinearLayout>
 
@@ -336,19 +335,19 @@
             android:layout_weight="1"
             android:listSelector="@drawable/bkg"
             android:paddingRight="5dp"
+            android:divider="@color/white"
             android:visibility="visible" />
         <LinearLayout
-            android:layout_width="15dp"
+            android:layout_width="20dp"
             android:layout_height="match_parent"
             android:gravity="center"
             android:layout_gravity="center"
             android:orientation="vertical"
-            android:layout_below="@id/ll_networkstate"
             android:id="@+id/sort">
 
             <ImageView
                 android:id="@+id/alpha_sort"
-                android:layout_width="15dp"
+                android:layout_width="20dp"
                 android:layout_height="15dp"
                 android:gravity="center"
                 android:layout_gravity="center"
@@ -356,7 +355,7 @@
 
             <ImageView
                 android:id="@+id/online_sort"
-                android:layout_width="15dp"
+                android:layout_width="20dp"
                 android:layout_height="15dp"
                 android:src="@drawable/useronline"
                 android:gravity="center"
@@ -366,7 +365,6 @@
         </LinearLayout>
 
         <RelativeLayout
-            android:id="@+id/r1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center">
@@ -393,6 +391,7 @@
                 android:id="@+id/alpha"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:scrollbarThumbVertical="@color/appcolor"
                 android:visibility="gone" />
         </LinearLayout>
 
@@ -406,7 +405,6 @@
             android:visibility="gone" />
 
         <RelativeLayout
-            android:id="@+id/w1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center">
@@ -433,7 +431,8 @@
                 android:id="@+id/alpha1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:visibility="gone"></ListView>
+                android:scrollbarThumbVertical="@drawable/custom_scroll_style"
+                android:visibility="gone"/>
         </LinearLayout>
     </LinearLayout>
 

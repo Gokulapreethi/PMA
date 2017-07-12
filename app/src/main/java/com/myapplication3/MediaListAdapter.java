@@ -628,6 +628,8 @@ public class MediaListAdapter extends ArrayAdapter<TaskDetailsBean> {
                                     intent.putExtra("Str", "conversation");
                                     intent.putExtra("task", "dependency");
                                     intent.putExtra("bean", gcBean);
+                                    intent.putExtra("ownerOfTask", gcBean.getOwnerOfTask());
+                                    intent.putExtra("category", category);
                                     Log.i("medialistAdapter", "dependency taskID " + gcBean.getTaskId());
                                     Log.i("medialistAdapter", "dependency signalId" + gcBean.getSignalid());
                                     ((Activity) context).startActivityForResult(intent, 212);
@@ -891,24 +893,155 @@ public class MediaListAdapter extends ArrayAdapter<TaskDetailsBean> {
                     }
                 }
             });*/
+
+            holder.receiver_side_description_layout.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    try {
+                        TaskDetailsBean taskDetailsBean = gcBean;
+                        Log.d("Receiver", "TaskStatus ##  == " + gcBean.getTaskStatus() + " priority " + taskDetailsBean.getTaskPriority());
+                        String receiver_side_des_status = "";
+                        if (gcBean.getProjectId() != null) {
+                            receiver_side_des_status = VideoCallDataBase.getDB(context).getProjectParentTaskId("select taskStatus from projectHistory where taskId='" + gcBean.getTaskId() + "'");
+                        } else {
+                            receiver_side_des_status = VideoCallDataBase.getDB(context).getProjectParentTaskId("select taskStatus from taskHistoryInfo where taskId='" + gcBean.getTaskId() + "'");
+                        }
+                        if (taskDetailsBean.getTaskPriority() != null && taskDetailsBean.getTaskPriority().equals("High")) {
+                            if (gcBean.getTaskStatus().equals("reminder")) {
+                                if (receiver_side_des_status != null && !receiver_side_des_status.equalsIgnoreCase("") && !receiver_side_des_status.equalsIgnoreCase("abandoned")) {
+                                    String query = "select signalId from taskDetailsInfo where taskId ='" + gcBean.getTaskId() + "' and mimeType = 'reminder' order by id DESC LIMIT 1";
+                                    String signalId = VideoCallDataBase.getDB(context).getProjectParentTaskId(query);
+                                    String query_for = "", taskMember_or_Receiver = "";
+                                    if (gcBean.getProjectId() != null && !gcBean.getProjectId().equalsIgnoreCase("") && !gcBean.getProjectId().equalsIgnoreCase("null")) {
+                                        query_for = "select taskMemberList from projectHistory where taskId='" + gcBean.getTaskId() + "'";
+                                    } else {
+                                        if (gcBean.getTaskType() != null && !gcBean.getTaskType().equalsIgnoreCase("Group")) {
+                                            query_for = "select taskReceiver from taskHistoryInfo where taskId='" + gcBean.getTaskId() + "'";
+                                        } else {
+                                            query_for = "select taskMemberList from taskHistoryInfo where taskId='" + gcBean.getTaskId() + "'";
+                                        }
+                                    }
+                                    try {
+                                        taskMember_or_Receiver = VideoCallDataBase.getDB(context).getProjectParentTaskId(query_for);
+                                    } catch (Exception e) {
+                                        e.printStackTrace();
+                                        Appreference.printLog("MediaListAdapter", "taskMember_or_Receiver Exception: " + e.getMessage(), "WARN", null);
+                                    }
+                                    if ((taskMember_or_Receiver != null && taskMember_or_Receiver.contains(Appreference.loginuserdetails.getUsername())) || gcBean.getOwnerOfTask().equalsIgnoreCase(Appreference.loginuserdetails.getUsername())) {
+                                        if (signalId != null && signalId.equalsIgnoreCase(gcBean.getSignalid())) {
+                                            int a = VideoCallDataBase.getDB(context).percentagechecker(taskDetailsBean.getTaskId());
+                                            String percentage = String.valueOf(a);
+                                            try {
+                                                if (taskDetailsBean.getTaskType() != null && taskDetailsBean.getTaskType().equalsIgnoreCase("Group")) {
+                                                    a = VideoCallDataBase.getDB(context).GroupPercentageChecker(taskDetailsBean.getToUserName(), taskDetailsBean.getTaskId(), taskDetailsBean.getOwnerOfTask());
+                                                    percentage = String.valueOf(a);
+                                                }
+                                            } catch (Exception e) {
+                                                e.printStackTrace();
+                                                Appreference.printLog("MediaListAdapter", "GroupPercentageChecker Exception: " + e.getMessage(), "WARN", null);
+                                            }
+                                            if (receiver_side_des_status != null && !receiver_side_des_status.equalsIgnoreCase("") && !receiver_side_des_status.equalsIgnoreCase("Closed")) {
+                                                Intent intent = new Intent(context, UpdateTaskActivity.class);
+                                                intent.putExtra("Str", "conversation");
+                                                intent.putExtra("level", percentage);
+                                                intent.putExtra("ownerOfTask", taskDetailsBean.getOwnerOfTask());
+                                                intent.putExtra("category", category);
+                                                ((Activity) context).startActivityForResult(intent, 210);
+                                            } else {
+                                                Toast.makeText(context, "This " + category + " is already Closed ", Toast.LENGTH_SHORT).show();
+                                            }
+                                        }
+                                    } else {
+                                    }
+                                } else {
+                                    Toast.makeText(context, "Unable to change percentage task is in abandoned state ", Toast.LENGTH_SHORT).show();
+                                }
+
+                            }
+                        } else if (gcBean.getSubType() != null && gcBean.getSubType().equalsIgnoreCase("formDetailsChangeRequest")) {
+                            TaskDetailsBean taskDetailsBean1 = gcBean;
+                            Intent intent = new Intent(context, FormEntryViewActivity.class);
+                            //                intent.putExtra("FormsMapValue", formFieldsBeenMap);
+                            //                intent.putExtra("FormsListValue", setIdValueList);
+                            intent.putExtra("FormsId", String.valueOf(taskDetailsBean1.getCustomTagId()));
+                            intent.putExtra("setId", String.valueOf(taskDetailsBean1.getCustomSetId()));
+                            intent.putExtra("TaskId", taskDetailsBean1.getTaskId());
+                            intent.putExtra("TaskNo", taskDetailsBean1.getTaskNo());
+                            intent.putExtra("TaskName", taskDetailsBean1.getTaskName());
+                            intent.putExtra("EntryMode", "multi");
+                            intent.putExtra("EntryWay", "Adapter");
+                            intent.putExtra("UserList", NewTaskConversation.listOfObservers);
+                            intent.putExtra("TaskBean", taskDetailsBean1);
+                            context.startActivity(intent);
+                        } else if (taskDetailsBean.getTaskPriority() != null && taskDetailsBean.getTaskPriority().equals("low")) {
+                        }
+
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        Appreference.printLog("MediaListAdapter", "rcv_des Exception: " + e.getMessage(), "WARN", null);
+                    }
+                }
+            });
             holder.rcv_des.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     try {
                         TaskDetailsBean taskDetailsBean = gcBean;
-                        Log.d("Receiver", "subType == " + gcBean.getSubType());
+                        Log.d("Receiver", "TaskStatus !! == " + gcBean.getTaskStatus() + " priority " + taskDetailsBean.getTaskPriority());
+                        String rcv_des_status = "";
+                        if (gcBean.getProjectId() != null && !gcBean.getProjectId().equalsIgnoreCase("") && !gcBean.getProjectId().equalsIgnoreCase("null")) {
+                            rcv_des_status = VideoCallDataBase.getDB(context).getProjectParentTaskId("select taskStatus from projectHistory where taskId='" + gcBean.getTaskId() + "'");
+                        } else {
+                            rcv_des_status = VideoCallDataBase.getDB(context).getProjectParentTaskId("select taskStatus from taskHistoryInfo where taskId='" + gcBean.getTaskId() + "'");
+                        }
+
                         if (taskDetailsBean.getTaskPriority() != null && taskDetailsBean.getTaskPriority().equals("High")) {
                             if (gcBean.getTaskStatus().equals("reminder")) {
-                                int a = VideoCallDataBase.getDB(context).percentagechecker(taskDetailsBean.getTaskId());
-                                String percentage = String.valueOf(a);
-                                if (taskDetailsBean.getTaskType() != null && taskDetailsBean.getTaskType().equalsIgnoreCase("Group")) {
-                                    a = VideoCallDataBase.getDB(context).GroupPercentageChecker(taskDetailsBean.getToUserName(), taskDetailsBean.getTaskId(), taskDetailsBean.getOwnerOfTask());
-                                    percentage = String.valueOf(a);
+                                if (rcv_des_status != null && !rcv_des_status.equalsIgnoreCase("") && !rcv_des_status.equalsIgnoreCase("abandoned")) {
+                                    String query = "select signalId from taskDetailsInfo where taskId ='" + gcBean.getTaskId() + "' and mimeType = 'reminder' order by id DESC LIMIT 1";
+                                    String signalId = VideoCallDataBase.getDB(context).getProjectParentTaskId(query);
+                                    String query_for = "", taskMember_or_Receiver = "";
+                                    if (gcBean.getProjectId() != null && !gcBean.getProjectId().equalsIgnoreCase("") && !gcBean.getProjectId().equalsIgnoreCase("null")) {
+                                        query_for = "select taskMemberList from projectHistory where taskId='" + gcBean.getTaskId() + "'";
+                                    } else {
+                                        if (gcBean.getTaskType() != null && !gcBean.getTaskType().equalsIgnoreCase("Group")) {
+                                            query_for = "select taskReceiver from taskHistoryInfo where taskId='" + gcBean.getTaskId() + "'";
+                                        } else {
+                                            query_for = "select taskMemberList from taskHistoryInfo where taskId='" + gcBean.getTaskId() + "'";
+                                        }
+                                    }
+                                    try {
+                                        taskMember_or_Receiver = VideoCallDataBase.getDB(context).getProjectParentTaskId(query_for);
+                                    } catch (Exception e) {
+                                        e.printStackTrace();
+                                        Appreference.printLog("MediaListAdapter", "taskMember_or_Receiver Exception: " + e.getMessage(), "WARN", null);
+                                    }
+                                    if ((taskMember_or_Receiver != null && taskMember_or_Receiver.contains(Appreference.loginuserdetails.getUsername())) || gcBean.getOwnerOfTask().equalsIgnoreCase(Appreference.loginuserdetails.getUsername())) {
+                                        if (signalId != null && signalId.equalsIgnoreCase(gcBean.getSignalid())) {
+                                            int a = VideoCallDataBase.getDB(context).percentagechecker(taskDetailsBean.getTaskId());
+                                            String percentage = String.valueOf(a);
+                                            if (taskDetailsBean.getTaskType() != null && taskDetailsBean.getTaskType().equalsIgnoreCase("Group")) {
+                                                a = VideoCallDataBase.getDB(context).GroupPercentageChecker(taskDetailsBean.getToUserName(), taskDetailsBean.getTaskId(), taskDetailsBean.getOwnerOfTask());
+                                                percentage = String.valueOf(a);
+                                            }
+                                            if (rcv_des_status != null && !rcv_des_status.equalsIgnoreCase("") && !rcv_des_status.equalsIgnoreCase("Closed")) {
+                                                Intent intent = new Intent(context, UpdateTaskActivity.class);
+                                                intent.putExtra("Str", "conversation");
+                                                intent.putExtra("level", percentage);
+                                                intent.putExtra("ownerOfTask", taskDetailsBean.getOwnerOfTask());
+                                                intent.putExtra("category", category);
+                                                ((Activity) context).startActivityForResult(intent, 210);
+                                            } else {
+                                                Toast.makeText(context, "This " + category + " is already Closed ", Toast.LENGTH_SHORT).show();
+                                            }
+                                        }
+                                    } else {
+
+                                    }
+                                } else {
+                                    Toast.makeText(context, "Unable to change percentage task is in abandoned state ", Toast.LENGTH_SHORT).show();
                                 }
-                                Intent intent = new Intent(context, UpdateTaskActivity.class);
-                                intent.putExtra("Str", "conversation");
-                                intent.putExtra("level", percentage);
-                                ((Activity) context).startActivityForResult(intent, 210);
+
                             }
                         } else if (gcBean.getSubType() != null && gcBean.getSubType().equalsIgnoreCase("formDetailsChangeRequest")) {
 
@@ -945,19 +1078,32 @@ public class MediaListAdapter extends ArrayAdapter<TaskDetailsBean> {
                 public void onClick(View v) {
                     try {
                         TaskDetailsBean taskDetailsBean = gcBean;
-                        Log.d("Receiver", "subType == " + gcBean.getSubType());
+                        Log.d("Receiver", "TaskStatus **  == " + gcBean.getTaskStatus() + " priority " + taskDetailsBean.getTaskPriority());
+                        String txt_des_status = "";
+                        if (gcBean.getProjectId() != null && !gcBean.getProjectId().equalsIgnoreCase("") && !gcBean.getProjectId().equalsIgnoreCase("null")) {
+                            txt_des_status = VideoCallDataBase.getDB(context).getProjectParentTaskId("select taskStatus from projectHistory where taskId='" + gcBean.getTaskId() + "'");
+                        } else {
+                            txt_des_status = VideoCallDataBase.getDB(context).getProjectParentTaskId("select taskStatus from taskHistoryInfo where taskId='" + gcBean.getTaskId() + "'");
+                        }
+
                         if (taskDetailsBean.getTaskPriority() != null && taskDetailsBean.getTaskPriority().equals("High")) {
                             if (gcBean.getTaskStatus().equals("reminder")) {
-                                int a = VideoCallDataBase.getDB(context).percentagechecker(taskDetailsBean.getTaskId());
-                                String percentage = String.valueOf(a);
-                                if (taskDetailsBean.getTaskType() != null && taskDetailsBean.getTaskType().equalsIgnoreCase("Group")) {
-                                    a = VideoCallDataBase.getDB(context).GroupPercentageChecker(taskDetailsBean.getToUserName(), taskDetailsBean.getTaskId(), taskDetailsBean.getOwnerOfTask());
-                                    percentage = String.valueOf(a);
+                                if (txt_des_status != null && !txt_des_status.equalsIgnoreCase("") && !txt_des_status.equalsIgnoreCase("Closed")) {
+                                    int a = VideoCallDataBase.getDB(context).percentagechecker(taskDetailsBean.getTaskId());
+                                    String percentage = String.valueOf(a);
+                                    if (taskDetailsBean.getTaskType() != null && taskDetailsBean.getTaskType().equalsIgnoreCase("Group")) {
+                                        a = VideoCallDataBase.getDB(context).GroupPercentageChecker(taskDetailsBean.getToUserName(), taskDetailsBean.getTaskId(), taskDetailsBean.getOwnerOfTask());
+                                        percentage = String.valueOf(a);
+                                    }
+                                    Intent intent = new Intent(context, UpdateTaskActivity.class);
+                                    intent.putExtra("Str", "conversation");
+                                    intent.putExtra("level", percentage);
+                                    intent.putExtra("ownerOfTask", taskDetailsBean.getOwnerOfTask());
+                                    intent.putExtra("category", category);
+                                    ((Activity) context).startActivityForResult(intent, 210);
+                                } else {
+                                    Toast.makeText(context, "This " + category + " is already Closed ", Toast.LENGTH_SHORT).show();
                                 }
-                                Intent intent = new Intent(context, UpdateTaskActivity.class);
-                                intent.putExtra("Str", "conversation");
-                                intent.putExtra("level", percentage);
-                                ((Activity) context).startActivityForResult(intent, 210);
                             }
                         }
                     } catch (Exception e) {
@@ -1562,115 +1708,132 @@ public class MediaListAdapter extends ArrayAdapter<TaskDetailsBean> {
                 @Override
                 public void onClick(View v) {
                     try {
-                        NewTaskConversation.calender = true;
-                        final Dialog dialog = new Dialog(context);
-                        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-                        dialog.setContentView(R.layout.edit_reminder_date);
-                        WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
-                        lp.copyFrom(dialog.getWindow().getAttributes());
-                        lp.width = WindowManager.LayoutParams.MATCH_PARENT;
-                        lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
-                        lp.horizontalMargin = 15;
-                        Window window = dialog.getWindow();
-                        window.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-                        window.setAttributes(lp);
-                        window.setGravity(Gravity.CENTER);
-                        try {
-                            dialog.show();
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                            Appreference.printLog("MediaListAdapter", "dateChangeRequest_icon Exception: " + e.getMessage(), "WARN", null);
+                        Log.d("Receiver", " status_dateChangeRequest_icon ### " + gcBean.getTaskStatus());
+                        Log.d("Receiver", " ProjectId ----> ##&&&  " + gcBean.getProjectId());
+                        String dateChangeRequest_status = "";
+                        if (gcBean.getProjectId() != null && !gcBean.getProjectId().equalsIgnoreCase("") && !gcBean.getProjectId().equalsIgnoreCase("null")) {
+                            dateChangeRequest_status = VideoCallDataBase.getDB(context).getProjectParentTaskId("select taskStatus from projectHistory where taskId='" + gcBean.getTaskId() + "'");
+                        } else {
+                            dateChangeRequest_status = VideoCallDataBase.getDB(context).getProjectParentTaskId("select taskStatus from taskHistoryInfo where taskId='" + gcBean.getTaskId() + "'");
                         }
-                        final TaskDetailsBean alert_bean = detailsBeanArrayList.get(position);
-                        TextView check_conflict = (TextView) dialog.findViewById(R.id.Check_conflict);
-                        View view_conflict = (View) dialog.findViewById(R.id.view_conflict);
-                        if (Appreference.conflicttask) {
-                            check_conflict.setVisibility(View.VISIBLE);
-                            view_conflict.setVisibility(View.VISIBLE);
-                        }
-                        TextView edit_remdr_date = (TextView) dialog.findViewById(R.id.edit);
-                        edit_remdr_date.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
+                        Log.d("Receiver", " status_dateChangeRequest_icon ===> 1 " + dateChangeRequest_status);
+                        if (dateChangeRequest_status != null && !dateChangeRequest_status.equalsIgnoreCase("") && !dateChangeRequest_status.equalsIgnoreCase("Closed")) {
+                            if (!dateChangeRequest_status.equalsIgnoreCase("abandoned")) {
+                                NewTaskConversation.calender = true;
+                                final Dialog dialog = new Dialog(context);
+                                dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                                dialog.setContentView(R.layout.edit_reminder_date);
+                                WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
+                                lp.copyFrom(dialog.getWindow().getAttributes());
+                                lp.width = WindowManager.LayoutParams.MATCH_PARENT;
+                                lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
+                                lp.horizontalMargin = 15;
+                                Window window = dialog.getWindow();
+                                window.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                                window.setAttributes(lp);
+                                window.setGravity(Gravity.CENTER);
                                 try {
-                                    dialog.dismiss();
-                                    String queryy = "";
-                                    Intent intent = new Intent(context, TaskTakerDateRequest.class);
-                                    if (alert_bean.getTaskType() != null && alert_bean.getTaskType().equalsIgnoreCase("Group")) {
-                                        if (alert_bean.getProjectId() != null && !alert_bean.getProjectId().equalsIgnoreCase("")){
-                                            queryy = "select * from taskDetailsInfo where (fromUserId='" + alert_bean.getFromUserId() + "' or toUserId='" + alert_bean.getFromUserId() + "') and loginuser='" + Appreference.loginuserdetails.getEmail() + "'and taskId='" + alert_bean.getTaskId() + "' and mimeType='date' and (requestStatus='approved' or requestStatus='assigned') order by id desc";
-                                        }else {
-                                            queryy = "select * from taskDetailsInfo where (fromUserId='" + alert_bean.getToUserId() + "' or toUserId='" + alert_bean.getToUserId() + "') and loginuser='" + Appreference.loginuserdetails.getEmail() + "'and taskId='" + alert_bean.getTaskId() + "' and mimeType='date' and (requestStatus='approved' or requestStatus='assigned') order by id desc";
-                                        }
-                                    } else {
-                                        queryy = "select * from taskDetailsInfo where (fromUserName='" + Appreference.loginuserdetails.getUsername() + "' or toUserName='" + Appreference.loginuserdetails.getUsername() + "') and loginuser='" + Appreference.loginuserdetails.getEmail() + "'and taskId='" + alert_bean.getTaskId() + "' and mimeType='date' and (requestStatus='approved' or requestStatus='assigned') order by id desc";
-                                    }
-                                    ArrayList<TaskDetailsBean> taskList = VideoCallDataBase.getDB(context).getTaskHistory(queryy);
-                                    if (taskList.size() > 0) {
-                                        TaskDetailsBean bean2 = taskList.get(0);
-                                        intent.putExtra("startdate", bean2.getPlannedStartDateTime());
-                                        intent.putExtra("enddate", bean2.getPlannedEndDateTime());
-                                        intent.putExtra("reminderdate", bean2.getRemainderFrequency());
-                                        intent.putExtra("reminderfreq", bean2.getTimeFrequency());
-                                        intent.putExtra("reminderquotes", bean2.getReminderQuote());
-                                        intent.putExtra("isRemainderRequired", bean2.getIsRemainderRequired());
-                                        intent.putExtra("username", bean2.getFromUserName());
-                                        intent.putExtra("remindertone", bean2.getServerFileName());
-                                        intent.putExtra("taskType", bean2.getTaskType());
-                                        intent.putExtra("toUserId", bean2.getToUserId());
-                                        intent.putExtra("ownerOfTask", bean2.getOwnerOfTask());
-                                        Log.i("groupMemberAccess", "medialist getTaskType ** " + bean2.getTaskType());
-                                        Log.i("groupMemberAccess", "medialist getToUserId ** " + bean2.getToUserId());
-                                        Log.i("groupMemberAccess", "medialist getOwnerOfTask ** " + bean2.getOwnerOfTask());
-                                        ((Activity) context).startActivityForResult(intent, 337);
-                                    }
+                                    dialog.show();
                                 } catch (Exception e) {
                                     e.printStackTrace();
                                     Appreference.printLog("MediaListAdapter", "dateChangeRequest_icon Exception: " + e.getMessage(), "WARN", null);
                                 }
-                            }
-                        });
-                        check_conflict.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                try {
-                                    dialog.dismiss();
-                                    if (Appreference.conflicttask) {
-                                        Appreference.isconflicttaker = true;
-                                        String queryy = "";
-                                        if (alert_bean.getTaskType() != null && alert_bean.getTaskType().equalsIgnoreCase("Group")) {
-                                            queryy = "select * from taskDetailsInfo where (fromUserId='" + alert_bean.getToUserId() + "' or toUserId='" + alert_bean.getToUserId() + "') and loginuser='" + Appreference.loginuserdetails.getEmail() + "'and taskId='" + alert_bean.getTaskId() + "' and mimeType='date' and (requestStatus='approved' or requestStatus='assigned') order by id desc";
-                                        } else {
-                                            queryy = "select * from taskDetailsInfo where (fromUserName='" + Appreference.loginuserdetails.getUsername() + "' or toUserName='" + Appreference.loginuserdetails.getUsername() + "') and loginuser='" + Appreference.loginuserdetails.getEmail() + "'and taskId='" + alert_bean.getTaskId() + "' and mimeType='date' and (requestStatus='approved' or requestStatus='assigned') order by id desc";
-                                        }
-                                        Log.i("DateClick", "check_conflict Click : queryy : " + queryy);
-                                        ArrayList<TaskDetailsBean> taskList = VideoCallDataBase.getDB(context).getTaskHistory(queryy);
-                                        if (taskList.size() > 0) {
-                                            TaskDetailsBean bean2 = taskList.get(0);
-                                            if (!bean2.getTaskType().equalsIgnoreCase("Group")) {
-                                                confictWebservice(bean2);
-                                                listener.showMedialistProgress();
+                                final TaskDetailsBean alert_bean = detailsBeanArrayList.get(position);
+                                TextView check_conflict = (TextView) dialog.findViewById(R.id.Check_conflict);
+                                View view_conflict = (View) dialog.findViewById(R.id.view_conflict);
+                                if (Appreference.conflicttask) {
+                                    check_conflict.setVisibility(View.VISIBLE);
+                                    view_conflict.setVisibility(View.VISIBLE);
+                                }
+                                TextView edit_remdr_date = (TextView) dialog.findViewById(R.id.edit);
+                                edit_remdr_date.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        try {
+                                            dialog.dismiss();
+                                            String queryy = "";
+                                            Intent intent = new Intent(context, TaskTakerDateRequest.class);
+                                            if (alert_bean.getTaskType() != null && alert_bean.getTaskType().equalsIgnoreCase("Group")) {
+                                                if (alert_bean.getProjectId() != null && !alert_bean.getProjectId().equalsIgnoreCase("")) {
+                                                    queryy = "select * from taskDetailsInfo where (fromUserId='" + alert_bean.getFromUserId() + "' or toUserId='" + alert_bean.getFromUserId() + "') and loginuser='" + Appreference.loginuserdetails.getEmail() + "'and taskId='" + alert_bean.getTaskId() + "' and mimeType='date' and (requestStatus='approved' or requestStatus='assigned') order by id desc";
+                                                } else {
+                                                    queryy = "select * from taskDetailsInfo where (fromUserId='" + alert_bean.getToUserId() + "' or toUserId='" + alert_bean.getToUserId() + "') and loginuser='" + Appreference.loginuserdetails.getEmail() + "'and taskId='" + alert_bean.getTaskId() + "' and mimeType='date' and (requestStatus='approved' or requestStatus='assigned') order by id desc";
+                                                }
+                                            } else {
+                                                queryy = "select * from taskDetailsInfo where (fromUserName='" + Appreference.loginuserdetails.getUsername() + "' or toUserName='" + Appreference.loginuserdetails.getUsername() + "') and loginuser='" + Appreference.loginuserdetails.getEmail() + "'and taskId='" + alert_bean.getTaskId() + "' and mimeType='date' and (requestStatus='approved' or requestStatus='assigned') order by id desc";
                                             }
+                                            ArrayList<TaskDetailsBean> taskList = VideoCallDataBase.getDB(context).getTaskHistory(queryy);
+                                            if (taskList.size() > 0) {
+                                                TaskDetailsBean bean2 = taskList.get(0);
+                                                intent.putExtra("startdate", bean2.getPlannedStartDateTime());
+                                                intent.putExtra("enddate", bean2.getPlannedEndDateTime());
+                                                intent.putExtra("reminderdate", bean2.getRemainderFrequency());
+                                                intent.putExtra("reminderfreq", bean2.getTimeFrequency());
+                                                intent.putExtra("reminderquotes", bean2.getReminderQuote());
+                                                intent.putExtra("isRemainderRequired", bean2.getIsRemainderRequired());
+                                                intent.putExtra("username", bean2.getFromUserName());
+                                                intent.putExtra("remindertone", bean2.getServerFileName());
+                                                intent.putExtra("taskType", bean2.getTaskType());
+                                                intent.putExtra("toUserId", bean2.getToUserId());
+                                                intent.putExtra("ownerOfTask", bean2.getOwnerOfTask());
+                                                Log.i("groupMemberAccess", "medialist getTaskType ** " + bean2.getTaskType());
+                                                Log.i("groupMemberAccess", "medialist getToUserId ** " + bean2.getToUserId());
+                                                Log.i("groupMemberAccess", "medialist getOwnerOfTask ** " + bean2.getOwnerOfTask());
+                                                ((Activity) context).startActivityForResult(intent, 337);
+                                            }
+                                        } catch (Exception e) {
+                                            e.printStackTrace();
+                                            Appreference.printLog("MediaListAdapter", "dateChangeRequest_icon Exception: " + e.getMessage(), "WARN", null);
                                         }
                                     }
-                                } catch (Exception e) {
-                                    e.printStackTrace();
-                                    Appreference.printLog("MediaListAdapter", "dateChangeRequest_icon Exception: " + e.getMessage(), "WARN", null);
-                                }
+                                });
+                                check_conflict.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        try {
+                                            dialog.dismiss();
+                                            if (Appreference.conflicttask) {
+                                                Appreference.isconflicttaker = true;
+                                                String queryy = "";
+                                                if (alert_bean.getTaskType() != null && alert_bean.getTaskType().equalsIgnoreCase("Group")) {
+                                                    queryy = "select * from taskDetailsInfo where (fromUserId='" + alert_bean.getToUserId() + "' or toUserId='" + alert_bean.getToUserId() + "') and loginuser='" + Appreference.loginuserdetails.getEmail() + "'and taskId='" + alert_bean.getTaskId() + "' and mimeType='date' and (requestStatus='approved' or requestStatus='assigned') order by id desc";
+                                                } else {
+                                                    queryy = "select * from taskDetailsInfo where (fromUserName='" + Appreference.loginuserdetails.getUsername() + "' or toUserName='" + Appreference.loginuserdetails.getUsername() + "') and loginuser='" + Appreference.loginuserdetails.getEmail() + "'and taskId='" + alert_bean.getTaskId() + "' and mimeType='date' and (requestStatus='approved' or requestStatus='assigned') order by id desc";
+                                                }
+                                                Log.i("DateClick", "check_conflict Click : queryy : " + queryy);
+                                                ArrayList<TaskDetailsBean> taskList = VideoCallDataBase.getDB(context).getTaskHistory(queryy);
+                                                if (taskList.size() > 0) {
+                                                    TaskDetailsBean bean2 = taskList.get(0);
+                                                    if (!bean2.getTaskType().equalsIgnoreCase("Group")) {
+                                                        confictWebservice(bean2);
+                                                        listener.showMedialistProgress();
+                                                    }
+                                                }
+                                            }
+                                        } catch (Exception e) {
+                                            e.printStackTrace();
+                                            Appreference.printLog("MediaListAdapter", "dateChangeRequest_icon Exception: " + e.getMessage(), "WARN", null);
+                                        }
+                                    }
+                                });
+                                TextView cancel_req = (TextView) dialog.findViewById(R.id.cancel);
+                                cancel_req.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        try {
+                                            dialog.dismiss();
+                                        } catch (Exception e) {
+                                            e.printStackTrace();
+                                            Appreference.printLog("MediaListAdapter", "dateChangeRequest_icon Exception: " + e.getMessage(), "WARN", null);
+                                        }
+                                    }
+                                });
+                            } else {
+                                Toast.makeText(context, "This " + category + " is  Abandon ", Toast.LENGTH_SHORT).show();
                             }
-                        });
-                        TextView cancel_req = (TextView) dialog.findViewById(R.id.cancel);
-                        cancel_req.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                try {
-                                    dialog.dismiss();
-                                } catch (Exception e) {
-                                    e.printStackTrace();
-                                    Appreference.printLog("MediaListAdapter", "dateChangeRequest_icon Exception: " + e.getMessage(), "WARN", null);
-                                }
-                            }
-                        });
+                        } else {
+                            Toast.makeText(context, "This " + category + " is already Closed ", Toast.LENGTH_SHORT).show();
+                        }
                     } catch (Exception e) {
                         e.printStackTrace();
                         Appreference.printLog("MediaListAdapter", "dateChangeRequest_icon Exception: " + e.getMessage(), "WARN", null);
@@ -1682,13 +1845,30 @@ public class MediaListAdapter extends ArrayAdapter<TaskDetailsBean> {
                 @Override
                 public void onClick(View v) {
                     try {
-                        Intent intent = new Intent(context, TaskDateUpdate.class);
-                        intent.putExtra("template", "failure");
-                        intent.putExtra("taskId", gcBean.getTaskId());
-                        intent.putExtra("taskType", gcBean.getTaskType());
-                        intent.putExtra("taskStatus", gcBean.getTaskStatus());
-                        intent.putExtra("toUserIdConflict", String.valueOf(gcBean.getToUserId()));
-                        ((Activity) context).startActivityForResult(intent, 336);
+
+                        Log.d("Receiver", " status_datechangeapp_status ===> !!! " + gcBean.getTaskStatus());
+                        String datechange_status = "";
+                        if (gcBean.getProjectId() != null && !gcBean.getProjectId().equalsIgnoreCase("") && !gcBean.getProjectId().equalsIgnoreCase("null")) {
+                            datechange_status = VideoCallDataBase.getDB(context).getProjectParentTaskId("select taskStatus from projectHistory where taskId='" + gcBean.getTaskId() + "'");
+                        } else {
+                            datechange_status = VideoCallDataBase.getDB(context).getProjectParentTaskId("select taskStatus from taskHistoryInfo where taskId='" + gcBean.getTaskId() + "'");
+                        }
+                        Log.d("Receiver", " status_datechangeapp_status ===> 2 " + datechange_status);
+                        if (datechange_status != null && !datechange_status.equalsIgnoreCase("") && !datechange_status.equalsIgnoreCase("Closed")) {
+                            if (datechange_status != null && !datechange_status.equalsIgnoreCase("") && !datechange_status.equalsIgnoreCase("abandoned")) {
+                                Intent intent = new Intent(context, TaskDateUpdate.class);
+                                intent.putExtra("template", "failure");
+                                intent.putExtra("taskId", gcBean.getTaskId());
+                                intent.putExtra("taskType", gcBean.getTaskType());
+                                intent.putExtra("taskStatus", gcBean.getTaskStatus());
+                                intent.putExtra("toUserIdConflict", String.valueOf(gcBean.getToUserId()));
+                                ((Activity) context).startActivityForResult(intent, 336);
+                            } else {
+                                Toast.makeText(context, "Unable to sent Date task is in abandoned state ", Toast.LENGTH_SHORT).show();
+                            }
+                        } else {
+                            Toast.makeText(context, "This " + category + " is already Closed ", Toast.LENGTH_SHORT).show();
+                        }
                     } catch (Exception e) {
                         e.printStackTrace();
                         Appreference.printLog("MediaListAdapter", "dateChangeApproval_sender Exception: " + e.getMessage(), "WARN", null);
@@ -1715,96 +1895,114 @@ public class MediaListAdapter extends ArrayAdapter<TaskDetailsBean> {
                 @Override
                 public void onClick(View v) {
                     try {
-                        NewTaskConversation.calender = true;
-                        final TaskDetailsBean alert_bean = detailsBeanArrayList.get(position);
-                        final Dialog dialog = new Dialog(context);
-                        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-                        dialog.setContentView(R.layout.date_change_approval);
-                        WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
-                        lp.copyFrom(dialog.getWindow().getAttributes());
-                        lp.width = WindowManager.LayoutParams.MATCH_PARENT;
-                        lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
-                        lp.horizontalMargin = 15;
-                        Window window = dialog.getWindow();
-                        window.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-                        window.setAttributes(lp);
-                        window.setGravity(Gravity.CENTER);
-                        dialog.show();
-                        TextView approve = (TextView) dialog.findViewById(R.id.approve);
-                        approve.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                try {
-                                    dialog.dismiss();
-                                    NewTaskConversation.calender = false;
-                                    VideoCallDataBase.getDB(context).taskMsg_StatusUpdate(gcBean.getSignalid());
-                                    for (TaskDetailsBean detailsBean : detailsBeanArrayList) {
-                                        if (detailsBean.getSignalid() != null && detailsBean.getSignalid().equalsIgnoreCase(gcBean.getSignalid())) {
-                                            detailsBean.setMsg_status(9);
-                                            break;
+                        Log.d("Receiver", " status_dateChangeApproval_status ----> &&&  " + gcBean.getTaskStatus());
+                        Log.d("Receiver", " ProjectId ----> &&&  " + gcBean.getProjectId());
+                        String dateChangeApprov_status = "";
+                        if (gcBean.getProjectId() != null && !gcBean.getProjectId().equalsIgnoreCase("") && !gcBean.getProjectId().equalsIgnoreCase("null")) {
+                            dateChangeApprov_status = VideoCallDataBase.getDB(context).getProjectParentTaskId("select taskStatus from projectHistory where taskId='" + gcBean.getTaskId() + "'");
+                        } else {
+                            dateChangeApprov_status = VideoCallDataBase.getDB(context).getProjectParentTaskId("select taskStatus from taskHistoryInfo where taskId='" + gcBean.getTaskId() + "'");
+                            Log.d("Receiver", " status_dateChangeApproval_status ---> 33 " + dateChangeApprov_status);
+                        }
+                        Log.d("Receiver", " status_dateChangeApproval_status ---> 3 " + dateChangeApprov_status);
+                        if (dateChangeApprov_status != null && !dateChangeApprov_status.equalsIgnoreCase("") && !dateChangeApprov_status.equalsIgnoreCase("Closed")) {
+                            if (dateChangeApprov_status != null && !dateChangeApprov_status.equalsIgnoreCase("") && !dateChangeApprov_status.equalsIgnoreCase("abandoned")) {
+                                NewTaskConversation.calender = true;
+                                final TaskDetailsBean alert_bean = detailsBeanArrayList.get(position);
+                                final Dialog dialog = new Dialog(context);
+                                dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                                dialog.setContentView(R.layout.date_change_approval);
+                                WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
+                                lp.copyFrom(dialog.getWindow().getAttributes());
+                                lp.width = WindowManager.LayoutParams.MATCH_PARENT;
+                                lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
+                                lp.horizontalMargin = 15;
+                                Window window = dialog.getWindow();
+                                window.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                                window.setAttributes(lp);
+                                window.setGravity(Gravity.CENTER);
+                                dialog.show();
+                                TextView approve = (TextView) dialog.findViewById(R.id.approve);
+                                approve.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        try {
+                                            dialog.dismiss();
+                                            NewTaskConversation.calender = false;
+                                            VideoCallDataBase.getDB(context).taskMsg_StatusUpdate(gcBean.getSignalid());
+                                            for (TaskDetailsBean detailsBean : detailsBeanArrayList) {
+                                                if (detailsBean.getSignalid() != null && detailsBean.getSignalid().equalsIgnoreCase(gcBean.getSignalid())) {
+                                                    detailsBean.setMsg_status(9);
+                                                    break;
+                                                }
+                                            }
+                                            String queryy = "";
+                                            if (alert_bean.getTaskType() != null && alert_bean.getTaskType().equalsIgnoreCase("Group")) {
+                                                queryy = "select * from taskDetailsInfo where (fromUserId='" + alert_bean.getToUserId() + "' or toUserId='" + alert_bean.getToUserId() + "') and loginuser='" + Appreference.loginuserdetails.getEmail() + "' and taskId='" + alert_bean.getTaskId() + "' and mimeType='date' and requestStatus='requested' order by id desc";
+                                            } else {
+                                                queryy = "select * from taskDetailsInfo where (fromUserName='" + Appreference.loginuserdetails.getUsername() + "' or toUserName='" + Appreference.loginuserdetails.getUsername() + "') and loginuser='" + Appreference.loginuserdetails.getEmail() + "' and taskId='" + alert_bean.getTaskId() + "' and mimeType='date' and requestStatus='requested' order by id desc";
+                                            }
+                                            ArrayList<TaskDetailsBean> taskList_fromDB = VideoCallDataBase.getDB(context).getTaskHistory(queryy);
+                                            if (taskList_fromDB.size() > 0) {
+                                                TaskDetailsBean bean2 = taskList_fromDB.get(0);
+                                                String date_header = "approved";
+                                                listener.dateSendORApprovalORReject(bean2, date_header);
+                                            }
+                                        } catch (Exception e) {
+                                            e.printStackTrace();
+                                            Appreference.printLog("MediaListAdapter", "dateChangeApproval_icon Exception: " + e.getMessage(), "WARN", null);
                                         }
                                     }
-                                    String queryy = "";
-                                    if (alert_bean.getTaskType() != null && alert_bean.getTaskType().equalsIgnoreCase("Group")) {
-                                        queryy = "select * from taskDetailsInfo where (fromUserId='" + alert_bean.getToUserId() + "' or toUserId='" + alert_bean.getToUserId() + "') and loginuser='" + Appreference.loginuserdetails.getEmail() + "' and taskId='" + alert_bean.getTaskId() + "' and mimeType='date' and requestStatus='requested' order by id desc";
-                                    } else {
-                                        queryy = "select * from taskDetailsInfo where (fromUserName='" + Appreference.loginuserdetails.getUsername() + "' or toUserName='" + Appreference.loginuserdetails.getUsername() + "') and loginuser='" + Appreference.loginuserdetails.getEmail() + "' and taskId='" + alert_bean.getTaskId() + "' and mimeType='date' and requestStatus='requested' order by id desc";
-                                    }
-                                    ArrayList<TaskDetailsBean> taskList_fromDB = VideoCallDataBase.getDB(context).getTaskHistory(queryy);
-                                    if (taskList_fromDB.size() > 0) {
-                                        TaskDetailsBean bean2 = taskList_fromDB.get(0);
-                                        String date_header = "approved";
-                                        listener.dateSendORApprovalORReject(bean2, date_header);
-                                    }
-                                } catch (Exception e) {
-                                    e.printStackTrace();
-                                    Appreference.printLog("MediaListAdapter", "dateChangeApproval_icon Exception: " + e.getMessage(), "WARN", null);
-                                }
-                            }
-                        });
-                        TextView reject = (TextView) dialog.findViewById(R.id.reject);
-                        reject.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                try {
-                                    dialog.dismiss();
-                                    VideoCallDataBase.getDB(context).taskMsg_StatusUpdate(gcBean.getSignalid());
-                                    for (TaskDetailsBean detailsBean : detailsBeanArrayList) {
-                                        if (detailsBean.getSignalid() != null && detailsBean.getSignalid().equalsIgnoreCase(gcBean.getSignalid())) {
-                                            detailsBean.setMsg_status(9);
-                                            break;
+                                });
+                                TextView reject = (TextView) dialog.findViewById(R.id.reject);
+                                reject.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        try {
+                                            dialog.dismiss();
+                                            VideoCallDataBase.getDB(context).taskMsg_StatusUpdate(gcBean.getSignalid());
+                                            for (TaskDetailsBean detailsBean : detailsBeanArrayList) {
+                                                if (detailsBean.getSignalid() != null && detailsBean.getSignalid().equalsIgnoreCase(gcBean.getSignalid())) {
+                                                    detailsBean.setMsg_status(9);
+                                                    break;
+                                                }
+                                            }
+                                            String queryy = "";
+                                            if (alert_bean.getTaskType() != null && alert_bean.getTaskType().equalsIgnoreCase("Group")) {
+                                                queryy = "select * from taskDetailsInfo where (fromUserId='" + alert_bean.getToUserId() + "' or toUserId='" + alert_bean.getToUserId() + "') and loginuser='" + Appreference.loginuserdetails.getEmail() + "' and taskId='" + alert_bean.getTaskId() + "' and mimeType='date' and requestStatus='requested' order by id desc";
+                                            } else {
+                                                queryy = "select * from taskDetailsInfo where (fromUserName='" + Appreference.loginuserdetails.getUsername() + "' or toUserName='" + Appreference.loginuserdetails.getUsername() + "') and loginuser='" + Appreference.loginuserdetails.getEmail() + "' and taskId='" + alert_bean.getTaskId() + "' and mimeType='date' and requestStatus='requested' order by id desc";
+                                            }
+                                            ArrayList<TaskDetailsBean> taskList_fromDB = VideoCallDataBase.getDB(context).getTaskHistory(queryy);
+                                            if (taskList_fromDB.size() > 0) {
+                                                TaskDetailsBean bean2 = taskList_fromDB.get(taskList_fromDB.size() - 1);
+                                                String date_header = "rejected";
+                                                listener.dateSendORApprovalORReject(bean2, date_header);
+                                            }
+                                        } catch (Exception e) {
+                                            e.printStackTrace();
+                                            Appreference.printLog("MediaListAdapter", "dateChangeApproval_icon Exception: " + e.getMessage(), "WARN", null);
                                         }
                                     }
-                                    String queryy = "";
-                                    if (alert_bean.getTaskType() != null && alert_bean.getTaskType().equalsIgnoreCase("Group")) {
-                                        queryy = "select * from taskDetailsInfo where (fromUserId='" + alert_bean.getToUserId() + "' or toUserId='" + alert_bean.getToUserId() + "') and loginuser='" + Appreference.loginuserdetails.getEmail() + "' and taskId='" + alert_bean.getTaskId() + "' and mimeType='date' and requestStatus='requested' order by id desc";
-                                    } else {
-                                        queryy = "select * from taskDetailsInfo where (fromUserName='" + Appreference.loginuserdetails.getUsername() + "' or toUserName='" + Appreference.loginuserdetails.getUsername() + "') and loginuser='" + Appreference.loginuserdetails.getEmail() + "' and taskId='" + alert_bean.getTaskId() + "' and mimeType='date' and requestStatus='requested' order by id desc";
+                                });
+                                TextView cancel1_req = (TextView) dialog.findViewById(R.id.cancel1);
+                                cancel1_req.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        try {
+                                            dialog.dismiss();
+                                        } catch (Exception e) {
+                                            e.printStackTrace();
+                                            Appreference.printLog("MediaListAdapter", "dateChangeApproval_icon Exception: " + e.getMessage(), "WARN", null);
+                                        }
                                     }
-                                    ArrayList<TaskDetailsBean> taskList_fromDB = VideoCallDataBase.getDB(context).getTaskHistory(queryy);
-                                    if (taskList_fromDB.size() > 0) {
-                                        TaskDetailsBean bean2 = taskList_fromDB.get(taskList_fromDB.size() - 1);
-                                        String date_header = "rejected";
-                                        listener.dateSendORApprovalORReject(bean2, date_header);
-                                    }
-                                } catch (Exception e) {
-                                    e.printStackTrace();
-                                    Appreference.printLog("MediaListAdapter", "dateChangeApproval_icon Exception: " + e.getMessage(), "WARN", null);
-                                }
+                                });
+                            } else {
+                                Toast.makeText(context, "Unable to Approve or Reject Requested date task is in abandoned state ", Toast.LENGTH_SHORT).show();
                             }
-                        });
-                        TextView cancel1_req = (TextView) dialog.findViewById(R.id.cancel1);
-                        cancel1_req.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                try {
-                                    dialog.dismiss();
-                                } catch (Exception e) {
-                                    e.printStackTrace();
-                                    Appreference.printLog("MediaListAdapter", "dateChangeApproval_icon Exception: " + e.getMessage(), "WARN", null);
-                                }
-                            }
-                        });
+                        } else {
+                            Toast.makeText(context, "This " + category + " is already Closed ", Toast.LENGTH_SHORT).show();
+                        }
                     } catch (Exception e) {
                         e.printStackTrace();
                         Appreference.printLog("MediaListAdapter", "dateChangeApproval_icon Exception: " + e.getMessage(), "WARN", null);
@@ -2525,7 +2723,7 @@ public class MediaListAdapter extends ArrayAdapter<TaskDetailsBean> {
                         }
                     }
                     holder.date_header_text.setText(Datetype);
-                } else if (gcBean.getMimeType() != null && (gcBean.getMimeType().equalsIgnoreCase("text") || gcBean.getMimeType().equalsIgnoreCase("overdue") || gcBean.getMimeType().equalsIgnoreCase("url") || gcBean.getMimeType().equalsIgnoreCase("date") || gcBean.getMimeType().equalsIgnoreCase("observer") || gcBean.getMimeType().equalsIgnoreCase("Reassign") || gcBean.getMimeType().equalsIgnoreCase("Remove") || gcBean.getMimeType().equalsIgnoreCase("note")) || gcBean.getMimeType().equalsIgnoreCase("assigntask")) {
+                } else if (gcBean.getMimeType() != null && (gcBean.getMimeType().equalsIgnoreCase("text") || gcBean.getMimeType().equalsIgnoreCase("overdue") || gcBean.getMimeType().equalsIgnoreCase("url") || gcBean.getMimeType().equalsIgnoreCase("date") || gcBean.getMimeType().equalsIgnoreCase("observer") || gcBean.getMimeType().equalsIgnoreCase("Reassign") || gcBean.getMimeType().equalsIgnoreCase("Remove") || gcBean.getMimeType().equalsIgnoreCase("note")) || gcBean.getMimeType().equalsIgnoreCase("assigntask") || gcBean.getMimeType().equalsIgnoreCase("reminder")) {
                     String imageFile = gcBean.getTaskDescription();
                     holder.both_side_list_image.setGravity(View.GONE);
                     holder.sender_side_list_image.setVisibility(View.GONE);

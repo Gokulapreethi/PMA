@@ -2384,9 +2384,14 @@ public class TravelJobDetails extends Activity implements View.OnClickListener, 
                 }
                 if (isDeassign) {
                     isDeassign = false;
+
                     handler.post(new Runnable() {
                         @Override
                         public void run() {
+                            ProjectHistory projectHistory = (ProjectHistory) Appreference.context_table.get("projecthistory");
+                            if (projectHistory != null){
+                                Log.i("conv123","isDeassign ProgressBarInvisible  projectHistory not null....===>");
+                                projectHistory.setProgressBarInvisible();}
                             TravelJobDetails.this.finish();
                         }
                     });

@@ -25,6 +25,8 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Hashtable;
+import java.util.Iterator;
 import java.util.Locale;
 import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
@@ -122,6 +124,11 @@ public class Appreference {
     public static boolean project_taskConversationEntry = false;
     public static String reassign_users_scheduled = null;
     public static boolean isEscalate_Observer_WS = false;
+    public static String isAlfhaOrOnline = "";
+    public static Hashtable<String, String> hashtable_online_alfha = new Hashtable<String, String>();
+    public static HashMap<String, String> contact_arrange = new HashMap(hashtable_online_alfha);
+    public static Iterator<String> keySetIterator = contact_arrange.keySet().iterator();
+    public static boolean isTemplateTaskProfile = false;
 
     public static void printLog(String tag, String message, String type,
                                 Throwable e) {

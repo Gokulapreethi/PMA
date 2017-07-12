@@ -79,38 +79,45 @@ static GroupPercentageStatus groupPercentageStatus;
                         String test = s1.toString();
                         JsonElement jelement = new JsonParser().parse(s1);
                         JsonArray jarray = jelement.getAsJsonArray();
-                        for (int i = 0; i < jarray.size(); i++) {
-                            String jobject1 = jarray.get(i).toString();
-                            JSONObject jobject = new JSONObject(jobject1);
-                            String firstname = jobject.getString("firstName");
-                            String lastname = jobject.getString("lastName");
-                           /* firstname = firstname.split("\"")[1];
-                            if(lastname.length()>0 && lastname!=null && !lastname.contains("\"")){
-                            lastname = lastname.split("\"")[1];}*/
-                            String percentagecomplete = String.valueOf(jobject.get("percentageCompleted"));
-                            String oracleStatus = String.valueOf(jobject.get("oracleStatus"));
-                            String name = firstname + " " + lastname;
-                            Log.i("GroupPercentage", firstname);
-                            Log.i("GroupPercentage", lastname);
-                            Log.i("GroupPercentage", name);
-                            Log.i("GroupPercentage", percentagecomplete);
-                            NameList.add(name);
-                            PercentageList.add(percentagecomplete);
-                            OracleStatusList.add(oracleStatus);
-                            if(isFromOracle){
-                                final MyAdapter buddyArrayAdapter = new MyAdapter(context, NameList, OracleStatusList);
-                                listView.setAdapter(buddyArrayAdapter);
-                                buddyArrayAdapter.notifyDataSetChanged();
-                            }else {
-                                final MyAdapter buddyArrayAdapter = new MyAdapter(context, NameList, PercentageList);
-                                listView.setAdapter(buddyArrayAdapter);
-                                buddyArrayAdapter.notifyDataSetChanged();
-                            }
 
+                        if (jarray.size()>0) {
+                            for (int i = 0; i < jarray.size(); i++) {
+                                String jobject1 = jarray.get(i).toString();
+                                JSONObject jobject = new JSONObject(jobject1);
+                                String firstname = jobject.getString("firstName");
+                                String lastname = jobject.getString("lastName");
+                               /* firstname = firstname.split("\"")[1];
+                                if(lastname.length()>0 && lastname!=null && !lastname.contains("\"")){
+                                lastname = lastname.split("\"")[1];}*/
+                                String percentagecomplete = String.valueOf(jobject.get("percentageCompleted"));
+                                String oracleStatus = String.valueOf(jobject.get("oracleStatus"));
+                                String name = firstname + " " + lastname;
+                                Log.i("GroupPercentage", firstname);
+                                Log.i("GroupPercentage", lastname);
+                                Log.i("GroupPercentage", name);
+                                Log.i("GroupPercentage", percentagecomplete);
+                                NameList.add(name);
+                                PercentageList.add(percentagecomplete);
+                                OracleStatusList.add(oracleStatus);
+                                if(isFromOracle){
+                                    final MyAdapter buddyArrayAdapter = new MyAdapter(context, NameList, OracleStatusList);
+                                    listView.setAdapter(buddyArrayAdapter);
+                                    buddyArrayAdapter.notifyDataSetChanged();
+                                }else {
+                                    final MyAdapter buddyArrayAdapter = new MyAdapter(context, NameList, PercentageList);
+                                    listView.setAdapter(buddyArrayAdapter);
+                                    buddyArrayAdapter.notifyDataSetChanged();
+                                }
+
+                            }
+                        }else
+                        {
+                            Toast.makeText(getApplicationContext(), "No Result Found...", Toast.LENGTH_SHORT).show();
+                            cancelDialog();
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
-                        Toast.makeText(getApplicationContext(), "Unable to Login...", Toast.LENGTH_LONG).show();
+                        Toast.makeText(getApplicationContext(), "Unable to Login...", Toast.LENGTH_SHORT).show();
                         Appreference.printLog("GroupPercentageStatus ResponceMethod ","Exception "+e.getMessage(),"WARN",null);
                     }
                 }
@@ -212,35 +219,22 @@ static GroupPercentageStatus groupPercentageStatus;
                     }
                 }
             } else {
-                Log.i("project_details", "Task group_Id == " + group_Id);
                 arrayList = VideoCallDataBase.getDB(context).getGroupmemberHistory("select * from groupmember where groupId='" + group_Id + "'");
             }
 
-            Log.i("project_details", "arrayList size is " + arrayList.toString());
-            if (arrayList.size() > 0) {
-                for (int k = 0; k < arrayList.size(); k++)
-                    Log.i("project_details", "listmember frst_last_name_s " + arrayList.get(k).getUsername());
-            }
             if (arrayList.size() > 0) {
                 for (ListMember listMember : arrayList) {
                     if (!Appreference.loginuserdetails.getUsername().equalsIgnoreCase(listMember.getUsername())) {
                         int percent_1 = VideoCallDataBase.getDB(context).groupPercentageStatus(listMember.getUsername(), taskid);
-                        Log.i("groupstatus", "percent_1 " + percent_1);
                         listMember.setCode(String.valueOf(percent_1));
                         if (isProject.equalsIgnoreCase("yes")) {
-                            Log.i("project_details", "frst_lst_name 1 " + listMember.getUsername());
                             if (listMember.getUsername().equalsIgnoreCase(Appreference.loginuserdetails.getUsername())) {
-                                Log.i("project_details", "frst_lst_name 2 " + listMember.getUsername());
                                 listMember.setFirstName(Appreference.loginuserdetails.getFirstName());
                                 listMember.setLastName(Appreference.loginuserdetails.getLastName());
                             } else {
-//                                String frst_last_name = VideoCallDataBase.getDB(context).getName(listMember.getUsername());
-//                                Log.i("project_details", "frst_lst_name " + frst_last_name);
-//                                Log.i("project_details", "frst_lst_name 3 " + listMember.getUsername());
-//                                if (frst_last_name != null) {
                                 listMember.setFirstName(VideoCallDataBase.getDB(context).getProjectParentTaskId("select firstname from contact where username='" + listMember.getUsername() + "'"));
                                 listMember.setLastName(VideoCallDataBase.getDB(context).getProjectParentTaskId("select lastname from contact where username='" + listMember.getUsername() + "'"));
-//                                }
+
                             }
                         }
                         Log.i("project_details", "frst_lst_name 4 " + listMember.getUsername());
@@ -254,25 +248,7 @@ static GroupPercentageStatus groupPercentageStatus;
                buddyArrayAdapter = new PrivateMemberAdapter(context, arrayList_1);
                 listView.setAdapter(buddyArrayAdapter);
                 buddyArrayAdapter.notifyDataSetChanged();
-            } /*else if (sub_type != null && sub_type.equalsIgnoreCase("normal")) {
-                private_heading.setText("Percentage Completion");
-            }*/
-
-//        handler.post(new Runnable() {
-//            @Override
-//            public void run() {
-//                Collections.sort(arrayList_1, new CustomComparator());
-//                buddyArrayAdapter.notifyDataSetChanged();
-//            }
-//        });
-        /*FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
             }
-        });*/
             if (sub_type != null && sub_type.equalsIgnoreCase("private")) {
                 listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
