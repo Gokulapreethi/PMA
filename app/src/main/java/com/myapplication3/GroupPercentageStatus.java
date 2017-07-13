@@ -79,7 +79,10 @@ static GroupPercentageStatus groupPercentageStatus;
                         String test = s1.toString();
                         JsonElement jelement = new JsonParser().parse(s1);
                         JsonArray jarray = jelement.getAsJsonArray();
-
+                        Log.i("GroupPercentage","jarray size====>"+ jarray.size());
+                        NameList.clear();
+                        OracleStatusList.clear();
+                        PercentageList.clear();
                         if (jarray.size()>0) {
                             for (int i = 0; i < jarray.size(); i++) {
                                 String jobject1 = jarray.get(i).toString();
@@ -99,6 +102,9 @@ static GroupPercentageStatus groupPercentageStatus;
                                 NameList.add(name);
                                 PercentageList.add(percentagecomplete);
                                 OracleStatusList.add(oracleStatus);
+                                Log.i("GroupPercentage","jarray position====>"+ i );
+                                Log.i("GroupPercentage","NameList size====>"+ NameList.size());
+
                                 if(isFromOracle){
                                     final MyAdapter buddyArrayAdapter = new MyAdapter(context, NameList, OracleStatusList);
                                     listView.setAdapter(buddyArrayAdapter);

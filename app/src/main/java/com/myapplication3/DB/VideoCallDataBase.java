@@ -30,7 +30,6 @@ import com.myapplication3.ContactBean;
 import com.myapplication3.Forms.FormAccessBean;
 import com.myapplication3.ListAllgetTaskDetails;
 import com.myapplication3.ListTaskFiles;
-import com.myapplication3.R;
 import com.myapplication3.call_list.Call_ListBean;
 import com.myapplication3.chat.ChatBean;
 
@@ -63,15 +62,15 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
     /**
      * DB Inside COMMedia Folder //
      */
-//    public static final String DATABASE_NAME = Environment
-//            .getExternalStorageDirectory().getAbsolutePath()
-//            + "/High Message/sipvideocall.db";
+    public static final String DATABASE_NAME = Environment
+            .getExternalStorageDirectory().getAbsolutePath()
+            + "/High Message/sipvideocall.db";
     /**
      * DB inside application
      */
-    public static final String DATABASE_NAME = Appreference.main_Activity_context
+    /*public static final String DATABASE_NAME = Appreference.main_Activity_context
 	 .getResources().getString(R.string.app_name) + ".db";
-
+*/
     Context context;
     public static final String CREATE_TABLE_CHAT = "create table if not exists chat(autoincrement_id integer primary key autoincrement,chattype varchar(100),chatname varchar(100),chatid varchar(100),username varchar(100),fromname varchar(100),toname varchar(100),signalid varchar(100),messagetype varchar(100),message varchar(100),datetime varchar(100),msgstatus varchar(100),imagepath varchar(100),userid varchar(100),opened varchar(50),coordinator varchar(100),chatmembers varchar(500),conferenceuri varchar(100),scheduled varchar(50))";
     public static final String CREATE_TABLE_CONTACTS = "create table if not exists contact(autoincrement_id integer primary key autoincrement,contactemail varchar(100),userid interger,username varchar(100),firstname varchar(100),lastname varchar(100),code varchar(100),title varchar(100),gender varchar(100),profileImage varchar(100),personalInfo varchar(100),loginuser varchar(100),presence varchar(50),job1 varchar(100),job2 varchar(100),job3 varchar(100),job4 varchar(100),textprofile varchar(100),videoprofile varchar(100),userType varchar(100),profession varchar(100),specialization varchar(100),organization varchar(100))";

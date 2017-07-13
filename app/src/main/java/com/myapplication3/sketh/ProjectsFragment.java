@@ -163,7 +163,8 @@ public class ProjectsFragment extends Fragment implements View.OnClickListener, 
 
     @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View
+    onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         view = inflater.inflate(R.layout.project_fragment_layout, container, false);
         try {
@@ -640,8 +641,8 @@ public class ProjectsFragment extends Fragment implements View.OnClickListener, 
 //                        Appreference.jsonRequestSender.getProject(EnumJsonWebservicename.getProject, nameValuePairs, ProjectsFragment.this);
                             Log.i("ws123", " projectDetailsBean.getOracleProjectId()=========>" + projectDetailsBean.getId());
                             Log.i("ws123", " projectDetailsBean.userId()=========>" + String.valueOf(Appreference.loginuserdetails.getId()));
-                            Appreference.jsonRequestSender.getTaskForJobID(EnumJsonWebservicename.getTaskForJobID, nameValuePairs, ProjectsFragment.this);
                             showprogress("Getting ActivityCode...");
+                            Appreference.jsonRequestSender.getTaskForJobID(EnumJsonWebservicename.getTaskForJobID, nameValuePairs, ProjectsFragment.this);
                         } else
                             Toast.makeText(getActivity(), "Check your internet connection", Toast.LENGTH_SHORT).show();
 
@@ -814,7 +815,7 @@ public class ProjectsFragment extends Fragment implements View.OnClickListener, 
 
                                 } else if (item.getTitle().toString().equalsIgnoreCase("Complete")) {
                                     try {
-                                        AlertDialog.Builder saveDialog = new AlertDialog.Builder(classContext);
+                                        AlertDialog.Builder saveDialog = new AlertDialog.Builder(getActivity());
                                         saveDialog.setTitle("Project Completion");
                                         saveDialog.setMessage("Are you sure want to Complete this Project?");
                                         saveDialog.setPositiveButton("OK", new DialogInterface.OnClickListener() {

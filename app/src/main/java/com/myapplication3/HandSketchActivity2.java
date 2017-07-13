@@ -249,23 +249,28 @@ public class HandSketchActivity2 extends Activity implements OnClickListener {
 	@Override
 	public void onClick(View view) {
 
-		if (view.getId() == R.id.draw_btn) {
-			check="pencil";
-			if (imageSelectedOption == 0) {
-				if (StoredFilepath != null) {
-					File file = new File(StoredFilepath);
-					if (file.exists()) {
-						Log.i("handsketch123", "file name : " + file.getPath());
-						Bitmap bitMap = ResizeImage(StoredFilepath);
-						if (bitMap != null) {
-							Log.i("handsketch123", "bitmap not null");
-							drawView.setImage(bitMap);
-						}
-					}
-				}
-			} else if (imageSelectedOption == 1) {
-				if (SelectedGallaryImage != null) {
-					Bitmap board;
+        if (view.getId() == R.id.draw_btn) {
+            check = "pencil";
+            if (imageSelectedOption == 0) {
+                if (StoredFilepath != null) {
+                    File file = new File(StoredFilepath);
+                    if (file.exists()) {
+                        Log.i("handsketch123", "file name : " + file.getPath());
+                        Bitmap bitMap = null;
+                        bitMap = BitmapFactory.decodeFile(StoredFilepath);
+                        int h = drawView.getHeight(); // 320; // Height in pixels
+                        int w = drawView.getWidth();// 480; // Width in pixels
+                        bitMap = Bitmap.createScaledBitmap(
+                                BitmapFactory.decodeFile(StoredFilepath), w, h, true);
+                        if (bitMap != null) {
+                            Log.i("handsketch123", "bitmap not null");
+                            drawView.setImage(bitMap);
+                        }
+                    }
+                }
+            } else if (imageSelectedOption == 1) {
+                if (SelectedGallaryImage != null) {
+                    Bitmap board;
 
 					String[] filePathColumn = {MediaStore.Images.Media.DATA};
 					Cursor cursor = getContentResolver().query(SelectedGallaryImage,
@@ -318,52 +323,59 @@ public class HandSketchActivity2 extends Activity implements OnClickListener {
 //			}
 //		}
 ////
-			else if (view.getId() == R.id.clearButt) {
-				isCleared = true;
-				drawView.startNew();
-				if (imageSelectedOption == 0) {
-					File file = new File(StoredFilepath);
-					if (file.exists()) {
-						Log.i("handsketch123", "file name : " + file.getPath());
-			 Bitmap bitMap = ResizeImage(StoredFilepath);
-			 if (bitMap != null) {
-			 Log.i("handsketch123", "bitmap not null");
-			 drawView.setImage(bitMap);
-				}
-					}
-				} else if (imageSelectedOption == 1) {
-					Bitmap board;
-
-					String[] filePathColumn = {MediaStore.Images.Media.DATA};
-					Cursor cursor = getContentResolver().query(SelectedGallaryImage,
-							filePathColumn, null, null, null);
-					cursor.moveToFirst();
-
-					int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
-					String picturePath = cursor.getString(columnIndex);
-					cursor.close();
-
-					// board=BitmapFactory.decodeFile(picturePath);
-					int h = drawView.getHeight(); // 320; // Height in pixels
-					int w = drawView.getWidth();// 480; // Width in pixels
-					board = Bitmap.createScaledBitmap(
-							BitmapFactory.decodeFile(picturePath), w, h, true);
-					drawView.setImage(board);
-				} else if (imageSelectedOption == 2) {
-					drawView.startNew();
-				}
-				Toast.makeText(this, "Cleared Successfully", Toast.LENGTH_SHORT).show();
+        else if (view.getId() == R.id.clearButt) {
+            isCleared = true;
+            drawView.startNew();
+            Log.i("handsketch123","imageSelectedOption "+imageSelectedOption);
+            if (imageSelectedOption == 0) {
+//                File file = new File(StoredFilepath);
+//                if (file.exists()) {
+//                    Log.i("handsketch123", "file name : " + file.getPath());
+//                    Bitmap bitMap = ResizeImage(StoredFilepath);
+//                    if (bitMap != null) {
+//                        Log.i("handsketch123", "bitmap not null");
+////                        drawView.setImage(bitMap);
+//                    }
+//                }
+                drawView.startNew();
+            } else if (imageSelectedOption == 1) {
+//                Bitmap board;
+//
+//                String[] filePathColumn = {MediaStore.Images.Media.DATA};
+//                Cursor cursor = getContentResolver().query(SelectedGallaryImage,
+//                        filePathColumn, null, null, null);
+//                assert cursor != null;
+//                cursor.moveToFirst();
+//
+//                int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
+//                String picturePath = cursor.getString(columnIndex);
+//                cursor.close();
+//
+//                // board=BitmapFactory.decodeFile(picturePath);
+//                int h = drawView.getHeight(); // 320; // Height in pixels
+//                int w = drawView.getWidth();// 480; // Width in pixels
+//                board = Bitmap.createScaledBitmap(
+//                        BitmapFactory.decodeFile(picturePath), w, h, true);
+////                drawView.setImage(board);
+                drawView.startNew();
+            } else if (imageSelectedOption == 2) {
+//                drawView.startNew();
+            }
+            if(drawView.count()>0) {
+                Toast.makeText(getApplicationContext(),"Cleared Successfully",Toast.LENGTH_SHORT).show();
+            }
 
 			} else if (view.getId() == R.id.save_btn)
 
-			{
-				saveNote();
-			}
-
-	else if(view.getId()== R.id.undoButt)
-	{
-		drawView.onClickUndo();
-	}
+        {
+            if(drawView.count()>0) {
+                saveNote();
+            } else {
+                Toast.makeText(getApplicationContext(),"Please draw a sketch",Toast.LENGTH_SHORT).show();
+            }
+        } else if (view.getId() == R.id.undoButt) {
+            drawView.onClickUndo();
+        }
 //	else if(view.getId()==R.id.redoButt)
 //	{
 //		redoButt.setBackgroundColor(getResources().getColor(R.color.black));
@@ -637,19 +649,18 @@ public class HandSketchActivity2 extends Activity implements OnClickListener {
 ////								});
 //
 //							}
-						}
-					} else if (requestCode == GALLERY_REQUEST
-							&& resultCode == RESULT_OK && data != null) {
-						imageSelectedOption = 1;
-						Uri selectedImage = data.getData();
-						SelectedGallaryImage = selectedImage;
-						handler.postDelayed(new Runnable() {
-							@Override
-							public void run() {
-								Log.i("handsketch123", "Delayed han :");
-								drawBtn.performClick();
-							}
-						},2000);
+                }
+            } else if (requestCode == GALLERY_REQUEST
+                    && resultCode == RESULT_OK && data != null) {
+                imageSelectedOption = 1;
+                SelectedGallaryImage = data.getData();
+                handler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        Log.i("handsketch123", "Delayed han :");
+                        drawBtn.performClick();
+                    }
+                }, 2000);
 //						String[] filePathColumn = {MediaStore.Images.Media.DATA};
 //
 //						Cursor cursor = getContentResolver().query(selectedImage,
@@ -679,41 +690,54 @@ public class HandSketchActivity2 extends Activity implements OnClickListener {
 
 	}
 
-	private void showAlert() {
+    private void showAlert() {
 
-		try {
-			AlertDialog.Builder builder = new AlertDialog.Builder(this);
-			String message = "";
-			if (!send)
-				message = "Are you sure want to Save and Go Back?";
-			else
-				message = "Are you sure want to Send and Go Back?";
-			builder.setMessage(message)
-					.setCancelable(false)
-					.setPositiveButton("Yes",
-							new DialogInterface.OnClickListener() {
-								public void onClick(DialogInterface dialog,
-													int id) {
-									saveNote();
-									dialog.dismiss();
+        try {
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            String message;
+            if(drawView.count() > 0) {
+                if (!send)
+                    message = "Are you sure want to Save and Go Back?";
+                else
+                    message = "Are you sure want to Send and Go Back?";
+            } else {
+                message = "Are you sure want to Exit?";
+            }
+            builder.setMessage(message)
+                    .setCancelable(false)
+                    .setPositiveButton("Yes",
+                            new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog,
+                                                    int id) {
+                                    if(drawView.count() > 0) {
+                                        saveNote();
+                                        dialog.dismiss();
+                                    } else {
+                                        setCleared(true);
+                                        finish();
+//                                        overridePendingTransition(R.anim.slide_in_down, R.anim.slide_out_down);
+                                    }
 
-								}
-							})
-					.setNegativeButton("No",
-							new DialogInterface.OnClickListener() {
-								public void onClick(DialogInterface dialog,
-													int id) {
-									setCleared(true);
-									finish();
-								}
-							});
-			AlertDialog alert = builder.create();
-			alert.show();
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			Appreference.printLog("HandSketchActivity2 showAlert","Exception "+e.getMessage(),"WARN",null);
-		}
+
+                                }
+                            })
+                    .setNegativeButton("No",
+                            new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog,
+                                                    int id) {
+                                    dialog.dismiss();
+//                                    setCleared(true);
+//                                    finish();
+//                                    overridePendingTransition(R.anim.slide_in_down, R.anim.slide_out_down);
+                                }
+                            });
+            AlertDialog alert = builder.create();
+            alert.show();
+        } catch (Exception e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+            Appreference.printLog("HandSketchActivity2 showAlert", "Exception " + e.getMessage(), "WARN", null);
+        }
 
 	}
 

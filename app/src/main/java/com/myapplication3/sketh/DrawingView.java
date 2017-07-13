@@ -24,6 +24,7 @@ public class DrawingView extends View {
 
 	// drawing path
 	private Path drawPath;
+	private Path mPath;
 	// drawing and canvas paint
 	private Paint drawPaint, canvasPaint;
 	// initial color
@@ -190,10 +191,20 @@ public class DrawingView extends View {
 
 	// start new drawing
 	public void startNew() {
-		if(paths.size()>0)
+//		canvasBitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+//		drawCanvas = new Canvas(canvasBitmap);
+		drawCanvas.drawColor(1, PorterDuff.Mode.CLEAR);
+		if (paths.size()>0) {
 			paths.clear();
-		drawCanvas.drawColor(0, PorterDuff.Mode.CLEAR);
+			Log.i("start", "new condition");
+		}
 		invalidate();
+	}
+
+	public int count(){
+		int in;
+		in = paths.size();
+		return in;
 	}
 
 	public void setImage(Bitmap decodeFile) {
@@ -205,6 +216,8 @@ public class DrawingView extends View {
 		// canvasBitmap = Bitmap.createBitmap(decodeFile,0,0,width,height);
 
 		// drawCanvas.setBitmap(decodeFile);
+		drawCanvas.drawColor(1, PorterDuff.Mode.CLEAR);
+		invalidate();
 		drawCanvas.drawBitmap(decodeFile, 0, 0, clearPaint);
 
 	}

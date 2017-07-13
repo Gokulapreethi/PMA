@@ -648,7 +648,7 @@ public class TravelJobDetails extends Activity implements View.OnClickListener, 
                         public void onClick(View v) {
                             dialog1.dismiss();
                             Log.i(tab, "remarks for DeAssign====>" + name.getText().toString());
-                            sendStatus_webservice("8", "", name.getText().toString(), "DeAssign", "draft");
+                            sendStatus_webservice("8", "", name.getText().toString(), "DeAssign", "");
                         }
                     });
                     no.setOnClickListener(new View.OnClickListener() {
@@ -667,7 +667,7 @@ public class TravelJobDetails extends Activity implements View.OnClickListener, 
 
     private void sendStatus_webservice(String status, String path, String remarks, String projectCurrentStatus, String statusUI) {
         try {
-            showStatusprogress();
+            showStatusprogress("Sending status...");
             ProjectHistory projectHistory = (ProjectHistory) Appreference.context_table.get("projecthistory");
             if (projectHistory != null) {
                 Log.i(tab, "inside status projectHistory ========>" + projectHistory.projectDetailsBeans + "size bean " + projectHistory.projectDetailsBeans.size() + "buddayArrayAdapteer==>" + projectHistory.buddyArrayAdapter);
@@ -862,11 +862,6 @@ public class TravelJobDetails extends Activity implements View.OnClickListener, 
     public void PercentageWebService(String getMediaType, String getMediaPath, String getExt, String sig_id, int isDateorUpdateorNormal) {
         if (!getMediaPath.equals(null)) {
             String subType = "normal";
-            Log.i(tab, "mediaListBean.getMimeType() --------> 4 " + taskStatus);
-            Log.i(tab, "isDeassign is -------->  " + isDeassign);
-            Log.i(tab, "1" + getMediaType);
-            Log.i(tab, "2" + getMediaPath);
-            Log.i(tab, "3" + getExt);
             SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
             String dateTime = dateFormat.format(new Date());
             dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
@@ -874,8 +869,6 @@ public class TravelJobDetails extends Activity implements View.OnClickListener, 
             tasktime = dateTime;
             tasktime = tasktime.split(" ")[1];
             taskUTCtime = dateforrow;
-            Log.i(tab, "tasktime" + tasktime);
-            Log.i(tab, "sendMessage utc time" + dateforrow);
             final TaskDetailsBean chatBean = new TaskDetailsBean();
 
             chatBean.setFromUserId(String.valueOf(Appreference.loginuserdetails.getId()));
@@ -909,7 +902,6 @@ public class TravelJobDetails extends Activity implements View.OnClickListener, 
 
 
             chatBean.setTaskName(taskName);
-            Log.e(tab, "taskname **" + taskName);
             String project_deassignMems = "";
 
             if (Self_assign && oracleProjectOwner != null && !oracleProjectOwner.equalsIgnoreCase("")) {
@@ -922,14 +914,12 @@ public class TravelJobDetails extends Activity implements View.OnClickListener, 
             }
 
             if (isDeassign) {
-                Log.i(tab, "SubType ==> ##   " + isDeassign);
                 chatBean.setSubType("deassign");
                 chatBean.setTaskRequestType(subType);
                 chatBean.setTaskStatus("unassigned");
                 taskStatus="unassigned";
                 chatBean.setTaskReceiver("");
                 chatBean.setToUserName("");
-                Log.d(tab, "=======>>>>>>. 1" + chatBean.getToUserName());
                 chatBean.setToUserId("");
                 if (projectGroup_Mems != null) {
                     int counter = 0;
@@ -937,11 +927,8 @@ public class TravelJobDetails extends Activity implements View.OnClickListener, 
                         if (projectGroup_Mems.charAt(i) == ',') {
                             counter++;
                         }
-                        Log.i(tab, "project_details Task Mem's counter size is == " + counter);
                     }
-                    Log.i(tab, "projectGroup_Mems " + projectGroup_Mems);
                     for (int j = 0; j < counter + 1; j++) {
-                        Log.i(tab, "project_details Task Mem's and position == " + projectGroup_Mems.split(",")[j] + " " + j);
                         if (counter == 0) {
                             if (!projectGroup_Mems.equalsIgnoreCase(Appreference.loginuserdetails.getUsername())) {
                                 project_deassignMems = projectGroup_Mems;
@@ -957,58 +944,25 @@ public class TravelJobDetails extends Activity implements View.OnClickListener, 
                         project_deassignMems = project_deassignMems.substring(0, project_deassignMems.length() - 1);
                     }
                 }
-                Log.i(tab, "project_deassignMems " + project_deassignMems);
             } else {
                 chatBean.setSubType(subType);
                 chatBean.setTaskRequestType(subType);
-
                 chatBean.setTaskReceiver(taskReceiver);
                 chatBean.setToUserName(toUserName);
                 Log.d(tab, "==============>>>>>>. 2" + chatBean.getToUserName());
                 chatBean.setToUserId(String.valueOf(toUserId));
             }
-
-            Log.i(tab, "Self_assign==> " + Self_assign + " oracleProjectOwner --> " + oracleProjectOwner);
-            Log.i(tab, "SubType !! ==> " + chatBean.getSubType());
             if (!getMediaType.equalsIgnoreCase("text") && !getMediaType.equalsIgnoreCase("assigntask")) {
                 chatBean.setShow_progress(0);
             }
             if (project) {
                 chatBean.setProjectId(projectId);
                 if (isDeassign) {
-                    Log.i(tab, "project_deassignMems success--> ");
                     chatBean.setGroupTaskMembers(project_deassignMems);
                 } else if (projectGroup_Mems != null) {
                     chatBean.setGroupTaskMembers(projectGroup_Mems);
                 }
             }
-
-            Log.i(tab, "value 03 " + chatBean.getTaskStatus());
-            Log.i(tab, "image sent " + getMediaType);
-            Log.i(tab, "getMimeType() --------> 9 " + getMediaType);
-                /*if (project) {
-                    VideoCallDataBase.getDB(context).update_Project_history(chatBean);
-                    Log.i("conv123 ", "value db updated in projectHistory " + chatBean.getTaskDescription());
-                }
-                if (VideoCallDataBase.getDB(context).insertORupdate_Task_history(chatBean)) {
-                    if (chatBean.isCustomTagVisible()) {
-                        taskList.add(chatBean);
-                        cancelDialog();
-                    }
-                    Log.i("task", "msg Status " + chatBean.getMsg_status());
-                    refresh();
-                }*/
-            Log.i(tab, "istaskName percentagewebservice else ");
-//            chatBean.setSubType(subType);
-//            chatBean.setTaskRequestType(subType);
-//            chatBean.setRequestStatus("normal");
-
-            Log.i(tab, "touserID ==> " + toUserId);
-            Log.i(tab, "toUserName ==> " + toUserName);
-            Log.i(tab, "taskReceiver ==> " + taskReceiver);
-            Log.i(tab, "ownerOfTask ==> " + ownerOfTask);
-            Log.i(tab, "subType ==> " + chatBean.getSubType());
-            Log.i(tab, "mediaListBean.getMimeType() --------> 10 " + getMediaType);
             try {
                 JSONObject jsonObject = new JSONObject();
                 JSONObject jsonObject1 = new JSONObject();
@@ -1021,11 +975,9 @@ public class TravelJobDetails extends Activity implements View.OnClickListener, 
                 jsonObject.put("signalId", sig_id);
                 jsonObject.put("parentId", getFileName());
                 jsonObject.put("createdDate", dateforrow);
-                Log.i(tab, "mediaListBean.getMimeType() --------> 12 " + getMediaType);
                 jsonObject.put("requestType", "taskConversation");
                 if (getMediaPath != null && (getMediaPath.equalsIgnoreCase("This Task is closed") || getMediaPath.equalsIgnoreCase("This issue is closed"))) {
                     jsonObject.put("requestStatus", "");
-                    Log.i(tab, "requeststatus ***" + getMediaPath);
                 } else {
                     jsonObject.put("requestStatus", "approved");
                 }
@@ -1041,12 +993,10 @@ public class TravelJobDetails extends Activity implements View.OnClickListener, 
                 jsonObject4.put("user", jsonObject5);
                 switch (getMediaType.toLowerCase().trim()) {
                     case "text":
-                        Log.i(tab, "mediaListBean.getMimeType() --------> 17 " + getMediaType);
                         jsonObject4.put("fileType", "text");
                         jsonObject4.put("description", getMediaPath);
                         break;
                     case "assigntask":
-                        Log.i(tab, "mediaListBean.getMimeType() --------> 17 " + getMediaType);
                         jsonObject4.put("fileType", "assigntask");
                         jsonObject4.put("description", getMediaPath);
                         break;
@@ -1054,13 +1004,8 @@ public class TravelJobDetails extends Activity implements View.OnClickListener, 
                 JSONArray jsonArray = new JSONArray();
                 jsonArray.put(0, jsonObject4);
                 jsonObject.put("listTaskConversationFiles", jsonArray);
-                Log.i(tab, "mediaListBean.getMimeType() --------> 20 " + jsonArray);
                 if (jsonObject != null) {
-                    Log.i(tab, "Task date update for giver is " + jsonObject);
                     Appreference.printLog("Completed percentage", jsonObject.toString(), "Completed percentage", null);
-                    Log.i(tab, "mpath" + getMediaPath);
-                    Log.i(tab, "1 taskConversationEntry 2");
-                    Log.i(tab, "mediaListBean.getMimeType() --------> 21 " + getMediaType);
                     Appreference.jsonRequestSender.taskConversationEntry(EnumJsonWebservicename.taskConversationEntry, jsonObject, this, null, chatBean);
                 }
             } catch (Exception e) {
@@ -1932,7 +1877,6 @@ public class TravelJobDetails extends Activity implements View.OnClickListener, 
             }
             chatBean.setTaskName(taskName);
             chatBean.setOwnerOfTask(ownerOfTask);
-            Log.i("taskConversation", "private sendMessage * 5 ");
             String project_deassignMems = "";
             if (Self_assign && oracleProjectOwner != null && !oracleProjectOwner.equalsIgnoreCase("")) {
                 Log.i("taskConversation", "Self_assign ==>  " + Self_assign);
@@ -1981,9 +1925,7 @@ public class TravelJobDetails extends Activity implements View.OnClickListener, 
                     }
                 }
             } else {
-                Log.i("taskConversation", "taskReceiver ==> " + taskReceiver);
-                Log.i("taskConversation", "toUserName ==> " + toUserName);
-                Log.i("taskConversation", "toUserId ==> " + toUserId);
+
                 chatBean.setTaskReceiver(taskReceiver);
                 chatBean.setToUserName(toUserName);
                 chatBean.setToUserId(String.valueOf(toUserId));
@@ -2093,13 +2035,14 @@ public class TravelJobDetails extends Activity implements View.OnClickListener, 
 
     public void gettaskwebservice() {
 //        showprogressforpriority("sync task details inprogress...");
+        showStatusprogress("Sync Task.....");
         Log.i("gettask", "get task webservice " + webtaskId);
         List<NameValuePair> nameValuePairs1 = new ArrayList<NameValuePair>(1);
         nameValuePairs1.add(new BasicNameValuePair("taskId", webtaskId));
         Appreference.jsonRequestSender.getTask(EnumJsonWebservicename.getTask, nameValuePairs1, TravelJobDetails.this);
     }
 
-    private void showStatusprogress() {
+    private void showStatusprogress(final String message) {
         handler.post(new Runnable() {
             @Override
             public void run() {
@@ -2108,7 +2051,7 @@ public class TravelJobDetails extends Activity implements View.OnClickListener, 
                     if (progress == null) {
                         progress = new ProgressDialog(context);
                         progress.setCancelable(false);
-                        progress.setMessage("Sending...");
+                        progress.setMessage(message);
                         progress.setProgressStyle(ProgressDialog.STYLE_SPINNER);
                         progress.setProgress(0);
                         progress.setMax(1000);
@@ -2139,7 +2082,7 @@ public class TravelJobDetails extends Activity implements View.OnClickListener, 
     private void sendAssignTask_webservice() {
         Log.i("AssignTask ", "isProjectFromOracle==> " + isProjectFromOracle);
         if (isProjectFromOracle) {
-            showStatusprogress();
+            showStatusprogress("Sending ...");
 
             ProjectHistory projectHistory = (ProjectHistory) Appreference.context_table.get("projecthistory");
             if (projectHistory != null) {
@@ -2480,7 +2423,6 @@ public class TravelJobDetails extends Activity implements View.OnClickListener, 
                 projectHistory.setProgressBarInvisible();
             Gson gson = new Gson();
             ListAllgetTaskDetails listAllgetTaskDetails = gson.fromJson(test1, ListAllgetTaskDetails.class);
-            cancelDialog();
             VideoCallDataBase.getDB(context).insertORupdate_ListAllgetTaskDetails(listAllgetTaskDetails);
 //            Project_backgroundProcess();
             projectBackgroundProcess();
@@ -2488,6 +2430,7 @@ public class TravelJobDetails extends Activity implements View.OnClickListener, 
                 Log.i(tab, "appSharedpreferences.saveBoolean 1");
                 appSharedpreferences.saveBoolean("syncTask" + webtaskId, true);
             }
+            cancelDialog();
         }
 
     }

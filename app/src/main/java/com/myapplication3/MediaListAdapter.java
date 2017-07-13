@@ -1762,7 +1762,13 @@ public class MediaListAdapter extends ArrayAdapter<TaskDetailsBean> {
                                             } else {
                                                 queryy = "select * from taskDetailsInfo where (fromUserName='" + Appreference.loginuserdetails.getUsername() + "' or toUserName='" + Appreference.loginuserdetails.getUsername() + "') and loginuser='" + Appreference.loginuserdetails.getEmail() + "'and taskId='" + alert_bean.getTaskId() + "' and mimeType='date' and (requestStatus='approved' or requestStatus='assigned') order by id desc";
                                             }
-                                            ArrayList<TaskDetailsBean> taskList = VideoCallDataBase.getDB(context).getTaskHistory(queryy);
+                                                ArrayList<TaskDetailsBean> taskList = null;
+                                                try {
+                                                    taskList = VideoCallDataBase.getDB(context).getTaskHistory(queryy);
+                                                } catch (Exception e) {
+                                                    e.printStackTrace();
+                                                    Appreference.printLog("MediaListAdapter", "taskList Exception: " + e.getMessage(), "WARN", null);
+                                                }
                                             if (taskList.size() > 0) {
                                                 TaskDetailsBean bean2 = taskList.get(0);
                                                 intent.putExtra("startdate", bean2.getPlannedStartDateTime());

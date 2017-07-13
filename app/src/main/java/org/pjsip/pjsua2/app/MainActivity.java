@@ -3255,6 +3255,7 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback,
                                                     taskDetailsBean.getMimeType().equalsIgnoreCase("assigntask") ||
                                                     taskDetailsBean.getTaskDescription().equalsIgnoreCase("Gathering Details...") ||
                                                     taskDetailsBean.getTaskDescription().equalsIgnoreCase("Hold Remarks :") ||
+                                                    taskDetailsBean.getTaskDescription().equalsIgnoreCase("Pause Remarks :") ||
                                                     taskDetailsBean.getSubType().equalsIgnoreCase("deassign")) {
                                                 if (projectHistory != null) {
                                                     if (projectHistory.projectDetailsBeans != null && projectHistory.projectDetailsBeans.size() > 0 && projectHistory.buddyArrayAdapter != null) {
@@ -3266,6 +3267,8 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback,
                                                                 (taskDetailsBean.getTaskReceiver() != null && !taskDetailsBean.getTaskReceiver().equalsIgnoreCase(""))) {
                                                             projectDetailsBean.setTaskReceiver(taskDetailsBean.getTaskReceiver());
                                                             projectDetailsBean.setCatagory("Task");
+                                                        }else if(taskDetailsBean.getSubType()!=null && taskDetailsBean.getSubType().equalsIgnoreCase("deassign")){
+                                                            projectDetailsBean.setCatagory("Template");
                                                         }
                                                         handler1.post(new Runnable() {
                                                             @Override
@@ -3294,6 +3297,7 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback,
                                                     taskDetailsBean.getTaskDescription().equalsIgnoreCase("Task is Completed") ||
                                                     taskDetailsBean.getTaskDescription().equalsIgnoreCase("Gathering Details...") ||
                                                     taskDetailsBean.getTaskDescription().equalsIgnoreCase("Hold Remarks :") ||
+                                                    taskDetailsBean.getTaskDescription().equalsIgnoreCase("Pause Remarks :") ||
                                                     taskDetailsBean.getMimeType().equalsIgnoreCase("assigntask") ||
                                                     taskDetailsBean.getSubType().equalsIgnoreCase("deassign")) {
                                                 if (projectHistory != null) {
@@ -3306,6 +3310,8 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback,
                                                                 (taskDetailsBean.getTaskReceiver() != null && !taskDetailsBean.getTaskReceiver().equalsIgnoreCase(""))) {
                                                             projectDetailsBean.setTaskReceiver(taskDetailsBean.getTaskReceiver());
                                                             projectDetailsBean.setCatagory("Task");
+                                                        }else if(taskDetailsBean.getSubType()!=null && taskDetailsBean.getSubType().equalsIgnoreCase("deassign")){
+                                                            projectDetailsBean.setCatagory("Template");
                                                         }
                                                         handler1.post(new Runnable() {
                                                             @Override
