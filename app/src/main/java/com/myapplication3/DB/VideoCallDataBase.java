@@ -84,6 +84,10 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
     public static final String CREATE_TABLE_FORM_ACCESS = "create table if not exists FormAccess(id integer primary key autoincrement,taskId varchar(50),formId varchar(50),formAccessId varchar(50),taskGiver varchar(50),memberName varchar(50),accessMode varchar(50))";
     public static final String CREATE_TABLE_List_User_Group_Member_Access = "create table if not exists listUserGroupMemberAccess(userid integer,groupid integer,groupname varchar(100),loginuser varchar(100),respondVideo varchar(50),respondFiles varchar(50),accessForms varchar(50),respondAudio varchar(50),videoAccess varchar(50),adminAccess varchar(50),respondDateChange varchar(50),respondLocation varchar(50),respondConfCall varchar(50),audioAccess varchar(50),chatAccess varchar(50),respondText varchar(50),respondPrivate varchar(50),respondPhoto varchar(50),accessReminder varchar(50),respondSketch varchar(50),respondTask varchar(50),accessScheduledCNF varchar(50),GroupTask varchar(50),ReassignTask varchar(50),ChangeTaskName varchar(50),TaskDescriptions varchar(50),TemplateExistingTask varchar(50),ApproveLeave varchar(50),RemindMe varchar(50),AddObserver varchar(50),TaskPriority varchar(50),Escalations varchar(50))";
     public static final String CREATE_TABLE_PROJECT_STATUS="create table if not exists projectStatus(id integer primary key autoincrement,userId integer,projectId integer,taskId integer,taskDescription varchar(100),travelStartTime varchar(100),activityStartTime varchar(100),activityEndTime varchar(100),travelEndTime varchar(100),totravelstartdatetime varchar(100),totravelenddatetime varchar(100),remarks varchar(100),hourMeterReading varchar(100),status varchar(100),customersignaturename varchar(100),photo varchar(100),techniciansignature varchar(100),customersignature varchar(100),observation varchar(100),actionTaken varchar(100))";
+
+    public static final String EULATABLE = "eulaagree";
+    public static final String EULACREATE = "create table if not exists '" + EULATABLE + "'(id integer (1),selection varchar(1))";
+
     public static SQLiteDatabase db = null;
     private static VideoCallDataBase dbHelper = null;
     MainActivity mainActivity = (MainActivity) Appreference.context_table.get("mainactivity");
@@ -145,6 +149,7 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
         db.execSQL(CREATE_TABLE_FORM_ACCESS);
         db.execSQL(CREATE_TABLE_List_User_Group_Member_Access);
         db.execSQL(CREATE_TABLE_PROJECT_STATUS);
+        db.execSQL(EULACREATE);
     }
 
     @Override
@@ -1396,6 +1401,7 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
                     cv.put("taskType", "Individual");
                 }
                 if (listTaskConversation.getTaskStartDateTime() != null && listTaskConversation.getTaskEndDateTime() != null) {
+                    VideoCallDataBase.getDB(context).updateaccept("update taskDetailsInfo set msgstatus=9 where taskId='" + bean.getId() + "' and mimeType='date'");
                     cv.put("taskDescription", "assigned");
                     cv.put("plannedStartDateTime", listTaskConversation.getTaskStartDateTime());
                     cv.put("plannedEndDateTime", listTaskConversation.getTaskEndDateTime());
@@ -6042,6 +6048,13 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
         }
     }
 
+    public void updateallmessage(String taskID, String msgstatus) {
+        ContentValues cv = new ContentValues();
+        cv.put("msgstatus", msgstatus);
+        Log.i("database", "updateallmessage " + msgstatus);
+        db.update("taskDetailsInfo", cv, "taskId" + "= ? and " + "(msgstatus" + "= ? or " + "msgstatus= ? )", new String[]{taskID, "24", "0"});
+    }
+
     public void updateTaskSentStatus(String signalID, String msgstatus) {
 //        try {
 //            String s = "update taskDetailsInfo set msgstatus=1 where signalid='" + signalID + "'";
@@ -6050,7 +6063,7 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
 //            e.printStackTrace();
 //        }
 
-
+        Log.i("sipmessage", "DB "+msgstatus);
         ContentValues cv = new ContentValues();
         cv.put("msgstatus", msgstatus);
         db.update("taskDetailsInfo", cv, "signalid" + "= ?", new String[]{signalID});
@@ -8747,6 +8760,68 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
             e.printStackTrace();
         } finally {
             return row;
+        }
+    }
+
+    public void insertvalueeula(boolean booleanvalue) {
+        try {
+            int row_id = 0;
+            if (!db.isOpen())
+                openDatabase();
+            ContentValues cv = new ContentValues();
+            cv.put("id",1);
+            cv.put("selection", booleanvalue);
+            if (isRecordExists("select selection from '" + EULATABLE + "'")) {
+                row_id = (int) db.update(EULATABLE, cv, "id='" + 1 + "'", null);
+            } else {
+                row_id = (int) db.insert(EULATABLE, null, cv);
+            }
+        } catch (Exception e) {
+            // TODO: handle exception
+            e.printStackTrace();
+        }
+    }
+
+    public int geteulavalue() {
+        int newvalue = 0;
+        Cursor cur;
+        if (db == null)
+            db = getReadableDatabase();
+        try {
+            if (db != null) {
+                if (!db.isOpen())
+                    openDatabase();
+                cur = db.rawQuery("select selection from eulaagree where id='" + 1 + "'", null);
+
+                while(cur.moveToNext()){
+                    newvalue=Integer.parseInt(cur.getString(cur.getColumnIndex("selection")));
+                }
+                cur.close();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return newvalue;
+
+    }
+
+    public boolean isRecordExists(String Querry) {
+        Cursor cur = null;
+        boolean status = false;
+        try {
+            if (!db.isOpen())
+                openDatabase();
+            cur = db.rawQuery(Querry, null);
+            cur.moveToFirst();
+            if (cur.getCount() > 0)
+                status = true;
+        } catch (Exception e) {
+            // TODO: handle exception
+            e.printStackTrace();
+        } finally {
+            if (cur != null)
+                cur.close();
+            return status;
         }
     }
 }

@@ -415,7 +415,7 @@
             android:screenOrientation="portrait" />
         <activity android:name=".TravelJobDetails"></activity>
         <activity android:name=".DatePicker.CustomTravelPickerActivity"></activity>
-
+        <activity android:name=".EulaScreen"></activity>
     </application>
 
 </manifest>

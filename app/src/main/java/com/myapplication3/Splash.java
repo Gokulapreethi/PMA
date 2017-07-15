@@ -3,8 +3,11 @@ package com.myapplication3;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
+
+import com.myapplication3.DB.VideoCallDataBase;
 
 /**
  * Created by vignesh on 6/17/2016.
@@ -24,7 +27,14 @@ public class Splash extends Activity {
                 }catch(InterruptedException e){
                     e.printStackTrace();
                 }finally{
-                    Intent intent = new Intent(Splash.this,LoginActivity.class);
+                    Intent intent;
+                    int value= VideoCallDataBase.getDB(getApplicationContext()).geteulavalue();
+                    Log.i("Splash", "Value is " + value);
+                    if (value == 0) {
+                        intent = new Intent(Splash.this, EulaScreen.class);
+                    }else{
+                        intent=new Intent(Splash.this,LoginActivity.class);
+                    }
                     startActivity(intent);
                 }
             }

@@ -36,6 +36,8 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -46,6 +48,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.myapplication3.Bean.User_Details;
+import com.myapplication3.DB.VideoCallDataBase;
 
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
@@ -115,6 +118,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     //For Auto Login
     private SharedPreferences preferences;
     private boolean logoutSuccess = false;
+    CheckBox checkeula;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -156,6 +160,26 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
         });*/
 
+        checkeula=(CheckBox)findViewById(R.id.check_eula);
+        checkeula.setChecked(true);
+        int value= VideoCallDataBase.getDB(getApplicationContext()).geteulavalue();
+        checkeula.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked == true){
+                    VideoCallDataBase.getDB(getApplicationContext()).insertvalueeula(true);
+                }else {
+//                    VideoCallDataBase.getDB(getApplicationContext()).insertvalueeula(false);
+                }
+              /*  Intent intent;
+                int value= VideoCallDataBase.getDB(getApplicationContext()).geteulavalue();
+                if (value == 0) {
+                    intent = new Intent(LoginActivity.this, EulaScreen.class);
+                    startActivity(intent);
+                }*/
+            }
+        });
+
         mPasswordView = (EditText) findViewById(R.id.password);
         mPasswordView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
@@ -175,43 +199,10 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         mEmailSignInButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
-                mPasswordView.clearFocus();
-                String em = mEmailView.getText().toString();
-                String pa = mPasswordView.getText().toString();
-                if (em.equals("") || em.equals(null)) {
-                    Toast.makeText(getApplicationContext(), "Please Enter email id", Toast.LENGTH_SHORT).show();
-                } else if (!(em.contains("@") && em.contains("."))) {
-                    Toast.makeText(getApplicationContext(), "Please Enter correct email id", Toast.LENGTH_SHORT).show();
-                } else if (pa.equals("") || pa.equals(null)) {
-                    Toast.makeText(getApplicationContext(), "Please Enter password", Toast.LENGTH_SHORT).show();
-                } else {
-                    if (isNetworkAvailable()) {
-                        try {
-                            List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
-                            nameValuePairs.add(new BasicNameValuePair("email", mEmailView.getText().toString()));
-                            nameValuePairs.add(new BasicNameValuePair("password", mPasswordView.getText().toString()));
-                            JsonRequestSender jsonRequestParser = new JsonRequestSender();
-                            Appreference.jsonRequestSender = jsonRequestParser;
-                            jsonRequestParser.login(EnumJsonWebservicename.loginMobile, nameValuePairs, LoginActivity.this);
-                            jsonRequestParser.start();
-                            InputMethodManager imm = (InputMethodManager) loginActivity.getSystemService(Activity.INPUT_METHOD_SERVICE);
-                            //Find the currently focused view, so we can grab the correct window token from it.
-                            View view1 = loginActivity.getCurrentFocus();
-                            //If no view currently has focus, create a new one, just so we can grab a window token from it
-                            if (view1 == null) {
-                                view1 = new View(loginActivity);
-                            }
-                            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
-                            if(progress == null)
-                            progress = new ProgressDialog(context);
-                            progress.setMessage("Loading");
-                            progress.show();
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                    } else {
-                        Toast.makeText(getApplicationContext(), "Please Check Your Internet", Toast.LENGTH_LONG).show();
-                    }
+                if (checkeula.isChecked() == true) {
+                    loginMethod(view);
+                }else{
+                    Toast.makeText(getApplicationContext(),"Please Agree to Terms and Conditions",Toast.LENGTH_SHORT).show();
                 }
 
                 //attemptLogin();
@@ -252,6 +243,48 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         appSharedpreferences.saveBoolean("login",false);
     }
 
+    public void loginMethod(View view){
+        mPasswordView.clearFocus();
+        String em = mEmailView.getText().toString();
+        String pa = mPasswordView.getText().toString();
+        if (em.equals("") || em.equals(null)) {
+            Toast.makeText(getApplicationContext(), "Please Enter email id", Toast.LENGTH_SHORT).show();
+        } else if (!(em.contains("@") && em.contains("."))) {
+            Toast.makeText(getApplicationContext(), "Please Enter correct email id", Toast.LENGTH_SHORT).show();
+        } else if (pa.equals("") || pa.equals(null)) {
+            Toast.makeText(getApplicationContext(), "Please Enter password", Toast.LENGTH_SHORT).show();
+        } else {
+            if (isNetworkAvailable()) {
+                try {
+                    List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
+                    nameValuePairs.add(new BasicNameValuePair("email", mEmailView.getText().toString()));
+                    nameValuePairs.add(new BasicNameValuePair("password", mPasswordView.getText().toString()));
+                    JsonRequestSender jsonRequestParser = new JsonRequestSender();
+                    Appreference.jsonRequestSender = jsonRequestParser;
+                    jsonRequestParser.login(EnumJsonWebservicename.loginMobile, nameValuePairs, LoginActivity.this);
+                    jsonRequestParser.start();
+                    InputMethodManager imm = (InputMethodManager) loginActivity.getSystemService(Activity.INPUT_METHOD_SERVICE);
+                    //Find the currently focused view, so we can grab the correct window token from it.
+                    View view1 = loginActivity.getCurrentFocus();
+                    //If no view currently has focus, create a new one, just so we can grab a window token from it
+                    if (view1 == null) {
+                        view1 = new View(loginActivity);
+                    }
+                    imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+                    if(progress == null)
+                        progress = new ProgressDialog(context);
+                    progress.setMessage("Loading");
+                    progress.show();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            } else {
+                Toast.makeText(getApplicationContext(), "Please Check Your Internet", Toast.LENGTH_LONG).show();
+            }
+        }
+
+        //attemptLogin();
+    }
     // check internet connection
 
     public boolean isNetworkAvailable() {

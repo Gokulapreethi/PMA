@@ -1,7 +1,6 @@
 package com.myapplication3;
 
 import android.app.Activity;
-import android.graphics.Color;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.http.SslError;
@@ -92,13 +91,13 @@ public class Viewvideo extends Activity {
                     switch (nameofvideo)
                     {
                         case "Performance":
-                            webView.loadUrl("https://122.165.92.171:8443/kamailioWeb/individualPerformancePieChart?userId=" + contact.getContact_id() );
+                            webView.loadUrl("http://151.253.12.203/ASE/individualPerformancePieChart?userId=2");
                             break;
                         case "Current Task":
-                            webView.loadUrl("http://122.165.92.171:8080/uploads/highmessaging/chart/201610041939168533679.jpg" );
+                            webView.loadUrl("https://122.165.92.171:8443/highMessage/individualGanttChart?userId=1");
                             break;
                         default:
-                            webView.loadUrl("http://122.165.92.171:8080/uploads/highmessaging/user/"+nameofvideo );
+                            webView.loadUrl(getResources().getString(R.string.user_upload)+nameofvideo );
                             break;
                     }
                     } else
@@ -122,7 +121,7 @@ public class Viewvideo extends Activity {
 
             webView.getSettings().setJavaScriptEnabled(true);
             webView.setWebViewClient(new SSLTolerentWebViewClient());
-            webView.loadUrl("http://122.165.92.171:8080/uploads/highmessaging/user/"+nameofvideo );
+            webView.loadUrl(getResources().getString(R.string.user_upload)+nameofvideo );
 
         }else
             Toast.makeText(getApplicationContext(),"No Network",Toast.LENGTH_LONG).show();
@@ -134,7 +133,7 @@ public class Viewvideo extends Activity {
 
             webView.getSettings().setJavaScriptEnabled(true);
             webView.setWebViewClient(new SSLTolerentWebViewClient());
-            webView.loadUrl("https://122.165.92.171:8443/kamailioWeb/individualPerformancePieChart?userId=" + contact.getContact_id() );
+            webView.loadUrl("http://151.253.12.203/ASE/individualPerformancePieChart?userId=2");
 
         }else
             Toast.makeText(getApplicationContext(),"No Network",Toast.LENGTH_LONG).show();
@@ -146,7 +145,7 @@ public class Viewvideo extends Activity {
 
             webView.getSettings().setJavaScriptEnabled(true);
             webView.setWebViewClient(new SSLTolerentWebViewClient());
-            webView.loadUrl("http://122.165.92.171:8080/uploads/highmessaging/chart/201610041939168533679.jpg" );
+            webView.loadUrl("https://122.165.92.171:8443/highMessage/individualGanttChart?userId=1");
 
         }else
             Toast.makeText(getApplicationContext(),"No Network",Toast.LENGTH_LONG).show();

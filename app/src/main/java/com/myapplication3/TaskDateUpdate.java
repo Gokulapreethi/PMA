@@ -3108,7 +3108,11 @@ public class TaskDateUpdate extends AppCompatActivity implements View.OnClickLis
                             String startrem1 = startrem.split(":")[0];  // yyyy-mm-dd hh
                             fromtime = startrem1.split(" ")[1] + ":" + startrem.split(":")[1]; // hh:mm
                             Log.i("starttime", "starttime " + fromtime);
-
+                            if (startampm.equalsIgnoreCase("p.m.")) {
+                                startampm = "PM";
+                            } else if (startampm.equalsIgnoreCase("a.m.")) {
+                                startampm = "AM";
+                            }
                             String endrem = "";
                             if (android.text.format.DateFormat.is24HourFormat(context)) {
                                 endrem = Appreference.ChangeOriginalPattern(true, end_date1.getText().toString(), datepattern);
@@ -3122,7 +3126,11 @@ public class TaskDateUpdate extends AppCompatActivity implements View.OnClickLis
                             String endrem1 = endrem.split(":")[0];  // yyyy-mm-dd hh
                             endTime = endrem1.split(" ")[1] + ":" + endrem.split(":")[1]; // hh:mm
                             Log.i("endTime", "endTime " + endTime);
-
+                            if (endampm.equalsIgnoreCase("p.m.")) {
+                                endampm = "PM";
+                            } else if (endampm.equalsIgnoreCase("a.m.")) {
+                                endampm = "AM";
+                            }
                             int startTime = Integer.parseInt(strDateTime.split(":")[0]);
                             String startMin = strDateTime.split(":")[1];
                             if (values4 != null && am_pmPicker != null && values4[am_pmPicker.getValue()]
@@ -3226,6 +3234,11 @@ public class TaskDateUpdate extends AppCompatActivity implements View.OnClickLis
                             Log.i("schedule", "strremindate1-->" + strremindate1);
 
                             String remampm = checkAmorPmfunction(strremindate);   // am/pm
+                            if (remampm.equalsIgnoreCase("p.m.")) {
+                                remampm = "PM";
+                            } else if (remampm.equalsIgnoreCase("a.m.")) {
+                                remampm = "AM";
+                            }
                             Log.i("Remhrmin", "enTime" + enTime);
 
                             Log.i("Time", "fromtime" + fromtime);
@@ -3267,7 +3280,10 @@ public class TaskDateUpdate extends AppCompatActivity implements View.OnClickLis
                                     }
 
                                 } else if (strfromdate1.compareTo(strenddate1) == 0) {
-                                    Log.i("comp", "reminderset ");
+                                    Log.i("comp", "reminderset==> $ ");
+                                    Log.i("comp", "startampm 1==>  " + startampm);
+                                    Log.i("comp", "endampm 1==> " + endampm);
+                                    Log.i("comp", "remampm 1==> " + remampm);
                                     if (startampm.equalsIgnoreCase("AM") && endampm.equalsIgnoreCase("AM")) {
                                         //am
                                         if (remampm.equalsIgnoreCase("AM")) {
@@ -3313,7 +3329,10 @@ public class TaskDateUpdate extends AppCompatActivity implements View.OnClickLis
 
                                     }
                                 } else if (strfromdate1.compareTo(strenddate1) < 0) {
-                                    Log.i("comp", "reminderset ");
+                                    Log.i("comp", "reminderset ==> ");
+                                    Log.i("comp", "startampm ==>  " + startampm);
+                                    Log.i("comp", "endampm ==> " + endampm);
+                                    Log.i("comp", "remampm ==> " + remampm);
                                     if (startampm.equalsIgnoreCase("AM") && endampm.equalsIgnoreCase("AM")) {
                                         //am
                                         if (remampm.equalsIgnoreCase("AM")) {
@@ -3546,24 +3565,34 @@ public class TaskDateUpdate extends AppCompatActivity implements View.OnClickLis
                         Log.i("response", "inside the conflict response");
                         Log.i("Response conflictTask ", "response " + str);
 
-                        JSONArray jsonArray = new JSONArray(str);
-                        if (jsonArray.length() > 0) {
-                            // jsonArray=jelement.getAsJsonArray();
-                            Log.i("response array", "response size" + jsonArray.length());
-                            conflictobject.clear();
-                            for (int i = 0; i < jsonArray.length(); i++) {
+                        if (!str.trim().equalsIgnoreCase("[]")) {
+                            Log.i("Response","conflict ==> "+str);
+                            JSONArray jsonArray = new JSONArray(str);
+                            if (jsonArray.length() > 0) {
+                                // jsonArray=jelement.getAsJsonArray();
+                                Log.i("response array", "response size" + jsonArray.length());
+                                conflictobject.clear();
+                                for (int i = 0; i < jsonArray.length(); i++) {
 
-                                //JSONObject jsonObject1= (JSONObject) jsonArray.getJSONObject(i);
-                                Log.i("response ", "objects  " + jsonArray.get(i));
-                                ConflictCheckBean conflictCheck = gson.fromJson(jsonArray.getString(i), ConflictCheckBean.class);
-                                conflictobject.add(conflictCheck);
+                                    //JSONObject jsonObject1= (JSONObject) jsonArray.getJSONObject(i);
+                                    Log.i("response ", "objects  " + jsonArray.get(i));
+                                    ConflictCheckBean conflictCheck = gson.fromJson(jsonArray.getString(i), ConflictCheckBean.class);
+                                    conflictobject.add(conflictCheck);
+                                }
+                                Log.i("size of conflict", "size " + conflictobject.size());
+                                Log.i("TaskDateUpdate ", "conflictobject.size @ " + conflictobject.size());
+                                Intent intent = new Intent(TaskDateUpdate.this, ConflictList.class);
+
+                                //                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                //                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                                intent.putExtra("Leave", "TaskDateUpdate");
+                                intent.putExtra("conflictobject", conflictobject);
+                                intent.putExtra("LeaveTaskId", CurrentTaskid);
+                                startActivity(intent);
                             }
-                            Log.i("size of conflict", "size " + conflictobject.size());
-                            Log.i("TaskDateUpdate ", "conflictobject.size @ " + conflictobject.size());
+                        } else {
+                            Log.i("Response","conflict else ==> "+str);
                             Intent intent = new Intent(TaskDateUpdate.this, ConflictList.class);
-
-//                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-//                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                             intent.putExtra("Leave", "TaskDateUpdate");
                             intent.putExtra("conflictobject", conflictobject);
                             intent.putExtra("LeaveTaskId", CurrentTaskid);

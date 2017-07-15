@@ -237,10 +237,39 @@ public class ProjectsFragment extends Fragment implements View.OnClickListener, 
                                 @Override
                                 public void onDateSet(DatePicker view, int year,
                                                       int monthOfYear, int dayOfMonth) {
-                                    activity_start.setText(year + "-"
-                                            + (monthOfYear + 1) + "-" + dayOfMonth);
-                                    TNAReportStart = year + "-"
-                                            + (monthOfYear + 1) + "-" + dayOfMonth;
+                                    try {
+                                        String curr_date = null;
+                                        try {
+                                            SimpleDateFormat simpleDateFormat_1 = new SimpleDateFormat("yyyy-MM-dd");
+                                            curr_date = simpleDateFormat_1.format(new Date());
+                                        } catch (Exception e) {
+                                            e.printStackTrace();
+                                        }
+                                        String months = "";
+                                        if ((monthOfYear + 1) < 10) {
+                                            months = "0" + (monthOfYear + 1);
+                                        } else {
+                                            months = String.valueOf(monthOfYear + 1);
+                                        }
+                                        String days = "";
+                                        if (dayOfMonth < 10) {
+                                            days = "0" + dayOfMonth;
+                                        } else {
+                                            days = String.valueOf(dayOfMonth);
+                                        }
+                                        String start_date = year + "-" + months + "-" + days;
+                                        Log.i("TNA", "start_date---> " + start_date);
+                                        Log.i("TNA", "curr_date---> " + curr_date);
+                                        if (curr_date !=null && curr_date.compareTo(start_date) < 0) {
+                                            Toast.makeText(getActivity(), "Kindly select current date ", Toast.LENGTH_SHORT).show();
+                                        } else {
+                                            activity_start.setText(start_date);
+                                            TNAReportStart = start_date;
+                                        }
+                                    } catch (Exception e) {
+                                        e.printStackTrace();
+                                    }
+
                                 }
                             }, c.get(Calendar.YEAR), c.get(Calendar.MONTH), c.get(Calendar.DATE));
                     dpd.show();
@@ -258,10 +287,45 @@ public class ProjectsFragment extends Fragment implements View.OnClickListener, 
                                 @Override
                                 public void onDateSet(DatePicker view, int year,
                                                       int monthOfYear, int dayOfMonth) {
-                                    activity_end.setText(year + "-"
-                                            + (monthOfYear + 1) + "-" + dayOfMonth);
-                                    TNAReportEnd = year + "-"
-                                            + (monthOfYear + 1) + "-" + dayOfMonth;
+                                    try {
+                                        String cur_date = null;
+                                        try {
+                                            SimpleDateFormat simpleDateFormat_1 = new SimpleDateFormat("yyyy-MM-dd");
+                                            cur_date = simpleDateFormat_1.format(new Date());
+                                        } catch (Exception e) {
+                                            e.printStackTrace();
+                                        }
+                                        String months = "";
+                                        if ((monthOfYear + 1) < 10) {
+                                            months = "0" + (monthOfYear + 1);
+                                        } else {
+                                            months = String.valueOf(monthOfYear + 1);
+                                        }
+                                        String days = "";
+                                        if (dayOfMonth < 10) {
+                                            days = "0" + dayOfMonth;
+                                        } else {
+                                            days = String.valueOf(dayOfMonth);
+                                        }
+                                        String end_date = year + "-" + months + "-" + days;
+                                        if (TNAReportStart != null && !TNAReportStart.equalsIgnoreCase("")) {
+                                            Log.i("TNA", "TNAReportStart $ ==> " + TNAReportStart);
+                                            Log.i("TNA", "end_date $ ==> " + end_date);
+                                            Log.i("TNA", "cur_date $ ==> " + cur_date);
+                                            Log.i("TNA", "compare ==> " + cur_date.compareTo(end_date));
+                                            Log.i("TNA", "compare ==> " + end_date.compareTo(TNAReportStart));
+                                            if ((cur_date.compareTo(end_date) >= 0) && (end_date.compareTo(TNAReportStart) > 0)) {
+                                                activity_end.setText(end_date);
+                                                TNAReportEnd = end_date;
+                                            } else {
+                                                Toast.makeText(getActivity(), "Kindly select above start date and below current date", Toast.LENGTH_SHORT).show();
+                                            }
+                                        } else {
+                                            Toast.makeText(getActivity(), "Please select start date", Toast.LENGTH_SHORT).show();
+                                        }
+                                    } catch (Exception e) {
+                                        e.printStackTrace();
+                                    }
                                 }
                             }, c.get(Calendar.YEAR), c.get(Calendar.MONTH), c.get(Calendar.DATE));
                     dpd.show();
@@ -276,7 +340,7 @@ public class ProjectsFragment extends Fragment implements View.OnClickListener, 
                     all_report_title.setVisibility(View.GONE);
                     tna_count = 0;
                     SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-                    SimpleDateFormat dateParse = new SimpleDateFormat("yyyy-M-dd");
+                    SimpleDateFormat dateParse = new SimpleDateFormat("yyyy-MM-dd");
 //                    dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
                     Date date = null;
                     Date date1 = null;
@@ -299,12 +363,17 @@ public class ProjectsFragment extends Fragment implements View.OnClickListener, 
                     }
                     Log.i("report123", "-====>startdATE UTC====>" + StartDateUTC);
                     Log.i("report123", "-====>eNDdATE UTC====>" + EndDateUTC);
-                    List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
-                    nameValuePairs.add(new BasicNameValuePair("userId", String.valueOf(Appreference.loginuserdetails.getId())));
-                    nameValuePairs.add(new BasicNameValuePair("travelStartDate", StartDateUTC));
-                    nameValuePairs.add(new BasicNameValuePair("travelEndDate", EndDateUTC));
-                    Appreference.jsonRequestSender.OracleTNAJobReport(EnumJsonWebservicename.tnaReportForDateWise, nameValuePairs, ProjectsFragment.this);
-                    showprogress("Downloading....");
+                    if(!date.after(date1)) {
+                        List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
+                        nameValuePairs.add(new BasicNameValuePair("userId", String.valueOf(Appreference.loginuserdetails.getId())));
+                        nameValuePairs.add(new BasicNameValuePair("travelStartDate", StartDateUTC));
+                        nameValuePairs.add(new BasicNameValuePair("travelEndDate", EndDateUTC));
+                        showprogress("Downloading....");
+                        Appreference.jsonRequestSender.OracleTNAJobReport(EnumJsonWebservicename.tnaReportForDateWise, nameValuePairs, ProjectsFragment.this);
+                    }else
+                    {
+                        Toast.makeText(getActivity(), "Please Enter correct Start/End Date", Toast.LENGTH_SHORT).show();
+                    }
                 }
             });
             final SwipeMenuCreator creator = new SwipeMenuCreator() {

@@ -781,6 +781,9 @@ public class ProjectHistory extends Activity implements WebServiceInterface, Swi
                                     }
                                     check = true;
                                     startActivity(intent);
+                                }else
+                                {
+                                    Toast.makeText(getApplicationContext(), "Group admin user not authorized to view the task details..", Toast.LENGTH_SHORT).show();
                                 }
 
                             } else {
@@ -802,6 +805,9 @@ public class ProjectHistory extends Activity implements WebServiceInterface, Swi
                                     check = true;
                                     startActivity(intent);
                                     overridePendingTransition(R.anim.right_anim, R.anim.left_anim);
+                                }else
+                                {
+                                    Toast.makeText(getApplicationContext(), "Group admin user not authorized to view the task details..", Toast.LENGTH_SHORT).show();
                                 }
 
                             }
@@ -835,6 +841,9 @@ public class ProjectHistory extends Activity implements WebServiceInterface, Swi
                                         }
                                         check = true;
                                         startActivity(intent);
+                                    }else
+                                    {
+                                        Toast.makeText(getApplicationContext(), "Group admin user not authorized to view the task details..", Toast.LENGTH_SHORT).show();
                                     }
                                 } else {
                                     if(Appreference.loginuserdetails!=null && Appreference.loginuserdetails.getRoleId()!=null
@@ -851,6 +860,9 @@ public class ProjectHistory extends Activity implements WebServiceInterface, Swi
                                         check = true;
                                         startActivity(intent);
                                         overridePendingTransition(R.anim.right_anim, R.anim.left_anim);
+                                    }else
+                                    {
+                                        Toast.makeText(getApplicationContext(), "Group admin user not authorized to view the task details..", Toast.LENGTH_SHORT).show();
                                     }
                                 }
                             } else {
@@ -875,6 +887,9 @@ public class ProjectHistory extends Activity implements WebServiceInterface, Swi
                                         }
                                         check = true;
                                         startActivity(intent);
+                                    }else
+                                    {
+                                        Toast.makeText(getApplicationContext(), "Group admin user not authorized to view the task details..", Toast.LENGTH_SHORT).show();
                                     }
                                 }else {
                                     if(Appreference.loginuserdetails!=null && Appreference.loginuserdetails.getRoleId()!=null
@@ -891,6 +906,9 @@ public class ProjectHistory extends Activity implements WebServiceInterface, Swi
                                         check = true;
                                         startActivity(intent);
                                         overridePendingTransition(R.anim.right_anim, R.anim.left_anim);
+                                    }else
+                                    {
+                                        Toast.makeText(getApplicationContext(), "Group admin user not authorized to view the task details..", Toast.LENGTH_SHORT).show();
                                     }
                                 }
                             } else {
@@ -1228,6 +1246,9 @@ public class ProjectHistory extends Activity implements WebServiceInterface, Swi
             overridePendingTransition(R.anim.right_anim, R.anim.left_anim);
 
             check = true;
+        }else
+        {
+            Toast.makeText(getApplicationContext(), "Group admin user not authorized to view the task details..", Toast.LENGTH_SHORT).show();
         }
     }
 

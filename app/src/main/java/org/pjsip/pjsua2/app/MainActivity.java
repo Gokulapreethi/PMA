@@ -4408,13 +4408,20 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback,
                     } else if (messagebody.contains("<TaskDetailsinfo>")) {
                         TaskDetailsBean taskDetailsBean = xmlparser
                                 .parseTaskDetailsSIPMessage(messagebody);
-                        Log.i("sipmessage", "Main Activity notifySipMessage");
+                        Log.i("sipmessage", "Main Activity notifySipMessage "+response_code);
                         if (taskDetailsBean != null && taskDetailsBean.getSignalid() != null) {
-                            if (response_code == 200 || response_code == 202) {
-                                VideoCallDataBase.getDB(context).updateTaskSentStatus(taskDetailsBean.getSignalid(), "1");
+                            if (response_code == 200) {
+                                VideoCallDataBase.getDB(context).updateallmessage(taskDetailsBean.getTaskId(), "1");
+                                taskDetailsBean.setMsg_status(1);
+                            } else if (response_code == 202) {
+                                Log.i("sipmessage", "Main Activity notifySipMessage ==>  "+response_code);
+                                Log.i("sipmessage", "getSignalid ==>  "+taskDetailsBean.getSignalid());
+                                VideoCallDataBase.getDB(context).updateTaskSentStatus(taskDetailsBean.getSignalid(), "24");
+                                taskDetailsBean.setMsg_status(24);
                             } else {
                                 VideoCallDataBase.getDB(context).updateTaskSentStatus(taskDetailsBean.getSignalid(), "10");
                             }
+
                             if (taskDetailsBean.getMimeType() != null && taskDetailsBean.getMimeType().equalsIgnoreCase("date")) {
                                 if (taskDetailsBean.getRequestStatus().equalsIgnoreCase("assigned") || taskDetailsBean.getRequestStatus().equalsIgnoreCase("approved")) {
                                     int sen_taskId = Integer.parseInt(taskDetailsBean.getTaskId());
@@ -4451,7 +4458,6 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback,
                                 }
                             }
                         }
-
                     }
                 }
             }

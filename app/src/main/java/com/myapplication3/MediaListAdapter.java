@@ -1782,6 +1782,7 @@ public class MediaListAdapter extends ArrayAdapter<TaskDetailsBean> {
                                                 intent.putExtra("taskType", bean2.getTaskType());
                                                 intent.putExtra("toUserId", bean2.getToUserId());
                                                 intent.putExtra("ownerOfTask", bean2.getOwnerOfTask());
+                                                Log.i("groupMemberAccess", "medialist IsRemainderRequired ** " + bean2.getIsRemainderRequired());
                                                 Log.i("groupMemberAccess", "medialist getTaskType ** " + bean2.getTaskType());
                                                 Log.i("groupMemberAccess", "medialist getToUserId ** " + bean2.getToUserId());
                                                 Log.i("groupMemberAccess", "medialist getOwnerOfTask ** " + bean2.getOwnerOfTask());
@@ -2323,8 +2324,9 @@ public class MediaListAdapter extends ArrayAdapter<TaskDetailsBean> {
                     }
                 }
             }
-            if (gcBean.getMsg_status() != 0) {
-                if (gcBean.getTaskStatus() != null && (gcBean.getTaskStatus().equals("draft") || gcBean.getMimeType().equals("note"))) {
+            Log.i("gcbean"," gcBean.getMsg_status() ==> "+ gcBean.getMsg_status());
+            if (gcBean.getMsg_status() != 0 && gcBean.getMsg_status() != 24) {
+                if ((gcBean.getTaskStatus() != null && gcBean.getTaskStatus().equals("draft")) || (gcBean.getMimeType() != null && gcBean.getMimeType().equals("note"))) {
                     holder.iv_txtstatus.setImageResource(R.drawable.dark_bluetick);
                     holder.iv_mmstatus.setImageResource(R.drawable.dark_bluetick);
                 } else {
@@ -2332,13 +2334,16 @@ public class MediaListAdapter extends ArrayAdapter<TaskDetailsBean> {
                     holder.iv_mmstatus.setImageResource(R.drawable.on_line);
                 }
             } else if (gcBean.getMsg_status() == 0) {
-                if (gcBean.getTaskStatus() != null && (gcBean.getTaskStatus().equals("draft") || gcBean.getMimeType().equals("note"))) {
+                if ((gcBean.getTaskStatus() != null && gcBean.getTaskStatus().equals("draft")) || (gcBean.getMimeType() != null && gcBean.getMimeType().equals("note"))) {
                     holder.iv_txtstatus.setImageResource(R.drawable.high_importance_32);
                     holder.iv_mmstatus.setImageResource(R.drawable.high_importance_32);
                 } else {
                     holder.iv_txtstatus.setImageResource(R.drawable.off_line);
                     holder.iv_mmstatus.setImageResource(R.drawable.off_line);
                 }
+            } else if (gcBean.getMsg_status() == 24) {
+                holder.iv_txtstatus.setImageResource(R.drawable.retryimg);
+                holder.iv_mmstatus.setImageResource(R.drawable.retryimg);
             }
             if (gcBean.getMimeType() != null && (!gcBean.getMimeType().equalsIgnoreCase("text") && !gcBean.getMimeType().equalsIgnoreCase("url") && !gcBean.getMimeType().equalsIgnoreCase("date") && !gcBean.getMimeType().equalsIgnoreCase("observer") && !gcBean.getMimeType().equalsIgnoreCase("Reassign") && !gcBean.getMimeType().equalsIgnoreCase("Remove")) && !gcBean.getMimeType().equalsIgnoreCase("assigntask")) {
                 if (gcBean.getFromUserName() != null && !gcBean.getFromUserName().equalsIgnoreCase(Appreference.loginuserdetails.getUsername())) {

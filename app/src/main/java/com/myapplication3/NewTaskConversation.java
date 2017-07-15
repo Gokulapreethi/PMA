@@ -2027,7 +2027,7 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                             icons.setVisibility(View.VISIBLE);
                             arrow = false;
                             break;
-                        case "ReminderResponses":
+                        case "ReminderResponce":
                             if (webtaskId != null) {
                                 Intent reminderintent = new Intent(NewTaskConversation.this, Reminder_Responses.class);
                                 reminderintent.putExtra("taskId", webtaskId);
@@ -2334,7 +2334,7 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                         icons.setVisibility(View.VISIBLE);
                         arrow = false;
                         break;
-                    case "ReminderResponses":
+                    case "ReminderResponce":
                         if (webtaskId != null) {
                             Intent reminderintent = new Intent(NewTaskConversation.this, Reminder_Responses.class);
                             reminderintent.putExtra("taskId", webtaskId);
@@ -3674,7 +3674,7 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                         if (project)
                             chatBean.setProjectId(projectId);
                         String xml = composeChatXML(chatBean);
-                        sendMultiInstantMessage(xml, listOfObservers, 0);
+                        sendMultiInstantMessage(xml, listOfObservers, 1); //if proxy need to set 0
                         Log.d("TaskObserver", "TaskObserver list size is == " + listOfObservers.size());
                         VideoCallDataBase.getDB(context).update_Task_history(chatBean);
                         taskDetailsBean.setSendStatus("0");
@@ -5549,11 +5549,16 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                     }
                 });
             } else if (ownerOfTask.equalsIgnoreCase(Appreference.loginuserdetails.getUsername()) && taskType != null && taskType.equalsIgnoreCase("Group")) {
-                if (webtaskId != null && parentTaskId != null && webtaskId.equalsIgnoreCase(parentTaskId))
+                if (webtaskId != null && parentTaskId != null && webtaskId.equalsIgnoreCase(parentTaskId)) {
                     addObserver.setVisibility(View.GONE);
-                else if (!isProjectFromOracle)
-                    addObserver.setVisibility(View.VISIBLE);
-                Log.i("groupMemberAccess", "groupMemberAccess.addObserver()!! ");
+                } else {
+                    Log.i("groupMemberAccess", "groupMemberAccess.addObserver()!! ");
+                    if ((taskType!=null &&  !taskType.equalsIgnoreCase("Group")) && !chat && !isProjectFromOracle) {
+                        addObserver.setVisibility(View.VISIBLE);
+                    } else {
+                        addObserver.setVisibility(View.GONE);
+                    }
+                }
             }
 
             if ((taskType != null && taskType.equalsIgnoreCase("Group") && groupMemberAccess != null && groupMemberAccess.getRespondDateChange() != null && groupMemberAccess.getRespondDateChange().contains("0"))) {
@@ -5680,8 +5685,8 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                 gridview_text.add("Completion");
                 gridview_thump.add(R.drawable.percent_grid);
 
-                gridview_text.add("Custom1");
-                gridview_thump.add(R.drawable.custom);
+//                gridview_text.add("Custom1");
+//                gridview_thump.add(R.drawable.custom);
 
                 if (groupMemberAccess.getRespondDateChange() != null && groupMemberAccess.getRespondDateChange().contains("1")) {
                     Log.i("gridview", "index Dates ");
@@ -5702,7 +5707,7 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                 if (groupMemberAccess.getChatAccess() != null && groupMemberAccess.getChatAccess().contains("1")) {
                     Log.i("gridview", "index Chat ");
                     gridview_text.add("Chat");
-                    gridview_thump.add(R.drawable.chat_grid1);
+                    gridview_thump.add(R.drawable.chat_grid_icon);
                 }
                 if (groupMemberAccess.getTaskDescriptions() != null && groupMemberAccess.getTaskDescriptions().contains("1")) {
                     Log.i("gridview", "index Description ");
@@ -5754,7 +5759,7 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                 gridview_text.add("Description");
 //                gridview_text.add("Forms");
 //                gridview_text.add("ReassignTask");
-                gridview_text.add("ReminderResponses");
+                gridview_text.add("ReminderResponce");
                 gridview_text.add("RemindMe");
 //                gridview_text.add("TNA Report");
 //                gridview_text.add("FSR Report");
@@ -5776,7 +5781,7 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                 gridview_thump.add(R.drawable.percent_grid);
                 gridview_thump.add(R.drawable.call_grid);
 //                gridview_thump.add(R.drawable.observer_grid);
-                gridview_thump.add(R.drawable.chat_grid1);
+                gridview_thump.add(R.drawable.chat_grid_icon);
                 gridview_thump.add(R.drawable.desceiption_grid);
 //                gridview_thump.add(R.drawable.forms);
 //                gridview_thump.add(R.drawable.reassign_task_new);
@@ -5835,8 +5840,8 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                     gridviewtaker_text.add("File");
                     gridviewtaker_thump.add(R.drawable.file_grid);
                 }
-                gridviewtaker_text.add("Custom1");
-                gridviewtaker_thump.add(R.drawable.custom);
+//                gridviewtaker_text.add("Custom1");
+//                gridviewtaker_thump.add(R.drawable.custom);
 
                 Log.i("gridview", "index Completion ");
                 gridviewtaker_text.add("Completion");
@@ -5847,7 +5852,10 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                     gridviewtaker_text.add("Call");
                     gridviewtaker_thump.add(R.drawable.call_grid);
                 }
-
+                if (groupMemberAccess.getChatAccess() != null && groupMemberAccess.getChatAccess().contains("1")) {
+                    gridviewtaker_text.add("Chat");
+                    gridviewtaker_thump.add(R.drawable.chat_grid_icon);
+                }
                 if (groupMemberAccess.getAccessForms() != null && groupMemberAccess.getAccessForms().contains("1")) {
                     Log.i("gridview", "index Forms ");
 //                    gridviewtaker_text.add("Forms");
@@ -5875,8 +5883,9 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                 gridviewtaker_text.add("File");
                 gridviewtaker_text.add("Completion");
                 gridviewtaker_text.add("Call");
+                gridviewtaker_text.add("Chat");
 //                gridviewtaker_text.add("Forms");
-                gridviewtaker_text.add("ReminderResponses");
+                gridviewtaker_text.add("ReminderResponce");
 //                gridviewtaker_text.add("moreFields");
                 gridviewtaker_text.add("Custom1");
                 if (category != null && category.equalsIgnoreCase("issue")) {
@@ -5894,6 +5903,7 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                 gridviewtaker_thump.add(R.drawable.file_grid);
                 gridviewtaker_thump.add(R.drawable.percent_grid);
                 gridviewtaker_thump.add(R.drawable.call_grid);
+                gridviewtaker_thump.add (R.drawable.chat_grid_icon);
                 gridviewtaker_thump.add(R.drawable.forms);
                 gridviewtaker_thump.add(R.mipmap.ic_reminder_icon);
 //                gridviewtaker_thump.add(R.drawable.ic_rectangle_filled_100);
@@ -9255,8 +9265,12 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                                 options.setVisibility(View.GONE);
                                 save.setVisibility(View.VISIBLE);
                                 icons.setVisibility(View.VISIBLE);
-                                if (!isProjectFromOracle)
+
+                                if ((taskType!=null && !taskType.equalsIgnoreCase("Group")) && !chat && !isProjectFromOracle) {
                                     addObserver.setVisibility(View.VISIBLE);
+                                } else {
+                                    addObserver.setVisibility(View.GONE);
+                                }
                                 if (!isProjectFromOracle)
                                     sendTemplate.setVisibility(View.VISIBLE);
                                 barchart.setVisibility(View.VISIBLE);
@@ -14308,6 +14322,7 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                 chatBean.setUtcPemainderFrequency(taskBean.getUtcPemainderFrequency());
                 chatBean.setDateFrequency("");
                 chatBean.setTimeFrequency(taskBean.getTimeFrequency());
+                chatBean.setIsRemainderRequired(taskBean.getIsRemainderRequired());
                 chatBean.setToUserName(taskBean.getToUserName());
                 if (taskBean.getServerFileName() != null) {
                     chatBean.setServerFileName(taskBean.getServerFileName());
@@ -14877,7 +14892,7 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
             buffer.append(" fromUserId=" + quotes + cmbean.getFromUserId() + quotes);
             buffer.append(" fromUserName=" + quotes + cmbean.getFromUserName() + quotes);
             if (!getResources().getString(R.string.proxyua).equalsIgnoreCase("enable")) {
-                if (cmbean.getTaskStatus().equalsIgnoreCase("draft")) {
+                if (cmbean.getTaskStatus()!=null && cmbean.getTaskStatus().equalsIgnoreCase("draft")) {
                     buffer.append(" toUserId=" + quotes + "    " + quotes);
                     buffer.append(" toUserName=" + quotes + "        " + quotes);
                 } else {
@@ -15419,8 +15434,11 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
             if (webtaskId != null && parentTaskId != null && webtaskId.equalsIgnoreCase(parentTaskId)) {
                 addObserver.setVisibility(View.GONE);
             } else {
-                if (!isProjectFromOracle)
+                if ((taskType!=null && !taskType.equalsIgnoreCase("Group")) && !chat && !isProjectFromOracle) {
                     addObserver.setVisibility(View.VISIBLE);
+                } else {
+                    addObserver.setVisibility(View.GONE);
+                }
             }
             if (!isProjectFromOracle)
                 sendTemplate.setVisibility(View.VISIBLE);
@@ -15493,8 +15511,12 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                     if (webtaskId != null && parentTaskId != null && webtaskId.equalsIgnoreCase(parentTaskId)) {
                         addObserver.setVisibility(View.GONE);
                     } else {
-                        if (!isProjectFromOracle)
+                        if ((taskType!=null && !taskType.equalsIgnoreCase("Group")) && !chat && !isProjectFromOracle) {
+                            Log.d("chat", "visible 2");
                             addObserver.setVisibility(View.VISIBLE);
+                        } else {
+                            addObserver.setVisibility(View.GONE);
+                        }
                     }
                     if (!isProjectFromOracle)
                         sendTemplate.setVisibility(View.VISIBLE);
@@ -16021,6 +16043,7 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
             gridviewObserver.add("Video");
             gridviewObserver.add("File");
             gridviewObserver.add("Call");
+            gridviewObserver.add("Chat");
 //            gridviewObserver.add("Forms");
             if (category != null && category.equalsIgnoreCase("issue")) {
                 gridviewObserver.add("ViewTask");
@@ -16034,6 +16057,7 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
             gridviewObserver_thump.add(R.drawable.video_grid);
             gridviewObserver_thump.add(R.drawable.file_grid);
             gridviewObserver_thump.add(R.drawable.call_grid);
+            gridviewObserver_thump.add(R.drawable.chat_grid_icon);
             gridviewObserver_thump.add(R.drawable.forms);
             if (category != null && category.equalsIgnoreCase("issue")) {
                 gridviewObserver_thump.add(R.drawable.ic_view_task);
@@ -19669,6 +19693,7 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
         }
     }
 
+/*
     public void updateMessageStatus(TaskDetailsBean taskDetailsBean) {
         if (taskDetailsBean != null) {
             Log.d("TaskObserver", "Inside message recived area 3");
@@ -19691,6 +19716,37 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
             }
         }
     }
+*/
+public void updateMessageStatus(TaskDetailsBean taskDetailsBean) {
+    if (taskDetailsBean != null) {
+        Log.d("TaskObserver", "Inside message recived area 3");
+        for (TaskDetailsBean detailsBean : taskList) {
+            if (detailsBean.getSignalid() != null && detailsBean.getSignalid().equalsIgnoreCase(taskDetailsBean.getSignalid())) {
+                Log.i("TaskObserver", "task " + detailsBean.getMsg_status());
+                Log.i("TaskObserver", "getSignalid ==>  "+taskDetailsBean.getSignalid());
+                Log.i("TaskObserver", "getSignalid ==>  "+detailsBean.getSignalid());
+                if (detailsBean.getMsg_status() <= 0 && taskDetailsBean.getMsg_status() != 24) {
+                    detailsBean.setMsg_status(1);
+                    Log.i("TaskObserver", "task if " + detailsBean.getMsg_status());
+                } else if (taskDetailsBean.getMsg_status() == 24) {
+                    detailsBean.setMsg_status(24);
+                }
+                break;
+            } else if (taskDetailsBean.getMsg_status() == 1) {
+                if (detailsBean.getMsg_status() == 24) {
+                    detailsBean.setMsg_status(1);
+                }
+            }
+        }
+        refresh();
+        if (down_icon != null && down_icon.getVisibility() == View.VISIBLE) {
+            if (list_all != null)
+                list_all.setTranscriptMode(AbsListView.TRANSCRIPT_MODE_DISABLED);
+        } else if (list_all != null) {
+            list_all.smoothScrollToPosition(list_all.getAdapter().getCount() - 1);
+        }
+    }
+}
 
     public void updateUploadStatus(TaskDetailsBean taskDetailsBean) {
         if (taskDetailsBean != null) {
@@ -20068,8 +20124,12 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                             update.setVisibility(View.VISIBLE);
                     } else {
                         Log.i("updaeicon", "owner 0 ");
-                        if (!isProjectFromOracle)
+                        if ((taskType !=null && !taskType.equalsIgnoreCase("Group")) && !chat && !isProjectFromOracle) {
+                            Log.d("chat", "visible 3");
                             addObserver.setVisibility(View.VISIBLE);
+                        } else {
+                            addObserver.setVisibility(View.GONE);
+                        }
                         if (!chat)
                             update.setVisibility(View.VISIBLE);
                     }
