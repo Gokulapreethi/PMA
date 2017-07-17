@@ -9,13 +9,13 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginTop="100dp"
-        android:background="@color/white">
+        android:background="@drawable/borderfordialog">
 
         <RelativeLayout
             android:id="@+id/header"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/red"
+            android:background="@color/yellownew"
             android:paddingBottom="10dp">
 
             <TextView
@@ -25,7 +25,7 @@
                 android:layout_centerInParent="true"
                 android:gravity="center"
                 android:text="Task Status Update"
-                android:textColor="@color/black"
+                android:textColor="@color/white"
                 android:textSize="23sp"
                 android:textStyle="bold" />
 
@@ -136,14 +136,15 @@
         <EditText
             android:id="@+id/edittext1"
             android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="85dp"
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
             android:layout_marginTop="150dp"
-            android:background="@android:drawable/screen_background_light"
             android:gravity="center"
-            android:hint="Remarks"
-            android:singleLine="true" />
+            android:ems="10"
+            android:hint="Enter Remarks"
+            android:cursorVisible="false"
+            android:background="@layout/iphone_edittext_into_android" />
 
         <View
             android:layout_width="wrap_content"

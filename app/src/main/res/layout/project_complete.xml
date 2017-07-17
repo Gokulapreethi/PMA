@@ -728,6 +728,7 @@
                     android:layout_weight="1"
                     android:gravity="center_vertical"
                     android:maxLength="100"
+                    android:digits="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890.,"
                     android:textColor="#808080"
                     android:visibility="visible">
                 </EditText>

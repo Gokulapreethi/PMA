@@ -2316,7 +2316,7 @@ public class TravelJobDetails extends Activity implements View.OnClickListener, 
                     runOnUiThread(new Runnable() {
                         public void run() {
                             travel_job.setEnabled(true);
-                            if (projectCurrentStatus.equalsIgnoreCase("completed")) {
+                             if (projectCurrentStatus!=null && projectCurrentStatus.equalsIgnoreCase("completed")) {
                                 status_job.setVisibility(View.GONE);
                                 travel_job.setVisibility(View.GONE);
                             }

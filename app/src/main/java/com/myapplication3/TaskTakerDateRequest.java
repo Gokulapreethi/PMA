@@ -2354,40 +2354,6 @@ public class TaskTakerDateRequest extends Activity implements View.OnClickListen
                                     } else {
                                         end_date1.setText(Appreference.ChangeDevicePattern(false, Appreference.setDateTime(false, strenddate), datepattern));
                                     }
-//                                end_date1.setText(strenddate);
-                                /*String endmin = values3[minutePicker.getValue()];
-                                Log.i("End", "endmin is " + endmin);
-                                int endmin1 = Integer.parseInt(endmin);
-                                if (endmin1 != 0) {
-                                    endmin1 = endmin1 - 15;
-                                    toas = tdystr + " " + values2[hourPicker.getValue()] + " : "
-                                            + endmin1 + " "
-                                            + values4[am_pmPicker.getValue()];
-                                } else {
-                                    Log.d("Hour is ", String.valueOf(hourPicker.getValue()) + " values2 :" + values2);
-                                    String hourval = values2[hourPicker.getValue()];
-                                    int hourval1 = Integer.parseInt(hourval);
-                                    hourval1 = hourval1 - 1;
-                                    if (hourval1 == 0) {
-                                        toas = tdystr + " " + "12" + " : "
-                                                + "45" + " "
-                                                + values4[am_pmPicker.getValue()];
-                                    } else {
-                                        toas = tdystr + " " + hourval1 + " : "
-                                                + "45" + " "
-                                                + values4[am_pmPicker.getValue()];
-                                    }
-                                }
-                                Log.i("Date", "is " + toas);
-                                selctedDateformate = new SimpleDateFormat("yyyy MMM dd hh : mm a");
-                                date = null;
-                                try {
-                                    date = selctedDateformate.parse(yyyy + " " + toas);
-                                } catch (ParseException e) {
-                                    e.printStackTrace();
-                                }
-                                day1 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-                                String strremdate = day1.format(date);*/
                                     DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
                                     Date ddate = null;
                                     try {
@@ -2410,9 +2376,7 @@ public class TaskTakerDateRequest extends Activity implements View.OnClickListen
                                         } else {
                                             reminder_date1.setText(Appreference.ChangeDevicePattern(false, Appreference.setDateTime(false, reminder_date), datepattern));
                                         }
-//                                    reminder_date1.setText(reminder_date);
                                     }
-//                                reminder_date1.setText(start_date1.getText().toString());
 
                                     enDate = values1[datePicker.getValue()];
 

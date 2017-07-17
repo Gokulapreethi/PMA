@@ -335,44 +335,48 @@ public class ProjectsFragment extends Fragment implements View.OnClickListener, 
             submit_button.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Log.i("report123", "-====>startdATE====>" + TNAReportStart);
-                    Log.i("report123", "-====>eNDdATE====>" + TNAReportEnd);
-                    all_report_title.setVisibility(View.GONE);
-                    tna_count = 0;
-                    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-                    SimpleDateFormat dateParse = new SimpleDateFormat("yyyy-MM-dd");
+                    try {
+                        Log.i("report123", "-====>startdATE====>" + TNAReportStart);
+                        Log.i("report123", "-====>eNDdATE====>" + TNAReportEnd);
+                        all_report_title.setVisibility(View.GONE);
+                        tna_count = 0;
+                        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+                        SimpleDateFormat dateParse = new SimpleDateFormat("yyyy-MM-dd");
 //                    dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
-                    Date date = null;
-                    Date date1 = null;
-                    String StartDateUTC = "", EndDateUTC = "";
-                    if (TNAReportStart != null && !TNAReportStart.equalsIgnoreCase("")) {
-                        try {
-                            date = dateParse.parse(TNAReportStart);
-                            StartDateUTC = dateFormat.format(date);
-                        } catch (Exception e) {
-                            e.printStackTrace();
+                        Date date = null;
+                        Date date1 = null;
+                        String StartDateUTC = "", EndDateUTC = "";
+                        if (TNAReportStart != null && !TNAReportStart.equalsIgnoreCase("")) {
+                            try {
+                                date = dateParse.parse(TNAReportStart);
+                                StartDateUTC = dateFormat.format(date);
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
                         }
-                    }
-                    if (TNAReportEnd != null && !TNAReportEnd.equalsIgnoreCase("")) {
-                        try {
-                            date1 = dateParse.parse(TNAReportEnd);
-                            EndDateUTC = dateFormat.format(date1);
-                        } catch (Exception e) {
-                            e.printStackTrace();
+                        if (TNAReportEnd != null && !TNAReportEnd.equalsIgnoreCase("")) {
+                            try {
+                                date1 = dateParse.parse(TNAReportEnd);
+                                EndDateUTC = dateFormat.format(date1);
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
                         }
-                    }
-                    Log.i("report123", "-====>startdATE UTC====>" + StartDateUTC);
-                    Log.i("report123", "-====>eNDdATE UTC====>" + EndDateUTC);
-                    if(!date.after(date1)) {
-                        List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
-                        nameValuePairs.add(new BasicNameValuePair("userId", String.valueOf(Appreference.loginuserdetails.getId())));
-                        nameValuePairs.add(new BasicNameValuePair("travelStartDate", StartDateUTC));
-                        nameValuePairs.add(new BasicNameValuePair("travelEndDate", EndDateUTC));
-                        showprogress("Downloading....");
-                        Appreference.jsonRequestSender.OracleTNAJobReport(EnumJsonWebservicename.tnaReportForDateWise, nameValuePairs, ProjectsFragment.this);
-                    }else
-                    {
-                        Toast.makeText(getActivity(), "Please Enter correct Start/End Date", Toast.LENGTH_SHORT).show();
+                        Log.i("report123", "-====>startdATE UTC====>" + StartDateUTC);
+                        Log.i("report123", "-====>eNDdATE UTC====>" + EndDateUTC);
+                        if(date!=null && date1!=null && !date.after(date1)) {
+                            List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
+                            nameValuePairs.add(new BasicNameValuePair("userId", String.valueOf(Appreference.loginuserdetails.getId())));
+                            nameValuePairs.add(new BasicNameValuePair("travelStartDate", StartDateUTC));
+                            nameValuePairs.add(new BasicNameValuePair("travelEndDate", EndDateUTC));
+                            showprogress("Downloading....");
+                            Appreference.jsonRequestSender.OracleTNAJobReport(EnumJsonWebservicename.tnaReportForDateWise, nameValuePairs, ProjectsFragment.this);
+                        }else
+                        {
+                            Toast.makeText(getActivity(), "Please Enter correct Start/End Date", Toast.LENGTH_SHORT).show();
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
                     }
                 }
             });
@@ -1278,17 +1282,14 @@ public class ProjectsFragment extends Fragment implements View.OnClickListener, 
                                         List<ListallProjectBean> pdb = new Gson().fromJson(s1, collectionType);
                                         for (int i = 0; i < pdb.size(); i++) {
                                             ListallProjectBean listallProjectBean = pdb.get(i);
-                                            listallProjectBean.getListallProject().size();
-                                            for (int j = 0; j < listallProjectBean.getListallProject().size(); j++) {
-
-                                                ProjectDetailsBean projectDetailsBean1 = listallProjectBean.getListallProject().get(j);
-
-                                                VideoCallDataBase.getDB(classContext).insertProject_Details(projectDetailsBean1);
-                                                Log.i("ws123", "projectDetailsBean DB inserted id is " + projectDetailsBean1.getId());
-                                                Log.i("listAllMyProject", "projectDetailsBean DB inserted id is " + projectDetailsBean1.getProjectName());
-                                                Log.i("ws123", "projectDetailsBean DB inserted mcModel is " + projectDetailsBean1.getMcModel());
-                                            }
-
+                                            Log.i("listAllMyJob","listallProject size2222====>"+listallProjectBean.getListallProject().size());
+                                            if(listallProjectBean.getListallProject()!=null && listallProjectBean.getListallProject().size()>0) {
+                                                for (int j = 0; j < listallProjectBean.getListallProject().size(); j++) {
+                                                    ProjectDetailsBean projectDetailsBean1 = listallProjectBean.getListallProject().get(j);
+                                                    VideoCallDataBase.getDB(classContext).insertProject_Details(projectDetailsBean1);
+                                                }
+                                            }else
+                                                showToast("No JobCards Found..");
                                         }
                                     }
                                 }

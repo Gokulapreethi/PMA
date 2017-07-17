@@ -119,7 +119,7 @@ public class MediaListAdapter extends ArrayAdapter<TaskDetailsBean> {
         this.category = s2;
         inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         this.listener = listener;
-        handler=new Handler();
+        handler = new Handler();
         swipeDetector = new SwipeListview();
         ft = new SimpleDateFormat("E yyyy.MM.dd 'at' hh:mm:ss.SSS a zzz");
         progressListener = Appreference.main_Activity_context;
@@ -306,9 +306,6 @@ public class MediaListAdapter extends ArrayAdapter<TaskDetailsBean> {
     public View getView(final int position, View view, ViewGroup parent) {  //Depends upon data size called for each row , Create each ListView row
 
         try {
-            Date dn = new Date();
-            Log.i("MediaListAdapter", "start getview : " + position + " " + ft.format(dn));
-            Log.i("MediaListAdapter", "start getview : " + position + " " + ft.format(dn));
             final TaskDetailsBean gcBean = detailsBeanArrayList.get(position);
             holder = new ViewHolder();
             if (view == null) {
@@ -416,7 +413,7 @@ public class MediaListAdapter extends ArrayAdapter<TaskDetailsBean> {
             holder.receiver_name_name = null;
             holder.receiver_name_name = VideoCallDataBase.getDB(context).getName(gcBean.getFromUserName());
             holder.text_views.setVisibility(View.GONE);
-            holder.date_header_text.setVisibility(View.GONE);
+            holder.date_header_text.setVisibility(View.VISIBLE);
             holder.rcv_syn_txt.setVisibility(View.GONE);
             holder.send_syn_txt.setVisibility(View.GONE);
             holder.send_syn_img.setVisibility(View.GONE);
@@ -451,8 +448,60 @@ public class MediaListAdapter extends ArrayAdapter<TaskDetailsBean> {
             holder.thumb_audio.setVisibility(View.GONE);
             final ViewHolder finalHolder1 = holder;
 
+            Date d1 = null;
+            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+            try {
+                d1 = format.parse(gcBean.getDateTime().split(" ")[0]);
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+            try {
+                SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
+                String newdate = sdf.format(d1);
+                if (position == 0) {
+                    holder.text_header.setVisibility(View.VISIBLE);
+                    holder.date_header_text.setText(newdate);
+                }
 
-            groupMemberAccess = VideoCallDataBase.getDB(context).getMemberAccessList(gcBean.getToUserId());
+                if (position > 0) {
+                    final TaskDetailsBean bean = detailsBeanArrayList.get(position - 1);
+                    if (bean.getDateTime().split(" ")[0].equals(gcBean.getDateTime().split(" ")[0])) {
+                        holder.text_header.setVisibility(View.GONE);
+                    } else {
+                        holder.text_header.setVisibility(View.VISIBLE);
+                        if (bean.getDateTime().split(" ")[0].equals(gcBean.getDateTime().split(" ")[0])) {
+                            holder.date_header_text.setText("TODAY");
+                        } else {
+                            holder.date_header_text.setText(newdate);
+                        }
+                    }
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                Appreference.printLog("MediaListAdapter", "DisplayDate Exception: " + e.getMessage(), "WARN", null);
+            }
+
+            /*try {
+                WindowManager wm = (WindowManager) context.getSystemService(context.WINDOW_SERVICE);
+                Display display = wm.getDefaultDisplay();
+                DisplayMetrics metrics = new DisplayMetrics();
+                display.getMetrics(metrics);
+                int width = metrics.widthPixels;
+                int height = metrics.heightPixels;
+                Log.i("DisplaySize"," -------- width --------- > "+width);
+                Log.i("DisplaySize"," --------- height -------- > "+height);
+                LinearLayout.LayoutParams lParams1 = (LinearLayout.LayoutParams) holder.txt_des_under.getLayoutParams();
+                lParams1.width = width - 20;
+                holder.txt_des_under.setLayoutParams(lParams1);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }*/
+            try {
+                groupMemberAccess = VideoCallDataBase.getDB(context).getMemberAccessList(gcBean.getToUserId());
+            } catch (Exception e) {
+                e.printStackTrace();
+                Appreference.printLog("MediaListAdapter", "groupMemberAccess Exception: " + e.getMessage(), "WARN", null);
+            }
             try {
                 view.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -1589,7 +1638,6 @@ public class MediaListAdapter extends ArrayAdapter<TaskDetailsBean> {
                                 context.startActivity(intentmap);
                                 break;
                             case "document":
-                                String ext = gcBean.getTaskDescription().substring(gcBean.getTaskDescription().lastIndexOf(".") + 1, gcBean.getTaskDescription().length());
                                 File url = new File(dir_path + gcBean.getTaskDescription());
                                 setDocumentDataType(url);
                         }
@@ -1618,7 +1666,6 @@ public class MediaListAdapter extends ArrayAdapter<TaskDetailsBean> {
                 public void onClick(View v) {
                     try {
                         if (gcBean.getMimeType() != null && !gcBean.getMimeType().equalsIgnoreCase("") && (gcBean.getTaskDescription() != null)) {
-                            String ext = gcBean.getTaskDescription().substring(gcBean.getTaskDescription().lastIndexOf(".") + 1, gcBean.getTaskDescription().length());
                             File url = new File(dir_path + gcBean.getTaskDescription());
                             setDocumentDataType(url);
                         }
@@ -1681,13 +1728,13 @@ public class MediaListAdapter extends ArrayAdapter<TaskDetailsBean> {
                             Intent intent = new Intent(context, FullScreenImage.class);
                             intent.putExtra("image", gcBean.getTaskDescription());
                             context.startActivity(intent);
-                        } else if (gcBean.getMimeType().toString().toLowerCase().trim().equalsIgnoreCase("audio")) {
+                        } else if (gcBean.getMimeType().toLowerCase().trim().equalsIgnoreCase("audio")) {
                             Bundle bundle = new Bundle();
                             bundle.putString("audio", gcBean.getTaskDescription());
                             Intent intent = new Intent(getContext(), Audioplayer.class);
                             intent.putExtras(bundle);
                             context.startActivity(intent);
-                        } else if (gcBean.getMimeType().toString().toLowerCase().trim().equalsIgnoreCase("map")) {
+                        } else if (gcBean.getMimeType().toLowerCase().trim().equalsIgnoreCase("map")) {
                             Bundle bundle = new Bundle();
                             bundle.putString("map", gcBean.getTaskDescription());
                             bundle.putString("viewmap", "location");
@@ -1762,13 +1809,13 @@ public class MediaListAdapter extends ArrayAdapter<TaskDetailsBean> {
                                             } else {
                                                 queryy = "select * from taskDetailsInfo where (fromUserName='" + Appreference.loginuserdetails.getUsername() + "' or toUserName='" + Appreference.loginuserdetails.getUsername() + "') and loginuser='" + Appreference.loginuserdetails.getEmail() + "'and taskId='" + alert_bean.getTaskId() + "' and mimeType='date' and (requestStatus='approved' or requestStatus='assigned') order by id desc";
                                             }
-                                                ArrayList<TaskDetailsBean> taskList = null;
-                                                try {
-                                                    taskList = VideoCallDataBase.getDB(context).getTaskHistory(queryy);
-                                                } catch (Exception e) {
-                                                    e.printStackTrace();
-                                                    Appreference.printLog("MediaListAdapter", "taskList Exception: " + e.getMessage(), "WARN", null);
-                                                }
+                                            ArrayList<TaskDetailsBean> taskList = null;
+                                            try {
+                                                taskList = VideoCallDataBase.getDB(context).getTaskHistory(queryy);
+                                            } catch (Exception e) {
+                                                e.printStackTrace();
+                                                Appreference.printLog("MediaListAdapter", "taskList Exception: " + e.getMessage(), "WARN", null);
+                                            }
                                             if (taskList.size() > 0) {
                                                 TaskDetailsBean bean2 = taskList.get(0);
                                                 intent.putExtra("startdate", bean2.getPlannedStartDateTime());
@@ -2193,14 +2240,13 @@ public class MediaListAdapter extends ArrayAdapter<TaskDetailsBean> {
                 }
             });
 
-            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
-            SimpleDateFormat simpleDateFormat1 = new SimpleDateFormat("dd/MMM");
-            String date = simpleDateFormat1.format(simpleDateFormat.parse(gcBean.getDateTime().split(" ")[0]));
-            if (simpleDateFormat.format(new Date()).equalsIgnoreCase(simpleDateFormat.format(simpleDateFormat.parse(gcBean.getDateTime().split(" ")[0])))) {
-                date = "today";
-            }
+//            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+//            SimpleDateFormat simpleDateFormat1 = new SimpleDateFormat("dd/MMM");
+//            String date = simpleDateFormat1.format(simpleDateFormat.parse(gcBean.getDateTime().split(" ")[0]));
+//            if (simpleDateFormat.format(new Date()).equalsIgnoreCase(simpleDateFormat.format(simpleDateFormat.parse(gcBean.getDateTime().split(" ")[0])))) {
+//                date = "today";
+//            }
 
-            Log.i("isshowonUI", "isshowonUI" + gcBean.isCustomTagVisible());
             if (gcBean.getMimeType() != null && gcBean.getFromUserName() != null && gcBean.getFromUserName().equalsIgnoreCase(MainActivity.username)) {
                 String dd = "";
                 dd = setConversationTime(gcBean);
@@ -2217,8 +2263,8 @@ public class MediaListAdapter extends ArrayAdapter<TaskDetailsBean> {
                             holder.sender_msg_type.setText("private" + " " + gcBean.getPrivate_Member());
                             holder.sender_msg_type_image.setText("private" + " " + gcBean.getPrivate_Member());
                         } else {
-                            holder.sender_msg_type.setText("private");
-                            holder.sender_msg_type_image.setText("private");
+                            holder.sender_msg_type.setText("private" + " " + gcBean.getPrivate_Member());
+                            holder.sender_msg_type_image.setText("private" + " " + gcBean.getPrivate_Member());
                         }
                         holder.sender_msg_type.setTextColor(Color.WHITE);
                         holder.sender_msg_type_image.setTextColor(Color.WHITE);
@@ -2324,7 +2370,7 @@ public class MediaListAdapter extends ArrayAdapter<TaskDetailsBean> {
                     }
                 }
             }
-            Log.i("gcbean"," gcBean.getMsg_status() ==> "+ gcBean.getMsg_status());
+            Log.i("gcbean", " gcBean.getMsg_status() ==> " + gcBean.getMsg_status());
             if (gcBean.getMsg_status() != 0 && gcBean.getMsg_status() != 24) {
                 if ((gcBean.getTaskStatus() != null && gcBean.getTaskStatus().equals("draft")) || (gcBean.getMimeType() != null && gcBean.getMimeType().equals("note"))) {
                     holder.iv_txtstatus.setImageResource(R.drawable.dark_bluetick);
@@ -2384,7 +2430,7 @@ public class MediaListAdapter extends ArrayAdapter<TaskDetailsBean> {
                     holder.ls_video_play_icon.setVisibility(View.GONE);
                     holder.thumb_audio.setVisibility(View.GONE);
                     holder.ls_thumb_audio.setVisibility(View.GONE);
-                    holder.date_header_text.setVisibility(View.GONE);
+                    holder.date_header_text.setVisibility(View.VISIBLE);
                     holder.sender_side_doc_icon.setVisibility(View.GONE);
                     holder.sender_side_doc_iconview.setVisibility(View.GONE);
                     holder.sender_side_location_iconview.setVisibility(View.GONE);
@@ -2414,7 +2460,7 @@ public class MediaListAdapter extends ArrayAdapter<TaskDetailsBean> {
                                 imageFile = new File(Environment.getExternalStorageDirectory().getAbsoluteFile() + "High Message/" + gcBean.getTaskDescription());
                             }
                             if (Appreference.getDeviceName() != null && Appreference.getDeviceName().equalsIgnoreCase("motorola MotoG3")) {
-                                if (imageFile != null && imageFile.exists()) {
+                                if (imageFile.exists()) {
                                     notifyImageThumb(gcBean);
                                     int size = 10;
                                     holder.thumb_image.setVisibility(View.VISIBLE);
@@ -2453,7 +2499,7 @@ public class MediaListAdapter extends ArrayAdapter<TaskDetailsBean> {
                         holder.frame_layout.setVisibility(View.GONE);
                         holder.ls_frame_layout.setVisibility(View.VISIBLE);
                         holder.receiver_side_list_image.setVisibility(View.VISIBLE);
-                        holder.text_header.setVisibility(View.VISIBLE);
+//                        holder.text_header.setVisibility(View.VISIBLE);
                         LinearLayout.LayoutParams lllp = (LinearLayout.LayoutParams) holder.timeview.getLayoutParams();
                         lllp.gravity = Gravity.LEFT;
                         holder.timeview.setLayoutParams(lllp);
@@ -2499,7 +2545,7 @@ public class MediaListAdapter extends ArrayAdapter<TaskDetailsBean> {
                     holder.text_views.setVisibility(View.GONE);
                     holder.video_play_icon.setVisibility(View.GONE);
                     holder.thumb_image.setVisibility(View.GONE);
-                    holder.date_header_text.setVisibility(View.GONE);
+                    holder.date_header_text.setVisibility(View.VISIBLE);
                     holder.ls_thumb_image.setVisibility(View.GONE);
                     holder.ls_video_play_icon.setVisibility(View.GONE);
                     holder.thumb_audio.setVisibility(View.GONE);
@@ -2512,7 +2558,7 @@ public class MediaListAdapter extends ArrayAdapter<TaskDetailsBean> {
                         lllp.gravity = Gravity.RIGHT;
                         holder.timeview.setLayoutParams(lllp);
                         holder.receiver_side_list_image.setVisibility(View.GONE);
-                        holder.text_header.setVisibility(View.GONE);
+//                        holder.text_header.setVisibility(View.GONE);
                         holder.sender_side_list_image.setVisibility(View.VISIBLE);
                         holder.frame_layout.setVisibility(View.VISIBLE);
                         holder.thumb_image.setVisibility(View.VISIBLE);
@@ -2592,7 +2638,7 @@ public class MediaListAdapter extends ArrayAdapter<TaskDetailsBean> {
                         File imageFile = new File(dir_path + gcBean.getTaskDescription());
                         holder.sender_side_list_image.setVisibility(View.GONE);
                         holder.receiver_side_list_image.setVisibility(View.VISIBLE);
-                        holder.text_header.setVisibility(View.GONE);
+//                        holder.text_header.setVisibility(View.GONE);
                         holder.ls_frame_layout.setVisibility(View.VISIBLE);
                         holder.ls_thumb_image.setVisibility(View.VISIBLE);
                         holder.time_under_image_receiver.setVisibility(View.VISIBLE);
@@ -2685,36 +2731,36 @@ public class MediaListAdapter extends ArrayAdapter<TaskDetailsBean> {
                         }
                     }
                 } else if (gcBean.getMimeType() != null && gcBean.getMimeType().equalsIgnoreCase("textdate")) {
-                    Log.i("TodaytaskType"," ServerFileName is -------> "+gcBean.getServerFileName());
-                    Log.i("TodaytaskType"," getDateTime is -------> "+gcBean.getDateTime());
+                    Log.i("TodaytaskType", " ServerFileName is -------> " + gcBean.getServerFileName());
+                    Log.i("TodaytaskType", " getDateTime is -------> " + gcBean.getDateTime());
 
                     if (gcBean.getServerFileName().contains(gcBean.getDateTime())) {
-                        Log.i("TodaytaskType"," ServerFileName is -------> 2 "+gcBean.getServerFileName());
+                        Log.i("TodaytaskType", " ServerFileName is -------> 2 " + gcBean.getServerFileName());
                         holder.audio_play1.setVisibility(View.GONE);
                         holder.both_side_list_image.setGravity(View.GONE);
                         holder.sender_side_list_image.setVisibility(View.GONE);
                         holder.receiver_side_list_image.setVisibility(View.GONE);
-                        holder.text_header.setVisibility(View.VISIBLE);
+//                        holder.text_header.setVisibility(View.VISIBLE);
                         holder.text_views.setVisibility(View.GONE);
                         holder.sender_side_add_txt.setVisibility(View.GONE);
                         holder.date_header_text.setVisibility(View.VISIBLE);
-                        String Datetype="";
-                        Log.i("timingtask","simpleDateformat is "+simpleDateFormat.format(new Date()));
-                        Log.i("timingtask","simpleDateformat is "+simpleDateFormat.format(simpleDateFormat.parse(gcBean.getDateTime())));
-                        if (simpleDateFormat.format(new Date()).equalsIgnoreCase(simpleDateFormat.format(simpleDateFormat.parse(gcBean.getDateTime().split(" ")[0])))) {
-                            Datetype = "Today";
-                        }else if(!simpleDateFormat.format(new Date()).equalsIgnoreCase(simpleDateFormat.format(simpleDateFormat.parse(gcBean.getDateTime().split(" ")[0])))){
-                            Date datevalid=simpleDateFormat.parse(String.valueOf(new Date()));
-                            Date datevalid2=simpleDateFormat.parse(String.valueOf(gcBean.getDateTime()));
-                            if (datevalid.compareTo(datevalid2)==-1) {
-                                Datetype = "Yesterday";
-                            } else {
-                                Datetype=gcBean.getDateTime().split(" ")[0];
-                            }
-                        }
-                        holder.date_header_text.setText(Datetype);
+                        String Datetype = "";
+//                        Log.i("timingtask","simpleDateformat is "+simpleDateFormat.format(new Date()));
+//                        Log.i("timingtask","simpleDateformat is "+simpleDateFormat.format(simpleDateFormat.parse(gcBean.getDateTime())));
+//                        if (simpleDateFormat.format(new Date()).equalsIgnoreCase(simpleDateFormat.format(simpleDateFormat.parse(gcBean.getDateTime().split(" ")[0])))) {
+//                            Datetype = "Today";
+//                        }else if(!simpleDateFormat.format(new Date()).equalsIgnoreCase(simpleDateFormat.format(simpleDateFormat.parse(gcBean.getDateTime().split(" ")[0])))){
+//                            Date datevalid=simpleDateFormat.parse(String.valueOf(new Date()));
+//                            Date datevalid2=simpleDateFormat.parse(String.valueOf(gcBean.getDateTime()));
+//                            if (datevalid.compareTo(datevalid2)==-1) {
+//                                Datetype = "Yesterday";
+//                            } else {
+//                                Datetype=gcBean.getDateTime().split(" ")[0];
+//                            }
+//                        }
+//                        holder.date_header_text.setText(Datetype);
                     }
-                    holder.date_header_text.setVisibility(View.VISIBLE);
+                    /*holder.date_header_text.setVisibility(View.VISIBLE);
                     String Datetype="";
                     Log.i("timingtask","simpleDateformat is "+simpleDateFormat.format(new Date()));
                     Log.i("timingtask", "simpleDateformat is " + simpleDateFormat.format(simpleDateFormat.parse(gcBean.getServerFileName())));
@@ -2732,17 +2778,17 @@ public class MediaListAdapter extends ArrayAdapter<TaskDetailsBean> {
                         } catch (ParseException e) {
                             e.printStackTrace();
                         }
-                    }
-                    holder.date_header_text.setText(Datetype);
+                    }*/
+//                    holder.date_header_text.setText(Datetype);
                 } else if (gcBean.getMimeType() != null && (gcBean.getMimeType().equalsIgnoreCase("text") || gcBean.getMimeType().equalsIgnoreCase("overdue") || gcBean.getMimeType().equalsIgnoreCase("url") || gcBean.getMimeType().equalsIgnoreCase("date") || gcBean.getMimeType().equalsIgnoreCase("observer") || gcBean.getMimeType().equalsIgnoreCase("Reassign") || gcBean.getMimeType().equalsIgnoreCase("Remove") || gcBean.getMimeType().equalsIgnoreCase("note")) || gcBean.getMimeType().equalsIgnoreCase("assigntask") || gcBean.getMimeType().equalsIgnoreCase("reminder")) {
                     String imageFile = gcBean.getTaskDescription();
                     holder.both_side_list_image.setGravity(View.GONE);
                     holder.sender_side_list_image.setVisibility(View.GONE);
                     holder.receiver_side_list_image.setVisibility(View.GONE);
-                    holder.text_header.setVisibility(View.GONE);
+//                    holder.text_header.setVisibility(View.VISIBLE);
                     holder.text_views.setVisibility(View.VISIBLE);
                     holder.sender_side_add_txt.setVisibility(View.GONE);
-                    holder.date_header_text.setVisibility(View.GONE);
+                    holder.date_header_text.setVisibility(View.VISIBLE);
 
                     Log.i("escalation", "demo 1" + gcBean.getTaskDescription());
                     if (imageFile != null && !imageFile.equalsIgnoreCase("")) {
@@ -2804,8 +2850,8 @@ public class MediaListAdapter extends ArrayAdapter<TaskDetailsBean> {
                             } else {
                                 holder.exclation_counter.setVisibility(View.GONE);
                             }
-                            if ((gcBean.getTaskStatus() != null && (gcBean.getTaskStatus().equalsIgnoreCase("overdue") || gcBean.getTaskStatus().equalsIgnoreCase("reminder"))) || (gcBean.getSubType() != null && gcBean.getSubType().equalsIgnoreCase("buzzrequest"))) {
-                                if (gcBean.getTaskStatus().equalsIgnoreCase("overdue") && gcBean.getMimeType() != null && gcBean.getMimeType().equalsIgnoreCase("overdue") && gcBean.getTaskDescription().equalsIgnoreCase("this task is overdue")) {
+                            if ((gcBean.getMimeType() != null && gcBean.getMimeType().equalsIgnoreCase("overdue") || (gcBean.getSubType() != null && gcBean.getSubType().equalsIgnoreCase("buzzrequest") || (gcBean.getMimeType() != null && gcBean.getMimeType().equalsIgnoreCase("reminder"))))) {
+                                if (gcBean.getMimeType() != null && gcBean.getMimeType().equalsIgnoreCase("overdue") && gcBean.getTaskDescription().equalsIgnoreCase("this task is overdue")) {
                                     Log.i("overdue", "overdue -->1 ");
                                     if (gcBean.getMsg_status() == 10) {
                                         holder.dateChangeApproval_sender.setVisibility(View.VISIBLE);
@@ -2813,7 +2859,7 @@ public class MediaListAdapter extends ArrayAdapter<TaskDetailsBean> {
                                         holder.dateChangeApproval_sender.setVisibility(View.GONE);
                                     }
                                 }
-                                if (gcBean.getMimeType() != null && gcBean.getMimeType().equalsIgnoreCase("overdue") || gcBean.getTaskStatus().equalsIgnoreCase("reminder") || (gcBean.getSubType() != null && gcBean.getSubType().equalsIgnoreCase("buzzrequest"))) {
+                                if (gcBean.getMimeType() != null && (gcBean.getMimeType().equalsIgnoreCase("overdue") || gcBean.getMimeType().equalsIgnoreCase("reminder")) || (gcBean.getSubType() != null && gcBean.getSubType().equalsIgnoreCase("buzzrequest"))) {
                                     if (gcBean.getMsg_status() == 15)
                                         holder.txt_des_under.setBackgroundResource(R.drawable.un_answer_bubble_9);
                                     else
@@ -2872,7 +2918,7 @@ public class MediaListAdapter extends ArrayAdapter<TaskDetailsBean> {
 //                                            list_mem = "Me," + list_mem;
                                             list_mem = "You";
                                         }
-                                    }else {
+                                    } else {
                                         String Mem_name = mem_list.split(",")[j];
                                         Log.i("MediaList ", "value==>  " + Mem_name);
                                         if (!Mem_name.equalsIgnoreCase(Appreference.loginuserdetails.getUsername())) {
@@ -2903,7 +2949,7 @@ public class MediaListAdapter extends ArrayAdapter<TaskDetailsBean> {
                                 } else {
                                     String list1 = VideoCallDataBase.getDB(context).getName(mem_list);
                                     mem_list = list1 + " Left";
-                                    Log.i("MediaList ", "Name ### ==>  " + list1 + " mem_list==> "+mem_list);
+                                    Log.i("MediaList ", "Name ### ==>  " + list1 + " mem_list==> " + mem_list);
                                 }
                                 holder.txt_des_under.setBackgroundResource(R.drawable.in_message_bg);
                                 holder.txt_des.setText(mem_list);
@@ -3016,6 +3062,9 @@ public class MediaListAdapter extends ArrayAdapter<TaskDetailsBean> {
                             } else if (gcBean.getSubType() != null && gcBean.getSubType().equalsIgnoreCase("taskDateChangedRequest")) {
                                 holder.txt_des.setTextColor(Color.BLACK);
                                 holder.sender_msg_type.setText("DateChangedRequest");
+                            } else if (gcBean.getMimeType() != null && (gcBean.getMimeType().equalsIgnoreCase("reminder") || gcBean.getMimeType().equalsIgnoreCase("overdue"))) {
+                                holder.txt_des.setTextColor(Color.WHITE);
+                                holder.time.setTextColor(Color.WHITE);
                             } else {
                                 holder.txt_des.setTextColor(Color.BLACK);
                                 holder.time.setTextColor(Color.WHITE);
@@ -3124,7 +3173,7 @@ public class MediaListAdapter extends ArrayAdapter<TaskDetailsBean> {
                                             Log.i("task", "date Requested not same user " + gcBean.getMsg_status());
                                             Log.i("overdue", "overdue -->4 ");
                                             String task_observers = VideoCallDataBase.getDB(context).getProjectParentTaskId("select taskObservers from taskHistoryInfo where taskId ='" + gcBean.getTaskId() + "'");
-                                            if (task_observers.contains(Appreference.loginuserdetails.getUsername())) {
+                                            if (task_observers != null && !task_observers.equalsIgnoreCase("") && !task_observers.equalsIgnoreCase("null") && task_observers.contains(Appreference.loginuserdetails.getUsername())) {
                                                 holder.dateChangeRequest_icon.setVisibility(View.GONE);
                                                 Log.i("overdue", "dateChangeRequest_icon -->gone ");
                                             } else {
@@ -3148,7 +3197,7 @@ public class MediaListAdapter extends ArrayAdapter<TaskDetailsBean> {
                                             Log.i("overdue", "overdue -->5 ");
                                             boolean isObserver;
                                             String task_observers = VideoCallDataBase.getDB(context).getProjectParentTaskId("select taskObservers from taskHistoryInfo where taskId ='" + gcBean.getTaskId() + "'");
-                                            if (task_observers!=null && task_observers.contains(Appreference.loginuserdetails.getUsername())) {
+                                            if (task_observers != null && !task_observers.equalsIgnoreCase("") && !task_observers.equalsIgnoreCase("null") && task_observers.contains(Appreference.loginuserdetails.getUsername())) {
                                                 holder.dateChangeRequest_icon.setVisibility(View.GONE);
                                                 Log.i("overdue", "dateChangeRequest_icon -->gone ");
                                             } else {
@@ -3177,6 +3226,7 @@ public class MediaListAdapter extends ArrayAdapter<TaskDetailsBean> {
                                         holder.receiver_name.setText(holder.receiver_name_name);
                                     } else {
                                         date_hdr = "Reminder Details";
+                                        Log.i("task", "date getRespondDateChange " + groupMemberAccess.getRespondDateChange());
                                         if ((gcBean.getTaskType() != null && gcBean.getTaskType().equalsIgnoreCase("Group") && groupMemberAccess.getRespondDateChange() != null && groupMemberAccess.getRespondDateChange().equalsIgnoreCase("1") && gcBean.getMsg_status() == 10) || (gcBean.getTaskType() != null && gcBean.getTaskType().equalsIgnoreCase("individual") && gcBean.getMsg_status() == 10 && gcBean.getToUserName().equalsIgnoreCase(Appreference.loginuserdetails.getUsername())) || (gcBean.getProjectId() != null && !gcBean.getProjectId().equalsIgnoreCase(null) && !gcBean.getProjectId().equalsIgnoreCase("") && !gcBean.getProjectId().equalsIgnoreCase("null") && gcBean.getMsg_status() == 10)) {
                                             Log.i("task", "date Assigned " + gcBean.getMsg_status());
                                             Log.i("groupMemberAccess", "ML if  " + groupMemberAccess.getRespondDateChange() + " " + gcBean.getProjectId() + " " + gcBean.getTaskType());
@@ -3197,8 +3247,8 @@ public class MediaListAdapter extends ArrayAdapter<TaskDetailsBean> {
                             } else {
                                 Log.i("Buzz", "receiver gcBean.getSubType() 1 " + gcBean.getSubType());
                                 try {
-                                    if ((gcBean.getTaskStatus() != null && (gcBean.getTaskStatus().equalsIgnoreCase("overdue") || gcBean.getTaskStatus().equalsIgnoreCase("reminder")) || gcBean.getMimeType().equalsIgnoreCase("overdue")) || (gcBean.getSubType() != null && gcBean.getSubType().equalsIgnoreCase("buzzrequest"))) {
-                                        if ((gcBean.getMimeType() != null && gcBean.getMimeType().equalsIgnoreCase("overdue")) || (gcBean.getTaskStatus() != null && gcBean.getTaskStatus().equalsIgnoreCase("reminder")) || (gcBean.getSubType() != null && gcBean.getSubType().equalsIgnoreCase("buzzrequest"))) {
+                                    if ((gcBean.getMimeType() != null && gcBean.getMimeType().equalsIgnoreCase("overdue")) || (gcBean.getMimeType() != null && gcBean.getMimeType().equalsIgnoreCase("reminder")) || (gcBean.getSubType() != null && gcBean.getSubType().equalsIgnoreCase("buzzrequest"))) {
+                                        if ((gcBean.getMimeType() != null && gcBean.getMimeType().equalsIgnoreCase("overdue")) || (gcBean.getMimeType() != null && gcBean.getMimeType().equalsIgnoreCase("reminder")) || (gcBean.getSubType() != null && gcBean.getSubType().equalsIgnoreCase("buzzrequest"))) {
                                             holder.receiver_side_description_layout.setBackgroundResource(R.drawable.redreceiver1);
                                         } else {
                                             Log.i("Buzz", "receiver if gcBean.getSubType() 4 " + gcBean.getSubType());
@@ -3287,7 +3337,7 @@ public class MediaListAdapter extends ArrayAdapter<TaskDetailsBean> {
                                         } else {
                                             String list1 = VideoCallDataBase.getDB(context).getName(mem_list);
                                             mem_list = list1 + " Left";
-                                            Log.i("MediaList ", "Name ### ==> @@ " + list1 + " mem_list==> "+mem_list);
+                                            Log.i("MediaList ", "Name ### ==> @@ " + list1 + " mem_list==> " + mem_list);
                                         }
                                         holder.receiver_side_description_layout.setBackgroundResource(R.drawable.grey_im);
                                         holder.rcv_des.setText(mem_list);
@@ -3350,6 +3400,9 @@ public class MediaListAdapter extends ArrayAdapter<TaskDetailsBean> {
                                 } else {
                                     holder.leave.setVisibility(View.GONE);
                                 }
+                            } else if (gcBean.getMimeType() != null && (gcBean.getMimeType().equalsIgnoreCase("reminder") || gcBean.getMimeType().equalsIgnoreCase("overdue"))) {
+                                holder.rcv_des.setTextColor(Color.WHITE);
+                                holder.time.setTextColor(Color.WHITE);
                             } else {
                                 holder.rcv_des.setTextColor(Color.BLACK);
                             }
@@ -3359,8 +3412,8 @@ public class MediaListAdapter extends ArrayAdapter<TaskDetailsBean> {
                     holder.both_side_list_image.setVisibility(View.VISIBLE);
                     holder.text_views.setVisibility(View.GONE);
                     holder.video_play_icon.setVisibility(View.VISIBLE);
-                    holder.date_header_text.setVisibility(View.GONE);
-                    String dd3 = "";
+                    holder.date_header_text.setVisibility(View.VISIBLE);
+                    String dd3;
                     dd3 = setConversationTime(gcBean);
                     holder.time_under_text.setText(dd3);
                     if (gcBean.getSubType() != null && gcBean.getSubType().equalsIgnoreCase("private")) {
@@ -3391,7 +3444,7 @@ public class MediaListAdapter extends ArrayAdapter<TaskDetailsBean> {
                         holder.sender_side_list_image.setVisibility(View.VISIBLE);
                         holder.frame_layout.setVisibility(View.VISIBLE);
                         holder.receiver_side_list_image.setVisibility(View.GONE);
-                        holder.text_header.setVisibility(View.GONE);
+//                        holder.text_header.setVisibility(View.VISIBLE);
                         holder.video_play_icon.setVisibility(View.VISIBLE);
                         holder.thumb_image.setVisibility(View.VISIBLE);
                         holder.thumb_image.setScaleType(ImageView.ScaleType.CENTER_CROP);
@@ -3425,7 +3478,7 @@ public class MediaListAdapter extends ArrayAdapter<TaskDetailsBean> {
                         lllp.gravity = Gravity.LEFT;
                         holder.timeview.setLayoutParams(lllp);
                         holder.receiver_side_list_image.setVisibility(View.VISIBLE);
-                        holder.text_header.setVisibility(View.GONE);
+//                        holder.text_header.setVisibility(View.VISIBLE);
                         holder.ls_video_play_icon.setVisibility(View.VISIBLE);
                         holder.video_play_icon.setVisibility(View.GONE);
                         holder.ls_frame_layout.setVisibility(View.VISIBLE);
@@ -3456,12 +3509,12 @@ public class MediaListAdapter extends ArrayAdapter<TaskDetailsBean> {
                 } else if (gcBean.getMimeType() != null && gcBean.getMimeType().equalsIgnoreCase("map") && (gcBean.getTaskDescription() != null)) {
                     holder.both_side_list_image.setVisibility(View.VISIBLE);
                     holder.text_views.setVisibility(View.GONE);
-                    holder.date_header_text.setVisibility(View.GONE);
+                    holder.date_header_text.setVisibility(View.VISIBLE);
                     if (gcBean.getFromUserName() != null && gcBean.getFromUserName().equalsIgnoreCase(Appreference.loginuserdetails.getUsername())) {
                         holder.sender_side_list_image.setVisibility(View.VISIBLE);
                         holder.frame_layout.setVisibility(View.VISIBLE);
                         holder.receiver_side_list_image.setVisibility(View.GONE);
-                        holder.text_header.setVisibility(View.GONE);
+//                        holder.text_header.setVisibility(View.VISIBLE);
                         holder.video_play_icon.setVisibility(View.GONE);
                         holder.thumb_audio.setVisibility(View.GONE);
                         holder.sender_side_doc_icon.setVisibility(View.GONE);
@@ -3480,7 +3533,7 @@ public class MediaListAdapter extends ArrayAdapter<TaskDetailsBean> {
                         lllp.gravity = Gravity.LEFT;
                         holder.timeview.setLayoutParams(lllp);
                         holder.receiver_side_list_image.setVisibility(View.GONE);
-                        holder.text_header.setVisibility(View.GONE);
+//                        holder.text_header.setVisibility(View.VISIBLE);
                         holder.ls_video_play_icon.setVisibility(View.GONE);
                         holder.ls_frame_layout.setVisibility(View.GONE);
                         holder.receiver_side_doc_iconview.setVisibility(View.GONE);
@@ -3507,7 +3560,7 @@ public class MediaListAdapter extends ArrayAdapter<TaskDetailsBean> {
                         holder.receiver_side_list_image.setVisibility(View.GONE);
                         holder.video_play_icon.setVisibility(View.GONE);
                         holder.thumb_image.setVisibility(View.VISIBLE);
-                        holder.text_header.setVisibility(View.GONE);
+//                        holder.text_header.setVisibility(View.VISIBLE);
                         holder.ls_thumb_audio.setVisibility(View.GONE);
                         holder.sender_side_doc_icon.setVisibility(View.GONE);
                         holder.sender_side_doc_iconview.setVisibility(View.GONE);
@@ -3529,7 +3582,7 @@ public class MediaListAdapter extends ArrayAdapter<TaskDetailsBean> {
                         holder.ls_thumb_image.setVisibility(View.VISIBLE);
                         holder.receiver_side_doc_iconview.setVisibility(View.GONE);
                         holder.ls_frame_layout.setVisibility(View.VISIBLE);
-                        holder.text_header.setVisibility(View.GONE);
+//                        holder.text_header.setVisibility(View.VISIBLE);
                         holder.receiver_side_list_image.setVisibility(View.VISIBLE);
                         holder.thumb_audio.setVisibility(View.GONE);
                         holder.ls_thumb_audio.setVisibility(View.GONE);
@@ -3547,9 +3600,9 @@ public class MediaListAdapter extends ArrayAdapter<TaskDetailsBean> {
                     holder.both_side_list_image.setGravity(View.GONE);
                     holder.sender_side_list_image.setVisibility(View.GONE);
                     holder.receiver_side_list_image.setVisibility(View.GONE);
-                    holder.text_header.setVisibility(View.GONE);
+//                    holder.text_header.setVisibility(View.VISIBLE);
                     holder.text_views.setVisibility(View.VISIBLE);
-                    holder.date_header_text.setVisibility(View.GONE);
+                    holder.date_header_text.setVisibility(View.VISIBLE);
                     holder.sender_side_add_txt.setVisibility(View.GONE);
 
                     if (imageFile != null && !imageFile.equalsIgnoreCase("")) {
@@ -3560,7 +3613,7 @@ public class MediaListAdapter extends ArrayAdapter<TaskDetailsBean> {
                             LinearLayout.LayoutParams lllp = (LinearLayout.LayoutParams) holder.timeview.getLayoutParams();
                             lllp.gravity = Gravity.RIGHT;
                             holder.timeview.setLayoutParams(lllp);
-                            if (gcBean.getTaskStatus() != null && (gcBean.getTaskStatus().equalsIgnoreCase("overdue") || gcBean.getTaskStatus().equalsIgnoreCase("reminder"))) {
+                            if ((gcBean.getMimeType() != null && gcBean.getMimeType().equalsIgnoreCase("overdue")) || (gcBean.getMimeType() != null && gcBean.getMimeType().equalsIgnoreCase("reminder"))) {
                                 holder.txt_des_under.setBackgroundResource(R.drawable.redsender1);
                                 holder.txt_des.setText(gcBean.getTaskDescription());
                             } else {
@@ -3671,14 +3724,18 @@ public class MediaListAdapter extends ArrayAdapter<TaskDetailsBean> {
                             if (gcBean.getSubType() != null && gcBean.getSubType().equalsIgnoreCase("private")) {
                                 holder.rcv_des.setTextColor(Color.BLACK);
                             } else if (gcBean.getSubType() != null && gcBean.getSubType().equalsIgnoreCase("taskDescription")) {
-                                holder.txt_des.setTextColor(Color.RED);
+                                holder.rcv_des.setTextColor(Color.RED);
                             } else if (gcBean.getSubType() != null && gcBean.getSubType().equalsIgnoreCase("percentageCompleted")) {
-                                holder.txt_des.setTextColor(Color.BLACK);
+                                holder.rcv_des.setTextColor(Color.BLACK);
                             } else if (gcBean.getSubType() != null && gcBean.getSubType().equalsIgnoreCase("taskDateChangedRequest")) {
-                                holder.txt_des.setTextColor(Color.BLACK);
+                                holder.rcv_des.setTextColor(Color.BLACK);
                             } else {
-                                holder.txt_des.setTextColor(Color.WHITE);
-                                holder.time.setTextColor(Color.WHITE);
+                                holder.rcv_des.setTextColor(Color.BLACK);
+                                holder.time.setTextColor(Color.BLACK);
+                            }
+
+                            if (gcBean.getMimeType().equalsIgnoreCase("leaveRequest")) {
+                                holder.rcv_des.setTextColor(Color.BLACK);
                             }
                         }
                     }
@@ -3688,9 +3745,9 @@ public class MediaListAdapter extends ArrayAdapter<TaskDetailsBean> {
                     holder.both_side_list_image.setGravity(View.GONE);
                     holder.sender_side_list_image.setVisibility(View.GONE);
                     holder.receiver_side_list_image.setVisibility(View.GONE);
-                    holder.text_header.setVisibility(View.GONE);
+//                    holder.text_header.setVisibility(View.VISIBLE);
                     holder.text_views.setVisibility(View.VISIBLE);
-                    holder.date_header_text.setVisibility(View.GONE);
+                    holder.date_header_text.setVisibility(View.VISIBLE);
                     holder.sender_side_add_txt.setVisibility(View.GONE);
 
                     if (imageFile != null && !imageFile.equalsIgnoreCase("")) {
@@ -3736,7 +3793,7 @@ public class MediaListAdapter extends ArrayAdapter<TaskDetailsBean> {
                                     holder.reply_sender_name.setText(gcBean.getReply_sender_name());
                                 }
                             }
-                            if (gcBean.getTaskStatus() != null && (gcBean.getTaskStatus().equalsIgnoreCase("overdue") || gcBean.getTaskStatus().equalsIgnoreCase("reminder"))) {
+                            if ((gcBean.getMimeType() != null && gcBean.getMimeType().equalsIgnoreCase("overdue")) || (gcBean.getMimeType() != null && gcBean.getMimeType().equalsIgnoreCase("reminder"))) {
                                 holder.txt_des_under.setBackgroundResource(R.drawable.redsender1);
                                 holder.txt_des.setText(gcBean.getTaskDescription());
                             } else if (gcBean.getSubType() != null && gcBean.getSubType().equalsIgnoreCase("taskDescription") && !gcBean.getMimeType().equalsIgnoreCase("date")) {
@@ -3924,7 +3981,7 @@ public class MediaListAdapter extends ArrayAdapter<TaskDetailsBean> {
                                     }
                                 }
                             } else {
-                                if (gcBean.getTaskStatus() != null && (gcBean.getTaskStatus().equalsIgnoreCase("overdue") || (gcBean.getTaskStatus().equalsIgnoreCase("reminder") || (gcBean.getShow_progress() > 0 && gcBean.getShow_progress() == 12 && gcBean.getTaskStatus().equalsIgnoreCase("Assigned"))))) {
+                                if ((gcBean.getMimeType() != null && gcBean.getMimeType().equalsIgnoreCase("overdue")) || (gcBean.getMimeType() != null && gcBean.getMimeType().equalsIgnoreCase("reminder"))) {
                                     holder.receiver_side_description_layout.setBackgroundResource(R.drawable.redreceiver1);
                                     holder.rcv_des.setText(gcBean.getTaskDescription());
                                     String dd55 = "";
@@ -3997,6 +4054,7 @@ public class MediaListAdapter extends ArrayAdapter<TaskDetailsBean> {
                 } else {
                     observeres = VideoCallDataBase.getDB(context).getProjectParentTaskId("select taskObservers from taskHistoryInfo where taskId='" + gcBean.getTaskId() + "'");
                 }
+                Log.i("task", " Nothing observeres " + observeres);
                 if (observeres != null) {
                     if (observeres.contains(",")) {
                         String nm[] = observeres.split(",");
@@ -4531,7 +4589,7 @@ public class MediaListAdapter extends ArrayAdapter<TaskDetailsBean> {
         if (mediaListBean.getTaskDescription() != null && mediaListBean.getTaskDescription().equalsIgnoreCase("Message has been Removed")) {
             withdraw_ll.setVisibility(View.GONE);
         }
-        if(mediaListBean.getProjectId()!=null){
+        if (mediaListBean.getProjectId() != null) {
             delete_ll.setVisibility(View.GONE);
             reply_ll.setVisibility(View.GONE);
         }

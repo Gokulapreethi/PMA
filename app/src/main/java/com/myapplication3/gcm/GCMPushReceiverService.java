@@ -65,6 +65,7 @@ public class GCMPushReceiverService extends FirebaseMessagingService {
     private Handler handler = new Handler();
     //    String fislast_name;
     String collapseKey = "";
+    AppSharedpreferences appSharedpreferences;
 
     //This method will be called on every new message received
     @Override
@@ -82,6 +83,7 @@ public class GCMPushReceiverService extends FirebaseMessagingService {
             String title = null;
 
             context = getApplicationContext();
+            appSharedpreferences = AppSharedpreferences.getInstance(this);
 
 
 //            Log.d("gcmMessage", message.getCollapseKey());
@@ -161,11 +163,12 @@ public class GCMPushReceiverService extends FirebaseMessagingService {
                                         if (!VideoCallDataBase.getDB(context).getOverdueMsg(remTask_Id)) {
                                             if ((Services.ScreenReceiver.wasScreenOn || !Services.ScreenReceiver.wasScreenOn) && isApplicationBroughtToBackground())
                                                 sendNotification(message.getSentTime(), message.getCollapseKey(), data.get("message").toString());
-                                        } else {
                                         }
                                     } else if (message.getCollapseKey() != null && (message.getCollapseKey().equalsIgnoreCase("Call Notification") || collapseKey.equalsIgnoreCase("Call Notification"))) {
-                                        if ((Services.ScreenReceiver.wasScreenOn || !Services.ScreenReceiver.wasScreenOn) && isApplicationBroughtToBackground())
-                                            sendNotification(message.getSentTime(), message.getCollapseKey(), data.get("message").toString());
+                                        if ((Services.ScreenReceiver.wasScreenOn || !Services.ScreenReceiver.wasScreenOn) && isApplicationBroughtToBackground()) {
+                                            String username = VideoCallDataBase.getDB(context).getname(data.get("message").toString());
+                                            sendNotification(message.getSentTime(), message.getCollapseKey(), username);
+                                        }
                                     } else {
                                         if ((!Services.ScreenReceiver.wasScreenOn) && isApplicationBroughtToBackground())
                                             sendNotification(message.getSentTime(), message.getCollapseKey(), data.get("message").toString());
@@ -175,8 +178,10 @@ public class GCMPushReceiverService extends FirebaseMessagingService {
                                 Log.d("gcmMessage1", "App Logout state * *");
                                 if (AppSharedpreferences.getInstance(this).getBoolean("login") && (message.getCollapseKey() != null && (message.getCollapseKey().equalsIgnoreCase("Call Notification") || collapseKey.equalsIgnoreCase("Call Notification")))) {
                                     if (Appreference.context_table.get("mainactivity") == null && Appreference.context_table.get("loginactivity") == null) {
-                                        if ((Services.ScreenReceiver.wasScreenOn || !Services.ScreenReceiver.wasScreenOn) && isApplicationBroughtToBackground())
-                                            sendNotification(message.getSentTime(), message.getCollapseKey(), data.get("message").toString());
+                                        if ((Services.ScreenReceiver.wasScreenOn || !Services.ScreenReceiver.wasScreenOn) && isApplicationBroughtToBackground()) {
+                                            String username = VideoCallDataBase.getDB(context).getname(data.get("message").toString());
+                                            sendNotification(message.getSentTime(), message.getCollapseKey(), username);
+                                        }
                                     }
                                 }
                             }
@@ -227,14 +232,17 @@ public class GCMPushReceiverService extends FirebaseMessagingService {
 
                                                 //                                    String dateforrow1 = dateFormat.format(new Date());
                                                 Log.i("gcmMessage", "firingTime before " + firing_Time);
-                                                firing_Time = firing_Time.substring(0, 19);
+                                                if (firing_Time != null) {
+                                                    firing_Time = firing_Time.substring(0, 19);
+                                                }
                                                 Log.i("gcmMessage", "firingTime after " + firing_Time);
                                                 Log.i("gcmMessage", "Current UTC Time " + TimeZone.getTimeZone("UTC"));
                                                 String dateTime = UTCToLocalTime(firing_Time);
                                                 Log.i("gcmMessage", "LocalTime " + dateTime);
                                                 String tasktime = dateTime;
-
-                                                tasktime = tasktime.split(" ")[1];
+                                                if (tasktime != null) {
+                                                    tasktime = tasktime.split(" ")[1];
+                                                }
                                                 Log.i("gcmMessage", "tasktime " + tasktime);
                                                 //                                    Log.i("UTC", "sendMessage utc time" + dateforrow);
 
@@ -274,7 +282,7 @@ public class GCMPushReceiverService extends FirebaseMessagingService {
                                                     taskDetailsBean.setFromUserName(fromUser_Name);
                                                     Log.i("gcmMessage", "toUser overdue " + toUser_Name);
                                                     taskDetailsBean.setToUserName(toUser_Name);
-                                                    VideoCallDataBase.getDB(this).taskMsg_StatusOverdueUpdate(remTask_Id);
+                                                    VideoCallDataBase.getDB(this).updateOverdueStatus(remTask_Id);
 //                                                    updateOverdueMsg(taskDetailsBean);
                                                     //                                        String fromuserid = VideoCallDataBase.getDB(this).getReminderId(fromUser_Name);
                                                     taskDetailsBean.setFromUserId(fromuser_Id);
@@ -327,18 +335,27 @@ public class GCMPushReceiverService extends FirebaseMessagingService {
                                                         Log.d("gcmMessage7", "if method fire");
                                                     }
                                                 } else if (Appreference.context_table.containsKey("taskhistory")) {
-                                                    if (!taskDetailsBean.getCatagory().equalsIgnoreCase("chat")) {
+                                                    if (taskDetailsBean.getCatagory() != null && !taskDetailsBean.getCatagory().equalsIgnoreCase("chat")) {
                                                         VideoCallDataBase.getDB(this).insertORupdate_Task_history(taskDetailsBean);
                                                         //                                            VideoCallDataBase.getDB(this).insertORupdate_TaskHistoryInfo(taskDetailsBean);
-                                                        VideoCallDataBase.getDB(this).updateStatus(taskDetailsBean.getTaskId());
-                                                        if (taskDetailsBean.getTaskStatus() != null && taskDetailsBean.getTaskStatus().equalsIgnoreCase("overdue")) {
-                                                            VideoCallDataBase.getDB(this).updategrouptaskstatus("update taskHistoryInfo set taskStatus='overdue' where taskId='" + taskDetailsBean.getTaskId() + "'");
-                                                        } else {
-                                                            String qry = "select taskDescription from taskDetailsInfo where (taskId ='" + taskDetailsBean.getTaskId() + "') and ((taskDescription ='Task Accepted') or (taskDescription ='issue Accepted')) group by taskId";
-                                                            if (VideoCallDataBase.getDB(context).isAgendaRecordExists(qry)) {
-                                                                taskDetailsBean.setTaskStatus("Assigned");
+//                                                        VideoCallDataBase.getDB(this).updateStatus(taskDetailsBean.getTaskId());
+                                                        if (rem_projectId != null) {
+                                                            if (taskDetailsBean.getTaskStatus() != null && taskDetailsBean.getTaskStatus().equalsIgnoreCase("overdue")) {
+                                                                VideoCallDataBase.getDB(this).updategrouptaskstatus("update projectHistory set taskStatus='overdue' where taskId='" + taskDetailsBean.getTaskId() + "'");
+                                                            } else {
+//                                                                taskDetailsBean.setTaskStatus("inprogress");
+                                                                VideoCallDataBase.getDB(context).update_Project_history(taskDetailsBean);
                                                             }
-                                                            VideoCallDataBase.getDB(context).insertORupdate_TaskHistoryInfo(taskDetailsBean);
+                                                        } else {
+                                                            if (taskDetailsBean.getTaskStatus() != null && taskDetailsBean.getTaskStatus().equalsIgnoreCase("overdue")) {
+                                                                VideoCallDataBase.getDB(this).updategrouptaskstatus("update taskHistoryInfo set taskStatus='overdue' where taskId='" + taskDetailsBean.getTaskId() + "'");
+                                                            } else {
+//                                                                String qry = "select taskDescription from taskDetailsInfo where (taskId ='" + taskDetailsBean.getTaskId() + "') and ((taskDescription ='Task Accepted') or (taskDescription ='issue Accepted')) group by taskId";
+//                                                                if (!VideoCallDataBase.getDB(context).isAgendaRecordExists(qry)) {
+//                                                                    taskDetailsBean.setTaskStatus("Assigned");
+//                                                                }
+                                                                VideoCallDataBase.getDB(context).insertORupdate_TaskHistoryInfo(taskDetailsBean);
+                                                            }
                                                         }
                                                         TaskHistory taskHistory = (TaskHistory) Appreference.context_table.get("taskhistory");
                                                         if (taskHistory != null) {
@@ -354,35 +371,50 @@ public class GCMPushReceiverService extends FirebaseMessagingService {
                                                     if (!taskDetailsBean.getCatagory().equalsIgnoreCase("chat")) {
                                                         VideoCallDataBase.getDB(context).insertORupdate_Task_history(taskDetailsBean);
                                                         //                                            VideoCallDataBase.getDB(context).insertORupdate_TaskHistoryInfo(taskDetailsBean);
-                                                        if (taskDetailsBean.getTaskStatus() != null && taskDetailsBean.getTaskStatus().equalsIgnoreCase("overdue")) {
-                                                            VideoCallDataBase.getDB(this).updategrouptaskstatus("update taskHistoryInfo set taskStatus='overdue' where taskId='" + taskDetailsBean.getTaskId() + "'");
-                                                        } else {
-                                                            String qry = "select taskDescription from taskDetailsInfo where (taskId ='" + taskDetailsBean.getTaskId() + "') and ((taskDescription ='Task accepted') or (taskDescription ='issue accepted')) group by taskId";
-                                                            if (!VideoCallDataBase.getDB(context).isAgendaRecordExists(qry) && rem_projectId == null) {
-                                                                taskDetailsBean.setTaskStatus("Assigned");
-                                                            }
-                                                            VideoCallDataBase.getDB(context).insertORupdate_TaskHistoryInfo(taskDetailsBean);
-                                                        }
                                                         //                                            VideoCallDataBase.getDB(this).updateStatus(taskDetailsBean.getTaskId());
                                                         if (rem_projectId != null) {
-                                                            taskDetailsBean.setTaskStatus("inprogress");
-                                                            VideoCallDataBase.getDB(context).update_Project_history(taskDetailsBean);
+                                                            if (taskDetailsBean.getTaskStatus() != null && taskDetailsBean.getTaskStatus().equalsIgnoreCase("overdue")) {
+                                                                VideoCallDataBase.getDB(this).updategrouptaskstatus("update projectHistory set taskStatus='overdue' where taskId='" + taskDetailsBean.getTaskId() + "'");
+                                                            } else {
+//                                                                taskDetailsBean.setTaskStatus("inprogress");
+                                                                VideoCallDataBase.getDB(context).update_Project_history(taskDetailsBean);
+                                                            }
+                                                        } else {
+                                                            if (taskDetailsBean.getTaskStatus() != null && taskDetailsBean.getTaskStatus().equalsIgnoreCase("overdue")) {
+                                                                VideoCallDataBase.getDB(this).updategrouptaskstatus("update taskHistoryInfo set taskStatus='overdue' where taskId='" + taskDetailsBean.getTaskId() + "'");
+                                                            } else {
+//                                                                String qry = "select taskDescription from taskDetailsInfo where (taskId ='" + taskDetailsBean.getTaskId() + "') and ((taskDescription ='Task Accepted') or (taskDescription ='issue Accepted')) group by taskId";
+//                                                                if (!VideoCallDataBase.getDB(context).isAgendaRecordExists(qry) && rem_projectId == null) {
+//                                                                    taskDetailsBean.setTaskStatus("Assigned");
+//                                                                }
+                                                                VideoCallDataBase.getDB(context).insertORupdate_TaskHistoryInfo(taskDetailsBean);
+                                                            }
                                                         }
                                                         Log.d("gcmMessage8", "else method fire");
-                                                        ContactsFragment contactsFragment = (ContactsFragment) Appreference.context_table.get("contactsfragment");
-                                                        //                                 /*   Appreference.isPN = true;*/
-                                                        contactsFragment.refresh();
-                                                        //                                        if (services.ScreenReceiver.wasScreenOn)
-                                                        //                                            sendNotification(message.getSentTime(), message.getCollapseKey(), data.get("message").toString());
-                                                        ProjectHistory project_History = (ProjectHistory) Appreference.context_table.get("projecthistory");
-                                                        if (project_History != null) {
-                                                            Log.d("TaskHistory", "Value true refreshed-2");
-                                                            project_History.refresh();
-                                                        }
-                                                        ProjectsFragment project_fragment = (ProjectsFragment) Appreference.context_table.get("projectfragment");
-                                                        if (project_fragment != null) {
-                                                            Log.d("TaskHistory", "Value true refreshed-2");
-                                                            project_fragment.refresh();
+                                                        if (Appreference.context_table.containsKey("contactsfragment")) {
+                                                            ContactsFragment contactsFragment = (ContactsFragment) Appreference.context_table.get("contactsfragment");
+                                                            if (contactsFragment != null) {
+                                                                Log.d("gcmMessage", "Reminder contactsfragment refreshed");
+                                                                contactsFragment.refresh();
+                                                            }
+                                                        } else if (Appreference.context_table.containsKey("taskhistory")) {
+                                                            TaskHistory taskHistory = (TaskHistory) Appreference.context_table.get("taskhistory");
+                                                            if (taskHistory != null) {
+                                                                Log.d("gcmMessage", "Reminder taskhistory refreshed");
+                                                                taskHistory.refresh();
+                                                            }
+                                                        } else if (Appreference.context_table.containsKey("projecthistory")) {
+                                                            ProjectHistory project_History = (ProjectHistory) Appreference.context_table.get("projecthistory");
+                                                            if (project_History != null) {
+                                                                Log.d("gcmMessage", "Reminder projecthistory refreshed");
+                                                                project_History.refresh();
+                                                            }
+                                                        } else if (Appreference.context_table.containsKey("projectfragment")) {
+                                                            ProjectsFragment project_fragment = (ProjectsFragment) Appreference.context_table.get("projectfragment");
+                                                            if (project_fragment != null) {
+                                                                Log.d("gcmMessage", "Reminder projectfragment refreshed");
+                                                                project_fragment.refresh();
+                                                            }
                                                         }
                                                     }
                                                 }
@@ -399,21 +431,25 @@ public class GCMPushReceiverService extends FirebaseMessagingService {
                                 } else {
                                     Log.d("gcmMessage9", "Not in MainActivity");
                                     try {
-                                        Log.i("gcmMessage", "firingTime before " + firing_Time);
-                                        firing_Time = firing_Time.substring(0, 19);
-                                        Log.i("gcmMessage", "firingTime after " + firing_Time);
-                                        Log.i("gcmMessage", "Current UTC Time " + TimeZone.getTimeZone("UTC"));
-                                        String dateTime = UTCToLocalTime(firing_Time);
-                                        Log.i("gcmMessage", "LocalTime " + dateTime);
-                                        String tasktime = dateTime;
 
-                                        tasktime = tasktime.split(" ")[1];
-                                        Log.i("gcmMessage", "tasktime " + tasktime);
-                                        //                                    Log.i("UTC", "sendMessage utc time" + dateforrow);
+                                        String dateforrow = null, taskUTCtime = null, tasktime = null;
+                                        if (firing_Time != null) {
+                                            Log.i("gcmMessage", "firingTime before " + firing_Time);
+                                            firing_Time = firing_Time.substring(0, 19);
+                                            Log.i("gcmMessage", "firingTime after " + firing_Time);
+                                            Log.i("gcmMessage", "Current UTC Time " + TimeZone.getTimeZone("UTC"));
+                                            String dateTime = UTCToLocalTime(firing_Time);
+                                            Log.i("gcmMessage", "LocalTime " + dateTime);
+                                            tasktime = dateTime;
 
-                                        Log.i("time", "value");
-                                        String dateforrow = firing_Time;
-                                        String taskUTCtime = firing_Time;
+                                            tasktime = tasktime.split(" ")[1];
+                                            Log.i("gcmMessage", "tasktime " + tasktime);
+                                            //                                    Log.i("UTC", "sendMessage utc time" + dateforrow);
+
+                                            Log.i("time", "value");
+                                            dateforrow = firing_Time;
+                                            taskUTCtime = firing_Time;
+                                        }
                                         final TaskDetailsBean taskDetailsBean = new TaskDetailsBean();
                                         taskDetailsBean.setTaskName(rem_taskName);
                                         Log.i("gcmMessage", "rem_taskName " + rem_taskName);
@@ -434,6 +470,7 @@ public class GCMPushReceiverService extends FirebaseMessagingService {
                                         taskDetailsBean.setDateTime(dateTime);
                                         taskDetailsBean.setTaskUTCDateTime(dateforrow);
                                         if (task_overdue != null && task_overdue.equalsIgnoreCase("Y")) {
+                                            taskDetailsBean.setMimeType("overdue");
                                             taskDetailsBean.setTaskStatus("overdue");
                                             taskDetailsBean.setTaskDescription("This task is overdue");
                                             Log.i("gcmMessage", "fromUser overdue " + fromUser_Name);
@@ -452,6 +489,7 @@ public class GCMPushReceiverService extends FirebaseMessagingService {
                                         });*/
 
                                         } else {
+                                            taskDetailsBean.setMimeType("reminder");
                                             taskDetailsBean.setTaskStatus("reminder");
                                             Log.i("gcmMessage", "reminderText " + reminder_quote);
                                             taskDetailsBean.setTaskDescription(reminder_quote);
@@ -475,7 +513,6 @@ public class GCMPushReceiverService extends FirebaseMessagingService {
                                         }
                                         taskDetailsBean.setRead_status(2);
                                         taskDetailsBean.setMsg_status(6);
-                                        taskDetailsBean.setMimeType("text");
                                         taskDetailsBean.setTaskPriority("High");
                                         if (Ind_Grp != null && Ind_Grp.equalsIgnoreCase("N")) {
                                             taskDetailsBean.setTaskType("Individual");
@@ -497,14 +534,20 @@ public class GCMPushReceiverService extends FirebaseMessagingService {
                                                     Log.d("gcmReceiver", " category == " + taskDetailsBean.getCatagory() + "taskDetailsBean.getTaskStatus()  ==   " + taskDetailsBean.getTaskStatus());
                                                     if (taskDetailsBean.getCatagory() != null && !taskDetailsBean.getCatagory().equalsIgnoreCase("chat")) {
                                                         VideoCallDataBase.getDB(context).insertORupdate_Task_history(taskDetailsBean);
-                                                        if (taskDetailsBean.getTaskStatus() != null && taskDetailsBean.getTaskStatus().equalsIgnoreCase("overdue")) {
-                                                            VideoCallDataBase.getDB(context).updategrouptaskstatus("update taskHistoryInfo set taskStatus='overdue' where taskId='" + taskDetailsBean.getTaskId() + "'");
-                                                        } else {
-                                                            VideoCallDataBase.getDB(context).insertORupdate_TaskHistoryInfo(taskDetailsBean);
-                                                        }
+
                                                         if (rem_projectId != null) {
-                                                            taskDetailsBean.setTaskStatus("inprogress");
-                                                            VideoCallDataBase.getDB(context).update_Project_history(taskDetailsBean);
+//                                                            taskDetailsBean.setTaskStatus("inprogress");
+                                                            if (taskDetailsBean.getTaskStatus() != null && taskDetailsBean.getTaskStatus().equalsIgnoreCase("overdue")) {
+                                                                VideoCallDataBase.getDB(context).updategrouptaskstatus("update projectHistory set taskStatus='overdue' where taskId='" + taskDetailsBean.getTaskId() + "'");
+                                                            } else {
+                                                                VideoCallDataBase.getDB(context).update_Project_history(taskDetailsBean);
+                                                            }
+                                                        } else {
+                                                            if (taskDetailsBean.getTaskStatus() != null && taskDetailsBean.getTaskStatus().equalsIgnoreCase("overdue")) {
+                                                                VideoCallDataBase.getDB(context).updategrouptaskstatus("update taskHistoryInfo set taskStatus='overdue' where taskId='" + taskDetailsBean.getTaskId() + "'");
+                                                            } else {
+                                                                VideoCallDataBase.getDB(context).insertORupdate_TaskHistoryInfo(taskDetailsBean);
+                                                            }
                                                         }
                                                         Log.d("gcmMessage", "DB updated");
                                                     }
@@ -655,10 +698,11 @@ public class GCMPushReceiverService extends FirebaseMessagingService {
     }
 
     private void sendNotification(long when, String message, String title) {
-
+        ProjectDetailsBean projectDetailsBean = null;
+        TaskDetailsBean taskDetailsBean = null;
         try {
-            String msg = null;
-            String tle = null;
+//            String msg = null;
+//            String tle = null;
             Log.d("gcm", message + " == parms message ");
             Log.d("gcm", collapseKey + " == collapseKey");
             Log.d("gcmMessage", title + "");
@@ -671,28 +715,78 @@ public class GCMPushReceiverService extends FirebaseMessagingService {
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(intent);
             }
+            Intent intent;
 
-            Intent intent = new Intent(this, MainActivity.class);
+            if (Appreference.context_table.get("mainactivity") != null) {
+                intent = new Intent(this, NewTaskConversation.class);
+
+                String query = "select * from taskHistoryInfo where taskId ='" + remTask_Id + "'";
+                String query1 = "select * from projectHistory where taskId ='" + remTask_Id + "'";
+                Log.d("gcm ", "query   " + query + " query 1    " + query1);
+
+
+                try {
+                    String projectId = VideoCallDataBase.getDB(this).getProjectParentTaskId("select projectId from projectHistory where taskId ='" + remTask_Id + "'");
+
+                    if (projectId != null && !projectId.equalsIgnoreCase("")) {
+                        if (VideoCallDataBase.getDB(this).getProjectHistory(query1).size() > 0) {
+                            Log.d("gcm ", "project  query 1 size   " + VideoCallDataBase.getDB(this).getProjectHistory(query1).size());
+                            projectDetailsBean = VideoCallDataBase.getDB(this).getProjectHistory(query1).get(0);
+                        }
+                    } else if (VideoCallDataBase.getDB(this).getTaskHistoryInfo(query).size() > 0) {
+                        Log.d("gcm ", "task query size  " + VideoCallDataBase.getDB(this).getTaskHistoryInfo(query).size());
+                        taskDetailsBean = VideoCallDataBase.getDB(this).getTaskHistoryInfo(query).get(0);
+                    }
+
+                    intent = new Intent(getApplicationContext(), NewTaskConversation.class);
+                    if (projectId != null && !projectId.equalsIgnoreCase("")) {
+
+                        if ((projectDetailsBean != null ? projectDetailsBean.getId() : null) != null && !projectDetailsBean.getId().equalsIgnoreCase("")) {
+                            intent.putExtra("task", "projectHistory");
+                            intent.putExtra("projectHistoryBean", projectDetailsBean);
+                        }
+                    } else {
+                        intent.putExtra("task", "taskhistory");
+                        intent.putExtra("taskHistoryBean", taskDetailsBean);
+                        intent.putExtra("catagory", taskDetailsBean != null ? taskDetailsBean.getCatagory() : null);
+                    }
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            } else {
+                intent = new Intent(this, MainActivity.class);
+                intent.putExtra("taskId", remTask_Id);
+                intent.putExtra("value", "fcm");
+            }
+
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+
+
             int requestCode = 0;
             Uri sound;
-            PendingIntent pendingIntent = PendingIntent.getActivity(this, requestCode, intent, PendingIntent.FLAG_CANCEL_CURRENT);
+            PendingIntent pendingIntent = PendingIntent.getActivity(this, requestCode, intent, PendingIntent.FLAG_UPDATE_CURRENT);
             if (Appreference.context_table.get("mainactivity") != null) {
-                sound = null;
                 Log.d("gcmMessage", "App Active custom sound");
             } else {
                 sound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
                 Log.d("gcmMessage", "App killed default sound");
             }
             if (message == null || (message.equalsIgnoreCase("Task Reminder") || message.equalsIgnoreCase("do_not_collapse"))) {
-                message = "Task Reminder";
-                String fstlst_name = VideoCallDataBase.getDB(context).getName(fromUser_Name);
-                if (fstlst_name != null) {
-                    title = "Reminder Received from " + fstlst_name;
-                } else if (fromUser_Name != null) {
-                    title = "Reminder Received from " + fromUser_Name;
+                message = "Reminder Received in '" + rem_taskName + "'";
+                if (projectDetailsBean != null && projectDetailsBean.getId() != null && !projectDetailsBean.getId().equalsIgnoreCase("")) {
+                    title = "Reminder Received in Task : '" + rem_taskName + "' In project : '" + projectDetailsBean.getProjectName() + "'";
+                    Log.d("gcmMessageReminder", "If project Reminder message == " + message + "\n" + " title" + title);
                 } else {
-                    title = "Reminder Received";
+                    String fstlst_name = VideoCallDataBase.getDB(context).getName(fromUser_Name);
+                    if (fstlst_name != null) {
+                        title = "Reminder Received in Task : '" + rem_taskName + "' Id :" + remTask_Id + " From :" + fstlst_name;
+                    } else if (fromUser_Name != null) {
+                        title = "Reminder Received in Task : '" + rem_taskName + "' Id :" + remTask_Id + " From :" + fromUser_Name;
+                    } else {
+                        title = "Reminder Received";
+                    }
+                    Log.d("gcmMessageReminder", "If normal task Reminder message == " + message + "\n" + " title" + title);
                 }
             } else if (message != null && (message.equalsIgnoreCase("New Task"))) {
                 message = "New Task";
@@ -1102,7 +1196,7 @@ public class GCMPushReceiverService extends FirebaseMessagingService {
                     if (jsonObject.has("remainderDateTime")) {
                         remainder_DateTime = jsonObject.getString("remainderDateTime");
                     }
-                    String taskPriority = null;
+                    String taskPriority;
                     if (jsonObject.has("taskPriority")) {
                         taskPriority = jsonObject.getString("taskPriority");
                     } else {
@@ -1124,6 +1218,8 @@ public class GCMPushReceiverService extends FirebaseMessagingService {
                     Log.d("TaskCategory ", "NEW task gcm signalId   = = " + signalId);
 //                    String remainderDateTime = jsonObject.getString("remainderDateTime");
                     String taskName = jsonObject.getString("taskName");
+                    if (taskName != null)
+                        rem_taskName = taskName;
                     String planned_StartDateTime = null;
                     if (jsonObject.has("plannedStartDateTime")) {
                         planned_StartDateTime = jsonObject.getString("plannedStartDateTime");
