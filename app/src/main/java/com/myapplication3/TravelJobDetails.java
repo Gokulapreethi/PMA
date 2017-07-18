@@ -463,20 +463,18 @@ public class TravelJobDetails extends Activity implements View.OnClickListener, 
                 handler.post(new Runnable() {
                     @Override
                     public void run() {
-                        if(oracleProjectOwner != null && !oracleProjectOwner.equalsIgnoreCase(Appreference.loginuserdetails.getUsername()))
-                        {
+                        if (oracleProjectOwner != null && !oracleProjectOwner.equalsIgnoreCase(Appreference.loginuserdetails.getUsername())) {
                             ll_2.setVisibility(View.GONE);
                             status_job.setVisibility(View.VISIBLE);
                             travel_job.setVisibility(View.VISIBLE);
-                        }else
-                        {
+                        } else {
                             ll_2.setVisibility(View.GONE);
                             status_job.setVisibility(View.GONE);
                             travel_job.setVisibility(View.GONE);
                         }
                     }
                 });
-            }else if(taskDetailsBean.getSubType()!=null && taskDetailsBean.getSubType().equalsIgnoreCase("deassign")){
+            } else if (taskDetailsBean.getSubType() != null && taskDetailsBean.getSubType().equalsIgnoreCase("deassign")) {
                 handler.post(new Runnable() {
                     @Override
                     public void run() {
@@ -917,7 +915,7 @@ public class TravelJobDetails extends Activity implements View.OnClickListener, 
                 chatBean.setSubType("deassign");
                 chatBean.setTaskRequestType(subType);
                 chatBean.setTaskStatus("unassigned");
-                taskStatus="unassigned";
+                taskStatus = "unassigned";
                 chatBean.setTaskReceiver("");
                 chatBean.setToUserName("");
                 chatBean.setToUserId("");
@@ -1307,16 +1305,25 @@ public class TravelJobDetails extends Activity implements View.OnClickListener, 
             Log.i("travelJobDetails ", "updateMessageStatus==> @@ ");
             for (TaskDetailsBean detailsBean : taskList) {
                 if (detailsBean.getSignalid() != null && detailsBean.getSignalid().equalsIgnoreCase(taskDetailsBean.getSignalid())) {
-                    Log.i("TaskObserver", "task --> ? " + detailsBean.getMsg_status());
-                    if (detailsBean.getMsg_status() <= 0) {
+                    Log.i("TaskObserver", "task " + detailsBean.getMsg_status());
+                    Log.i("TaskObserver", "getSignalid ==>  " + taskDetailsBean.getSignalid());
+                    Log.i("TaskObserver", "getSignalid ==>  " + detailsBean.getSignalid());
+                    if (detailsBean.getMsg_status() <= 0 && taskDetailsBean.getMsg_status() != 24) {
                         detailsBean.setMsg_status(1);
-                        Log.i("TaskObserver", "task if ---> ? " + detailsBean.getMsg_status());
+                        Log.i("TaskObserver", "task if " + detailsBean.getMsg_status());
+                    } else if (taskDetailsBean.getMsg_status() == 24) {
+                        detailsBean.setMsg_status(24);
                     }
                     break;
+                } else if (taskDetailsBean.getMsg_status() == 1) {
+                    if (detailsBean.getMsg_status() == 24) {
+                        detailsBean.setMsg_status(1);
+                    }
                 }
             }
             refresh();
         }
+
     }
 
 
@@ -1834,7 +1841,7 @@ public class TravelJobDetails extends Activity implements View.OnClickListener, 
             tasktime = dateTime;
             tasktime = tasktime.split(" ")[1];
             taskUTCtime = dateforrow;
-            Log.i("Sendmessage", "SubType * 0 "+chatBean.getSubType());
+            Log.i("Sendmessage", "SubType * 0 " + chatBean.getSubType());
             if (chatBean == null) {
                 Log.i("taskConversation", "private sendMessage * 0 ");
                 chatBean = new TaskDetailsBean();
@@ -1900,7 +1907,7 @@ public class TravelJobDetails extends Activity implements View.OnClickListener, 
                 chatBean.setTaskRequestType("nornal");
                 chatBean.setTaskStatus("unassigned");
                 chatBean.setCatagory("Template");
-                taskStatus="unassigned";
+                taskStatus = "unassigned";
                 if (projectGroup_Mems != null) {
                     int counter = 0;
                     for (int i = 0; i < projectGroup_Mems.length(); i++) {
@@ -1967,7 +1974,7 @@ public class TravelJobDetails extends Activity implements View.OnClickListener, 
                 }
                 refresh();
             }
-            Log.i("taskConversation", "taskList$$ ==>  " +  taskList.size());
+            Log.i("taskConversation", "taskList$$ ==>  " + taskList.size());
             Log.i("taskConversation", "listOfObservers ==> " + listOfObservers.size());
             if (listOfObservers != null && listOfObservers.size() > 0) {
                 if (getResources().getString(R.string.proxyua).equalsIgnoreCase("enable")) {
@@ -2201,6 +2208,7 @@ public class TravelJobDetails extends Activity implements View.OnClickListener, 
             }
         }
     }
+
     @Override
     public void onBackPressed() {
         super.onBackPressed();
@@ -2210,6 +2218,7 @@ public class TravelJobDetails extends Activity implements View.OnClickListener, 
         finish();
         overridePendingTransition(R.anim.left_to_right, R.anim.right_to_left);
     }
+
     @Override
     protected void onResume() {
         super.onResume();
@@ -2316,7 +2325,7 @@ public class TravelJobDetails extends Activity implements View.OnClickListener, 
                     runOnUiThread(new Runnable() {
                         public void run() {
                             travel_job.setEnabled(true);
-                             if (projectCurrentStatus!=null && projectCurrentStatus.equalsIgnoreCase("completed")) {
+                            if (projectCurrentStatus != null && projectCurrentStatus.equalsIgnoreCase("completed")) {
                                 status_job.setVisibility(View.GONE);
                                 travel_job.setVisibility(View.GONE);
                             }
@@ -2332,9 +2341,10 @@ public class TravelJobDetails extends Activity implements View.OnClickListener, 
                         @Override
                         public void run() {
                             ProjectHistory projectHistory = (ProjectHistory) Appreference.context_table.get("projecthistory");
-                            if (projectHistory != null){
-                                Log.i("conv123","isDeassign ProgressBarInvisible  projectHistory not null....===>");
-                                projectHistory.setProgressBarInvisible();}
+                            if (projectHistory != null) {
+                                Log.i("conv123", "isDeassign ProgressBarInvisible  projectHistory not null....===>");
+                                projectHistory.setProgressBarInvisible();
+                            }
                             TravelJobDetails.this.finish();
                         }
                     });

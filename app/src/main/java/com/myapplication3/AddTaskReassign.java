@@ -62,9 +62,9 @@ public class AddTaskReassign extends Activity implements View.OnClickListener, W
             newTaskNo,/*newTaskDescription,*/
             dateforDate, percentage = "0";
     ArrayList<String> chatUsers, chatUsersName, listOfObservers;
-    String taskType, groupname, taskReceiver, projectid, listMembers, RemoveUser, isReassignNote,jobcodeno,activitycode;
-    boolean isTemplate = false, isProjectFromOracle,Self_Assign;
-    String SelectedUserList = null,SelectedUserList1="";
+    String taskType, groupname, taskReceiver, projectid, listMembers, RemoveUser, isReassignNote, jobcodeno, activitycode;
+    boolean isTemplate = false, isProjectFromOracle, Self_Assign;
+    String SelectedUserList = null, SelectedUserList1 = "";
     String SelectedUsersId = null;
     ProgressDialog dialog;
     int Clickposition;
@@ -121,7 +121,7 @@ public class AddTaskReassign extends Activity implements View.OnClickListener, W
             Self_Assign = getIntent().getBooleanExtra("selfAssign", false);
             jobcodeno = getIntent().getStringExtra("jobcodeno");
             activitycode = getIntent().getStringExtra("activitycode");
-            Clickposition = getIntent().getIntExtra("Clickposition",0);
+            Clickposition = getIntent().getIntExtra("Clickposition", 0);
             Log.i("ws123", "  AssignTask isProjectFromOracle ====>" + isProjectFromOracle);
             Log.i("add observer", "task type " + taskType);
             if (taskType != null)
@@ -146,8 +146,10 @@ public class AddTaskReassign extends Activity implements View.OnClickListener, W
                 //            newSubType=getIntent().getExtras().getString("subType");
                 //            newTaskDescription=getIntent().getExtras().getString("taskDescription");
                 title = (TextView) findViewById(R.id.txtView01);
-//                title.setText("Assign Task To");
-                title.setText("Job Card No : "+ jobcodeno +"\nActivity Code : "+activitycode);
+                if (isProjectFromOracle)
+                    title.setText("Job Card No : " + jobcodeno + "\nActivity Code : " + activitycode);
+                else
+                    title.setText("Assign Task To");
                 //submit.setBackgroundResource(android.R.drawable.btn_default);
                 //submit.setText("Assign");
                 isTemplate = true;
@@ -155,13 +157,18 @@ public class AddTaskReassign extends Activity implements View.OnClickListener, W
                 title = (TextView) findViewById(R.id.txtView01);
                 isProject = getIntent().getExtras().getString("isProject");
                 if (getIntent().getExtras().getString("isProject") != null && getIntent().getExtras().getString("isProject").toString().equalsIgnoreCase("Yes")) {
-//                    title.setText("Assign To");
-                    title.setText("Job Card No : "+ jobcodeno +"\nActivity Code : "+activitycode);
+                    if (isProjectFromOracle)
+                        title.setText("Job Card No : " + jobcodeno + "\nActivity Code : " + activitycode);
+                    else
+                        title.setText("Assign To");
                 } else {
                     title.setText("Assign Task To");
                 }
             }
-            title.setText("Job Card No : "+ jobcodeno +"\nActivity Code : "+activitycode);
+            if (isProjectFromOracle)
+                title.setText("Job Card No : " + jobcodeno + "\nActivity Code : " + activitycode);
+            else
+                title.setText("Assign To");
             Log.i("add observer", "group name --> 0 " + groupname);
         /*handler.post(new Runnable() {
             @Override
@@ -211,10 +218,9 @@ public class AddTaskReassign extends Activity implements View.OnClickListener, W
             taskTime = taskTime.split(" ")[1] + " " + taskTime.split(" ")[2];
             String query = "select * from taskDetailsInfo where loginuser='" + Appreference.loginuserdetails.getEmail() + "' and taskId='" + taskId + "' and mimeType='observer' order by id DESC LIMIT 1";
             ArrayList<TaskDetailsBean> taskDetailsBeenList = VideoCallDataBase.getDB(context).getTaskHistory(query);
-            if(isProjectFromOracle)
-            {
+            if (isProjectFromOracle) {
 
-                String SubTaskToUsers,ProjectToUsers;
+                String SubTaskToUsers, ProjectToUsers;
                 // remove task receiver and owner name in reassign task member list and add the owername in from note
 //        Log.i("ReassignNote", "getOwnerOfTask " + detailsBean.getOwnerOfTask() + " " + detailsBean.getTaskReceiver());
                 Log.i("ReassignTask", "isReassignNote ! " + isReassignNote);
@@ -487,8 +493,8 @@ public class AddTaskReassign extends Activity implements View.OnClickListener, W
                     taskDetailsBean.setEstimatedActivity("");
                     oracleProject_object.put("estimatedActivityHours", "");
                     JSONArray jsonArray = new JSONArray();
-    //                String SelectedUserList = null;
-                    int checkPos=0;
+                    //                String SelectedUserList = null;
+                    int checkPos = 0;
                     for (int position = 0; position < contactList.size(); position++) {
                         ContactBean item = contactList.get(position);
                         if (item.getIscheck()) {
@@ -509,13 +515,12 @@ public class AddTaskReassign extends Activity implements View.OnClickListener, W
 
                     }
                     Log.i("ws123", "AssignTask SelectedUserList=====>  " + SelectedUserList);
-    //                taskDetailsBean.setToUserName(SelectedUserList);
+                    //                taskDetailsBean.setToUserName(SelectedUserList);
                     oracleProject_object.put("listUser", jsonArray);
 
                     ProjectHistory projectHistory = (ProjectHistory) Appreference.context_table.get("projecthistory");
-                    if(projectHistory!=null)
-                    {
-                        Log.i("ProjectHistory","inside refresh  status projectHistory ========>"+projectHistory.projectDetailsBeans + "size bean "+projectHistory.projectDetailsBeans.size()+"buddayArrayAdapteer==>"+projectHistory.buddyArrayAdapter);
+                    if (projectHistory != null) {
+                        Log.i("ProjectHistory", "inside refresh  status projectHistory ========>" + projectHistory.projectDetailsBeans + "size bean " + projectHistory.projectDetailsBeans.size() + "buddayArrayAdapteer==>" + projectHistory.buddyArrayAdapter);
 
                         if (projectHistory.projectDetailsBeans != null && projectHistory.projectDetailsBeans.size() > 0 && projectHistory.buddyArrayAdapter != null) {
 
@@ -526,7 +531,7 @@ public class AddTaskReassign extends Activity implements View.OnClickListener, W
                             projectHistory.buddyArrayAdapter.notifyDataSetChanged();
                         }
                     }
-    //                taskDetailsBean.setFromUserId(String.valueOf(Appreference.loginuserdetails.getId()));
+                    //                taskDetailsBean.setFromUserId(String.valueOf(Appreference.loginuserdetails.getId()));
                     taskDetailsBean.setFromUserName(Appreference.loginuserdetails.getUsername());
                     taskDetailsBean.setTaskName(detailsBean.getTaskName());
                     taskDetailsBean.setTaskNo(detailsBean.getTaskNo());
@@ -545,11 +550,10 @@ public class AddTaskReassign extends Activity implements View.OnClickListener, W
                     taskDetailsBean.setOwnerOfTask(detailsBean.getOwnerOfTask());
                     Log.i("ASE", "Signalid " + taskDetailsBean.getSignalid());
                     Log.i("ASE", "SelectedUserList " + SelectedUserList);
-                    if (SelectedUserList.contains(",")){
+                    if (SelectedUserList.contains(",")) {
                         taskDetailsBean.setTaskType("Group");
                         taskDetailsBean.setTaskMemberList(SelectedUserList);
-                    }
-                    else{
+                    } else {
                         taskDetailsBean.setTaskType("individual");
                         taskDetailsBean.setToUserName(SelectedUserList);
                         taskDetailsBean.setToUserId(SelectedUsersId);
@@ -602,20 +606,20 @@ public class AddTaskReassign extends Activity implements View.OnClickListener, W
 
 
             }
-        }else
+        } else
             Toast.makeText(AddTaskReassign.this, "Check your internet connection", Toast.LENGTH_SHORT).show();
 
     }
-    private boolean getNetworkState()
-    {
-        boolean isNetwork=false;
-        ConnectivityManager ConnectionManager=(ConnectivityManager)getSystemService(Context.CONNECTIVITY_SERVICE);
-        if(ConnectionManager!=null) {
+
+    private boolean getNetworkState() {
+        boolean isNetwork = false;
+        ConnectivityManager ConnectionManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        if (ConnectionManager != null) {
             NetworkInfo networkInfo = ConnectionManager.getActiveNetworkInfo();
             if (networkInfo != null && networkInfo.isConnected() == true)
-                isNetwork= true;
+                isNetwork = true;
             else
-                isNetwork= false;
+                isNetwork = false;
         }
         return isNetwork;
     }
@@ -857,14 +861,14 @@ public class AddTaskReassign extends Activity implements View.OnClickListener, W
                         }
 */
                         Intent intent = new Intent();
-                        Log.i("ASE","RemoveUser "+ RemoveUser + " Receiver==>  "+detailsBean1.getTaskReceiver());
-                        Log.i("ASE","RemoveUserllist "+detailsBean1.getTaskMemberList());
+                        Log.i("ASE", "RemoveUser " + RemoveUser + " Receiver==>  " + detailsBean1.getTaskReceiver());
+                        Log.i("ASE", "RemoveUserllist " + detailsBean1.getTaskMemberList());
                         intent.putExtra("taskRemover", RemoveUser);
                         intent.putExtra("isProject", isProject);
                         intent.putExtra("taskBean", detailsBean1);
                         setResult(RESULT_OK, intent);
                         finish();
-                    }else {
+                    } else {
                         String result = (String) jsonObject.get("result_text");
                         Toast.makeText(AddTaskReassign.this, result, Toast.LENGTH_LONG).show();
                     }

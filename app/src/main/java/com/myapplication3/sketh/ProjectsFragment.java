@@ -826,7 +826,9 @@ public class ProjectsFragment extends Fragment implements View.OnClickListener, 
                     pjt_owner = projectDetailsBean.getProject_ownerName();
                 }
                 Log.i("Fragment", "pjt_owner ==> " + pjt_owner);
-                if (pjt_owner != null && pjt_owner.equalsIgnoreCase(Appreference.loginuserdetails.getUsername())) {
+                if (pjt_owner != null && pjt_owner.equalsIgnoreCase(Appreference.loginuserdetails.getUsername())
+                        || Appreference.loginuserdetails != null && Appreference.loginuserdetails.getRoleId() != null
+                        && Appreference.loginuserdetails.getRoleId().equalsIgnoreCase("2")) {
                     completed_status.setVisibility(View.VISIBLE);
                 }
                 if (pjt_owner != null && pjt_owner.equalsIgnoreCase(Appreference.loginuserdetails.getUsername())) {
@@ -874,7 +876,11 @@ public class ProjectsFragment extends Fragment implements View.OnClickListener, 
                     public void onClick(View v) {
                         PopupMenu popup = new PopupMenu(getActivity(), completed_status);
                         popup.getMenuInflater().inflate(R.menu.project_pop_menu, popup.getMenu());
+                        if(Appreference.loginuserdetails != null && Appreference.loginuserdetails.getRoleId() != null
+                                && Appreference.loginuserdetails.getRoleId().equalsIgnoreCase("2")){
+                            popup.getMenu().getItem(1).setVisible(false);
 
+                        }
                         popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                             public boolean onMenuItemClick(MenuItem item) {
                                 /*Toast.makeText(getActivity(),

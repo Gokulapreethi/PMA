@@ -1436,10 +1436,16 @@ public class MediaListAdapter extends ArrayAdapter<TaskDetailsBean> {
                             try {
                                 itemPosition = position;
                                 isreceiver = true;
-                                String query = "select * from taskDetailsInfo where signalid='" + gcBean.getSignalid() + "'";
-                                ArrayList<TaskDetailsBean> taskDetailsBeans_list = VideoCallDataBase.getDB(context).getTaskHistory(query);
-                                TaskDetailsBean taskDetailsBeanclick = taskDetailsBeans_list.get(0);    /* media delete */
-                                editmenu(taskDetailsBeanclick, holder.rcv_des, context);
+                                if (gcBean.getSubType() != null && gcBean.getSubType().equalsIgnoreCase("taskDescription")) {
+
+                                } else if (gcBean.getMimeType() != null && gcBean.getMimeType().equalsIgnoreCase("reminder")) {
+
+                                } else {
+                                    String query = "select * from taskDetailsInfo where signalid='" + gcBean.getSignalid() + "'";
+                                    ArrayList<TaskDetailsBean> taskDetailsBeans_list = VideoCallDataBase.getDB(context).getTaskHistory(query);
+                                    TaskDetailsBean taskDetailsBeanclick = taskDetailsBeans_list.get(0);    /* media delete */
+                                    editmenu(taskDetailsBeanclick, holder.rcv_des, context);
+                                }
                             } catch (Exception e) {
                                 e.printStackTrace();
                                 Appreference.printLog("MediaListAdapter", "rcv_des Exception: " + e.getMessage(), "WARN", null);
@@ -1456,10 +1462,16 @@ public class MediaListAdapter extends ArrayAdapter<TaskDetailsBean> {
                     try {
                         itemPosition = position;
                         isreceiver = true;
-                        String query = "select * from taskDetailsInfo where signalid='" + gcBean.getSignalid() + "'";
-                        ArrayList<TaskDetailsBean> taskDetailsBeans_list = VideoCallDataBase.getDB(context).getTaskHistory(query);
-                        TaskDetailsBean taskDetailsBeanclick = taskDetailsBeans_list.get(0);    /* media delete */
-                        editmenu(taskDetailsBeanclick, holder.receiver_side_description_layout, context);
+                        if (gcBean.getSubType() != null && gcBean.getSubType().equalsIgnoreCase("taskDescription")) {
+
+                        } else if (gcBean.getMimeType() != null && gcBean.getMimeType().equalsIgnoreCase("reminder")) {
+
+                        } else {
+                            String query = "select * from taskDetailsInfo where signalid='" + gcBean.getSignalid() + "'";
+                            ArrayList<TaskDetailsBean> taskDetailsBeans_list = VideoCallDataBase.getDB(context).getTaskHistory(query);
+                            TaskDetailsBean taskDetailsBeanclick = taskDetailsBeans_list.get(0);    /* media delete */
+                            editmenu(taskDetailsBeanclick, holder.receiver_side_description_layout, context);
+                        }
                     } catch (Exception e) {
                         e.printStackTrace();
                         Appreference.printLog("MediaListAdapter", "receiver_side_description_layout Exception: " + e.getMessage(), "WARN", null);
@@ -1509,7 +1521,11 @@ public class MediaListAdapter extends ArrayAdapter<TaskDetailsBean> {
                         public void run() {
                             try {
                                 itemPosition = position;
-                                if (gcBean.getMsg_status() == 0 && gcBean.getFromUserName().equalsIgnoreCase(Appreference.loginuserdetails.getUsername())) {
+                                if (gcBean.getSubType() != null && gcBean.getSubType().equalsIgnoreCase("taskDescription")) {
+
+                                } else if (gcBean.getMimeType() != null && gcBean.getMimeType().equalsIgnoreCase("reminder")) {
+
+                                } else if (gcBean.getMsg_status() == 0 && gcBean.getFromUserName().equalsIgnoreCase(Appreference.loginuserdetails.getUsername())) {
                                     String query = "select * from taskDetailsInfo where signalid='" + gcBean.getSignalid() + "'";
                                     ArrayList<TaskDetailsBean> taskDetailsBeans_list = VideoCallDataBase.getDB(context).getTaskHistory(query);
                                     TaskDetailsBean taskDetailsBeanclick = taskDetailsBeans_list.get(0);    /* media resend */
@@ -1539,8 +1555,12 @@ public class MediaListAdapter extends ArrayAdapter<TaskDetailsBean> {
                 public boolean onLongClick(View v) {
                     try {
                         itemPosition = position;
-                        if (gcBean.getMsg_status() == 0 && gcBean.getFromUserName().equalsIgnoreCase(Appreference.loginuserdetails.getUsername())) {
-                            String query = "select * from taskDetailsInfo where signalid='" + gcBean.getSignalid() + "'";
+                        if (gcBean.getSubType() != null && gcBean.getSubType().equalsIgnoreCase("taskDescription")) {
+
+                        } else if (gcBean.getMimeType() != null && gcBean.getMimeType().equalsIgnoreCase("reminder")) {
+
+                        } else if (gcBean.getMsg_status() == 0 && gcBean.getFromUserName().equalsIgnoreCase(Appreference.loginuserdetails.getUsername())) {
+                            String query = "select * from  taskDetailsInfo where signalid='" + gcBean.getSignalid() + "'";
                             ArrayList<TaskDetailsBean> taskDetailsBeans_list = VideoCallDataBase.getDB(context).getTaskHistory(query);
                             TaskDetailsBean taskDetailsBeanclick = taskDetailsBeans_list.get(0);    /* media resend */
                             editmenu(taskDetailsBeanclick, holder.txt_des_under, context);
@@ -1829,6 +1849,10 @@ public class MediaListAdapter extends ArrayAdapter<TaskDetailsBean> {
                                                 intent.putExtra("taskType", bean2.getTaskType());
                                                 intent.putExtra("toUserId", bean2.getToUserId());
                                                 intent.putExtra("ownerOfTask", bean2.getOwnerOfTask());
+                                                intent.putExtra("taskId", bean2.getTaskId());
+                                                if (bean2.getProjectId() != null) {
+                                                    intent.putExtra("projectId", bean2.getProjectId());
+                                                }
                                                 Log.i("groupMemberAccess", "medialist IsRemainderRequired ** " + bean2.getIsRemainderRequired());
                                                 Log.i("groupMemberAccess", "medialist getTaskType ** " + bean2.getTaskType());
                                                 Log.i("groupMemberAccess", "medialist getToUserId ** " + bean2.getToUserId());

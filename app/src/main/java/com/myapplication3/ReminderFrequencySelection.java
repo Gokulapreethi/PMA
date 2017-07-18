@@ -32,7 +32,7 @@ public class ReminderFrequencySelection extends Activity {
             public void onClick(View v) {
 
                 Intent intent = new Intent();
-                intent.putExtra("TimeFrequency", "Minute");
+                intent.putExtra("TimeFrequency", "Minutes");
                 setResult(RESULT_OK, intent);
                 finish();
             }
@@ -42,7 +42,7 @@ public class ReminderFrequencySelection extends Activity {
             public void onClick(View v) {
 
                 Intent intent = new Intent();
-                intent.putExtra("TimeFrequency", "Hour");
+                intent.putExtra("TimeFrequency", "Hours");
                 setResult(RESULT_OK, intent);
                 finish();
             }
@@ -52,7 +52,7 @@ public class ReminderFrequencySelection extends Activity {
             public void onClick(View v) {
 
                 Intent intent = new Intent();
-                intent.putExtra("TimeFrequency", "Day");
+                intent.putExtra("TimeFrequency", "Days");
                 setResult(RESULT_OK, intent);
                 finish();
             }

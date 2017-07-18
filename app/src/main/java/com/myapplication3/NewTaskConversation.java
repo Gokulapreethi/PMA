@@ -1025,1416 +1025,1341 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                 });
             }
         });
-        gridview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Log.i("gridview", "Position" + position);
-                try {
-                    String selected_text = texts[position];
-                    switch (selected_text) {
-                        case "Private":
-                            try {
-                                if (subType != null && subType.equalsIgnoreCase("private")) {
-                                    private_member = null;
-                                    subType = "normal";
-                                    des.setHint("");
-                                    icons.setBackgroundColor(getResources().getColor(R.color.white));
-                                    linear1.setBackgroundColor(getResources().getColor(R.color.white));
-                                    Toast.makeText(NewTaskConversation.this, "Private message disabled", Toast.LENGTH_SHORT).show();
-                                } else {
-                                    des.setHint("private message");
-                                    subType = "private";
-                                    icons.setBackgroundColor(getResources().getColor(R.color.grey));
-                                    linear1.setBackgroundColor(getResources().getColor(R.color.grey));
-                                    Toast.makeText(NewTaskConversation.this, "Private message enabled", Toast.LENGTH_SHORT).show();
-                                    if (taskType != null && taskType.equalsIgnoreCase("Group")) {
-                                        Intent intent = new Intent(NewTaskConversation.this, GroupPercentageStatus.class);
-                                        intent.putExtra("taskid", webtaskId);
-                                        intent.putExtra("groupId", String.valueOf(toUserId));
-                                        intent.putExtra("subtype", "private");
-                                        if (project) {
-                                            intent.putExtra("isProject", "yes");
-                                        } else {
-                                            intent.putExtra("isProject", "no");
+        gridview.setOnItemClickListener(
+                new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                        Log.i("gridview", "Position" + position);
+                        try {
+                            String selected_text = texts[position];
+                            Log.i("gridview", "Position selected_text  " + selected_text);
+                            switch (selected_text) {
+                                case "Private":
+                                    try {
+                                        if (taskStatus != null && !taskStatus.equalsIgnoreCase("abandoned") && !taskStatus.equalsIgnoreCase("pause")) {
+                                            if (subType != null && subType.equalsIgnoreCase("private")) {
+                                                private_member = null;
+                                                subType = "normal";
+                                                des.setHint("");
+                                                icons.setBackgroundColor(getResources().getColor(R.color.white));
+                                                linear1.setBackgroundColor(getResources().getColor(R.color.white));
+                                                Toast.makeText(NewTaskConversation.this, "Private message disabled", Toast.LENGTH_SHORT).show();
+                                            } else {
+//                                                                        des.setHint("private message");
+//                                                                        subType = "private";
+//                                                                        icons.setBackgroundColor(getResources().getColor(R.color.grey));
+//                                                                        linear1.setBackgroundColor(getResources().getColor(R.color.grey));
+//                                                                        Toast.makeText(NewTaskConversation.this, "Private message enabled", Toast.LENGTH_SHORT).show();
+                                                Log.i("gridview", "listOfObservers  " + listOfObservers.size() + " name " + listOfObservers);
+                                                String Observers = "", Qurey;
+                                                if (project) {
+                                                    Qurey = "select taskObservers from projectHistory where taskId='" + webtaskId + "'";
+                                                } else {
+                                                    Qurey = "select taskObservers from taskHistoryInfo where taskId='" + webtaskId + "'";
+                                                }
+                                                Log.i("gridview", "listOfObservers  " + Observers + " name " + Qurey);
+                                                Observers = VideoCallDataBase.getDB(context).getProjectParentTaskId(Qurey);
+                                                if ((taskType != null && taskType.equalsIgnoreCase("Group"))) {
+                                                    des.setHint("private message");
+                                                    subType = "private";
+                                                    icons.setBackgroundColor(getResources().getColor(R.color.grey));
+                                                    linear1.setBackgroundColor(getResources().getColor(R.color.grey));
+                                                    Toast.makeText(NewTaskConversation.this, "Private message enabled", Toast.LENGTH_SHORT).show();
+                                                    Intent intent = new Intent(NewTaskConversation.this, GroupPercentageStatus.class);
+                                                    intent.putExtra("taskid", webtaskId);
+                                                    intent.putExtra("groupId", String.valueOf(toUserId));
+                                                    intent.putExtra("subtype", "private");
+                                                    intent.putExtra("ownerOfTask", ownerOfTask);
+                                                    if (project) {
+                                                        intent.putExtra("isProject", "yes");
+                                                    } else {
+                                                        intent.putExtra("isProject", "no");
+                                                    }
+                                                    startActivityForResult(intent, 999);
+                                                } else if (Observers != null && Observers.length() > 0) {
+                                                    des.setHint("private message");
+                                                    subType = "private";
+                                                    icons.setBackgroundColor(getResources().getColor(R.color.grey));
+                                                    linear1.setBackgroundColor(getResources().getColor(R.color.grey));
+                                                    Toast.makeText(NewTaskConversation.this, "Private message enabled", Toast.LENGTH_SHORT).show();
+                                                    Log.i("private_message", "values " + listOfObservers.size() + "Name " + listOfObservers);
+                                                    Intent intent = new Intent(NewTaskConversation.this, GroupPercentageStatus.class);
+                                                    intent.putExtra("taskid", webtaskId);
+                                                    intent.putExtra("taskType", taskType);
+                                                    intent.putExtra("subtype", "private");
+                                                    intent.putExtra("ownerOfTask", ownerOfTask);
+                                                    if (project) {
+                                                        intent.putExtra("isProject", "yes");
+                                                    } else {
+                                                        intent.putExtra("isProject", "no");
+                                                    }
+                                                    startActivityForResult(intent, 999);
+                                                } else if (!ownerOfTask.equalsIgnoreCase(taskReceiver)) {
+                                                    des.setHint("private message");
+                                                    subType = "private";
+                                                    icons.setBackgroundColor(getResources().getColor(R.color.grey));
+                                                    linear1.setBackgroundColor(getResources().getColor(R.color.grey));
+                                                    Toast.makeText(NewTaskConversation.this, "Private message enabled", Toast.LENGTH_SHORT).show();
+                                                    private_member = VideoCallDataBase.getDB(context).getName(toUserName);
+                                                } else {
+                                                    Toast.makeText(context, "Unable to sent  Private Message for ME task", Toast.LENGTH_SHORT).show();
+                                                }
+                                            }
+                                        } else if (taskStatus != null && taskStatus.equalsIgnoreCase("abandoned")) {
+                                            Toast.makeText(context, "Unable to sent  Private Message task is in abandoned state ", Toast.LENGTH_SHORT).show();
+                                        } else if (taskStatus != null && taskStatus.equalsIgnoreCase("pause")) {
+                                            Toast.makeText(context, "Unable to sent  Private Message task is in pause state ", Toast.LENGTH_SHORT).show();
                                         }
-                                        Log.i("private message", "chatusers for private1 ");
-                                        startActivityForResult(intent, 999);
-                                        Log.i("private message", "chatusers for private1 ");
+                                        gridview.setVisibility(View.GONE);
+                                        icons.setVisibility(View.VISIBLE);
+                                        arrow = false;
+                                    } catch (Resources.NotFoundException e) {
+                                        e.printStackTrace();
+                                        Appreference.printLog("NewTaskConversation gridview Private click ", "Exception " + e.getMessage(), "WARN", null);
                                     }
-                                }
-                                gridview.setVisibility(View.GONE);
-                                icons.setVisibility(View.VISIBLE);
-                                arrow = false;
-                            } catch (Resources.NotFoundException e) {
-                                e.printStackTrace();
-                                Appreference.printLog("NewTaskConversation gridview Private click ", "Exception " + e.getMessage(), "WARN", null);
-                            }
-                            break;
-                        case "Priority":
-                            if (ownerOfTask != null && ownerOfTask.equalsIgnoreCase(Appreference.loginuserdetails.getUsername())) {
-                                Priority();
-                            }
-                            gridview.setVisibility(View.GONE);
-                            icons.setVisibility(View.VISIBLE);
-                            arrow = false;
-                            break;
-                        case "Escalation":
-                            try {
-                                if (!isTaskName) {
-                                    //                            Toast.makeText(getApplicationContext(), "Escalation Entry", Toast.LENGTH_SHORT).show();
-                                    showprogressforpriority("Loading Escalation Entry");
-                                    List<NameValuePair> tagNameValuePairs = new ArrayList<NameValuePair>();
-                                    Appreference.jsonRequestSender.getlistCustomHeaderTags(EnumJsonWebservicename.listCustomHeaderTags, tagNameValuePairs, NewTaskConversation.this);
-                                } else {
-                                    showToast("Please Enter TaskDescription and Make a NewTask ");
-                                }
-                                gridview.setVisibility(View.GONE);
-                                icons.setVisibility(View.VISIBLE);
-                                arrow = false;
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                                Appreference.printLog("NewTaskConversation", "Exception " + e.getMessage(), "WARN", null);
-                            }
-                            break;
-                        case "Custom1":
-                            try {
-                                final TaskDetailsBean detailsBean;
-                                String Querystatus = "Select * from projectStatus where projectId ='" + projectId + "' and taskId = '" + webtaskId + "'";
-                                detailsBean = VideoCallDataBase.getDB(context).getStatusCompletedProjectDetails(Querystatus);
-                                showCustom1PopUp(detailsBean);
+                                    break;
 
-                           /*     final TaskDetailsBean detailsBean;
-                                String Querystatus = "Select * from projectStatus where projectId ='" + projectId + "' and taskId = '" + webtaskId + "'";
-                                detailsBean = VideoCallDataBase.getDB(context).getStatusCompletedProjectDetails(Querystatus);
-                                Log.i("custom1", "signature --> ! " + detailsBean.getCustomerSignature());
-                                Log.i("custom1", "photo --> ! " + detailsBean.getPhotoPath());
-                                Log.i("custom1", "techsignature --> ! " + detailsBean.getTechnicianSignature());
-
-                                if (detailsBean.getCustomerSignature()!=null  && !detailsBean.getCustomerSignature().equalsIgnoreCase("")) {
-                                    File custom_sig = new File(detailsBean.getCustomerSignature());
-                                    if (custom_sig.exists()) {
-                                        Log.i("custom1", "signature --> 11!@==> " + detailsBean.getCustomerSignature());
-                                    } else {
-                                        Log.i("custom1", "signature --> 100!@==> " + detailsBean.getCustomerSignature());
-                                        if (detailsBean.getCustomerSignature() != null) {
-                                            Appreference.taskMultimediaDownload.put(detailsBean.getCustomerSignature(), detailsBean);
-                                            Log.i("profiledownload", "fileName--2 " + detailsBean.getCustomerSignature());
-                                            Log.i("task", "1 image" + detailsBean.getCustomerSignature());
-                                            new DownloadCustomImage(getResources().getString(R.string.task_reminder) + detailsBean.getCustomerSignature(), detailsBean.getCustomerSignature()).execute();
+                                case "Priority":
+                                    if (taskStatus != null && !taskStatus.equalsIgnoreCase("abandoned") && !taskStatus.equalsIgnoreCase("pause")) {
+                                        if (ownerOfTask != null && ownerOfTask.equalsIgnoreCase(Appreference.loginuserdetails.getUsername())) {
+                                            Priority();
                                         }
-                                    }
-                                }
-
-                                if (detailsBean.getPhotoPath()!=null  && !detailsBean.getPhotoPath().equalsIgnoreCase("")) {
-                                    File photo_path = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/High Message/" + detailsBean.getPhotoPath());
-                                    if (photo_path.exists()) {
-                                    }else{
-                                        if (detailsBean.getPhotoPath() != null) {
-                                            Appreference.taskMultimediaDownload.put(detailsBean.getPhotoPath(), detailsBean);
-                                            Log.i("profiledownload", "fileName--2 " + detailsBean.getPhotoPath());
-                                            Log.i("task", "1 image" + detailsBean.getPhotoPath());
-                                            new DownloadCustomImage(getResources().getString(R.string.task_reminder) + detailsBean.getPhotoPath(), detailsBean.getPhotoPath()).execute();
-                                        }
-                                    }
-                                }
-
-                                if ( detailsBean.getTechnicianSignature()!=null  && !detailsBean.getTechnicianSignature().equalsIgnoreCase("")) {
-                                    File tech_sig = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/High Message/" + detailsBean.getTechnicianSignature());
-                                    if (tech_sig.exists()) {
-                                    }else{
-                                        if (detailsBean.getTechnicianSignature() != null) {
-//                                            showStatusprogress();
-                                            Appreference.taskMultimediaDownload.put(detailsBean.getTechnicianSignature(), detailsBean);
-                                            Log.i("profiledownload", "fileName--2 " + detailsBean.getTechnicianSignature());
-                                            Log.i("task", "1 image" + detailsBean.getTechnicianSignature());
-                                            new DownloadCustomImage(getResources().getString(R.string.task_reminder) + detailsBean.getTechnicianSignature(), detailsBean.getTechnicianSignature()).execute();
-                                        }
-                                    }
-                                }
-                                int sec = 0;
-                                    sec = sec + 5000;
-                                    handler.postDelayed(new Runnable() {
-                                        @Override
-                                        public void run() {
-                                            showCustom1PopUp(detailsBean);
-
-                                        }
-                                    }, sec);*/
-
-
-                                /*if (taskType != null && taskType.equalsIgnoreCase("group")) {
-                                    if (!isTaskName) {
-                                        showprogressforpriority("Setting Custom Tags");
-                                        List<NameValuePair> tagNameValuePairs = new ArrayList<NameValuePair>();
-                                        Appreference.jsonRequestSender.getlistCustomHeaderTags(EnumJsonWebservicename.listCustomHeaderTags, tagNameValuePairs, NewTaskConversation.this);
-                                    } else {
-                                        showToast("Please Enter TaskDescription and Make a NewTask ");
-                                    }
-                                } else {
-                                    if (!isTaskName) {
-                                        showprogressforpriority("Setting Custom Tags");
-                                        List<NameValuePair> tagNameValuePairs = new ArrayList<NameValuePair>();
-                                        Appreference.jsonRequestSender.getlistCustomHeaderTags(EnumJsonWebservicename.listCustomHeaderTags, tagNameValuePairs, NewTaskConversation.this);
-                                    } else {
-                                        showToast("Please Enter TaskDescription and Make a NewTask ");
+                                    } else if (taskStatus != null && taskStatus.equalsIgnoreCase("abandoned")) {
+                                        Toast.makeText(context, "Unable to set  Priority for task is in abandoned state ", Toast.LENGTH_SHORT).show();
+                                    } else if (taskStatus != null && taskStatus.equalsIgnoreCase("pause")) {
+                                        Toast.makeText(context, "Unable to set  Priority for task is in pause state ", Toast.LENGTH_SHORT).show();
                                     }
                                     gridview.setVisibility(View.GONE);
                                     icons.setVisibility(View.VISIBLE);
                                     arrow = false;
-                                }*/
+                                    break;
 
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                                Appreference.printLog("NewTaskConversation", "Exception " + e.getMessage(), "WARN", null);
+                                case "Escalations":
+                                    try {
+                                        if (!isTaskName) {
+                                            if (taskStatus != null && !taskStatus.equalsIgnoreCase("abandoned") && !taskStatus.equalsIgnoreCase("pause") && !taskStatus.equalsIgnoreCase("rejected")) {
+                                                showprogressforpriority("Loading Escalation Entry");
+                                                List<NameValuePair> tagNameValuePairs = new ArrayList<NameValuePair>();
+                                                Appreference.jsonRequestSender.getlistCustomHeaderTags(EnumJsonWebservicename.listCustomHeaderTags, tagNameValuePairs, NewTaskConversation.this);
+                                            } else if (taskStatus != null && taskStatus.equalsIgnoreCase("abandoned")) {
+                                                Toast.makeText(context, "Unable to set  Escalations task is in abandoned state ", Toast.LENGTH_SHORT).show();
+                                            } else if (taskStatus != null && taskStatus.equalsIgnoreCase("pause")) {
+                                                Toast.makeText(context, "Unable to set  Escalations task is in pause state ", Toast.LENGTH_SHORT).show();
+                                            } else if (taskStatus != null && taskStatus.equalsIgnoreCase("rejected")) {
+                                                Toast.makeText(context, "Unable to set  Escalations task is in rejected state ", Toast.LENGTH_SHORT).show();
+                                            }
+                                        } else {
+                                            showToast("Please Enter TaskDescription and Make a NewTask ");
+                                        }
+                                        gridview.setVisibility(View.GONE);
+                                        icons.setVisibility(View.VISIBLE);
+                                        arrow = false;
+                                    } catch (Exception e) {
+                                        e.printStackTrace();
+                                        Appreference.printLog("NewTaskConversation", "Exception " + e.getMessage(), "WARN", null);
+                                    }
+                                    break;
+
+                                case "Scheduled Call":
+                                    try {
+                                        if (!isTaskName) {
+                                            if (taskStatus != null && !taskStatus.equalsIgnoreCase("abandoned") && !taskStatus.equalsIgnoreCase("pause") && !taskStatus.equalsIgnoreCase("rejected")) {
+                                                Log.i("scheduled", "listofobserver " + listOfObservers.size());
+                                                Log.i("scheduled", "listofobserver " + ownerOfTask);
+                                                Log.i("scheduled", "listofobserver " + taskReceiver);
+                                                if (!ownerOfTask.equalsIgnoreCase(taskReceiver) || listOfObservers.size() > 1) {
+                                                    showprogressforpriority("Loading Scheduled calls");
+                                                    List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
+                                                    nameValuePairs.add(new BasicNameValuePair("taskId", webtaskId));
+                                                    Appreference.jsonRequestSender.getCustomTag(EnumJsonWebservicename.getCustomTag, nameValuePairs, NewTaskConversation.this);
+                                                } else {
+                                                    showToast("You are not able to set scheduled call");
+                                                }
+                                            } else if (taskStatus != null && taskStatus.equalsIgnoreCase("abandoned")) {
+                                                Toast.makeText(context, "Unable to set Scheduled Call task is in abandoned state ", Toast.LENGTH_SHORT).show();
+                                            } else if (taskStatus != null && taskStatus.equalsIgnoreCase("pause")) {
+                                                Toast.makeText(context, "Unable to set Scheduled Call task is in pause state ", Toast.LENGTH_SHORT).show();
+                                            } else if (taskStatus != null && taskStatus.equalsIgnoreCase("rejected")) {
+                                                Toast.makeText(context, "Unable to set Scheduled Call task is in rejected state ", Toast.LENGTH_SHORT).show();
+                                            }
+                                        } else {
+                                            showToast("Please Enter TaskDescription and Make a NewTask ");
+                                        }
+                                        gridview.setVisibility(View.GONE);
+                                        icons.setVisibility(View.VISIBLE);
+                                        arrow = false;
+                                    } catch (Exception e) {
+                                        e.printStackTrace();
+                                        Appreference.printLog("NewTaskConversation", "Exception " + e.getMessage(), "WARN", null);
+                                    }
+                                    break;
+
+                                case "Audio":
+                                    try {
+                                        Intent i = new Intent(NewTaskConversation.this, AudioRecorder.class);
+                                        i.putExtra("task", "audio");
+                                        startActivityForResult(i, 333);
+                                        gridview.setVisibility(View.GONE);
+                                        icons.setVisibility(View.VISIBLE);
+                                        arrow = false;
+                                    } catch (Exception e) {
+                                        e.printStackTrace();
+                                        Appreference.printLog("NewTaskConversation", "Exception " + e.getMessage(), "WARN", null);
+                                    }
+                                    break;
+
+                                case "Photo":
+                                    multimediaImage("image");
+                                    gridview.setVisibility(View.GONE);
+                                    icons.setVisibility(View.VISIBLE);
+                                    arrow = false;
+                                    break;
+
+                                case "Sketch":
+                                    try {
+                                        Intent i = new Intent(getApplicationContext(), HandSketchActivity2.class);
+                                        startActivityForResult(i, 423);
+                                        gridview.setVisibility(View.GONE);
+                                        icons.setVisibility(View.VISIBLE);
+                                        arrow = false;
+                                    } catch (Exception e) {
+                                        e.printStackTrace();
+                                        Appreference.printLog("NewTaskConversation", "Exception " + e.getMessage(), "WARN", null);
+                                    }
+                                    break;
+
+                                case "Video":
+                                    multimediaImage("video");
+                                    gridview.setVisibility(View.GONE);
+                                    icons.setVisibility(View.VISIBLE);
+                                    arrow = false;
+                                    break;
+
+                                case "File":
+                                    try {
+                                        Intent file_intent = new Intent(NewTaskConversation.this, FilePicker.class);
+                                        startActivityForResult(file_intent, 55);
+                                        gridview.setVisibility(View.GONE);
+                                        icons.setVisibility(View.VISIBLE);
+                                        arrow = false;
+                                    } catch (Exception e) {
+                                        e.printStackTrace();
+                                    }
+                                    break;
+
+                                case "Dates":
+                                    try {
+                                        if (taskStatus != null && !taskStatus.equalsIgnoreCase("Closed") && !taskStatus.equalsIgnoreCase("Completed")) {
+//                                                                if (taskStatus != null && !taskStatus.equalsIgnoreCase("closed") ) {
+                                            if (taskStatus != null && !taskStatus.equalsIgnoreCase("abandoned") && !taskStatus.equalsIgnoreCase("pause") && !taskStatus.equalsIgnoreCase("rejected")) {
+                                                if (template && !note) {
+                                                    Intent intent = new Intent(NewTaskConversation.this, TaskDateUpdate.class);
+                                                    intent.putExtra("template", "success");
+                                                    intent.putExtra("taskId", webtaskId);
+                                                    intent.putExtra("taskType", "template");
+                                                    intent.putExtra("toUserIdConflict", String.valueOf(toUserId));
+                                                    NewTaskConversation.this.startActivityForResult(intent, 666);
+                                                } else if (note) {
+                                                    Intent intent = new Intent(NewTaskConversation.this, NoteDateUpdate.class);
+                                                    intent.putExtra("taskId", webtaskId);
+                                                    intent.putExtra("taskType", "note");
+                                                    intent.putExtra("from", "taskconversation");
+                                                    NewTaskConversation.this.startActivityForResult(intent, 555);
+                                                } else {
+                                                    Intent intent = new Intent(NewTaskConversation.this, TaskDateUpdate.class);
+                                                    intent.putExtra("template", "failure");
+                                                    intent.putExtra("taskId", webtaskId);
+                                                    intent.putExtra("taskType", taskType);
+                                                    if (projectId != null) {
+                                                        intent.putExtra("projectId", projectId);
+                                                    }
+                                                    intent.putExtra("toUserIdConflict", String.valueOf(toUserId));
+                                                    NewTaskConversation.this.startActivityForResult(intent, 336);
+                                                }
+
+                                            } else if (taskStatus != null && taskStatus.equalsIgnoreCase("abandoned")) {
+                                                Toast.makeText(context, "Unable to set Date task is in abandoned state ", Toast.LENGTH_SHORT).show();
+                                            } else if (taskStatus != null && taskStatus.equalsIgnoreCase("pause")) {
+                                                Toast.makeText(context, "Unable to set Date task is in pause state ", Toast.LENGTH_SHORT).show();
+                                            } else if (taskStatus != null && taskStatus.equalsIgnoreCase("rejected")) {
+                                                Toast.makeText(context, "Unable to set Date task is in rejected state ", Toast.LENGTH_SHORT).show();
+                                            }
+                                        } else {
+                                            Toast.makeText(context, "This " + category + " is already Closed ", Toast.LENGTH_SHORT).show();
+                                        }
+                                    } catch (Exception e) {
+                                        e.printStackTrace();
+                                        Appreference.printLog("NewTaskConversation", "Exception " + e.getMessage(), "WARN", null);
+                                    }
+                                    gridview.setVisibility(View.GONE);
+                                    icons.setVisibility(View.VISIBLE);
+                                    arrow = false;
+                                    break;
+
+                                case "Completion":
+                                    try {
+                                        if (taskStatus != null && !taskStatus.equalsIgnoreCase("Closed")) {
+                                            if (taskStatus != null && !taskStatus.equalsIgnoreCase("abandoned") && !taskStatus.equalsIgnoreCase("pause") && !taskStatus.equalsIgnoreCase("rejected") /*&& (!taskStatus.equalsIgnoreCase("assigned") || taskType.equalsIgnoreCase("group"))*/) {
+                                                int a;
+                                                if (taskType != null && taskType.equalsIgnoreCase("group")) {
+                                                    String percent_sender = VideoCallDataBase.getDB(context).getlastCompletedParcentagesender(webtaskId);
+                                                    Log.i("GroupPercentageClick", " groupname 21 " + percent_sender);
+                                                    if (percent_sender != null && percent_sender.equalsIgnoreCase(ownerOfTask)) {
+                                                        a = Integer.parseInt(VideoCallDataBase.getDB(context).getlastCompletedParcentage(webtaskId));
+                                                    } else {
+                                                        a = VideoCallDataBase.getDB(context).GroupPercentageChecker(groupname, webtaskId, ownerOfTask);
+                                                    }
+                                                    percentage = String.valueOf(a);
+                                                } else {
+                                                    a = VideoCallDataBase.getDB(context).percentagechecker(webtaskId);
+                                                    percentage = String.valueOf(a);
+                                                }
+                                                Intent intent = new Intent(NewTaskConversation.this, UpdateTaskActivity.class);
+                                                intent.putExtra("username", toUserName);
+                                                intent.putExtra("Str", "conversation");
+                                                intent.putExtra("level", percentage);
+                                                intent.putExtra("taskType", taskType);
+                                                intent.putExtra("toUserId", String.valueOf(toUserId));
+                                                intent.putExtra("ownerOfTask", ownerOfTask);
+                                                intent.putExtra("category", category);
+                                                startActivityForResult(intent, 210);
+
+                                            } else if (taskStatus != null && taskStatus.equalsIgnoreCase("abandoned")) {
+                                                Toast.makeText(context, "Unable to change percentage task is in abandoned state ", Toast.LENGTH_SHORT).show();
+                                            } else if (taskStatus != null && taskStatus.equalsIgnoreCase("pause")) {
+                                                Toast.makeText(context, "Unable to sent percentage task is in pause state ", Toast.LENGTH_SHORT).show();
+                                            } else if (taskStatus != null && taskStatus.equalsIgnoreCase("rejected")) {
+                                                Toast.makeText(context, "Unable to sent percentage task is in rejected state ", Toast.LENGTH_SHORT).show();
+                                            } else {
+                                                Toast.makeText(context, "Task not accepted", Toast.LENGTH_SHORT).show();
+                                            }
+                                        } else {
+                                            Toast.makeText(context, "This " + category + " is already Closed ", Toast.LENGTH_SHORT).show();
+                                        }
+                                        gridview.setVisibility(View.GONE);
+                                        icons.setVisibility(View.VISIBLE);
+                                        arrow = false;
+                                    } catch (NumberFormatException e) {
+                                        e.printStackTrace();
+                                        Appreference.printLog("NewTaskConversation", "Exception " + e.getMessage(), "WARN", null);
+                                    }
+                                    break;
+
+                                case "Call":
+                                    multimediaImage("call");
+                                    gridview.setVisibility(View.GONE);
+                                    icons.setVisibility(View.VISIBLE);
+                                    arrow = false;
+                                    break;
+
+                                case "Add Observer":
+                                    try {
+                                        if (webtaskId == null) {
+                                            Toast.makeText(NewTaskConversation.this, "Please Create the Task ", Toast.LENGTH_SHORT).show();
+                                        } else {
+                                            if (taskStatus != null && !taskStatus.equalsIgnoreCase("abandoned") && !taskStatus.equalsIgnoreCase("pause") && !taskStatus.equalsIgnoreCase("rejected")) {
+                                                addObserverClickEvent();
+                                            } else if (taskStatus != null && taskStatus.equalsIgnoreCase("abandoned")) {
+                                                Toast.makeText(context, "Unable to Add Observer task is in abandoned state ", Toast.LENGTH_SHORT).show();
+                                            } else if (taskStatus != null && taskStatus.equalsIgnoreCase("pause")) {
+                                                Toast.makeText(context, "Unable to Add Observer task is in pause state ", Toast.LENGTH_SHORT).show();
+                                            } else if (taskStatus != null && taskStatus.equalsIgnoreCase("rejected")) {
+                                                Toast.makeText(context, "Unable to Add Observer task is in pause state ", Toast.LENGTH_SHORT).show();
+                                            }
+//                                    addObserverClickEvent();
+                                        }
+                                        gridview.setVisibility(View.GONE);
+                                        icons.setVisibility(View.VISIBLE);
+                                        arrow = false;
+                                    } catch (Exception e) {
+                                        e.printStackTrace();
+                                        Appreference.printLog("NewTaskConversation", "Exception " + e.getMessage(), "WARN", null);
+                                    }
+                                    break;
+
+                                case "Chat":
+                                    try {
+                                        if (taskStatus != null && !taskStatus.equalsIgnoreCase("abandoned") && !taskStatus.equalsIgnoreCase("pause")) {
+                                            if (subType != null && subType.equalsIgnoreCase("private")) {
+                                                subType = "normal";
+                                                des.setHint("");
+                                                icons.setBackgroundColor(getResources().getColor(R.color.white));
+                                                linear1.setBackgroundColor(getResources().getColor(R.color.white));
+                                                Toast.makeText(NewTaskConversation.this, "Private message disabled", Toast.LENGTH_SHORT).show();
+                                            } else if (subType != null && subType.equalsIgnoreCase("taskDescription")) {
+                                                subType = "normal";
+                                                des.setHint("");
+                                                icons.setBackgroundColor(getResources().getColor(R.color.white));
+                                                linear1.setBackgroundColor(getResources().getColor(R.color.white));
+                                                Toast.makeText(NewTaskConversation.this, "Task Description message disabled", Toast.LENGTH_SHORT).show();
+                                            }
+                                        } else if (taskStatus != null && taskStatus.equalsIgnoreCase("abandoned")) {
+                                            Toast.makeText(context, "Unable to change chat task is in abandoned state ", Toast.LENGTH_SHORT).show();
+                                        } else if (taskStatus != null && taskStatus.equalsIgnoreCase("pause")) {
+                                            Toast.makeText(context, "Unable to  change chat task is in pause state ", Toast.LENGTH_SHORT).show();
+                                        }
+                                        gridview.setVisibility(View.GONE);
+                                        icons.setVisibility(View.VISIBLE);
+                                        arrow = false;
+                                    } catch (Resources.NotFoundException e) {
+                                        e.printStackTrace();
+                                        Appreference.printLog("NewTaskConversation", "Exception " + e.getMessage(), "WARN", null);
+                                    }
+                                    break;
+
+                                case "Task Description":
+                                    try {
+                                        if (taskStatus != null && !taskStatus.equalsIgnoreCase("abandoned") && !taskStatus.equalsIgnoreCase("pause")) {
+                                            if (subType != null && subType.equalsIgnoreCase("taskDescription")) {
+                                                subType = "normal";
+                                                des.setHint("");
+                                                icons.setBackgroundColor(getResources().getColor(R.color.white));
+                                                linear1.setBackgroundColor(getResources().getColor(R.color.white));
+                                                Toast.makeText(NewTaskConversation.this, "Task Description message disabled", Toast.LENGTH_SHORT).show();
+                                            } else {
+                                                subType = "taskDescription";
+                                                des.setHint("Task Description");
+                                                icons.setBackgroundColor(getResources().getColor(R.color.lgyellow));
+                                                linear1.setBackgroundColor(getResources().getColor(R.color.lgyellow));
+                                                Toast.makeText(NewTaskConversation.this, "Task description message enabled", Toast.LENGTH_SHORT).show();
+                                            }
+                                        } else if (taskStatus != null && taskStatus.equalsIgnoreCase("abandoned")) {
+                                            Toast.makeText(context, "Unable to sent Description Message task is in abandoned state ", Toast.LENGTH_SHORT).show();
+                                        } else if (taskStatus != null && taskStatus.equalsIgnoreCase("pause")) {
+                                            Toast.makeText(context, "Unable to sent Description Message task is in pause state ", Toast.LENGTH_SHORT).show();
+                                        }
+                                        gridview.setVisibility(View.GONE);
+                                        icons.setVisibility(View.VISIBLE);
+                                        arrow = false;
+                                    } catch (Resources.NotFoundException e) {
+                                        e.printStackTrace();
+                                        Appreference.printLog("NewTaskConversation", "Exception " + e.getMessage(), "WARN", null);
+                                    }
+                                    break;
+
+                                case "Forms":
+                                    try {
+                                        if (!isTaskName) {
+                                            if (taskStatus != null && !taskStatus.equalsIgnoreCase("abandoned") && !taskStatus.equalsIgnoreCase("pause")) {
+                                                Intent formintent = new Intent(NewTaskConversation.this, FormsListActivity.class);
+                                                formintent.putExtra("FormsList", new ArrayList<FormsListBean>());
+                                                formintent.putExtra("TaskId", webtaskId);
+                                                formintent.putExtra("webformcheck", "false");
+                                                formintent.putExtra("isTemplate", "No");
+                                                formintent.putExtra("UserList", listOfObservers);
+                                                formintent.putExtra("TaskBean", beanValue());
+                                                startActivity(formintent);
+                                            } else if (taskStatus != null && taskStatus.equalsIgnoreCase("abandoned")) {
+                                                Toast.makeText(context, "Unable to set Forms task is in abandoned state ", Toast.LENGTH_SHORT).show();
+                                            } else if (taskStatus != null && taskStatus.equalsIgnoreCase("pause")) {
+                                                Toast.makeText(context, "Unable to set Forms task is in pause state ", Toast.LENGTH_SHORT).show();
+                                            }
+                                        } else {
+                                            showToast("Please Enter TaskDescription and Make a NewTask ");
+                                        }
+                                        arrow = false;
+                                        gridview.setVisibility(View.GONE);
+                                        icons.setVisibility(View.VISIBLE);
+                                    } catch (Exception e) {
+                                        e.printStackTrace();
+                                        Appreference.printLog("NewTaskConversation", "Exception " + e.getMessage(), "WARN", null);
+                                    }
+                                    break;
+
+                                case "Reassign":
+                                    if (taskStatus != null && !taskStatus.equalsIgnoreCase("abandoned") && !taskStatus.equalsIgnoreCase("pause")) {
+                                        addTaskReassignClickEvent();
+                                    } else if (taskStatus != null && taskStatus.equalsIgnoreCase("abandoned")) {
+                                        Toast.makeText(context, "Unable to Reassign task is in abandoned state ", Toast.LENGTH_SHORT).show();
+                                    } else if (taskStatus != null && taskStatus.equalsIgnoreCase("pause")) {
+                                        Toast.makeText(context, "Unable to Reassign task is in pause state ", Toast.LENGTH_SHORT).show();
+                                    }
+                                    gridview.setVisibility(View.GONE);
+                                    icons.setVisibility(View.VISIBLE);
+                                    arrow = false;
+                                    break;
+
+                                case "Reminder Responses":
+                                    try {
+                                        if (webtaskId != null) {
+                                            if (taskStatus != null && !taskStatus.equalsIgnoreCase("abandoned") && !taskStatus.equalsIgnoreCase("pause")) {
+                                                Intent reminderintent = new Intent(NewTaskConversation.this, Reminder_Responses.class);
+                                                reminderintent.putExtra("taskId", webtaskId);
+                                                reminderintent.putExtra("taskType", taskType);
+                                                startActivity(reminderintent);
+                                            } else if (taskStatus != null && taskStatus.equalsIgnoreCase("abandoned")) {
+                                                Toast.makeText(context, "Unable to View Reminder Responses task is in abandoned state ", Toast.LENGTH_SHORT).show();
+                                            } else if (taskStatus != null && taskStatus.equalsIgnoreCase("pause")) {
+                                                Toast.makeText(context, "Unable to View Reminder Responses task is in pause state ", Toast.LENGTH_SHORT).show();
+                                            }
+                                        } else {
+                                            showToast("Please Create Task to view Reminder Response ");
+                                        }
+                                        gridview.setVisibility(View.GONE);
+                                        icons.setVisibility(View.VISIBLE);
+                                        arrow = false;
+                                    } catch (Exception e) {
+                                        e.printStackTrace();
+                                        Appreference.printLog("NewTaskConversation", "Exception " + e.getMessage(), "WARN", null);
+                                    }
+                                    break;
+
+                                case "RemindMe":
+                                    try {
+                                        if (taskStatus != null && !taskStatus.equalsIgnoreCase("abandoned") && !taskStatus.equalsIgnoreCase("pause") && !taskStatus.equalsIgnoreCase("rejected")) {
+                                            Intent note_intent = new Intent(NewTaskConversation.this, NoteDateUpdate.class);
+                                            note_intent.putExtra("taskId", webtaskId);
+                                            note_intent.putExtra("taskType", "note");
+                                            NewTaskConversation.this.startActivityForResult(note_intent, 555);
+                                        } else if (taskStatus != null && taskStatus.equalsIgnoreCase("abandoned")) {
+                                            Toast.makeText(context, "Unable to set  RemindMe task is in abandoned state ", Toast.LENGTH_SHORT).show();
+                                        } else if (taskStatus != null && taskStatus.equalsIgnoreCase("pause")) {
+                                            Toast.makeText(context, "Unable to set  RemindMe task is in pause state ", Toast.LENGTH_SHORT).show();
+                                        } else if (taskStatus != null && taskStatus.equalsIgnoreCase("rejected")) {
+                                            Toast.makeText(context, "Unable to set  RemindMe task is in rejected state ", Toast.LENGTH_SHORT).show();
+                                        }
+                                        gridview.setVisibility(View.GONE);
+                                        icons.setVisibility(View.VISIBLE);
+                                        arrow = false;
+                                    } catch (Exception e) {
+                                        e.printStackTrace();
+                                        Appreference.printLog("NewTaskConversation", "Exception " + e.getMessage(), "WARN", null);
+                                    }
+                                    break;
+
+                                case "MoreFields":
+                                    try {
+                                        if (!isTaskName) {
+                                            if (taskStatus != null && !taskStatus.equalsIgnoreCase("abandoned") && !taskStatus.equalsIgnoreCase("pause") && !taskStatus.equalsIgnoreCase("rejected")) {
+                                                showprogressforpriority("Loading MoreFields");
+                                                List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
+                                                nameValuePairs.add(new BasicNameValuePair("taskId", webtaskId));
+                                                Appreference.jsonRequestSender.getCustomTag(EnumJsonWebservicename.getRequestType, nameValuePairs, NewTaskConversation.this);
+                                            } else if (taskStatus != null && taskStatus.equalsIgnoreCase("abandoned")) {
+                                                Toast.makeText(context, "Unable to set  MoreFields task is in abandoned state ", Toast.LENGTH_SHORT).show();
+                                            } else if (taskStatus != null && taskStatus.equalsIgnoreCase("pause")) {
+                                                Toast.makeText(context, "Unable to set  MoreFields task is in pause state ", Toast.LENGTH_SHORT).show();
+                                            } else if (taskStatus != null && taskStatus.equalsIgnoreCase("rejected")) {
+                                                Toast.makeText(context, "Unable to set  MoreFields task is in rejected state ", Toast.LENGTH_SHORT).show();
+                                            }
+                                        } else {
+                                            showToast("Please Enter TaskDescription and Make a NewTask ");
+                                        }
+                                        gridview.setVisibility(View.GONE);
+                                        icons.setVisibility(View.VISIBLE);
+                                        arrow = false;
+                                    } catch (Exception e) {
+                                        e.printStackTrace();
+                                        Appreference.printLog("NewTaskConversation", "Exception " + e.getMessage(), "WARN", null);
+                                    }
+                                    break;
+
+                                case "ViewTask":
+                                    try {
+                                        if (webtaskId != null) {
+                                            if (!project) {
+                                                String issue_Parent_id = dataBase.getProjectParentTaskId("select parentTaskId from taskHistoryInfo where taskId='" + webtaskId + "'");
+                                                ArrayList<TaskDetailsBean> taskDetailsBean;
+                                                taskDetailsBean = VideoCallDataBase.getDB(context).getTaskHistoryInfo("select * from taskHistoryInfo where taskId='" + issue_Parent_id + "'");
+                                                if (taskDetailsBean.size() > 0) {
+                                                    TaskDetailsBean taskBean = taskDetailsBean.get(0);
+                                                    Intent intent = new Intent(getApplicationContext(), NewTaskConversation.class);
+                                                    intent.putExtra("task", "taskhistory");
+                                                    intent.putExtra("taskHistoryBean", taskBean);
+                                                    intent.putExtra("catagory", taskBean.getCatagory());
+                                                    Log.i("Task1", "groupname" + groupname);
+                                                    intent.putExtra("groupname", groupname);
+                                                    Log.i("task", "taskId is == " + taskBean.getTaskId());
+                                                    startActivity(intent);
+                                                }
+                                            } else {
+                                                String issue_Parent_id = dataBase.getProjectParentTaskId("select issueParentId from projectHistory where taskId='" + webtaskId + "'");
+                                                ArrayList<ProjectDetailsBean> taskDetailsBean;
+                                                taskDetailsBean = VideoCallDataBase.getDB(context).getProjectHistory("select * from projectHistory where taskId='" + issue_Parent_id + "'");
+                                                Log.i("View_Task", " issue_Parent_id == 2 " + issue_Parent_id + "  taskDetailsBean size == " + taskDetailsBean.size());
+                                                if (taskDetailsBean.size() > 0) {
+                                                    ProjectDetailsBean taskBean = taskDetailsBean.get(0);
+                                                    for (ProjectDetailsBean taskDetailsBean1 : taskDetailsBean) {
+                                                        Log.i("View_Task", "  taskDetailsBean size ==  for Loop " + taskDetailsBean1.getTaskId());
+                                                    }
+                                                    Log.i("View_Task", " issue_Parent_id == 3 " + issue_Parent_id + "  taskDetailsBean size == " + taskBean.getTaskId());
+                                                    if (taskBean.getTaskType() != null && taskBean.getTaskType().equalsIgnoreCase("individual")) {
+                                                        if (taskBean.getTaskReceiver().equalsIgnoreCase(Appreference.loginuserdetails.getUsername()) || taskBean.getOwnerOfTask().equalsIgnoreCase(Appreference.loginuserdetails.getUsername()) || taskBean.getTaskObservers().contains(Appreference.loginuserdetails.getUsername())) {
+                                                            Intent intent = new Intent(context, NewTaskConversation.class);
+                                                            intent.putExtra("task", "projectHistory");
+                                                            intent.putExtra("projectHistoryBean", taskBean);
+                                                            startActivity(intent);
+                                                        } else {
+                                                            Toast.makeText(getApplicationContext(), "You are not in individual project subtask", Toast.LENGTH_SHORT).show();
+                                                        }
+                                                    } else if (taskBean.getTaskType() != null && taskBean.getTaskType().equalsIgnoreCase("Group")) {
+                                                        Log.i("ListMembers", "projectDetailsBean.getTaskMemberList() " + taskBean.getTaskMemberList());
+                                                        if ((taskBean.getTaskMemberList() != null && taskBean.getTaskMemberList().contains(Appreference.loginuserdetails.getUsername())) || (taskBean.getOwnerOfTask() != null && taskBean.getOwnerOfTask().equalsIgnoreCase(Appreference.loginuserdetails.getUsername())) || (taskBean.getTaskObservers() != null && taskBean.getTaskObservers().contains(Appreference.loginuserdetails.getUsername()))) {
+                                                            Intent intent = new Intent(context, NewTaskConversation.class);
+                                                            intent.putExtra("task", "projectHistory");
+                                                            intent.putExtra("projectHistoryBean", taskBean);
+                                                            startActivity(intent);
+                                                        } else {
+                                                            Toast.makeText(getApplicationContext(), "You are not in group project task", Toast.LENGTH_SHORT).show();
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        } else {
+                                            showToast("Please Enter TaskDescription and Make a NewTask ");
+                                        }
+                                        gridview.setVisibility(View.GONE);
+                                        icons.setVisibility(View.VISIBLE);
+                                        arrow = false;
+                                    } catch (Exception e) {
+                                        e.printStackTrace();
+                                        Appreference.printLog("NewTaskConversation", "Exception " + e.getMessage(), "WARN", null);
+                                    }
+                                    break;
+                                case "Custom1":
+                                    try {
+                                        final TaskDetailsBean detailsBean;
+                                        String Querystatus = "Select * from projectStatus where projectId ='" + projectId + "' and taskId = '" + webtaskId + "'";
+                                        detailsBean = VideoCallDataBase.getDB(context).getStatusCompletedProjectDetails(Querystatus);
+                                        showCustom1PopUp(detailsBean);
+                                    } catch (Exception e) {
+                                        e.printStackTrace();
+                                        Appreference.printLog("NewTaskConversation", "Exception " + e.getMessage(), "WARN", null);
+                                    }
+                                    break;
                             }
-                            break;
-                        case "Scheduled":
-                            try {
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                            Appreference.printLog("NewTaskConversation gridview owner click ", "Exception " + e.getMessage(), "WARN", null);
+                        }
+                    }
+                }
+
+        );
+
+        gridview_taker.setOnItemClickListener(
+                new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                        Log.i("gridview", "Position" + position);
+                        try {
+                            String selected_text = texts_taker[position];
+                            switch (selected_text) {
+                                case "Private":
+                                    try {
+                                        if (taskStatus != null && !taskStatus.equalsIgnoreCase("abandoned") && !taskStatus.equalsIgnoreCase("pause")) {
+                                            if (subType != null && subType.equalsIgnoreCase("private")) {
+                                                private_member = null;
+                                                subType = "normal";
+                                                des.setHint("");
+                                                icons.setBackgroundColor(getResources().getColor(R.color.white));
+                                                linear1.setBackgroundColor(getResources().getColor(R.color.white));
+                                                Toast.makeText(NewTaskConversation.this, "Private message disabled", Toast.LENGTH_SHORT).show();
+                                            } else {
+                                                des.setHint("private message");
+                                                subType = "private";
+                                                icons.setBackgroundColor(getResources().getColor(R.color.grey));
+                                                linear1.setBackgroundColor(getResources().getColor(R.color.grey));
+                                                Toast.makeText(NewTaskConversation.this, "Private message enabled", Toast.LENGTH_SHORT).show();
+                                                String Observers = "", Qurey;
+                                                if (project) {
+                                                    Qurey = "select taskObservers from projectHistory where taskId='" + webtaskId + "'";
+                                                } else {
+                                                    Qurey = "select taskObservers from taskHistoryInfo where taskId='" + webtaskId + "'";
+                                                }
+                                                Log.i("gridview", "listOfObservers  " + Observers + " name " + Qurey);
+                                                Observers = VideoCallDataBase.getDB(context).getProjectParentTaskId(Qurey);
+                                                if ((taskType != null && taskType.equalsIgnoreCase("Group"))) {
+                                                    Intent intent = new Intent(NewTaskConversation.this, GroupPercentageStatus.class);
+                                                    intent.putExtra("taskid", webtaskId);
+                                                    intent.putExtra("groupId", String.valueOf(toUserId));
+                                                    intent.putExtra("subtype", "private");
+                                                    intent.putExtra("ownerOfTask", ownerOfTask);
+                                                    if (project) {
+                                                        intent.putExtra("isProject", "yes");
+                                                    } else {
+                                                        intent.putExtra("isProject", "no");
+                                                    }
+                                                    startActivityForResult(intent, 999);
+                                                } else if (Observers != null && Observers.length() > 0) {
+                                                    Log.i("private_message", "values " + listOfObservers.size() + "Name " + listOfObservers);
+                                                    Intent intent = new Intent(NewTaskConversation.this, GroupPercentageStatus.class);
+                                                    intent.putExtra("taskid", webtaskId);
+                                                    intent.putExtra("taskType", taskType);
+                                                    intent.putExtra("subtype", "private");
+                                                    intent.putExtra("ownerOfTask", ownerOfTask);
+                                                    if (project) {
+                                                        intent.putExtra("isProject", "yes");
+                                                    } else {
+                                                        intent.putExtra("isProject", "no");
+                                                    }
+                                                    startActivityForResult(intent, 999);
+                                                } else {
+                                                    private_member = VideoCallDataBase.getDB(context).getName(toUserName);
+                                                }
+                                            }
+                                        } else if (taskStatus != null && taskStatus.equalsIgnoreCase("abandoned")) {
+                                            Toast.makeText(context, "Unable to sent  Private Message task is in abandoned state ", Toast.LENGTH_SHORT).show();
+                                        } else if (taskStatus != null && taskStatus.equalsIgnoreCase("pause")) {
+                                            Toast.makeText(context, "Unable to sent  Private Message task is in pause state ", Toast.LENGTH_SHORT).show();
+                                        }
+                                        gridview_taker.setVisibility(View.GONE);
+                                        icons.setVisibility(View.VISIBLE);
+                                        arrow = false;
+                                    } catch (Resources.NotFoundException e) {
+                                        e.printStackTrace();
+                                        Appreference.printLog("NewTaskConversation", "Exception " + e.getMessage(), "WARN", null);
+                                    }
+                                    break;
+
+                                case "Chat":
+                                    try {
+                                        if (taskStatus != null && !taskStatus.equalsIgnoreCase("abandoned") && !taskStatus.equalsIgnoreCase("pause")) {
+                                            if (subType != null && subType.equalsIgnoreCase("private")) {
+                                                subType = "normal";
+                                                des.setHint("");
+                                                icons.setBackgroundColor(getResources().getColor(R.color.white));
+                                                linear1.setBackgroundColor(getResources().getColor(R.color.white));
+                                                Toast.makeText(NewTaskConversation.this, "Private message disabled", Toast.LENGTH_SHORT).show();
+                                            } else if (subType != null && subType.equalsIgnoreCase("taskDescription")) {
+                                                subType = "normal";
+                                                des.setHint("");
+                                                icons.setBackgroundColor(getResources().getColor(R.color.white));
+                                                linear1.setBackgroundColor(getResources().getColor(R.color.white));
+                                                Toast.makeText(NewTaskConversation.this, "Task Description message disabled", Toast.LENGTH_SHORT).show();
+                                            }
+                                        } else if (taskStatus != null && taskStatus.equalsIgnoreCase("abandoned")) {
+                                            Toast.makeText(context, "Unable to change Chat task is in abandoned state ", Toast.LENGTH_SHORT).show();
+                                        } else if (taskStatus != null && taskStatus.equalsIgnoreCase("pause")) {
+                                            Toast.makeText(context, "Unable to change Chat task is in pause state ", Toast.LENGTH_SHORT).show();
+                                        }
+                                        gridview_taker.setVisibility(View.GONE);
+                                        icons.setVisibility(View.VISIBLE);
+                                        arrow = false;
+                                    } catch (Resources.NotFoundException e) {
+                                        e.printStackTrace();
+                                        Appreference.printLog("NewTaskConversation", "Exception " + e.getMessage(), "WARN", null);
+                                    }
+                                    break;
+
+                                case "Leave":
+                                    try {
+                                        if (taskStatus != null && !taskStatus.equalsIgnoreCase("abandoned") /*&& !taskStatus.equalsIgnoreCase("assigned")*/ && !taskStatus.equalsIgnoreCase("pause")) {
+                                            if (!Appreference.loginuserdetails.getUsername().equalsIgnoreCase(ownerOfTask) || Appreference.loginuserdetails.getUsername().equalsIgnoreCase(taskReceiver)) {
+                                                Intent intent1 = new Intent(NewTaskConversation.this, Leave_Request_dateSent.class);
+                                                intent1.putExtra("Taskid", webtaskId);
+                                                intent1.putExtra("ToUserName", ownerOfTask);
+                                                startActivityForResult(intent1, 222);
+                                            }
+                                        } else if (taskStatus != null && taskStatus.equalsIgnoreCase("assigned")) {
+                                            Toast.makeText(context, "Unable to sent Leave Request task is in assigned state ", Toast.LENGTH_SHORT).show();
+                                        } else if (taskStatus != null && taskStatus.equalsIgnoreCase("pause")) {
+                                            Toast.makeText(context, "Unable to sent Leave Request task is in pause state ", Toast.LENGTH_SHORT).show();
+                                        } else {
+                                            Toast.makeText(context, "Unable to sent Leave Request task is in abandoned state ", Toast.LENGTH_SHORT).show();
+                                        }
+                                        gridview_taker.setVisibility(View.GONE);
+                                        icons.setVisibility(View.VISIBLE);
+                                        arrow = false;
+                                    } catch (Exception e) {
+                                        e.printStackTrace();
+                                        Appreference.printLog("NewTaskConversation", "Exception " + e.getMessage(), "WARN", null);
+                                    }
+                                    break;
+
+                                case "Scheduled Call":
+                                    try {
+                                        if (!isTaskName) {
+                                            if (taskStatus != null && !taskStatus.equalsIgnoreCase("abandoned") && !taskStatus.equalsIgnoreCase("pause") && !taskStatus.equalsIgnoreCase("rejected")) {
+                                                showprogressforpriority("Loading Scheduled calls");
+                                                List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
+                                                nameValuePairs.add(new BasicNameValuePair("taskId", webtaskId));
+                                                Appreference.jsonRequestSender.getCustomTag(EnumJsonWebservicename.getCustomTag, nameValuePairs, NewTaskConversation.this);
+                                            } else if (taskStatus != null && taskStatus.equalsIgnoreCase("abandoned")) {
+                                                Toast.makeText(context, "Unable to set Scheduled Call task is in abandoned state ", Toast.LENGTH_SHORT).show();
+                                            } else if (taskStatus != null && taskStatus.equalsIgnoreCase("pause")) {
+                                                Toast.makeText(context, "Unable to set Scheduled Call task is in pause state ", Toast.LENGTH_SHORT).show();
+                                            } else if (taskStatus != null && taskStatus.equalsIgnoreCase("rejected")) {
+                                                Toast.makeText(context, "Unable to set Scheduled Call task is in rejected state ", Toast.LENGTH_SHORT).show();
+                                            }
+                                        } else {
+                                            showToast("Please Enter TaskDescription and Make a NewTask ");
+                                        }
+                                        gridview_taker.setVisibility(View.GONE);
+                                        icons.setVisibility(View.VISIBLE);
+                                        arrow = false;
+                                    } catch (Exception e) {
+                                        e.printStackTrace();
+                                        Appreference.printLog("NewTaskConversation", "Exception " + e.getMessage(), "WARN", null);
+                                    }
+                                    break;
+
+                                case "Audio":
+                                    try {
+                                        Intent i = new Intent(NewTaskConversation.this, AudioRecorder.class);
+                                        i.putExtra("task", "audio");
+                                        startActivityForResult(i, 333);
+                                        gridview_taker.setVisibility(View.GONE);
+                                        icons.setVisibility(View.VISIBLE);
+                                        arrow = false;
+                                    } catch (Exception e) {
+                                        e.printStackTrace();
+                                        Appreference.printLog("NewTaskConversation", "Exception " + e.getMessage(), "WARN", null);
+                                    }
+                                    break;
+
+                                case "Photo":
+                                    multimediaImage("image");
+                                    gridview_taker.setVisibility(View.GONE);
+                                    icons.setVisibility(View.VISIBLE);
+                                    arrow = false;
+                                    break;
+
+                                case "Sketch":
+                                    try {
+                                        Intent i = new Intent(getApplicationContext(), HandSketchActivity2.class);
+                                        startActivityForResult(i, 423);
+                                        gridview_taker.setVisibility(View.GONE);
+                                        icons.setVisibility(View.VISIBLE);
+                                        arrow = false;
+                                    } catch (Exception e) {
+                                        e.printStackTrace();
+                                        Appreference.printLog("NewTaskConversation", "Exception " + e.getMessage(), "WARN", null);
+                                    }
+                                    break;
+
+                                case "Video":
+                                    multimediaImage("video");
+                                    gridview_taker.setVisibility(View.GONE);
+                                    icons.setVisibility(View.VISIBLE);
+                                    arrow = false;
+                                    break;
+
+                                case "File":
+                                    try {
+                                        Intent intent_file = new Intent(NewTaskConversation.this, FilePicker.class);
+                                        startActivityForResult(intent_file, 55);
+                                    } catch (Exception e) {
+                                        e.printStackTrace();
+                                        Appreference.printLog("NewTaskConversation", "Exception " + e.getMessage(), "WARN", null);
+                                    }
+                                    gridview_taker.setVisibility(View.GONE);
+                                    icons.setVisibility(View.VISIBLE);
+                                    arrow = false;
+                                    break;
+
+                                case "Completion":
+                                    try {
+                                        if (taskStatus != null && !taskStatus.equalsIgnoreCase("Closed")) {
+                                            if (taskStatus != null && !taskStatus.equalsIgnoreCase("abandoned") && !taskStatus.equalsIgnoreCase("pause") && !taskStatus.equalsIgnoreCase("rejected") /*&& (!taskStatus.equalsIgnoreCase("assigned") || taskType.equalsIgnoreCase("group"))*/) {
+                                                int a;
+                                                if (taskType != null && taskType.equalsIgnoreCase("group")) {
+                                                    String percent_sender = VideoCallDataBase.getDB(context).getlastCompletedParcentagesender(webtaskId);
+                                                    Log.i("GroupPercentageClick", " groupname 11 " + percent_sender);
+                                                    if (percent_sender != null && percent_sender.equalsIgnoreCase(ownerOfTask)) {
+                                                        a = Integer.parseInt(VideoCallDataBase.getDB(context).getlastCompletedParcentage(webtaskId));
+                                                    } else {
+                                                        a = VideoCallDataBase.getDB(context).GroupPercentageChecker(groupname, webtaskId, ownerOfTask);
+                                                    }
+                                                    percentage = String.valueOf(a);
+                                                } else {
+                                                    a = VideoCallDataBase.getDB(context).percentagechecker(webtaskId);
+                                                    percentage = String.valueOf(a);
+                                                }
+                                                Intent intent = new Intent(NewTaskConversation.this, UpdateTaskActivity.class);
+                                                intent.putExtra("username", toUserName);
+                                                intent.putExtra("Str", "conversation");
+                                                intent.putExtra("level", percentage);
+                                                intent.putExtra("taskType", taskType);
+                                                intent.putExtra("toUserId", String.valueOf(toUserId));
+                                                intent.putExtra("ownerOfTask", ownerOfTask);
+                                                intent.putExtra("category", category);
+                                                startActivityForResult(intent, 210);
+                                            } else if (taskStatus != null && taskStatus.equalsIgnoreCase("abandoned")) {
+                                                Toast.makeText(context, "Unable to change  percentage task is in abandoned state ", Toast.LENGTH_SHORT).show();
+                                            } else if (taskStatus != null && taskStatus.equalsIgnoreCase("pause")) {
+                                                Toast.makeText(context, "Unable to change  percentage task is in pause state ", Toast.LENGTH_SHORT).show();
+                                            } else if (taskStatus != null && taskStatus.equalsIgnoreCase("rejected")) {
+                                                Toast.makeText(context, "Unable to change  percentage task is in rejected state ", Toast.LENGTH_SHORT).show();
+                                            } else {
+                                                Toast.makeText(context, "Task not accepted", Toast.LENGTH_SHORT).show();
+                                            }
+                                        } else {
+                                            Toast.makeText(context, "This " + category + " is already Closed ", Toast.LENGTH_SHORT).show();
+                                        }
+                                        gridview_taker.setVisibility(View.GONE);
+                                        icons.setVisibility(View.VISIBLE);
+                                        arrow = false;
+                                        break;
+                                    } catch (NumberFormatException e) {
+                                        e.printStackTrace();
+                                    }
+
+                                case "Call":
+                                    multimediaImage("call");
+                                    gridview_taker.setVisibility(View.GONE);
+                                    icons.setVisibility(View.VISIBLE);
+                                    arrow = false;
+                                    break;
+
+                                case "Forms":
+                                    if (!isTaskName) {
+                                        if (taskStatus != null && !taskStatus.equalsIgnoreCase("abandoned") && !taskStatus.equalsIgnoreCase("pause")) {
+                                            Intent formintent = new Intent(NewTaskConversation.this, FormsListActivity.class);
+                                            formintent.putExtra("FormsList", new ArrayList<FormsListBean>());
+                                            formintent.putExtra("TaskId", webtaskId);
+                                            formintent.putExtra("webformcheck", "false");
+                                            formintent.putExtra("isTemplate", "No");
+                                            formintent.putExtra("TaskBean", beanValue());
+                                            formintent.putExtra("UserList", listOfObservers);
+                                            startActivity(formintent);
+                                        } else if (taskStatus != null && taskStatus.equalsIgnoreCase("abandoned")) {
+                                            Toast.makeText(context, "Unable to set Forms task is in abandoned state ", Toast.LENGTH_SHORT).show();
+                                        } else if (taskStatus != null && taskStatus.equalsIgnoreCase("pause")) {
+                                            Toast.makeText(context, "Unable to set Forms task is in pause state ", Toast.LENGTH_SHORT).show();
+                                        }
+                                    } else {
+                                        showToast("Please Enter TaskDescription and Make a NewTask ");
+                                    }
+                                    gridview_taker.setVisibility(View.GONE);
+                                    icons.setVisibility(View.VISIBLE);
+                                    arrow = false;
+                                    break;
+
+                                case "Reminder Responses":
+                                    if (webtaskId != null) {
+                                        if (taskStatus != null && !taskStatus.equalsIgnoreCase("abandoned") && !taskStatus.equalsIgnoreCase("pause")) {
+                                            Intent reminderintent = new Intent(NewTaskConversation.this, Reminder_Responses.class);
+                                            reminderintent.putExtra("taskId", webtaskId);
+                                            reminderintent.putExtra("taskType", taskType);
+                                            startActivity(reminderintent);
+                                        } else if (taskStatus != null && taskStatus.equalsIgnoreCase("abandoned")) {
+                                            Toast.makeText(context, "Unable to View Reminder Responses task is in abandoned state ", Toast.LENGTH_SHORT).show();
+                                        } else if (taskStatus != null && taskStatus.equalsIgnoreCase("pause")) {
+                                            Toast.makeText(context, "Unable to View Reminder Responses task is in pause state ", Toast.LENGTH_SHORT).show();
+                                        }
+                                    } else {
+                                        showToast("Please Create Task to view Reminder Response ");
+                                    }
+                                    gridview_taker.setVisibility(View.GONE);
+                                    icons.setVisibility(View.VISIBLE);
+                                    arrow = false;
+                                    break;
+
+                                case "MoreFields":
+                                    try {
+                                        if (!isTaskName) {
+                                            if (taskStatus != null && !taskStatus.equalsIgnoreCase("abandoned") && !taskStatus.equalsIgnoreCase("pause") && !taskStatus.equalsIgnoreCase("rejected")) {
+                                                showprogressforpriority("Loading MoreFields");
+                                                List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
+                                                nameValuePairs.add(new BasicNameValuePair("taskId", webtaskId));
+                                                Appreference.jsonRequestSender.getCustomTag(EnumJsonWebservicename.getRequestType, nameValuePairs, NewTaskConversation.this);
+                                            } else if (taskStatus != null && taskStatus.equalsIgnoreCase("abandoned")) {
+                                                Toast.makeText(context, "Unable to set MoreFields task is in abandoned state ", Toast.LENGTH_SHORT).show();
+                                            } else if (taskStatus != null && taskStatus.equalsIgnoreCase("pause")) {
+                                                Toast.makeText(context, "Unable to set MoreFields task is in pause state ", Toast.LENGTH_SHORT).show();
+                                            } else if (taskStatus != null && taskStatus.equalsIgnoreCase("rejetced")) {
+                                                Toast.makeText(context, "Unable to set MoreFields task is in rejetced state ", Toast.LENGTH_SHORT).show();
+                                            }
+                                        } else {
+                                            showToast("Please Enter TaskDescription and Make a NewTask");
+                                        }
+                                        gridview_taker.setVisibility(View.GONE);
+                                        icons.setVisibility(View.VISIBLE);
+                                        arrow = false;
+                                    } catch (Exception e) {
+                                        e.printStackTrace();
+                                        Appreference.printLog("NewTaskConversation", "Exception " + e.getMessage(), "WARN", null);
+                                    }
+                                    break;
+
+                                case "ViewTask":
+                                    try {
+                                        if (webtaskId != null) {
+                                            if (!project) {
+                                                String issue_Parent_id = dataBase.getProjectParentTaskId("select parentTaskId from taskHistoryInfo where taskId='" + webtaskId + "'");
+                                                ArrayList<TaskDetailsBean> taskDetailsBean;
+                                                taskDetailsBean = VideoCallDataBase.getDB(context).getTaskHistoryInfo("select * from taskHistoryInfo where taskId='" + issue_Parent_id + "'");
+                                                if (taskDetailsBean.size() > 0) {
+                                                    TaskDetailsBean taskBean = taskDetailsBean.get(0);
+                                                    Intent intent1 = new Intent(getApplicationContext(), NewTaskConversation.class);
+                                                    intent1.putExtra("task", "taskhistory");
+                                                    intent1.putExtra("taskHistoryBean", taskBean);
+                                                    intent1.putExtra("catagory", taskBean.getCatagory());
+                                                    Log.i("Task1", "groupname" + groupname);
+                                                    intent1.putExtra("groupname", groupname);
+                                                    Log.i("task", "taskId is == " + taskBean.getTaskId());
+                                                    startActivity(intent1);
+                                                }
+                                            } else {
+                                                String issue_Parent_id = dataBase.getProjectParentTaskId("select issueParentId from projectHistory where taskId='" + webtaskId + "'");
+                                                ArrayList<ProjectDetailsBean> taskDetailsBean;
+                                                taskDetailsBean = VideoCallDataBase.getDB(context).getProjectHistory("select * from projectHistory where taskId='" + issue_Parent_id + "'");
+                                                Log.i("View_Task", " issue_Parent_id == 2 " + issue_Parent_id + "  taskDetailsBean size == " + taskDetailsBean.size());
+                                                if (taskDetailsBean.size() > 0) {
+                                                    ProjectDetailsBean taskBean = taskDetailsBean.get(0);
+                                                    for (ProjectDetailsBean taskDetailsBean1 : taskDetailsBean) {
+                                                        Log.i("View_Task", "  taskDetailsBean size ==  for Loop " + taskDetailsBean1.getTaskId());
+                                                    }
+                                                    if (taskBean.getTaskType() != null && taskBean.getTaskType().equalsIgnoreCase("individual")) {
+                                                        if (taskBean.getTaskReceiver().equalsIgnoreCase(Appreference.loginuserdetails.getUsername()) || taskBean.getOwnerOfTask().equalsIgnoreCase(Appreference.loginuserdetails.getUsername()) || taskBean.getTaskObservers().contains(Appreference.loginuserdetails.getUsername())) {
+                                                            Intent intent1 = new Intent(context, NewTaskConversation.class);
+                                                            intent1.putExtra("task", "projectHistory");
+                                                            intent1.putExtra("projectHistoryBean", taskBean);
+                                                            startActivity(intent1);
+                                                        } else {
+                                                            Toast.makeText(getApplicationContext(), "You are not in individual project subtask", Toast.LENGTH_SHORT).show();
+                                                        }
+                                                    } else if (taskBean.getTaskType() != null && taskBean.getTaskType().equalsIgnoreCase("Group")) {
+                                                        if ((taskBean.getTaskMemberList() != null && taskBean.getTaskMemberList().contains(Appreference.loginuserdetails.getUsername())) || (taskBean.getOwnerOfTask() != null && taskBean.getOwnerOfTask().equalsIgnoreCase(Appreference.loginuserdetails.getUsername())) || (taskBean.getTaskObservers() != null && taskBean.getTaskObservers().contains(Appreference.loginuserdetails.getUsername()))) {
+                                                            Intent intent2 = new Intent(context, NewTaskConversation.class);
+                                                            intent2.putExtra("task", "projectHistory");
+                                                            intent2.putExtra("projectHistoryBean", taskBean);
+                                                            startActivity(intent2);
+                                                        } else {
+                                                            Toast.makeText(getApplicationContext(), "You are not in group project task", Toast.LENGTH_SHORT).show();
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        } else {
+                                            showToast("Please Enter TaskDescription and Make a NewTask ");
+                                        }
+                                        gridview_taker.setVisibility(View.GONE);
+                                        icons.setVisibility(View.VISIBLE);
+                                        arrow = false;
+                                    } catch (Exception e) {
+                                        e.printStackTrace();
+                                        Appreference.printLog("NewTaskConversation", "Exception " + e.getMessage(), "WARN", null);
+                                    }
+                                    break;
+                                case "Custom1":
+                                    try {
+                                        final TaskDetailsBean detailsBean;
+                                        String Querystatus = "Select * from projectStatus where projectId ='" + projectId + "' and taskId = '" + webtaskId + "'";
+                                        detailsBean = VideoCallDataBase.getDB(context).getStatusCompletedProjectDetails(Querystatus);
+                                        showCustom1PopUp(detailsBean);
+                                    } catch (Exception e) {
+                                        e.printStackTrace();
+                                        Appreference.printLog("NewTaskConversation", "Exception " + e.getMessage(), "WARN", null);
+                                    }
+                                    break;
+                            }
+                        } catch (NumberFormatException e) {
+                            e.printStackTrace();
+                            Appreference.printLog("NewTaskConversation girdview taker click", "Exception " + e.getMessage(), "WARN", null);
+                        }
+                    }
+                }
+
+        );
+
+        gridview_observer.setOnItemClickListener(
+                new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                        Log.i("gridview", "Position" + position);
+                        String selected_text = texts_observer[position];
+                        switch (selected_text) {
+                            case "Private":
+                                if (taskStatus != null && !taskStatus.equalsIgnoreCase("abandoned") && !taskStatus.equalsIgnoreCase("pause")) {
+                                    if (subType != null && subType.equalsIgnoreCase("private")) {
+                                        private_member = null;
+                                        subType = "normal";
+                                        des.setHint("");
+                                        icons.setBackgroundColor(getResources().getColor(R.color.white));
+                                        linear1.setBackgroundColor(getResources().getColor(R.color.white));
+                                        Toast.makeText(NewTaskConversation.this, "Private message disabled", Toast.LENGTH_SHORT).show();
+                                    } else {
+                                        des.setHint("private message");
+                                        subType = "private";
+                                        icons.setBackgroundColor(getResources().getColor(R.color.grey));
+                                        linear1.setBackgroundColor(getResources().getColor(R.color.grey));
+                                        Toast.makeText(NewTaskConversation.this, "Private message enabled", Toast.LENGTH_SHORT).show();
+                                        String Observers = "", Qurey;
+                                        if (project) {
+                                            Qurey = "select taskObservers from projectHistory where taskId='" + webtaskId + "'";
+                                        } else {
+                                            Qurey = "select taskObservers from taskHistoryInfo where taskId='" + webtaskId + "'";
+                                        }
+                                        Log.i("gridview", "listOfObservers  " + Observers + " name " + Qurey);
+                                        Observers = VideoCallDataBase.getDB(context).getProjectParentTaskId(Qurey);
+                                        if ((taskType != null && taskType.equalsIgnoreCase("Group"))) {
+                                            Intent intent = new Intent(NewTaskConversation.this, GroupPercentageStatus.class);
+                                            intent.putExtra("taskid", webtaskId);
+                                            intent.putExtra("groupId", String.valueOf(toUserId));
+                                            intent.putExtra("subtype", "private");
+                                            intent.putExtra("ownerOfTask", ownerOfTask);
+                                            if (project) {
+                                                intent.putExtra("isProject", "yes");
+                                            } else {
+                                                intent.putExtra("isProject", "no");
+                                            }
+                                            startActivityForResult(intent, 999);
+                                        } else if (Observers != null && Observers.length() > 0) {
+                                            Log.i("private_message", "values " + listOfObservers.size() + "Name " + listOfObservers);
+                                            Intent intent = new Intent(NewTaskConversation.this, GroupPercentageStatus.class);
+                                            intent.putExtra("taskid", webtaskId);
+                                            intent.putExtra("taskType", taskType);
+                                            intent.putExtra("subtype", "private");
+                                            intent.putExtra("ownerOfTask", ownerOfTask);
+                                            if (project) {
+                                                intent.putExtra("isProject", "yes");
+                                            } else {
+                                                intent.putExtra("isProject", "no");
+                                            }
+                                            startActivityForResult(intent, 999);
+                                        } else {
+                                            private_member = VideoCallDataBase.getDB(context).getName(toUserName);
+                                        }
+                                    }
+                                } else if (taskStatus != null && taskStatus.equalsIgnoreCase("abandoned")) {
+                                    Toast.makeText(context, "Unable to sent  Private Message task is in abandoned state ", Toast.LENGTH_SHORT).show();
+                                } else if (taskStatus != null && taskStatus.equalsIgnoreCase("pause")) {
+                                    Toast.makeText(context, "Unable to sent  Private Message task is in pause state ", Toast.LENGTH_SHORT).show();
+                                }
+                                gridview_observer.setVisibility(View.GONE);
+                                icons.setVisibility(View.VISIBLE);
+                                arrow = false;
+                                break;
+
+                            case "Chat":
+                                try {
+                                    if (taskStatus != null && !taskStatus.equalsIgnoreCase("abandoned") && !taskStatus.equalsIgnoreCase("pause")) {
+                                        if (subType != null && subType.equalsIgnoreCase("private")) {
+                                            subType = "normal";
+                                            des.setHint("");
+                                            icons.setBackgroundColor(getResources().getColor(R.color.white));
+                                            linear1.setBackgroundColor(getResources().getColor(R.color.white));
+                                            Toast.makeText(NewTaskConversation.this, "Private message disabled", Toast.LENGTH_SHORT).show();
+                                        } else if (subType != null && subType.equalsIgnoreCase("taskDescription")) {
+                                            subType = "normal";
+                                            des.setHint("");
+                                            icons.setBackgroundColor(getResources().getColor(R.color.white));
+                                            linear1.setBackgroundColor(getResources().getColor(R.color.white));
+                                            Toast.makeText(NewTaskConversation.this, "Task Description message disabled", Toast.LENGTH_SHORT).show();
+                                        }
+                                    } else if (taskStatus != null && taskStatus.equalsIgnoreCase("abandoned")) {
+                                        Toast.makeText(context, "Unable to change  Chat Message task is in abandoned state ", Toast.LENGTH_SHORT).show();
+                                    } else if (taskStatus != null && taskStatus.equalsIgnoreCase("pause")) {
+                                        Toast.makeText(context, "Unable to change Chat Message task is in pause state ", Toast.LENGTH_SHORT).show();
+                                    }
+                                    gridview_observer.setVisibility(View.GONE);
+                                    icons.setVisibility(View.VISIBLE);
+                                    arrow = false;
+                                } catch (Resources.NotFoundException e) {
+                                    e.printStackTrace();
+                                    Appreference.printLog("NewTaskConversation", "Exception " + e.getMessage(), "WARN", null);
+                                }
+                                break;
+
+                            case "Scheduled":
                                 if (!isTaskName) {
-                                    showprogressforpriority("Loading Scheduled calls");
-                                    List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
-                                    nameValuePairs.add(new BasicNameValuePair("taskId", webtaskId));
-                                    Appreference.jsonRequestSender.getCustomTag(EnumJsonWebservicename.getCustomTag, nameValuePairs, NewTaskConversation.this);
+                                    if (taskStatus != null && !taskStatus.equalsIgnoreCase("abandoned") && !taskStatus.equalsIgnoreCase("pause") && !taskStatus.equalsIgnoreCase("rejected")) {
+                                        showprogressforpriority("Loading Scheduled calls");
+                                        List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
+                                        nameValuePairs.add(new BasicNameValuePair("taskId", webtaskId));
+                                        Appreference.jsonRequestSender.getCustomTag(EnumJsonWebservicename.getCustomTag, nameValuePairs, NewTaskConversation.this);
+                                    } else if (taskStatus != null && taskStatus.equalsIgnoreCase("abandoned")) {
+                                        Toast.makeText(context, "Unable to set Scheduled call task is in abandoned state ", Toast.LENGTH_SHORT).show();
+                                    } else if (taskStatus != null && taskStatus.equalsIgnoreCase("pause")) {
+                                        Toast.makeText(context, "Unable to set Scheduled call task is in pause state ", Toast.LENGTH_SHORT).show();
+                                    } else if (taskStatus != null && taskStatus.equalsIgnoreCase("rejected")) {
+                                        Toast.makeText(context, "Unable to set Scheduled call task is in rejected state ", Toast.LENGTH_SHORT).show();
+                                    }
                                 } else {
                                     showToast("Please Enter TaskDescription and Make a NewTask ");
                                 }
-                                gridview.setVisibility(View.GONE);
+                                gridview_observer.setVisibility(View.GONE);
                                 icons.setVisibility(View.VISIBLE);
                                 arrow = false;
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                                Appreference.printLog("NewTaskConversation", "Exception " + e.getMessage(), "WARN", null);
-                            }
-                            break;
-                        case "Audio":
-                            try {
-                                Intent i = new Intent(NewTaskConversation.this, AudioRecorder.class);
-                                i.putExtra("task", "audio");
-                                startActivityForResult(i, 333);
-                                gridview.setVisibility(View.GONE);
+                                break;
+
+                            case "Audio":
+                                try {
+                                    Intent i = new Intent(NewTaskConversation.this, AudioRecorder.class);
+                                    i.putExtra("task", "audio");
+                                    startActivityForResult(i, 333);
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
+                                gridview_observer.setVisibility(View.GONE);
                                 icons.setVisibility(View.VISIBLE);
                                 arrow = false;
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                                Appreference.printLog("NewTaskConversation", "Exception " + e.getMessage(), "WARN", null);
-                            }
-                            break;
-                        case "Photo":
-                            multimediaImage("image");
-                            gridview.setVisibility(View.GONE);
-                            icons.setVisibility(View.VISIBLE);
-                            arrow = false;
-                            break;
-                        case "Sketch":
-                            try {
+                                break;
+
+                            case "Photo":
+                                multimediaImage("image");
+                                gridview_observer.setVisibility(View.GONE);
+                                icons.setVisibility(View.VISIBLE);
+                                arrow = false;
+                                break;
+
+                            case "Sketch":
                                 Intent i = new Intent(getApplicationContext(), HandSketchActivity2.class);
                                 startActivityForResult(i, 423);
-                                gridview.setVisibility(View.GONE);
+                                gridview_observer.setVisibility(View.GONE);
                                 icons.setVisibility(View.VISIBLE);
                                 arrow = false;
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                                Appreference.printLog("NewTaskConversation", "Exception " + e.getMessage(), "WARN", null);
-                            }
-                            break;
-                        case "Video":
-                            multimediaImage("video");
-                            gridview.setVisibility(View.GONE);
-                            icons.setVisibility(View.VISIBLE);
-                            arrow = false;
-                            break;
-                        case "File":
-                            try {
-                                Intent file_intent = new Intent(NewTaskConversation.this, FilePicker.class);
-                                startActivityForResult(file_intent, 55);
-                                gridview.setVisibility(View.GONE);
-                                icons.setVisibility(View.VISIBLE);
-                                arrow = false;
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                            }
-                            break;
-                        case "Dates":
-                            try {
-                                if (taskStatus != null && !taskStatus.equalsIgnoreCase("closed")) {
-                                    if (taskStatus != null && !taskStatus.equalsIgnoreCase("abandoned")) {
-                                        if (template && !note) {
-                                            Intent intent = new Intent(NewTaskConversation.this, TaskDateUpdate.class);
-                                            intent.putExtra("template", "success");
-                                            intent.putExtra("taskId", webtaskId);
-                                            intent.putExtra("taskType", "template");
-                                            intent.putExtra("toUserIdConflict", String.valueOf(toUserId));
-                                            NewTaskConversation.this.startActivityForResult(intent, 666);
-                                        } else if (note) {
-                                            Intent intent = new Intent(NewTaskConversation.this, NoteDateUpdate.class);
-                                            //                                intent.putExtra("template", "success");
-                                            intent.putExtra("taskId", webtaskId);
-                                            intent.putExtra("taskType", "note");
-                                            intent.putExtra("from", "taskconversation");
-                                            //                                intent.putExtra("toUserIdConflict", String.valueOf(toUserId));
-                                            NewTaskConversation.this.startActivityForResult(intent, 555);
-                                        } else {
-                                            Intent intent = new Intent(NewTaskConversation.this, TaskDateUpdate.class);
-                                            intent.putExtra("template", "failure");
-                                            intent.putExtra("taskId", webtaskId);
-                                            intent.putExtra("taskType", taskType);
-                                            intent.putExtra("toUserIdConflict", String.valueOf(toUserId));
-                                            NewTaskConversation.this.startActivityForResult(intent, 336);
-                                        }
-                                    } else {
-                                        Toast.makeText(context, "Unable to sent the Date task is in abandoned state ", Toast.LENGTH_SHORT).show();
-                                    }
-                                } else {
-                                    Toast.makeText(context, "This " + category + " is already Closed ", Toast.LENGTH_SHORT).show();
-                                }
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                                Appreference.printLog("NewTaskConversation", "Exception " + e.getMessage(), "WARN", null);
-                            }
-                            gridview.setVisibility(View.GONE);
-                            icons.setVisibility(View.VISIBLE);
-                            arrow = false;
-                            break;
-                        case "Completion":
-                            try {
-                                if (taskStatus != null && !taskStatus.equalsIgnoreCase("Closed")) {
-                                    if (taskStatus != null && !taskStatus.equalsIgnoreCase("abandoned")) {
-                                        int a = 0;
-                                        if (taskType != null && taskType.equalsIgnoreCase("group")) {
-                                            Log.i("GroupPercentageClick", " groupname 2 " + groupname);
-                                            String percent_sender = VideoCallDataBase.getDB(context).getlastCompletedParcentagesender(webtaskId);
-                                            Log.i("GroupPercentageClick", " groupname 21 " + percent_sender);
-                                            if (percent_sender != null && percent_sender.equalsIgnoreCase(ownerOfTask)) {
-                                                a = Integer.parseInt(VideoCallDataBase.getDB(context).getlastCompletedParcentage(webtaskId));
-                                                Log.i("GroupPercentageClick", " groupname 22 " + a);
-                                            } else {
-                                                a = VideoCallDataBase.getDB(context).GroupPercentageChecker(groupname, webtaskId, ownerOfTask);
-                                                Log.i("GroupPercentageClick", " groupname 23 " + a);
-                                            }
-                                            percentage = String.valueOf(a);
-                                        } else {
-                                            a = VideoCallDataBase.getDB(context).percentagechecker(webtaskId);
-                                            Log.i("Task1", "percentage" + percentage);
-                                            percentage = String.valueOf(a);
-                                        }
-                                        Intent intent = new Intent(NewTaskConversation.this, UpdateTaskActivity.class);
-                                        Log.i("percentage", "UpdateTaskActivity 2  " + ownerOfTask);
-                                        Log.i("percentage", "UpdateTaskActivity 2 " + toUserId);
-                                        intent.putExtra("username", toUserName);
-                                        intent.putExtra("Str", "conversation");
-                                        intent.putExtra("level", percentage);
-                                        intent.putExtra("taskType", taskType);
-                                        intent.putExtra("toUserId", String.valueOf(toUserId));
-                                        intent.putExtra("ownerOfTask", ownerOfTask);
-                                        intent.putExtra("category", category);
-                                        startActivityForResult(intent, 210);
-                                    } else {
-                                        Toast.makeText(context, "Unable to change the percentage task is in abandoned state ", Toast.LENGTH_SHORT).show();
-                                    }
-                                } else {
-                                    Toast.makeText(context, "This " + category + " is already Closed ", Toast.LENGTH_SHORT).show();
-                                }
-                                gridview.setVisibility(View.GONE);
-                                icons.setVisibility(View.VISIBLE);
-                                arrow = false;
-                            } catch (NumberFormatException e) {
-                                e.printStackTrace();
-                                Appreference.printLog("NewTaskConversation", "Exception " + e.getMessage(), "WARN", null);
-                            }
-                            break;
+                                break;
 
-                        case "Call":
-                            multimediaImage("call");
-                            gridview.setVisibility(View.GONE);
-                            icons.setVisibility(View.VISIBLE);
-                            arrow = false;
-                            break;
-                        case "AddObserver":
-                            try {
-                                if (webtaskId == null) {
-                                    Toast.makeText(NewTaskConversation.this, "Please Create the Task ", Toast.LENGTH_SHORT).show();
-                                } else {
-                                    addObserverClickEvent();
-                                }
-                                gridview.setVisibility(View.GONE);
+                            case "Video":
+                                multimediaImage("video");
+                                gridview_observer.setVisibility(View.GONE);
                                 icons.setVisibility(View.VISIBLE);
                                 arrow = false;
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                                Appreference.printLog("NewTaskConversation", "Exception " + e.getMessage(), "WARN", null);
-                            }
-                            break;
-                        case "Chat":
-                            try {
-                                if (subType != null && subType.equalsIgnoreCase("private")) {
-                                    subType = "normal";
-                                    des.setHint("");
-                                    icons.setBackgroundColor(getResources().getColor(R.color.white));
-                                    linear1.setBackgroundColor(getResources().getColor(R.color.white));
-                                    Toast.makeText(NewTaskConversation.this, "Private message disabled", Toast.LENGTH_SHORT).show();
-                                } else if (subType != null && subType.equalsIgnoreCase("taskDescription")) {
-                                    subType = "normal";
-                                    des.setHint("");
-                                    icons.setBackgroundColor(getResources().getColor(R.color.white));
-                                    linear1.setBackgroundColor(getResources().getColor(R.color.white));
-                                    Toast.makeText(NewTaskConversation.this, "Task Description message disabled", Toast.LENGTH_SHORT).show();
-                                }
-                                gridview.setVisibility(View.GONE);
-                                icons.setVisibility(View.VISIBLE);
-                                arrow = false;
-                            } catch (Resources.NotFoundException e) {
-                                e.printStackTrace();
-                                Appreference.printLog("NewTaskConversation", "Exception " + e.getMessage(), "WARN", null);
-                            }
-                            break;
-                        case "Description":
-                            try {
-                                if (subType != null && subType.equalsIgnoreCase("taskDescription")) {
-                                    subType = "normal";
-                                    des.setHint("");
-                                    icons.setBackgroundColor(getResources().getColor(R.color.white));
-                                    linear1.setBackgroundColor(getResources().getColor(R.color.white));
-                                    Toast.makeText(NewTaskConversation.this, "Task Description message disabled", Toast.LENGTH_SHORT).show();
-                                } else {
-                                    subType = "taskDescription";
-                                    des.setHint("Task Description");
-                                    icons.setBackgroundColor(getResources().getColor(R.color.lgyellow));
-                                    linear1.setBackgroundColor(getResources().getColor(R.color.lgyellow));
-                                    Toast.makeText(NewTaskConversation.this, "Task description message enabled", Toast.LENGTH_SHORT).show();
-                                }
-                                gridview.setVisibility(View.GONE);
-                                icons.setVisibility(View.VISIBLE);
-                                arrow = false;
-                            } catch (Resources.NotFoundException e) {
-                                e.printStackTrace();
-                                Appreference.printLog("NewTaskConversation", "Exception " + e.getMessage(), "WARN", null);
-                            }
-                            break;
+                                break;
 
-                        case "Forms":
-                            try {
+                            case "File":
+                                try {
+                                    Intent intent_file = new Intent(NewTaskConversation.this, FilePicker.class);
+                                    startActivityForResult(intent_file, 55);
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
+                                gridview_observer.setVisibility(View.GONE);
+                                icons.setVisibility(View.VISIBLE);
+                                arrow = false;
+                                break;
+
+                            case "Call":
+                                multimediaImage("call");
+                                gridview.setVisibility(View.GONE);
+                                icons.setVisibility(View.VISIBLE);
+                                arrow = false;
+                                break;
+
+                            case "Forms":
                                 if (!isTaskName) {
-                                    Intent formintent = new Intent(NewTaskConversation.this, FormsListActivity.class);
-                                    formintent.putExtra("FormsList", new ArrayList<FormsListBean>());
-                                    formintent.putExtra("TaskId", webtaskId);
-                                    formintent.putExtra("webformcheck", "false");
-                                    formintent.putExtra("isTemplate", "No");
-                                    formintent.putExtra("UserList", listOfObservers);
-                                    formintent.putExtra("TaskBean", beanValue());
-                                    Log.i("TemplateList", " formclick in grid ");
-                                    startActivity(formintent);
+                                    if (taskStatus != null && !taskStatus.equalsIgnoreCase("abandoned") && !taskStatus.equalsIgnoreCase("pause")) {
+                                        Intent formintent = new Intent(NewTaskConversation.this, FormsListActivity.class);
+                                        formintent.putExtra("FormsList", new ArrayList<FormsListBean>());
+                                        formintent.putExtra("TaskId", webtaskId);
+                                        formintent.putExtra("webformcheck", "false");
+                                        formintent.putExtra("isTemplate", "No");
+                                        formintent.putExtra("TaskBean", beanValue());
+                                        formintent.putExtra("UserList", listOfObservers);
+                                        startActivity(formintent);
+                                    } else if (taskStatus != null && taskStatus.equalsIgnoreCase("abandoned")) {
+                                        Toast.makeText(context, "Unable to set Forms task is in abandoned state ", Toast.LENGTH_SHORT).show();
+                                    } else if (taskStatus != null && taskStatus.equalsIgnoreCase("pause")) {
+                                        Toast.makeText(context, "Unable to set Forms task is in pause state ", Toast.LENGTH_SHORT).show();
+                                    }
                                 } else {
                                     showToast("Please Enter TaskDescription and Make a NewTask ");
                                 }
-                                arrow = false;
-                                gridview.setVisibility(View.GONE);
+                                gridview_observer.setVisibility(View.GONE);
                                 icons.setVisibility(View.VISIBLE);
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                                Appreference.printLog("NewTaskConversation", "Exception " + e.getMessage(), "WARN", null);
-                            }
-                            break;
-                        case "ReassignTask":
-                            addTaskReassignClickEvent();
-                            gridview.setVisibility(View.GONE);
-                            icons.setVisibility(View.VISIBLE);
-                            arrow = false;
-                            break;
-                        case "ReminderResponce":
-                            try {
+                                arrow = false;
+                                break;
+
+                            case "Reminder Responses":
                                 if (webtaskId != null) {
-                                    Intent reminderintent = new Intent(NewTaskConversation.this, Reminder_Responses.class);
-                                    reminderintent.putExtra("taskId", webtaskId);
-                                    startActivity(reminderintent);
+                                    if (taskStatus != null && !taskStatus.equalsIgnoreCase("abandoned") && !taskStatus.equalsIgnoreCase("pause")) {
+                                        Intent reminderintent = new Intent(NewTaskConversation.this, Reminder_Responses.class);
+                                        reminderintent.putExtra("taskId", webtaskId);
+                                        reminderintent.putExtra("taskType", taskType);
+                                        startActivity(reminderintent);
+                                    } else if (taskStatus != null && taskStatus.equalsIgnoreCase("abandoned")) {
+                                        Toast.makeText(context, "Unable to View Reminder Responses task is in abandoned state ", Toast.LENGTH_SHORT).show();
+                                    } else if (taskStatus != null && taskStatus.equalsIgnoreCase("pause")) {
+                                        Toast.makeText(context, "Unable to View Reminder Responses task is in pause state ", Toast.LENGTH_SHORT).show();
+                                    }
                                 } else {
                                     showToast("Please Create Task to view Reminder Response ");
                                 }
-                                gridview.setVisibility(View.GONE);
+                                gridview_observer.setVisibility(View.GONE);
                                 icons.setVisibility(View.VISIBLE);
                                 arrow = false;
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                                Appreference.printLog("NewTaskConversation", "Exception " + e.getMessage(), "WARN", null);
-                            }
-                            break;
-                        case "RemindMe":
-                            try {
-                                Intent note_intent = new Intent(NewTaskConversation.this, NoteDateUpdate.class);
-                                note_intent.putExtra("taskId", webtaskId);
-                                note_intent.putExtra("taskType", "note");
-                                NewTaskConversation.this.startActivityForResult(note_intent, 555);
-                                gridview.setVisibility(View.GONE);
-                                icons.setVisibility(View.VISIBLE);
-                                arrow = false;
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                                Appreference.printLog("NewTaskConversation", "Exception " + e.getMessage(), "WARN", null);
-                            }
-                            break;
-                        case "moreFields":
-                            try {
+                                break;
+
+                            case "MoreFields":
                                 if (!isTaskName) {
-                                    //                            Toast.makeText(getApplicationContext(), "CustomTagsActivity", Toast.LENGTH_SHORT).show();
-                                    showprogressforpriority("Loading MoreFields");
-                                    List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
-                                    nameValuePairs.add(new BasicNameValuePair("taskId", webtaskId));
-                                    Appreference.jsonRequestSender.getCustomTag(EnumJsonWebservicename.getRequestType, nameValuePairs, NewTaskConversation.this);
-                                } else {
-                                    showToast("Please Enter TaskDescription and Make a NewTask ");
-                                }
-                                gridview_taker.setVisibility(View.GONE);
-                                icons.setVisibility(View.VISIBLE);
-                                arrow = false;
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                                Appreference.printLog("NewTaskConversation", "Exception " + e.getMessage(), "WARN", null);
-                            }
-                            break;
-                        case "ViewTask":
-                            try {
-                                if (webtaskId != null) {
-                                    if (!project) {
-                                        String issue_Parent_id = dataBase.getProjectParentTaskId("select parentTaskId from taskHistoryInfo where taskId='" + webtaskId + "'");
-                                        ArrayList<TaskDetailsBean> taskDetailsBean = new ArrayList<TaskDetailsBean>();
-                                        taskDetailsBean = VideoCallDataBase.getDB(context).getTaskHistoryInfo("select * from taskHistoryInfo where taskId='" + issue_Parent_id + "'");
-                                        if (taskDetailsBean.size() > 0) {
-                                            TaskDetailsBean taskBean = taskDetailsBean.get(0);
-                                            Intent intent = new Intent(getApplicationContext(), NewTaskConversation.class);
-                                            intent.putExtra("task", "taskhistory");
-                                            intent.putExtra("taskHistoryBean", taskBean);
-                                            intent.putExtra("catagory", taskBean.getCatagory());
-                                            Log.i("Task1", "groupname" + groupname);
-                                            intent.putExtra("groupname", groupname);
-                                            Log.i("task", "taskId is == " + taskBean.getTaskId());
-                                            startActivity(intent);
-//                                            finish();
-                                        }
-                                    } else {
-                                        String issue_Parent_id = dataBase.getProjectParentTaskId("select issueParentId from projectHistory where taskId='" + webtaskId + "'");
-                                        ArrayList<ProjectDetailsBean> taskDetailsBean = new ArrayList<ProjectDetailsBean>();
-                                        taskDetailsBean = VideoCallDataBase.getDB(context).getProjectHistory("select * from projectHistory where taskId='" + issue_Parent_id + "'");
-                                        Log.i("View_Task", " issue_Parent_id == 2 " + issue_Parent_id + "  taskDetailsBean size == " + taskDetailsBean.size());
-                                        if (taskDetailsBean.size() > 0) {
-                                            ProjectDetailsBean taskBean = taskDetailsBean.get(0);
-                                            for (ProjectDetailsBean taskDetailsBean1 : taskDetailsBean) {
-                                                Log.i("View_Task", "  taskDetailsBean size ==  for Loop " + taskDetailsBean1.getTaskId());
-                                            }
-                                            Log.i("View_Task", " issue_Parent_id == 3 " + issue_Parent_id + "  taskDetailsBean size == " + taskBean.getTaskId());
-                                            if (taskBean.getTaskType() != null && taskBean.getTaskType().equalsIgnoreCase("individual")) {
-                                                if (taskBean.getTaskReceiver().equalsIgnoreCase(Appreference.loginuserdetails.getUsername()) || taskBean.getOwnerOfTask().equalsIgnoreCase(Appreference.loginuserdetails.getUsername()) || taskBean.getTaskObservers().contains(Appreference.loginuserdetails.getUsername())) {
-                                                    Intent intent = new Intent(context, NewTaskConversation.class);
-                                                    intent.putExtra("task", "projectHistory");
-                                                    intent.putExtra("projectHistoryBean", taskBean);
-                                                    startActivity(intent);
-                                                } else {
-                                                    Toast.makeText(getApplicationContext(), "You are not in individual project subtask", Toast.LENGTH_SHORT).show();
-                                                }
-                                            } else if (taskBean.getTaskType() != null && taskBean.getTaskType().equalsIgnoreCase("Group")) {
-                                                Log.i("ListMembers", "projectDetailsBean.getTaskMemberList() " + taskBean.getTaskMemberList());
-                                                if ((taskBean.getTaskMemberList() != null && taskBean.getTaskMemberList().contains(Appreference.loginuserdetails.getUsername())) || (taskBean.getOwnerOfTask() != null && taskBean.getOwnerOfTask().equalsIgnoreCase(Appreference.loginuserdetails.getUsername())) || (taskBean.getTaskObservers() != null && taskBean.getTaskObservers().contains(Appreference.loginuserdetails.getUsername()))) {
-                                                    Intent intent = new Intent(context, NewTaskConversation.class);
-                                                    intent.putExtra("task", "projectHistory");
-                                                    intent.putExtra("projectHistoryBean", taskBean);
-                                                    startActivity(intent);
-                                                } else {
-                                                    Toast.makeText(getApplicationContext(), "You are not in group project task", Toast.LENGTH_SHORT).show();
-                                                }
-                                            }
-                                        }
+                                    if (taskStatus != null && !taskStatus.equalsIgnoreCase("abandoned") && !taskStatus.equalsIgnoreCase("pause") && !taskStatus.equalsIgnoreCase("rejected")) {
+                                        showprogressforpriority("Loading MoreFields");
+                                        List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
+                                        nameValuePairs.add(new BasicNameValuePair("taskId", webtaskId));
+                                        Appreference.jsonRequestSender.getCustomTag(EnumJsonWebservicename.getRequestType, nameValuePairs, NewTaskConversation.this);
+                                    } else if (taskStatus != null && taskStatus.equalsIgnoreCase("abandoned")) {
+                                        Toast.makeText(context, "Unable to set MoreFields task is in abandoned state ", Toast.LENGTH_SHORT).show();
+                                    } else if (taskStatus != null && taskStatus.equalsIgnoreCase("pause")) {
+                                        Toast.makeText(context, "Unable to set MoreFields task is in pause state ", Toast.LENGTH_SHORT).show();
+                                    } else if (taskStatus != null && taskStatus.equalsIgnoreCase("rejected")) {
+                                        Toast.makeText(context, "Unable to set MoreFields task is in rejected state ", Toast.LENGTH_SHORT).show();
                                     }
                                 } else {
                                     showToast("Please Enter TaskDescription and Make a NewTask ");
                                 }
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                                Appreference.printLog("NewTaskConversation", "Exception " + e.getMessage(), "WARN", null);
-                            }
-                            break;
-                        case "TNA Report":
-                            JSONObject jsonTNAObject = new JSONObject();
-                            JSONObject jsonObject1 = new JSONObject();
-                            jsonObject1.put("id", Integer.parseInt(webtaskId));
-                            jsonTNAObject.put("task", jsonObject1);
-                            jsonTNAObject.put("fromId", Appreference.loginuserdetails.getId());
-                            jsonTNAObject.put("projectId", projectId);
-                            JSONArray jsonArray = new JSONArray();
-                            JSONObject jsonObject3 = new JSONObject();
-                            jsonObject3.put("id", toUserId);
-                            jsonArray.put(0, jsonObject3);
-                            jsonTNAObject.put("listUser", jsonArray);
-                            Appreference.jsonRequestSender.OracleTNAReport(EnumJsonWebservicename.taskNeedAssessmentReport, jsonTNAObject, NewTaskConversation.this);
+                                gridview_observer.setVisibility(View.GONE);
+                                icons.setVisibility(View.VISIBLE);
+                                arrow = false;
+                                break;
 
-
-
-                          /*  if (taskType != null && taskType.equalsIgnoreCase("group")) {
-                                AlertDialog.Builder builderSingle = new AlertDialog.Builder(NewTaskConversation.this);
-                                builderSingle.setIcon(R.drawable.app_icon);
-                                builderSingle.setTitle("Please Select....");
-                                final ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(NewTaskConversation.this, android.R.layout.select_dialog_singlechoice, listOfObservers);
-                                builderSingle.setNegativeButton("cancel", new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        dialog.dismiss();
-                                    }
-                                });
-
-                                builderSingle.setAdapter(arrayAdapter, new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        String Selected_User = arrayAdapter.getItem(which);
-                                        if (!isTaskName) {
-                                            Intent intent1 = new Intent(getApplicationContext(), TaskReport.class);
-                                            intent1.putExtra("taskid", webtaskId);
-                                            intent1.putExtra("user_name", Selected_User);
-                                            if (listOfObservers.size() > 1)
-                                                intent1.putExtra("isGroup", "true");
-                                            else
-                                                intent1.putExtra("isGroup", "false");
-                                            startActivity(intent1);
-                                        } else {
-                                            showToast("Please fill the Custom1 ");
-                                        }
-                                    }
-                                });
-                                builderSingle.show();
-                            } else {
-                                if (!isTaskName) {
-                                    Intent intent1 = new Intent(getApplicationContext(), TaskReport.class);
-                                    intent1.putExtra("taskid", webtaskId);
-                                    startActivity(intent1);
-                                } else {
-                                    showToast("Please fill the Custom1 ");
-                                }
-                            }*/
-                            break;
-                        case "FSR Report":
-                            try {
-                                JSONObject jsonFSRObject = new JSONObject();
-                                JSONObject jsonObject2 = new JSONObject();
-                                jsonObject2.put("id", Integer.parseInt(webtaskId));
-                                jsonFSRObject.put("task", jsonObject2);
-                                jsonFSRObject.put("fromId", Appreference.loginuserdetails.getId());
-                                jsonFSRObject.put("projectId", projectId);
-                                JSONArray jsonArray1 = new JSONArray();
-                                JSONObject jsonObject4 = new JSONObject();
-                                jsonObject4.put("id", toUserId);
-                                jsonArray1.put(0, jsonObject4);
-                                jsonFSRObject.put("listUser", jsonArray1);
-//                                Appreference.jsonRequestSender.OracleFSRReport(EnumJsonWebservicename.fieldServiceReport, jsonFSRObject, NewTaskConversation.this);
-
-                              /*  if (!isTaskName) {
+                            case "ViewTask":
+                                try {
                                     if (webtaskId != null) {
-                                        //Client Side UI and get Values From DB
-                                        ArrayList<TaskDetailsBean> report = new ArrayList<>();
-                                        TaskDetailsBean bean = new TaskDetailsBean();
-                                        ArrayList<TaskDetailsBean> Report_List = VideoCallDataBase.getDB(context).getFSRReport(webtaskId);
-                                        if (Report_List != null && Report_List.size() > 0) {
-                                            Log.i("getreport", "Report_List size-->" + Report_List.size());
-                                            for (TaskDetailsBean taskDetailsBean : Report_List) {
-                                                if (taskDetailsBean.getTaskNo() != null && !taskDetailsBean.getTaskNo().equalsIgnoreCase("") && !taskDetailsBean.getTaskNo().equalsIgnoreCase("null")
-                                                        && taskDetailsBean.getTaskNo().length() > 0) {
-                                                    bean.setTaskNo(taskDetailsBean.getTaskNo());
-                                                }
-                                                if (taskDetailsBean.getTaskName() != null && !taskDetailsBean.getTaskName().equalsIgnoreCase("") && !taskDetailsBean.getTaskName().equalsIgnoreCase("null")
-                                                        && taskDetailsBean.getTaskName().length() > 0) {
-                                                    bean.setTaskName(taskDetailsBean.getTaskName());
-                                                }
-                                                if (taskDetailsBean.getTaskId() != null && !taskDetailsBean.getTaskId().equalsIgnoreCase("") && !taskDetailsBean.getTaskId().equalsIgnoreCase("null")
-                                                        && taskDetailsBean.getTaskId().length() > 0) {
-                                                    bean.setTaskId(taskDetailsBean.getTaskId());
-                                                }
-                                                if (taskDetailsBean.getTaskDescription() != null && !taskDetailsBean.getTaskDescription().equalsIgnoreCase("") && !taskDetailsBean.getTaskDescription().equalsIgnoreCase("null")
-                                                        && taskDetailsBean.getTaskDescription().length() > 0) {
-                                                    bean.setTaskDescription(taskDetailsBean.getTaskDescription());
-                                                }
-                                                if (taskDetailsBean.getToUserName() != null && !taskDetailsBean.getToUserName().equalsIgnoreCase("") && !taskDetailsBean.getToUserName().equalsIgnoreCase("null")
-                                                        && taskDetailsBean.getToUserName().length() > 0) {
-                                                    bean.setToUserName(taskDetailsBean.getToUserName());
-                                                }
-                                                if (taskDetailsBean.getDateTime() != null && !taskDetailsBean.getDateTime().equalsIgnoreCase("") && !taskDetailsBean.getDateTime().equalsIgnoreCase("null")
-                                                        && taskDetailsBean.getDateTime().length() > 0) {
-                                                    String[] DateTask = taskDetailsBean.getDateTime().split(" ");
-                                                    Log.i("string12", "Date and time-->" + DateTask[0]);
-                                                    bean.setDateTime(DateTask[0]);
-                                                }
-                                                if (taskDetailsBean.getEstimatedTravel() != null && !taskDetailsBean.getEstimatedTravel().equalsIgnoreCase("") && !taskDetailsBean.getEstimatedTravel().equalsIgnoreCase("null")
-                                                        && taskDetailsBean.getEstimatedTravel().length() > 0) {
-                                                    Log.i("string12", "travel-->" + taskDetailsBean.getEstimatedTravel());
-                                                    bean.setEstimatedTravel(taskDetailsBean.getEstimatedTravel());
-                                                }
-                                                if (taskDetailsBean.getEstimatedActivity() != null && !taskDetailsBean.getEstimatedActivity().equalsIgnoreCase("") && !taskDetailsBean.getEstimatedActivity().equalsIgnoreCase("null")
-                                                        && taskDetailsBean.getEstimatedActivity().length() > 0) {
-                                                    Log.i("string12", "Activity-->" + taskDetailsBean.getEstimatedActivity());
-                                                    bean.setEstimatedActivity(taskDetailsBean.getEstimatedActivity());
-                                                }
-                                                if (taskDetailsBean.getTotalTravel() != null && !taskDetailsBean.getTotalTravel().equalsIgnoreCase("") && !taskDetailsBean.getTotalTravel().equalsIgnoreCase("null")
-                                                        && taskDetailsBean.getTotalTravel().length() > 0) {
-                                                    Log.i("string12", "total travel-->" + taskDetailsBean.getTotalTravel());
-                                                    bean.setTotalTravel(taskDetailsBean.getTotalTravel());
-                                                }
-                                                if (taskDetailsBean.getTotalActivity() != null && !taskDetailsBean.getTotalActivity().equalsIgnoreCase("") && !taskDetailsBean.getTotalActivity().equalsIgnoreCase("null")
-                                                        && taskDetailsBean.getTotalActivity().length() > 0) {
-                                                    Log.i("string12", "total activity-->" + taskDetailsBean.getTotalActivity());
-                                                    bean.setTotalActivity(taskDetailsBean.getTotalActivity());
-                                                }
-                                                if (taskDetailsBean.getStartDate() != null && !taskDetailsBean.getStartDate().equalsIgnoreCase("") && !taskDetailsBean.getStartDate().equalsIgnoreCase("null")
-                                                        && taskDetailsBean.getStartDate().length() > 0) {
-                                                    String[] startTime = taskDetailsBean.getStartDate().split(" ");
-                                                    Log.i("string12", "start date-->" + startTime[1]);
-                                                    bean.setStartDate(startTime[0]);
-                                                }
-                                                if (taskDetailsBean.getEndDate() != null && !taskDetailsBean.getEndDate().equalsIgnoreCase("") && !taskDetailsBean.getEndDate().equalsIgnoreCase("null")
-                                                        && taskDetailsBean.getEndDate().length() > 0) {
-                                                    String[] endTime = taskDetailsBean.getEndDate().split(" ");
-                                                    Log.i("string12", "end date-->" + endTime[1]);
-                                                    bean.setEndDate(endTime[0]);
-                                                }
-                                                if (taskDetailsBean.getAddress() != null && !taskDetailsBean.getAddress().equalsIgnoreCase("") && !taskDetailsBean.getAddress().equalsIgnoreCase("null")
-                                                        && taskDetailsBean.getAddress().length() > 0) {
-                                                    bean.setAddress(taskDetailsBean.getAddress());
-                                                }
-                                                if (taskDetailsBean.getMcModel() != null && !taskDetailsBean.getMcModel().equalsIgnoreCase("") && !taskDetailsBean.getMcModel().equalsIgnoreCase("null")
-                                                        && taskDetailsBean.getMcModel().length() > 0) {
-                                                    bean.setMcModel(taskDetailsBean.getMcModel());
-                                                }
-                                                if (taskDetailsBean.getMcSrNo() != null && !taskDetailsBean.getMcSrNo().equalsIgnoreCase("") && !taskDetailsBean.getMcSrNo().equalsIgnoreCase("null")
-                                                        && taskDetailsBean.getMcSrNo().length() > 0) {
-                                                    bean.setMcSrNo(taskDetailsBean.getMcSrNo());
-                                                }
-                                                if (taskDetailsBean.getReportedBy() != null && !taskDetailsBean.getReportedBy().equalsIgnoreCase("") && !taskDetailsBean.getReportedBy().equalsIgnoreCase("null")
-                                                        && taskDetailsBean.getReportedBy().length() > 0) {
-                                                    bean.setReportedBy(taskDetailsBean.getReportedBy());
-                                                }
-                                                if (taskDetailsBean.getHMReading() != null && !taskDetailsBean.getHMReading().equalsIgnoreCase("") && !taskDetailsBean.getHMReading().equalsIgnoreCase("null")
-                                                        && taskDetailsBean.getHMReading().length() > 0) {
-                                                    bean.setHMReading(taskDetailsBean.getHMReading());
-                                                }
-                                                if (taskDetailsBean.getObservation() != null && !taskDetailsBean.getObservation().equalsIgnoreCase("") && !taskDetailsBean.getObservation().equalsIgnoreCase("null")
-                                                        && taskDetailsBean.getObservation().length() > 0) {
-                                                    bean.setObservation(taskDetailsBean.getObservation());
-                                                }
-                                                if (taskDetailsBean.getActivity() != null && !taskDetailsBean.getActivity().equalsIgnoreCase("") && !taskDetailsBean.getActivity().equalsIgnoreCase("null")
-                                                        && taskDetailsBean.getActivity().length() > 0) {
-                                                    bean.setActivity(taskDetailsBean.getActivity());
-                                                }
-                                                if (taskDetailsBean.getCustomerRemarks() != null && !taskDetailsBean.getCustomerRemarks().equalsIgnoreCase("") && !taskDetailsBean.getCustomerRemarks().equalsIgnoreCase("null")
-                                                        && taskDetailsBean.getCustomerRemarks().length() > 0) {
-                                                    bean.setCustomerRemarks(taskDetailsBean.getCustomerRemarks());
-                                                }
-                                                if (taskDetailsBean.getCustomerSignature() != null && !taskDetailsBean.getCustomerSignature().equalsIgnoreCase("") && !taskDetailsBean.getCustomerSignature().equalsIgnoreCase("null")
-                                                        && taskDetailsBean.getCustomerSignature().length() > 0) {
-                                                    bean.setCustomerSignature(taskDetailsBean.getCustomerSignature());
-                                                }
-
+                                        if (!project) {
+                                            String issue_Parent_id = dataBase.getProjectParentTaskId("select parentTaskId from taskHistoryInfo where taskId='" + webtaskId + "'");
+                                            ArrayList<TaskDetailsBean> taskDetailsBean;
+                                            taskDetailsBean = VideoCallDataBase.getDB(context).getTaskHistoryInfo("select * from taskHistoryInfo where taskId='" + issue_Parent_id + "'");
+                                            if (taskDetailsBean.size() > 0) {
+                                                TaskDetailsBean taskBean = taskDetailsBean.get(0);
+                                                Intent intent = new Intent(getApplicationContext(), NewTaskConversation.class);
+                                                intent.putExtra("task", "taskhistory");
+                                                intent.putExtra("taskHistoryBean", taskBean);
+                                                intent.putExtra("catagory", taskBean.getCatagory());
+                                                Log.i("Task1", "groupname" + groupname);
+                                                intent.putExtra("groupname", groupname);
+                                                Log.i("task", "taskId is == " + taskBean.getTaskId());
+                                                startActivity(intent);
                                             }
-                                            report.add(bean);
-                                        }
-                                        if (report != null && report.size() > 0) {
-                                            HashMap<String, String> fsr_report = new HashMap<String, String>();
-                                            for (TaskDetailsBean detailsBean : report) {
-                                                if (detailsBean.getTaskNo() != null) {
-                                                    fsr_report.put("Job No", detailsBean.getTaskNo());
-                                                }
-                                                if (detailsBean.getToUserName() != null) {
-                                                    fsr_report.put("Employee Name", detailsBean.getToUserName());
-                                                }
-                                                if (detailsBean.getTaskName() != null) {
-                                                    fsr_report.put("Customer Name", detailsBean.getTaskName());
-                                                }
-                                                if (detailsBean.getTaskId() != null) {
-                                                    fsr_report.put("Task Id", detailsBean.getTaskId());
-                                                }
-                                                if (detailsBean.getTaskDescription() != null) {
-                                                    fsr_report.put("Task Description", detailsBean.getTaskDescription());
-                                                }
-                                                if (detailsBean.getEstimatedTravel() != null) {
-                                                    fsr_report.put("Estimated Travel Hrs", detailsBean.getEstimatedTravel());
-                                                }
-                                                if (detailsBean.getEstimatedActivity() != null) {
-                                                    fsr_report.put("Estimated Activity Hrs", detailsBean.getEstimatedActivity());
-                                                }
-                                                if (detailsBean.getTotalTravel() != null) {
-                                                    fsr_report.put("ActualTotalHrs", detailsBean.getTotalTravel());
-                                                }
-                                                if (detailsBean.getTotalActivity() != null) {
-                                                    fsr_report.put("ActivityTotalHrs", detailsBean.getTotalActivity());
-                                                }
-                                                if (detailsBean.getStartDate() != null) {
-                                                    fsr_report.put("Start Time", detailsBean.getStartDate());
-                                                }
-                                                if (detailsBean.getEndDate() != null) {
-                                                    fsr_report.put("End Time", detailsBean.getEndDate());
-                                                }
-                                                if (detailsBean.getAddress() != null) {
-                                                    fsr_report.put("Address", detailsBean.getAddress());
-                                                }
-                                                if (detailsBean.getMcModel() != null) {
-                                                    fsr_report.put("M/c Model", detailsBean.getMcModel());
-                                                }
-                                                if (detailsBean.getEndDate() != null) {
-                                                    fsr_report.put("M/c Sr. No", detailsBean.getMcSrNo());
-                                                }
-                                                if (detailsBean.getEndDate() != null) {
-                                                    fsr_report.put("Reported By", detailsBean.getReportedBy());
-                                                }
-                                                if (detailsBean.getHMReading() != null) {
-                                                    fsr_report.put("Hour Meter Reading", detailsBean.getHMReading());
-                                                }
-                                                if (detailsBean.getObservation() != null) {
-                                                    fsr_report.put("Observation", detailsBean.getObservation());
-                                                }
-                                                if (detailsBean.getActivity() != null) {
-                                                    fsr_report.put("Activity", detailsBean.getActivity());
-                                                }
-                                                if (detailsBean.getCustomerRemarks() != null) {
-                                                    fsr_report.put("Customer Remarks", detailsBean.getCustomerRemarks());
-                                                }
-                                                if (detailsBean.getCustomerSignature() != null) {
-                                                    fsr_report.put("Customer Signature", detailsBean.getCustomerSignature());
-                                                }
-
-                                            }
-
-                                            if (fsr_report != null && fsr_report.size() > 0) {
-                                                createPDF(fsr_report);
-                                                Intent intent1 = new Intent(NewTaskConversation.this, ReportView.class);
-                                                intent1.putExtra("fromContacts", false);
-                                                startActivity(intent1);
-                                            }
-
-                                        }
-                                    }
-                                } else {
-                                    showToast("Please fill the Custom1 ");
-                                }*/
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                                Appreference.printLog("NewTaskConversation", "Exception " + e.getMessage(), "WARN", null);
-                            }
-                            break;
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    Appreference.printLog("NewTaskConversation gridview owner click ", "Exception " + e.getMessage(), "WARN", null);
-                }
-            }
-        });
-
-
-        gridview_taker.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Log.i("gridview", "Position" + position);
-                try {
-                    String selected_text = texts_taker[position];
-                    switch (selected_text) {
-                        case "Private":
-                            try {
-                                if (subType != null && subType.equalsIgnoreCase("private")) {
-                                    private_member = null;
-                                    subType = "normal";
-                                    des.setHint("");
-                                    icons.setBackgroundColor(getResources().getColor(R.color.white));
-                                    linear1.setBackgroundColor(getResources().getColor(R.color.white));
-
-                                    Toast.makeText(NewTaskConversation.this, "Private message disabled", Toast.LENGTH_SHORT).show();
-                                } else {
-                                    des.setHint("private message");
-                                    subType = "private";
-                                    icons.setBackgroundColor(getResources().getColor(R.color.grey));
-                                    linear1.setBackgroundColor(getResources().getColor(R.color.grey));
-                                    Toast.makeText(NewTaskConversation.this, "Private message enabled", Toast.LENGTH_SHORT).show();
-                                    if (taskType != null && taskType.equalsIgnoreCase("Group")) {
-                                        Intent intent = new Intent(NewTaskConversation.this, GroupPercentageStatus.class);
-                                        intent.putExtra("taskid", webtaskId);
-                                        intent.putExtra("groupId", String.valueOf(toUserId));
-                                        intent.putExtra("subtype", "private");
-                                        if (project) {
-                                            intent.putExtra("isProject", "yes");
                                         } else {
-                                            intent.putExtra("isProject", "no");
-                                        }
-                                        Log.i("taskConversation", "chatusers for private 1 ");
-                                        startActivityForResult(intent, 999);
-                                        Log.i("private message", "chatusers for private 11 ");
-                                    }
-                                }
-                                gridview.setVisibility(View.GONE);
-                                icons.setVisibility(View.VISIBLE);
-                                arrow = false;
-                            } catch (Resources.NotFoundException e) {
-                                e.printStackTrace();
-                                Appreference.printLog("NewTaskConversation", "Exception " + e.getMessage(), "WARN", null);
-                            }
-                            break;
-
-
-                        case "Leave":
-                            try {
-                                if (!Appreference.loginuserdetails.getUsername().equalsIgnoreCase(ownerOfTask) || Appreference.loginuserdetails.getUsername().equalsIgnoreCase(taskReceiver)) {
-                                    Log.i("gridview", "leave " + position);
-                                    Intent intent1 = new Intent(NewTaskConversation.this, Leave_Request_dateSent.class);
-                                    intent1.putExtra("Taskid", webtaskId);
-                                    intent1.putExtra("ToUserName", ownerOfTask);
-                                    startActivityForResult(intent1, 222);
-                                }
-                                gridview_taker.setVisibility(View.GONE);
-                                icons.setVisibility(View.VISIBLE);
-                                arrow = false;
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                                Appreference.printLog("NewTaskConversation", "Exception " + e.getMessage(), "WARN", null);
-                            }
-                            break;
-                        case "Scheduled":
-                            try {
-                                if (!isTaskName) {
-                                    Toast.makeText(getApplicationContext(), "CustomTagsActivity", Toast.LENGTH_SHORT).show();
-                                    showprogressforpriority("Loading Scheduled calls");
-                                    List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
-                                    nameValuePairs.add(new BasicNameValuePair("taskId", webtaskId));
-                                    Appreference.jsonRequestSender.getCustomTag(EnumJsonWebservicename.getCustomTag, nameValuePairs, NewTaskConversation.this);
-                                } else {
-                                    showToast("Please Enter TaskDescription and Make a NewTask ");
-                                }
-                                gridview_taker.setVisibility(View.GONE);
-                                icons.setVisibility(View.VISIBLE);
-                                arrow = false;
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                                Appreference.printLog("NewTaskConversation", "Exception " + e.getMessage(), "WARN", null);
-                            }
-                            break;
-                        case "Audio":
-                            try {
-                                Intent i = new Intent(NewTaskConversation.this, AudioRecorder.class);
-                                i.putExtra("task", "audio");
-                                startActivityForResult(i, 333);
-                                gridview_taker.setVisibility(View.GONE);
-                                icons.setVisibility(View.VISIBLE);
-                                arrow = false;
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                                Appreference.printLog("NewTaskConversation", "Exception " + e.getMessage(), "WARN", null);
-                            }
-                            break;
-                        case "Photo":
-                            multimediaImage("image");
-                            gridview_taker.setVisibility(View.GONE);
-                            icons.setVisibility(View.VISIBLE);
-                            arrow = false;
-                            break;
-                        case "Sketch":
-                            try {
-                                Intent i = new Intent(getApplicationContext(), HandSketchActivity2.class);
-                                startActivityForResult(i, 423);
-                                gridview_taker.setVisibility(View.GONE);
-                                icons.setVisibility(View.VISIBLE);
-                                arrow = false;
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                                Appreference.printLog("NewTaskConversation", "Exception " + e.getMessage(), "WARN", null);
-                            }
-                            break;
-                        case "Video":
-                            multimediaImage("video");
-                            gridview_taker.setVisibility(View.GONE);
-                            icons.setVisibility(View.VISIBLE);
-                            arrow = false;
-                            break;
-                        case "File":
-                            try {
-                                Intent intent_file = new Intent(NewTaskConversation.this, FilePicker.class);
-                                startActivityForResult(intent_file, 55);
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                                Appreference.printLog("NewTaskConversation", "Exception " + e.getMessage(), "WARN", null);
-                            }
-                            gridview_taker.setVisibility(View.GONE);
-                            icons.setVisibility(View.VISIBLE);
-                            arrow = false;
-                            break;
-                        case "Completion":
-                            try {
-                                if (taskStatus != null && !taskStatus.equalsIgnoreCase("Closed")) {
-                                    if (taskStatus != null && !taskStatus.equalsIgnoreCase("abandoned")) {
-                                        int a = 0;
-                                        if (taskType != null && taskType.equalsIgnoreCase("group")) {
-                                            Log.i("GroupPercentageClick", " groupname 1 " + groupname);
-                                            String percent_sender = VideoCallDataBase.getDB(context).getlastCompletedParcentagesender(webtaskId);
-                                            Log.i("GroupPercentageClick", " groupname 11 " + percent_sender);
-                                            if (percent_sender != null && percent_sender.equalsIgnoreCase(ownerOfTask)) {
-                                                a = Integer.parseInt(VideoCallDataBase.getDB(context).getlastCompletedParcentage(webtaskId));
-                                                Log.i("GroupPercentageClick", " groupname 12 " + a);
-                                            } else {
-                                                a = VideoCallDataBase.getDB(context).GroupPercentageChecker(groupname, webtaskId, ownerOfTask);
-                                                Log.i("GroupPercentageClick", " groupname 13 " + a);
-                                            }
-                                            percentage = String.valueOf(a);
-                                        } else {
-                                            a = VideoCallDataBase.getDB(context).percentagechecker(webtaskId);
-                                            Log.i("Task1", "percentage" + percentage);
-                                            percentage = String.valueOf(a);
-                                        }
-                                        Intent intent = new Intent(NewTaskConversation.this, UpdateTaskActivity.class);
-                                        Log.i("percentage", "UpdateTaskActivity 3  " + ownerOfTask);
-                                        Log.i("percentage", "UpdateTaskActivity 3 " + toUserId);
-                                        intent.putExtra("username", toUserName);
-                                        intent.putExtra("Str", "conversation");
-                                        intent.putExtra("level", percentage);
-                                        intent.putExtra("taskType", taskType);
-                                        intent.putExtra("toUserId", String.valueOf(toUserId));
-                                        intent.putExtra("ownerOfTask", ownerOfTask);
-                                        intent.putExtra("category", category);
-                                        startActivityForResult(intent, 210);
-                                    } else {
-                                        Toast.makeText(context, "Unable to change percentage task is in abandoned state ", Toast.LENGTH_SHORT).show();
-                                    }
-                                } else {
-                                    Toast.makeText(context, "This " + category + " is already Closed ", Toast.LENGTH_SHORT).show();
-                                }
-                                gridview_taker.setVisibility(View.GONE);
-                                icons.setVisibility(View.VISIBLE);
-                                arrow = false;
-                            } catch (NumberFormatException e) {
-                                e.printStackTrace();
-                            }
-                            break;
-
-                        case "Call":
-                            multimediaImage("call");
-                            gridview.setVisibility(View.GONE);
-                            icons.setVisibility(View.VISIBLE);
-                            arrow = false;
-                            break;
-                        case "Forms":
-                            if (!isTaskName) {
-                                Intent formintent = new Intent(NewTaskConversation.this, FormsListActivity.class);
-                                formintent.putExtra("FormsList", new ArrayList<FormsListBean>());
-                                formintent.putExtra("TaskId", webtaskId);
-                                formintent.putExtra("webformcheck", "false");
-                                formintent.putExtra("isTemplate", "No");
-                                formintent.putExtra("TaskBean", beanValue());
-                                formintent.putExtra("UserList", listOfObservers);
-                                Log.i("TemplateList", "template_form.setOnClickListener 1 " + webtaskId);
-                                Log.i("TemplateList", "template_form.setOnClickListener 1 " + listOfObservers);
-                                Log.i("TemplateList", "template_form.setOnClickListener 1 " + beanValue());
-
-                                startActivity(formintent);
-
-                            } else {
-                                showToast("Please Enter TaskDescription and Make a NewTask ");
-                            }
-                            gridview_taker.setVisibility(View.GONE);
-                            icons.setVisibility(View.VISIBLE);
-                            arrow = false;
-                            break;
-                        case "ReminderResponce":
-                            if (webtaskId != null) {
-                                Intent reminderintent = new Intent(NewTaskConversation.this, Reminder_Responses.class);
-                                reminderintent.putExtra("taskId", webtaskId);
-                                startActivity(reminderintent);
-                            } else {
-                                showToast("Please Create Task to view Reminder Response ");
-                            }
-                            gridview_taker.setVisibility(View.GONE);
-                            icons.setVisibility(View.VISIBLE);
-                            arrow = false;
-                            break;
-                        case "moreFields":
-                            //                        String type="numeric";
-
-                            if (!isTaskName) {
-                                //                            Toast.makeText(getApplicationContext(), "CustomTagsActivity", Toast.LENGTH_SHORT).show();
-                                showprogressforpriority("Loading MoreFields");
-                                List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
-                                nameValuePairs.add(new BasicNameValuePair("taskId", webtaskId));
-                                Appreference.jsonRequestSender.getCustomTag(EnumJsonWebservicename.getRequestType, nameValuePairs, NewTaskConversation.this);
-                            } else {
-                                showToast("Please Enter TaskDescription and Make a NewTask ");
-                            }
-                            gridview_taker.setVisibility(View.GONE);
-                            icons.setVisibility(View.VISIBLE);
-                            arrow = false;
-                            break;
-
-                        case "ViewTask":
-                            try {
-                                if (webtaskId != null) {
-                                    if (!project) {
-                                        String issue_Parent_id = dataBase.getProjectParentTaskId("select parentTaskId from taskHistoryInfo where taskId='" + webtaskId + "'");
-                                        ArrayList<TaskDetailsBean> taskDetailsBean = new ArrayList<TaskDetailsBean>();
-                                        taskDetailsBean = VideoCallDataBase.getDB(context).getTaskHistoryInfo("select * from taskHistoryInfo where taskId='" + issue_Parent_id + "'");
-                                        if (taskDetailsBean.size() > 0) {
-                                            TaskDetailsBean taskBean = taskDetailsBean.get(0);
-                                            Intent intent1 = new Intent(getApplicationContext(), NewTaskConversation.class);
-                                            intent1.putExtra("task", "taskhistory");
-                                            intent1.putExtra("taskHistoryBean", taskBean);
-                                            intent1.putExtra("catagory", taskBean.getCatagory());
-                                            Log.i("Task1", "groupname" + groupname);
-                                            intent1.putExtra("groupname", groupname);
-                                            Log.i("task", "taskId is == " + taskBean.getTaskId());
-                                            startActivity(intent1);
-//                                            finish();
-                                        }
-                                    } else {
-                                        String issue_Parent_id = dataBase.getProjectParentTaskId("select issueParentId from projectHistory where taskId='" + webtaskId + "'");
-                                        ArrayList<ProjectDetailsBean> taskDetailsBean = new ArrayList<ProjectDetailsBean>();
-                                        taskDetailsBean = VideoCallDataBase.getDB(context).getProjectHistory("select * from projectHistory where taskId='" + issue_Parent_id + "'");
-                                        Log.i("View_Task", " issue_Parent_id == 2 " + issue_Parent_id + "  taskDetailsBean size == " + taskDetailsBean.size());
-                                        if (taskDetailsBean.size() > 0) {
-                                            ProjectDetailsBean taskBean = taskDetailsBean.get(0);
-                                            for (ProjectDetailsBean taskDetailsBean1 : taskDetailsBean) {
-                                                Log.i("View_Task", "  taskDetailsBean size ==  for Loop " + taskDetailsBean1.getTaskId());
-                                            }
-                                            Log.i("View_Task", " issue_Parent_id == 3 " + issue_Parent_id + "  taskDetailsBean size == " + taskBean.getTaskId());
-                                            if (taskBean.getTaskType() != null && taskBean.getTaskType().equalsIgnoreCase("individual")) {
-                                                if (taskBean.getTaskReceiver().equalsIgnoreCase(Appreference.loginuserdetails.getUsername()) || taskBean.getOwnerOfTask().equalsIgnoreCase(Appreference.loginuserdetails.getUsername()) || taskBean.getTaskObservers().contains(Appreference.loginuserdetails.getUsername())) {
-                                                    Intent intent1 = new Intent(context, NewTaskConversation.class);
-                                                    intent1.putExtra("task", "projectHistory");
-                                                    intent1.putExtra("projectHistoryBean", taskBean);
-                                                    startActivity(intent1);
-                                                } else {
-                                                    Toast.makeText(getApplicationContext(), "You are not in individual project subtask", Toast.LENGTH_SHORT).show();
+                                            String issue_Parent_id = dataBase.getProjectParentTaskId("select issueParentId from projectHistory where taskId='" + webtaskId + "'");
+                                            ArrayList<ProjectDetailsBean> taskDetailsBean;
+                                            taskDetailsBean = VideoCallDataBase.getDB(context).getProjectHistory("select * from projectHistory where taskId='" + issue_Parent_id + "'");
+                                            Log.i("View_Task", " issue_Parent_id == 2 " + issue_Parent_id + "  taskDetailsBean size == " + taskDetailsBean.size());
+                                            if (taskDetailsBean.size() > 0) {
+                                                ProjectDetailsBean taskBean = taskDetailsBean.get(0);
+                                                for (ProjectDetailsBean taskDetailsBean1 : taskDetailsBean) {
+                                                    Log.i("View_Task", "  taskDetailsBean size ==  for Loop " + taskDetailsBean1.getTaskId());
                                                 }
-                                            } else if (taskBean.getTaskType() != null && taskBean.getTaskType().equalsIgnoreCase("Group")) {
-                                                Log.i("ListMembers", "projectDetailsBean.getTaskMemberList() " + taskBean.getTaskMemberList());
-                                                if ((taskBean.getTaskMemberList() != null && taskBean.getTaskMemberList().contains(Appreference.loginuserdetails.getUsername())) || (taskBean.getOwnerOfTask() != null && taskBean.getOwnerOfTask().equalsIgnoreCase(Appreference.loginuserdetails.getUsername())) || (taskBean.getTaskObservers() != null && taskBean.getTaskObservers().contains(Appreference.loginuserdetails.getUsername()))) {
-                                                    Intent intent2 = new Intent(context, NewTaskConversation.class);
-                                                    intent2.putExtra("task", "projectHistory");
-                                                    intent2.putExtra("projectHistoryBean", taskBean);
-                                                    startActivity(intent2);
-                                                } else {
-                                                    Toast.makeText(getApplicationContext(), "You are not in group project task", Toast.LENGTH_SHORT).show();
+                                                if (taskBean.getTaskType() != null && taskBean.getTaskType().equalsIgnoreCase("individual")) {
+                                                    if (taskBean.getTaskReceiver().equalsIgnoreCase(Appreference.loginuserdetails.getUsername()) || taskBean.getOwnerOfTask().equalsIgnoreCase(Appreference.loginuserdetails.getUsername()) || taskBean.getTaskObservers().contains(Appreference.loginuserdetails.getUsername())) {
+                                                        Intent intent = new Intent(context, NewTaskConversation.class);
+                                                        intent.putExtra("task", "projectHistory");
+                                                        intent.putExtra("projectHistoryBean", taskBean);
+                                                        startActivity(intent);
+                                                    } else {
+                                                        Toast.makeText(getApplicationContext(), "You are not in individual project subtask", Toast.LENGTH_SHORT).show();
+                                                    }
+                                                } else if (taskBean.getTaskType() != null && taskBean.getTaskType().equalsIgnoreCase("Group")) {
+                                                    if ((taskBean.getTaskMemberList() != null && taskBean.getTaskMemberList().contains(Appreference.loginuserdetails.getUsername())) || (taskBean.getOwnerOfTask() != null && taskBean.getOwnerOfTask().equalsIgnoreCase(Appreference.loginuserdetails.getUsername())) || (taskBean.getTaskObservers() != null && taskBean.getTaskObservers().contains(Appreference.loginuserdetails.getUsername()))) {
+                                                        Intent intent = new Intent(context, NewTaskConversation.class);
+                                                        intent.putExtra("task", "projectHistory");
+                                                        intent.putExtra("projectHistoryBean", taskBean);
+                                                        startActivity(intent);
+                                                    } else {
+                                                        Toast.makeText(getApplicationContext(), "You are not in group project task", Toast.LENGTH_SHORT).show();
+                                                    }
                                                 }
                                             }
                                         }
-                                    }
-                                } else {
-                                    showToast("Please Enter TaskDescription and Make a NewTask ");
-                                }
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                                Appreference.printLog("NewTaskConversation", "Exception " + e.getMessage(), "WARN", null);
-                            }
-                            break;
-                        case "Custom1":
-                            try {
-                                final TaskDetailsBean detailsBean;
-                                String Querystatus = "Select * from projectStatus where projectId ='" + projectId + "' and taskId = '" + webtaskId + "'";
-                                detailsBean = VideoCallDataBase.getDB(context).getStatusCompletedProjectDetails(Querystatus);
-                                showCustom1PopUp(detailsBean);
-
-
-                              /*  if (detailsBean.getCustomerSignature()!=null && !detailsBean.getCustomerSignature().equalsIgnoreCase("")) {
-                                    File cus_sig1 = new File(detailsBean.getCustomerSignature());
-                                    if (cus_sig1.exists()) {
-                                    } else {
-                                        if (detailsBean.getCustomerSignature() != null) {
-                                            Appreference.taskMultimediaDownload.put(detailsBean.getCustomerSignature(), detailsBean);
-                                            new DownloadCustomImage(getResources().getString(R.string.task_reminder) + detailsBean.getCustomerSignature(), detailsBean.getCustomerSignature()).execute();
-                                        }
-                                    }
-                                }
-
-                                if (detailsBean.getPhotoPath()!=null && !detailsBean.getPhotoPath().equalsIgnoreCase("")) {
-                                    File photo_path1 = new File(detailsBean.getPhotoPath());
-                                    if (photo_path1.exists()) {
-                                    } else {
-                                        if (detailsBean.getPhotoPath() != null) {
-                                            Appreference.taskMultimediaDownload.put(detailsBean.getPhotoPath(), detailsBean);
-                                            new DownloadCustomImage(getResources().getString(R.string.task_reminder) + detailsBean.getPhotoPath(), detailsBean.getPhotoPath()).execute();
-                                        }
-                                    }
-                                }
-                                if (detailsBean.getTechnicianSignature()!=null && !detailsBean.getTechnicianSignature().equalsIgnoreCase("")) {
-                                    File tech_sig1 = new File(detailsBean.getTechnicianSignature());
-                                    if (tech_sig1.exists()) {
-                                    } else {
-                                        if (detailsBean.getTechnicianSignature() != null) {
-                                            showStatusprogress();
-                                            Appreference.taskMultimediaDownload.put(detailsBean.getTechnicianSignature(), detailsBean);
-                                            new DownloadCustomImage(getResources().getString(R.string.task_reminder) + detailsBean.getTechnicianSignature(), detailsBean.getTechnicianSignature()).execute();
-                                        }
-                                    }
-                                }
-                                int sec = 0;
-                                sec = sec + 5000;
-                                handler.postDelayed(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        showCustom1PopUp(detailsBean);
-
-                                    }
-                                }, sec);*/
-                                /* if (taskType != null && taskType.equalsIgnoreCase("group")) {
-                                    if (!isTaskName) {
-                                        showprogressforpriority("Setting Custom Tags");
-                                        List<NameValuePair> tagNameValuePairs = new ArrayList<NameValuePair>();
-                                        Appreference.jsonRequestSender.getlistCustomHeaderTags(EnumJsonWebservicename.listCustomHeaderTags, tagNameValuePairs, NewTaskConversation.this);
                                     } else {
                                         showToast("Please Enter TaskDescription and Make a NewTask ");
                                     }
-                                } else {
-                                    if (!isTaskName) {
-//                                    Toast.makeText(getApplicationContext(), "CustomTagsActivity", Toast.LENGTH_SHORT).show();
-                                        showprogressforpriority("Setting Custom Tags");
-                                        List<NameValuePair> tagNameValuePairs = new ArrayList<NameValuePair>();
-//                                    tagNameValuePairs.add(new BasicNameValuePair("taskId", "14815"));
-                                        Appreference.jsonRequestSender.getlistCustomHeaderTags(EnumJsonWebservicename.listCustomHeaderTags, tagNameValuePairs, NewTaskConversation.this);
-                                    } else {
-                                        showToast("Please Enter TaskDescription and Make a NewTask ");
-                                    }
-                                    gridview.setVisibility(View.GONE);
+                                    gridview_observer.setVisibility(View.GONE);
                                     icons.setVisibility(View.VISIBLE);
                                     arrow = false;
-                                }*/
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                                Appreference.printLog("NewTaskConversation", "Exception " + e.getMessage(), "WARN", null);
-                            }
-                            break;
-                           /* Intent fields = new Intent(NewTaskConversation.this, MoreFieldsEntry.class);
-                            fields.putExtra("bean", beanValue());
-                            fields.putExtra("userList", listOfObservers);
-                            startActivity(fields);
-                            gridview.setVisibility(View.GONE);
-                            icons.setVisibility(View.VISIBLE);
-                            arrow = false;
-                            break;*/
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                    Appreference.printLog("NewTaskConversation", "Exception " + e.getMessage(), "WARN", null);
+                                }
+                                break;
+                        }
                     }
-                } catch (NumberFormatException e) {
-                    e.printStackTrace();
-                    Appreference.printLog("NewTaskConversation girdview taker click", "Exception " + e.getMessage(), "WARN", null);
                 }
-            }
-        });
 
-        gridview_observer.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Log.i("gridview", "Position" + position);
-                String selected_text = texts_observer[position];
-                switch (selected_text) {
-                    case "Private":
-                        if (subType != null && subType.equalsIgnoreCase("private")) {
-                            private_member = null;
-                            subType = "normal";
-                            des.setHint("");
-                            icons.setBackgroundColor(getResources().getColor(R.color.white));
-                            linear1.setBackgroundColor(getResources().getColor(R.color.white));
-                            Toast.makeText(NewTaskConversation.this, "Private message disabled", Toast.LENGTH_SHORT).show();
-                        } else {
-                            des.setHint("private message");
-                            subType = "private";
-                            icons.setBackgroundColor(getResources().getColor(R.color.grey));
-                            linear1.setBackgroundColor(getResources().getColor(R.color.grey));
-                            Toast.makeText(NewTaskConversation.this, "Private message enabled", Toast.LENGTH_SHORT).show();
-                            if (taskType != null && taskType.equalsIgnoreCase("Group")) {
-                                Intent intent = new Intent(NewTaskConversation.this, GroupPercentageStatus.class);
-                                intent.putExtra("taskid", webtaskId);
-                                intent.putExtra("groupId", String.valueOf(toUserId));
-                                intent.putExtra("subtype", "private");
-                                if (project) {
-                                    intent.putExtra("isProject", "yes");
-                                } else {
-                                    intent.putExtra("isProject", "no");
-                                }
-                                Log.i("taskConversation", "chatusers for private 1 ");
-                                startActivityForResult(intent, 999);
-                                Log.i("private message", "chatusers for private 11 ");
-                            }
-                        }
-                        gridview.setVisibility(View.GONE);
-                        icons.setVisibility(View.VISIBLE);
-                        arrow = false;
-                        break;
-
-
-                    case "Scheduled":
-                        if (!isTaskName) {
-                            Toast.makeText(getApplicationContext(), "CustomTagsActivity", Toast.LENGTH_SHORT).show();
-                            showprogressforpriority("Loading Scheduled calls");
-                            List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
-                            nameValuePairs.add(new BasicNameValuePair("taskId", webtaskId));
-                            Appreference.jsonRequestSender.getCustomTag(EnumJsonWebservicename.getCustomTag, nameValuePairs, NewTaskConversation.this);
-                        } else {
-                            showToast("Please Enter TaskDescription and Make a NewTask ");
-                        }
-                        gridview_observer.setVisibility(View.GONE);
-                        icons.setVisibility(View.VISIBLE);
-                        arrow = false;
-                        break;
-                    case "Audio":
-                        try {
-                            Intent i = new Intent(NewTaskConversation.this, AudioRecorder.class);
-                            i.putExtra("task", "audio");
-                            startActivityForResult(i, 333);
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                        gridview_observer.setVisibility(View.GONE);
-                        icons.setVisibility(View.VISIBLE);
-                        arrow = false;
-                        break;
-                    case "Photo":
-                        multimediaImage("image");
-                        gridview_observer.setVisibility(View.GONE);
-                        icons.setVisibility(View.VISIBLE);
-                        arrow = false;
-                        break;
-                    case "Sketch":
-                        Intent i = new Intent(getApplicationContext(), HandSketchActivity2.class);
-                        startActivityForResult(i, 423);
-                        gridview_observer.setVisibility(View.GONE);
-                        icons.setVisibility(View.VISIBLE);
-                        arrow = false;
-                        break;
-                    case "Video":
-                        multimediaImage("video");
-                        gridview_observer.setVisibility(View.GONE);
-                        icons.setVisibility(View.VISIBLE);
-                        arrow = false;
-                        break;
-                    case "File":
-                        try {
-                            Intent intent_file = new Intent(NewTaskConversation.this, FilePicker.class);
-                            startActivityForResult(intent_file, 55);
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                        gridview_observer.setVisibility(View.GONE);
-                        icons.setVisibility(View.VISIBLE);
-                        arrow = false;
-                        break;
-
-                    case "Call":
-                        multimediaImage("call");
-                        gridview.setVisibility(View.GONE);
-                        icons.setVisibility(View.VISIBLE);
-                        arrow = false;
-                        break;
-                    case "Forms":
-                        if (!isTaskName) {
-                            Intent formintent = new Intent(NewTaskConversation.this, FormsListActivity.class);
-                            formintent.putExtra("FormsList", new ArrayList<FormsListBean>());
-                            formintent.putExtra("TaskId", webtaskId);
-                            formintent.putExtra("webformcheck", "false");
-                            formintent.putExtra("isTemplate", "No");
-                            formintent.putExtra("TaskBean", beanValue());
-                            formintent.putExtra("UserList", listOfObservers);
-                            Log.i("TemplateList", "template_form.setOnClickListener 1 " + webtaskId);
-                            Log.i("TemplateList", "template_form.setOnClickListener 1 " + listOfObservers);
-                            Log.i("TemplateList", "template_form.setOnClickListener 1 " + beanValue());
-
-                            startActivity(formintent);
-
-                        } else {
-                            showToast("Please Enter TaskDescription and Make a NewTask ");
-                        }
-                        gridview_observer.setVisibility(View.GONE);
-                        icons.setVisibility(View.VISIBLE);
-                        arrow = false;
-                        break;
-                    case "ReminderResponce":
-                        if (webtaskId != null) {
-                            Intent reminderintent = new Intent(NewTaskConversation.this, Reminder_Responses.class);
-                            reminderintent.putExtra("taskId", webtaskId);
-                            startActivity(reminderintent);
-                        } else {
-                            showToast("Please Create Task to view Reminder Response ");
-                        }
-                        gridview_observer.setVisibility(View.GONE);
-                        icons.setVisibility(View.VISIBLE);
-                        arrow = false;
-                        break;
-                    case "moreFields":
-//                        String type="numeric";
-                        if (!isTaskName) {
-//                            Toast.makeText(getApplicationContext(), "CustomTagsActivity", Toast.LENGTH_SHORT).show();
-                            showprogressforpriority("Loading MoreFields");
-                            List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
-                            nameValuePairs.add(new BasicNameValuePair("taskId", webtaskId));
-                            Appreference.jsonRequestSender.getCustomTag(EnumJsonWebservicename.getRequestType, nameValuePairs, NewTaskConversation.this);
-                        } else {
-                            showToast("Please Enter TaskDescription and Make a NewTask ");
-                        }
-                        gridview_observer.setVisibility(View.GONE);
-                        icons.setVisibility(View.VISIBLE);
-                        arrow = false;
-                        break;
-
-                    case "ViewTask":
-                        try {
-                            if (webtaskId != null) {
-                                if (!project) {
-                                    String issue_Parent_id = dataBase.getProjectParentTaskId("select parentTaskId from taskHistoryInfo where taskId='" + webtaskId + "'");
-                                    ArrayList<TaskDetailsBean> taskDetailsBean = new ArrayList<TaskDetailsBean>();
-                                    taskDetailsBean = VideoCallDataBase.getDB(context).getTaskHistoryInfo("select * from taskHistoryInfo where taskId='" + issue_Parent_id + "'");
-                                    if (taskDetailsBean.size() > 0) {
-                                        TaskDetailsBean taskBean = taskDetailsBean.get(0);
-                                        Intent intent = new Intent(getApplicationContext(), NewTaskConversation.class);
-                                        intent.putExtra("task", "taskhistory");
-                                        intent.putExtra("taskHistoryBean", taskBean);
-                                        intent.putExtra("catagory", taskBean.getCatagory());
-                                        Log.i("Task1", "groupname" + groupname);
-                                        intent.putExtra("groupname", groupname);
-                                        Log.i("task", "taskId is == " + taskBean.getTaskId());
-                                        startActivity(intent);
-//                                        finish();
-                                    }
-                                } else {
-                                    String issue_Parent_id = dataBase.getProjectParentTaskId("select issueParentId from projectHistory where taskId='" + webtaskId + "'");
-                                    ArrayList<ProjectDetailsBean> taskDetailsBean = new ArrayList<ProjectDetailsBean>();
-                                    taskDetailsBean = VideoCallDataBase.getDB(context).getProjectHistory("select * from projectHistory where taskId='" + issue_Parent_id + "'");
-                                    Log.i("View_Task", " issue_Parent_id == 2 " + issue_Parent_id + "  taskDetailsBean size == " + taskDetailsBean.size());
-                                    if (taskDetailsBean.size() > 0) {
-                                        ProjectDetailsBean taskBean = taskDetailsBean.get(0);
-                                        for (ProjectDetailsBean taskDetailsBean1 : taskDetailsBean) {
-                                            Log.i("View_Task", "  taskDetailsBean size ==  for Loop " + taskDetailsBean1.getTaskId());
-                                        }
-                                        Log.i("View_Task", " issue_Parent_id == 3 " + issue_Parent_id + "  taskDetailsBean size == " + taskBean.getTaskId());
-                                        if (taskBean.getTaskType() != null && taskBean.getTaskType().equalsIgnoreCase("individual")) {
-                                            if (taskBean.getTaskReceiver().equalsIgnoreCase(Appreference.loginuserdetails.getUsername()) || taskBean.getOwnerOfTask().equalsIgnoreCase(Appreference.loginuserdetails.getUsername()) || taskBean.getTaskObservers().contains(Appreference.loginuserdetails.getUsername())) {
-                                                Intent intent = new Intent(context, NewTaskConversation.class);
-                                                intent.putExtra("task", "projectHistory");
-                                                intent.putExtra("projectHistoryBean", taskBean);
-                                                startActivity(intent);
-                                            } else {
-                                                Toast.makeText(getApplicationContext(), "You are not in individual project subtask", Toast.LENGTH_SHORT).show();
-                                            }
-                                        } else if (taskBean.getTaskType() != null && taskBean.getTaskType().equalsIgnoreCase("Group")) {
-                                            Log.i("ListMembers", "projectDetailsBean.getTaskMemberList() " + taskBean.getTaskMemberList());
-                                            if ((taskBean.getTaskMemberList() != null && taskBean.getTaskMemberList().contains(Appreference.loginuserdetails.getUsername())) || (taskBean.getOwnerOfTask() != null && taskBean.getOwnerOfTask().equalsIgnoreCase(Appreference.loginuserdetails.getUsername())) || (taskBean.getTaskObservers() != null && taskBean.getTaskObservers().contains(Appreference.loginuserdetails.getUsername()))) {
-                                                Intent intent = new Intent(context, NewTaskConversation.class);
-                                                intent.putExtra("task", "projectHistory");
-                                                intent.putExtra("projectHistoryBean", taskBean);
-                                                startActivity(intent);
-                                            } else {
-                                                Toast.makeText(getApplicationContext(), "You are not in group project task", Toast.LENGTH_SHORT).show();
-                                            }
-                                        }
-                                    }
-                                }
-                            } else {
-                                showToast("Please Enter TaskDescription and Make a NewTask ");
-                            }
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                            Appreference.printLog("NewTaskConversation", "Exception " + e.getMessage(), "WARN", null);
-                        }
-                        break;
-                       /* Intent fields = new Intent(NewTaskConversation.this, MoreFieldsEntry.class);
-                        fields.putExtra("bean", beanValue());
-                        fields.putExtra("userList", listOfObservers);
-                        startActivity(fields);
-                        gridview.setVisibility(View.GONE);
-                        icons.setVisibility(View.VISIBLE);
-                        arrow = false;
-                        break;*/
-                }
-            }
-        });
+        );
 
         if (template) {
             savetemplate.setVisibility(View.INVISIBLE);
@@ -3000,87 +2925,84 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
         update.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (taskStatus != null && !taskStatus.equalsIgnoreCase("Closed")) {
-                    if (taskStatus != null && !taskStatus.equalsIgnoreCase("abandoned")) {
-                        boolean takerCheck = false;
-                        taskList_9 = new ArrayList<>();
-                        taskList_10 = new ArrayList<>();
-                        Log.i("percents", "taskpercent webtaskId " + webtaskId);
-                        if (webtaskId != null && !taskType.equalsIgnoreCase("Group") && (!project)) {
-                            if (ownerOfTask.equalsIgnoreCase(Appreference.loginuserdetails.getUsername())) {
-                                taskList_9 = VideoCallDataBase.getDB(context).getTaskHistory("select * from taskDetailsInfo where taskId='" + webtaskId + "' and taskDescription = '" + category + " accepted' order by id desc");
+                if (taskStatus != null && !taskStatus.equalsIgnoreCase("Closed") && !taskStatus.equalsIgnoreCase("abandoned") && !taskStatus.equalsIgnoreCase("rejected") && (!taskStatus.equalsIgnoreCase("assigned") || taskType.equalsIgnoreCase("group"))) {
+                    boolean takerCheck = false;
+                    taskList_9 = new ArrayList<>();
+                    taskList_10 = new ArrayList<>();
+                    if (webtaskId != null && !taskType.equalsIgnoreCase("Group") && (!project)) {
+                        if (ownerOfTask.equalsIgnoreCase(Appreference.loginuserdetails.getUsername())) {
+                            taskList_9 = VideoCallDataBase.getDB(context).getTaskHistory("select * from taskDetailsInfo where taskId='" + webtaskId + "' and taskDescription = '" + category + " Accepted' order by id desc");
+                            taskList_10 = VideoCallDataBase.getDB(context).getTaskHistory("select * from taskDetailsInfo where taskId='" + webtaskId + "' and mimeType = 'date' order by id desc");
+                            Log.i("percents", "taskpercent giver size is " + taskList_9.size() + " " + taskList_10.size());
+                        } else if (!ownerOfTask.equalsIgnoreCase(Appreference.loginuserdetails.getUsername())) {
+                            taskList_9 = VideoCallDataBase.getDB(context).getTaskHistory("select * from taskDetailsInfo where taskId='" + webtaskId + "' and taskDescription = '" + category + " Accepted' order by id desc");
+                            if (taskStatus.equalsIgnoreCase("assigned") && taskList_9.size() == 0) {
+                                showToast("Please Accept Your Task");
+                                takerCheck = true;
+                            } else {
+                                taskList_9 = VideoCallDataBase.getDB(context).getTaskHistory("select * from taskDetailsInfo where taskId='" + webtaskId + "' and taskDescription = '" + category + " Accepted' order by id desc");
                                 taskList_10 = VideoCallDataBase.getDB(context).getTaskHistory("select * from taskDetailsInfo where taskId='" + webtaskId + "' and mimeType = 'date' order by id desc");
-                                Log.i("percents", "taskpercent giver size is " + taskList_9.size() + " " + taskList_10.size());
-                            } else if (!ownerOfTask.equalsIgnoreCase(Appreference.loginuserdetails.getUsername())) {
-                                taskList_9 = VideoCallDataBase.getDB(context).getTaskHistory("select * from taskDetailsInfo where taskId='" + webtaskId + "' and taskDescription = '" + category + " accepted' order by id desc");
-                                if (taskStatus.equalsIgnoreCase("assigned") && taskList_9.size() == 0) {
-                                    showToast("Please Accept Your Task");
-                                    takerCheck = true;
-                                } else {
-                                    taskList_9 = VideoCallDataBase.getDB(context).getTaskHistory("select * from taskDetailsInfo where taskId='" + webtaskId + "' and taskDescription = '" + category + " accepted' order by id desc");
-                                    taskList_10 = VideoCallDataBase.getDB(context).getTaskHistory("select * from taskDetailsInfo where taskId='" + webtaskId + "' and mimeType = 'date' order by id desc");
-                                    Log.i("percents", "taskpercent taker size is " + taskList_9.size() + " " + taskList_10.size());
-                                }
+                                Log.i("percents", "taskpercent taker size is " + taskList_9.size() + " " + taskList_10.size());
                             }
                         }
-                        if ((taskList_9.size() > 0 || taskList_10.size() > 0) || taskType.equalsIgnoreCase("Group") || project) {
-                            int a = 0;
-                            String name_pass = null;
-                            Log.i("Task1", "groupPercentage" + groupname);
-                            if (taskType != null && taskType.equalsIgnoreCase("Group")) {
-                                if (ownerOfTask.equalsIgnoreCase(Appreference.loginuserdetails.getUsername())) {
-                                    if (!project) {
-                                        Log.i("GroupPercentageClick", " groupname 3 " + groupname);
-                                        String percent_sender = VideoCallDataBase.getDB(context).getlastCompletedParcentagesender(webtaskId);
-                                        Log.i("GroupPercentageClick", " groupname 31 " + percent_sender);
-                                        if (percent_sender != null && percent_sender.equalsIgnoreCase(ownerOfTask)) {
-                                            a = Integer.parseInt(VideoCallDataBase.getDB(context).getlastCompletedParcentage(webtaskId));
-                                            Log.i("GroupPercentageClick", " groupname 32 " + a);
-                                        } else {
-                                            a = VideoCallDataBase.getDB(context).GroupPercentageChecker(groupname, webtaskId, ownerOfTask);
-                                            Log.i("GroupPercentageClick", " groupname 33 " + a);
-                                        }
-                                        Log.i("percentage", "Inside task if " + a);
-                                        percentage = String.valueOf(a);
+                    }
+                    if ((taskList_9.size() > 0 || taskList_10.size() > 0) || taskType.equalsIgnoreCase("Group") || project) {
+                        int a;
+                        if (taskType != null && taskType.equalsIgnoreCase("Group")) {
+                            if (ownerOfTask.equalsIgnoreCase(Appreference.loginuserdetails.getUsername())) {
+                                if (!project) {
+                                    String percent_sender = VideoCallDataBase.getDB(context).getlastCompletedParcentagesender(webtaskId);
+                                    Log.i("GroupPercentageClick", " groupname 31 " + percent_sender);
+                                    if (percent_sender != null && percent_sender.equalsIgnoreCase(ownerOfTask)) {
+                                        a = Integer.parseInt(VideoCallDataBase.getDB(context).getlastCompletedParcentage(webtaskId));
                                     } else {
-                                        a = VideoCallDataBase.getDB(context).ProjectGroupPercentageChecker(listOfObservers, webtaskId, ownerOfTask);
-                                        Log.i("percentage", "Inside project if " + a);
-                                        percentage = String.valueOf(a);
+                                        a = VideoCallDataBase.getDB(context).GroupPercentageChecker(groupname, webtaskId, ownerOfTask);
                                     }
+                                    Log.i("percentage", "Inside task if " + a);
+                                    percentage = String.valueOf(a);
                                 } else {
-                                    int percent_1 = VideoCallDataBase.getDB(context).groupPercentageStatus(Appreference.loginuserdetails.getUsername(), webtaskId);
-                                    Log.i("percentage", "Inside else " + percent_1);
-                                    percentage = String.valueOf(percent_1);
+                                    a = VideoCallDataBase.getDB(context).ProjectGroupPercentageChecker(listOfObservers, webtaskId, ownerOfTask);
+                                    Log.i("percentage", "Inside project if " + a);
+                                    percentage = String.valueOf(a);
                                 }
                             } else {
-                                a = VideoCallDataBase.getDB(context).percentagechecker(webtaskId);
-                                Log.i("Task1", "percentage" + percentage);
-                                percentage = String.valueOf(a);
+                                int percent_1 = VideoCallDataBase.getDB(context).groupPercentageStatus(Appreference.loginuserdetails.getUsername(), webtaskId);
+                                Log.i("percentage", "Inside else " + percent_1);
+                                percentage = String.valueOf(percent_1);
                             }
+                        } else {
+                            a = VideoCallDataBase.getDB(context).percentagechecker(webtaskId);
+                            Log.i("Task1", "percentage" + percentage);
+                            percentage = String.valueOf(a);
                         }
-                        if (note) {
-                            int percent_1 = VideoCallDataBase.getDB(context).groupPercentageStatus(Appreference.loginuserdetails.getUsername(), webtaskId);
-                            Log.i("percentage", "Inside else " + percent_1);
-                            percentage = String.valueOf(percent_1);
-                        }
-                        if (!isTaskName && !takerCheck) {
-                            Intent intent = new Intent(NewTaskConversation.this, UpdateTaskActivity.class);
-                            Log.i("percentage", "UpdateTaskActivity 1 " + ownerOfTask);
-                            Log.i("percentage", "UpdateTaskActivity 1 " + String.valueOf(toUserId));
-                            intent.putExtra("username", toUserName);
-                            intent.putExtra("Str", "conversation");
-                            intent.putExtra("level", percentage);
-                            intent.putExtra("taskType", taskType);
-                            intent.putExtra("toUserId", String.valueOf(toUserId));
-                            intent.putExtra("ownerOfTask", ownerOfTask);
-                            intent.putExtra("category", category);
-                            startActivityForResult(intent, 210);
-                        }
-                    } else {
-                        Toast.makeText(context, "Unable to sent the percentage task is in abandoned state ", Toast.LENGTH_SHORT).show();
                     }
-                } else {
+                    if (note) {
+                        int percent_1 = VideoCallDataBase.getDB(context).groupPercentageStatus(Appreference.loginuserdetails.getUsername(), webtaskId);
+                        Log.i("percentage", "Inside note else " + percent_1);
+                        percentage = String.valueOf(percent_1);
+                    }
+                    if (!isTaskName && !takerCheck) {
+                        Intent intent = new Intent(NewTaskConversation.this, UpdateTaskActivity.class);
+                        intent.putExtra("username", toUserName);
+                        intent.putExtra("Str", "conversation");
+                        intent.putExtra("level", percentage);
+                        intent.putExtra("taskType", taskType);
+                        intent.putExtra("toUserId", String.valueOf(toUserId));
+                        intent.putExtra("ownerOfTask", ownerOfTask);
+                        intent.putExtra("category", category);
+                        startActivityForResult(intent, 210);
+                    }
+
+                } else if (taskStatus != null && taskStatus.equalsIgnoreCase("abandoned")) {
+                    Toast.makeText(context, "Unable to sent the percentage task is in abandoned state ", Toast.LENGTH_SHORT).show();
+                } else if (taskStatus != null && taskStatus.equalsIgnoreCase("Closed")) {
                     Toast.makeText(context, "This " + category + " is already Closed ", Toast.LENGTH_SHORT).show();
+                } else if (taskStatus != null && taskStatus.equalsIgnoreCase("rejected")) {
+                    Toast.makeText(context, "Unable to sent the percentage task is in rejected state ", Toast.LENGTH_SHORT).show();
+                } else if (isTaskName) {
+                    Toast.makeText(context, "Please Enter TaskDescription and Make a NewTask", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(context, "Task not accepted", Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -3131,118 +3053,123 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
             @Override
             public void onClick(View v) {
                 Log.i("text", "length --->" + des.getText().toString().length());
-                if (des.getText().toString().trim().length() > 0) {
-                    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-                    String dateTime = dateFormat.format(new Date());
-                    dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
-                    String dateforrow = dateFormat.format(new Date());
-                    tasktime = dateTime;
-                    tasktime = tasktime.split(" ")[1];
-                    Log.i("task", "tasktime" + tasktime);
-                    Log.i("UTC", "sendMessage utc time" + dateforrow);
-                    Log.i("time", "value");
-                    taskUTCtime = dateforrow;
-                    final TaskDetailsBean chatBean = new TaskDetailsBean();
-                    chatBean.setFromUserId(String.valueOf(Appreference.loginuserdetails.getId()));
-                    chatBean.setFromUserName(Appreference.loginuserdetails.getUsername());
-                    chatBean.setSelect(false);
-                    chatBean.setToUserName(toUserName);
-                    chatBean.setToUserId(String.valueOf(toUserId));
-                    chatBean.setTaskDescription(des.getText().toString());
-                    chatBean.setSignalid(Utility.getSessionID());
-                    chatBean.setTaskNo(task_No);
-                    chatBean.setCatagory(category);
-                    chatBean.setIssueId(issueId);
-                    chatBean.setParentId(getFileName());
-                    chatBean.setTaskPriority("Medium");
-                    if (template) {
-                        if (note) {
-                            chatBean.setTaskStatus("note");
-                        } else if (chat) {
-                            chatBean.setTaskStatus("chat");
-                        } else {
-                            chatBean.setTaskStatus("draft");
-                        }
+                if (webtaskId != null) {
+                    if (des.getText().toString().trim().length() > 0) {
+                        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                        String dateTime = dateFormat.format(new Date());
+                        dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
+                        String dateforrow = dateFormat.format(new Date());
+                        tasktime = dateTime;
+                        tasktime = tasktime.split(" ")[1];
+                        Log.i("task", "tasktime" + tasktime);
+                        Log.i("UTC", "sendMessage utc time" + dateforrow);
+                        taskUTCtime = dateforrow;
+                        final TaskDetailsBean chatBean = new TaskDetailsBean();
+                        chatBean.setFromUserId(String.valueOf(Appreference.loginuserdetails.getId()));
+                        chatBean.setFromUserName(Appreference.loginuserdetails.getUsername());
+                        chatBean.setSelect(false);
+                        chatBean.setToUserName(toUserName);
+                        chatBean.setToUserId(String.valueOf(toUserId));
+                        chatBean.setTaskDescription(des.getText().toString());
+                        chatBean.setSignalid(Utility.getSessionID());
+                        chatBean.setTaskNo(task_No);
+                        chatBean.setCatagory(category);
+                        chatBean.setIssueId(issueId);
+                        chatBean.setParentId(getFileName());
+                        chatBean.setTaskPriority("Medium");
+                        if (template) {
+                            if (note) {
+                                chatBean.setTaskStatus("note");
+                            } else if (chat) {
+                                chatBean.setTaskStatus("chat");
+                            } else {
+                                chatBean.setTaskStatus("draft");
+                            }
+                            chatBean.setCustomTagVisible(true);
+                        } else
+                            chatBean.setTaskStatus(taskStatus);
+                        Log.i("Accept", "value 12" + chatBean.getTaskStatus());
+                        chatBean.setIsRemainderRequired("");
+                        chatBean.setCompletedPercentage("0");
+                        chatBean.setPlannedStartDateTime("");
+                        chatBean.setPlannedEndDateTime("");
+                        chatBean.setRemainderFrequency("");
                         chatBean.setCustomTagVisible(true);
-                    } else
-                        chatBean.setTaskStatus(taskStatus);
-                    Log.i("Accept", "value 12" + chatBean.getTaskStatus());
-                    chatBean.setIsRemainderRequired("");
-                    chatBean.setCompletedPercentage("0");
-                    chatBean.setPlannedStartDateTime("");
-                    chatBean.setPlannedEndDateTime("");
-                    chatBean.setRemainderFrequency("");
-                    chatBean.setCustomTagVisible(true);
-                    chatBean.setTaskUTCDateTime(dateforrow);
-                    chatBean.setDateTime(dateTime);
-                    if (chatBean.getTaskDescription() != null && (chatBean.getTaskDescription().contains("www.") || chatBean.getTaskDescription().contains("https:") || chatBean.getTaskDescription().contains("http:"))) {
-                        chatBean.setMimeType("url");
-                    } else {
-                        chatBean.setMimeType("text");
-                    }
-                    if (project) {
-                        chatBean.setProjectId(projectId);
-                        if (projectGroup_Mems != null) {
-                            chatBean.setGroupTaskMembers(projectGroup_Mems);
-                        }
-                    }
-                    chatBean.setOwnerOfTask(ownerOfTask);
-                    chatBean.setCustomTagVisible(true);
-                    chatBean.setTaskType(taskType);
-                    // send status 0 is send 1 is unsend
-                    chatBean.setSendStatus("1");
-                    chatBean.setTaskId(webtaskId);
-                    chatBean.setTasktime(tasktime);
-                    chatBean.setTaskUTCTime(taskUTCtime);
-                    chatBean.setTaskReceiver(taskReceiver);
-                    if (subType != null && subType.equalsIgnoreCase("private")) {
-                        chatBean.setSubType(subType);
-                        chatBean.setPrivate_Member(private_member);
-                        if (taskType != null && !taskType.equalsIgnoreCase("Group")) {
-                            Log.i("observer", "list clear 13");
-                            listOfObservers.clear();
-                            listObservers.clear();
-                            if (!listOfObservers.contains(toUserName))
-                                listOfObservers.add(toUserName);
-                            listObservers.add(toUserName);
-                            Log.i("task", "private list " + listOfObservers.get(0));
-                        }
-                    } else if (subType != null && subType.equalsIgnoreCase("taskDescription")) {
-                        chatBean.setSubType(subType);
-                        chatBean.setTaskRequestType(subType);
-                    } else {
-                        chatBean.setSubType(subType);
-                    }
-                    if (isTaskName) {
-                        chatBean.setMsg_status(0);
-                        chatBean.setSendStatus("0");
-                        chatBean.setTaskName(des.getText().toString());
-                    } else {
-                        chatBean.setMsg_status(1);
-                        chatBean.setTaskName(taskName);
-                    }
-
-                    if (isTaskName) {
-                        taskName = des.getText().toString();
-                        ownerOfTask = Appreference.loginuserdetails.getUsername();
-                        taskIdWebservice(chatBean);
-                        Log.i("task", "isTask Name is false");
-                    } else {
-                        if (project) {
-                            VideoCallDataBase.getDB(context).update_Project_history(chatBean);
+                        chatBean.setTaskUTCDateTime(dateforrow);
+                        chatBean.setDateTime(dateTime);
+                        if (chatBean.getTaskDescription() != null && (chatBean.getTaskDescription().contains("www.") || chatBean.getTaskDescription().contains("https:") || chatBean.getTaskDescription().contains("http:"))) {
+                            chatBean.setMimeType("url");
                         } else {
-                            dataBase.insertORupdate_TaskHistoryInfo(chatBean);
+                            chatBean.setMimeType("text");
                         }
-                        Log.i("taskconversation", "CusTome ---->>><<< 3 ");
-                        dataBase.insertORupdate_Task_history(chatBean);
-//                        dataBase.insertORupdate_TaskHistoryInfo(chatBean);
-                        if (chatBean.isCustomTagVisible()) {
-                            taskList.add(chatBean);
+                        if (project) {
+                            chatBean.setProjectId(projectId);
+                            if (projectGroup_Mems != null) {
+                                chatBean.setGroupTaskMembers(projectGroup_Mems);
+                            }
                         }
-                        refresh();
+                        chatBean.setOwnerOfTask(ownerOfTask);
+                        chatBean.setCustomTagVisible(true);
+                        chatBean.setTaskType(taskType);
+                        chatBean.setSendStatus("1");    // send status 0 is send 1 is unsend
+                        chatBean.setTaskId(webtaskId);
+                        chatBean.setTasktime(tasktime);
+                        chatBean.setTaskUTCTime(taskUTCtime);
+                        chatBean.setTaskReceiver(taskReceiver);
+                        if (subType != null && subType.equalsIgnoreCase("private")) {
+                            chatBean.setSubType(subType);
+                            chatBean.setPrivate_Member(private_member);
+                            if (taskType != null && !taskType.equalsIgnoreCase("Group")) {
+                                listOfObservers.clear();
+                                listObservers.clear();
+                                if (!listOfObservers.contains(toUserName))
+                                    listOfObservers.add(toUserName);
+                                listObservers.add(toUserName);
+                            }
+                        } else if (subType != null && subType.equalsIgnoreCase("taskDescription")) {
+                            chatBean.setSubType(subType);
+                            chatBean.setTaskRequestType(subType);
+                        } else {
+                            chatBean.setSubType(subType);
+                        }
+                        if (isTaskName) {
+                            chatBean.setMsg_status(0);
+                            chatBean.setSendStatus("0");
+                            chatBean.setTaskName(des.getText().toString());
+                        } else {
+                            chatBean.setMsg_status(1);
+                            chatBean.setTaskName(taskName);
+                        }
+
+                        if (isTaskName) {
+                            taskName = des.getText().toString();
+                            ownerOfTask = Appreference.loginuserdetails.getUsername();
+                            taskIdWebservice(chatBean);
+                        } else {
+                            if (project) {
+                                VideoCallDataBase.getDB(context).update_Project_history(chatBean);
+                            } else {
+                                if (!chat) {
+                                    dataBase.insertORupdate_Task_history(chatBean);
+                                    dataBase.insertORupdate_TaskHistoryInfo(chatBean);
+                                }
+                            }
+                            dataBase.insertORupdate_Task_history(chatBean);
+                            if (chatBean.isCustomTagVisible()) {
+                                taskList.add(chatBean);
+                            }
+                            refresh();
+                        }
+                        handler.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                list_all.setSelection(list_all.getAdapter().getCount() - 1);
+                                des.setText("");
+                            }
+                        });
                     }
-                    Log.i("mp", "mpath" + strIPath);
-                    des.setText("");
+                } else {
+                    Toast.makeText(context, "Please create the task to add draft message ", Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -3434,8 +3361,8 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
             public void onClick(View v) {
                 try {
                     Log.i("datepicker", "outer side");
-                    if (taskStatus != null && !taskStatus.equalsIgnoreCase("Closed")) {
-                        if (taskStatus != null && !taskStatus.equalsIgnoreCase("abandoned")) {
+                    if (taskStatus != null && !taskStatus.equalsIgnoreCase("Closed") && !taskStatus.equalsIgnoreCase("Completed")) {
+                        if (taskStatus != null && !taskStatus.equalsIgnoreCase("abandoned") && !taskStatus.equalsIgnoreCase("pause") && !taskStatus.equalsIgnoreCase("rejected")) {
                             if (template && !note) {
                                 Log.i("datepicker", "template side");
                                 Intent intent = new Intent(NewTaskConversation.this, TaskDateUpdate.class);
@@ -3469,10 +3396,17 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                                 intent.putExtra("taskType", taskType);
                                 intent.putExtra("taskStatus", taskStatus);
                                 intent.putExtra("toUserIdConflict", String.valueOf(toUserId));
+                                if (projectId != null) {
+                                    intent.putExtra("projectId", projectId);
+                                }
                                 NewTaskConversation.this.startActivityForResult(intent, 336);
                             }
-                        } else {
-                            Toast.makeText(context, "Unable to sent the Date task is in abandoned state ", Toast.LENGTH_SHORT).show();
+                        } else if (taskStatus != null && taskStatus.equalsIgnoreCase("abandoned")) {
+                            Toast.makeText(context, "Unable to change percentage task is in abandoned state ", Toast.LENGTH_SHORT).show();
+                        } else if (taskStatus != null && taskStatus.equalsIgnoreCase("pause")) {
+                            Toast.makeText(context, "Unable to sent change percentage task is in pause state ", Toast.LENGTH_SHORT).show();
+                        } else if (taskStatus != null && taskStatus.equalsIgnoreCase("rejected")) {
+                            Toast.makeText(context, "Unable to sent change percentage task is in rejected state ", Toast.LENGTH_SHORT).show();
                         }
                     } else {
                         Toast.makeText(context, "This " + category + " is already Closed ", Toast.LENGTH_SHORT).show();
@@ -3488,8 +3422,8 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
             @Override
             public void onClick(View v) {
                 try {
-                    if (taskStatus != null && !taskStatus.equalsIgnoreCase("Closed")) {
-                        if (taskStatus != null && !taskStatus.equalsIgnoreCase("abandoned")) {
+                    if (taskStatus != null && !taskStatus.equalsIgnoreCase("Closed") && !taskStatus.equalsIgnoreCase("Completed")) {
+                        if (taskStatus != null && !taskStatus.equalsIgnoreCase("abandoned") && !taskStatus.equalsIgnoreCase("pause") && !taskStatus.equalsIgnoreCase("rejected")) {
                             if ((taskType != null && taskType.equalsIgnoreCase("Group") && groupMemberAccess != null && groupMemberAccess.getRespondDateChange() != null && groupMemberAccess.getRespondDateChange().contains("1")) || (taskType != null && taskType.equalsIgnoreCase("individual") || project)) {
                                 taskList_5 = new ArrayList<>();
                                 if (taskType != null && taskType.equalsIgnoreCase("Group")) {
@@ -3516,14 +3450,22 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                                     intent.putExtra("taskType", taskDetailsBean.getTaskType());
                                     intent.putExtra("toUserId", taskDetailsBean.getToUserId());
                                     intent.putExtra("ownerOfTask", taskDetailsBean.getOwnerOfTask());
+                                    intent.putExtra("taskId", taskDetailsBean.getTaskId());
+                                    if (taskDetailsBean.getProjectId() != null) {
+                                        intent.putExtra("projectId", taskDetailsBean.getProjectId());
+                                    }
                                     date_header = "requested";
                                     startActivityForResult(intent, 337);
                                 }
                             } else {
                                 Toast.makeText(context, "Access Deniedfor DateChangeRequest", Toast.LENGTH_SHORT).show();
                             }
-                        } else {
+                        } else if (taskStatus != null && taskStatus.equalsIgnoreCase("abandoned")) {
                             Toast.makeText(context, "Unable to sent the Date task is in abandoned state ", Toast.LENGTH_SHORT).show();
+                        } else if (taskStatus != null && taskStatus.equalsIgnoreCase("pause")) {
+                            Toast.makeText(context, "Unable to sent the Date task is in pause state ", Toast.LENGTH_SHORT).show();
+                        } else if (taskStatus != null && taskStatus.equalsIgnoreCase("rejected")) {
+                            Toast.makeText(context, "Unable to sent the Date task is in rejected state ", Toast.LENGTH_SHORT).show();
                         }
                     } else {
                         Toast.makeText(context, "This " + category + " is already Closed ", Toast.LENGTH_SHORT).show();
@@ -3554,19 +3496,23 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                         tv_unreadCountScroll.setVisibility(View.INVISIBLE);
                         show_unreadCount = 0;
                     }
-                    if (!project && !template) {
+                    if (!project && (!template || chat)) {
                         Log.i("lazyloadtaskcv", "scroll count-->" + taskList_count);
                         if (taskList_count != 0 && taskList_count >= 10) {
                             Scroll = true;
                         } else if (taskList_count != 0 && taskList_count < 10) {
                             Scroll = true;
-                        } else {
-                            Scroll = false;
-                        }
+                        } else
+                            Scroll = taskList_count != 0 && taskList_count < 10;
                         if (firstVisibleItem == 0 && medialistadapter != null && Scroll) {
                             final int currentPosition = list_all.getFirstVisiblePosition();
                             getTaskConversationListFromDBWhenScroll(taskList_count);
-                            medialistadapter.notifyDataSetChanged();
+                            handler.post(new Runnable() {
+                                @Override
+                                public void run() {
+                                    medialistadapter.notifyDataSetChanged();
+                                }
+                            });
                             Log.i("lazyloadtaskcv", "current position--->" + currentPosition);
                             Log.i("lazyloadtaskcv", "on scroll taskList_count--->" + taskList_count);
 
@@ -3611,22 +3557,29 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
             }
         });
 
-        audio.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                medialistadapter.stopPlayback();
-                try {
-                    Intent i = new Intent(NewTaskConversation.this, AudioRecorder.class);
-                    i.putExtra("task", "audio");
-                    startActivityForResult(i, 333);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    Appreference.printLog("NewTaskConversation", "audio clicklistener Exception " + e.getMessage(), "WARN", null);
-                }
+        audio.setOnClickListener(new View.OnClickListener()
 
-            }
-        });
+                                 {
+                                     @Override
+                                     public void onClick(View v) {
+                                         handler.post(new Runnable() {
+                                             @Override
+                                             public void run() {
+                                                 medialistadapter.stopPlayback();
+                                             }
+                                         });
+                                         try {
+                                             Intent i = new Intent(NewTaskConversation.this, AudioRecorder.class);
+                                             i.putExtra("task", "audio");
+                                             startActivityForResult(i, 333);
+                                         } catch (Exception e) {
+                                             e.printStackTrace();
+                                             Appreference.printLog("NewTaskConversation", "audio clicklistener Exception " + e.getMessage(), "WARN", null);
+                                         }
+                                     }
+                                 }
 
+        );
 
         save.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -3649,13 +3602,12 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                         chatBean.setFromUserId(String.valueOf(taskDetailsBean.getFromUserId()));
                         chatBean.setFromUserName(taskDetailsBean.getFromUserName());
                         chatBean.setSelect(taskDetailsBean.isSelected());
-                        chatBean.setSelect(taskDetailsBean.isSelected());
                         chatBean.setToUserName(taskDetailsBean.getToUserName());
                         chatBean.setToUserId(taskDetailsBean.getToUserId());
-                        chatBean.setTaskName(taskDetailsBean.getTaskName());
+                        chatBean.setTaskName(taskName);
                         chatBean.setTaskDescription(taskDetailsBean.getTaskDescription());
                         chatBean.setTaskNo(taskDetailsBean.getTaskNo());
-                        chatBean.setCatagory(taskDetailsBean.getCatagory());
+                        chatBean.setCatagory(category);
                         chatBean.setIssueId(taskDetailsBean.getIssueId());
                         chatBean.setParentId(taskDetailsBean.getParentId());
                         chatBean.setTaskPriority(taskDetailsBean.getTaskPriority());
@@ -3672,7 +3624,10 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                         chatBean.setTaskType(taskDetailsBean.getTaskType());
                         chatBean.setTaskId(taskDetailsBean.getTaskId());
                         chatBean.setTasktime(tasktime);
+                        chatBean.setTaskStatus(taskStatus);
+                        chatBean.setTaskReceiver(taskReceiver);
                         chatBean.setDateTime(taskDetailsBean.getDateTime());
+                        chatBean.setOwnerOfTask(ownerOfTask);
                         if (project)
                             chatBean.setProjectId(projectId);
                         String xml = composeChatXML(chatBean);
@@ -5647,65 +5602,38 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
             gridviewtaker_thump = new ArrayList<>();
 
             if (taskType != null && taskType.equalsIgnoreCase("Group") && !project) {
-                Log.i("gridview", "Group owner " + taskType);
-                if (groupMemberAccess.getRespondPrivate() != null && groupMemberAccess.getRespondPrivate().contains("1")) {
-                    Log.i("gridview", "index private ");
-                    gridview_text.add("Private");
-                    gridview_thump.add(R.drawable.private_chat);
+                gridview_text.add("Audio");
+                gridview_thump.add(R.drawable.audiofilefilled_32);
+                gridview_text.add("Photo");
+                gridview_thump.add(R.drawable.photo_grid);
+                gridview_text.add("Sketch");
+                gridview_thump.add(R.drawable.sketch_grid);
+                gridview_text.add("Video");
+                gridview_thump.add(R.drawable.video_grid);
+                gridview_text.add("File");
+                gridview_thump.add(R.drawable.file_grid);
+                gridview_text.add("Completion");
+                gridview_thump.add(R.drawable.percent_grid);
+                if (groupMemberAccess.getRespondConfCall() != null && groupMemberAccess.getRespondConfCall().contains("1")) {
+                    gridview_text.add("Call");
+                    gridview_thump.add(R.drawable.call_grid);
                 }
+                if (groupMemberAccess.getRespondDateChange() != null && groupMemberAccess.getRespondDateChange().contains("1")) {
+                    gridview_text.add("Dates");
+                    gridview_thump.add(R.drawable.date_grid);
+                }
+
                 if (groupMemberAccess.getTaskPriority() != null && groupMemberAccess.getTaskPriority().contains("1")) {
                     gridview_text.add("Priority");
                     gridview_thump.add(R.drawable.priority_grid);
                 }
                 if (groupMemberAccess.getEscalations() != null && groupMemberAccess.getEscalations().contains("1")) {
-                    gridview_text.add("Escalation");
-                    gridview_thump.add(R.drawable.sketch_grid);
+                    gridview_text.add("Escalations");
+                    gridview_thump.add(R.drawable.issue_icon);
                 }
-                if (groupMemberAccess.getAccessScheduledCNF() != null && groupMemberAccess.getAccessScheduledCNF().contains("1")) {
-                    gridview_text.add("Scheduled");
-                    gridview_thump.add(R.drawable.missedcall_32);
-                }
-                gridview_text.add("Audio");
-                gridview_thump.add(R.drawable.audiofilefilled_32);
-                Log.i("gridview", "index Photo ");
-
-                gridview_text.add("Photo");
-                gridview_thump.add(R.drawable.photo_grid);
-                Log.i("gridview", "index Sketch ");
-
-                gridview_text.add("Sketch");
-                gridview_thump.add(R.drawable.sketch_grid);
-                Log.i("gridview", "index Video ");
-
-                gridview_text.add("Video");
-                gridview_thump.add(R.drawable.video_grid);
-                Log.i("gridview", "index File ");
-
-                gridview_text.add("File");
-                gridview_thump.add(R.drawable.file_grid);
-
-                Log.i("gridview", "index Completion ");
-                gridview_text.add("Completion");
-                gridview_thump.add(R.drawable.percent_grid);
-
-//                gridview_text.add("Custom1");
-//                gridview_thump.add(R.drawable.custom);
-
-                if (groupMemberAccess.getRespondDateChange() != null && groupMemberAccess.getRespondDateChange().contains("1")) {
-                    Log.i("gridview", "index Dates ");
-                    gridview_text.add("Dates");
-                    gridview_thump.add(R.drawable.date_grid);
-                }
-
-                if (groupMemberAccess.getRespondConfCall() != null && groupMemberAccess.getRespondConfCall().contains("1")) {
-                    Log.i("gridview", "index Call ");
-                    gridview_text.add("Call");
-                    gridview_thump.add(R.drawable.call_grid);
-                }
-                if (groupMemberAccess.getAddObserver() != null && groupMemberAccess.getAddObserver().contains("1")) {
-                    Log.i("gridview", "index AddObserver ");
-//                    gridview_text.add("AddObserver");
-//                    gridview_thump.add(R.drawable.observer_grid);
+                if (groupMemberAccess.getAccessForms() != null && groupMemberAccess.getAccessForms().contains("1")) {
+                    gridview_text.add("Forms");
+                    gridview_thump.add(R.drawable.forms);
                 }
                 if (groupMemberAccess.getChatAccess() != null && groupMemberAccess.getChatAccess().contains("1")) {
                     Log.i("gridview", "index Chat ");
@@ -5713,27 +5641,36 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                     gridview_thump.add(R.drawable.chat_grid_icon);
                 }
                 if (groupMemberAccess.getTaskDescriptions() != null && groupMemberAccess.getTaskDescriptions().contains("1")) {
-                    Log.i("gridview", "index Description ");
-                    gridview_text.add("Description");
+                    gridview_text.add("Task Description");
                     gridview_thump.add(R.drawable.desceiption_grid);
                 }
-                if (groupMemberAccess.getAccessForms() != null && groupMemberAccess.getAccessForms().contains("1")) {
-                    Log.i("gridview", "index Forms ");
-//                    gridview_text.add("Forms");
-//                    gridview_thump.add(R.drawable.forms);
-                }
-                if (groupMemberAccess.getReassignTask() != null && groupMemberAccess.getReassignTask().contains("1")) {
-                    Log.i("gridview", "index ReassignTask ");
-//                    gridview_text.add("ReassignTask");
-//                    gridview_thump.add(R.drawable.reassign_task_new);
+                if (groupMemberAccess.getAccessScheduledCNF() != null && groupMemberAccess.getAccessScheduledCNF().contains("1")) {
+                    gridview_text.add("Scheduled Call");
+                    gridview_thump.add(R.drawable.missedcall_32);
                 }
                 if (groupMemberAccess.getAccessReminder() != null && groupMemberAccess.getAccessReminder().contains("1")) {
-                    Log.i("gridview", "index ReminderResponce ");
-                    gridview_text.add("ReminderResponce");
+                    gridview_text.add("Reminder Responses");
                     gridview_thump.add(R.mipmap.ic_reminder_icon);
                 }
+                if (groupMemberAccess.getAddObserver() != null && groupMemberAccess.getAddObserver().contains("1")) {
+                    if (!taskType.equalsIgnoreCase("Group")) {
+                        gridview_text.add("Add Observer");
+                        gridview_thump.add(R.drawable.addobserver_grid_icon);
+                    }
+                }
+                if (groupMemberAccess.getRespondPrivate() != null && groupMemberAccess.getRespondPrivate().contains("1")) {
+                    gridview_text.add("Private");
+                    gridview_thump.add(R.drawable.private_chat);
+                }
+                if (groupMemberAccess.getReassignTask() != null && groupMemberAccess.getReassignTask().contains("1")) {
+                    if (!taskType.equalsIgnoreCase("Group")) {
+                        gridview_text.add("Reassign");
+                        gridview_thump.add(R.drawable.reassign_task_new);
+                    }
+                }
+                gridview_text.add("MoreFields");
+                gridview_thump.add(R.drawable.morefields_grid_icon);
                 if (groupMemberAccess.getRemindMe() != null && groupMemberAccess.getRemindMe().contains("1")) {
-                    Log.i("gridview", "index RemindMe ");
                     gridview_text.add("RemindMe");
                     gridview_thump.add(R.drawable.remind_me);
                 }
@@ -5741,58 +5678,94 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                     gridview_text.add("ViewTask");
                     gridview_thump.add(R.drawable.ic_view_task);
                 }
-//                gridview_text.add("TNA Report");
-//                gridview_thump.add(R.drawable.leave);
-            } else {
+
+            } else if (isProjectFromOracle && project) {
                 Log.i("gridview", "individual owner " + taskType);
-                gridview_text.add("Private");
-                gridview_text.add("Priority");
-                gridview_text.add("Custom1");
-                gridview_text.add("Scheduled");
                 gridview_text.add("Audio");
                 gridview_text.add("Photo");
                 gridview_text.add("Sketch");
                 gridview_text.add("Video");
                 gridview_text.add("File");
-                gridview_text.add("Dates");
                 gridview_text.add("Completion");
                 gridview_text.add("Call");
-//                gridview_text.add("AddObserver");
+                gridview_text.add("Dates");
+                gridview_text.add("Priority");
                 gridview_text.add("Chat");
-                gridview_text.add("Description");
-//                gridview_text.add("Forms");
-//                gridview_text.add("ReassignTask");
-                gridview_text.add("ReminderResponce");
+                gridview_text.add("Task Description");
+                gridview_text.add("Scheduled Call");
+                gridview_text.add("Reminder Responses");
+                gridview_text.add("Private");
                 gridview_text.add("RemindMe");
-//                gridview_text.add("TNA Report");
-//                gridview_text.add("FSR Report");
-//                gridview_text.add("moreFields");
+                gridview_text.add("Custom1");
                 if (category != null && category.equalsIgnoreCase("issue")) {
                     gridview_text.add("ViewTask");
                 }
-//
-                gridview_thump.add(R.drawable.ic_private123);
-                gridview_thump.add(R.drawable.priority_grid);
-                gridview_thump.add(R.drawable.custom);
-                gridview_thump.add(R.drawable.missedcall_32);
                 gridview_thump.add(R.drawable.audiofilefilled_32);
                 gridview_thump.add(R.drawable.photo_grid);
                 gridview_thump.add(R.drawable.sketch_grid);
                 gridview_thump.add(R.drawable.video_grid);
                 gridview_thump.add(R.drawable.file_grid);
-                gridview_thump.add(R.drawable.date_grid);
                 gridview_thump.add(R.drawable.percent_grid);
                 gridview_thump.add(R.drawable.call_grid);
-//                gridview_thump.add(R.drawable.observer_grid);
+                gridview_thump.add(R.drawable.date_grid);
+                gridview_thump.add(R.drawable.priority_grid);
                 gridview_thump.add(R.drawable.chat_grid_icon);
                 gridview_thump.add(R.drawable.desceiption_grid);
-//                gridview_thump.add(R.drawable.forms);
-//                gridview_thump.add(R.drawable.reassign_task_new);
+                gridview_thump.add(R.drawable.missedcall_32);
                 gridview_thump.add(R.mipmap.ic_reminder_icon);
+                gridview_thump.add(R.drawable.private_chat);
                 gridview_thump.add(R.drawable.remind_me);
-//                gridview_thump.add(R.drawable.leave);
-//                gridview_thump.add(R.drawable.share);
-//                gridview_thump.add(R.drawable.ic_rectangle_filled_100);
+                gridview_thump.add(R.drawable.custom);
+                if (category != null && category.equalsIgnoreCase("issue")) {
+                    gridview_thump.add(R.drawable.ic_view_task);
+                }
+            } else {
+                gridview_text.add("Audio");
+                gridview_text.add("Photo");
+                gridview_text.add("Sketch");
+                gridview_text.add("Video");
+                gridview_text.add("File");
+                gridview_text.add("Completion");
+                gridview_text.add("Call");
+                gridview_text.add("Dates");
+                gridview_text.add("Priority");
+                gridview_text.add("Escalations");
+                gridview_text.add("Forms");
+                gridview_text.add("Chat");
+                gridview_text.add("Task Description");
+                gridview_text.add("Scheduled Call");
+                gridview_text.add("Reminder Responses");
+                gridview_text.add("Add Observer");
+                gridview_text.add("Private");
+                gridview_text.add("Reassign");
+                gridview_text.add("MoreFields");
+                gridview_text.add("RemindMe");
+                if (category != null && category.equalsIgnoreCase("issue")) {
+                    gridview_text.add("ViewTask");
+                }
+
+                gridview_thump.add(R.drawable.audiofilefilled_32);
+                gridview_thump.add(R.drawable.photo_grid);
+                gridview_thump.add(R.drawable.sketch_grid);
+                gridview_thump.add(R.drawable.video_grid);
+                gridview_thump.add(R.drawable.file_grid);
+                gridview_thump.add(R.drawable.percent_grid);
+                gridview_thump.add(R.drawable.call_grid);
+                gridview_thump.add(R.drawable.date_grid);
+                gridview_thump.add(R.drawable.priority_grid);
+                gridview_thump.add(R.drawable.issue_icon);
+                gridview_thump.add(R.drawable.forms);
+                gridview_thump.add(R.drawable.chat_grid_icon);
+                gridview_thump.add(R.drawable.desceiption_grid);
+                gridview_thump.add(R.drawable.missedcall_32);
+                gridview_thump.add(R.mipmap.ic_reminder_icon);
+                gridview_thump.add(R.drawable.addobserver_grid_icon);
+                gridview_thump.add(R.drawable.private_chat);
+                gridview_thump.add(R.drawable.reassign_task_new);
+                gridview_thump.add(R.drawable.morefields_grid_icon);
+                gridview_thump.add(R.drawable.remind_me);
+
+
                 if (category != null && category.equalsIgnoreCase("issue")) {
                     gridview_thump.add(R.drawable.ic_view_task);
                 }
@@ -5805,53 +5778,30 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
 
             if (taskType != null && taskType.equalsIgnoreCase("Group") && !project) {
 
-                Log.i("gridview", "Group receiver " + taskType);
-                if (groupMemberAccess.getRespondPrivate() != null && groupMemberAccess.getRespondPrivate().contains("1")) {
-                    Log.i("gridview", "index private ");
-                    gridviewtaker_text.add("Private");
-                    gridviewtaker_thump.add(R.drawable.private_chat);
-                }
-                if (groupMemberAccess.getApproveLeave() != null && groupMemberAccess.getApproveLeave().contains("1")) {
-                    gridviewtaker_text.add("Leave");
-                    gridviewtaker_thump.add(R.drawable.leave);
-                }
-                if (groupMemberAccess.getAccessScheduledCNF() != null && groupMemberAccess.getAccessScheduledCNF().contains("1")) {
-                    gridviewtaker_text.add("Scheduled");
-                    gridviewtaker_thump.add(R.drawable.missedcall_32);
-                }
                 if (groupMemberAccess.getRespondAudio() != null && groupMemberAccess.getRespondAudio().contains("1")) {
                     gridviewtaker_text.add("Audio");
                     gridviewtaker_thump.add(R.drawable.audiofilefilled_32);
                 }
                 if (groupMemberAccess.getRespondPhoto() != null && groupMemberAccess.getRespondPhoto().contains("1")) {
-                    Log.i("gridview", "index Photo ");
                     gridviewtaker_text.add("Photo");
                     gridviewtaker_thump.add(R.drawable.photo_grid);
                 }
                 if (groupMemberAccess.getRespondSketch() != null && groupMemberAccess.getRespondSketch().contains("1")) {
-                    Log.i("gridview", "index Sketch ");
                     gridviewtaker_text.add("Sketch");
                     gridviewtaker_thump.add(R.drawable.sketch_grid);
                 }
                 if (groupMemberAccess.getRespondVideo() != null && groupMemberAccess.getRespondVideo().contains("1")) {
-                    Log.i("gridview", "index Video ");
                     gridviewtaker_text.add("Video");
                     gridviewtaker_thump.add(R.drawable.video_grid);
                 }
                 if (groupMemberAccess.getRespondFiles() != null && groupMemberAccess.getRespondFiles().contains("1")) {
-                    Log.i("gridview", "index File ");
                     gridviewtaker_text.add("File");
                     gridviewtaker_thump.add(R.drawable.file_grid);
                 }
-//                gridviewtaker_text.add("Custom1");
-//                gridviewtaker_thump.add(R.drawable.custom);
-
-                Log.i("gridview", "index Completion ");
                 gridviewtaker_text.add("Completion");
                 gridviewtaker_thump.add(R.drawable.percent_grid);
 
                 if (groupMemberAccess.getRespondConfCall() != null && groupMemberAccess.getRespondConfCall().contains("1")) {
-                    Log.i("gridview", "index Call ");
                     gridviewtaker_text.add("Call");
                     gridviewtaker_thump.add(R.drawable.call_grid);
                 }
@@ -5860,25 +5810,33 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                     gridviewtaker_thump.add(R.drawable.chat_grid_icon);
                 }
                 if (groupMemberAccess.getAccessForms() != null && groupMemberAccess.getAccessForms().contains("1")) {
-                    Log.i("gridview", "index Forms ");
-//                    gridviewtaker_text.add("Forms");
-//                    gridviewtaker_thump.add(R.drawable.forms);
+                    gridviewtaker_text.add("Forms");
+                    gridviewtaker_thump.add(R.drawable.forms);
                 }
-
+                if (groupMemberAccess.getApproveLeave() != null && groupMemberAccess.getApproveLeave().contains("1")) {
+                    gridviewtaker_text.add("Leave");
+                    gridviewtaker_thump.add(R.drawable.leave);
+                }
+                if (groupMemberAccess.getAccessScheduledCNF() != null && groupMemberAccess.getAccessScheduledCNF().contains("1")) {
+                    gridviewtaker_text.add("Scheduled Call");
+                    gridviewtaker_thump.add(R.drawable.missedcall_32);
+                }
                 if (groupMemberAccess.getAccessReminder() != null && groupMemberAccess.getAccessReminder().contains("1")) {
-                    Log.i("gridview", "index ReminderResponce ");
-                    gridviewtaker_text.add("ReminderResponce");
+                    gridviewtaker_text.add("Reminder Responses");
                     gridviewtaker_thump.add(R.mipmap.ic_reminder_icon);
                 }
+                if (groupMemberAccess.getRespondPrivate() != null && groupMemberAccess.getRespondPrivate().contains("1")) {
+                    gridviewtaker_text.add("Private");
+                    gridviewtaker_thump.add(R.drawable.private_chat);
+                }
+                gridviewtaker_text.add("MoreFields");
+                gridviewtaker_thump.add(R.drawable.morefields_grid_icon);
                 if (category != null && category.equalsIgnoreCase("issue")) {
                     gridviewtaker_text.add("ViewTask");
                     gridviewtaker_thump.add(R.drawable.ic_view_task);
                 }
-            } else {
+            } else if (isProjectFromOracle && project) {
                 Log.i("gridview", "individual receiver " + taskType);
-                gridviewtaker_text.add("Private");
-                gridviewtaker_text.add("Leave");
-                gridviewtaker_text.add("Scheduled");
                 gridviewtaker_text.add("Audio");
                 gridviewtaker_text.add("Photo");
                 gridviewtaker_text.add("Sketch");
@@ -5887,8 +5845,11 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                 gridviewtaker_text.add("Completion");
                 gridviewtaker_text.add("Call");
                 gridviewtaker_text.add("Chat");
+                gridviewtaker_text.add("Leave");
+                gridviewtaker_text.add("Scheduled Call");
 //                gridviewtaker_text.add("Forms");
-                gridviewtaker_text.add("ReminderResponce");
+                gridviewtaker_text.add("Reminder Responses");
+                gridviewtaker_text.add("Private");
 //                gridviewtaker_text.add("moreFields");
                 gridviewtaker_text.add("Custom1");
                 if (category != null && category.equalsIgnoreCase("issue")) {
@@ -5896,9 +5857,7 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                 }
 
 
-                gridviewtaker_thump.add(R.drawable.private_chat);
-                gridviewtaker_thump.add(R.drawable.leave);
-                gridviewtaker_thump.add(R.drawable.missedcall_32);
+
                 gridviewtaker_thump.add(R.drawable.audiofilefilled_32);
                 gridviewtaker_thump.add(R.drawable.photo_grid);
                 gridviewtaker_thump.add(R.drawable.sketch_grid);
@@ -5906,11 +5865,50 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                 gridviewtaker_thump.add(R.drawable.file_grid);
                 gridviewtaker_thump.add(R.drawable.percent_grid);
                 gridviewtaker_thump.add(R.drawable.call_grid);
-                gridviewtaker_thump.add (R.drawable.chat_grid_icon);
-                gridviewtaker_thump.add(R.drawable.forms);
+                gridviewtaker_thump.add(R.drawable.chat_grid_icon);
+                gridviewtaker_thump.add(R.drawable.leave);
+                gridviewtaker_thump.add(R.drawable.missedcall_32);
+//                gridviewtaker_thump.add(R.drawable.forms);
                 gridviewtaker_thump.add(R.mipmap.ic_reminder_icon);
+                gridviewtaker_thump.add(R.drawable.private_chat);
 //                gridviewtaker_thump.add(R.drawable.ic_rectangle_filled_100);
                 gridviewtaker_thump.add(R.drawable.custom);
+                if (category != null && category.equalsIgnoreCase("issue")) {
+                    gridviewtaker_thump.add(R.drawable.ic_view_task);
+                }
+            } else {
+                gridviewtaker_text.add("Audio");
+                gridviewtaker_text.add("Photo");
+                gridviewtaker_text.add("Sketch");
+                gridviewtaker_text.add("Video");
+                gridviewtaker_text.add("File");
+                gridviewtaker_text.add("Completion");
+                gridviewtaker_text.add("Call");
+                gridviewtaker_text.add("Chat");
+                gridviewtaker_text.add("Forms");
+                gridviewtaker_text.add("Leave");
+                gridviewtaker_text.add("Scheduled Call");
+                gridviewtaker_text.add("Reminder Responses");
+                gridviewtaker_text.add("Private");
+                gridviewtaker_text.add("MoreFields");
+                if (category != null && category.equalsIgnoreCase("issue")) {
+                    gridviewtaker_text.add("ViewTask");
+                }
+
+                gridviewtaker_thump.add(R.drawable.audiofilefilled_32);
+                gridviewtaker_thump.add(R.drawable.photo_grid);
+                gridviewtaker_thump.add(R.drawable.sketch_grid);
+                gridviewtaker_thump.add(R.drawable.video_grid);
+                gridviewtaker_thump.add(R.drawable.file_grid);
+                gridviewtaker_thump.add(R.drawable.percent_grid);
+                gridviewtaker_thump.add(R.drawable.call_grid);
+                gridviewtaker_thump.add(R.drawable.chat_grid_icon);
+                gridviewtaker_thump.add(R.drawable.forms);
+                gridviewtaker_thump.add(R.drawable.leave);
+                gridviewtaker_thump.add(R.drawable.missedcall_32);
+                gridviewtaker_thump.add(R.mipmap.ic_reminder_icon);
+                gridviewtaker_thump.add(R.drawable.private_chat);
+                gridviewtaker_thump.add(R.drawable.morefields_grid_icon);
                 if (category != null && category.equalsIgnoreCase("issue")) {
                     gridviewtaker_thump.add(R.drawable.ic_view_task);
                 }
@@ -10981,11 +10979,12 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                                                  Log.i("desc123", "isDeassign==>" + isDeassign);
                                                  if (isDeassign) {
                                                      isDeassign = false;
-                                                     Log.i("conv123","isDeassign ProgressBarInvisible calling....===>");
+                                                     Log.i("conv123", "isDeassign ProgressBarInvisible calling....===>");
                                                      ProjectHistory projectHistory = (ProjectHistory) Appreference.context_table.get("projecthistory");
-                                                     if (projectHistory != null){
-                                                         Log.i("conv123","isDeassign ProgressBarInvisible  projectHistory not null....===>");
-                                                         projectHistory.setProgressBarInvisible();}
+                                                     if (projectHistory != null) {
+                                                         Log.i("conv123", "isDeassign ProgressBarInvisible  projectHistory not null....===>");
+                                                         projectHistory.setProgressBarInvisible();
+                                                     }
                                                      NewTaskConversation.this.finish();
                                                  }
                                              } catch (Exception e) {
@@ -15450,7 +15449,7 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
             if (webtaskId != null && parentTaskId != null && webtaskId.equalsIgnoreCase(parentTaskId)) {
                 addObserver.setVisibility(View.GONE);
             } else {
-                if ((taskType!=null && !taskType.equalsIgnoreCase("Group")) && !chat && !isProjectFromOracle) {
+                if ((taskType != null && !taskType.equalsIgnoreCase("Group")) && !chat && !isProjectFromOracle) {
                     addObserver.setVisibility(View.VISIBLE);
                 } else {
                     addObserver.setVisibility(View.GONE);
@@ -16051,8 +16050,6 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
             calen_picker.setVisibility(View.GONE);
             task_accept_layout.setVisibility(View.GONE);
 
-            gridviewObserver.add("Private");
-            gridviewObserver.add("Scheduled");
             gridviewObserver.add("Audio");
             gridviewObserver.add("Photo");
             gridviewObserver.add("Sketch");
@@ -16060,13 +16057,13 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
             gridviewObserver.add("File");
             gridviewObserver.add("Call");
             gridviewObserver.add("Chat");
-//            gridviewObserver.add("Forms");
+            gridviewObserver.add("Forms");
+            gridviewObserver.add("Scheduled Call");
+            gridviewObserver.add("Private");
+            gridviewObserver.add("MoreFields");
             if (category != null && category.equalsIgnoreCase("issue")) {
                 gridviewObserver.add("ViewTask");
             }
-
-            gridviewObserver_thump.add(R.drawable.private_chat);
-            gridviewObserver_thump.add(R.drawable.missedcall_32);
             gridviewObserver_thump.add(R.drawable.audiofilefilled_32);
             gridviewObserver_thump.add(R.drawable.photo_grid);
             gridviewObserver_thump.add(R.drawable.sketch_grid);
@@ -16075,6 +16072,9 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
             gridviewObserver_thump.add(R.drawable.call_grid);
             gridviewObserver_thump.add(R.drawable.chat_grid_icon);
             gridviewObserver_thump.add(R.drawable.forms);
+            gridviewObserver_thump.add(R.drawable.missedcall_32);
+            gridviewObserver_thump.add(R.drawable.private_chat);
+            gridviewObserver_thump.add(R.drawable.morefields_grid_icon);
             if (category != null && category.equalsIgnoreCase("issue")) {
                 gridviewObserver_thump.add(R.drawable.ic_view_task);
             }
@@ -17161,8 +17161,8 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                 }
             }
             if ((subType != null && subType.equalsIgnoreCase("taskDescription")) && !chatBean.getTaskDescription().contains("Completed Percentage ")) {
-                    chatBean.setSubType(subType);
-                    chatBean.setTaskRequestType(subType);
+                chatBean.setSubType(subType);
+                chatBean.setTaskRequestType(subType);
             } else {
                 if (!isTaskName) {
                     if (isDateorUpdateorNormal == 1) {
@@ -19913,18 +19913,50 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
         }
     }
 
-/*
+    /*
+        public void updateMessageStatus(TaskDetailsBean taskDetailsBean) {
+            if (taskDetailsBean != null) {
+                Log.d("TaskObserver", "Inside message recived area 3");
+                for (TaskDetailsBean detailsBean : taskList) {
+                    if (detailsBean.getSignalid() != null && detailsBean.getSignalid().equalsIgnoreCase(taskDetailsBean.getSignalid())) {
+                        Log.i("TaskObserver", "task " + detailsBean.getMsg_status());
+                        if (detailsBean.getMsg_status() <= 0) {
+                            detailsBean.setMsg_status(1);
+                            Log.i("TaskObserver", "task if " + detailsBean.getMsg_status());
+                        }
+                        break;
+                    }
+                    break;
+                }
+                refresh();
+                if (down_icon != null && down_icon.getVisibility() == View.VISIBLE) {
+                    if (list_all != null)
+                        list_all.setTranscriptMode(AbsListView.TRANSCRIPT_MODE_DISABLED);
+                } else if (list_all != null) {
+                    list_all.smoothScrollToPosition(list_all.getAdapter().getCount() - 1);
+                }
+            }
+        }
+    */
     public void updateMessageStatus(TaskDetailsBean taskDetailsBean) {
         if (taskDetailsBean != null) {
             Log.d("TaskObserver", "Inside message recived area 3");
             for (TaskDetailsBean detailsBean : taskList) {
                 if (detailsBean.getSignalid() != null && detailsBean.getSignalid().equalsIgnoreCase(taskDetailsBean.getSignalid())) {
                     Log.i("TaskObserver", "task " + detailsBean.getMsg_status());
-                    if (detailsBean.getMsg_status() <= 0) {
+                    Log.i("TaskObserver", "getSignalid ==>  " + taskDetailsBean.getSignalid());
+                    Log.i("TaskObserver", "getSignalid ==>  " + detailsBean.getSignalid());
+                    if (detailsBean.getMsg_status() <= 0 && taskDetailsBean.getMsg_status() != 24) {
                         detailsBean.setMsg_status(1);
                         Log.i("TaskObserver", "task if " + detailsBean.getMsg_status());
+                    } else if (taskDetailsBean.getMsg_status() == 24) {
+                        detailsBean.setMsg_status(24);
                     }
                     break;
+                } else if (taskDetailsBean.getMsg_status() == 1) {
+                    if (detailsBean.getMsg_status() == 24) {
+                        detailsBean.setMsg_status(1);
+                    }
                 }
             }
             refresh();
@@ -19936,37 +19968,6 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
             }
         }
     }
-*/
-public void updateMessageStatus(TaskDetailsBean taskDetailsBean) {
-    if (taskDetailsBean != null) {
-        Log.d("TaskObserver", "Inside message recived area 3");
-        for (TaskDetailsBean detailsBean : taskList) {
-            if (detailsBean.getSignalid() != null && detailsBean.getSignalid().equalsIgnoreCase(taskDetailsBean.getSignalid())) {
-                Log.i("TaskObserver", "task " + detailsBean.getMsg_status());
-                Log.i("TaskObserver", "getSignalid ==>  "+taskDetailsBean.getSignalid());
-                Log.i("TaskObserver", "getSignalid ==>  "+detailsBean.getSignalid());
-                if (detailsBean.getMsg_status() <= 0 && taskDetailsBean.getMsg_status() != 24) {
-                    detailsBean.setMsg_status(1);
-                    Log.i("TaskObserver", "task if " + detailsBean.getMsg_status());
-                } else if (taskDetailsBean.getMsg_status() == 24) {
-                    detailsBean.setMsg_status(24);
-                }
-                break;
-            } else if (taskDetailsBean.getMsg_status() == 1) {
-                if (detailsBean.getMsg_status() == 24) {
-                    detailsBean.setMsg_status(1);
-                }
-            }
-        }
-        refresh();
-        if (down_icon != null && down_icon.getVisibility() == View.VISIBLE) {
-            if (list_all != null)
-                list_all.setTranscriptMode(AbsListView.TRANSCRIPT_MODE_DISABLED);
-        } else if (list_all != null) {
-            list_all.smoothScrollToPosition(list_all.getAdapter().getCount() - 1);
-        }
-    }
-}
 
     public void updateUploadStatus(TaskDetailsBean taskDetailsBean) {
         if (taskDetailsBean != null) {

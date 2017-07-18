@@ -794,11 +794,11 @@ public class TaskDateUpdate extends AppCompatActivity implements View.OnClickLis
                                 + "calculation value is == " + (int) ((diff / (1000 * 60))) / Long.valueOf(repeat_min.getText().toString().trim()));
                         System.out.println("Days: " + TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS));
 
-                        if (reminder_freq1.getText().toString().equalsIgnoreCase("Minute")|| reminder_freq1.getText().toString().equalsIgnoreCase("Minutes")) {
+                        if (reminder_freq1.getText().toString().equalsIgnoreCase("Minutes")|| reminder_freq1.getText().toString().equalsIgnoreCase("Minutes")) {
                             reminder_count = (int) (((diff / (1000 * 60))) / Long.valueOf(repeat_min.getText().toString().trim()));
-                        } else if (reminder_freq1.getText().toString().equalsIgnoreCase("hour")) {
+                        } else if (reminder_freq1.getText().toString().equalsIgnoreCase("hours")) {
                             reminder_count = (int) (((diff / (1000 * 60 * 60))) / Long.valueOf(repeat_min.getText().toString().trim()));
-                        } else if (reminder_freq1.getText().toString().equalsIgnoreCase("day")) {
+                        } else if (reminder_freq1.getText().toString().equalsIgnoreCase("days")) {
                             reminder_count = (int) TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS);
                         }
 
@@ -1235,13 +1235,13 @@ public class TaskDateUpdate extends AppCompatActivity implements View.OnClickLis
         if (getResources().getString(R.string.TASKNOTIFICATION_FROM_SERVER).equalsIgnoreCase("0")) {
             repeat_frequency.setText("Every minute");
         } else {
-            repeat_frequency.setText("Minute");
+            repeat_frequency.setText("Minutes");
         }
         if (temp_value.equalsIgnoreCase("success")) {
             if (temp_durationunit != null) {
                 duration_unit.setText(temp_durationunit.replaceAll("\"", " ").trim());
             } else {
-                duration_unit.setText("Hour");
+                duration_unit.setText("Hours");
             }
             if (temp_duration != null) {
                 duration.setText(temp_duration);
@@ -1695,8 +1695,8 @@ public class TaskDateUpdate extends AppCompatActivity implements View.OnClickLis
                 TextView day = (TextView) dialog.findViewById(R.id.log_out);
 
                 if (type.equalsIgnoreCase("duration")) {
-                    day.setText("Day");
-                    hour.setText("Hour");
+                    day.setText("Days");
+                    hour.setText("Hours");
                 }
                 TextView cancel1 = (TextView) dialog.findViewById(R.id.cancel);
                 cancel1.setOnClickListener(new View.OnClickListener() {
@@ -1714,14 +1714,14 @@ public class TaskDateUpdate extends AppCompatActivity implements View.OnClickLis
                 day.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        duration_unit.setText("Day");
+                        duration_unit.setText("Days");
                         dialog.dismiss();
                     }
                 });
                 hour.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        duration_unit.setText("Hour");
+                        duration_unit.setText("Hours");
                         dialog.dismiss();
                     }
                 });
@@ -1745,7 +1745,7 @@ public class TaskDateUpdate extends AppCompatActivity implements View.OnClickLis
 
                 if (type.equalsIgnoreCase("duration")) {
                     minute.setText("Every minute");
-                    hour.setText("Hour");
+                    hour.setText("Hours");
                 }
                 TextView cancel1 = (TextView) dialog.findViewById(R.id.cancel);
                 cancel1.setOnClickListener(new View.OnClickListener() {
@@ -1770,7 +1770,7 @@ public class TaskDateUpdate extends AppCompatActivity implements View.OnClickLis
                 hour.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        duration_unit.setText("Hour");
+                        duration_unit.setText("Hours");
                         dialog.dismiss();
                     }
                 });

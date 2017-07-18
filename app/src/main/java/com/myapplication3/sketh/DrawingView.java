@@ -13,6 +13,8 @@ import android.util.TypedValue;
 import android.view.MotionEvent;
 import android.view.View;
 
+import com.myapplication3.Appreference;
+import com.myapplication3.HandSketchActivity2;
 import com.myapplication3.R;
 
 import java.util.ArrayList;
@@ -76,7 +78,7 @@ public class DrawingView extends View {
 		super.onSizeChanged(w, h, oldw, oldh);
 		canvasBitmap = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888);
 		drawCanvas = new Canvas(canvasBitmap);
-
+//		drawCanvas.drawColor(Color.BLUE);
 		this.width = w;
 		this.height = h;
 	}
@@ -133,6 +135,7 @@ public class DrawingView extends View {
 				// invalidate();
 				drawPath.lineTo(mX, mY);
 				paths.add(drawPath);
+				Appreference.isImageSelected = false;
 				colorsMap.put(drawPath, paintColor);
 				brushSizeMap.put(drawPath, (int) brushSize);
 				drawPath = new Path();
@@ -153,10 +156,9 @@ public class DrawingView extends View {
 
 	// set brush size
 	public void setBrushSize(float newSize) {
-		float pixelAmount = TypedValue.applyDimension(
+		brushSize = TypedValue.applyDimension(
 				TypedValue.COMPLEX_UNIT_DIP, newSize, getResources()
 						.getDisplayMetrics());
-		brushSize = pixelAmount;
 		drawPaint.setStrokeWidth(brushSize);
 	}
 
@@ -211,11 +213,13 @@ public class DrawingView extends View {
 		// TODO Auto-generated method stub
 
 		// drawCanvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR);
-		startNew();
+//		startNew();
 
 		// canvasBitmap = Bitmap.createBitmap(decodeFile,0,0,width,height);
 
 		// drawCanvas.setBitmap(decodeFile);
+//		mPath = new Path();
+//		paths.add(mPath);
 		drawCanvas.drawColor(1, PorterDuff.Mode.CLEAR);
 		invalidate();
 		drawCanvas.drawBitmap(decodeFile, 0, 0, clearPaint);
@@ -237,6 +241,8 @@ public class DrawingView extends View {
 			invalidate();
 		} else  {
 			Log.i("undo", "Undo elsecondition");
+			startNew();
+			Appreference.isImageSelected = true;
 		}
 	}
 

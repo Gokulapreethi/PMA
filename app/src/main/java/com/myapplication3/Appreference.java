@@ -65,7 +65,7 @@ public class Appreference {
     public static boolean isPauseStartFrom=false;
     public static HashMap<String,String> old_status=new HashMap<>();
 
-
+    public static boolean isImageSelected=false;
     public static boolean isLocation = false;
     public static HashMap<String, Boolean> isRem_Enable_details = new HashMap<>();
     public static HashMap<String, Boolean> isOverdue = new HashMap<>();
