@@ -1,7 +1,7 @@
 package json;
 
-import com.myapplication3.Bean.ListofFileds;
-import com.myapplication3.Bean.TaskDetailsBean;
+import com.ase.Bean.ListofFileds;
+import com.ase.Bean.TaskDetailsBean;
 
 import org.apache.http.NameValuePair;
 import org.json.JSONArray;

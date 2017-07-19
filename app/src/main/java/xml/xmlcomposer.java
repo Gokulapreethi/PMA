@@ -2,9 +2,8 @@ package xml;
 
 import android.util.Log;
 
-import com.myapplication3.Bean.TaskDetailsBean;
+import com.ase.Bean.TaskDetailsBean;
 
-import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;

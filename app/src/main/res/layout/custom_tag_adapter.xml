@@ -72,7 +72,7 @@
             android:textColor="#808080"
             android:visibility="gone" />
 
-        <com.myapplication3.MultiSelectionSpinner
+        <com.ase.MultiSelectionSpinner
             android:id="@+id/mySpinner1"
             android:layout_width="0dp"
             android:layout_height="wrap_content"

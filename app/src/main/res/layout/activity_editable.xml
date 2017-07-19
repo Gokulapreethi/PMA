@@ -52,7 +52,7 @@
             android:layout_centerHorizontal="true"
             android:background="@color/audioreceiv">
 
-            <com.myapplication3.RoundedImageView
+            <com.ase.RoundedImageView
                 android:id="@+id/imageView_round"
                 android:layout_width="97dp"
                 android:layout_height="105dp"

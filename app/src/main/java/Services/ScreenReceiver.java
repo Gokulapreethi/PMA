@@ -5,7 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 
-import com.myapplication3.Appreference;
+import com.ase.Appreference;
 
 import org.pjsip.pjsua2.app.MainActivity;
 

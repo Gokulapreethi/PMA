@@ -4,12 +4,11 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
-import android.util.Range;
 
-import com.myapplication3.Appreference;
-import com.myapplication3.Bean.TaskDetailsBean;
-import com.myapplication3.DB.VideoCallDataBase;
-import com.myapplication3.activity.SchedulerActivity;
+import com.ase.Appreference;
+import com.ase.Bean.TaskDetailsBean;
+import com.ase.DB.VideoCallDataBase;
+import com.ase.activity.SchedulerActivity;
 
 import org.pjsip.pjsua2.app.MainActivity;
 

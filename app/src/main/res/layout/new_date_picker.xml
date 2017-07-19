@@ -5,7 +5,7 @@
     android:layout_width="fill_parent"
     android:layout_height="match_parent">
 
-    <com.myapplication3.DateTimePicker
+    <com.ase.DateTimePicker
         android:id="@+id/DateTimePicker"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"

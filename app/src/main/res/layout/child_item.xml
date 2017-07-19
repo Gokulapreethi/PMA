@@ -17,7 +17,7 @@
         android:text="TextView"
         android:textSize="20dp" />
 
-    <com.myapplication3.RoundedImageView
+    <com.ase.RoundedImageView
         android:id="@+id/flag"
         android:layout_width="50dp"
         android:layout_height="50dp"

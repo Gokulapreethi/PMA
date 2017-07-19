@@ -5,12 +5,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 
-import com.myapplication3.Appreference;
-import com.myapplication3.DB.VideoCallDataBase;
-import com.myapplication3.R;
-import com.myapplication3.chat.ChatActivity;
-import com.myapplication3.chat.ChatAlert;
-import com.myapplication3.chat.ChatBean;
+import com.ase.Appreference;
+import com.ase.DB.VideoCallDataBase;
+import com.ase.chat.ChatActivity;
+import com.ase.chat.ChatBean;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;

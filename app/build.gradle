@@ -13,7 +13,7 @@ android {
     }
 
     defaultConfig {
-        applicationId "com.myapplication3"
+        applicationId "com.ase"
         minSdkVersion 16
         targetSdkVersion 21
         versionCode 1

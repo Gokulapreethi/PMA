@@ -2,7 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
 	android:id="@+id/DateTimeDialog" android:layout_width="fill_parent"
 	android:layout_height="wrap_content">
-	<com.myapplication3.CommonDateTimePicker
+	<com.ase.CommonDateTimePicker
 		android:id="@+id/DateTimePicker" android:layout_width="fill_parent"
 		android:layout_height="wrap_content" />
 	<LinearLayout android:id="@+id/ControlButtons"

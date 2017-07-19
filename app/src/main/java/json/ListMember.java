@@ -39,6 +39,8 @@ public class ListMember {
     Boolean ischeck = false;
 //    String roles;
     String profession;
+    String roleId;
+    String roleName;
 
     public String getSpecialization() {
         return specialization;
@@ -314,5 +316,21 @@ public class ListMember {
 
     public void setOracleStatus(String oracleStatus) {
         this.oracleStatus = oracleStatus;
+    }
+
+    public String getRoleId() {
+        return roleId;
+    }
+
+    public void setRoleId(String roleId) {
+        this.roleId = roleId;
+    }
+
+    public String getRoleName() {
+        return roleName;
+    }
+
+    public void setRoleName(String roleName) {
+        this.roleName = roleName;
     }
 }

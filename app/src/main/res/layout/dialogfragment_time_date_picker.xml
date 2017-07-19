@@ -21,26 +21,26 @@
                 android:orientation="horizontal">
 
 
-                <com.myapplication3.Numberpicker
+                <com.ase.Numberpicker
                     android:id="@+id/datePicker"
                     android:layout_width="180dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     />
 
-                <com.myapplication3.Numberpicker
+                <com.ase.Numberpicker
                     android:id="@+id/hourPicker"
                     android:layout_width="50dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1" />
 
-                <com.myapplication3.Numberpicker
+                <com.ase.Numberpicker
                     android:id="@+id/minutePicker"
                     android:layout_width="50dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1" />
 
-                <com.myapplication3.Numberpicker
+                <com.ase.Numberpicker
                     android:id="@+id/am_pm"
                     android:layout_width="60dp"
                     android:layout_height="wrap_content"

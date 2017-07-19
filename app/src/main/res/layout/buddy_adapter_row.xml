@@ -19,7 +19,7 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-    <com.myapplication3.RoundedImageView
+    <com.ase.RoundedImageView
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:layout_marginTop="5dp"

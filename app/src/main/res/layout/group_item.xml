@@ -10,7 +10,7 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal">
 
-        <com.myapplication3.RoundedImageView
+        <com.ase.RoundedImageView
             android:id="@+id/flag1"
             android:layout_width="50dp"
             android:layout_height="50dp"

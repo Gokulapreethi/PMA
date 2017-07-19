@@ -45,7 +45,7 @@
             android:background="@color/audioreceiv"
             android:id="@+id/frame_layout">
 
-            <com.myapplication3.RoundedImageView
+            <com.ase.RoundedImageView
                 android:id="@+id/imageView_round"
                 android:layout_width="97dp"
                 android:layout_height="105dp"

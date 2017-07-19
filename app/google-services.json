@@ -1,27 +1,27 @@
 {
   "project_info": {
-    "project_number": "979637112716",
-    "firebase_url": "https://fir-highmessage.firebaseio.com",
-    "project_id": "firebase-highmessage",
-    "storage_bucket": "firebase-highmessage.appspot.com"
+    "project_number": "523777359038",
+    "firebase_url": "https://asea-7e7d1.firebaseio.com",
+    "project_id": "asea-7e7d1",
+    "storage_bucket": "asea-7e7d1.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:979637112716:android:99c4bbf1d9aeb422",
+        "mobilesdk_app_id": "1:523777359038:android:9038af7c168b57e1",
         "android_client_info": {
-          "package_name": "com.myapplication3"
+          "package_name": "com.ase"
         }
       },
       "oauth_client": [
         {
-          "client_id": "979637112716-8ncr77saauj9ouknj8n8on38e5k56peo.apps.googleusercontent.com",
+          "client_id": "523777359038-q34gp.rtbr89d6b78tl51s307k9hgl2jl.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyBM3yyN2wwfxwwr4ppoh9RC5e6rH6J_MHg"
+          "current_key": "AIzaSyDZW44dabPOnpopKpliqCZMmKGXvmGmvWY"
         }
       ],
       "services": {

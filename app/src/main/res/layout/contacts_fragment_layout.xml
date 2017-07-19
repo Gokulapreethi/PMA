@@ -44,7 +44,7 @@
                 android:textSize="20sp"
                 android:visibility="gone" />
 
-            <com.myapplication3.RoundedImageView
+            <com.ase.RoundedImageView
                 android:id="@+id/contactimage"
                 android:layout_width="40dp"
                 android:layout_height="40dp"

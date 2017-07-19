@@ -2,8 +2,7 @@ package Services;
 
 import android.content.Context;
 
-import com.myapplication3.Bean.CustomTagBean;
-import com.myapplication3.Bean.TaskDetailsBean;
+import com.ase.Bean.TaskDetailsBean;
 
 /**
  * Created by Amuthan on 04/01/2017.

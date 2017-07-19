@@ -20,7 +20,7 @@ package org.pjsip.pjsua2.app;
 
 import android.util.Log;
 
-import com.myapplication3.Appreference;
+import com.ase.Appreference;
 
 import org.pjsip.pjsua2.AccountConfig;
 import org.pjsip.pjsua2.BuddyConfig;

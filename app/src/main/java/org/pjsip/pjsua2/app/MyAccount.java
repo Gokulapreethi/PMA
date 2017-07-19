@@ -2,18 +2,16 @@ package org.pjsip.pjsua2.app;
 
 import android.util.Log;
 
-import com.myapplication3.Appreference;
+import com.ase.Appreference;
 
 import org.pjsip.pjsua2.Account;
 import org.pjsip.pjsua2.AccountConfig;
 import org.pjsip.pjsua2.BuddyConfig;
-import org.pjsip.pjsua2.CallOpParam;
 import org.pjsip.pjsua2.OnIncomingCallParam;
 import org.pjsip.pjsua2.OnIncomingSubscribeParam;
 import org.pjsip.pjsua2.OnInstantMessageParam;
 import org.pjsip.pjsua2.OnInstantMessageStatusParam;
 import org.pjsip.pjsua2.OnRegStateParam;
-import org.pjsip.pjsua2.pjsip_status_code;
 
 import java.util.ArrayList;
 

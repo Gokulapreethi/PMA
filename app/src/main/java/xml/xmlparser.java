@@ -3,14 +3,14 @@ package xml;
 import android.util.Base64;
 import android.util.Log;
 
-import com.myapplication3.Appreference;
-import com.myapplication3.Bean.ProjectDetailsBean;
-import com.myapplication3.Bean.SipNotification;
-import com.myapplication3.Bean.TaskDetailsBean;
-import com.myapplication3.ContactBean;
-import com.myapplication3.DB.VideoCallDataBase;
-import com.myapplication3.Forms.FormAccessBean;
-import com.myapplication3.chat.ChatBean;
+import com.ase.Appreference;
+import com.ase.Bean.ProjectDetailsBean;
+import com.ase.Bean.SipNotification;
+import com.ase.Bean.TaskDetailsBean;
+import com.ase.ContactBean;
+import com.ase.DB.VideoCallDataBase;
+import com.ase.Forms.FormAccessBean;
+import com.ase.chat.ChatBean;
 
 import org.json.JSONException;
 import org.json.JSONObject;

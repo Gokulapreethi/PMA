@@ -75,7 +75,7 @@
                 android:orientation="vertical"
                 android:visibility="visible">
 
-                <com.myapplication3.ExpandableTextView
+                <com.ase.ExpandableTextView
                     android:id="@+id/expandableTextView_right"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -118,7 +118,7 @@
                 android:orientation="vertical"
                 android:visibility="visible">
 
-                <com.myapplication3.ExpandableTextView
+                <com.ase.ExpandableTextView
                     android:id="@+id/expandableTextView_left"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -1080,7 +1080,7 @@
 
             >
 
-            <com.myapplication3.ExpandableTextView
+            <com.ase.ExpandableTextView
                 android:id="@+id/expandableTextView_dependency"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

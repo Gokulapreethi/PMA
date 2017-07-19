@@ -2,10 +2,10 @@ package json;
 
 import android.util.Log;
 
-import com.myapplication3.Appreference;
-import com.myapplication3.Bean.ListofFileds;
-import com.myapplication3.Bean.TaskDetailsBean;
-import com.myapplication3.chat.ChatBean;
+import com.ase.Appreference;
+import com.ase.Bean.ListofFileds;
+import com.ase.Bean.TaskDetailsBean;
+import com.ase.chat.ChatBean;
 
 import org.apache.http.NameValuePair;
 import org.json.JSONArray;

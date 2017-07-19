@@ -124,7 +124,7 @@
             android:textSize="25dp" />
         />
 
-        <com.myapplication3.RoundedImageView
+        <com.ase.RoundedImageView
             android:id="@+id/imageView_round"
             android:layout_width="70dp"
             android:layout_height="76dp"
