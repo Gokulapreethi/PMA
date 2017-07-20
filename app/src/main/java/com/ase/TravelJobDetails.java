@@ -64,7 +64,7 @@ import json.WebServiceInterface;
  * Created by prasanth on 6/24/2017.
  */
 public class TravelJobDetails extends Activity implements View.OnClickListener, CommonDateTimePicker.DateWatcher, WebServiceInterface {
-    ImageView showMy_ID, submit, status_job, travel_job, drop_down;
+    ImageView showMy_ID, status_job, travel_job, drop_down;
     TextView cancel, head, text11, text12, text13, tv_networksate, updatingtask, item_counter, tv_reassign;
     LinearLayout linear1, header_menu, ll_networkstate, updatingtask_layout;
     ProgressBar progress_updating;
@@ -115,16 +115,6 @@ public class TravelJobDetails extends Activity implements View.OnClickListener, 
 
 
     private String proxy_user = "proxyua_highmessaging.com";
-    //        private String proxy_user = "proxydev_highmessaging.com";
-//    private String proxy_user = "proxyua_highmessaging.org";
-
-   /* public static void clearMediaList(int position) {
-        taskList.remove(position);
-        if (taskList.size() == 0) {
-            taskList.clear();
-        }
-        medialistadapter.notifyDataSetChanged();
-    }*/
 
     public static TravelJobDetails getInstance() {
         if (travelJobDetails == null) {
@@ -141,7 +131,6 @@ public class TravelJobDetails extends Activity implements View.OnClickListener, 
         handler = new Handler();
         travelJobDetails = this;
         showMy_ID = (ImageView) findViewById(R.id.showMy_ID);
-        submit = (ImageView) findViewById(R.id.submit);
         status_job = (ImageView) findViewById(R.id.status_job);
         travel_job = (ImageView) findViewById(R.id.travel_job);
         drop_down = (ImageView) findViewById(R.id.drop_down);
@@ -310,7 +299,6 @@ public class TravelJobDetails extends Activity implements View.OnClickListener, 
         ActivityCode = VideoCallDataBase.getDB(getApplication()).getProjectParentTaskId(qury_1);
         Log.i(tab, "JobCodeNo==> " + JobCodeNo);
         Log.i(tab, "ActivityCode==> " + ActivityCode);
-//        head.setText(taskName);
         head.setText("Job Card No :" + JobCodeNo + "\nActivity Code :" + ActivityCode);
 
         cancel.setOnClickListener(new View.OnClickListener() {
@@ -345,13 +333,6 @@ public class TravelJobDetails extends Activity implements View.OnClickListener, 
                     }
                 });
                 dialog.show();
-            }
-        });
-
-        submit.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-//                Toast.makeText(getApplication(), "Details sesnd ", Toast.LENGTH_SHORT).show();
             }
         });
         String query = "select status from projectStatus where projectId='" + projectId + "' and userId='" + Appreference.loginuserdetails.getId() + "' and taskId= '" + webtaskId + "'";
@@ -390,8 +371,7 @@ public class TravelJobDetails extends Activity implements View.OnClickListener, 
 
     public void Project_backgroundProcess() {
 
-        String query_1 = null;
-        query_1 = "select * from taskDetailsInfo where (loginuser='" + Appreference.loginuserdetails.getEmail() + "') and (taskStatus!='note' and taskStatus!='draft') and (taskId='" + webtaskId + "') and (projectId='" + projectId + "') and customTagVisible = '1';";
+        String query_1 = "select * from taskDetailsInfo where (loginuser='" + Appreference.loginuserdetails.getEmail() + "') and (taskStatus!='note' and taskStatus!='draft') and (taskId='" + webtaskId + "') and (projectId='" + projectId + "') and customTagVisible = '1';";
 
         if (VideoCallDataBase.getDB(context).getTaskHistory(query_1) != null) {
             Log.d(tab, "PJ_BG TASK HISTORY NOT NULL");
@@ -401,7 +381,6 @@ public class TravelJobDetails extends Activity implements View.OnClickListener, 
             Log.d(tab, "ownerOfTask " + ownerOfTask);
             Log.d(tab, "taskName " + taskName);
             Log.d(tab, "taskReceiver " + taskReceiver);
-            String dateValue1 = "";
             if (taskList.size() > 0) {
                 for (TaskDetailsBean taskBean : taskList) {
                     taskBean.setOwnerOfTask(ownerOfTask);
@@ -419,12 +398,6 @@ public class TravelJobDetails extends Activity implements View.OnClickListener, 
 
         list_all.setAdapter(medialistadapter);
         refresh();
-//        handler.post(new Runnable() {
-//            @Override
-//            public void run() {
-//                list_all.setSelection(list_all.getAdapter().getCount() - 1);
-//            }
-//        });
     }
 
 
@@ -618,6 +591,7 @@ public class TravelJobDetails extends Activity implements View.OnClickListener, 
                 if (item.getTitle().toString().equalsIgnoreCase("Completed")) {
                     AlertDialog.Builder saveDialog = new AlertDialog.Builder(context);
                     saveDialog.setTitle("Completion");
+                    saveDialog.setCancelable(false);
                     saveDialog.setMessage("Are You sure want to complete this job ");
                     saveDialog.setPositiveButton("OK", new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
@@ -636,6 +610,7 @@ public class TravelJobDetails extends Activity implements View.OnClickListener, 
                     final Dialog dialog1 = new Dialog(context);
                     dialog1.requestWindowFeature(Window.FEATURE_NO_TITLE);
                     dialog1.setContentView(R.layout.task_remarks);
+                    dialog1.setCanceledOnTouchOutside(false);
                     TextView header = (TextView) dialog1.findViewById(R.id.template_header);
                     TextView yes = (TextView) dialog1.findViewById(R.id.save);
                     TextView no = (TextView) dialog1.findViewById(R.id.no);
@@ -644,9 +619,12 @@ public class TravelJobDetails extends Activity implements View.OnClickListener, 
                     yes.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            dialog1.dismiss();
                             Log.i(tab, "remarks for DeAssign====>" + name.getText().toString());
-                            sendStatus_webservice("8", "", name.getText().toString(), "DeAssign", "");
+                            if(name.getText().toString()!=null && !name.getText().toString().equalsIgnoreCase("")) {
+                                dialog1.dismiss();
+                                sendStatus_webservice("8", "", name.getText().toString(), "DeAssign", "");
+                            }else
+                                Toast.makeText(TravelJobDetails.this, "Please enter any Remarks", Toast.LENGTH_SHORT).show();
                         }
                     });
                     no.setOnClickListener(new View.OnClickListener() {
@@ -750,17 +728,14 @@ public class TravelJobDetails extends Activity implements View.OnClickListener, 
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-            } /*else {
+            } else {
                 jsonObject.put("travelStartTime", "");
                 jsonObject.put("activityStartTime", "");
                 jsonObject.put("activityEndTime", "");
                 jsonObject.put("travelEndTime", "");
                 jsonObject.put("toTravelStartDateTime", "");
                 jsonObject.put("toTravelEndDateTime", "");
-
-                taskDetailsBean.setActivityEndTime("");
-                taskDetailsBean.setActivityStartTime("");
-            }*/
+            }
             if (remarks != null && !remarks.equalsIgnoreCase("")) {
                 jsonObject.put("remarks", remarks);
                 taskDetailsBean.setCustomerRemarks(remarks);
@@ -906,6 +881,7 @@ public class TravelJobDetails extends Activity implements View.OnClickListener, 
                 chatBean.setOwnerOfTask(oracleProjectOwner);
                 chatBean.setTaskStatus("Assigned");
                 ownerOfTask = oracleProjectOwner;
+                chatBean.setCatagory("task");
             } else {
                 chatBean.setOwnerOfTask(ownerOfTask);
                 chatBean.setTaskStatus(taskStatus);
@@ -949,6 +925,7 @@ public class TravelJobDetails extends Activity implements View.OnClickListener, 
                 chatBean.setToUserName(toUserName);
                 Log.d(tab, "==============>>>>>>. 2" + chatBean.getToUserName());
                 chatBean.setToUserId(String.valueOf(toUserId));
+                 chatBean.setCatagory("task");
             }
             if (!getMediaType.equalsIgnoreCase("text") && !getMediaType.equalsIgnoreCase("assigntask")) {
                 chatBean.setShow_progress(0);
@@ -1531,12 +1508,12 @@ public class TravelJobDetails extends Activity implements View.OnClickListener, 
                 } else {
                     intent.putExtra("groupname", groupname);
                 }
-                if (project) {
-                    intent.putExtra("isProject", "Yes");
-                    taskDetailsBean.setProjectId(projectId);
-                } else {
+               /* if (project) {*/
+                intent.putExtra("isProject", "Yes");
+                taskDetailsBean.setProjectId(projectId);
+                /*} else {
                     intent.putExtra("isProject", "No");
-                }
+                }*/
                 intent.putExtra("taskReceiver", taskReceiver);
                 intent.putExtra("taskBean", taskDetailsBean);
             } else {
@@ -1551,12 +1528,12 @@ public class TravelJobDetails extends Activity implements View.OnClickListener, 
                 taskDetailsBean.setTaskId(webtaskId);
                 taskDetailsBean.setTaskStatus(taskStatus);
                 taskDetailsBean.setParentTaskId(OracleParentTaskId);
-                if (project) {
-                    taskDetailsBean.setProjectId(projectId);
-                    intent.putExtra("isProject", "Yes");
-                } else {
+                /*if (project) {*/
+                taskDetailsBean.setProjectId(projectId);
+                intent.putExtra("isProject", "Yes");
+                /*} else {
                     intent.putExtra("isProject", "No");
-                }
+                }*/
                 intent.putExtra("taskReceiver", taskReceiver);
                 if (taskDetailsBean != null)
                     Log.i("ws123", "Bean============4411" + taskDetailsBean.getParentTaskId() + "getProjectId=========>" + taskDetailsBean.getProjectId());
@@ -1890,6 +1867,7 @@ public class TravelJobDetails extends Activity implements View.OnClickListener, 
                 chatBean.setOwnerOfTask(oracleProjectOwner);
                 chatBean.setTaskStatus("Assigned");
                 ownerOfTask = oracleProjectOwner;
+                chatBean.setCatagory("task");
             } else {
                 chatBean.setOwnerOfTask(ownerOfTask);
                 chatBean.setTaskStatus(taskStatus);
@@ -1936,7 +1914,7 @@ public class TravelJobDetails extends Activity implements View.OnClickListener, 
                 chatBean.setTaskReceiver(taskReceiver);
                 chatBean.setToUserName(toUserName);
                 chatBean.setToUserId(String.valueOf(toUserId));
-                chatBean.setCatagory(category);
+                chatBean.setCatagory("task");
                 chatBean.setSubType("normal");
             }
             if (project) {

@@ -42,12 +42,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.baoyz.swipemenulistview.SwipeMenu;
-import com.baoyz.swipemenulistview.SwipeMenuCreator;
-import com.baoyz.swipemenulistview.SwipeMenuItem;
-import com.baoyz.swipemenulistview.SwipeMenuListView;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 import com.ase.Appreference;
 import com.ase.Bean.ListallProjectBean;
 import com.ase.Bean.ProjectDetailsBean;
@@ -58,10 +52,17 @@ import com.ase.ListAllgetTaskDetails;
 import com.ase.ProjectHistory;
 import com.ase.R;
 import com.ase.SearchMediaWebView;
+import com.baoyz.swipemenulistview.SwipeMenu;
+import com.baoyz.swipemenulistview.SwipeMenuCreator;
+import com.baoyz.swipemenulistview.SwipeMenuItem;
+import com.baoyz.swipemenulistview.SwipeMenuListView;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 import org.pjsip.pjsua2.app.MainActivity;
 
@@ -1380,52 +1381,68 @@ public class ProjectsFragment extends Fragment implements View.OnClickListener, 
                             Log.i("projectCompleted", "******projectCompleted********** Response String " + s1);
                             final JSONObject jsonObject = new JSONObject(opr.getEmail());
                             cancelDialog();
-                            if (((String) jsonObject.get("result_text")).equalsIgnoreCase("project task not completed")) {
-                                String result = (String) jsonObject.get("result_text");
-                                Toast.makeText(getContext(), "JobCards Tasks Not Completed", Toast.LENGTH_LONG).show();
-                            } else if (((String) jsonObject.get("result_text")).equalsIgnoreCase("Job Completed")) {
-                                String result = (String) jsonObject.get("result_text");
-                                Toast.makeText(getContext(), "JobCard Completed Successfully", Toast.LENGTH_LONG).show();
-                            } else {
-                                String result = (String) jsonObject.get("result_text");
-                                Toast.makeText(getContext(), result, Toast.LENGTH_LONG).show();
+                            try {
+                                if (((String) jsonObject.get("result_text")).equalsIgnoreCase("project task not completed")) {
+                                    String result = (String) jsonObject.get("result_text");
+                                    Toast.makeText(getContext(), "JobCards Tasks Not Completed", Toast.LENGTH_LONG).show();
+                                } else if (((String) jsonObject.get("result_text")).equalsIgnoreCase("Job Completed")) {
+                                    String result = (String) jsonObject.get("result_text");
+                                    Toast.makeText(getContext(), "JobCard Completed Successfully", Toast.LENGTH_LONG).show();
+                                } else {
+                                    String result = (String) jsonObject.get("result_text");
+                                    Toast.makeText(getContext(), result, Toast.LENGTH_LONG).show();
+                                }
+                            } catch (Exception e) {
+                                e.printStackTrace();
                             }
                         } else if (s2 != null && s2.equalsIgnoreCase(("fieldServiceReportJobWise"))) {
                             Log.i("output123", "projectFragment fieldServiceReportJobWise  Responce Received" + s1);
                             final JSONObject jsonObject = new JSONObject(opr.getEmail());
                             cancelDialog();
-                            if (((String) jsonObject.get("result_text")).equalsIgnoreCase("Field_servicce_report job successed")) {
-                                Log.i("output123", " Filename" + jsonObject.getString("filename"));
-                                String pdfURL = getResources().getString(R.string.task_reminder) + jsonObject.getString("filename");
-                                Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(pdfURL));
-                                startActivity(browserIntent);
-                               /* Intent intent = new Intent(getActivity(), WebViewActivity.class);
-                                intent.putExtra("ReportFileName", jsonObject.getString("File Name"));
-                                startActivity(intent);*/
-                                showToast("Task_Need_assessment_report created ");
-                            } else {
-                                String result = (String) jsonObject.get("result_text");
-                                Toast.makeText(getContext(), result, Toast.LENGTH_LONG).show();
+                            try {
+                                if (((String) jsonObject.get("result_text")).equalsIgnoreCase("Field_servicce_report job successed")) {
+                                    Log.i("output123", " Filename" + jsonObject.getString("filename"));
+                                    String pdfURL = getResources().getString(R.string.task_reminder) + jsonObject.getString("filename");
+                                    Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(pdfURL));
+                                    startActivity(browserIntent);
+                                   /* Intent intent = new Intent(getActivity(), WebViewActivity.class);
+                                    intent.putExtra("ReportFileName", jsonObject.getString("File Name"));
+                                    startActivity(intent);*/
+                                    showToast("Task_Need_assessment_report created ");
+                                } else {
+                                    String result = (String) jsonObject.get("result_text");
+                                    Toast.makeText(getContext(), result, Toast.LENGTH_LONG).show();
+                                }
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            } catch (Exception e) {
+                                e.printStackTrace();
                             }
                         } else if (s2 != null && s2.equalsIgnoreCase(("tnaReportForDateWise"))) {
                             Log.i("report123", "projectFragment tnaReportForDateWise  Responce Received===>" + s1);
                             final JSONObject jsonObject = new JSONObject(opr.getEmail());
                             cancelDialog();
-                            if (((String) jsonObject.get("result_text")).equalsIgnoreCase("TaskNeedAssigment Report Created successfully")) {
-                                Log.i("output123", " Filename" + jsonObject.getString("filename"));
-                                String pdfURL = getResources().getString(R.string.task_reminder) + jsonObject.getString("filename");
-                                String fileName = jsonObject.getString("filename");
-//                                Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(pdfURL));
-//                                startActivity(browserIntent);
-                                /*Intent intent = new Intent(getActivity(), WebViewActivity.class);
-                                intent.putExtra("ReportFileName", jsonObject.getString("filename"));
-                                startActivity(intent);*/
+                            try {
+                                if (((String) jsonObject.get("result_text")).equalsIgnoreCase("TaskNeedAssigment Report Created successfully")) {
+                                    Log.i("output123", " Filename" + jsonObject.getString("filename"));
+                                    String pdfURL = getResources().getString(R.string.task_reminder) + jsonObject.getString("filename");
+                                    String fileName = jsonObject.getString("filename");
+    //                                Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(pdfURL));
+    //                                startActivity(browserIntent);
+                                    /*Intent intent = new Intent(getActivity(), WebViewActivity.class);
+                                    intent.putExtra("ReportFileName", jsonObject.getString("filename"));
+                                    startActivity(intent);*/
 
-                                new DownloadImage(pdfURL, jsonObject.getString("filename")).execute();
+                                    new DownloadImage(pdfURL, jsonObject.getString("filename")).execute();
 
-                            } else {
-                                String result = (String) jsonObject.get("result_text");
-                                Toast.makeText(getContext(), result, Toast.LENGTH_LONG).show();
+                                } else {
+                                    String result = (String) jsonObject.get("result_text");
+                                    Toast.makeText(getContext(), result, Toast.LENGTH_LONG).show();
+                                }
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            } catch (Exception e) {
+                                e.printStackTrace();
                             }
                         }
                     } catch (Exception e) {

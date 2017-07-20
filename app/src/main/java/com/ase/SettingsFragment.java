@@ -97,10 +97,10 @@ public class SettingsFragment extends Fragment implements WebServiceInterface {
         try{
             String s = "select * from taskDetailsInfo where msgstatus='12' and loginuser='"+Appreference.loginuserdetails.getEmail()+"'";
             ArrayList<ProjectDetailsBean> projectDetailsBeen = VideoCallDataBase.getDB(getContext()).getExclationdetails(s);
-            if(projectDetailsBeen.size() > 0)
-                exclation_counter.setVisibility(View.VISIBLE);
-            else
-                exclation_counter.setVisibility(View.GONE);
+//            if(projectDetailsBeen.size() > 0)
+//                exclation_counter.setVisibility(View.VISIBLE);
+//            else
+//                exclation_counter.setVisibility(View.GONE);
 
         }catch (Exception e){
             e.printStackTrace();

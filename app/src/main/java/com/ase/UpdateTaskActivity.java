@@ -117,6 +117,7 @@ public class UpdateTaskActivity extends Activity implements SeekBar.OnSeekBarCha
     String test = "sam";
     TextView buddyName;
     TaskDetailsBean taskDetailsBean,taskbeanvalue;
+    boolean isProjectFromOracle;
 //    ListView listView;
 
     public static ArrayList<TaskDetailsBean> mediaList;
@@ -171,6 +172,7 @@ public class UpdateTaskActivity extends Activity implements SeekBar.OnSeekBarCha
             category = getIntent().getStringExtra("category");
             taskDetailsBean = (TaskDetailsBean) getIntent().getExtras().getSerializable("TaskBean");
             taskbeanvalue = (TaskDetailsBean) getIntent().getExtras().getSerializable("bean");
+            isProjectFromOracle = getIntent().getBooleanExtra("ProjectFromOracle", false);
             Log.i("Task1", "percentage " + percentage);
             Log.i("Task1", "percentage " + taskType);
             Log.i("Task1", "percentage " + toUserId);
@@ -186,6 +188,11 @@ public class UpdateTaskActivity extends Activity implements SeekBar.OnSeekBarCha
         txtView01 = (TextView) findViewById(R.id.txtView01);
         linearLayout = (LinearLayout) findViewById(R.id.rl);
         seekBar1 = (SeekBar) findViewById(R.id.firstBar);
+        Log.i("Task1", "isProjectFromOracle--> " + isProjectFromOracle);
+        if(isProjectFromOracle){
+            seekBar1.setMax(99);
+            t3.setText("1%");
+        }
         seekBar1.setOnSeekBarChangeListener(this);
         seekBar1.setOnTouchListener(new View.OnTouchListener() {
             @Override
@@ -1452,6 +1459,9 @@ public class UpdateTaskActivity extends Activity implements SeekBar.OnSeekBarCha
     @Override
     public void onProgressChanged(SeekBar seekBar, int progress,
                                   boolean fromUser) {
+       if(isProjectFromOracle && progress == 0 ){
+           progress = 1;
+       }
         t3.setText(progress + "%");
         percentage = String.valueOf(progress);
         InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);

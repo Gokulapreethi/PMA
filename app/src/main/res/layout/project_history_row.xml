@@ -54,7 +54,7 @@
             android:text="0%"
             android:textSize="12sp"
             android:textStyle="bold"
-            android:visibility="invisible"/>
+            android:visibility="visible"/>
 
         <RelativeLayout
             android:id="@+id/rl_status"

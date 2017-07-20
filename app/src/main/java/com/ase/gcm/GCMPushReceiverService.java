@@ -797,6 +797,9 @@ public class GCMPushReceiverService extends FirebaseMessagingService {
             } else if (message != null && message.equalsIgnoreCase("Misc Reminder")) {
                 message = "Misc Reminder ";
                 title = "Escalation Received ";
+            }else
+            {
+                title = "New Reminder Received";
             }
             /*else if (message != null && message.equalsIgnoreCase("Task Reminder")) {
                 message = "HiMessage";

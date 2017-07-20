@@ -33,6 +33,8 @@ public class ContactBean implements Serializable{
     String profession;
     String organization;
     String specialization;
+    String roleId;
+    String roleName;
 
 
     String status;
@@ -252,5 +254,21 @@ public class ContactBean implements Serializable{
 
     public void setIsprofile(Boolean isprofile) {
         this.isprofile = isprofile;
+    }
+
+    public String getRoleId() {
+        return roleId;
+    }
+
+    public void setRoleId(String roleId) {
+        this.roleId = roleId;
+    }
+
+    public String getRoleName() {
+        return roleName;
+    }
+
+    public void setRoleName(String roleName) {
+        this.roleName = roleName;
     }
 }

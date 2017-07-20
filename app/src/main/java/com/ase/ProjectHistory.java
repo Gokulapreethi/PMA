@@ -1089,7 +1089,7 @@ public class ProjectHistory extends Activity implements WebServiceInterface, Swi
             if (check) {
                 Log.i("DBQuery", "check " + check);
                 Log.i("DBQuery", "check1111 " + check);
-//                setActiveAdapter();
+                setActiveAdapter();
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -1482,6 +1482,11 @@ public class ProjectHistory extends Activity implements WebServiceInterface, Swi
                     status_oracle.setVisibility(View.GONE);
                     task_status.setVisibility(View.VISIBLE);
                 }
+                if(projectDetailsBean.getTaskName() !=null && projectDetailsBean.getTaskName().equalsIgnoreCase("Travel Time")){
+                    percentage_1.setVisibility(View.GONE);
+                }else{
+                    percentage_1.setVisibility(View.VISIBLE);
+                }
                 conView.setBackgroundResource(R.color.white);
                 dependency_icon.setVisibility(View.GONE);
                 String oracle_taskId = VideoCallDataBase.getDB(context).getProjectParentTaskId("select oracleTaskId from projectHistory where projectId='" + project_id + "' and taskId='" + projectDetailsBean.getTaskId() + "'");
@@ -1728,7 +1733,7 @@ public class ProjectHistory extends Activity implements WebServiceInterface, Swi
                     }else if (projectDetailsBean.getTaskStatus() != null && projectDetailsBean.getTaskStatus().equalsIgnoreCase("inprogress")) {
                         Log.i("ProjectHistory", "projectDetailsBean.getTaskStatus() 7 " + projectDetailsBean.getTaskStatus());
 //                        task_status.setText("Template");
-                        task_status.setText("Assigned");
+                        task_status.setText("inprogress");
                     }else if (projectDetailsBean.getTaskStatus() != null && projectDetailsBean.getTaskStatus().equalsIgnoreCase("DeAssign")) {
                         Log.i("ProjectHistory", "projectDetailsBean.getTaskStatus() 7 " + projectDetailsBean.getTaskStatus());
 //                        task_status.setText("Template");

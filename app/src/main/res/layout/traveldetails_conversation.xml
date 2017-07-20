@@ -51,14 +51,6 @@
                 android:src="@drawable/id_image"
                 android:visibility="gone" />
 
-            <ImageView
-                android:id="@+id/submit"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="0.11"
-                android:paddingLeft="-15dp"
-                android:paddingRight="-15dp"
-                android:src="@drawable/ic_send" />
 
         </LinearLayout>
 

@@ -3256,18 +3256,22 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback,
                                                     taskDetailsBean.getTaskDescription().equalsIgnoreCase("Gathering Details...") ||
                                                     taskDetailsBean.getTaskDescription().equalsIgnoreCase("Hold Remarks :") ||
                                                     taskDetailsBean.getTaskDescription().equalsIgnoreCase("Pause Remarks :") ||
+                                                    taskDetailsBean.getTaskDescription().contains("Completed Percentage") ||
                                                     taskDetailsBean.getSubType().equalsIgnoreCase("deassign")) {
                                                 if (projectHistory != null) {
                                                     if (projectHistory.projectDetailsBeans != null && projectHistory.projectDetailsBeans.size() > 0 && projectHistory.buddyArrayAdapter != null) {
                                                         ProjectDetailsBean projectDetailsBean = projectHistory.projectDetailsBeans.get(projectHistory.ListViewCurrentPosition);
-                                                        Log.i("notifyreceived123", "getTaskStatus==>  " + taskDetailsBean.getTaskStatus());
+                                                        Log.i("notifyreceived123", "getTaskStatus ==>  " + taskDetailsBean.getTaskStatus());
+                                                        Log.i("notifyreceived123", "getCompletedPercentage ==>  " + taskDetailsBean.getCompletedPercentage());
+                                                        if (taskDetailsBean.getCompletedPercentage() != null && !taskDetailsBean.getCompletedPercentage().equalsIgnoreCase(""))
+                                                            projectDetailsBean.setCompletedPercentage(taskDetailsBean.getCompletedPercentage());
                                                         if (taskDetailsBean.getTaskStatus() != null && !taskDetailsBean.getTaskStatus().equalsIgnoreCase(""))
                                                             projectDetailsBean.setTaskStatus(taskDetailsBean.getTaskStatus());
                                                         if ((taskDetailsBean.getMimeType() != null && taskDetailsBean.getMimeType().equalsIgnoreCase("assigntask")) &&
                                                                 (taskDetailsBean.getTaskReceiver() != null && !taskDetailsBean.getTaskReceiver().equalsIgnoreCase(""))) {
                                                             projectDetailsBean.setTaskReceiver(taskDetailsBean.getTaskReceiver());
                                                             projectDetailsBean.setCatagory("Task");
-                                                        }else if(taskDetailsBean.getSubType()!=null && taskDetailsBean.getSubType().equalsIgnoreCase("deassign")){
+                                                        } else if (taskDetailsBean.getSubType() != null && taskDetailsBean.getSubType().equalsIgnoreCase("deassign")) {
                                                             projectDetailsBean.setCatagory("Template");
                                                         }
                                                         handler1.post(new Runnable() {
@@ -3283,7 +3287,7 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback,
                                     }
                                 }
                             }
-                        }else if (Appreference.context_table.containsKey("projecthistory") && Appreference.context_table.containsKey("traveljobdetails")) {
+                        } else if (Appreference.context_table.containsKey("projecthistory") && Appreference.context_table.containsKey("traveljobdetails")) {
                             TravelJobDetails travelJobDetails = (TravelJobDetails) Appreference.context_table.get("traveljobdetails");
                             final ProjectHistory projectHistory = (ProjectHistory) Appreference.context_table.get("projecthistory");
                             if (travelJobDetails != null) {
@@ -3299,11 +3303,15 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback,
                                                     taskDetailsBean.getTaskDescription().equalsIgnoreCase("Hold Remarks :") ||
                                                     taskDetailsBean.getTaskDescription().equalsIgnoreCase("Pause Remarks :") ||
                                                     taskDetailsBean.getMimeType().equalsIgnoreCase("assigntask") ||
+                                                    taskDetailsBean.getTaskDescription().contains("Completed Percentage") ||
                                                     taskDetailsBean.getSubType().equalsIgnoreCase("deassign")) {
                                                 if (projectHistory != null) {
                                                     if (projectHistory.projectDetailsBeans != null && projectHistory.projectDetailsBeans.size() > 0 && projectHistory.buddyArrayAdapter != null) {
                                                         ProjectDetailsBean projectDetailsBean = projectHistory.projectDetailsBeans.get(projectHistory.ListViewCurrentPosition);
                                                         Log.i("notifyreceived123", "traveljobdetails getTaskStatus==> else  " + taskDetailsBean.getTaskStatus());
+                                                        Log.i("notifyreceived123", "traveljobdetails getCompletedPercentage==> else  " + taskDetailsBean.getCompletedPercentage());
+                                                        if (taskDetailsBean.getCompletedPercentage() != null && !taskDetailsBean.getCompletedPercentage().equalsIgnoreCase(""))
+                                                            projectDetailsBean.setCompletedPercentage(taskDetailsBean.getCompletedPercentage());
                                                         if (taskDetailsBean.getTaskStatus() != null && !taskDetailsBean.getTaskStatus().equalsIgnoreCase(""))
                                                             projectDetailsBean.setTaskStatus(taskDetailsBean.getTaskStatus());
                                                         if ((taskDetailsBean.getMimeType() != null && taskDetailsBean.getMimeType().equalsIgnoreCase("assigntask")) &&
@@ -4000,11 +4008,11 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback,
 //                                    VideoCallDataBase.getDB(context).update_Project_history(taskDetailsBean);
 //                                    if (VideoCallDataBase.getDB(context).DuplicateProjectTaskIdChecker(taskDetailsBean.getTaskId())) {
                                     VideoCallDataBase.getDB(context).insert_new_Project_history(taskDetailsBean);
-                                    if(taskDetailsBean.getTaskStatus()!=null && taskDetailsBean.getTaskStatus().length()>0) {
+                                    if (taskDetailsBean.getTaskStatus() != null && taskDetailsBean.getTaskStatus().length() > 0) {
 //                                        VideoCallDataBase.getDB(context).update_Project_history(taskDetailsBean);
 //                                        VideoCallDataBase.getDB(context).insertORupdate_Task_history(taskDetailsBean);
                                         VideoCallDataBase.getDB(context).insertORupdateStatus(taskDetailsBean);
-                                    }else if(taskDetailsBean.getMimeType().equalsIgnoreCase("assigntask")){
+                                    } else if (taskDetailsBean.getMimeType().equalsIgnoreCase("assigntask")) {
 //                                        VideoCallDataBase.getDB(context).insertORupdate_Task_history(taskDetailsBean);
                                         VideoCallDataBase.getDB(context).insertORupdateStatus(taskDetailsBean);
                                     }
@@ -4191,7 +4199,7 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback,
                         Log.i("notifyreceived", "projecthistory status == $$$$  ");
                         final ProjectHistory projectHistory = (ProjectHistory) Appreference.context_table.get("projecthistory");
                         if (projectHistory != null) {
-                            Log.i("notifyreceived", "projecthistory  ==  "+taskDetailsBean.getTaskDescription());
+                            Log.i("notifyreceived", "projecthistory  ==  " + taskDetailsBean.getTaskDescription());
                             if (taskDetailsBean.getTaskDescription() != null) {
                                 if (taskDetailsBean.getTaskDescription().equalsIgnoreCase("Task is Started") ||
                                         taskDetailsBean.getTaskDescription().equalsIgnoreCase("Task is hold") ||
@@ -4205,7 +4213,7 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback,
                                         taskDetailsBean.getSubType().equalsIgnoreCase("deassign")) {
                                     if (projectHistory.projectDetailsBeans != null && projectHistory.projectDetailsBeans.size() > 0 && projectHistory.buddyArrayAdapter != null) {
                                         Log.i("notifyreceived", "getTaskStatus==> 3 " + taskDetailsBean.getTaskStatus());
-                                        if(taskDetailsBean.getTaskStatus()!=null && !taskDetailsBean.getTaskStatus().equalsIgnoreCase("")) {
+                                        if (taskDetailsBean.getTaskStatus() != null && !taskDetailsBean.getTaskStatus().equalsIgnoreCase("")) {
                                             for (ProjectDetailsBean detailsBean : projectHistory.projectDetailsBeans) {
                                                 if (detailsBean.getId() != null && detailsBean.getTaskId() != null &&
                                                         detailsBean.getId().equalsIgnoreCase(taskDetailsBean.getProjectId()) &&
@@ -4408,14 +4416,14 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback,
                     } else if (messagebody.contains("<TaskDetailsinfo>")) {
                         TaskDetailsBean taskDetailsBean = xmlparser
                                 .parseTaskDetailsSIPMessage(messagebody);
-                        Log.i("sipmessage", "Main Activity notifySipMessage "+response_code);
+                        Log.i("sipmessage", "Main Activity notifySipMessage " + response_code);
                         if (taskDetailsBean != null && taskDetailsBean.getSignalid() != null) {
                             if (response_code == 200) {
                                 VideoCallDataBase.getDB(context).updateallmessage(taskDetailsBean.getTaskId(), "1");
                                 taskDetailsBean.setMsg_status(1);
                             } else if (response_code == 202) {
-                                Log.i("sipmessage", "Main Activity notifySipMessage ==>  "+response_code);
-                                Log.i("sipmessage", "getSignalid ==>  "+taskDetailsBean.getSignalid());
+                                Log.i("sipmessage", "Main Activity notifySipMessage ==>  " + response_code);
+                                Log.i("sipmessage", "getSignalid ==>  " + taskDetailsBean.getSignalid());
                                 VideoCallDataBase.getDB(context).updateTaskSentStatus(taskDetailsBean.getSignalid(), "24");
                                 taskDetailsBean.setMsg_status(24);
                             } else {

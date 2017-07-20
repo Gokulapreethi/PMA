@@ -553,8 +553,10 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
             cv.put("profession", bean.getProfession());
             cv.put("organization", bean.getOrganization());
             cv.put("specialization", bean.getSpecialization());
-            cv.put("roleId",bean.getRoleId());
-            cv.put("roleName",bean.getRoleName());
+            if(bean.getRoleId()!=null && !bean.getRoleId().equalsIgnoreCase("")) {
+                cv.put("roleId", bean.getRoleId());
+                cv.put("roleName", bean.getRoleName());
+            }
             if (isAgendaRecordExists("select * from contact where userid='" + bean.getId() + "'and loginuser='" + name + "'")) {
                 Log.i("ContactTable", "UpdateQuery");
                 row_id = (int) db.update("contact", cv, "userid='" + bean.getId() + "'and loginuser='" + name + "'", null);
@@ -2258,23 +2260,9 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
                                 VideoCallDataBase.getDB(context).insertNewContact_history(listMember, Appreference.loginuserdetails.getUsername());
                             }else if(listMember_1.getRoleId()!=null && !listMember_1.getRoleId().equalsIgnoreCase(""))
                             {
-                                Log.i("chat123","DB contact list already contains ===>"+listMember_1.getUsername());
+                                Log.i("chat123","DB contact list already contains ===>"+listMember_1.getId());
                                 Log.i("chat123","DB contact list already contains role ID ===>"+listMember_1.getRoleId());
-
-                                ListMember listMember = new ListMember();
-                                listMember.setEmail(listMember_1.getEmail());
-                                listMember.setId(listMember_1.getId());
-                                listMember.setUsername(listMember_1.getUsername());
-                                listMember.setFirstName(listMember_1.getFirstName());
-                                listMember.setLastName(listMember_1.getLastName());
-                                listMember.setCode(listMember_1.getCode());
-                                listMember.setGender(listMember_1.getGender());
-                                listMember.setProfileImage(listMember_1.getProfileImage());
-                                listMember.setPersonalInfo(listMember_1.getPersonalInfo());
-                                listMember.setPersonalInfo("");
-                                listMember.setRoleId(listMember_1.getRoleId());
-                                listMember.setRoleName(listMember_1.getRoleName());
-                                VideoCallDataBase.getDB(context).insertNewContact_history(listMember, Appreference.loginuserdetails.getUsername());
+                                VideoCallDataBase.getDB(context).contactRoleIdUpdate(listMember_1.getRoleId(),listMember_1.getRoleName(),listMember_1.getId());
                             }
                         }
                     }
@@ -5447,10 +5435,11 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
             if (db != null) {
                 if (!db.isOpen())
                     openDatabase();
-                cur = db.rawQuery("select * from contact where loginuser='" + username + "'and roleId NOT IN (select roleId from contact where roleId like '2')", null);
+                cur = db.rawQuery("select * from contact where loginuser='" + username + "'", null);
                 cur.moveToFirst();
                 while (!cur.isAfterLast()) {
                     if (!username.equalsIgnoreCase(cur.getString(cur.getColumnIndex("username")))) {
+
                         ContactBean bean = new ContactBean();
                         bean.setEmail(cur.getString(cur.getColumnIndex("contactemail")));
                         bean.setUserid(cur.getInt(cur.getColumnIndex("userid")));
@@ -5600,9 +5589,11 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
                 if (!db.isOpen())
                     openDatabase();
                 Log.d("Task1", "query is " + "select * from contact where username=" + username);
-                cur = db.rawQuery("select * from contact where username='" + username + "'", null);
+                cur = db.rawQuery("select * from contact where username='" + username + "'and roleId NOT IN (select roleId from contact where roleId like '2')", null);
                 cur.moveToFirst();
                 while (!cur.isAfterLast()) {
+                    Log.i("admin123","username====>"+cur.getString(cur.getColumnIndex("username")));
+                    Log.i("admin123","RoleId====>"+cur.getString(cur.getColumnIndex("roleId")));
                     bean.setEmail(cur.getString(cur.getColumnIndex("contactemail")));
                     bean.setUserid(cur.getInt(cur.getColumnIndex("userid")));
                     bean.setUsername(cur.getString(cur.getColumnIndex("username")));
@@ -5614,6 +5605,8 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
                     bean.setProfileImage(cur.getString(cur.getColumnIndex("profileImage")));
                     bean.setPersonalInfo(cur.getString(cur.getColumnIndex("personalInfo")));
                     bean.setLoginuser(cur.getString(cur.getColumnIndex("loginuser")));
+                    bean.setRoleId(cur.getString(cur.getColumnIndex("roleId")));
+                    bean.setRoleName(cur.getString(cur.getColumnIndex("roleName")));
                     cur.moveToNext();
                 }
                 cur.close();
@@ -8847,4 +8840,12 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
             return status;
         }
     }
+    public void contactRoleIdUpdate(String roleId,String roleName,int userId) {
+        Log.i("chat123","contactRoleIdUpdate==>"+roleId+roleName+userId);
+        ContentValues cv = new ContentValues();
+        cv.put("roleId", roleId);
+        cv.put("roleName", roleName);
+        db.update("contact", cv, "userid" + "='" + userId + "'", null);
+    }
+
 }
