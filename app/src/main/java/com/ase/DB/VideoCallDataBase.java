@@ -4068,8 +4068,14 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
                     projectDetailsBean.setIsActiveStatus(cur.getString(cur.getColumnIndex("isActiveStatus")));
                     projectDetailsBean.setJobCardType(cur.getString(cur.getColumnIndex("jobCardType")));
                     projectDetailsBean.setMachineMake(cur.getString(cur.getColumnIndex("machineMake")));
+                    Log.i("draft123", "DB before If" + projectDetailsBean.getTaskStatus());
+
                     if(projectDetailsBean.getTaskId()!=null && projectDetailsBean.getTaskStatus()!=null && !projectDetailsBean.getTaskStatus().equalsIgnoreCase("")){
+//                            &&!projectDetailsBean.getTaskStatus().equalsIgnoreCase("draft") ){
                         Appreference.old_status.put(projectDetailsBean.getTaskId(),projectDetailsBean.getTaskStatus());
+                        Log.i("draft123", "DB Appreference added status " + projectDetailsBean.getTaskStatus());
+                        Log.i("draft123", "DB Appreference added ID" +projectDetailsBean.getTaskId());
+
                     }
                     arrayList.add(projectDetailsBean);
                     cur.moveToNext();

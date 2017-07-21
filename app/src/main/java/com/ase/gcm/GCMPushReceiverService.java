@@ -290,7 +290,7 @@ public class GCMPushReceiverService extends FirebaseMessagingService {
 //                                                    taskDetailsBean.setOverdue_Msg("1");
                                                     taskDetailsBean.setMsg_status(10);
                                                 } else {
-                                                    taskDetailsBean.setMimeType("text");
+                                                    taskDetailsBean.setMimeType("reminder");
                                                     taskDetailsBean.setTaskStatus("reminder");
                                                     Appreference.printLog("Remainder", "Reminder TimeDetails App Active State   Server Time is == " + rem_firingTime + "   ServerFiringTime is == " + serverTime + "   client FiringTime is == " + taskDetailsBean.getDateTime() + "\n  taskId is ==  " + taskDetailsBean.getTaskId() + "   signal Id is == " + signalId, "DEBUG", null);
                                                     Log.i("gcmMessage", "reminderText " + reminder_quote);

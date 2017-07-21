@@ -4220,16 +4220,13 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback,
                                                         detailsBean.getTaskId().equalsIgnoreCase(taskDetailsBean.getTaskId())) {
                                                     Log.i("notifyreceived", "for getTaskStatus==> 4  " + taskDetailsBean.getTaskStatus());
                                                     detailsBean.setTaskStatus(taskDetailsBean.getTaskStatus());
+                                                    Log.i("draft123", "Mainactivity before If" + taskDetailsBean.getTaskStatus());
                                                     Appreference.old_status.put(detailsBean.getTaskId(), taskDetailsBean.getTaskStatus());
+                                                    Log.i("draft123", "Mainactivity Appreference added status " + taskDetailsBean.getTaskStatus());
+                                                    Log.i("draft123", "Mainactivity Appreference added ID" +detailsBean.getTaskId());
                                                     break;
                                                 }
                                             }
-                                          /*  handler1.post(new Runnable() {
-                                                @Override
-                                                public void run() {
-                                                    projectHistory.buddyArrayAdapter.notifyDataSetChanged();
-                                                }
-                                            });*/
                                         }
                                     }
                                 }

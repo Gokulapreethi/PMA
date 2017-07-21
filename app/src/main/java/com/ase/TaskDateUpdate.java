@@ -817,24 +817,6 @@ public class TaskDateUpdate extends AppCompatActivity implements View.OnClickLis
                         Appreference.printLog("TaskDateUpdate submit.SetOnClickListener", "Exception " + e.getMessage(), "WARN", null);
                     }
                 }
-
-
-//                int remfreq_hr = Integer.parseInt(reminder_freq1.getText().toString());
-//                remfreq_hr = remfreq_hr / 60;
-//                int remfreq_mm = Integer.parseInt(reminder_freq1.getText().toString());
-//                remfreq_mm = remfreq_mm % 60;
-//                String remfreq_hr1 = String.valueOf(remfreq_hr);
-//                if (remfreq_hr1.length() < 2) {
-//                    remfreq_hr1 = "0" + remfreq_hr1;
-//                }
-//                String remfreq_mm1 = String.valueOf(remfreq_mm);
-//                if (remfreq_mm1.length() < 2) {
-//                    remfreq_mm1 = "0" + remfreq_mm1;
-//                }
-//                String remfreq_hrmm = remfreq_hr1 + " hrs " + remfreq_mm1 + " mins";
-//                if ((repeat_min.getText().toString() != null && !repeat_min.getText().toString().equalsIgnoreCase("0") &&
-//                        !repeat_min.getText().toString().equalsIgnoreCase("")) || (temp_min.getText().toString() != null && !temp_min.getText().toString().equalsIgnoreCase("0") &&
-//                        !temp_min.getText().toString().equalsIgnoreCase(""))) {
                 if (repeat_min.getText().toString().matches("0") || repeat_min.getText().toString().matches("") || temp_min.getText().toString().matches("0") || temp_min.getText().toString().matches("")) {
                     showToast("Unit must never be null or none");
                     return;
@@ -884,15 +866,6 @@ public class TaskDateUpdate extends AppCompatActivity implements View.OnClickLis
                     repeat_freq = temp_min.getText().toString() + " " + repeat_frequency.getText().toString();
                     String unit = duration_unit.getText().toString();
                     String dura = duration.getText().toString();
-
-                    Log.i("Reminder quotes", "is " + Reminder_quote.getText().toString());
-//                if (Reminder_quote.getText().toString().equals("") || Reminder_quote.getText().toString().equals(null)) {
-//                    Toast.makeText(getApplicationContext(), "Please Give Quote For This Task", Toast.LENGTH_LONG).show();
-//                } else {
-//                if (remfreq_mins.length() < 2) {
-//                    remfreq_mins = "0" + remfreq_mins;
-//                }
-//                remfreq_mins = remfreq_mins + " mins";
                     temp_value = getIntent().getStringExtra("template");
                     if (temp_value.equalsIgnoreCase("success")) {
                         Intent i = new Intent();
@@ -918,28 +891,10 @@ public class TaskDateUpdate extends AppCompatActivity implements View.OnClickLis
                             if (!android.text.format.DateFormat.is24HourFormat(context)) {
                                 Log.i("Taskdateupdate", "Appreference.conflicttask else " + Appreference.conflicttask);
                                 NewTaskConversation.conflict = false;
-//                                if (!getResources().getString(R.string.proxyua).equalsIgnoreCase("enable")) {
-//                                    Intent i = new Intent();
-//                                    i.putExtra("StartDate",Appreference.setDateTime(true,Appreference.ChangeOriginalPattern(false,start_date1.getText().toString(),datepattern)));
-//                                    i.putExtra("EndDate",Appreference.setDateTime(true,Appreference.ChangeOriginalPattern(false,end_date1.getText().toString(),datepattern)));
-//                                    i.putExtra("ReminderDate", Appreference.setDateTime(true,Appreference.ChangeOriginalPattern(false,reminder_date1.getText().toString(),datepattern)));
-//                                    i.putExtra("ReminderFrequency", remfreq_mins);
-//                                    i.putExtra("ReminderQuote", Reminder_quote.getText().toString());
-//                                    i.putExtra("ReminderTone", strIPath);
-//                                    if (weekdays != null && !weekdays.equalsIgnoreCase("")) {
-//                                        i.putExtra("Weekdays", weekdays);
-//                                    }
-//                                    i.putExtra("changedateheader", "assigned");
-//                                    setResult(RESULT_OK, i);
-//                                    finish();
-//                                } else {
                                 Intent i = new Intent();
                                 i.putExtra("StartDate", Appreference.setDateTime(true, Appreference.ChangeOriginalPattern(false, start_date1.getText().toString(), datepattern)));
                                 i.putExtra("EndDate", Appreference.setDateTime(true, Appreference.ChangeOriginalPattern(false, end_date1.getText().toString(), datepattern)));
-//                                i.putExtra("ReminderDate", Appreference.setDateTime(true, Appreference.ChangeOriginalPattern(false, reminder_date1.getText().toString(), datepattern)));
-//                                i.putExtra("ReminderFrequency", remfreq_mins);
-//                                i.putExtra("ReminderQuote", Reminder_quote.getText().toString());
-                                i.putExtra("ReminderTone", strIPath);
+                               i.putExtra("ReminderTone", strIPath);
                                 if (reminder_switch.isChecked()) {
                                     Log.i("Taskdateupdate", "reminder_switch.isChecked() @@@ " + reminder_switch.isChecked());
                                     i.putExtra("ReminderDate", Appreference.setDateTime(true, Appreference.ChangeOriginalPattern(false, reminder_date1.getText().toString(), datepattern)));
@@ -965,27 +920,9 @@ public class TaskDateUpdate extends AppCompatActivity implements View.OnClickLis
 //                                }
 
                             } else {
-//                                if (!getResources().getString(R.string.proxyua).equalsIgnoreCase("enable")) {
-//                                    Intent i = new Intent();
-//                                    i.putExtra("StartDate", Appreference.ChangeOriginalPattern(true,start_date1.getText().toString(),datepattern));
-//                                    i.putExtra("EndDate", Appreference.ChangeOriginalPattern(true,end_date1.getText().toString(),datepattern));
-//                                    i.putExtra("ReminderDate", Appreference.ChangeOriginalPattern(true,reminder_date1.getText().toString(),datepattern));
-//                                    i.putExtra("ReminderFrequency", remfreq_mins);
-//                                    i.putExtra("ReminderQuote", Reminder_quote.getText().toString());
-//                                    i.putExtra("ReminderTone", strIPath);
-//                                    if (weekdays != null && !weekdays.equalsIgnoreCase("")) {
-//                                        i.putExtra("Weekdays", weekdays);
-//                                    }
-//                                    i.putExtra("changedateheader", "assigned");
-//                                    setResult(RESULT_OK, i);
-//                                    finish();
-//                                } else {
                                 Intent i = new Intent();
                                 i.putExtra("StartDate", Appreference.ChangeOriginalPattern(true, start_date1.getText().toString(), datepattern));
                                 i.putExtra("EndDate", Appreference.ChangeOriginalPattern(true, end_date1.getText().toString(), datepattern));
-//                                i.putExtra("ReminderDate", Appreference.ChangeOriginalPattern(true, reminder_date1.getText().toString(), datepattern));
-//                                i.putExtra("ReminderFrequency", remfreq_mins);
-//                                i.putExtra("ReminderQuote", Reminder_quote.getText().toString());
                                 i.putExtra("ReminderTone", strIPath);
                                 if (reminder_switch.isChecked()) {
                                     Log.i("Taskdateupdate", "reminder_switch.isChecked() @@@ " + reminder_switch.isChecked());
@@ -1010,14 +947,9 @@ public class TaskDateUpdate extends AppCompatActivity implements View.OnClickLis
                                 setResult(RESULT_OK, i);
                                 finish();
                             }
-
-//                            }
                         }
                     }
                 }
-//                } else {
-//                    showToast("Unit must never be null or none");
-//                }
             }
         });
 
@@ -1039,13 +971,9 @@ public class TaskDateUpdate extends AppCompatActivity implements View.OnClickLis
                             end_date1.setText(Appreference.ChangeDevicePattern(true, taskDetailsBean1.getPlannedEndDateTime(), datepattern));
                         } else {
                             start_date1.setText(Appreference.ChangeDevicePattern(false, Appreference.setDateTime(false, taskDetailsBean1.getPlannedStartDateTime()), datepattern));
-//                            start_date1.setText(Appreference.setTimeinDevicePattern(false,taskDetailsBean1.getPlannedStartDateTime(),datepattern));
-//                            end_date1.setText(Appreference.setTimeinDevicePattern(false,taskDetailsBean1.getPlannedEndDateTime(),datepattern));
                             Log.i("TaskDateUpdate", "end_date1 value is" + taskDetailsBean1.getPlannedEndDateTime());
                             end_date1.setText(Appreference.ChangeDevicePattern(false, Appreference.setDateTime(false, taskDetailsBean1.getPlannedEndDateTime()), datepattern));
                         }
-//                        start_date1.setText(Appreference.getDeviceTime24or12(context, taskDetailsBean1.getPlannedStartDateTime()));
-//                        end_date1.setText(Appreference.getDeviceTime24or12(context, taskDetailsBean1.getPlannedEndDateTime()));
                         if (getResources().getString(R.string.TASKNOTIFICATION_FROM_SERVER).equalsIgnoreCase("0")) {
                             reminder_freq1.setText(taskDetailsBean1.getTimeFrequency());
                         } else {
@@ -1078,8 +1006,6 @@ public class TaskDateUpdate extends AppCompatActivity implements View.OnClickLis
                         Log.i("TaskDateUpdate", "end_date2 value is" + taskDetailsBean.getPlannedEndDateTime());
                         end_date1.setText(Appreference.ChangeDevicePattern(false, Appreference.setDateTime(false, taskDetailsBean.getPlannedEndDateTime()), datepattern));
                     }
-//                    start_date1.setText(Appreference.getDeviceTime24or12(context, taskDetailsBean.getPlannedStartDateTime()));
-//                    end_date1.setText(Appreference.getDeviceTime24or12(context, taskDetailsBean.getPlannedEndDateTime()));
                     if (getResources().getString(R.string.TASKNOTIFICATION_FROM_SERVER).equalsIgnoreCase("0")) {
                         reminder_freq_local.setText(taskDetailsBean.getTimeFrequency());
                     } else {
@@ -1099,7 +1025,6 @@ public class TaskDateUpdate extends AppCompatActivity implements View.OnClickLis
                     } else {
                         Reminder_quote.setText("Task Remainder");
                     }
-//                    Reminder_quote.setText(taskDetailsBean.getReminderQuote());
                     if (taskDetailsBean.getServerFileName() != null && !taskDetailsBean.getServerFileName().equalsIgnoreCase(null) && !taskDetailsBean.getServerFileName().equalsIgnoreCase("")) {
                         strIPath = "/storage/emulated/0/High Message/" + taskDetailsBean.getServerFileName();
                     }
@@ -1113,10 +1038,7 @@ public class TaskDateUpdate extends AppCompatActivity implements View.OnClickLis
                     start_date1.setText(Appreference.ChangeDevicePattern(true, sdf.format(date), datepattern));
                 } else {
                     start_date1.setText(Appreference.ChangeDevicePattern(false, Appreference.setDateTime(false, sdf.format(date)), datepattern));
-//                    start_date1.setText("is hidden");
-//                    start_date1.setText(Appreference.setDateTimepattern(false, String.valueOf(date)));
                 }
-//                start_date1.setText(Appreference.getDeviceTime24or12(context, sdf.format(new Date())));
                 String fromdate1 = " ";
                 if (android.text.format.DateFormat.is24HourFormat(context)) {
                     fromdate1 = Appreference.ChangeOriginalPattern(true, start_date1.getText().toString(), datepattern);
@@ -1126,7 +1048,6 @@ public class TaskDateUpdate extends AppCompatActivity implements View.OnClickLis
                     fromdate1 = Appreference.setDateTime(true, Appreference.ChangeOriginalPattern(false, start_date1.getText().toString(), datepattern));
                 }
                 Log.i("Taskdateupdate", "fromdate1 value is" + fromdate1);
-//                fromdate1 = Appreference.getEndOfDay(fromdate1);
                 Log.i("Taskdateupdate", "fromdate1 value is" + fromdate1);
                 fromdate1 = fromdate1.split(" ")[0] + " 23:55:00";
                 Log.i("Dateand time", "fromdate1 value is " + fromdate1);
@@ -1134,13 +1055,7 @@ public class TaskDateUpdate extends AppCompatActivity implements View.OnClickLis
                     end_date1.setText(Appreference.ChangeDevicePattern(true, fromdate1, datepattern));
                 } else {
                     end_date1.setText(Appreference.ChangeDevicePattern(false, Appreference.setDateTime(false, fromdate1), datepattern));
-//                    end_date1.setText(Appreference.setDateTimepattern(false,fromdate1));
-//                    end_date1.setText("is hidden");
-                    Log.i("TaskDateUpdate", "fromdate1 value is " + fromdate1);
-//                    end_date1.setText(Appreference.setTaskTime(true,fromdate1));
-//                Toast.makeText(getApplicationContext(),"enddate is hidden",Toast.LENGTH_SHORT).show();
                 }
-//                end_date1.setText(Appreference.getDeviceTime24or12(context, fromdate1));
                 Log.i("task", "endDate second " + endDate + " " + datecheck);
                 if (getResources().getString(R.string.TASKNOTIFICATION_FROM_SERVER).equalsIgnoreCase("0")) {
                     reminder_freq_local.setText("Every minute");
@@ -1157,29 +1072,17 @@ public class TaskDateUpdate extends AppCompatActivity implements View.OnClickLis
             if (android.text.format.DateFormat.is24HourFormat(context)) {
                 start_date1.setText(Appreference.ChangeDevicePattern(true, sdf.format(date), datepattern));
             } else {
-//                int hour=date.getHours();
-//                int minute=date.getMinutes();
-//                int seconds=date.getSeconds();
-//                start_date1.setText(hour%12 + ":" + minute + ":"+seconds+" " + ((hour>=12) ? "PM" : "AM"));
                 Log.i("TaskDateUpdate", "sdf.format" + sdf.format(date));
                 start_date1.setText(Appreference.ChangeDevicePattern(false, Appreference.setDateTime(false, sdf.format(new Date())), datepattern));
-            }
-//            Toast.makeText(getApplicationContext(), "startdate is 2 hidden", Toast.LENGTH_SHORT).show();
-//            start_date1.setText(Appreference.getDeviceTime24or12(context, sdf.format(new Date())));
-        }
+            }  }
         Log.i("task", "endDate three " + endDate + " " + datecheck);
         if (datecheck) {
             if (android.text.format.DateFormat.is24HourFormat(context)) {
                 end_date1.setText(Appreference.ChangeDevicePattern(true, endDate, datepattern));
             } else {
                 end_date1.setText(Appreference.ChangeDevicePattern(false, Appreference.setDateTime(false, endDate), datepattern));
-            }
-//            end_date1.setText(Appreference.getDeviceTime24or12(context, endDate));
-            Log.i("task", "endDate four " + endDate + " " + datecheck);
-        }
-//        String todate1 = end_date1.getText().toString();
-//        todate1 = todate1.split(" ")[0] + " 23:40:00";
-        if (!android.text.format.DateFormat.is24HourFormat(context)) {
+            } Log.i("task", "endDate four " + endDate + " " + datecheck);
+        }  if (!android.text.format.DateFormat.is24HourFormat(context)) {
             DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss a");
             Date ddate = null;
             try {
@@ -1195,7 +1098,6 @@ public class TaskDateUpdate extends AppCompatActivity implements View.OnClickLis
                 cl.setTime(ddate);
                 cl.add(Calendar.MINUTE, 1);
                 reminder_date = dateFormat.format(cl.getTime());
-//            reminder_date=Appreference.getEndOfDay(reminder_date);
                 Log.i("TaskDateUpdate", "reminder_date 0 " + reminder_date);
                 reminder_date1.setText(Appreference.ChangeDevicePattern(false, reminder_date, datepattern));
             }
@@ -1220,14 +1122,12 @@ public class TaskDateUpdate extends AppCompatActivity implements View.OnClickLis
                 cl.setTime(ddate);
                 cl.add(Calendar.MINUTE, 1);
                 reminder_date = dateFormat.format(cl.getTime());
-//            reminder_date=Appreference.getEndOfDay(reminder_date);
                 Log.i("TaskDateUpdate", "reminder_date 00 " + reminder_date);
                 if (android.text.format.DateFormat.is24HourFormat(context)) {
                     reminder_date1.setText(Appreference.ChangeDevicePattern(true, reminder_date, datepattern));
                 } else {
                     Log.i("TaskDateUpdate", "reminder date2 value is" + reminder_date);
                     reminder_date1.setText(Appreference.ChangeDevicePattern(false, Appreference.setDateTime(false, reminder_date), datepattern));
-//                    reminder_date1.setText(Appreference.setTimeinDevicePattern(false,reminder_date,datepattern));
                 }
             }
         }
@@ -1423,7 +1323,6 @@ public class TaskDateUpdate extends AppCompatActivity implements View.OnClickLis
             Log.i("taskdateupdate", "111111 " + applicationContext);
             Format dateFormat = android.text.format.DateFormat.getDateFormat(applicationContext);
             date_pattern = ((SimpleDateFormat) dateFormat).toLocalizedPattern();
-//            Toast.makeText(context,date_pattern,Toast.LENGTH_SHORT).show();
         } catch (Exception e) {
             e.printStackTrace();
             Appreference.printLog("TaskDateUpdate getDevicePattern", "Exception " + e.getMessage(), "WARN", null);
@@ -1505,22 +1404,6 @@ public class TaskDateUpdate extends AppCompatActivity implements View.OnClickLis
         Log.d("conflict", "onResume called");
         if (Appreference.isConflict) {
             if (!android.text.format.DateFormat.is24HourFormat(context)) {
-//                if (!getResources().getString(R.string.proxyua).equalsIgnoreCase("enable")) {
-//                    Intent i = new Intent();
-//                    i.putExtra("StartDate",Appreference.setDateTime(true,Appreference.ChangeOriginalPattern(false,start_date1.getText().toString(),datepattern)));
-//                    i.putExtra("EndDate",Appreference.setDateTime(true,Appreference.ChangeOriginalPattern(false,end_date1.getText().toString(),datepattern)));
-//                    i.putExtra("ReminderDate", Appreference.setDateTime(true,Appreference.ChangeOriginalPattern(false,reminder_date1.getText().toString(),datepattern)));
-//                    i.putExtra("ReminderFrequency", remfreq_mins);
-//                    i.putExtra("ReminderQuote", Reminder_quote.getText().toString());
-//                    i.putExtra("ReminderTone", strIPath);
-//                    if (weekdays != null && !weekdays.equalsIgnoreCase("")) {
-//                        i.putExtra("Weekdays", weekdays);
-//                    }
-//                    i.putExtra("changedateheader", "assigned");
-//                    Appreference.isConflict = false;
-//                    setResult(RESULT_OK, i);
-//                    finish();
-//                } else {
                 Intent i = new Intent();
                 i.putExtra("StartDate", Appreference.setDateTime(true, Appreference.ChangeOriginalPattern(false, start_date1.getText().toString(), datepattern)));
                 i.putExtra("EndDate", Appreference.setDateTime(true, Appreference.ChangeOriginalPattern(false, end_date1.getText().toString(), datepattern)));
@@ -1548,25 +1431,8 @@ public class TaskDateUpdate extends AppCompatActivity implements View.OnClickLis
                 setResult(RESULT_OK, i);
                 Appreference.isConflict = false;
                 finish();
-//                }
 
             } else {
-//                if (!getResources().getString(R.string.proxyua).equalsIgnoreCase("enable")) {
-//                    Intent i = new Intent();
-//                    i.putExtra("StartDate", Appreference.ChangeOriginalPattern(true,start_date1.getText().toString(),datepattern));
-//                    i.putExtra("EndDate", Appreference.ChangeOriginalPattern(true,end_date1.getText().toString(),datepattern));
-//                    i.putExtra("ReminderDate", Appreference.ChangeOriginalPattern(true,reminder_date1.getText().toString(),datepattern));
-//                    i.putExtra("ReminderFrequency", remfreq_mins);
-//                    i.putExtra("ReminderQuote", Reminder_quote.getText().toString());
-//                    i.putExtra("ReminderTone", strIPath);
-//                    if (weekdays != null && !weekdays.equalsIgnoreCase("")) {
-//                        i.putExtra("Weekdays", weekdays);
-//                    }
-//                    i.putExtra("changedateheader", "assigned");
-//                    Appreference.isConflict = false;
-//                    setResult(RESULT_OK, i);
-//                    finish();
-//                } else {
                 Intent i = new Intent();
                 i.putExtra("StartDate", Appreference.ChangeOriginalPattern(true, start_date1.getText().toString(), datepattern));
                 i.putExtra("EndDate", Appreference.ChangeOriginalPattern(true, end_date1.getText().toString(), datepattern));
@@ -1594,7 +1460,6 @@ public class TaskDateUpdate extends AppCompatActivity implements View.OnClickLis
                 setResult(RESULT_OK, i);
                 Appreference.isConflict = false;
                 finish();
-//                }
             }
         }
     }
@@ -1637,11 +1502,7 @@ public class TaskDateUpdate extends AppCompatActivity implements View.OnClickLis
             }
             txt_time.setText(min + ":" + sec);
 
-                   /* MediaListBean uIbean = new MediaListBean();
-                    uIbean.setMediaType("audio");
-                    uIbean.setMediaPath(path);
-                    mediaList.add(uIbean);
-                    medialistadapter.notifyDataSetChanged();*/
+
         } else if (resultCode == RESULT_OK && requestCode == 1) {
             String s = data.getStringExtra("TimeFrequency");
             Log.i("time", "frequency" + s);
@@ -1853,12 +1714,7 @@ public class TaskDateUpdate extends AppCompatActivity implements View.OnClickLis
             String[] sdisplayedValues = {"00", "01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30", "31", "32", "33", "34", "35", "36", "37", "38", "39", "40", "41", "42", "43", "44", "45", "46", "47", "48", "49", "50", "51", "52", "53", "54", "55", "56", "57", "58", "59"};
             List<String> ampmValues = new ArrayList<String>();
             String[] am_pm = {"AM", "PM", "AM", "PM"};
-            // for (int i = 0; i < 60; i += 15) {
-            // displayedValues.add(String.format("%02d", i));
-            // }
             minutePicker.setDisplayedValues(sdisplayedValues);
-//             ampmValues.add("AM");
-            // ampmValues.add("PM");
             if (android.text.format.DateFormat.is24HourFormat(context)) {
                 hourPicker.setMinValue(00);
                 hourPicker.setMaxValue(23);
@@ -1884,26 +1740,14 @@ public class TaskDateUpdate extends AppCompatActivity implements View.OnClickLis
             yyyy = rightNow.get(Calendar.YEAR);
             if (startOrEnd == 1) {
                 Log.i("TaskDateUpdate", "start_date1 click event 1 ");
-//                String dateInputString=String.valueOf(start_date1);
                 String[] values1 = datePicker.getDisplayedValues();
-//                String str = values1[datePicker.getValue()];
                 String st_hour = "";
                 String st_date = "";
                 if (android.text.format.DateFormat.is24HourFormat(context)) {
-
-                    //                   st_hour = start_date1.getText().toString();
-//                    st_date = start_date1.getText().toString();
-//                    st_hour=Appreference.ChangeOriginalPattern(true,start_date1.getText().toString(),datepattern);
                     st_hour = Appreference.ChangeOriginalPattern(true, start_date1.getText().toString(), datepattern);
                     st_date = Appreference.ChangeOriginalPattern(true, start_date1.getText().toString(), datepattern);
-                    Log.i("TaskDateUpdate", "start_date1 click event 10 " + st_date + "  " + st_hour);
-                    Log.i("TaskDateUpdate", "start_date1 click event 10* st date" + st_date);
-                    Log.i("TaskDateUpdate", "start_date1 click event 10* st hour" + st_hour);
                     st_hour = st_hour.split(" ")[1];
                     st_date = st_date.split(" ")[0];
-                    Log.i("start", "st_date " + st_date);
-                    Log.i("start", "st_hour " + st_hour);
-                    Log.i("TaskDateUpdate", "start_date1 click event 11* " + st_date + "  " + st_hour);
                     try {
                         // obtain date and time from initial string
                         DateFormat originalFormat = new SimpleDateFormat("yyyy-MM-dd");
@@ -1918,11 +1762,6 @@ public class TaskDateUpdate extends AppCompatActivity implements View.OnClickLis
                                 Log.i("start", "if" + values1[i]);
                                 datePicker.setValue(i);
                             }
-//                        else
-//                        {
-//                            Log.i("start","else");
-////                            datePicker.setValue(0);
-//                        }
                         }
                         // 20120821
                     } catch (Exception e) {
@@ -1937,16 +1776,8 @@ public class TaskDateUpdate extends AppCompatActivity implements View.OnClickLis
                 } else {
                     String date_ptn = Appreference.ChangeOriginalPattern(false, start_date1.getText().toString(), datepattern);
                     st_date = Appreference.setDateTime(true, date_ptn);
-                    st_hour = Appreference.setDateTime(true, date_ptn);
-//                    st_date = Appreference.setTimeinDevicePattern(true, date_ptn,datepattern);
-//                    st_hour = Appreference.setTimeinDevicePattern(true, date_ptn,datepattern);
-                    Log.i("TaskDateUpdate", "start_date1 click event 10 start date" + st_date);
-                    Log.i("TaskDateUpdate", "start_date1 click event 10 start hour" + st_hour);
-                    st_hour = st_hour.split(" ")[1];
+                    st_hour = Appreference.setDateTime(true, date_ptn);st_hour = st_hour.split(" ")[1];
                     st_date = st_date.split(" ")[0];
-                    Log.i("start", "st_date " + st_date);
-                    Log.i("start", "st_hour " + st_hour);
-                    Log.i("TaskDateUpdate", "start_date1 click event 11 " + st_date + "  " + st_hour);
                     try {
                         // obtain date and time from initial string
                         DateFormat originalFormat = new SimpleDateFormat("yyyy-MM-dd");
@@ -1961,11 +1792,6 @@ public class TaskDateUpdate extends AppCompatActivity implements View.OnClickLis
                                 Log.i("start", "if" + values1[i]);
                                 datePicker.setValue(i);
                             }
-//                        else
-//                        {
-//                            Log.i("start","else");
-////                            datePicker.setValue(0);
-//                        }
                         }
                         // 20120821
                     } catch (Exception e) {
@@ -2009,8 +1835,6 @@ public class TaskDateUpdate extends AppCompatActivity implements View.OnClickLis
                 }
 
                 Log.i("start", "am_pmPicker" + am_pmPicker.getValue());
-//                hourPicker.setValue(hour - 1);
-//                hourPicker.setValue(dd);
             } else if (startOrEnd == 2) {
                 Log.i("TaskDateUpdate", "end_date1 click event 2 ");
                 String[] values1 = datePicker.getDisplayedValues();
@@ -2018,8 +1842,6 @@ public class TaskDateUpdate extends AppCompatActivity implements View.OnClickLis
                 String en_date = "";
                 if (android.text.format.DateFormat.is24HourFormat(context)) {
                     String date_ptn = Appreference.ChangeOriginalPattern(true, end_date1.getText().toString(), datepattern);
-//                    end_hour = end_date1.getText().toString();
-//                    en_date = end_date1.getText().toString();
                     end_hour = date_ptn;
                     en_date = date_ptn;
                     Log.i("TaskDateUpdate", "end_date1 click event 20 " + end_hour + "   " + en_date);
@@ -2043,11 +1865,6 @@ public class TaskDateUpdate extends AppCompatActivity implements View.OnClickLis
                                 Log.i("end", "if" + values1[i]);
                                 datePicker.setValue(i);
                             }
-//                        else
-//                        {
-//                            Log.i("start","else");
-////                            datePicker.setValue(0);
-//                        }
                         }
                         // 20120821
                     } catch (Exception e) {
@@ -2061,8 +1878,6 @@ public class TaskDateUpdate extends AppCompatActivity implements View.OnClickLis
                     String date_ptn = Appreference.ChangeOriginalPattern(false, end_date1.getText().toString(), datepattern);
                     en_date = Appreference.setDateTime(true, date_ptn);
                     end_hour = Appreference.setDateTime(true, date_ptn);
-//                    en_date = Appreference.setTimeinDevicePattern(true, date_ptn,datepattern);
-//                    end_hour = Appreference.setTimeinDevicePattern(true, date_ptn,datepattern);
                     Log.i("TaskDateUpdate", "end_date1 click event 20 " + end_hour + "   " + en_date);
                     end_hour = end_hour.split(" ")[1];
                     Log.i("end", "en_hour" + end_hour);
@@ -2084,11 +1899,6 @@ public class TaskDateUpdate extends AppCompatActivity implements View.OnClickLis
                                 Log.i("end", "if" + values1[i]);
                                 datePicker.setValue(i);
                             }
-//                        else
-//                        {
-//                            Log.i("start","else");
-////                            datePicker.setValue(0);
-//                        }
                         }
                         // 20120821
                     } catch (Exception e) {
@@ -2129,8 +1939,6 @@ public class TaskDateUpdate extends AppCompatActivity implements View.OnClickLis
                     }
                 }
 
-                //Log.i("end","hour"+start_time);
-//                hourPicker.setValue(start_time);
             } else if (startOrEnd == 3) {
                 Log.i("TaskDateUpdate", "reminder_date1 click event 3 ");
                 String[] values1 = datePicker.getDisplayedValues();
@@ -2138,8 +1946,6 @@ public class TaskDateUpdate extends AppCompatActivity implements View.OnClickLis
                 String re_date = "";
                 if (android.text.format.DateFormat.is24HourFormat(context)) {
                     String date_rem = Appreference.ChangeOriginalPattern(true, reminder_date1.getText().toString(), datepattern);
-//                    re_hour = reminder_date1.getText().toString();
-//                    re_date = reminder_date1.getText().toString();
                     re_hour = date_rem;
                     re_date = date_rem;
                     Log.i("TaskDateUpdate", "reminder_date1 click event 30 " + re_date + "  " + re_hour);
@@ -2163,11 +1969,6 @@ public class TaskDateUpdate extends AppCompatActivity implements View.OnClickLis
                                 Log.i("remin", "if" + values1[i]);
                                 datePicker.setValue(i);
                             }
-//                        else
-//                        {
-//                            Log.i("start","else");
-////                            datePicker.setValue(0);
-//                        }
                         }
                         // 20120821
                     } catch (Exception e) {
@@ -2181,8 +1982,6 @@ public class TaskDateUpdate extends AppCompatActivity implements View.OnClickLis
                     String date_rem = Appreference.ChangeOriginalPattern(false, reminder_date1.getText().toString(), datepattern);
                     re_date = Appreference.setDateTime(true, date_rem);
                     re_hour = Appreference.setDateTime(true, date_rem);
-//                    re_date = Appreference.setTimeinDevicePattern(true,date_rem,datepattern);
-//                    re_hour = Appreference.setTimeinDevicePattern(true,date_rem,datepattern);
                     Log.i("TaskDateUpdate", "reminder_date1 click event 30 " + re_date + "  " + re_hour);
                     re_hour = re_hour.split(" ")[1];
                     Log.i("remin", "en_hour" + re_hour);
@@ -2204,11 +2003,6 @@ public class TaskDateUpdate extends AppCompatActivity implements View.OnClickLis
                                 Log.i("remin", "if" + values1[i]);
                                 datePicker.setValue(i);
                             }
-//                        else
-//                        {
-//                            Log.i("start","else");
-////                            datePicker.setValue(0);
-//                        }
                         }
                         // 20120821
                     } catch (Exception e) {
@@ -2248,58 +2042,7 @@ public class TaskDateUpdate extends AppCompatActivity implements View.OnClickLis
                         am_pmPicker.setValue(0);
                     }
                 }
-//                hourPicker.setValue(end_time);
             }
-//            minutePicker.setMinValue(0);
-//            minutePicker.setMaxValue(59);
-//            minutePicker.setWrapSelectorWheel(true);
-//            // ArrayList<String> displayedValues = new ArrayList<String>();
-//            String[] sdisplayedValues = {"00", "01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30", "31", "32", "33", "34", "35", "36", "37", "38", "39", "40", "41", "42", "43", "44", "45", "46", "47", "48", "49", "50", "51", "52", "53", "54", "55", "56", "57", "58", "59"};
-//            List<String> ampmValues = new ArrayList<String>();
-//            String[] am_pm = {"AM", "PM", "AM", "PM"};
-//            // for (int i = 0; i < 60; i += 15) {
-//            // displayedValues.add(String.format("%02d", i));
-//            // }
-//            minutePicker.setDisplayedValues(sdisplayedValues);
-//            // ampmValues.add("AM");
-//            // ampmValues.add("PM");
-//            am_pmPicker.setMinValue(0);
-//            am_pmPicker.setMaxValue(3);
-//            am_pmPicker.setWrapSelectorWheel(true);
-//            int am = 0;
-//            am_pmPicker.setDisplayedValues(am_pm);
-//            if (rightNow.get(Calendar.AM_PM) == 0) {
-//                am = 0;
-//            } else {
-//                am = 1;
-//            }
-//            hourPicker.setOnValueChangedListener(new NumberPicker.
-//                    OnValueChangeListener() {
-//                @Override
-//                public void onValueChange(NumberPicker picker, int
-//                        oldVal, int newVal) {
-////                   if(newVal==12||newVal==1)
-////                    int ampm = oldVal - newVal;
-////                    ampm = 0;
-//                    if (newVal == 12 && oldVal == 11 || newVal == 11 && oldVal == 12) {
-//
-//                        if (am_pmPicker.getValue() == 1) {
-//                            am_pmPicker.setValue(0);
-//                        } else {
-//                            am_pmPicker.setValue(1);
-//                        }
-//                    }
-//                }
-//            });
-
-//            if (startOrEnd == 1) {
-//                am_pmPicker.setValue(am);
-//            } else if (startOrEnd == 2) {
-//                am_pmPicker.setValue(start_am_pm);
-//            } else if (startOrEnd == 3) {
-//                am_pmPicker.setValue(end_am_pm);
-//            }
-            // if(rightNow.get(Calendar.MINUTE))
 
             int minute = rightNow.get(Calendar.MINUTE);
             int nextMinute = 0;
@@ -2452,10 +2195,6 @@ public class TaskDateUpdate extends AppCompatActivity implements View.OnClickLis
                                     strTime = "23" + ":"
                                             + String.valueOf(startMin);
                                 }
-//                            else if (startTime == 12) {
-//                                strTime = "00" + ":"
-//                                        + String.valueOf(startMin);
-//                            }
                                 else
                                     strTime = strDateTime;
 
@@ -2485,22 +2224,14 @@ public class TaskDateUpdate extends AppCompatActivity implements View.OnClickLis
                                 String date_rem = Appreference.ChangeOriginalPattern(false, start_date1.getText().toString(), datepattern);
                                 strfromdate = Appreference.setDateTime(true, date_rem);
                             }
-//                        String strfromdate = Appreference.setDateTimepattern(true, start_date1.getText().toString());
                             String strfromday = strfromdate.split(" ")[0];
                             DateFormat selctedDateformate = null;
                             Date date = null;
                             if (!android.text.format.DateFormat.is24HourFormat(context)) {
                                 try {
-//                                if (getDeviceName().contains("samsung") && Build.MODEL.contains("J7")){
-////                                    Log.i("device name","devicename is"+getDeviceName());
-////                                    Toast.makeText(getApplicationContext(),"Please Change devicepattern for 24 Hour Format",Toast.LENGTH_SHORT).show();
-//                                    selctedDateformate = new SimpleDateFormat("EEE MMM dd yyyy hh : mm a",Locale.ENGLISH);
-//                                    date=selctedDateformate.parse(toas);
-//                                }else {
                                     selctedDateformate = new SimpleDateFormat("MMM dd yyyy hh : mm a");
                                     Log.i("time123", "toas----->" + toas);
                                     date = selctedDateformate.parse(toas);
-//                                }
                                 } catch (ParseException e) {
                                     e.printStackTrace();
                                     Appreference.printLog("TaskDateUpdate set.setOnClickListener", "Exception " + e.getMessage(), "WARN", null);
@@ -2514,17 +2245,8 @@ public class TaskDateUpdate extends AppCompatActivity implements View.OnClickLis
                                     Appreference.printLog("TaskDateUpdate set.setOnClickListener", "Exception " + e.getMessage(), "WARN", null);
                                 }
                             }
-//                        DateFormat selctedDateformate = new SimpleDateFormat("yyyy MMM dd hh : mm a");
-//                        Date date = null;
-//                        try {
-//                            date = selctedDateformate.parse(yyyy + " " + toas);
-//                        } catch (ParseException e) {
-//                            e.printStackTrace();
-//                        }
                             SimpleDateFormat day1 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
                             String strenddate = day1.format(date);
-//                        String strendmonth = strenddate.split("-")[1];
-//                        int strendmonth1 = Integer.parseInt(strendmonth);
                             String strendday = strenddate.split(" ")[0];
                             int strendday1 = Integer.parseInt(strendday.split("-")[2]);
                             if (strfromday.compareTo(strendday) <= 0) {
@@ -2554,10 +2276,7 @@ public class TaskDateUpdate extends AppCompatActivity implements View.OnClickLis
                                         Log.i("time", "dur_check " + dur_check);
                                         if (datecheck) {
                                             try {
-                                        /*SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-//                                        String startdate_3 = sdf.format(startdate2);
-                                        DateFormat formatter = DateFormat.getDateInstance();
-                                        Date date_1 = formatter.parse(startdate2);*/
+
                                                 DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
                                                 Date ddate = null;
                                                 try {
@@ -2598,14 +2317,7 @@ public class TaskDateUpdate extends AppCompatActivity implements View.OnClickLis
                                                 String bb = Appreference.setDateTime(false, fromdate2);
                                                 end_date1.setText(Appreference.ChangeDevicePattern(false, bb, datepattern));
                                             }
-//                                    end_date1.setText(fromdate2);
                                         }
-
-//                                String todate2 = end_date1.getText().toString();
-//                                String todate3 = todate2.split(" ")[0] + " 23:40:00";
-//                                reminder_date1.setText(start_date1.getText().toString());
-//                            String date_start_temp[] = strTime.split(":");
-//                            start_date = Integer.parseInt(date_start_temp[0]);
                                         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
                                         Date ddate = null;
                                         try {
@@ -2614,7 +2326,6 @@ public class TaskDateUpdate extends AppCompatActivity implements View.OnClickLis
                                             } else {
                                                 ddate = dateFormat.parse(Appreference.setDateTime(true, Appreference.ChangeOriginalPattern(false, start_date1.getText().toString(), datepattern)));
                                             }
-//                                    ddate = dateFormat.parse(start_date1.getText().toString());
                                         } catch (ParseException e) {
                                             e.printStackTrace();
                                             Appreference.printLog("TaskDateUpdate set.setOnClickListener", "Exception " + e.getMessage(), "WARN", null);
@@ -2630,7 +2341,6 @@ public class TaskDateUpdate extends AppCompatActivity implements View.OnClickLis
                                                 Log.i("TaskDateUpdate", "reminder3 value is " + reminder_date);
                                                 reminder_date1.setText(Appreference.ChangeDevicePattern(false, Appreference.setDateTime(false, reminder_date), datepattern));
                                             }
-//                                    reminder_date1.setText(reminder_date);
                                         }
                                         start_date = dateposition;
                                         start_time = hourPicker.getValue();
@@ -2664,16 +2374,11 @@ public class TaskDateUpdate extends AppCompatActivity implements View.OnClickLis
                                             startdate2 = Appreference.setDateTime(true, stdat);
 
                                         }
-//                                startdate2 = start_date1.getText().toString();
                                         Log.i("time", "datecheck " + datecheck);
                                         Log.i("time", "time1 " + time1);
                                         Log.i("time", "dur_check " + dur_check);
                                         if (datecheck) {
                                             try {
-                                        /*SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-//                                        String startdate_3 = sdf.format(startdate2);
-                                        DateFormat formatter = DateFormat.getDateInstance();
-                                        Date date_1 = formatter.parse(startdate2);*/
                                                 DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
                                                 Date ddate = null;
                                                 try {
@@ -2712,14 +2417,7 @@ public class TaskDateUpdate extends AppCompatActivity implements View.OnClickLis
                                                 String vv = Appreference.setDateTime(false, fromdate2);
                                                 end_date1.setText(Appreference.ChangeDevicePattern(false, vv, datepattern));
                                             }
-//                                    end_date1.setText(fromdate2);
                                         }
-
-//                                String todate2 = end_date1.getText().toString();
-//                                String todate3 = todate2.split(" ")[0] + " 23:40:00";
-//                                reminder_date1.setText(start_date1.getText().toString());
-//                            String date_start_temp[] = strTime.split(":");
-//                            start_date = Integer.parseInt(date_start_temp[0]);
                                         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
                                         Date ddate = null;
                                         try {
@@ -2804,10 +2502,6 @@ public class TaskDateUpdate extends AppCompatActivity implements View.OnClickLis
                                 } else if (startTime == 11) {
                                     enTime = "23" + ":" + String.valueOf(startMin);
                                 }
-//                            else if (startTime == 12) {
-//                                enTime = "00" + ":"
-//                                        + String.valueOf(startMin);
-//                            }
                                 else
                                     enTime = strDateTime;
                             } else {
@@ -2828,32 +2522,21 @@ public class TaskDateUpdate extends AppCompatActivity implements View.OnClickLis
                                     enTime = strDateTime;
                                 }
                             }
-//                        if ((strDATE.equals(values1[datePicker.getValue()]) && values4[am_pmPicker
-//                                .getValue()].equalsIgnoreCase("pm"))
-//                                || (!strDATE.equals(values1[datePicker
-//                                .getValue()]))) {
-                            String strfromdate = "";
+                            String strfromdate= "";
                             if (android.text.format.DateFormat.is24HourFormat(context)) {
                                 strfromdate = Appreference.ChangeOriginalPattern(true, start_date1.getText().toString(), datepattern);
                             } else {
                                 String ss = Appreference.ChangeOriginalPattern(false, start_date1.getText().toString(), datepattern);
                                 strfromdate = Appreference.setDateTime(true, ss);
                             }
-
-//                        String strfromdate = start_date1.getText().toString();
-//                        String strfrommonth = strfromdate.split("-")[1];
-//                        int strfrommonth1 = Integer.parseInt(strfrommonth);
                             String strfromday = strfromdate.split(" ")[0];
                             int strfromday1 = Integer.parseInt(strfromday.split("-")[2]);
-//                        Log.i("schedule", "strfrommonth-->" + strfrommonth);
                             Log.i("schedule", "strfromday-->" + strfromday1);
                             Log.i("schedule", "toas-->" + toas);
                             DateFormat selctedDateformate = null;
                             Date date = null;
                             if (!android.text.format.DateFormat.is24HourFormat(context)) {
                                 if (getDeviceName().contains("samsung") && Build.MODEL.contains("J7")) {
-//                                    Log.i("device name","devicename is"+getDeviceName());
-//                                    Toast.makeText(getApplicationContext(),"Please Change devicepattern for 24 Hour Format",Toast.LENGTH_SHORT).show();
                                     selctedDateformate = new SimpleDateFormat("EEE MMM dd yyyy hh : mm a");
                                     try {
                                         date = selctedDateformate.parse(toas);

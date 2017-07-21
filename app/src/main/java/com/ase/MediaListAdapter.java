@@ -308,6 +308,8 @@ public class MediaListAdapter extends ArrayAdapter<TaskDetailsBean> {
         try {
             final TaskDetailsBean gcBean = detailsBeanArrayList.get(position);
             holder = new ViewHolder();
+            Log.i("conv123", "getView MediaListAdapter------->  " );
+
             if (view == null) {
                 inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
                 view = inflater.inflate(R.layout.media_list_adapter, null);

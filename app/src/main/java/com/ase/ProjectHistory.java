@@ -120,12 +120,7 @@ public class ProjectHistory extends Activity implements WebServiceInterface, Swi
 
     private void setActiveAdapter() {
         try {
-            Log.i("ws123", "Refresh Request  received ");
-
-            Log.i("DBQuery", "userName is == " + userName);
-            Log.i("DBQuery", "taskType is == " + taskType);
-            Log.i("DBQuery", "taskType is == " + project_id);
-            query = "select * from projectHistory where projectId ='" + project_id + "' and parentTaskId != taskId order by taskId ASC";
+              query = "select * from projectHistory where projectId ='" + project_id + "' and parentTaskId != taskId order by taskId ASC";
             Log.d("DBQuery", "query is == " + query);
             projectDetailsBeans = VideoCallDataBase.getDB(context).getProjectHistory(query);
             projectDetailsBeanslist_ForSearch = VideoCallDataBase.getDB(context).getProjectHistory(query);
@@ -141,11 +136,7 @@ public class ProjectHistory extends Activity implements WebServiceInterface, Swi
 
                 public int compare(ProjectDetailsBean lhs, ProjectDetailsBean rhs) {
                     try {
-                        Log.i("DateFormat", "leftside" + lhs.getTaskId());
-                        Log.i("DateFormat", "rightside" + rhs.getTaskId());
-                        //                    date_lhs = dateFormat.parse(lhs.getDateTime());
-                        //                    date_rhs = dateFormat.parse(rhs.getDateTime());
-                        date_lhs = lhs.getTaskId();
+                          date_lhs = lhs.getTaskId();
                         date_rhs = rhs.getTaskId();
                         Log.i("DateFormet", "ListPosition" + projectDetailsBeans.get(1).getTaskId());
                     } catch (Exception e) {
@@ -158,9 +149,7 @@ public class ProjectHistory extends Activity implements WebServiceInterface, Swi
             Collections.sort(projectDetailsBeans, new StringDateComparator());
             Collections.reverse(projectDetailsBeans);
             for (ProjectDetailsBean projectDetailsBean : projectDetailsBeans) {
-                Log.i("DBQuery", "taskId of history " + projectDetailsBean.getTaskId());
-                Log.i("DBQuery", "taskId of history " + projectDetailsBean.getTaskStatus());
-            }
+                }
             buddyArrayAdapter = new TaskArrayAdapter(context, projectDetailsBeans);
             listView.setAdapter(buddyArrayAdapter);
 //            swipeRefreshLayout.setRefreshing(false);
@@ -268,13 +257,7 @@ public class ProjectHistory extends Activity implements WebServiceInterface, Swi
                 if (isFromOracle)
                     addsubtasks.setVisibility(View.GONE);
             }
-           /* if (project_Owner != null && project_Owner.equalsIgnoreCase(Appreference.loginuserdetails.getUsername())) {
-                addsubtasks.setVisibility(View.VISIBLE);
-    //            addnote.setVisibility(View.VISIBLE);
-            } else {
-                addsubtasks.setVisibility(View.INVISIBLE);
-    //            addnote.setVisibility(View.INVISIBLE);
-            }*/
+
             if (project_name != null)
                 active_task.setText(project_name);
             InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -339,10 +322,7 @@ public class ProjectHistory extends Activity implements WebServiceInterface, Swi
                 @Override
                 public void onClick(View v) {
                     check = true;
-                    Log.i("ProjectSpinner", "Fill spin1pos value is" + spin1pos);
-                    Log.i("ProjectSpinner", "Fill spin2pos value is" + spin2pos);
-                    Log.i("ProjectSpinner", "Fill spin3pos value is" + spin3pos);
-                    if (spinner_layout.getVisibility() == View.GONE) {
+                   if (spinner_layout.getVisibility() == View.GONE) {
                         spinner_layout.setVisibility(View.VISIBLE);
                         Search_EditText.setVisibility(View.GONE);
                         listView.setEnabled(false);
@@ -507,10 +487,7 @@ public class ProjectHistory extends Activity implements WebServiceInterface, Swi
                         Log.i("projectHistory", "Inside 3 are selected");
                         if (spinner3.equalsIgnoreCase("Me")) {
                             issue_qry = "select * from projectHistory where (projectId='" + project_id + "') and ( taskStatus='" + spinner2 + "') and( category='" + spinner1 + "') and ( ownerOfTask='" + Appreference.loginuserdetails.getUsername() + "')";
-                            Log.i("projectHistory", spinner1);
-                            Log.i("projectHistory", spinner2);
-                            Log.i("projectHistory", "issue_qry value1111" + issue_qry);
-                        } else {
+                           } else {
                             issue_qry = "select * from projectHistory where (projectId='" + project_id + "') and ( taskStatus='" + spinner2 + "') and( category='" + spinner1 + "') and ( ownerOfTask='" + spy + "')";
                             Log.i("projectHistory", "issue_qry value2222" + issue_qry);
                         }
@@ -521,10 +498,7 @@ public class ProjectHistory extends Activity implements WebServiceInterface, Swi
                             if (!spinner3.equalsIgnoreCase("All")) {
                                 if (spinner3.equalsIgnoreCase("Me")) {
                                     issue_qry = "select * from projectHistory where (projectId='" + project_id + "') and ( ownerOfTask='" + Appreference.loginuserdetails.getUsername() + "')";
-                                    Log.i("projectHistory", spinner1);
-                                    Log.i("projectHistory", spinner2);
-                                    Log.i("projectHistory", "issue_qry value" + issue_qry);
-                                } else {
+                                      } else {
                                     issue_qry = "select * from projectHistory where (projectId='" + project_id + "') and ( ownerOfTask='" + spy + "')";
                                     Log.i("projectHistory", "issue_qry value" + issue_qry);
                                 }
@@ -533,30 +507,21 @@ public class ProjectHistory extends Activity implements WebServiceInterface, Swi
                             if (!spinner3.equalsIgnoreCase("All")) {
                                 if (spinner3.equalsIgnoreCase("Me")) {
                                     issue_qry = "select * from projectHistory where (projectId='" + project_id + "') and ( taskStatus='" + spinner2 + "') and ( ownerOfTask='" + Appreference.loginuserdetails.getUsername() + "')";
-                                    Log.i("projectHistory", spinner1);
-                                    Log.i("projectHistory", spinner2);
-                                    Log.i("projectHistory", "issue_qry value" + issue_qry);
-                                } else {
+                                    } else {
                                     issue_qry = "select * from projectHistory where (projectId='" + project_id + "') and ( taskStatus='" + spinner2 + "') and ( ownerOfTask='" + spy + "')";
                                     Log.i("projectHistory", "issue_qry value" + issue_qry);
                                 }
                             }
                         }
                     } else {
-                        Log.i("projectHistory", "Inside category selected");
-                        Log.i("projectHistory", "Me name is" + Appreference.loginuserdetails.getUsername());
-                        if (spinner2.equalsIgnoreCase("All")) {
+                       if (spinner2.equalsIgnoreCase("All")) {
                             Log.i("projectHistory", "Inside category selected status is unselected");
                             if (spinner3.equalsIgnoreCase("All")) {
                                 issue_qry = "select * from projectHistory where (projectId='" + project_id + "') and ( category='" + spinner1 + "')";
                             } else {
                                 if (spinner3.equalsIgnoreCase("Me")) {
                                     issue_qry = "select * from projectHistory where (projectId='" + project_id + "')and ( category='" + spinner1 + "') and ( ownerOfTask='" + Appreference.loginuserdetails.getUsername() + "')";
-                                    Log.i("projectHistory", spinner1);
-                                    Log.i("projectHistory", spinner2);
-                                    Log.i("projectHistory", "Me name is" + Appreference.loginuserdetails.getUsername());
-                                    Log.i("projectHistory", "issue_qry value" + issue_qry);
-                                } else {
+                                   } else {
                                     issue_qry = "select * from projectHistory where (projectId='" + project_id + "')and ( category='" + spinner1 + "') and ( ownerOfTask='" + spy + "')";
                                     Log.i("projectHistory", "issue_qry value" + issue_qry);
                                 }
@@ -646,15 +611,6 @@ public class ProjectHistory extends Activity implements WebServiceInterface, Swi
                     }, 1000);
 //                    setActiveAdapter();
 
-
-                   /* List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
-                    nameValuePairs.add(new BasicNameValuePair("projectId", project_id));
-                    nameValuePairs.add(new BasicNameValuePair("userId", String.valueOf(Appreference.loginuserdetails.getId())));
-//                        Appreference.jsonRequestSender.getProject(EnumJsonWebservicename.getProject, nameValuePairs, ProjectsFragment.this);
-                    Log.i("ws123", " projectDetailsBean.getOracleProjectId()=========>" + project_id);
-                    Log.i("ws123", " projectDetailsBean.userId()=========>" + String.valueOf(Appreference.loginuserdetails.getId()));
-                    Appreference.jsonRequestSender.getTaskForJobID(EnumJsonWebservicename.getTaskForJobID, nameValuePairs, ProjectsFragment.getInstance());
-//                    showprogress();*/
                 }
             });
             addnote.setOnClickListener(new View.OnClickListener() {
@@ -755,14 +711,6 @@ public class ProjectHistory extends Activity implements WebServiceInterface, Swi
                         if (taskDetailsBean.getTaskStatus() != null && taskDetailsBean.getTaskStatus().equalsIgnoreCase("Template")
                                 || (taskDetailsBean.getTaskStatus() != null && taskDetailsBean.getTaskStatus().equalsIgnoreCase("draft"))
                                 || (taskDetailsBean.getTaskStatus() != null && taskDetailsBean.getTaskStatus().equalsIgnoreCase("Unassigned"))) {
-                            //                    if (!taskDetailsBean.getOwnerOfTask().equalsIgnoreCase(Appreference.loginuserdetails.getUsername())) {
-                            //                        showDialog();
-                            //                        webTaskId = taskDetailsBean.getTaskId();
-                            //                        gettaskwebservice(webTaskId);
-                            //                        check = true;
-                            //
-                            //                    }
-//                            if (taskDetailsBean.getOwnerOfTask().equalsIgnoreCase(Appreference.loginuserdetails.getUsername())) {
                             Log.i("task", String.valueOf(position));
                             if (taskDetailsBean.getTaskName() != null && taskDetailsBean.getTaskName().equalsIgnoreCase("Travel Time")) {
                                 if(Appreference.loginuserdetails!=null && Appreference.loginuserdetails.getRoleId()!=null
@@ -1529,93 +1477,6 @@ public class ProjectHistory extends Activity implements WebServiceInterface, Swi
                 });
 
                 if (projectDetailsBean.getParentTaskId() != null && projectDetailsBean.getTaskId() != null) {
-                   /* if (projectDetailsBean.getParentTaskId().equalsIgnoreCase(projectDetailsBean.getTaskId())) {
-
-                        parent_startdate.setVisibility(View.VISIBLE);
-                        parent_enddate.setVisibility(View.VISIBLE);
-                        task_taker.setVisibility(View.GONE);
-                        task_observer.setVisibility(View.GONE);
-                        remain.setVisibility(View.GONE);
-                        Log.i("ws123", "taskArrayAdapter values taskID---------->" + projectDetailsBean.getTaskId());
-                        Log.i("ws123", "taskArrayAdapter values taskName---------->" + projectDetailsBean.getTaskName());
-                        catagory.setText("Oracle TaskId : " + oracle_taskId);
-//                        catagory.setText("Oracle TaskId : " + projectDetailsBean.getTaskId());
-                        if (projectDetailsBean.getTaskName() != null) {
-                            taskName.setText("Task Name: " + projectDetailsBean.getTaskName());
-                            taskName.setTextColor(Color.BLUE);
-                            viewforparent.setVisibility(View.VISIBLE);
-                        } else {
-                            viewforparent.setVisibility(View.VISIBLE);
-                            taskName.setText("Task Name: " + "New Project");
-                            taskName.setTextColor(Color.BLUE);
-                        }
-                        if (projectDetailsBean.getCompletedPercentage() != null && projectDetailsBean.getCompletedPercentage().equalsIgnoreCase("100")) {
-                            percentage_1.setText(projectDetailsBean.getCompletedPercentage() + "%");
-                            percentage_1.setTextColor(Color.GREEN);
-                        } else if (projectDetailsBean.getCompletedPercentage() != null && !projectDetailsBean.getCompletedPercentage().equalsIgnoreCase(null) && !projectDetailsBean.getCompletedPercentage().equalsIgnoreCase("") && !projectDetailsBean.getCompletedPercentage().equalsIgnoreCase("null") && !projectDetailsBean.getCompletedPercentage().equalsIgnoreCase("(null)")) {
-                            percentage_1.setText(projectDetailsBean.getCompletedPercentage() + "%");
-                            percentage_1.setTextColor(Color.RED);
-                        } else {
-                            percentage_1.setText("0%");
-                            percentage_1.setTextColor(Color.RED);
-                        }
-                        if (projectDetailsBean.getOwnerOfTask() != null) {
-                            if (projectDetailsBean.getTaskStatus() != null && projectDetailsBean.getTaskStatus().equalsIgnoreCase("note")) {
-                                if (projectDetailsBean.getOwnerOfTask().equalsIgnoreCase(Appreference.loginuserdetails.getUsername())) {
-                                    task_giver.setText("Me Giver : Me");
-                                } else {
-                                    if (VideoCallDataBase.getDB(context).getname(projectDetailsBean.getOwnerOfTask()) != null) {
-                                        task_giver.setText("Me Giver : " + VideoCallDataBase.getDB(context).getname(projectDetailsBean.getOwnerOfTask()));
-                                    } else {
-                                        task_giver.setText("Me Giver : " + projectDetailsBean.getOwnerOfTask());
-                                    }
-                                }
-                            } else {
-                                if (projectDetailsBean.getOwnerOfTask().equalsIgnoreCase(Appreference.loginuserdetails.getUsername())) {
-                                    task_giver.setText("Task Giver : Me");
-                                } else {
-                                    if (VideoCallDataBase.getDB(context).getname(projectDetailsBean.getOwnerOfTask()) != null) {
-                                        task_giver.setText("Task Giver : " + VideoCallDataBase.getDB(context).getname(projectDetailsBean.getOwnerOfTask()));
-                                    } else {
-                                        task_giver.setText("Task Giver : " + projectDetailsBean.getOwnerOfTask());
-                                    }
-                                }
-                            }
-
-                        } else {
-                            if (projectDetailsBean.getTaskStatus() != null && projectDetailsBean.getTaskStatus().equalsIgnoreCase("note")) {
-                                task_giver.setText("Me Giver : NA");
-                            } else {
-                                task_giver.setText("Task Giver : NA");
-                            }
-                        }
-                        Log.i("project_details", "projectDetailsBean.getTaskStatus() " + projectDetailsBean.getTaskStatus());
-                        if ((projectDetailsBean.getTaskStatus() != null && projectDetailsBean.getTaskStatus().equalsIgnoreCase("closed")) && (projectDetailsBean.getCompletedPercentage() != null && projectDetailsBean.getCompletedPercentage().equalsIgnoreCase("100"))) {
-                            Log.i("ProjectHistory","projectDetailsBean.getTaskStatus() 1 "+projectDetailsBean.getTaskStatus());
-                            task_status.setText(projectDetailsBean.getTaskStatus());
-                            task_status.setTextColor(getResources().getColor(R.color.green));
-                        } else if (projectDetailsBean.getTaskStatus() != null) {
-                            Log.i("ProjectHistory","projectDetailsBean.getTaskStatus() 2 "+projectDetailsBean.getTaskStatus());
-                            task_status.setText(projectDetailsBean.getTaskStatus());
-                        } else {
-                            Log.i("ProjectHistory","projectDetailsBean.getTaskStatus() 3 "+projectDetailsBean.getTaskStatus());
-                            task_status.setText("NA");
-                        }
-                        Log.i("project_details", "projectDetailsBean getPlannedStartDateTime() " + projectDetailsBean.getPlannedStartDateTime());
-                        if (projectDetailsBean.getPlannedStartDateTime() != null) {
-                            String projectStart_date = UTCToLocalTime(projectDetailsBean.getPlannedStartDateTime().substring(0, 19));
-                            parent_startdate.setText("Task Start date : " + projectStart_date);
-                        } else {
-                            parent_startdate.setText("Task Start date : NA");
-                        }
-                        Log.i("project_details", "projectDetailsBean getPlannedEndDateTime() " + projectDetailsBean.getPlannedEndDateTime());
-                        if (projectDetailsBean.getPlannedEndDateTime() != null) {
-                            String projectEnd_date = UTCToLocalTime(projectDetailsBean.getPlannedEndDateTime().substring(0, 19));
-                            parent_enddate.setText("Task End date : " + projectEnd_date);
-                        } else {
-                            parent_enddate.setText("Task End date : NA");
-                        }
-                    } else{*/
                     task_taker.setVisibility(View.VISIBLE);
                     if (isFromOracle)
                         task_observer.setVisibility(View.GONE);
@@ -1727,7 +1588,7 @@ public class ProjectHistory extends Activity implements WebServiceInterface, Swi
                         task_status.setText(projectDetailsBean.getTaskStatus());
                         task_status.setTextColor(getResources().getColor(R.color.green));
                     } else if (projectDetailsBean.getTaskStatus() != null && projectDetailsBean.getTaskStatus().equalsIgnoreCase("draft")) {
-                        Log.i("ProjectHistory", "projectDetailsBean.getTaskStatus() 7 " + projectDetailsBean.getTaskStatus());
+                        Log.i("draft123", "projectDetailsBean.getTaskStatus() 7 " + projectDetailsBean.getTaskStatus());
 //                        task_status.setText("Template");
                         task_status.setText("Unassigned");
                     }else if (projectDetailsBean.getTaskStatus() != null && projectDetailsBean.getTaskStatus().equalsIgnoreCase("inprogress")) {
@@ -1742,14 +1603,37 @@ public class ProjectHistory extends Activity implements WebServiceInterface, Swi
                         Log.i("ProjectHistory", "projectDetailsBean.getTaskStatus() 8 " + projectDetailsBean.getTaskStatus());
                         task_status.setText(projectDetailsBean.getTaskStatus());
                     } else {
-                        Log.i("ProjectHistory", "projectDetailsBean.getTaskStatus() 9 " + projectDetailsBean.getTaskStatus());
-                        if(projectDetailsBean.getTaskId()!=null && Appreference.old_status.containsKey(projectDetailsBean.getTaskId())){
+                        Log.i("draft123", "projectDetailsBean.getTaskStatus() 9 " + projectDetailsBean.getTaskStatus());
+                        Log.i("draft123", "projectDetailsBean.getTaskId() 9 " + projectDetailsBean.getTaskId());
+                        Log.i("draft123", "Appreference.old_status.get(projectDetailsBean.getTaskId()" + Appreference.old_status.get(projectDetailsBean.getTaskId()));
+                        String status=Appreference.old_status.get(projectDetailsBean.getTaskId());
+                       /* if(projectDetailsBean.getTaskId()!=null && Appreference.old_status.containsKey(projectDetailsBean.getTaskId()) && !status.equalsIgnoreCase("draft")){
                         task_status.setText(Appreference.old_status.get(projectDetailsBean.getTaskId()));
-                        }else {
-                            task_status.setText("NA");
-                        }
+                        }else {*/
+//                            task_status.setText("NA");
+                            int current_status;
+                            String status_info = "select status from projectStatus where projectId='" + projectDetailsBean.getId() + "' and userId='" + Appreference.loginuserdetails.getId() + "' and taskId= '" + projectDetailsBean.getTaskId() + "' and status!='7' and status!= '9' order by id DESC";
+                            ArrayList<String> status_all = VideoCallDataBase.getDB(context).getAllCurrentStatus(status_info);
+                            if (status_all.size() > 0) {
+                                current_status = Integer.parseInt(status_all.get(0));
+                                Log.i("draft123", "project CurrentStatus from DB====>8***********" + current_status);
 
-
+                                if (current_status == 0)
+                                    task_status.setText("Started");
+                                else if (current_status == 1)
+                                    task_status.setText("Hold");
+                                else if (current_status == 2)
+                                    task_status.setText("Resumed");
+                                else if (current_status == 3)
+                                    task_status.setText("Paused");
+                                else if (current_status == 4)
+                                    task_status.setText("Restarted");
+                                else if (current_status == 5)
+                                    task_status.setText("Completed");
+                                else if (current_status == 6)
+                                    task_status.setText("Unassigned");
+                            }
+//                        }
                     }
                     if (projectDetailsBean.getTaskStatus().equalsIgnoreCase("note")) {
                         selectedimage.setBackgroundResource(R.drawable.ic_note_32_2);
