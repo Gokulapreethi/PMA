@@ -2,9 +2,9 @@ package com.ase;
 
 import android.app.Activity;
 import android.app.Dialog;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -43,12 +43,12 @@ import android.widget.NumberPicker;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.ase.Bean.TaskDetailsBean;
+import com.ase.DB.VideoCallDataBase;
 import com.baoyz.swipemenulistview.SwipeMenu;
 import com.baoyz.swipemenulistview.SwipeMenuCreator;
 import com.baoyz.swipemenulistview.SwipeMenuItem;
 import com.baoyz.swipemenulistview.SwipeMenuListView;
-import com.ase.Bean.TaskDetailsBean;
-import com.ase.DB.VideoCallDataBase;
 
 import org.pjsip.pjsua2.CallOpParam;
 import org.pjsip.pjsua2.CallSetting;
@@ -199,20 +199,24 @@ public class TaskTakerDateRequest extends Activity implements View.OnClickListen
         SwipeMenuCreator creator = new SwipeMenuCreator() {
             @Override
             public void create(SwipeMenu menu) {
-                SwipeMenuItem openItem = new SwipeMenuItem(context);
-                // set item background
-                openItem.setBackground(new ColorDrawable(Color.rgb(0xFf,
-                        0x00, 0x00)));
-                // set item width
-                openItem.setWidth(dp2px(90));
-                // set item title
-                openItem.setTitle("Delete");
-                // set item title fontsize
-                openItem.setTitleSize(18);
-                // set item title font color
-                openItem.setTitleColor(Color.WHITE);
-                // add to menu
-                menu.addMenuItem(openItem);
+                try {
+                    SwipeMenuItem openItem = new SwipeMenuItem(context);
+                    // set item background
+                    openItem.setBackground(new ColorDrawable(Color.rgb(0xFf,
+                            0x00, 0x00)));
+                    // set item width
+                    openItem.setWidth(dp2px(90));
+                    // set item title
+                    openItem.setTitle("Delete");
+                    // set item title fontsize
+                    openItem.setTitleSize(18);
+                    // set item title font color
+                    openItem.setTitleColor(Color.WHITE);
+                    // add to menu
+                    menu.addMenuItem(openItem);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
 
             }
         };
@@ -221,8 +225,12 @@ public class TaskTakerDateRequest extends Activity implements View.OnClickListen
         takers_listOfFiles.setOnMenuItemClickListener(new SwipeMenuListView.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(int position, SwipeMenu menu, int index) {
-                mediaList.remove(position);
-                medialistadapter.notifyDataSetChanged();
+                try {
+                    mediaList.remove(position);
+                    medialistadapter.notifyDataSetChanged();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
                 return true;
             }
         });
@@ -231,67 +239,68 @@ public class TaskTakerDateRequest extends Activity implements View.OnClickListen
         takers_listOfFiles.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                TaskDetailsBean taskDetailsBean = mediaList.get(position);
-                if (taskDetailsBean.getMimeType().equalsIgnoreCase("image")) {
-                    Log.i("group123", "icon clicked image");
-                    Intent intent = new Intent(context, FullScreenImage.class);
-                    intent.putExtra("image", taskDetailsBean.getTaskDescription());
-                    context.startActivity(intent);
-                } else if (taskDetailsBean.getMimeType().equalsIgnoreCase("audio")) {
-                    Intent intent = new Intent(context, Audioplayer.class);
-                    intent.putExtra("audio", taskDetailsBean.getTaskDescription());
-                    context.startActivity(intent);
-                } else if (taskDetailsBean.getMimeType().equalsIgnoreCase("video")) {
-                    Log.i("group123", "icon clicked video");
-                    File directory = new File(taskDetailsBean.getTaskDescription());
-                    if (directory.exists()) {
-                        Log.i("update", "video  **" + taskDetailsBean.getTaskDescription());
-                        Intent intent = new Intent(context, VideoPlayer.class);
-                        intent.putExtra("video", taskDetailsBean.getTaskDescription());
+                try {
+                    TaskDetailsBean taskDetailsBean = mediaList.get(position);
+                    if (taskDetailsBean.getMimeType().equalsIgnoreCase("image")) {
+                        Log.i("group123", "icon clicked image");
+                        Intent intent = new Intent(context, FullScreenImage.class);
+                        intent.putExtra("image", taskDetailsBean.getTaskDescription());
                         context.startActivity(intent);
-                    }
-                } else if (taskDetailsBean.getMimeType().equalsIgnoreCase("document")) {
-                    Log.i("update conversation ", "mm file " + taskDetailsBean.getMimeType());
-                    Log.i("update conversation ", "description " + taskDetailsBean.getTaskDescription());
-                    File url = new File(taskDetailsBean.getTaskDescription());
-                    if (url.exists()) {
-                        Uri uri = Uri.fromFile(url);
-                        Intent intent = new Intent(Intent.ACTION_VIEW);
-                        if (url.toString().contains(".doc") || url.toString().contains(".docx")) {
-                            // Word document
-                            intent.setDataAndType(uri, "application/msword");
-                        } else if (url.toString().contains(".pdf")) {
-                            // PDF file
-                            intent.setDataAndType(uri, "application/pdf");
-                        } else if (url.toString().contains(".ppt") || url.toString().contains(".pptx")) {
-                            // Powerpoint file
-                            intent.setDataAndType(uri, "application/vnd.ms-powerpoint");
-                        } else if (url.toString().contains(".xls") || url.toString().contains(".xlsx")) {
-                            // Excel file
-                            intent.setDataAndType(uri, "application/vnd.ms-excel");
-                        } else if (url.toString().contains(".zip") || url.toString().contains(".rar")) {
-                            // WAV audio file
-                            intent.setDataAndType(uri, "application/x-wav");
-                        } else if (url.toString().contains(".rtf")) {
-                            // RTF file
-                            intent.setDataAndType(uri, "application/rtf");
-                        } else if (url.toString().contains(".wav") || url.toString().contains(".mp3")) {
-                            // WAV audio file
-                            intent.setDataAndType(uri, "audio/x-wav");
-                        } else if (url.toString().contains(".gif")) {
-                            // GIF file
-                            intent.setDataAndType(uri, "image/gif");
-                        } else if (url.toString().contains(".jpg") || url.toString().contains(".jpeg") || url.toString().contains(".png")) {
-                            // JPG file
-                            intent.setDataAndType(uri, "image/jpeg");
-                        } else if (url.toString().contains(".txt")) {
-                            // Text file
-                            intent.setDataAndType(uri, "text/plain");
-                        } else if (url.toString().contains(".3gp") || url.toString().contains(".mpg") || url.toString().contains(".mpeg") || url.toString().contains(".mpe") || url.toString().contains(".mp4") || url.toString().contains(".avi")) {
-                            // Video files
-                            intent.setDataAndType(uri, "video");
-                        } else {
-                            //if you want you can also define the intent type for any other file
+                    } else if (taskDetailsBean.getMimeType().equalsIgnoreCase("audio")) {
+                        Intent intent = new Intent(context, Audioplayer.class);
+                        intent.putExtra("audio", taskDetailsBean.getTaskDescription());
+                        context.startActivity(intent);
+                    } else if (taskDetailsBean.getMimeType().equalsIgnoreCase("video")) {
+                        Log.i("group123", "icon clicked video");
+                        File directory = new File(taskDetailsBean.getTaskDescription());
+                        if (directory.exists()) {
+                            Log.i("update", "video  **" + taskDetailsBean.getTaskDescription());
+                            Intent intent = new Intent(context, VideoPlayer.class);
+                            intent.putExtra("video", taskDetailsBean.getTaskDescription());
+                            context.startActivity(intent);
+                        }
+                    } else if (taskDetailsBean.getMimeType().equalsIgnoreCase("document")) {
+                        Log.i("update conversation ", "mm file " + taskDetailsBean.getMimeType());
+                        Log.i("update conversation ", "description " + taskDetailsBean.getTaskDescription());
+                        File url = new File(taskDetailsBean.getTaskDescription());
+                        if (url.exists()) {
+                            Uri uri = Uri.fromFile(url);
+                            Intent intent = new Intent(Intent.ACTION_VIEW);
+                            if (url.toString().contains(".doc") || url.toString().contains(".docx")) {
+                                // Word document
+                                intent.setDataAndType(uri, "application/msword");
+                            } else if (url.toString().contains(".pdf")) {
+                                // PDF file
+                                intent.setDataAndType(uri, "application/pdf");
+                            } else if (url.toString().contains(".ppt") || url.toString().contains(".pptx")) {
+                                // Powerpoint file
+                                intent.setDataAndType(uri, "application/vnd.ms-powerpoint");
+                            } else if (url.toString().contains(".xls") || url.toString().contains(".xlsx")) {
+                                // Excel file
+                                intent.setDataAndType(uri, "application/vnd.ms-excel");
+                            } else if (url.toString().contains(".zip") || url.toString().contains(".rar")) {
+                                // WAV audio file
+                                intent.setDataAndType(uri, "application/x-wav");
+                            } else if (url.toString().contains(".rtf")) {
+                                // RTF file
+                                intent.setDataAndType(uri, "application/rtf");
+                            } else if (url.toString().contains(".wav") || url.toString().contains(".mp3")) {
+                                // WAV audio file
+                                intent.setDataAndType(uri, "audio/x-wav");
+                            } else if (url.toString().contains(".gif")) {
+                                // GIF file
+                                intent.setDataAndType(uri, "image/gif");
+                            } else if (url.toString().contains(".jpg") || url.toString().contains(".jpeg") || url.toString().contains(".png")) {
+                                // JPG file
+                                intent.setDataAndType(uri, "image/jpeg");
+                            } else if (url.toString().contains(".txt")) {
+                                // Text file
+                                intent.setDataAndType(uri, "text/plain");
+                            } else if (url.toString().contains(".3gp") || url.toString().contains(".mpg") || url.toString().contains(".mpeg") || url.toString().contains(".mpe") || url.toString().contains(".mp4") || url.toString().contains(".avi")) {
+                                // Video files
+                                intent.setDataAndType(uri, "video");
+                            } else {
+                                //if you want you can also define the intent type for any other file
 
                             //additionally use else clause below, to manage other unknown extensions
                             //in this case, Android will show all applications installed on the device
@@ -306,22 +315,25 @@ public class TaskTakerDateRequest extends Activity implements View.OnClickListen
                             Log.e("error", "" + e);
                         }
 
-                    } else {
-                        Log.i("can't open", "file");
-                        Toast.makeText(context, "can't open", Toast.LENGTH_SHORT).show();
+                        } else {
+                            Log.i("can't open", "file");
+                            Toast.makeText(context, "can't open", Toast.LENGTH_SHORT).show();
+                        }
+                    } else if (taskDetailsBean.getMimeType() != null && taskDetailsBean.getMimeType().equalsIgnoreCase("map")) {
+                        if (taskDetailsBean.getMimeType() != null && taskDetailsBean.getMimeType().equalsIgnoreCase("map")) {
+                            Log.i("Location", "icon clicked map");
+                            Log.d("Location", "map " + taskDetailsBean.getTaskDescription());
+                            Log.d("Location", "map " + taskDetailsBean.getMimeType());
+                            Bundle bundle = new Bundle();
+                            bundle.putString("map", taskDetailsBean.getTaskDescription());
+                            bundle.putString("viewmap", "location");
+                            Intent intent = new Intent(context, LocationFind.class);
+                            intent.putExtras(bundle);
+                            context.startActivity(intent);
+                        }
                     }
-                } else if (taskDetailsBean.getMimeType() != null && taskDetailsBean.getMimeType().equalsIgnoreCase("map")) {
-                    if (taskDetailsBean.getMimeType() != null && taskDetailsBean.getMimeType().equalsIgnoreCase("map")) {
-                        Log.i("Location", "icon clicked map");
-                        Log.d("Location", "map " + taskDetailsBean.getTaskDescription());
-                        Log.d("Location", "map " + taskDetailsBean.getMimeType());
-                        Bundle bundle = new Bundle();
-                        bundle.putString("map", taskDetailsBean.getTaskDescription());
-                        bundle.putString("viewmap", "location");
-                        Intent intent = new Intent(context, LocationFind.class);
-                        intent.putExtras(bundle);
-                        context.startActivity(intent);
-                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
 
             }
@@ -363,22 +375,30 @@ public class TaskTakerDateRequest extends Activity implements View.OnClickListen
         reminder_freq2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-                inputMethodManager.hideSoftInputFromWindow(reminder_freq2.getWindowToken(), 0);
-                Intent i = new Intent(TaskTakerDateRequest.this, ReminderFrequencySelection.class);
-                i.putExtra("TimeFrequency", 100);
-                startActivityForResult(i, 100);
+                try {
+                    InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                    inputMethodManager.hideSoftInputFromWindow(reminder_freq2.getWindowToken(), 0);
+                    Intent i = new Intent(TaskTakerDateRequest.this, ReminderFrequencySelection.class);
+                    i.putExtra("TimeFrequency", 100);
+                    startActivityForResult(i, 100);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
         });
 
         Reminder_freq_local.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-                inputMethodManager.hideSoftInputFromWindow(Reminder_freq_local.getWindowToken(), 0);
-                Intent i = new Intent(TaskTakerDateRequest.this, ReminderFrequencyLocal.class);
-                i.putExtra("TimeFrequency", 100);
-                startActivityForResult(i, 100);
+                try {
+                    InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                    inputMethodManager.hideSoftInputFromWindow(Reminder_freq_local.getWindowToken(), 0);
+                    Intent i = new Intent(TaskTakerDateRequest.this, ReminderFrequencyLocal.class);
+                    i.putExtra("TimeFrequency", 100);
+                    startActivityForResult(i, 100);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
         });
 
@@ -715,7 +735,9 @@ public class TaskTakerDateRequest extends Activity implements View.OnClickListen
         isRemainderRequired = getIntent().getStringExtra("isRemainderRequired");
         username = getIntent().getStringExtra("username");
         planned_EndDate = ch_enddate;
+
         preEndDate = ch_enddate;
+
 
         Log.i("TaskDateChangeRequest", "isRemainderRequired 111 " + isRemainderRequired);
         Log.i("TaskDateChangeRequest", "username 111 " + username);
@@ -1028,7 +1050,7 @@ public class TaskTakerDateRequest extends Activity implements View.OnClickListen
                     File selected_file = new File(strIPath);
                     int length = (int) selected_file.length() / 1048576;
                     if (length <= 2) {
-                        Bitmap img = null;
+                        Bitmap img;
                         img = convertpathToBitmap(strIPath);
 
                         if (img != null) {
@@ -1038,7 +1060,7 @@ public class TaskTakerDateRequest extends Activity implements View.OnClickListen
                                     + "/High Message/" + getFileName() + ".jpg";
 
                             BufferedOutputStream stream;
-                            Bitmap bitmap = null;
+                            Bitmap bitmap;
                             try {
                                 bitmap = convertpathToBitmap(strIPath);
                                 if (bitmap != null) {
@@ -1052,7 +1074,6 @@ public class TaskTakerDateRequest extends Activity implements View.OnClickListen
                                     bitmap = Bitmap.createScaledBitmap(
                                             bitmap, 200, 150, false);
                                 }
-                                File imageFile = new File(strIPath);
                                 if (selected_file.exists()) {
                                     Log.i("imagefile", "image");
                                     test = "image";
@@ -1078,28 +1099,32 @@ public class TaskTakerDateRequest extends Activity implements View.OnClickListen
                     }
                 }
             } else if (requestCode == 31) {
-                if (data != null) {
-                    Uri selectedImageUri = data.getData();
-                    final int takeFlags = data.getFlags()
-                            & (Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
-                    getContentResolver().takePersistableUriPermission(
-                            selectedImageUri, takeFlags);
-                    strIPath = Environment.getExternalStorageDirectory()
-                            + "/High Message/"
-                            + getFileName() + ".jpg";
+                try {
+                    if (data != null) {
+                        Uri selectedImageUri = data.getData();
+                        final int takeFlags = data.getFlags()
+                                & (Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+                        getContentResolver().takePersistableUriPermission(
+                                selectedImageUri, takeFlags);
+                        strIPath = Environment.getExternalStorageDirectory()
+                                + "/High Message/"
+                                + getFileName() + ".jpg";
 
-                    File selected_file = new File(strIPath);
-                    int length = (int) selected_file.length() / 1048576;
-                    Log.d("task", "........ size is------------->" + length);
-                    Log.e("update", "value  " + strIPath);
-                    Log.e("update", "value  " + selectedImageUri);
-                    Log.e("update", "value  " + getFileName());
-                    if (length <= 2) {
-                        new bitmaploader().execute(selectedImageUri);
-                    } else {
-                        showToast("Kindly Select someother image,this image is too large");
+                        File selected_file = new File(strIPath);
+                        int length = (int) selected_file.length() / 1048576;
+                        Log.d("task", "........ size is------------->" + length);
+                        Log.e("update", "value  " + strIPath);
+                        Log.e("update", "value  " + selectedImageUri);
+                        Log.e("update", "value  " + getFileName());
+                        if (length <= 2) {
+                            new bitmaploader().execute(selectedImageUri);
+                        } else {
+                            showToast("Kindly Select someother image,this image is too large");
+                        }
+
                     }
-
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
             } else if (requestCode == 32) {
                 if (data != null) {
@@ -1123,9 +1148,7 @@ public class TaskTakerDateRequest extends Activity implements View.OnClickListen
                         FileOutputStream fout = new FileOutputStream(strIPath);
                         straam.flush();
                         straam.close();
-                        straam = null;
                         fin.close();
-                        fin = null;
                         fout.write(bytes);
                         fout.flush();
                         fout.close();
@@ -1150,39 +1173,48 @@ public class TaskTakerDateRequest extends Activity implements View.OnClickListen
                     }
                 }
             } else if (requestCode == 423) {
-                strIPath = data.getStringExtra("path");
-                Log.i("Task", "path" + strIPath);
-                File new_file = new File(strIPath);
-                test = "image";
+                try {
+                    strIPath = data.getStringExtra("path");
+                    Log.i("Task", "path" + strIPath);
+                    test = "image";
                /* MediaListBean uIbean = new MediaListBean();
                 uIbean.setMediaType("image");
                 uIbean.setMediaPath(strIPath);*/
-                TaskDetailsBean taskBean = new TaskDetailsBean();
-                taskBean.setMimeType("image");
-                taskBean.setTaskDescription(strIPath);
-                mediaList.add(taskBean);
-                medialistadapter.notifyDataSetChanged();
-                Log.i("AAAA", "onactivity result $$$$$$$$$$$$$$$" + strIPath);
-            } else if (requestCode == 132) {
-                strIPath = data.getStringExtra("filePath");
-                Log.i("task1", "onactivity result $$$$$$$$$$$$$$$" + strIPath);
-                File new_file = new File(strIPath);
-                if (new_file.exists()) {
-                    Log.i("task1", "onactivity result " + strIPath);
-                    test = "image";
-                   /* MediaListBean uIbean = new MediaListBean();
-                    uIbean.setMediaType("image");
-                    uIbean.setMediaPath(strIPath);*/
                     TaskDetailsBean taskBean = new TaskDetailsBean();
                     taskBean.setMimeType("image");
                     taskBean.setTaskDescription(strIPath);
                     mediaList.add(taskBean);
                     medialistadapter.notifyDataSetChanged();
+                    Log.i("AAAA", "onactivity result $$$$$$$$$$$$$$$" + strIPath);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            } else if (requestCode == 132) {
+                try {
+                    strIPath = data.getStringExtra("filePath");
+                    Log.i("task1", "onactivity result $$$$$$$$$$$$$$$" + strIPath);
+                    File new_file = new File(strIPath);
+                    if (new_file.exists()) {
+                        Log.i("task1", "onactivity result " + strIPath);
+                        test = "image";
+                       /* MediaListBean uIbean = new MediaListBean();
+                        uIbean.setMediaType("image");
+                        uIbean.setMediaPath(strIPath);*/
+                        TaskDetailsBean taskBean = new TaskDetailsBean();
+                        taskBean.setMimeType("image");
+                        taskBean.setTaskDescription(strIPath);
+                        mediaList.add(taskBean);
+                        medialistadapter.notifyDataSetChanged();
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
             } else if (requestCode == 333) {
-                Log.d("filePath", data.getStringExtra("taskFileExt"));
-                strIPath = data.getStringExtra("taskFileExt");
-                test = "audio";
+
+                try {
+                    Log.d("filePath", data.getStringExtra("taskFileExt"));
+                    strIPath = data.getStringExtra("taskFileExt");
+                    test = "audio";
                /* MediaListBean uIbean = new MediaListBean();
                 uIbean.setMediaType("audio");
                 uIbean.setMediaPath(strIPath);*/
@@ -1193,32 +1225,35 @@ public class TaskTakerDateRequest extends Activity implements View.OnClickListen
                 mediaList.add(taskBean);
                 medialistadapter.notifyDataSetChanged();
 //                seekBar.setProgress(0);
-                MediaMetadataRetriever mmr = new MediaMetadataRetriever();
-                mmr.setDataSource(strIPath);
-                String duration = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION);
-                mmr.release();
-                String min, sec;
-                min = String.valueOf(TimeUnit.MILLISECONDS.toMinutes(Long.parseLong(duration)));
-                sec = String.valueOf(TimeUnit.MILLISECONDS.toSeconds(Long.parseLong(duration)) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(Long.parseLong(duration))));
-                if (Integer.parseInt(min) < 10) {
-                    min = 0 + String.valueOf(min);
-                }
-                if (Integer.parseInt(sec) < 10) {
-                    sec = 0 + String.valueOf(sec);
-                }
+                    MediaMetadataRetriever mmr = new MediaMetadataRetriever();
+                    mmr.setDataSource(strIPath);
+//                    String duration = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION);
+                    mmr.release();
+//                    String min, sec;
+//                    min = String.valueOf(TimeUnit.MILLISECONDS.toMinutes(Long.parseLong(duration)));
+//                    sec = String.valueOf(TimeUnit.MILLISECONDS.toSeconds(Long.parseLong(duration)) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(Long.parseLong(duration))));
+//                    if (Integer.parseInt(min) < 10) {
+//                        min = 0 + String.valueOf(min);
+//                    }
+//                    if (Integer.parseInt(sec) < 10) {
+//                        sec = 0 + String.valueOf(sec);
+//                    }
 //                buddyName.setText(min + ":" + sec);
+                } catch (IllegalArgumentException e) {
+                    e.printStackTrace();
+                }
 
             } else if (requestCode == 55) {
 
-                filePath = data.getStringExtra("fileExt");
-                String fileName = data.getStringExtra("fileName");
-                strIPath = data.getStringExtra("filePath");
+                try {
+                    filePath = data.getStringExtra("fileExt");
+                    strIPath = data.getStringExtra("filePath");
 //                    filePath = fileName.split(".")[1];
 //                    fileExt=fileExt1.substring(fileExt1.lastIndexOf(1));
-                Log.i("file", "fileExt" + strIPath);
-                Log.i("file", "fm--->" + filePath);
+                    Log.i("file", "fileExt" + strIPath);
+                    Log.i("file", "fm--->" + filePath);
 //                Log.i("filename", "fm--->" + fileName);
-                Log.i("file", "fm--->" + strIPath);
+                    Log.i("file", "fm--->" + strIPath);
 
 //                docfileWebService(filePath);
 //                    strIPath = filePath;
@@ -1226,28 +1261,50 @@ public class TaskTakerDateRequest extends Activity implements View.OnClickListen
                 uIbean.setMediaType("doc");
                 uIbean.setMediaPath(strIPath);
                 uIbean.setExt(filePath);*/
-                TaskDetailsBean taskBean = new TaskDetailsBean();
-                taskBean.setMimeType("document");
-                taskBean.setTaskDescription(strIPath);
-                Log.i("mp", "mpath" + strIPath);
-                mediaList.add(taskBean);
-                medialistadapter.notifyDataSetChanged();
+                    File file = new File(strIPath);
+
+                    if (file.exists()) {
+
+                        long fileSizeInBytes = file.length();   // Get length of file in bytes
+//                                long fileSizeInKB = ; // Convert the bytes to Kilobytes (1 KB = 1024 Bytes)
+                        long fileSizeInMB = (fileSizeInBytes / 1024 )/ 1024;    // Convert the KB to MegaBytes (1 MB = 1024 KBytes)
+                        if (fileSizeInMB < 10) {
+                        TaskDetailsBean taskBean = new TaskDetailsBean();
+                        taskBean.setMimeType("document");
+                        taskBean.setTaskDescription(strIPath);
+                        Log.i("mp", "mpath" + strIPath);
+                        mediaList.add(taskBean);
+                        medialistadapter.notifyDataSetChanged();
+                    }  else {
+                            Toast.makeText(context,"Please Select Less then 10 Mb file ",Toast.LENGTH_SHORT).show();
+                        }
+
+                    } else {
+                        Toast.makeText(getApplicationContext(), "File does not exists!", Toast.LENGTH_SHORT).show();
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             } else if (requestCode == 111) {
-                strIPath = data.getStringExtra("filePath");
-                Log.i("Avideo", "New activity ************* : " + strIPath);
-                File new_file = new File(strIPath);
-                if (new_file.exists()) {
-                    test = "video";
-                  /*  MediaListBean uIbean = new MediaListBean();
-                    uIbean.setMediaType("video");
-                    uIbean.setMediaPath(strIPath);*/
-                    TaskDetailsBean taskBean = new TaskDetailsBean();
-                    taskBean.setMimeType("video");
-                    taskBean.setTaskDescription(strIPath);
-                    Log.e("update", "value" + taskBean.getTaskDescription());
-                    Log.i("mp", "mpath" + strIPath);
-                    mediaList.add(taskBean);
-                    medialistadapter.notifyDataSetChanged();
+                try {
+                    strIPath = data.getStringExtra("filePath");
+                    Log.i("Avideo", "New activity ************* : " + strIPath);
+                    File new_file = new File(strIPath);
+                    if (new_file.exists()) {
+                        test = "video";
+                      /*  MediaListBean uIbean = new MediaListBean();
+                        uIbean.setMediaType("video");
+                        uIbean.setMediaPath(strIPath);*/
+                        TaskDetailsBean taskBean = new TaskDetailsBean();
+                        taskBean.setMimeType("video");
+                        taskBean.setTaskDescription(strIPath);
+                        Log.e("update", "value" + taskBean.getTaskDescription());
+                        Log.i("mp", "mpath" + strIPath);
+                        mediaList.add(taskBean);
+                        medialistadapter.notifyDataSetChanged();
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
             } else if (requestCode == 33) {
                 if (data != null) {
@@ -1283,13 +1340,10 @@ public class TaskTakerDateRequest extends Activity implements View.OnClickListen
                             FileOutputStream fout = new FileOutputStream(strIPath);
                             straam.flush();
                             straam.close();
-                            straam = null;
                             fin.close();
-                            fin = null;
                             fout.write(bytes);
                             fout.flush();
                             fout.close();
-                            fout = null;
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
@@ -1309,26 +1363,35 @@ public class TaskTakerDateRequest extends Activity implements View.OnClickListen
                     ImageView.setImageBitmap(bMap);
                 }*/
             } else if (requestCode == 888) {
-                Log.d("latitude", data.getStringExtra("loc_latitude"));
-                Location = data.getStringExtra("loc_latitude");
-                Log.i("location", "loc_latitude " + Location);
-                Log.i("update", "extension");
-                TaskDetailsBean taskBean = new TaskDetailsBean();
-                taskBean.setMimeType("map");
-                taskBean.setTaskDescription(Location);
-                Log.e("update", "value" + taskBean.getTaskDescription());
-                Log.i("update", "location" + Location);
-                mediaList.add(taskBean);
-                medialistadapter.notifyDataSetChanged();
+
+                try {
+                    Log.d("latitude", data.getStringExtra("loc_latitude"));
+                    Location = data.getStringExtra("loc_latitude");
+                    Log.i("location", "loc_latitude " + Location);
+                    Log.i("update", "extension");
+                    TaskDetailsBean taskBean = new TaskDetailsBean();
+                    taskBean.setMimeType("map");
+                    taskBean.setTaskDescription(Location);
+                    Log.e("update", "value" + taskBean.getTaskDescription());
+                    Log.i("update", "location" + Location);
+                    mediaList.add(taskBean);
+                    medialistadapter.notifyDataSetChanged();
 //                String sig_id = Utility.getSessionID();
 //                sendMessage(Location, null, "map", null, null, sig_id);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             } else if (requestCode == 100) {
-                String s = data.getStringExtra("TimeFrequency");
-                Log.i("time", "frequency" + s);
-                if (getResources().getString(R.string.TASKNOTIFICATION_FROM_SERVER).equalsIgnoreCase("0")) {
-                    Reminder_freq_local.setText(s);
-                } else {
-                    reminder_freq2.setText(s);
+                try {
+                    String s = data.getStringExtra("TimeFrequency");
+                    Log.i("time", "frequency" + s);
+                    if (getResources().getString(R.string.TASKNOTIFICATION_FROM_SERVER).equalsIgnoreCase("0")) {
+                        Reminder_freq_local.setText(s);
+                    } else {
+                        reminder_freq2.setText(s);
+                    }
+                } catch (Resources.NotFoundException e) {
+                    e.printStackTrace();
                 }
             }
         }
@@ -1336,16 +1399,26 @@ public class TaskTakerDateRequest extends Activity implements View.OnClickListen
 
     @Override
     public void onClick(View v) {
-        if (v.getId() == start_date1.getId()) {
-//            showdatetime_dialog(1);
-        } else if (v.getId() == end_date1.getId()) {
-            if (start_date1.getText().toString().length() > 0) {
-                showdatetime_dialog(2);
-            } else
-                Toast.makeText(context, context.getString(R.string.kindly_set_Starttime),
-                        Toast.LENGTH_LONG).show();
-        } else if (v.getId() == reminder_date1.getId()) {
-            showdatetime_dialog(3);
+        SimpleDateFormat simpleDateFormat_1;
+        String curr_date;
+        try {
+            simpleDateFormat_1 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            curr_date = simpleDateFormat_1.format(new Date());
+//            Log.d("StartDate  " ," current date is  "+ simpleDateFormat_1.parse(curr_date) + " db Date == "+ simpleDateFormat_1.parse(start_date1.getText().toString()));
+
+            if (v.getId() == start_date1.getId() && simpleDateFormat_1.parse(curr_date).before(simpleDateFormat_1.parse(start_date1.getText().toString()))) {
+                showdatetime_dialog(1);
+            } else if (v.getId() == end_date1.getId()) {
+                if (start_date1.getText().toString().length() > 0) {
+                    showdatetime_dialog(2);
+                } else
+                    Toast.makeText(context, context.getString(R.string.kindly_set_Starttime),
+                            Toast.LENGTH_LONG).show();
+            } else if (v.getId() == reminder_date1.getId()) {
+                showdatetime_dialog(3);
+            }
+        } catch (ParseException e) {
+            e.printStackTrace();
         }
     }
 
@@ -1359,7 +1432,7 @@ public class TaskTakerDateRequest extends Activity implements View.OnClickListen
                 super.onPostExecute(result);
                 Log.d("image", "came to post execute for image");
 
-                Bitmap img = null;
+                Bitmap img;
                 if (strIPath != null)
                     img = convertpathToBitmap(strIPath);
 
@@ -1392,7 +1465,7 @@ public class TaskTakerDateRequest extends Activity implements View.OnClickListen
 
             try {
                 super.onPreExecute();
-                ProgressDialog dialog = new ProgressDialog(context);
+//                ProgressDialog dialog = new ProgressDialog(context);
 //                callDisp.showprogress(dialog, context);
             } catch (Exception e) {
                 // TODO Auto-generated catch block
@@ -1422,13 +1495,10 @@ public class TaskTakerDateRequest extends Activity implements View.OnClickListen
                     FileOutputStream fout = new FileOutputStream(strIPath);
                     straam.flush();
                     straam.close();
-                    straam = null;
                     fin.close();
-                    fin = null;
                     fout.write(bytes);
                     fout.flush();
                     fout.close();
-                    fout = null;
                 }
             } catch (Exception e) {
                 /*if (AppReference.isWriteInFile)
@@ -1485,7 +1555,7 @@ public class TaskTakerDateRequest extends Activity implements View.OnClickListen
             minutePicker.setWrapSelectorWheel(true);
             // ArrayList<String> displayedValues = new ArrayList<String>();
             String[] sdisplayedValues = {"00", "01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30", "31", "32", "33", "34", "35", "36", "37", "38", "39", "40", "41", "42", "43", "44", "45", "46", "47", "48", "49", "50", "51", "52", "53", "54", "55", "56", "57", "58", "59"};
-            List<String> ampmValues = new ArrayList<String>();
+            //noinspection UnusedAssignment
             String[] am_pm = {"AM", "PM", "AM", "PM"};
             // for (int i = 0; i < 60; i += 15) {
             // displayedValues.add(String.format("%02d", i));
@@ -1512,7 +1582,6 @@ public class TaskTakerDateRequest extends Activity implements View.OnClickListen
                 am_pmPicker.setMinValue(0);
                 am_pmPicker.setMaxValue(3);
                 am_pmPicker.setWrapSelectorWheel(true);
-                int am = 0;
                 am_pmPicker.setDisplayedValues(am_pm);
             }
             if (startOrEnd == 1) {
@@ -1640,13 +1709,14 @@ public class TaskTakerDateRequest extends Activity implements View.OnClickListen
 //                hourPicker.setValue(dd);
             } else if (startOrEnd == 2) {
                 String[] values1 = datePicker.getDisplayedValues();
-                String end_hour = end_date1.getText().toString();
+                String end_hour = Appreference.ChangeOriginalPattern(true, end_date1.getText().toString(), Appreference.getDeviceDatePattern(context));
                 end_hour = end_hour.split(" ")[1];
                 Log.i("end", "en_hour" + end_hour);
                 String en_date = end_date1.getText().toString();
-                en_date = en_date.split(" ")[0];
+
+//                en_date = en_date.split(" ")[0];
                 if (android.text.format.DateFormat.is24HourFormat(context)) {
-                    end_hour = end_date1.getText().toString();
+                    end_hour = Appreference.ChangeOriginalPattern(true, end_date1.getText().toString(), Appreference.getDeviceDatePattern(context));
                     en_date = end_date1.getText().toString();
                     Log.i("TaskDateUpdate", "end_date1 click event 20 " + end_hour + "   " + en_date);
                     end_hour = end_hour.split(" ")[1];
@@ -1755,8 +1825,8 @@ public class TaskTakerDateRequest extends Activity implements View.OnClickListen
             } else if (startOrEnd == 3) {
                 Log.i("TaskDateUpdate", "reminder_date1 click event 3 ");
                 String[] values1 = datePicker.getDisplayedValues();
-                String re_hour = "";
-                String re_date = "";
+                String re_hour;
+                String re_date;
                 if (android.text.format.DateFormat.is24HourFormat(context)) {
                     re_hour = Appreference.ChangeOriginalPattern(true, reminder_date1.getText().toString(), datepattern);
                     re_date = Appreference.ChangeOriginalPattern(true, reminder_date1.getText().toString(), datepattern);
@@ -1914,16 +1984,8 @@ public class TaskTakerDateRequest extends Activity implements View.OnClickListen
 //            }
             // if(rightNow.get(Calendar.MINUTE))
 
-            int minute = rightNow.get(Calendar.MINUTE);
-            int nextMinute = 0;
-            if (minute >= 45 && minute <= 59)
-                nextMinute = 3;
-            else if (minute >= 30)
-                nextMinute = 2;
-            else if (minute >= 15)
-                nextMinute = 1;
-            else if (minute > 0 && minute < 15)
-                nextMinute = 0;
+//            int minute = rightNow.get(Calendar.MINUTE);
+
 
             if (startOrEnd == 1) {
                 String st_min = start_date1.getText().toString();
@@ -1934,7 +1996,7 @@ public class TaskTakerDateRequest extends Activity implements View.OnClickListen
                 minutePicker.setValue(min);
 //            } else if ((startOrEnd == 1 && startTimeSet) || !endTimeSet) {
             } else if (startOrEnd == 2) {
-                String en_min = end_date1.getText().toString();
+                String en_min = Appreference.ChangeOriginalPattern(true, end_date1.getText().toString(), Appreference.getDeviceDatePattern(context));
                 en_min = en_min.split(" ")[1];
                 Log.i("end", "en_min" + en_min);
                 int enmin = Integer.parseInt(en_min.split(":")[1]);
@@ -1957,14 +2019,12 @@ public class TaskTakerDateRequest extends Activity implements View.OnClickListen
 
                 @Override
                 public void onClick(View v) {
-                    String startDATE, endDate = null;
                     String[] values1 = datePicker.getDisplayedValues();
                     String[] values2 = hourPicker.getDisplayedValues();
                     String[] values3 = minutePicker.getDisplayedValues();
                     String[] values4 = am_pmPicker.getDisplayedValues();
-                    String tdystr = values1[datePicker.getValue()];
+                    String tdystr;
                     int dateposition = datePicker.getValue();
-                    int hourposition = hourPicker.getValue();
                     if (values1[datePicker.getValue()]
                             .equalsIgnoreCase("today")) {
                         tdystr = today;
@@ -1986,14 +2046,13 @@ public class TaskTakerDateRequest extends Activity implements View.OnClickListen
                                 + values3[minutePicker.getValue()];
                     }
                     // int month = dp.getMonth() + 1;
-                    String day = values3[minutePicker.getValue()];// String.valueOf(tp.getCurrentMinute());
                     // if (day.length() == 1) {
                     // day = "0" + day;
                     // }
                     String strDateTime = values2[hourPicker.getValue()] + ":"
                             + values3[minutePicker.getValue()];// tp.getCurrentHour()
                     // + ":" + day;
-                    String tm = null;
+                    String tm;
 
                     SimpleDateFormat time = new SimpleDateFormat("HH:mm");
                     tm = time.format(new Date());
@@ -2071,7 +2130,7 @@ public class TaskTakerDateRequest extends Activity implements View.OnClickListen
                         //        ampm = values4[am_pmPicker.getValue()];
                         String strfromdate = Appreference.setDateTime(true, start_date1.getText().toString());
                         String strfromday = strfromdate.split(" ")[0];
-                        DateFormat selctedDateformate = null;
+                        DateFormat selctedDateformate;
                         Date date = null;
                         if (!android.text.format.DateFormat.is24HourFormat(context)) {
                             selctedDateformate = new SimpleDateFormat("MMM dd yyyy hh : mm a");
@@ -2093,7 +2152,6 @@ public class TaskTakerDateRequest extends Activity implements View.OnClickListen
 //                        String strendmonth = strenddate.split("-")[1];
 //                        int strendmonth1 = Integer.parseInt(strendmonth);
                         String strendday = strenddate.split(" ")[0];
-                        int strendday1 = Integer.parseInt(strendday.split("-")[2]);
                         if (strfromday.compareTo(strendday) <= 0) {
                             if (!android.text.format.DateFormat.is24HourFormat(context)) {
                                 if (CheckReminderIsValid(
@@ -2104,7 +2162,7 @@ public class TaskTakerDateRequest extends Activity implements View.OnClickListen
                                     } else {
                                         start_date1.setText(Appreference.setDateTime(false, strenddate));
                                     }
-                                    String startdate2 = "";
+                                    String startdate2;
                                     if (android.text.format.DateFormat.is24HourFormat(context)) {
                                         startdate2 = start_date1.getText().toString();
                                     } else {
@@ -2172,7 +2230,7 @@ public class TaskTakerDateRequest extends Activity implements View.OnClickListen
                                         start_date1.setText(Appreference.ChangeDevicePattern(false, Appreference.setDateTime(false, strenddate), datepattern));
                                     }
 //                                    start_date1.setText(strenddate);
-                                    String startdate2 = "";
+                                    String startdate2;
                                     if (android.text.format.DateFormat.is24HourFormat(context)) {
                                         startdate2 = start_date1.getText().toString();
                                     } else {
@@ -2233,7 +2291,7 @@ public class TaskTakerDateRequest extends Activity implements View.OnClickListen
                             Toast.makeText(getApplicationContext(), "Kindly select future date", Toast.LENGTH_LONG).show();
                         }
                     } else if (startOrEnd == 2) {
-                        String startrem = "";
+                        String startrem;
 //                        String startrem = start_date1.getText().toString();
                         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
                         if (android.text.format.DateFormat.is24HourFormat(context)) {
@@ -2244,7 +2302,6 @@ public class TaskTakerDateRequest extends Activity implements View.OnClickListen
                             startrem = Appreference.setDateTime(false, sdf.format(new Date()));
                         }
                         Log.i("TaskTakerDateRequest", "startrem1 value is" + startrem);
-                        String startampm = checkAmorPmfunction(startrem);  // am/pm
                         Log.i("currentTime", "startrem " + startrem);
                         String startrem1 = startrem.split(":")[0];  // yyyy-mm-dd hh
                         String starttime = startrem1.split(" ")[1] + ":" + startrem.split(":")[1]; // hh:mm
@@ -2306,7 +2363,7 @@ public class TaskTakerDateRequest extends Activity implements View.OnClickListen
 //                                .getValue()].equalsIgnoreCase("pm"))
 //                                || (!strDATE.equals(values1[datePicker
 //                                .getValue()]))) {
-                        String strfromdate = "", strcurrdate_1 = "", strcurrday_1 = "";
+                        String strfromdate;
 
                         if (android.text.format.DateFormat.is24HourFormat(context)) {
                             strfromdate = Appreference.ChangeOriginalPattern(true, start_date1.getText().toString(), datepattern);
@@ -2323,7 +2380,7 @@ public class TaskTakerDateRequest extends Activity implements View.OnClickListen
                         Log.i("schedule", "strfromday-->" + strfromday1);
                         Log.i("schedule", "toas-->" + toas);
 
-                        DateFormat selctedDateformate = null;
+                        DateFormat selctedDateformate;
                         Date date = null;
 //                        try {
 //                            date = selctedDateformate.parse(yyyy + " " + toas);
@@ -2348,24 +2405,32 @@ public class TaskTakerDateRequest extends Activity implements View.OnClickListen
                         SimpleDateFormat day1 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
                         String strenddate = day1.format(date);
 
+//                        String strendday = strenddate.split(" ")[0];
+//                        int strendday1 = Integer.parseInt(strendday.split("-")[2]);
+//                        Log.i("schedule", "strendday1--> " + strendday1);
+                        Date cur_date = new Date();
+                        String Current_Time;
+                        Current_Time = day1.format(cur_date);
+
                         String strendday = strenddate.split(" ")[0];
                         int strendday1 = Integer.parseInt(strendday.split("-")[2]);
-                        Log.i("schedule", "strendday1--> " + strendday1);
+                        Log.i("schedule", "strfromday-->" + strendday1);
+                        if (Current_Time.compareTo(strenddate) < 0) {
+                            if (strfromday.compareTo(strendday) <= 0) {
+                                if (!android.text.format.DateFormat.is24HourFormat(context)) {
+                                    if (CheckReminderIsValid(
+                                            values4[am_pmPicker.getValue()],
+                                            dateposition, enTime, starttime, true)) {
 
-                        if (strfromday.compareTo(strendday) <= 0) {
-                            if (!android.text.format.DateFormat.is24HourFormat(context)) {
-                                if (CheckReminderIsValid(
-                                        values4[am_pmPicker.getValue()],
-                                        dateposition, enTime, starttime, true)) {
-
-                                    Log.i("schedule", "entry if");
-                                    planned_EndDate = strenddate;
-                                    Log.i("End", "planned_EndDate " + planned_EndDate);
-                                    if (android.text.format.DateFormat.is24HourFormat(context)) {
-                                        end_date1.setText(Appreference.ChangeDevicePattern(true, strenddate, datepattern));
-                                    } else {
-                                        end_date1.setText(Appreference.ChangeDevicePattern(false, Appreference.setDateTime(false, strenddate), datepattern));
-                                    }
+                                        Log.i("schedule", "entry if");
+                                        Log.i("End", "Date is " + strenddate);
+                                        planned_EndDate = strenddate;
+                                        Log.i("End", "planned_EndDate " + planned_EndDate);
+                                        if (android.text.format.DateFormat.is24HourFormat(context)) {
+                                            end_date1.setText(Appreference.ChangeDevicePattern(true, strenddate, datepattern));
+                                        } else {
+                                            end_date1.setText(Appreference.ChangeDevicePattern(false, Appreference.setDateTime(false, strenddate), datepattern));
+                                        }
 //                                end_date1.setText(strenddate);
                                 /*String endmin = values3[minutePicker.getValue()];
                                 Log.i("End", "endmin is " + endmin);
@@ -2485,21 +2550,24 @@ public class TaskTakerDateRequest extends Activity implements View.OnClickListen
                                     end_minute = minutePicker.getValue();
                                     // end_am_pm = am_pmPicker.getValue();
 
-                                    endTimeSet = true;
-                                } else {
-                                    showToast(context.getString(R.string.Kindly_slct_grt_than_value_from_start_time));
+                                        endTimeSet = true;
+                                    } else {
+                                        showToast(context.getString(R.string.Kindly_slct_grt_than_value_from_start_time));
+                                    }
                                 }
+                            } else {
+                                showToast(context.getString(R.string.Kindly_slct_grt_than_value_from_start_date));
                             }
                         } else {
-                            showToast(context.getString(R.string.Kindly_slct_grt_than_value_from_start_date));
+                            showToast(context.getString(R.string.Kindly_slct_future_time));
                         }
                     } else if (startOrEnd == 3) {
 
-                        String startrem = "";
-                        String startampm = "";
+                        String startrem;
+                        String startampm;
                         if (android.text.format.DateFormat.is24HourFormat(context)) {
-                            startrem = start_date1.getText().toString();
-                            startampm = checkAmorPmfunction(Appreference.ChangeOriginalPattern(true, startrem, datepattern));
+                            startrem = Appreference.ChangeOriginalPattern(true, start_date1.getText().toString(), Appreference.getDeviceDatePattern(context));
+                            startampm = checkAmorPmfunction(startrem);
                         } else {
                             startrem = Appreference.setDateTime(true, Appreference.ChangeOriginalPattern(false, start_date1.getText().toString(), datepattern));
                             startampm = checkAmorPmfunction(Appreference.setDateTime(false, startrem));
@@ -2510,7 +2578,7 @@ public class TaskTakerDateRequest extends Activity implements View.OnClickListen
                         String startrem1 = startrem.split(":")[0];  // yyyy-mm-dd hh
                         fromtime = startrem1.split(" ")[1] + ":" + startrem.split(":")[1]; // hh:mm
                         Log.i("starttime", "starttime " + fromtime);
-                        String endrem = "";
+                        String endrem;
                         if (android.text.format.DateFormat.is24HourFormat(context)) {
                             endrem = Appreference.ChangeOriginalPattern(true, end_date1.getText().toString(), datepattern);
                         } else {
@@ -2575,9 +2643,9 @@ public class TaskTakerDateRequest extends Activity implements View.OnClickListen
                                 enTime = strDateTime;
                             }
                         }
-                        String strdate = "";
+                        String strdate;
                         if (android.text.format.DateFormat.is24HourFormat(context)) {
-                            strdate = start_date1.getText().toString();
+                            strdate = Appreference.ChangeOriginalPattern(true, start_date1.getText().toString(), Appreference.getDeviceDatePattern(context));
                         } else {
                             strdate = Appreference.setDateTime(true, Appreference.ChangeOriginalPattern(false, start_date1.getText().toString(), datepattern));
                         }
@@ -2585,7 +2653,7 @@ public class TaskTakerDateRequest extends Activity implements View.OnClickListen
                         String strfromdate1 = strdate.split(" ")[0];
                         Log.i("schedule", "strfromdate1-->" + strfromdate1);
 
-                        String strdate1 = "";
+                        String strdate1;
                         if (android.text.format.DateFormat.is24HourFormat(context)) {
                             strdate1 = Appreference.ChangeOriginalPattern(true, end_date1.getText().toString(), datepattern);
                         } else {
@@ -2596,7 +2664,7 @@ public class TaskTakerDateRequest extends Activity implements View.OnClickListen
                         String strenddate1 = strdate1.split(" ")[0];
                         Log.i("schedule", "strenddate1-->" + strenddate1);
 
-                        DateFormat selctedDateformate = null;
+                        DateFormat selctedDateformate;
                         Date date = null;
                         if (!android.text.format.DateFormat.is24HourFormat(context)) {
                             selctedDateformate = new SimpleDateFormat("MMM dd yyyy hh : mm a");
@@ -2627,10 +2695,10 @@ public class TaskTakerDateRequest extends Activity implements View.OnClickListen
                         Log.i("TaskTakerDateRequest", "strfromdate1 is" + strfromdate1);
                         Log.i("TaskTakerDateRequest", "strremindate1 is" + strremindate1);
                         Log.i("TaskTakerDateRequest", "strenddate1 is" + strenddate1);
-                        String strfromdate2 = "";
-                        String strenddate2 = "";
+                        String strfromdate2;
+                        String strenddate2;
                         if (android.text.format.DateFormat.is24HourFormat(context)) {
-                            strfromdate2 = Appreference.Changeoriginaldateonly(true, strfromdate1, datepattern);
+                            strfromdate2 = strfromdate1;
                             strenddate2 = strenddate1;
                         } else {
                             strfromdate2 = strfromdate1;
@@ -2706,7 +2774,7 @@ public class TaskTakerDateRequest extends Activity implements View.OnClickListen
                                     //pm
                                     if (remampm.equalsIgnoreCase("AM") || remampm.equalsIgnoreCase("PM")) {
                                         int comp = endTime.compareTo(enTime);
-                                        int comp1 = fromtime.compareTo(enTime);
+                                        //noinspection UnusedAssignment,UnusedAssignment,UnusedAssignment,UnusedAssignment,UnusedAssignment
                                         Log.i("comp", "comp" + comp);
                                         if ((endTime.compareTo(enTime) > 0) && (fromtime.compareTo(enTime) > 0))
                                             flag = true;
@@ -2750,7 +2818,6 @@ public class TaskTakerDateRequest extends Activity implements View.OnClickListen
                                     //pm
                                     if (remampm.equalsIgnoreCase("AM")) {
                                         int comp = endTime.compareTo(enTime);
-                                        int comp1 = fromtime.compareTo(enTime);
                                         Log.i("comp", "comp" + comp);
                                         if (strenddate1.compareTo(strremindate1) == 0) {
                                             if ((endTime.compareTo(enTime) > 0) && (fromtime.compareTo(enTime) > 0))
@@ -2762,7 +2829,6 @@ public class TaskTakerDateRequest extends Activity implements View.OnClickListen
                                         }
                                     } else if (remampm.equalsIgnoreCase("PM")) {
                                         int comp = endTime.compareTo(enTime);
-                                        int comp1 = fromtime.compareTo(enTime);
                                         Log.i("comp", "comp" + comp);
                                         if ((endTime.compareTo(enTime) > 0) && (fromtime.compareTo(enTime) > 0))
                                             flag = true;
@@ -2804,25 +2870,30 @@ public class TaskTakerDateRequest extends Activity implements View.OnClickListen
     }
 
     private String checkAmorPmfunction(String amorpm) {
-        DateFormat selctedDateformate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        Date date = null;
-        Log.i("TaskTakerDateRequest", "Check AmorPmFunction");
-        Log.i("TaskTakerDateRequest", "datepattern value is" + datepattern);
-        Log.i("TaskTakerDateRequest", "amorpm value is" + amorpm);
+        String ammorpmm = null;
         try {
-            // String sans=Appreference.ChangeOriginalPattern(true,amorpm,datepattern);
-            //\\og.i("TaskTakerDateRequest","sans value is"+sans);
-            date = selctedDateformate.parse(amorpm);
+            DateFormat selctedDateformate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            Date date = null;
+            Log.i("TaskTakerDateRequest", "Check AmorPmFunction");
+            Log.i("TaskTakerDateRequest", "datepattern value is" + datepattern);
+            Log.i("TaskTakerDateRequest", "amorpm value is" + amorpm);
+            try {
+                // String sans=Appreference.ChangeOriginalPattern(true,amorpm,datepattern);
+                //\\og.i("TaskTakerDateRequest","sans value is"+sans);
+                date = selctedDateformate.parse(amorpm);
 
-            Log.i("TaskTakerDateRequest", "date value is" + selctedDateformate.format(date));
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
+                Log.i("TaskTakerDateRequest", "date value is" + selctedDateformate.format(date));
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
 //        SimpleDateFormat simpledateform=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 //        String datesample=simpledateform.format(date);
-        SimpleDateFormat day1 = new SimpleDateFormat("hh:mm a");
-        String ammorpmm = day1.format(date);
-        ammorpmm = ammorpmm.split(" ")[1];
+            SimpleDateFormat day1 = new SimpleDateFormat("hh:mm a");
+            ammorpmm = day1.format(date);
+            ammorpmm = ammorpmm.split(" ")[1];
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         return ammorpmm;
     }
 
@@ -2844,8 +2915,6 @@ public class TaskTakerDateRequest extends Activity implements View.OnClickListen
             Calendar c = Calendar.getInstance();
             SimpleDateFormat df = new SimpleDateFormat("dd-MMM-yyyy");
             String formattedDate = df.format(c.getTime());
-            String split[] = formattedDate.split("-");
-            String todaydate = split[0] + " " + split[1];
             for (int i = 0; i < 365; i++) {
                 c1.add(Calendar.DATE, 1);
                 dates.add(dateFormat.format(c1.getTime()));
@@ -2871,7 +2940,6 @@ public class TaskTakerDateRequest extends Activity implements View.OnClickListen
             Calendar rightNow = Calendar.getInstance(Locale.getDefault());
             int amPM = rightNow.get(Calendar.AM_PM);
 
-            int position = day;
             int startTime = Integer.parseInt(strDate.split(":")[0]);
             int currentTime = Integer.parseInt(date.split(":")[0]);
 
@@ -2885,22 +2953,18 @@ public class TaskTakerDateRequest extends Activity implements View.OnClickListen
             Log.i("SCHEDULECALL", "currentMin ===>" + currentMin);
             if (start) {
 
-                if (position > 0 && position < 364) {
+                if (day > 0 && day < 364) {
                     isvalid = true;
-                } else if (position == 0 && startTime > currentTime) {
+                } else if (day == 0 && startTime > currentTime) {
                     isvalid = true;
-                } else if (position == 0 && startTime >= currentTime
+                } else if (day == 0 && startTime >= currentTime
                         && startMin > currentMin) {
                     isvalid = true;
-                } else if (position == 0 && amPM == 0
+                } else if (day == 0 && amPM == 0
                         && am_pm.equalsIgnoreCase("pm")) {
                 } else if (ampm.equalsIgnoreCase("pm") && am_pm.equalsIgnoreCase("pm")) {
-                    if (startTime >= currentTime
-                            && startMin > currentMin) {
-                        isvalid = true;
-                    } else {
-                        isvalid = false;
-                    }
+                    isvalid = startTime >= currentTime
+                            && startMin > currentMin;
 
                 } else {
 
@@ -2908,12 +2972,7 @@ public class TaskTakerDateRequest extends Activity implements View.OnClickListen
                 }
 
             } else {
-                if (currentTime >= startTime || currentMin > startMin) {
-                    isvalid = true;
-                } else {
-
-                    isvalid = false;
-                }
+                isvalid = currentTime >= startTime || currentMin > startMin;
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -2931,6 +2990,7 @@ public class TaskTakerDateRequest extends Activity implements View.OnClickListen
             int column_index = cursor
                     .getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
             cursor.moveToFirst();
+            cursor.close();
             return cursor.getString(column_index);
         } catch (IllegalArgumentException e) {
             // TODO Auto-generated catch block
@@ -2943,13 +3003,11 @@ public class TaskTakerDateRequest extends Activity implements View.OnClickListen
 
     public Bitmap convertpathToBitmap(String strIPath) {
         BitmapFactory.Options bmOptions = new BitmapFactory.Options();
-        Bitmap bitmap = BitmapFactory.decodeFile((compressImage(strIPath)), bmOptions);
-        return bitmap;
+        return BitmapFactory.decodeFile((compressImage(strIPath)), bmOptions);
     }
 
     public String compressImage(String imageUri) {
 
-        String filePath = imageUri;
         Bitmap scaledBitmap = null;
 
         BitmapFactory.Options options = new BitmapFactory.Options();
@@ -2957,7 +3015,7 @@ public class TaskTakerDateRequest extends Activity implements View.OnClickListen
 //      by setting this field as true, the actual bitmap pixels are not loaded in the memory. Just the bounds are loaded. If
 //      you try the use the bitmap here, you will get null.
         options.inJustDecodeBounds = true;
-        Bitmap bmp = BitmapFactory.decodeFile(filePath, options);
+        Bitmap bmp = BitmapFactory.decodeFile(imageUri, options);
 
         int actualHeight = options.outHeight;
         int actualWidth = options.outWidth;
@@ -3001,7 +3059,7 @@ public class TaskTakerDateRequest extends Activity implements View.OnClickListen
 
         try {
 //          load the bitmap from its path
-            bmp = BitmapFactory.decodeFile(filePath, options);
+            bmp = BitmapFactory.decodeFile(imageUri, options);
         } catch (OutOfMemoryError exception) {
             exception.printStackTrace();
 
@@ -3027,7 +3085,7 @@ public class TaskTakerDateRequest extends Activity implements View.OnClickListen
 //      check the rotation of the image and display it properly
         ExifInterface exif;
         try {
-            exif = new ExifInterface(filePath);
+            exif = new ExifInterface(imageUri);
 
             int orientation = exif.getAttributeInt(
                     ExifInterface.TAG_ORIENTATION, 0);
@@ -3050,10 +3108,9 @@ public class TaskTakerDateRequest extends Activity implements View.OnClickListen
             e.printStackTrace();
         }
 
-        FileOutputStream out = null;
-        String filename = imageUri;
+        FileOutputStream out;
         try {
-            out = new FileOutputStream(filename);
+            out = new FileOutputStream(imageUri);
 
 //          write the compressed bitmap at the destination specified by filename.
             scaledBitmap.compress(Bitmap.CompressFormat.JPEG, 80, out);
@@ -3062,48 +3119,57 @@ public class TaskTakerDateRequest extends Activity implements View.OnClickListen
             e.printStackTrace();
         }
 
-        return filename;
+        return imageUri;
 
     }
 
 
     public int calculateInSampleSize(BitmapFactory.Options options, int reqWidth, int reqHeight) {
-        final int height = options.outHeight;
-        final int width = options.outWidth;
-        int inSampleSize = 1;
+        int inSampleSize = 0;
+        try {
+            final int height = options.outHeight;
+            final int width = options.outWidth;
+            inSampleSize = 1;
 
-        if (height > reqHeight || width > reqWidth) {
-            final int heightRatio = Math.round((float) height / (float) reqHeight);
-            final int widthRatio = Math.round((float) width / (float) reqWidth);
-            inSampleSize = heightRatio < widthRatio ? heightRatio : widthRatio;
-        }
-        final float totalPixels = width * height;
-        final float totalReqPixelsCap = reqWidth * reqHeight * 2;
-        while (totalPixels / (inSampleSize * inSampleSize) > totalReqPixelsCap) {
-            inSampleSize++;
+            if (height > reqHeight || width > reqWidth) {
+                final int heightRatio = Math.round((float) height / (float) reqHeight);
+                final int widthRatio = Math.round((float) width / (float) reqWidth);
+                inSampleSize = heightRatio < widthRatio ? heightRatio : widthRatio;
+            }
+            final float totalPixels = width * height;
+            final float totalReqPixelsCap = reqWidth * reqHeight * 2;
+            while (totalPixels / (inSampleSize * inSampleSize) > totalReqPixelsCap) {
+                inSampleSize++;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
 
         return inSampleSize;
     }
 
     public void imgfun(String getMediaType, String getMediaPath, String getExt) {
-        File imageFile = new File(strIPath);
+        try {
+            File imageFile = new File(strIPath);
 
-        if (imageFile.exists()) {
-            Log.i("imagefile", "image");
-            test = "image";
-                      /*  MediaListBean uIbean = new MediaListBean();
-                        uIbean.setMediaType("image");
-                        uIbean.setMediaPath(strIPath);*/
+            if (imageFile.exists()) {
+                Log.i("imagefile", "image");
+                test = "image";
+                          /*  MediaListBean uIbean = new MediaListBean();
+                            uIbean.setMediaType("image");
+                            uIbean.setMediaPath(strIPath);*/
 
 
-            TaskDetailsBean taskBean = new TaskDetailsBean();
-            Log.e("update", "values--->" + taskBean.getTaskDescription());
-            taskBean.setMimeType(getMediaType);
-            taskBean.setTaskDescription(getMediaPath);
-            Log.e("update", "values--->" + taskBean.getTaskDescription());
-            mediaList.add(taskBean);
-            medialistadapter.notifyDataSetChanged();
+                TaskDetailsBean taskBean = new TaskDetailsBean();
+                Log.e("update", "values--->" + taskBean.getTaskDescription());
+                taskBean.setMimeType(getMediaType);
+                taskBean.setTaskDescription(getMediaPath);
+                Log.e("update", "values--->" + taskBean.getTaskDescription());
+                mediaList.add(taskBean);
+                medialistadapter.notifyDataSetChanged();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
@@ -3145,12 +3211,16 @@ public class TaskTakerDateRequest extends Activity implements View.OnClickListen
     }
 
     private void showCallActivity() {
-        Log.i("SipVideo", "showCallActivity method");
-        Intent intent = new Intent(context, CallActivity.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        String par_name = Appreference.loginuserdetails.getFirstName() + " " + Appreference.loginuserdetails.getLastName();
-        intent.putExtra("host", par_name);
-        startActivity(intent);
+        try {
+            Log.i("SipVideo", "showCallActivity method");
+            Intent intent = new Intent(context, CallActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            String par_name = Appreference.loginuserdetails.getFirstName() + " " + Appreference.loginuserdetails.getLastName();
+            intent.putExtra("host", par_name);
+            startActivity(intent);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
 

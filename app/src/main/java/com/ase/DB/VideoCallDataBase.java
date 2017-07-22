@@ -8741,7 +8741,7 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
         return status_all;
     }
 
-    public int CheckTravelEntryDetails(String query) {
+    public int  CheckTravelEntryDetails(String query) {
         Cursor cur;
         int row=0;
         if (db == null)

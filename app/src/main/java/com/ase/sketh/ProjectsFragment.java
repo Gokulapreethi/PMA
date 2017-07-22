@@ -315,7 +315,7 @@ public class ProjectsFragment extends Fragment implements View.OnClickListener, 
                                             Log.i("TNA", "cur_date $ ==> " + cur_date);
                                             Log.i("TNA", "compare ==> " + cur_date.compareTo(end_date));
                                             Log.i("TNA", "compare ==> " + end_date.compareTo(TNAReportStart));
-                                            if ((cur_date.compareTo(end_date) >= 0) && (end_date.compareTo(TNAReportStart) > 0)) {
+                                            if ((cur_date.compareTo(end_date) >= 0) && (end_date.compareTo(TNAReportStart) > 0) || (end_date.compareTo(TNAReportStart)== 0)) {
                                                 activity_end.setText(end_date);
                                                 TNAReportEnd = end_date;
                                             } else {

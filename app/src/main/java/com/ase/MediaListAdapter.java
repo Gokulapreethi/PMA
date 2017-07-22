@@ -1942,6 +1942,9 @@ public class MediaListAdapter extends ArrayAdapter<TaskDetailsBean> {
                                 intent.putExtra("taskType", gcBean.getTaskType());
                                 intent.putExtra("taskStatus", gcBean.getTaskStatus());
                                 intent.putExtra("toUserIdConflict", String.valueOf(gcBean.getToUserId()));
+                                if (gcBean.getProjectId() != null) {
+                                    intent.putExtra("projectId", gcBean.getProjectId());
+                                }
                                 ((Activity) context).startActivityForResult(intent, 336);
                             } else {
                                 Toast.makeText(context, "Unable to sent Date task is in abandoned state ", Toast.LENGTH_SHORT).show();

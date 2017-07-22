@@ -583,13 +583,27 @@ public class TravelJobDetails extends Activity implements View.OnClickListener, 
                     sendStatus_webservice("0", "", "", "Started", "start");
                 }
                 if (item.getTitle().toString().equalsIgnoreCase("Completed")) {
+                    final int travelentry = VideoCallDataBase.getDB(context).CheckTravelEntryDetails("select * from projectStatus where projectId ='" + projectId + "' and taskId = '" + webtaskId + "' and travelStartTime IS NOT NULL and travelEndTime IS NULL");
+                    Log.i("conv123", "TravelEntry==>" + travelentry);
+                    String query = "select * from projectStatus where projectId='" + projectId + "' and userId='" + Appreference.loginuserdetails.getId() + "' and taskId= '" + webtaskId + "' and status = '7'";
+                    final int count = VideoCallDataBase.getDB(context).getCountForTravelEntry(query);
+                    Log.i("conv123", "bean size==>");
                     AlertDialog.Builder saveDialog = new AlertDialog.Builder(context);
                     saveDialog.setTitle("Completion");
                     saveDialog.setCancelable(false);
                     saveDialog.setMessage("Are You sure want to complete this job ");
                     saveDialog.setPositiveButton("OK", new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
-                            sendStatus_webservice("5", "", "", "Completed", "complete");
+                            if (count!=0) {
+                                if (travelentry == 0) {
+                                    sendStatus_webservice("5", "", "", "Completed", "complete");
+                                }else{
+                                    Toast.makeText(TravelJobDetails.this, "Enter end date and time and then proceed to complete the task.", Toast.LENGTH_SHORT).show();
+                                }
+                            }else
+                            {
+                                Toast.makeText(TravelJobDetails.this, "No StartEndTime Found", Toast.LENGTH_SHORT).show();
+                            }
                         }
                     });
                     saveDialog.setNegativeButton("Cancel",
@@ -1411,7 +1425,9 @@ public class TravelJobDetails extends Activity implements View.OnClickListener, 
         try {
             runOnUiThread(new Runnable() {
                 public void run() {
-                    medialistadapter.notifyDataSetChanged();
+                    if (medialistadapter != null) {
+                        medialistadapter.notifyDataSetChanged();
+                    }
                     Log.i("NewTaskConversation", "Refresh Handled here");
                 }
             });

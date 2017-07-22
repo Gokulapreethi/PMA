@@ -5252,7 +5252,15 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                         e.printStackTrace();
                     }
                 }
-
+                Log.i("listobservers","ownerOfTask ** "+ownerOfTask);
+                listOfObservers.clear();
+                if (ownerOfTask != null && !ownerOfTask.equalsIgnoreCase(Appreference.loginuserdetails.getUsername())) {
+                    listOfObservers.add(ownerOfTask);
+                    project_toUsers = ownerOfTask;
+                } else {
+                    listOfObservers.add(project_toUsers);
+                }
+                Log.i("listobservers","ownerOfTask ** "+listOfObservers);
                 if (status.equalsIgnoreCase("9")) {
                     String query = "select * from projectStatus where projectId='" + projectId + "' and userId='" + Appreference.loginuserdetails.getId() + "' and taskId= '" + webtaskId + "' and status = '7'";
                     TaskDetailsBean bean = VideoCallDataBase.getDB(context).getActivityTimeFromStatus(query);
@@ -10933,7 +10941,7 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                                                  }
                                              } catch (Exception e) {
                                                  e.printStackTrace();
-                                                 Log.i("output123", "NewTaskConv sip responce a jsonobject Exception*******" + e);
+                                                  Log.i("output123", "NewTaskConv sip responce a jsonobject Exception*******" + e);
                                              }
                                          } else {
                                              String result = (String) jsonObject1.get("result_text");
@@ -17719,16 +17727,20 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                                 @Override
                                 public void run() {
                                     if (oracleProjectOwner != null && !oracleProjectOwner.equalsIgnoreCase(Appreference.loginuserdetails.getUsername())) {
+                                        template =false;
                                         assign_taskview.setVisibility(View.GONE);
                                         status_job.setVisibility(View.VISIBLE);
                                         travel_job.setVisibility(View.VISIBLE);
                                         bottom_layout.setVisibility(View.VISIBLE);
                                         Arrow.setVisibility(View.VISIBLE);
-                                        TakerofTasks();
+//                                        TakerofTasks();
                                     } else {
+                                        template =false;
                                         assign_taskview.setVisibility(View.GONE);
                                         status_job.setVisibility(View.GONE);
                                         travel_job.setVisibility(View.GONE);
+                                        bottom_layout.setVisibility(View.VISIBLE);
+                                        Arrow.setVisibility(View.VISIBLE);
                                     }
                                 }
                             });
