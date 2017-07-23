@@ -116,8 +116,8 @@ public class JsonRequestResponce extends Thread {
 //                        HttpPost httppost = new HttpPost("https://122.165.92.171:8443/kamailioWeb/" + obj.getEnumJsonWebservicename());
 //                        HttpPost httppost = new HttpPost("https://66.109.17.204/highMessage/" + obj.getEnumJsonWebservicename());//
 
-//                          HttpPost httppost = new HttpPost("https://192.168.1.3:8443/ASE/" + obj.getEnumJsonWebservicename());
-                          HttpPost httppost = new HttpPost("http://151.253.12.203/ASE/" + obj.getEnumJsonWebservicename());
+                          HttpPost httppost = new HttpPost("https://192.168.1.3:8443/ASE/" + obj.getEnumJsonWebservicename());
+//                          HttpPost httppost = new HttpPost("http://151.253.12.203/ASE/" + obj.getEnumJsonWebservicename());
 
 //                        HttpPost httppost = new HttpPost("https://66.109.17.204/highMessage/" + obj.getEnumJsonWebservicename());//
 //                        HttpPost httppost = new HttpPost("https://66.109.17.205/highMessage/" + obj.getEnumJsonWebservicename());//
@@ -125,7 +125,7 @@ public class JsonRequestResponce extends Thread {
 //                        HttpPost httppost = new HttpPost("https://35.162.171.171/highMessage/" + obj.getEnumJsonWebservicename());
 
                         Log.i("json", obj.getEnumJsonWebservicename().toString());
-                        Appreference.printLog("jsonwebservice", "webservice request name-->" + obj.getEnumJsonWebservicename().toString(), "DEBUG", null);
+                        Appreference.printLog("jsonwebservice", "webservice request name-- >" + obj.getEnumJsonWebservicename().toString(), "DEBUG", null);
 
                         String servname = obj.getEnumJsonWebservicename().toString();
                         if (servname.equals("updateUser")) {
@@ -427,6 +427,8 @@ public class JsonRequestResponce extends Thread {
                 inter.ErrorMethod(obj);
                 break;
             case getTask:
+                Log.i("getTask123","gettask jsonwebserviceResponse errorResponse*************"+result);
+
 //                NewTaskConversation.getInstance().cancelDialog();
 //                TaskHistory.getInstance().showToast(result);
 //                TaskHistory.getInstance().cancelDialog();
@@ -629,6 +631,7 @@ public class JsonRequestResponce extends Thread {
                         break;
                     case getTask:
                         Log.i("jsonwebservice", "Responce------>" + responseString);
+                        Log.i("getTask123","gettaskwebservice jsonwebserviceResponse*************"+responseString);
                         obj.setEmail(responseString);
                         obj.setFirstname("getTask");
                         Log.i("jsonwebservice", "getTask " + obj.getFirstname());

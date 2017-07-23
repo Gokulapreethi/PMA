@@ -689,7 +689,7 @@ public class AddTaskReassign extends Activity implements View.OnClickListener, W
                     }
                 }
             }
-            if (!check) {
+         /*   if (!check) {
                 handler.post(new Runnable() {
                     @Override
                     public void run() {
@@ -697,7 +697,7 @@ public class AddTaskReassign extends Activity implements View.OnClickListener, W
                         Toast.makeText(getApplicationContext(), "Please select the contact", Toast.LENGTH_SHORT).show();
                     }
                 });
-            }
+            }*/
 
 
         } catch (Exception e) {

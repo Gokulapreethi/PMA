@@ -200,7 +200,7 @@ public class ContactsFragment extends Fragment implements View.OnClickListener, 
         }
     }
 
-    @Override
+   /* @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
         Log.i("LifeCycle", " projectFragment isVisibleToUser : " + isVisibleToUser);
@@ -225,7 +225,7 @@ public class ContactsFragment extends Fragment implements View.OnClickListener, 
             e.printStackTrace();
         }
     }
-
+*/
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {

@@ -402,21 +402,26 @@ public class TravelJobDetails extends Activity implements View.OnClickListener, 
 
 
     public void projectBackgroundProcess() {
+        cancelDialog();
 
-        String query_1 = "select * from taskDetailsInfo where (loginuser='" + Appreference.loginuserdetails.getEmail() + "') and (taskStatus!='note' and taskStatus!='draft') and (taskId='" + webtaskId + "') and (projectId='" + projectId + "') and customTagVisible = '1';";
+        try {
+            String query_1 = "select * from taskDetailsInfo where (loginuser='" + Appreference.loginuserdetails.getEmail() + "') and (taskStatus!='note' and taskStatus!='draft') and (taskId='" + webtaskId + "') and (projectId='" + projectId + "') and customTagVisible = '1';";
 
-        if (VideoCallDataBase.getDB(context).getTaskHistory(query_1) != null) {
-            taskList = VideoCallDataBase.getDB(context).getTaskHistory(query_1);
-            sortTaskMessage();
-            if (taskList.size() > 0) {
-                for (TaskDetailsBean taskBean : taskList) {
-                    taskBean.setOwnerOfTask(ownerOfTask);
-                    taskBean.setTaskReceiver(taskReceiver);
-                    taskBean.setTaskName(taskName);
+            if (VideoCallDataBase.getDB(context).getTaskHistory(query_1) != null) {
+                taskList = VideoCallDataBase.getDB(context).getTaskHistory(query_1);
+                sortTaskMessage();
+                if (taskList.size() > 0) {
+                    for (TaskDetailsBean taskBean : taskList) {
+                        taskBean.setOwnerOfTask(ownerOfTask);
+                        taskBean.setTaskReceiver(taskReceiver);
+                        taskBean.setTaskName(taskName);
+                    }
                 }
             }
+            refresh();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-        refresh();
     }
 
     public void notifyTaskReceived(final TaskDetailsBean taskDetailsBean) {

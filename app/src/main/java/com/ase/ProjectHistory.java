@@ -1632,8 +1632,9 @@ public class ProjectHistory extends Activity implements WebServiceInterface, Swi
                                     task_status.setText("Completed");
                                 else if (current_status == 6)
                                     task_status.setText("Unassigned");
-                            }
-//                        }
+                            }else if(projectDetailsBean.getTaskId()!=null && Appreference.old_status.containsKey(projectDetailsBean.getTaskId()) && !status.equalsIgnoreCase("draft")){
+                                task_status.setText(Appreference.old_status.get(projectDetailsBean.getTaskId()));
+                        }
                     }
                     if (projectDetailsBean.getTaskStatus().equalsIgnoreCase("note")) {
                         selectedimage.setBackgroundResource(R.drawable.ic_note_32_2);

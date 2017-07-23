@@ -339,7 +339,7 @@ public class JsonRequestSender {
     }
 
     public void getTask(EnumJsonWebservicename webservicename, List<NameValuePair> valuePair, WebServiceInterface access) {
-
+        Log.i("getTask123","gettaskwebservice JsonrequestSender*************");
         CommunicationBean communicationBean = new CommunicationBean();
         communicationBean.setEnumJsonWebservicename(webservicename);
         communicationBean.setNameValuePairs(valuePair);

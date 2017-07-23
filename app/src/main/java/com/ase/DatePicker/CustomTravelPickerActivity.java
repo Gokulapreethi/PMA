@@ -132,8 +132,6 @@ public class CustomTravelPickerActivity extends Activity implements DateTimePick
                             // TODO Auto-generated method stub
                             String result_string = mDateTimePicker.getMonth() + "-" + String.valueOf(mDateTimePicker.getDay()) + "-" + String.valueOf(mDateTimePicker.getYear())
                                     + "  " + String.valueOf(mDateTimePicker.getHour()) + ":" + String.valueOf(mDateTimePicker.getMinute());
-//				if(mDateTimePicker.getHour() > 12) result_string = result_string + "PM";
-//				else result_string = result_string + "AM";
                             Date date_from=null;
                             try {
                                 date_from=new SimpleDateFormat("MMM-d-yyyy HH:mm").parse(result_string);
@@ -144,7 +142,6 @@ public class CustomTravelPickerActivity extends Activity implements DateTimePick
                             if (date3 == null) {
                                 try {
                                     date3 = sdf.format(c.getTime());
-//                                    date_from = sdf.parse(date3);
                                     date_from = new SimpleDateFormat("MMM-d-yyyy HH:mm").parse(result_string);
                                 } catch (Exception e) {
                                     e.printStackTrace();
@@ -155,6 +152,9 @@ public class CustomTravelPickerActivity extends Activity implements DateTimePick
                             } catch (Exception e) {
                                 e.printStackTrace();
                             }
+                            Log.i("Date123","Date arrange===>"+result_string);
+                            Log.i("Date123","Date From===>"+date_from);
+                            Log.i("Date123","Date to===>"+date_to);
                             if (date_from.compareTo(date_to) > 0) {
                                 Toast.makeText(getApplicationContext(), "Please select Still today date", Toast.LENGTH_SHORT).show();
 //                                totimepickerDialog.cancel();
@@ -246,10 +246,10 @@ public class CustomTravelPickerActivity extends Activity implements DateTimePick
                                 // TODO Auto-generated method stub
                                 String result_string = mDateTimePicker.getMonth() + "-" + String.valueOf(mDateTimePicker.getDay()) + "-" + String.valueOf(mDateTimePicker.getYear())
                                         + "  " + String.valueOf(mDateTimePicker.getHour()) + ":" + String.valueOf(mDateTimePicker.getMinute());
-//				if(mDateTimePicker.getHour() > 12) result_string = result_string + "PM";
-//				else result_string = result_string + "AM";
                                 date1=null;
                                 date4=null;
+                                final Calendar c_date = Calendar.getInstance();
+
                                 try {
                                     date_to = new SimpleDateFormat("MMM-d-yyyy HH:mm").parse(result_string);
                                 } catch (ParseException e) {
@@ -268,17 +268,17 @@ public class CustomTravelPickerActivity extends Activity implements DateTimePick
 
                                 if (date4 == null) {
                                     try {
-                                        date4 = sdf.format(c.getTime());
+                                        date4 = sdf.format(c_date.getTime());
                                         date_from1 = sdf.parse(date4);
                                     } catch (Exception e) {
                                         e.printStackTrace();
                                     }
                                 }
-//                                try {
-//                                    date_to = sdf.parse(date2);
-//                                } catch (Exception e) {
-//                                    e.printStackTrace();
-//                                }
+                                Log.i("Date123","date_from1.compareTo(date_to) < 0***********8");
+                                Log.i("Date123","endDate arrange ===>"+result_string);
+                                Log.i("Date123","endDate From ===>"+date_from);
+                                Log.i("Date123","endDate to ===>"+date_to);
+                                Log.i("Date123","endDate current date date_from1 ===>"+date_from1);
                                 if (date_from!=null && date_to!=null && date_from.compareTo(date_to) > 0) {
                                     Toast.makeText(getApplicationContext(), "Please select above from date", Toast.LENGTH_SHORT).show();
 //                                totimepickerDialog.cancel();
