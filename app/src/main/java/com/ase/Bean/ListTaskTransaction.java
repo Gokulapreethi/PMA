@@ -75,6 +75,9 @@ public class ListTaskTransaction {
     @SerializedName("actionTaken")
     @Expose
     private String actionTaken;
+    @SerializedName("taskcompletedDate")
+    @Expose
+    private String taskcompletedDate;
 
     public Object getId() {
         return id;
@@ -256,5 +259,13 @@ public class ListTaskTransaction {
 
     public void setActionTaken(String actionTaken) {
         this.actionTaken = actionTaken;
+    }
+
+    public String getTaskcompletedDate() {
+        return taskcompletedDate;
+    }
+
+    public void setTaskcompletedDate(String taskcompletedDate) {
+        this.taskcompletedDate = taskcompletedDate;
     }
 }

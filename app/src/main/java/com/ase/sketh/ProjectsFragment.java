@@ -1,6 +1,7 @@
 package com.ase.sketh;
 
 import android.app.DatePickerDialog;
+import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
@@ -24,10 +25,12 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.util.TypedValue;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
@@ -39,6 +42,7 @@ import android.widget.Filter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -95,8 +99,8 @@ import static android.graphics.Color.rgb;
 public class ProjectsFragment extends Fragment implements View.OnClickListener, WebServiceInterface {
     public View view;
     private SwipeMenuListView listview_project;
-    TextView heading_project, exclation_counter;
-    ImageView image_search, reportdetails;
+    TextView heading_project, exclation_counter,first_fsr,end_fsr,tna_middle;
+    ImageView image_search, reportdetails,fsrDetails;
     public static Context classContext;
     static ProjectsFragment fragment;
     ProgressDialog progress;
@@ -174,20 +178,35 @@ public class ProjectsFragment extends Fragment implements View.OnClickListener, 
             History_Search = (LinearLayout) view.findViewById(R.id.History_Search);
             ProjectSearch = (EditText) view.findViewById(R.id.searchtext);
             NoResults = (TextView) view.findViewById(R.id.Noresult);
+            tna_middle = (TextView) view.findViewById(R.id.tna_middle);
+            first_fsr = (TextView) view.findViewById(R.id.first_fsr);
+            end_fsr = (TextView) view.findViewById(R.id.end_fsr);
             listview_project = (SwipeMenuListView) view.findViewById(R.id.listview_project);
             NoResults.setVisibility(View.GONE);
             heading_project = (TextView) view.findViewById(R.id.heading_project);
             image_search = (ImageView) view.findViewById(R.id.image_search);
             reportdetails = (ImageView) view.findViewById(R.id.reportdetails);
+            fsrDetails = (ImageView) view.findViewById(R.id.fsrDetails);
             reportdetails.setOnClickListener(this);
+            fsrDetails.setOnClickListener(this);
+
             if (Appreference.loginuserdetails != null && Appreference.loginuserdetails.getRoleId() != null
                     && Appreference.loginuserdetails.getRoleId().equalsIgnoreCase("2")) {
                 image_search.setVisibility(View.VISIBLE);
                 reportdetails.setVisibility(View.VISIBLE);
+                fsrDetails.setVisibility(View.VISIBLE);
+                tna_middle.setVisibility(View.VISIBLE);
+                first_fsr.setVisibility(View.VISIBLE);
+                end_fsr.setVisibility(View.GONE);
             } else {
                 image_search.setVisibility(View.GONE);
                 reportdetails.setVisibility(View.GONE);
+                fsrDetails.setVisibility(View.VISIBLE);
+                tna_middle.setVisibility(View.GONE);
+                first_fsr.setVisibility(View.GONE);
+                end_fsr.setVisibility(View.VISIBLE);
             }
+
 
             Log.i("task", "project");
             InputMethodManager inputMethodManager = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -225,6 +244,51 @@ public class ProjectsFragment extends Fragment implements View.OnClickListener, 
                     intent.putExtra("urlload","tnareport");
                     startActivity(intent);
                     getActivity().overridePendingTransition(R.anim.right_anim, R.anim.left_anim);*/
+                }
+            });
+
+            fsrDetails.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    final Dialog dialog = new Dialog(getActivity());
+                    dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                    dialog.setContentView(R.layout.fsr_report_view);
+                    WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
+                    lp.copyFrom(dialog.getWindow().getAttributes());
+                    lp.width = WindowManager.LayoutParams.MATCH_PARENT;
+                    lp.height = WindowManager.LayoutParams.MATCH_PARENT;
+                    lp.horizontalMargin = 15;
+                    Window window = dialog.getWindow();
+                    window.setBackgroundDrawableResource((R.color.white));
+                    window.setAttributes(lp);
+                    window.setGravity(Gravity.BOTTOM);
+                    dialog.show();
+                    Spinner job_spinner = (Spinner) dialog.findViewById(R.id.job_spinner);
+                    Spinner date_spinner = (Spinner) dialog.findViewById(R.id.date_spinner);
+                    String list_query="select * from projectDetails where loginuser = '" + Appreference.loginuserdetails.getEmail() + "' order by oracleProjectId";
+
+                    ArrayList<String> My_Project = VideoCallDataBase.getDB(getActivity()).getOracleProjectIdlist(list_query);
+
+                    ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, My_Project);
+
+                    // Drop down layout style - list view with radio button
+                    dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+                    // attaching data adapter to spinner
+                    job_spinner.setAdapter(dataAdapter);
+                    String list_query1="select * from projectStatus where loginuser = '" + Appreference.loginuserdetails.getEmail() + "'";
+
+                    ArrayList<String> My_date = VideoCallDataBase.getDB(getActivity()).getPerTaskcompletedDates(list_query1);
+
+                   /* ArrayAdapter<String> dataAdapter_Date = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, My_date);
+
+                    // Drop down layout style - list view with radio button
+                    dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+                    // attaching data adapter to spinner
+                    date_spinner.setAdapter(dataAdapter_Date);*/
+
+
                 }
             });
             activity_start.setOnClickListener(new View.OnClickListener() {
@@ -877,11 +941,11 @@ public class ProjectsFragment extends Fragment implements View.OnClickListener, 
                     public void onClick(View v) {
                         PopupMenu popup = new PopupMenu(getActivity(), completed_status);
                         popup.getMenuInflater().inflate(R.menu.project_pop_menu, popup.getMenu());
-                        if(Appreference.loginuserdetails != null && Appreference.loginuserdetails.getRoleId() != null
+                      /*  if(Appreference.loginuserdetails != null && Appreference.loginuserdetails.getRoleId() != null
                                 && Appreference.loginuserdetails.getRoleId().equalsIgnoreCase("2")){
                             popup.getMenu().getItem(1).setVisible(false);
 
-                        }
+                        }*/
                         popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                             public boolean onMenuItemClick(MenuItem item) {
                                 /*Toast.makeText(getActivity(),
@@ -1019,20 +1083,8 @@ public class ProjectsFragment extends Fragment implements View.OnClickListener, 
             if (filterbuddy.size() > 0) {
                 NoResults.setVisibility(View.GONE);
                 for (int i = 0, l = filterbuddy.size(); i < l; i++) {
-                    //Log.i("result","filter"+filterbuddy.get(i).toString());
-                    // buddyList.add(filterbuddy.get(i));
                     Log.d("constraint", "JNDSEJBJW  12 " + results.count);
                     projectList.add(filterbuddy.get(i));
-//                Log.i("buddy","buddy"+buddyList.toString());
-//                Log.i("buddy","size"+buddyList.size());
-//                buddyArrayAdapter.add(filterbuddy.get(i));
-//            buddyArrayAdapter=new BuddyArrayAdapter(getContext(),buddyList);
-//                buddyArrayAdapter.clear();
-//                buddyArrayAdapter = new BuddyArrayAdapter(getActivity(),filterbuddy);
-//                buddyListView.setAdapter(buddyArrayAdapter);
-//            }
-//                buddyArrayAdapter.notifyDataSetChanged();
-
                 }
             } else {
                 NoResults.setVisibility(View.VISIBLE);
@@ -1052,7 +1104,7 @@ public class ProjectsFragment extends Fragment implements View.OnClickListener, 
         super.onResume();
 
         try {
-            String query_1 = "select * from projectDetails where loginuser = '" + Appreference.loginuserdetails.getEmail() + "'and projectcompletedstatus NOT IN (select projectcompletedstatus where projectcompletedstatus like '1')";
+            String query_1 = "select * from projectDetails where loginuser = '" + Appreference.loginuserdetails.getEmail() + "'and projectcompletedstatus NOT IN (select projectcompletedstatus where projectcompletedstatus like '1') order by oracleProjectId";
             projectList = new ArrayList<>();
             projectSearchList = new ArrayList<>();
             projectList = VideoCallDataBase.getDB(classContext).getProjectdetails(query_1);
@@ -1165,7 +1217,7 @@ public class ProjectsFragment extends Fragment implements View.OnClickListener, 
             @Override
             public void run() {
                 try {
-                    String query_1 = "select * from projectDetails where loginuser = '" + Appreference.loginuserdetails.getEmail() + "'and projectcompletedstatus NOT IN (select projectcompletedstatus where projectcompletedstatus like '1')";
+                    String query_1 = "select * from projectDetails where loginuser = '" + Appreference.loginuserdetails.getEmail() + "'and projectcompletedstatus NOT IN (select projectcompletedstatus where projectcompletedstatus like '1') order by oracleProjectId";
                     projectList = new ArrayList<>();
                     projectSearchList = new ArrayList<>();
                     projectList = VideoCallDataBase.getDB(classContext).getProjectdetails(query_1);
@@ -1264,7 +1316,7 @@ public class ProjectsFragment extends Fragment implements View.OnClickListener, 
                                         }
                                     }
                                 }
-                                String query_1 = "select * from projectDetails where loginuser = '" + Appreference.loginuserdetails.getEmail() + "'and projectcompletedstatus NOT IN (select projectcompletedstatus where projectcompletedstatus like '1')";
+                                String query_1 = "select * from projectDetails where loginuser = '" + Appreference.loginuserdetails.getEmail() + "'and projectcompletedstatus NOT IN (select projectcompletedstatus where projectcompletedstatus like '1') order by oracleProjectId";
                                 projectList = new ArrayList<>();
                                 projectSearchList = new ArrayList<>();
                                 projectList = VideoCallDataBase.getDB(classContext).getProjectdetails(query_1);
@@ -1300,7 +1352,7 @@ public class ProjectsFragment extends Fragment implements View.OnClickListener, 
                                         }
                                     }
                                 }
-                                String query_1 = "select * from projectDetails where loginuser = '" + Appreference.loginuserdetails.getEmail() + "'and projectcompletedstatus NOT IN (select projectcompletedstatus where projectcompletedstatus like '1')";
+                                String query_1 = "select * from projectDetails where loginuser = '" + Appreference.loginuserdetails.getEmail() + "'and projectcompletedstatus NOT IN (select projectcompletedstatus where projectcompletedstatus like '1')order by oracleProjectId";
                                 projectList = new ArrayList<>();
                                 projectSearchList = new ArrayList<>();
                                 projectList = VideoCallDataBase.getDB(classContext).getProjectdetails(query_1);

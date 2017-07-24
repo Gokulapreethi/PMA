@@ -1603,6 +1603,7 @@ public class ProjectHistory extends Activity implements WebServiceInterface, Swi
                         Log.i("ProjectHistory", "projectDetailsBean.getTaskStatus() 8 " + projectDetailsBean.getTaskStatus());
                         task_status.setText(projectDetailsBean.getTaskStatus());
                     } else {
+                        layoutcard.setBackgroundResource(R.color.white);
                         Log.i("draft123", "projectDetailsBean.getTaskStatus() 9 " + projectDetailsBean.getTaskStatus());
                         Log.i("draft123", "projectDetailsBean.getTaskId() 9 " + projectDetailsBean.getTaskId());
                         Log.i("draft123", "Appreference.old_status.get(projectDetailsBean.getTaskId()" + Appreference.old_status.get(projectDetailsBean.getTaskId()));

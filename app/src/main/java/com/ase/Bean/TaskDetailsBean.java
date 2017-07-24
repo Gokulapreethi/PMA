@@ -137,6 +137,8 @@ public class TaskDetailsBean implements Serializable,Cloneable {
     private String technicianSignature;
     private String customerSignatureName;
     private String actionTaken;
+    private String taskCompletedDate;
+
 
 
     public String getEstimatedTravel() {
@@ -1091,6 +1093,14 @@ private String sender_reply;
 
     public void setActionTaken(String actionTaken) {
         this.actionTaken = actionTaken;
+    }
+
+    public String getTaskCompletedDate() {
+        return taskCompletedDate;
+    }
+
+    public void setTaskCompletedDate(String taskCompletedDate) {
+        this.taskCompletedDate = taskCompletedDate;
     }
 }
 

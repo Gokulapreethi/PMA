@@ -4008,6 +4008,14 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback,
 //                                    VideoCallDataBase.getDB(context).update_Project_history(taskDetailsBean);
 //                                    if (VideoCallDataBase.getDB(context).DuplicateProjectTaskIdChecker(taskDetailsBean.getTaskId())) {
                                     VideoCallDataBase.getDB(context).insert_new_Project_history(taskDetailsBean);
+                                    Log.i("status", "new task $$$  "+taskDetailsBean.getProjectStatus());
+                                    if (taskDetailsBean.getTaskStatus()!=null && !taskDetailsBean.getTaskStatus().equalsIgnoreCase("")) {
+                                        if (taskDetailsBean.getTaskStatus()!=null && taskDetailsBean.getTaskStatus().equalsIgnoreCase("Started")) {
+                                            taskDetailsBean.setProjectStatus("0");
+                                        } else {
+                                            taskDetailsBean.setProjectStatus(taskDetailsBean.getTaskStatus());
+                                        }
+                                    }
                                     if (taskDetailsBean.getTaskStatus() != null && taskDetailsBean.getTaskStatus().length() > 0) {
 //                                        VideoCallDataBase.getDB(context).update_Project_history(taskDetailsBean);
 //                                        VideoCallDataBase.getDB(context).insertORupdate_Task_history(taskDetailsBean);

@@ -532,7 +532,8 @@ public class AddTaskReassign extends Activity implements View.OnClickListener, W
                 taskDetailsBean.setSignalid(Utility.getSessionID());
                 taskDetailsBean.setDateTime(dateforrow);
                 taskDetailsBean.setSendStatus("0");
-                taskDetailsBean.setTaskStatus("inprogress");
+                taskDetailsBean.setTaskStatus("Assigned");
+                taskDetailsBean.setProjectStatus("Assigned");
                 taskDetailsBean.setOwnerOfTask(detailsBean.getOwnerOfTask());
                 Log.i("ASE", "Signalid " + taskDetailsBean.getSignalid());
                 Log.i("ASE", "SelectedUserList " + SelectedUserList);

@@ -26,11 +26,14 @@
         android:icon="@drawable/restart"/>
     <item
         android:id="@+id/completed_job"
-        android:title="Completed"
+        android:title="End of Day"
         android:icon="@drawable/completed"/>
     <item
         android:id="@+id/DeAssign_job"
         android:title="DeAssign"
         android:icon="@drawable/deassign_job"/>
-
+    <item
+        android:id="@+id/completed_job1"
+        android:title="Complete"
+        android:icon="@drawable/completed"/>
 </menu>

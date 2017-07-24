@@ -96,6 +96,7 @@ import xml.xmlcomposer;
  */
 public class ContactsFragment extends Fragment implements View.OnClickListener, Handler.Callback, WebServiceInterface {
 
+    View rootView;
     private BuddyArrayAdapter buddyArrayAdapter;
     ArrayAdapter<String> adapter;
     public ArrayList<Map<String, String>> total_buddyList;
@@ -200,32 +201,33 @@ public class ContactsFragment extends Fragment implements View.OnClickListener, 
         }
     }
 
-   /* @Override
+    @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
         Log.i("LifeCycle", " projectFragment isVisibleToUser : " + isVisibleToUser);
         try {
-            if (Appreference.loginuserdetails.getFirstName() != null && Appreference.loginuserdetails.getLastName() != null) {
+            if (rootView != null) {
+                if (Appreference.loginuserdetails.getFirstName() != null && Appreference.loginuserdetails.getLastName() != null) {
+                    name.setText(Appreference.loginuserdetails.getFirstName() + " " + Appreference.loginuserdetails.getLastName());
+                } else if (Appreference.loginuserdetails.getFirstName() != null) {
+                    buddyList = VideoCallDataBase.getDB(classContext).getContact(Appreference.loginuserdetails.getFirstName());
+                } else {
+                    name.setText(Appreference.loginuserdetails.getEmail());
 
-                name.setText(Appreference.loginuserdetails.getFirstName() + " " + Appreference.loginuserdetails.getLastName());
-            } else if (Appreference.loginuserdetails.getFirstName() != null) {
-                buddyList = VideoCallDataBase.getDB(classContext).getContact(Appreference.loginuserdetails.getFirstName());
-            } else {
-                name.setText(Appreference.loginuserdetails.getEmail());
-
+                }
+                String s = "select * from taskDetailsInfo where msgstatus='12' and loginuser='" + Appreference.loginuserdetails.getEmail() + "'";
+                ArrayList<ProjectDetailsBean> projectDetailsBeen = VideoCallDataBase.getDB(getContext()).getExclationdetails(s);
+                if (projectDetailsBeen.size() > 0)
+                    exclation_counter.setVisibility(View.VISIBLE);
+                else
+                    exclation_counter.setVisibility(View.GONE);
             }
-            String s = "select * from taskDetailsInfo where msgstatus='12' and loginuser='" + Appreference.loginuserdetails.getEmail() + "'";
-            ArrayList<ProjectDetailsBean> projectDetailsBeen = VideoCallDataBase.getDB(getContext()).getExclationdetails(s);
-            if (projectDetailsBeen.size() > 0)
-                exclation_counter.setVisibility(View.VISIBLE);
-            else
-                exclation_counter.setVisibility(View.GONE);
 
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
-*/
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -237,7 +239,7 @@ public class ContactsFragment extends Fragment implements View.OnClickListener, 
         classContext = getContext();
         xmlcomposer = new xmlcomposer();
         Appreference.context_table.put("contactsfragment", this);
-        View rootView = inflater.inflate(R.layout.contacts_fragment_layout, container, false);
+        rootView = inflater.inflate(R.layout.contacts_fragment_layout, container, false);
         View rootView1 = inflater.inflate(R.layout.item, container, false);
         loginuserStatus = (TextView) rootView.findViewById(R.id.tv_status);
         alpha_sort = (ImageView) rootView.findViewById(R.id.alpha_sort);
@@ -1480,7 +1482,11 @@ public class ContactsFragment extends Fragment implements View.OnClickListener, 
             }
 
             Log.i("List", "arraylist " + list1);
-            Collections.sort(buddyList, new CustomComparator());
+            try {
+                Collections.sort(buddyList, new CustomComparator());
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
             if (buddyList.size() == 0)
                 contact.performClick();
 
