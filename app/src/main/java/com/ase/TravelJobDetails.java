@@ -294,6 +294,21 @@ public class TravelJobDetails extends Activity implements View.OnClickListener, 
                 status_job.setVisibility(View.GONE);
             }
         }
+        if(!taskStatus.equalsIgnoreCase("") && taskStatus!=null && taskStatus.equalsIgnoreCase("completed")){
+                    handler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                    if (oracleProjectOwner != null && !oracleProjectOwner.equalsIgnoreCase(Appreference.loginuserdetails.getUsername())) {
+                        ll_2.setVisibility(View.GONE);
+                        status_job.setVisibility(View.GONE);
+                        travel_job.setVisibility(View.GONE);
+                    } else {
+                        ll_2.setVisibility(View.GONE);
+                        status_job.setVisibility(View.GONE);
+                    }
+                }
+            });
+        }
         ll_2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -413,7 +428,6 @@ public class TravelJobDetails extends Activity implements View.OnClickListener, 
         refresh();
     }
 
-
     public void projectBackgroundProcess() {
         cancelDialog();
 
@@ -468,6 +482,20 @@ public class TravelJobDetails extends Activity implements View.OnClickListener, 
                         tv_reassign.setText("Assign Task");
                         status_job.setVisibility(View.GONE);
                         travel_job.setVisibility(View.GONE);
+                    }
+                });
+            }else if(!taskDetailsBean.getTaskStatus().equalsIgnoreCase("") && taskDetailsBean.getTaskStatus()!=null && taskDetailsBean.getTaskStatus().equalsIgnoreCase("completed")){
+                handler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (oracleProjectOwner != null && !oracleProjectOwner.equalsIgnoreCase(Appreference.loginuserdetails.getUsername())) {
+                            ll_2.setVisibility(View.GONE);
+                            status_job.setVisibility(View.GONE);
+                            travel_job.setVisibility(View.GONE);
+                        } else {
+                            ll_2.setVisibility(View.GONE);
+                            status_job.setVisibility(View.GONE);
+                        }
                     }
                 });
             }

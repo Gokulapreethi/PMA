@@ -69,7 +69,7 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
      * DB inside application
      */
     /*public static final String DATABASE_NAME = Appreference.main_Activity_context
-	 .getResources().getString(R.string.app_name) + ".db";
+     .getResources().getString(R.string.app_name) + ".db";
 */
     Context context;
     public static final String CREATE_TABLE_CHAT = "create table if not exists chat(autoincrement_id integer primary key autoincrement,chattype varchar(100),chatname varchar(100),chatid varchar(100),username varchar(100),fromname varchar(100),toname varchar(100),signalid varchar(100),messagetype varchar(100),message varchar(100),datetime varchar(100),msgstatus varchar(100),imagepath varchar(100),userid varchar(100),opened varchar(50),coordinator varchar(100),chatmembers varchar(500),conferenceuri varchar(100),scheduled varchar(50))";
@@ -83,7 +83,7 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
     public static final String CREATE_TABLE_PROJECT_HISTORY = "create table if not exists projectHistory(id integer primary key autoincrement,loginuser varchar(100),projectId varchar(100),parentTaskId varchar(100),projectOwner varchar(100),projectName varchar(100),fromUserId varchar(100),toUserId varchar(100),fromUserName varchar(100),toUserName varchar(100),projectDescription varchar(100),projectOrganisation varchar(100),plannedStartDateTime varchar(100),plannedEndDateTime varchar(100),taskMemberList varchar(100),taskStatus varchar(100),ownerOfTask varchar(100),taskReceiver varchar(100),taskObservers TEXT,taskNo varchar(100),taskName varchar(100),taskDescription varchar(100),taskType varchar(100),mimeType varchar(100),taskId varchar(100),signalId varchar(100),completedPercentage varchar(100),readStatus varchar(5),category varchar(10),isParentTask varchar(5),issueParentId varchar(100),requestStatus varchar(100),oracleTaskId varchar(100),estimatedTravelHrs integer,estimatedActivityHrs integer,activity varchar(100),oracleProjectId varchar(100),customerName varchar(100),address varchar(100),mcModel varchar(100),mcSrNo varchar(100),serviceRequestDate varchar(100),chasisNo varchar(100),observation varchar(100),oracleCustomerId integer,processFlag varchar(100),projectcompletedstatus varchar(100),isActiveStatus varchar(100),jobCardType varchar(100),machineMake varchar(100))";
     public static final String CREATE_TABLE_FORM_ACCESS = "create table if not exists FormAccess(id integer primary key autoincrement,taskId varchar(50),formId varchar(50),formAccessId varchar(50),taskGiver varchar(50),memberName varchar(50),accessMode varchar(50))";
     public static final String CREATE_TABLE_List_User_Group_Member_Access = "create table if not exists listUserGroupMemberAccess(userid integer,groupid integer,groupname varchar(100),loginuser varchar(100),respondVideo varchar(50),respondFiles varchar(50),accessForms varchar(50),respondAudio varchar(50),videoAccess varchar(50),adminAccess varchar(50),respondDateChange varchar(50),respondLocation varchar(50),respondConfCall varchar(50),audioAccess varchar(50),chatAccess varchar(50),respondText varchar(50),respondPrivate varchar(50),respondPhoto varchar(50),accessReminder varchar(50),respondSketch varchar(50),respondTask varchar(50),accessScheduledCNF varchar(50),GroupTask varchar(50),ReassignTask varchar(50),ChangeTaskName varchar(50),TaskDescriptions varchar(50),TemplateExistingTask varchar(50),ApproveLeave varchar(50),RemindMe varchar(50),AddObserver varchar(50),TaskPriority varchar(50),Escalations varchar(50))";
-    public static final String CREATE_TABLE_PROJECT_STATUS="create table if not exists projectStatus(id integer primary key autoincrement,userId integer,projectId integer,taskId integer,taskDescription varchar(100),travelStartTime varchar(100),activityStartTime varchar(100),activityEndTime varchar(100),travelEndTime varchar(100),totravelstartdatetime varchar(100),totravelenddatetime varchar(100),remarks varchar(100),hourMeterReading varchar(100),status varchar(100),customersignaturename varchar(100),photo varchar(100),techniciansignature varchar(100),customersignature varchar(100),observation varchar(100),actionTaken varchar(100),taskcompleteddate varchar(100))";
+    public static final String CREATE_TABLE_PROJECT_STATUS = "create table if not exists projectStatus(id integer primary key autoincrement,userId integer,projectId integer,taskId integer,taskDescription varchar(100),travelStartTime varchar(100),activityStartTime varchar(100),activityEndTime varchar(100),travelEndTime varchar(100),totravelstartdatetime varchar(100),totravelenddatetime varchar(100),remarks varchar(100),hourMeterReading varchar(100),status varchar(100),customersignaturename varchar(100),photo varchar(100),techniciansignature varchar(100),customersignature varchar(100),observation varchar(100),actionTaken varchar(100),taskcompleteddate varchar(100))";
 
     public static final String EULATABLE = "eulaagree";
     public static final String EULACREATE = "create table if not exists '" + EULATABLE + "'(id integer (1),selection varchar(1))";
@@ -534,7 +534,7 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
             if (!db.isOpen())
                 openDatabase();
             ContentValues cv = new ContentValues();
-            Log.i("chat123","inside DB contact list");
+            Log.i("chat123", "inside DB contact list");
 
             Log.i("ContactTable", "Value--->" + row_id);
             cv.put("contactemail", bean.getEmail());
@@ -553,7 +553,7 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
             cv.put("profession", bean.getProfession());
             cv.put("organization", bean.getOrganization());
             cv.put("specialization", bean.getSpecialization());
-            if(bean.getRoleId()!=null && !bean.getRoleId().equalsIgnoreCase("")) {
+            if (bean.getRoleId() != null && !bean.getRoleId().equalsIgnoreCase("")) {
                 cv.put("roleId", bean.getRoleId());
                 cv.put("roleName", bean.getRoleName());
             }
@@ -567,7 +567,7 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
         } catch (Exception e) {
             // TODO: handle exception
             e.printStackTrace();
-            Log.i("chat123","inside DB contact list exception==>"+e.getMessage());
+            Log.i("chat123", "inside DB contact list exception==>" + e.getMessage());
 
         }
     }
@@ -1007,7 +1007,7 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
             Log.i("time", "TaskHistoryInfo  value");
             Log.i("videcalldatebase", "bean.getGroupTaskMembers() " + bean.getGroupTaskMembers());
             Log.i("TaskArrayAdapter", "New DB OwnerOftask---------> 1 *  " + bean.getGroupTaskMembers());
-            if (bean.getGroupTaskMembers() != null && !bean.getGroupTaskMembers().equalsIgnoreCase("(null)") && !bean.getGroupTaskMembers().equalsIgnoreCase(null) && !bean.getGroupTaskMembers().equalsIgnoreCase("null") ) {
+            if (bean.getGroupTaskMembers() != null && !bean.getGroupTaskMembers().equalsIgnoreCase("(null)") && !bean.getGroupTaskMembers().equalsIgnoreCase(null) && !bean.getGroupTaskMembers().equalsIgnoreCase("null")) {
                 Log.i("videcalldatebase", "bean.getGroupTaskMembers() inside " + bean.getGroupTaskMembers());
                 cv.put("taskMemberList", bean.getGroupTaskMembers());
             }
@@ -2110,14 +2110,14 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
             cv.put("projectDescription", projectDetailsBean.getDescription());
             ProjectOrganisationBean projectOrganisationBean = projectDetailsBean.getOrganisation();
 //            Log.i("Response", "projectDetailsBean projectOrganisationBean.getName() " + projectOrganisationBean.getName());
-            if(projectOrganisationBean!=null)
-            cv.put("projectOrganisation", projectOrganisationBean.getName());
+            if (projectOrganisationBean != null)
+                cv.put("projectOrganisation", projectOrganisationBean.getName());
             ListMember listMember1 = projectDetailsBean.getProjectOwner();
-            if(listMember1!=null)
-            cv.put("projectOwner", listMember1.getUsername());
+            if (listMember1 != null)
+                cv.put("projectOwner", listMember1.getUsername());
             ArrayList<String> grouplist_2 = VideoCallDataBase.getDB(context).selectGroupmembers("select * from contact", "username");
             if (grouplist_2.size() > 0) {
-                if (listMember1!=null && !listMember1.getUsername().equalsIgnoreCase(Appreference.loginuserdetails.getUsername())) {
+                if (listMember1 != null && !listMember1.getUsername().equalsIgnoreCase(Appreference.loginuserdetails.getUsername())) {
                     if (!grouplist_2.contains(listMember1.getUsername())) {
                         ListMember listMember = new ListMember();
                         listMember.setEmail(listMember1.getEmail());
@@ -2139,34 +2139,34 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
             cv.put("readStatus", project_unReadMsg_count);
             ArrayList<ListMember> listMembers;
             listMembers = projectDetailsBean.getListMemberProject();
-            if (listMembers!=null && listMembers.size() > 0) {
+            if (listMembers != null && listMembers.size() > 0) {
                 ListMember listMember_1 = listMembers.get(0);
 //                cv.put("", listMember_1.getUsername());
                 Log.i("Response", "projectDetailsBean listMember_1.getUsername()" + listMember_1.getUsername());
             }
             ArrayList<ListAllgetTaskDetails> listAllgetTaskDetailses;
             listAllgetTaskDetailses = projectDetailsBean.getListSubTask();
-            if (listAllgetTaskDetailses!=null && listAllgetTaskDetailses.size() > 0) {
+            if (listAllgetTaskDetailses != null && listAllgetTaskDetailses.size() > 0) {
                 ListAllgetTaskDetails listAllgetTaskDetailses1 = listAllgetTaskDetailses.get(0);
                 cv.put("taskStatus", listAllgetTaskDetailses1.getStatus());
                 Log.i("Response", "projectDetailsBean listMember_1.getUsername()" + listAllgetTaskDetailses1.getCompletedPercentage());
             }
 
-                cv.put("oracleProjectId", projectDetailsBean.getOracleProjectId());
-                cv.put("customerName", projectDetailsBean.getCustomerName());
-                cv.put("address", projectDetailsBean.getAddress());
-                cv.put("mcModel", projectDetailsBean.getMcModel());
-                cv.put("mcSrNo", projectDetailsBean.getMcSrNo());
-                cv.put("serviceRequestDate", projectDetailsBean.getServiceRequestDate());
-                cv.put("chasisNo", projectDetailsBean.getChasisNo());
-                cv.put("observation", projectDetailsBean.getObservation());
-                cv.put("oracleCustomerId", projectDetailsBean.getOracleCustomerId());
-                cv.put("activity", projectDetailsBean.getActivity());
-                cv.put("processFlag", projectDetailsBean.getProcessFlag());
-                cv.put("projectcompletedstatus", projectDetailsBean.getProjectCompletedStatus());
-                cv.put("isActiveStatus", projectDetailsBean.getIsActiveStatus());
-                cv.put("jobCardType", projectDetailsBean.getJobCardType());
-                cv.put("machineMake", projectDetailsBean.getMachineMake());
+            cv.put("oracleProjectId", projectDetailsBean.getOracleProjectId());
+            cv.put("customerName", projectDetailsBean.getCustomerName());
+            cv.put("address", projectDetailsBean.getAddress());
+            cv.put("mcModel", projectDetailsBean.getMcModel());
+            cv.put("mcSrNo", projectDetailsBean.getMcSrNo());
+            cv.put("serviceRequestDate", projectDetailsBean.getServiceRequestDate());
+            cv.put("chasisNo", projectDetailsBean.getChasisNo());
+            cv.put("observation", projectDetailsBean.getObservation());
+            cv.put("oracleCustomerId", projectDetailsBean.getOracleCustomerId());
+            cv.put("activity", projectDetailsBean.getActivity());
+            cv.put("processFlag", projectDetailsBean.getProcessFlag());
+            cv.put("projectcompletedstatus", projectDetailsBean.getProjectCompletedStatus());
+            cv.put("isActiveStatus", projectDetailsBean.getIsActiveStatus());
+            cv.put("jobCardType", projectDetailsBean.getJobCardType());
+            cv.put("machineMake", projectDetailsBean.getMachineMake());
 
             if (!DuplicateProjectIdChecker(projectDetailsBean.getId())) {
                 row_id = (int) db.insert("projectDetails", null, cv);
@@ -2188,7 +2188,7 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
                 openDatabase();
             ContentValues cv = new ContentValues();
             ContentValues cv_1 = new ContentValues();
-            ProjectDetailsBean projectDetailsBean=listallProjectBean.getProjectDTO();
+            ProjectDetailsBean projectDetailsBean = listallProjectBean.getProjectDTO();
 
             cv.put("loginuser", Appreference.loginuserdetails.getEmail());
             cv_1.put("loginuser", Appreference.loginuserdetails.getEmail());
@@ -2197,9 +2197,9 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
 
             //Added For ASE
 //            cv_1.put("oracleTaskId",projectDetailsBean.getOracleTaskId());
-            cv_1.put("estimatedTravelHrs",projectDetailsBean.getEstimatedTravelHours());
-            cv_1.put("estimatedActivityHrs",projectDetailsBean.getEstimatedActivityHrs());
-            cv_1.put("activity",projectDetailsBean.getActivity());
+            cv_1.put("estimatedTravelHrs", projectDetailsBean.getEstimatedTravelHours());
+            cv_1.put("estimatedActivityHrs", projectDetailsBean.getEstimatedActivityHrs());
+            cv_1.put("activity", projectDetailsBean.getActivity());
             cv_1.put("oracleProjectId", projectDetailsBean.getOracleProjectId());
             cv_1.put("customerName", projectDetailsBean.getCustomerName());
             cv_1.put("address", projectDetailsBean.getAddress());
@@ -2217,8 +2217,6 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
             cv_1.put("machineMake", projectDetailsBean.getMachineMake());
 
 
-
-
 //            cv.put("projectName", projectDetailsBean.getProjectName());
             cv_1.put("projectName", projectDetailsBean.getProjectName());
             ListMember listMember_2 = projectDetailsBean.getProjectOwner();
@@ -2234,18 +2232,18 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
             listMembers = projectDetailsBean.getListMemberProject();
             String pjt_members = "";
 
-            Log.i("chat123","listMember size"+listMembers.size());
+            Log.i("chat123", "listMember size" + listMembers.size());
             if (listMembers.size() > 0) {
                 ArrayList<String> grouplist2 = VideoCallDataBase.getDB(context).selectGroupmembers("select * from contact", "username");
                 for (int i = 0; i < listMembers.size(); i++) {
                     ListMember listMember_1 = listMembers.get(i);
                     Log.i("Response", "projectDetailsBean listMember_1.getUsername()" + listMember_1.getUsername());
-                    Log.i("chat123","DB contact list size"+grouplist2.size());
+                    Log.i("chat123", "DB contact list size" + grouplist2.size());
 
                     if (grouplist2.size() > 0) {
                         if (!listMember_1.getUsername().equalsIgnoreCase(Appreference.loginuserdetails.getUsername())) {
-                            Log.i("chat123","DB contact list notcontains new one===>"+listMember_1.getUsername());
-                            Log.i("chat123","DB contact list notcontains new RoleId===>"+listMember_1.getRoleId());
+                            Log.i("chat123", "DB contact list notcontains new one===>" + listMember_1.getUsername());
+                            Log.i("chat123", "DB contact list notcontains new RoleId===>" + listMember_1.getRoleId());
 
                             if (!grouplist2.contains(listMember_1.getUsername())) {
                                 ListMember listMember = new ListMember();
@@ -2262,11 +2260,10 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
                                 listMember.setRoleId(listMember_1.getRoleId());
                                 listMember.setRoleName(listMember_1.getRoleName());
                                 VideoCallDataBase.getDB(context).insertNewContact_history(listMember, Appreference.loginuserdetails.getUsername());
-                            }else if(listMember_1.getRoleId()!=null && !listMember_1.getRoleId().equalsIgnoreCase(""))
-                            {
-                                Log.i("chat123","DB contact list already contains ===>"+listMember_1.getId());
-                                Log.i("chat123","DB contact list already contains role ID ===>"+listMember_1.getRoleId());
-                                VideoCallDataBase.getDB(context).contactRoleIdUpdate(listMember_1.getRoleId(),listMember_1.getRoleName(),listMember_1.getId());
+                            } else if (listMember_1.getRoleId() != null && !listMember_1.getRoleId().equalsIgnoreCase("")) {
+                                Log.i("chat123", "DB contact list already contains ===>" + listMember_1.getId());
+                                Log.i("chat123", "DB contact list already contains role ID ===>" + listMember_1.getRoleId());
+                                VideoCallDataBase.getDB(context).contactRoleIdUpdate(listMember_1.getRoleId(), listMember_1.getRoleName(), listMember_1.getId());
                             }
                         }
                     }
@@ -2357,7 +2354,7 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
                 cv.put("taskDescription", parentlist.getName());
                 cv_1.put("taskDescription", parentlist.getName());
                 cv.put("parentTaskId", parentlist.getId());
-                Log.i("ws123","DB values under ParentTask ---------->"+parentlist.getId());
+                Log.i("ws123", "DB values under ParentTask ---------->" + parentlist.getId());
 
                 cv_1.put("parentTaskId", parentlist.getId());
                 if (parentlist.getCreatedDate() != null) {
@@ -2501,7 +2498,7 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
                         Log.i("Response", "projectDetailsBean listToDetails1.getUsername() subtask " + listToDetails1.getUsername());
                         ArrayList<String> grouplist_2 = VideoCallDataBase.getDB(context).selectGroupmembers("select * from contact", "username");
                         if (grouplist_2.size() > 0) {
-                            if (listToDetails1!=null && listToDetails1.getUsername()!=null && !listToDetails1.getUsername().equalsIgnoreCase(Appreference.loginuserdetails.getUsername())) {
+                            if (listToDetails1 != null && listToDetails1.getUsername() != null && !listToDetails1.getUsername().equalsIgnoreCase(Appreference.loginuserdetails.getUsername())) {
                                 if (!grouplist_2.contains(listToDetails1.getUsername())) {
                                     ListMember listMember = new ListMember();
                                     listMember.setEmail(listToDetails1.getEmail());
@@ -2586,7 +2583,7 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
 //                    cv.put("parentTaskId", listAllgetTaskDetailses1.getParentTask());
 //                    cv_1.put("parentTaskId", listAllgetTaskDetailses1.getParentTask());
                     cv.put("parentTaskId", parentlist.getId());
-                    Log.i("ws123","DB values under ParentTask 2---------->"+parentlist.getId());
+                    Log.i("ws123", "DB values under ParentTask 2---------->" + parentlist.getId());
 
                     cv_1.put("parentTaskId", parentlist.getId());
 //                cv.put("mimeType", listAllgetTaskDetailses1.getCompletedPercentage());
@@ -2597,13 +2594,13 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
                     cv.put("completedPercentage", listAllgetTaskDetailses1.getCompletedPercentage());
                     cv_1.put("completedPercentage", listAllgetTaskDetailses1.getCompletedPercentage());
                     Log.i("Response", "projectDetailsBean subtask CompletedPercentage " + listAllgetTaskDetailses1.getCompletedPercentage());
-                    Log.i("oracle_status", "oracle values 1 ==> " +"task Id----->"+task_id+"===>" +oracle_status);
-                    Log.i("oracle_status", "normal values 1 ==> " +"task Id----->"+task_id+"===>" +listAllgetTaskDetailses1.getStatus());
-                    Log.i("oracle_status", "oracleProjectId values 1===>" +projectDetailsBean.getOracleProjectId());
+                    Log.i("oracle_status", "oracle values 1 ==> " + "task Id----->" + task_id + "===>" + oracle_status);
+                    Log.i("oracle_status", "normal values 1 ==> " + "task Id----->" + task_id + "===>" + listAllgetTaskDetailses1.getStatus());
+                    Log.i("oracle_status", "oracleProjectId values 1===>" + projectDetailsBean.getOracleProjectId());
 
                     if (projectDetailsBean.getOracleProjectId() != null && !projectDetailsBean.getOracleProjectId().equalsIgnoreCase("") && !projectDetailsBean.getOracleProjectId().equalsIgnoreCase("null")) {
 
-                        if (oracle_status!=null && !oracle_status.equalsIgnoreCase("")) {
+                        if (oracle_status != null && !oracle_status.equalsIgnoreCase("")) {
                             cv.put("taskStatus", oracle_status);
                             cv_1.put("taskStatus", oracle_status);
                         } else {
@@ -2618,8 +2615,8 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
                         }
                         cv_1.put("taskStatus", listAllgetTaskDetailses1.getStatus());
                     }
-                    cv_1.put("oracleTaskId",listAllgetTaskDetailses1.getOracleTaskId());
-                    cv_1.put("estimatedTravelHrs",listAllgetTaskDetailses1.getEstimatedTravelHours());
+                    cv_1.put("oracleTaskId", listAllgetTaskDetailses1.getOracleTaskId());
+                    cv_1.put("estimatedTravelHrs", listAllgetTaskDetailses1.getEstimatedTravelHours());
                     if (listAllgetTaskDetailses1.getCreatedDate() != null) {
                         String created_date = listAllgetTaskDetailses1.getCreatedDate();
                         String date_time = created_date.substring(0, 19);
@@ -2828,7 +2825,7 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
         } catch (Exception e) {
             // TODO: handle exception
             e.printStackTrace();
-            Log.i("ws123","DB values Exception ---------->"+e.getMessage());
+            Log.i("ws123", "DB values Exception ---------->" + e.getMessage());
 
         }
 
@@ -3161,8 +3158,8 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
     public int update_Project_history(TaskDetailsBean bean) {
         int row_id = 0;
         try {
-            Log.i("conv123","update_Project_history DBDBDB=getTaskReceiver=====>"+bean.getTaskReceiver());
-            Log.i("conv123","update_Project_history DBDBDB=getSubType=====>"+bean.getSubType());
+            Log.i("conv123", "update_Project_history DBDBDB=getTaskReceiver=====>" + bean.getTaskReceiver());
+            Log.i("conv123", "update_Project_history DBDBDB=getSubType=====>" + bean.getSubType());
             String logginuser = Appreference.loginuserdetails.getEmail();
             if (!db.isOpen())
                 openDatabase();
@@ -3217,7 +3214,7 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
             }
             if (bean.getTaskReceiver() != null)
                 cv.put("taskReceiver", bean.getTaskReceiver());
-            if (bean.getGroupTaskMembers() != null  && !bean.getGroupTaskMembers().equalsIgnoreCase("null") && !bean.getGroupTaskMembers().equalsIgnoreCase(null)) {
+            if (bean.getGroupTaskMembers() != null && !bean.getGroupTaskMembers().equalsIgnoreCase("null") && !bean.getGroupTaskMembers().equalsIgnoreCase(null)) {
                 cv.put("taskMemberList", bean.getGroupTaskMembers());
             }
             Log.i("TaskTable", "Insert Task Id : " + bean.getTaskId());
@@ -3305,8 +3302,8 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
     public int insert_new_Project_history(TaskDetailsBean bean) {
         int row_id = 0;
         try {
-            Log.i("conv123","insert_new_Project_history DBDBDB=getTaskReceiver=====>"+bean.getTaskReceiver());
-            Log.i("conv123","insert_new_Project_history DBDBDB=getSubType=====>"+bean.getSubType());
+            Log.i("conv123", "insert_new_Project_history DBDBDB=getTaskReceiver=====>" + bean.getTaskReceiver());
+            Log.i("conv123", "insert_new_Project_history DBDBDB=getSubType=====>" + bean.getSubType());
             String logginuser = Appreference.loginuserdetails.getEmail();
             String query1 = "select projectName from projectHistory where projectId='" + bean.getProjectId() + "' order by id desc limit 1";
             String projectname = VideoCallDataBase.getDB(context).getProjectParentTaskId(query1);
@@ -3375,7 +3372,7 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
             cv.put("projectId", bean.getProjectId());
             cv.put("parentTaskId", parent_TaskId);
             cv.put("requestStatus", bean.getRequestStatus());
-            if ((bean.getGroupTaskMembers() != null && !bean.getGroupTaskMembers().trim().equalsIgnoreCase("") && !bean.getGroupTaskMembers().equalsIgnoreCase("null") && !bean.getGroupTaskMembers().equalsIgnoreCase(null))|| bean.getSubType()!=null && bean.getSubType().equalsIgnoreCase("deassign")) {
+            if ((bean.getGroupTaskMembers() != null && !bean.getGroupTaskMembers().trim().equalsIgnoreCase("") && !bean.getGroupTaskMembers().equalsIgnoreCase("null") && !bean.getGroupTaskMembers().equalsIgnoreCase(null)) || bean.getSubType() != null && bean.getSubType().equalsIgnoreCase("deassign")) {
                 cv.put("taskMemberList", bean.getGroupTaskMembers());
             }
             if (bean.getCatagory() != null && !bean.getCatagory().trim().equalsIgnoreCase("") && !bean.getCatagory().equalsIgnoreCase("null") && !bean.getCatagory().equalsIgnoreCase(null)) {
@@ -3701,7 +3698,7 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
     }
 
     public ArrayList<TaskDetailsBean> getTaskHistory(String query) {
-         ArrayList<TaskDetailsBean> arrayList = new ArrayList<>();
+        ArrayList<TaskDetailsBean> arrayList = new ArrayList<>();
         Cursor cur;
         if (db == null)
             db = getReadableDatabase();
@@ -3826,7 +3823,7 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
                     if (cur.getString(cur.getColumnIndex("private_member")) != null)
                         taskDetailsBean.setPrivate_Member(cur.getString(cur.getColumnIndex("private_member")));
                     if (cur.getString(cur.getColumnIndex("sender_reply")) != null)
-                       taskDetailsBean.setSender_reply(cur.getString(cur.getColumnIndex("sender_reply")));
+                        taskDetailsBean.setSender_reply(cur.getString(cur.getColumnIndex("sender_reply")));
                     if (cur.getString(cur.getColumnIndex("reply_sendername")) != null)
                         taskDetailsBean.setReply_sender_name(cur.getString(cur.getColumnIndex("reply_sendername")));
                     if (cur.getString(cur.getColumnIndex("taskPlannedBeforeEndDate")) != null)
@@ -4074,11 +4071,11 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
                     projectDetailsBean.setMachineMake(cur.getString(cur.getColumnIndex("machineMake")));
                     Log.i("draft123", "DB before If" + projectDetailsBean.getTaskStatus());
 
-                    if(projectDetailsBean.getTaskId()!=null && projectDetailsBean.getTaskStatus()!=null && !projectDetailsBean.getTaskStatus().equalsIgnoreCase("")){
+                    if (projectDetailsBean.getTaskId() != null && projectDetailsBean.getTaskStatus() != null && !projectDetailsBean.getTaskStatus().equalsIgnoreCase("")) {
 //                            &&!projectDetailsBean.getTaskStatus().equalsIgnoreCase("draft") ){
-                        Appreference.old_status.put(projectDetailsBean.getTaskId(),projectDetailsBean.getTaskStatus());
+                        Appreference.old_status.put(projectDetailsBean.getTaskId(), projectDetailsBean.getTaskStatus());
                         Log.i("draft123", "DB Appreference added status " + projectDetailsBean.getTaskStatus());
-                        Log.i("draft123", "DB Appreference added ID" +projectDetailsBean.getTaskId());
+                        Log.i("draft123", "DB Appreference added ID" + projectDetailsBean.getTaskId());
 
                     }
                     arrayList.add(projectDetailsBean);
@@ -4245,7 +4242,7 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
 
     public int getUserIdForUserName(String username) {
         Cursor cur = null;
-        int from_userId=0;
+        int from_userId = 0;
         try {
             if (!db.isOpen())
                 openDatabase();
@@ -4524,7 +4521,7 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
         }
     }
 
-       public int getAllChatUnReadMsgCount() {
+    public int getAllChatUnReadMsgCount() {
         ArrayList<ChatBean> arrayList = new ArrayList<>();
         Cursor cur, cur1;
         if (db == null)
@@ -4620,11 +4617,12 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
             }
         } catch (Exception e) {
             e.printStackTrace();
-            Log.i("DB123","Error====>getProjectdetails===>"+e.getMessage());
+            Log.i("DB123", "Error====>getProjectdetails===>" + e.getMessage());
         } finally {
             return arrayList;
         }
     }
+
     public ArrayList<TaskDetailsBean> getTravelDetails(String query) {
         ArrayList<TaskDetailsBean> arrayList = new ArrayList<>();
         Cursor cur;
@@ -4644,7 +4642,7 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
 //                    taskDetailsBean.setActivityEndTime(cur.getString(cur.getColumnIndex("activityEndTime")));
 //                    taskDetailsBean.setToTravelStartTime(cur.getString(cur.getColumnIndex("totravelstartdatetime")));
 //                    taskDetailsBean.setToTravelEndTime(cur.getString(cur.getColumnIndex("totravelenddatetime")));
-                    Log.i("travel123","");
+                    Log.i("travel123", "");
 //                    if(taskDetailsBean.getTravelStartTime()!=null && !taskDetailsBean.getTravelStartTime().equalsIgnoreCase("")
 //                            && taskDetailsBean.getTravelEndTime()!=null && !taskDetailsBean.getTravelEndTime().equalsIgnoreCase(""))
                     arrayList.add(taskDetailsBean);
@@ -5338,7 +5336,8 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
             return chatlist;
         }
     }
- public ArrayList<TaskDetailsBean> getChatnames(String str, String tasktype) {
+
+    public ArrayList<TaskDetailsBean> getChatnames(String str, String tasktype) {
         ArrayList<TaskDetailsBean> chatlist = new ArrayList<>();
         Cursor cur = null;
         if (db == null)
@@ -5348,7 +5347,7 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
                 Log.i("chat", "DB-getChatname");
                 if (!db.isOpen())
                     openDatabase();
-                if (tasktype !=null && !tasktype.equalsIgnoreCase("") && tasktype.equalsIgnoreCase("group")) {
+                if (tasktype != null && !tasktype.equalsIgnoreCase("") && tasktype.equalsIgnoreCase("group")) {
                     cur = db.rawQuery("select * from taskHistoryInfo where loginuser='" + Appreference.loginuserdetails.getEmail() + "' and ((ownerOfTask='" + Appreference.loginuserdetails.getUsername() + "' or taskReceiver='" + Appreference.loginuserdetails.getUsername() + "') and (taskType='group' or taskType='Group')) and (ownerOfTask='" + str + "' or taskReceiver='" + str + "') and category='chat'", null);
                 } else if (tasktype.equalsIgnoreCase("individual")) {
                     cur = db.rawQuery("select * from taskHistoryInfo where loginuser='" + Appreference.loginuserdetails.getEmail() + "' and ((ownerOfTask='" + Appreference.loginuserdetails.getUsername() + "' or taskReceiver='" + Appreference.loginuserdetails.getUsername() + "') and (taskType='individual' or taskType='Individual')) and (ownerOfTask='" + str + "' or taskReceiver='" + str + "') and category='chat'", null);
@@ -5602,8 +5601,8 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
                 cur = db.rawQuery("select * from contact where username='" + username + "'and roleId NOT IN (select roleId from contact where roleId like '2')", null);
                 cur.moveToFirst();
                 while (!cur.isAfterLast()) {
-                    Log.i("admin123","username====>"+cur.getString(cur.getColumnIndex("username")));
-                    Log.i("admin123","RoleId====>"+cur.getString(cur.getColumnIndex("roleId")));
+                    Log.i("admin123", "username====>" + cur.getString(cur.getColumnIndex("username")));
+                    Log.i("admin123", "RoleId====>" + cur.getString(cur.getColumnIndex("roleId")));
                     bean.setEmail(cur.getString(cur.getColumnIndex("contactemail")));
                     bean.setUserid(cur.getInt(cur.getColumnIndex("userid")));
                     bean.setUsername(cur.getString(cur.getColumnIndex("username")));
@@ -6089,7 +6088,7 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
 //            e.printStackTrace();
 //        }
 
-        Log.i("sipmessage", "DB "+msgstatus);
+        Log.i("sipmessage", "DB " + msgstatus);
         ContentValues cv = new ContentValues();
         cv.put("msgstatus", msgstatus);
         db.update("taskDetailsInfo", cv, "signalid" + "= ?", new String[]{signalID});
@@ -6675,7 +6674,8 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
             return name;
         }
     }
-	 public String getusernameWithOutLast(String firstname) {
+
+    public String getusernameWithOutLast(String firstname) {
         String name = null;
         Cursor cur;
         if (db == null)
@@ -8084,7 +8084,7 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
         }
     }
 
-    public ArrayList<TaskDetailsBean> getAllReport(String taskid,String target_user,boolean isGroup) {
+    public ArrayList<TaskDetailsBean> getAllReport(String taskid, String target_user, boolean isGroup) {
         Cursor cur;
         ArrayList<TaskDetailsBean> taskDetailsBean = new ArrayList<TaskDetailsBean>();
         if (db == null)
@@ -8095,8 +8095,8 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
             String Loginuser = Appreference.loginuserdetails.getUsername().replace('_', '@');
             String owner = Appreference.loginuserdetails.getUsername();
 //            cur = db.rawQuery("select taskNo,taskName,taskDescription,fromUserName,toUserName,taskId,taskTagName from taskDetailsInfo where loginuser='" + Loginuser + "'and ownerOfTask='"+owner+"'and subType='customeHeaderAttribute'", null);
-            if(target_user!=null)
-            cur = db.rawQuery("select * from taskDetailsInfo where loginuser='" + Loginuser + "'and fromUserName='" + target_user + "'and subType='customeHeaderAttribute' and taskId='" + taskid + "'", null);
+            if (target_user != null)
+                cur = db.rawQuery("select * from taskDetailsInfo where loginuser='" + Loginuser + "'and fromUserName='" + target_user + "'and subType='customeHeaderAttribute' and taskId='" + taskid + "'", null);
             else
                 cur = db.rawQuery("select * from taskDetailsInfo where loginuser='" + Loginuser + "'and subType='customeHeaderAttribute' and taskId='" + taskid + "'", null);
 
@@ -8199,21 +8199,21 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
                 openDatabase();
             String Loginuser = Appreference.loginuserdetails.getUsername().replace('_', '@');
             String owner = Appreference.loginuserdetails.getUsername();
-            String Query="select * from taskDetailsInfo where loginuser='" + Loginuser + "'and subType='customeHeaderAttribute' and taskId='"+taskid+"'";
+            String Query = "select * from taskDetailsInfo where loginuser='" + Loginuser + "'and subType='customeHeaderAttribute' and taskId='" + taskid + "'";
             cur = db.rawQuery(Query, null);
             cur.moveToFirst();
             while (!cur.isAfterLast()) {
                 TaskDetailsBean taskdetailsbean = new TaskDetailsBean();
                 if (cur.getString(cur.getColumnIndex("taskTagName")) != null && cur.getString(cur.getColumnIndex("taskTagName")).equalsIgnoreCase("Job No")) {
                     taskdetailsbean.setTaskNo(cur.getString(cur.getColumnIndex("taskDescription")));
-                    if(cur.getString(cur.getColumnIndex("toUserName"))!=null &&
+                    if (cur.getString(cur.getColumnIndex("toUserName")) != null &&
                             cur.getString(cur.getColumnIndex("toUserName")).equalsIgnoreCase(owner)) {
                         String username = VideoCallDataBase.getDB(context).getName(cur.getString(cur.getColumnIndex("fromUserName")));
                         if (username != null)
                             taskdetailsbean.setToUserName(username);
                         else
                             taskdetailsbean.setToUserName(cur.getString(cur.getColumnIndex("fromUserName")));
-                    }else {
+                    } else {
                         String username = VideoCallDataBase.getDB(context).getName(cur.getString(cur.getColumnIndex("toUserName")));
                         if (username != null)
                             taskdetailsbean.setToUserName(username);
@@ -8243,11 +8243,11 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
                     taskdetailsbean.setTotalActivity(cur.getString(cur.getColumnIndex("taskDescription")));
                 }
                 if (cur.getString(cur.getColumnIndex("taskTagName")) != null && cur.getString(cur.getColumnIndex("taskTagName")).equalsIgnoreCase("Travel Start Time")
-                        && cur.getString(cur.getColumnIndex("customTagId"))!=null && cur.getString(cur.getColumnIndex("customTagId")).equalsIgnoreCase("12")) {
+                        && cur.getString(cur.getColumnIndex("customTagId")) != null && cur.getString(cur.getColumnIndex("customTagId")).equalsIgnoreCase("12")) {
                     taskdetailsbean.setStartDate(cur.getString(cur.getColumnIndex("taskDescription")));
                 }
                 if (cur.getString(cur.getColumnIndex("taskTagName")) != null && cur.getString(cur.getColumnIndex("taskTagName")).equalsIgnoreCase("Travel End Time")
-                        && cur.getString(cur.getColumnIndex("customTagId"))!=null && cur.getString(cur.getColumnIndex("customTagId")).equalsIgnoreCase("19")) {
+                        && cur.getString(cur.getColumnIndex("customTagId")) != null && cur.getString(cur.getColumnIndex("customTagId")).equalsIgnoreCase("19")) {
                     taskdetailsbean.setEndDate(cur.getString(cur.getColumnIndex("taskDescription")));
                 }
 
@@ -8308,9 +8308,9 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
 //                   bean.setTaskNo(cur.getString(cur.getColumnIndex("taskDescription")));
 //                }
 
-                if(cur.getString(cur.getColumnIndex("taskId"))!=null) {
+                if (cur.getString(cur.getColumnIndex("taskId")) != null) {
 //                    bean.setTaskId(cur.getString(cur.getColumnIndex("taskId")));
-                    if(!total_id.contains(cur.getString(cur.getColumnIndex("taskId")))) {
+                    if (!total_id.contains(cur.getString(cur.getColumnIndex("taskId")))) {
                         total_id.add(cur.getString(cur.getColumnIndex("taskId")));
                     }
                 }
@@ -8338,7 +8338,7 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
             cv.put("travelStartTime", taskDetailsBean.getTravelStartTime());
             cv.put("activityStartTime", taskDetailsBean.getActivityStartTime());
             cv.put("activityEndTime", taskDetailsBean.getActivityEndTime());
-            Log.i("conv123","insertORupdateStatus===>"+taskDetailsBean.getTravelEndTime());
+            Log.i("conv123", "insertORupdateStatus===>" + taskDetailsBean.getTravelEndTime());
             cv.put("travelEndTime", taskDetailsBean.getTravelEndTime());
             cv.put("totravelstartdatetime", taskDetailsBean.getToTravelStartTime());
             cv.put("totravelenddatetime", taskDetailsBean.getToTravelEndTime());
@@ -8367,6 +8367,7 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
         }
         return row_id;
     }
+
     public int insert_updateProjectStatus(ListallProjectBean listallProjectBean) {
         int row_id = 0;
         String task_id = "", project_id = "";
@@ -8393,11 +8394,11 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
                     Boolean is_delete = false;
                     ArrayList<ListTaskTransaction> listAlltaskTransactions;
                     listAlltaskTransactions = listAllgetTaskDetails.getListTaskTransaction();
-                    Log.i("conv123","TaskTrasaction Size===>"+listAlltaskTransactions.size());
+                    Log.i("conv123", "TaskTrasaction Size===>" + listAlltaskTransactions.size());
                     if (listAlltaskTransactions.size() > 0) {
                         for (int k = 0; k < listAlltaskTransactions.size(); k++) {
                             ListTaskTransaction listTaskTransaction = listAlltaskTransactions.get(k);
-                            Log.i("conv123","TaskTrasaction currentBean position===>"+k);
+                            Log.i("conv123", "TaskTrasaction currentBean position===>" + k);
                             Task task_trans = listTaskTransaction.getTask();
                             cv.put("taskId", task_trans.getId());
                             task_id = String.valueOf(task_trans.getId());
@@ -8413,17 +8414,17 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
 //                            cv.put("travelEndTime", listTaskTransaction.getTravelEndTime());
 //                            cv.put("totravelstartdatetime", listTaskTransaction.getTravelEndTime());
 //                            cv.put("totravelenddatetime", listTaskTransaction.getTravelEndTime());
-                            Log.i("conv123","================================================"+k);
-                            Log.i("conv123","travelStartTime====>"+Appreference.utcToLocalTime(listTaskTransaction.getTravelStartTime()));
-                            Log.i("conv123","travelEndTime====>"+Appreference.utcToLocalTime(listTaskTransaction.getTravelEndTime()));
-                            Log.i("conv123","================================================="+k);
+                            Log.i("conv123", "================================================" + k);
+                            Log.i("conv123", "travelStartTime====>" + Appreference.utcToLocalTime(listTaskTransaction.getTravelStartTime()));
+                            Log.i("conv123", "travelEndTime====>" + Appreference.utcToLocalTime(listTaskTransaction.getTravelEndTime()));
+                            Log.i("conv123", "=================================================" + k);
 
-                                cv.put("travelStartTime", Appreference.utcToLocalTime(listTaskTransaction.getTravelStartTime()));
-                                cv.put("activityStartTime", listTaskTransaction.getActivityStartTime());
-                                cv.put("activityEndTime", listTaskTransaction.getActivityEndTime());
-                                cv.put("travelEndTime", Appreference.utcToLocalTime(listTaskTransaction.getTravelEndTime()));
-                                cv.put("totravelstartdatetime", listTaskTransaction.getToTravelStartDateTime());
-                                cv.put("totravelenddatetime", listTaskTransaction.getToTravelEndDateTime());
+                            cv.put("travelStartTime", Appreference.utcToLocalTime(listTaskTransaction.getTravelStartTime()));
+                            cv.put("activityStartTime", listTaskTransaction.getActivityStartTime());
+                            cv.put("activityEndTime", listTaskTransaction.getActivityEndTime());
+                            cv.put("travelEndTime", Appreference.utcToLocalTime(listTaskTransaction.getTravelEndTime()));
+                            cv.put("totravelstartdatetime", listTaskTransaction.getToTravelStartDateTime());
+                            cv.put("totravelenddatetime", listTaskTransaction.getToTravelEndDateTime());
 
                           /*  if(listTaskTransaction.getTravelStartTime()!=null && !listTaskTransaction.getTravelStartTime().equalsIgnoreCase("") && Appreference.utcToLocalTime(listTaskTransaction.getTravelStartTime())!=null){
                                 cv.put("travelStartTime", Appreference.utcToLocalTime(listTaskTransaction.getTravelStartTime()));
@@ -8443,18 +8444,18 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
                             if(listTaskTransaction.getToTravelEndDateTime()!=null && !listTaskTransaction.getToTravelEndDateTime().equalsIgnoreCase("") && Appreference.utcToLocalTime(listTaskTransaction.getToTravelEndDateTime())!=null) {
                                 cv.put("totravelenddatetime", listTaskTransaction.getToTravelEndDateTime());
                             }*/
+                            Log.i("conv123", "taskcompleteddate====>" + Appreference.utcToLocalTime(listTaskTransaction.getTaskcompletedDate()));
+
                             cv.put("status", listTaskTransaction.getStatus());
                             cv.put("observation", listTaskTransaction.getObservation());
                             cv.put("actionTaken", listTaskTransaction.getActionTaken());
-                            cv.put("taskcompleteddate", listTaskTransaction.getTaskcompletedDate());
+                            cv.put("taskcompleteddate",Appreference.utcToLocalTime(listTaskTransaction.getTaskcompletedDate()));
                             cv.put("customersignaturename", listTaskTransaction.getCustomerSignatureName());
                             cv.put("hourMeterReading", listTaskTransaction.getHourMeterReading());
                             cv.put("remarks", listTaskTransaction.getRemarks());
                             cv.put("customersignature", listTaskTransaction.getSignature());
                             cv.put("photo", listTaskTransaction.getPhoto());
                             cv.put("techniciansignature", listTaskTransaction.getTechnicianSignature());
-
-
 
 
                             Log.i("Listtransation", "value===> " + cv);
@@ -8525,6 +8526,7 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
             return row_id;
         }
     }
+
     public String getStatus_FromProject_history(String query) {
         int row_id = 0;
         String status = null;
@@ -8549,6 +8551,7 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
             return status;
         }
     }
+
     public ArrayList<TaskDetailsBean> getDetails_to_complete_project(String query) {
         ArrayList<TaskDetailsBean> arrayList = new ArrayList<>();
         Cursor cur;
@@ -8590,6 +8593,7 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
             return arrayList;
         }
     }
+
     public TaskDetailsBean getStatusCompletedProjectDetails(String query) {
 //        ArrayList<TaskDetailsBean> arrayList = new ArrayList<>();
         TaskDetailsBean taskDetailsBean = new TaskDetailsBean();
@@ -8648,7 +8652,7 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
     }
 
     public String getOracleProjMembers(String query) {
-       String Members = null;
+        String Members = null;
         Cursor cur;
         if (db == null)
             db = getReadableDatabase();
@@ -8660,7 +8664,7 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
                 cur.moveToFirst();
 
                 while (!cur.isAfterLast()) {
-                    Members=(cur.getString(cur.getColumnIndex("taskMemberList")));
+                    Members = (cur.getString(cur.getColumnIndex("taskMemberList")));
                     cur.moveToNext();
                 }
                 cur.close();
@@ -8675,25 +8679,24 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
     }
 
     public String getDivertedProjId(String query) {
-        String project_id=null;
+        String project_id = null;
         Cursor cur;
-        if(db==null)
-            db=getReadableDatabase();
-        try{
-            if(db!=null){
-                if(!db.isOpen())
+        if (db == null)
+            db = getReadableDatabase();
+        try {
+            if (db != null) {
+                if (!db.isOpen())
                     openDatabase();
-                cur=db.rawQuery(query,null);
+                cur = db.rawQuery(query, null);
                 cur.moveToFirst();
-                while(!cur.isAfterLast()){
-                    project_id=(cur.getString(cur.getColumnIndex("projectId")));
+                while (!cur.isAfterLast()) {
+                    project_id = (cur.getString(cur.getColumnIndex("projectId")));
                     cur.moveToNext();
                 }
-                    cur.close();
+                cur.close();
             }
 
-        }catch(Exception e)
-        {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return project_id;
@@ -8725,6 +8728,7 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
             return taskDetailsBean;
         }
     }
+
     public ArrayList<String> getAllCurrentStatus(String Query) {
         Cursor cur;
         ArrayList<String> status_all = new ArrayList<String>();
@@ -8733,11 +8737,11 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
         try {
             if (!db.isOpen())
                 openDatabase();
-            cur = db.rawQuery(Query,null);
+            cur = db.rawQuery(Query, null);
             cur.moveToFirst();
             while (!cur.isAfterLast()) {
-                if(cur.getString(cur.getColumnIndex("status"))!=null) {
-                        status_all.add(cur.getString(cur.getColumnIndex("status")));
+                if (cur.getString(cur.getColumnIndex("status")) != null) {
+                    status_all.add(cur.getString(cur.getColumnIndex("status")));
                 }
                 cur.moveToNext();
             }
@@ -8748,9 +8752,9 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
         return status_all;
     }
 
-    public int  CheckTravelEntryDetails(String query) {
+    public int CheckTravelEntryDetails(String query) {
         Cursor cur;
-        int row=0;
+        int row = 0;
         if (db == null)
             db = getReadableDatabase();
         try {
@@ -8774,7 +8778,7 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
 
     public int getCountForTravelEntry(String query) {
         Cursor cur;
-        int row=0;
+        int row = 0;
         if (db == null)
             db = getReadableDatabase();
         try {
@@ -8782,7 +8786,7 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
                 if (!db.isOpen())
                     openDatabase();
                 cur = db.rawQuery(query, null);
-                 row = cur.getCount();
+                row = cur.getCount();
                 cur.close();
             }
         } catch (Exception e) {
@@ -8798,7 +8802,7 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
             if (!db.isOpen())
                 openDatabase();
             ContentValues cv = new ContentValues();
-            cv.put("id",1);
+            cv.put("id", 1);
             cv.put("selection", booleanvalue);
             if (isRecordExists("select selection from '" + EULATABLE + "'")) {
                 row_id = (int) db.update(EULATABLE, cv, "id='" + 1 + "'", null);
@@ -8822,8 +8826,8 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
                     openDatabase();
                 cur = db.rawQuery("select selection from eulaagree where id='" + 1 + "'", null);
 
-                while(cur.moveToNext()){
-                    newvalue=Integer.parseInt(cur.getString(cur.getColumnIndex("selection")));
+                while (cur.moveToNext()) {
+                    newvalue = Integer.parseInt(cur.getString(cur.getColumnIndex("selection")));
                 }
                 cur.close();
             }
@@ -8853,13 +8857,15 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
             return status;
         }
     }
-    public void contactRoleIdUpdate(String roleId,String roleName,int userId) {
-        Log.i("chat123","contactRoleIdUpdate==>"+roleId+roleName+userId);
+
+    public void contactRoleIdUpdate(String roleId, String roleName, int userId) {
+        Log.i("chat123", "contactRoleIdUpdate==>" + roleId + roleName + userId);
         ContentValues cv = new ContentValues();
         cv.put("roleId", roleId);
         cv.put("roleName", roleName);
         db.update("contact", cv, "userid" + "='" + userId + "'", null);
     }
+
     public ArrayList<String> getOracleProjectIdlist(String query) {
         ArrayList<String> arrayList = new ArrayList<>();
         Cursor cur;
@@ -8872,7 +8878,7 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
                 cur = db.rawQuery(query, null);
                 cur.moveToFirst();
                 while (!cur.isAfterLast()) {
-                    if(cur.getString(cur.getColumnIndex("oracleProjectId"))!=null && !cur.getString(cur.getColumnIndex("oracleProjectId")).equalsIgnoreCase("")) {
+                    if (cur.getString(cur.getColumnIndex("oracleProjectId")) != null && !cur.getString(cur.getColumnIndex("oracleProjectId")).equalsIgnoreCase("")) {
                         arrayList.add(cur.getString(cur.getColumnIndex("oracleProjectId")));
                         Log.i("oracle123", "Error====>oracleProjectId list===>" + cur.getString(cur.getColumnIndex("oracleProjectId")));
                     }
@@ -8883,11 +8889,12 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
             }
         } catch (Exception e) {
             e.printStackTrace();
-            Log.i("DB123","Error====>getProjectdetails===>"+e.getMessage());
+            Log.i("DB123", "Error====>getProjectdetails===>" + e.getMessage());
         } finally {
             return arrayList;
         }
     }
+
     public ArrayList<String> getPerTaskcompletedDates(String query) {
         ArrayList<String> arrayList = new ArrayList<>();
         Cursor cur;
@@ -8900,17 +8907,48 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
                 cur = db.rawQuery(query, null);
                 cur.moveToFirst();
                 while (!cur.isAfterLast()) {
-                    arrayList.add(cur.getString(cur.getColumnIndex("taskcompleteddate")));
-                    Log.i("oracle123", "Error====>taskcompleteddate list===>" + cur.getString(cur.getColumnIndex("taskcompleteddate")));
+                    if (cur.getString(cur.getColumnIndex("taskcompleteddate")) != null && !cur.getString(cur.getColumnIndex("taskcompleteddate")).equalsIgnoreCase("")) {
+                        String data=cur.getString(cur.getColumnIndex("taskcompleteddate"));
+                        String completed_date[]=data.split(" ");
+                        arrayList.add(completed_date[0]);
+                        Log.i("oracle123", "taskcompleteddate list===>" + cur.getString(cur.getColumnIndex("taskcompleteddate")));
+                    }
                     cur.moveToNext();
                 }
                 cur.close();
             }
         } catch (Exception e) {
             e.printStackTrace();
-            Log.i("DB123","Error====>getProjectdetails===>"+e.getMessage());
+            Log.i("DB123", "Error====>getProjectdetails===>" + e.getMessage());
         } finally {
             return arrayList;
         }
     }
+
+    @SuppressWarnings("finally")
+    public String getprojectIdForOracleID(String query) {
+        String projectIdForOracleId = "";
+        Cursor cur;
+        if (db == null)
+            db = getReadableDatabase();
+        try {
+            if (db != null) {
+                if (!db.isOpen())
+                    openDatabase();
+                cur = db.rawQuery(query, null);
+                cur.moveToFirst();
+                while (!cur.isAfterLast()) {
+                    projectIdForOracleId = cur.getString(0);
+                    Log.i("oracle123", "projectIdForOracleId list===>" + projectIdForOracleId);
+                    cur.moveToNext();
+                }
+                cur.close();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            return projectIdForOracleId;
+        }
+    }
+
 }

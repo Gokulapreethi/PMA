@@ -31,7 +31,9 @@ public class DisplayList extends Activity {
     ArrayList<TaskDetailsBean> list_date = new ArrayList<TaskDetailsBean>();
     ListView list;
     View view1;
-    String projectId, webtaskId,date_type;
+    boolean isFromcustom1;
+    String query;
+    String projectId, webtaskId, date_type, completedate_display;
 
     /**
      * Called when the activity is first created.
@@ -48,10 +50,17 @@ public class DisplayList extends Activity {
         projectId = getIntent().getStringExtra("projectId");
         webtaskId = getIntent().getStringExtra("webtaskId");
         date_type = getIntent().getStringExtra("date_type");
+        isFromcustom1 = getIntent().getBooleanExtra("isFromcustom1",false);
+        completedate_display = getIntent().getStringExtra("completedate_display");
+        Log.i("date", "completedate_display ==> " + completedate_display);
+        if(!isFromcustom1) {
+            query = "Select * from projectStatus where projectId ='" + projectId + "' and taskId = '" + webtaskId + "' and (status ='7' or status='9') and " + (("travelStartTime like '" + completedate_display + "%" + "' and travelEndTime like '" + completedate_display + "%" + "'") + " or " + ("travelStartTime like '" + completedate_display + "%" + "' and travelEndTime IS NULL") + " or " + ("travelStartTime IS NULL and travelEndTime like '" + completedate_display + "%" + "'"));
+        }else
+             query = "Select * from projectStatus where projectId ='" + projectId + "' and taskId = '" + webtaskId + "' and (status ='7' or status='9')";
 
-        list_date = VideoCallDataBase.getDB(context).getTravelDetails("Select * from projectStatus where projectId ='" + projectId + "' and taskId = '" + webtaskId + "' and (status ='7' or status='9')");
-        Log.i("DisplayList", "list_date " + list_date.size());
-        adapter = new ListAct(context,list_date);
+        list_date = VideoCallDataBase.getDB(context).getTravelDetails(query);
+        Log.i("DisplayList", "query and list_date " + query + " " + list_date.size());
+        adapter = new ListAct(context, list_date);
         list.setAdapter(adapter);
         adapter.notifyDataSetChanged();
         // TODO Auto-generated method stub
@@ -84,16 +93,16 @@ public class DisplayList extends Activity {
             TextView tvHome = (TextView) rowView.findViewById(R.id.end_date_1);
             Log.i("DisplayList", "Time_start ===========>" + user.getActivityStartTime());
             Log.i("DisplayList", "Time_end ===========>" + user.getActivityEndTime());
-            if (date_type!=null && date_type.equalsIgnoreCase("travel_start")) {
-                    tvName.setText(user.getTravelStartTime());
-                    tvHome.setText(user.getTravelEndTime());
-            }else if(date_type!=null && date_type.equalsIgnoreCase("activity_date")){
+            if (date_type != null && date_type.equalsIgnoreCase("travel_start")) {
+                tvName.setText(user.getTravelStartTime());
+                tvHome.setText(user.getTravelEndTime());
+            } else if (date_type != null && date_type.equalsIgnoreCase("activity_date")) {
                 tvName.setText(user.getActivityStartTime());
                 tvHome.setText(user.getActivityEndTime());
-            }else if(date_type!=null && date_type.equalsIgnoreCase("travel_end")){
+            }/*else if(date_type!=null && date_type.equalsIgnoreCase("travel_end")){
                 tvName.setText(user.getToTravelStartTime());
                 tvHome.setText(user.getToTravelEndTime());
-            }
+            }*/
             return rowView;
         }
     }

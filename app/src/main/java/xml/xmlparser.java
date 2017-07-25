@@ -480,8 +480,26 @@ public class xmlparser {
                     taskDetailsBean.setSubType(taskDetailsBean.getTaskRequestType());
             }
 
-            if (nodeMap.getNamedItem("taskPriority") != null)
-                taskDetailsBean.setTaskPriority(nodeMap.getNamedItem("taskPriority").getNodeValue());
+            if (nodeMap.getNamedItem("taskPriority") != null) {
+                String project_status = nodeMap.getNamedItem("taskStatus").getNodeValue();
+                if (project_status != null && (project_status.equalsIgnoreCase("Started") || project_status.equalsIgnoreCase("Start"))) {
+                    taskDetailsBean.setProjectStatus("0");
+                } else if (project_status != null && project_status.equalsIgnoreCase("Hold")) {
+                    taskDetailsBean.setProjectStatus("1");
+                } else if (project_status != null && (project_status.equalsIgnoreCase("Resumed") || project_status.equalsIgnoreCase("Resume"))) {
+                    taskDetailsBean.setProjectStatus("2");
+                } else if (project_status != null && (project_status.equalsIgnoreCase("Paused") || project_status.equalsIgnoreCase("Pause"))) {
+                    taskDetailsBean.setProjectStatus("3");
+                } else if (project_status != null && (project_status.equalsIgnoreCase("Restarted") || project_status.equalsIgnoreCase("Restart"))) {
+                    taskDetailsBean.setProjectStatus("4");
+                } else if (project_status != null && (project_status.equalsIgnoreCase("Completed") || project_status.equalsIgnoreCase("Complete"))) {
+                    taskDetailsBean.setProjectStatus("5");
+                } else if (project_status != null && project_status.equalsIgnoreCase("DeAssign")) {
+                    taskDetailsBean.setProjectStatus("8");
+                } else {
+                    taskDetailsBean.setTaskStatus(nodeMap.getNamedItem("taskStatus").getNodeValue());
+                }
+            }
 
             if (nodeMap.getNamedItem("taskStatus") != null)
                 taskDetailsBean.setTaskStatus(nodeMap.getNamedItem("taskStatus").getNodeValue());
@@ -594,6 +612,11 @@ public class xmlparser {
 //                            cmbean.setMessage(text);
 
                             taskDetailsBean.setTaskDescription(text);
+                            String description =taskDetailsBean.getTaskDescription();
+                            if(description != null && (description.equalsIgnoreCase("Gathering Details...")
+                                    || description.contains("StartTime :") || description.contains("EndTime :"))) {
+                                taskDetailsBean.setProjectStatus("7");
+                            }
                             Log.i("profiledownload", "description-->4" + taskDetailsBean.getTaskDescription());
                         }
 
@@ -1367,8 +1390,9 @@ public class xmlparser {
             if (nodeMap.getNamedItem("parentId") != null)
                 taskDetailsBean.setParentId(nodeMap.getNamedItem("parentId").getNodeValue());
 
-            if (nodeMap.getNamedItem("taskStatus") != null)
+            if (nodeMap.getNamedItem("taskStatus") != null) {
                 taskDetailsBean.setTaskStatus(nodeMap.getNamedItem("taskStatus").getNodeValue());
+            }
 
             if (nodeMap.getNamedItem("taskAddObservers") != null) {
                 String observers = nodeMap.getNamedItem("taskAddObservers").getNodeValue();

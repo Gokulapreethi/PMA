@@ -470,6 +470,48 @@
                     android:background="#FFFFFF"
                     android:gravity="left"
                     android:padding="7dp"
+                    android:text="EOD Completed Date *"
+                    android:singleLine="true"
+                    android:textColor="@color/black"
+                    android:textSize="15dp" />
+                <Button
+                    android:layout_width="30dp"
+                    android:layout_height= "30dp"
+                    android:id="@+id/complete_date_btn"
+                    android:background="@drawable/ic_date_chang_request"
+                    />
+                <TextView
+                    android:id="@+id/task_completed_date"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="2dp"
+                    android:layout_marginRight="2dp"
+                    android:layout_marginTop="4dp"
+                    android:layout_weight="1"
+                    android:gravity="center_vertical"
+                    android:textColor="#808080"
+                    android:visibility="visible">
+                </TextView>
+            </LinearLayout>
+            <View
+                android:layout_width="wrap_content"
+                android:layout_height="1.20dp"
+                android:layout_marginTop="10dp"
+                android:background="@color/gray" />
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="2dp"
+                android:layout_marginRight="2dp"
+                android:layout_marginTop="2dp"
+                android:orientation="horizontal" >
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="#FFFFFF"
+                    android:gravity="left"
+                    android:padding="7dp"
                     android:text="Activity Start &amp; End"
                     android:singleLine="true"
                     android:textColor="@color/black"
@@ -578,48 +620,7 @@
                 android:layout_height="1.20dp"
                 android:layout_marginTop="10dp"
                 android:background="@color/gray" />
-            <LinearLayout
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="2dp"
-                android:layout_marginRight="2dp"
-                android:layout_marginTop="2dp"
-                android:orientation="horizontal" >
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:background="#FFFFFF"
-                    android:gravity="left"
-                    android:padding="7dp"
-                    android:text="Task Completed Date *"
-                    android:singleLine="true"
-                    android:textColor="@color/black"
-                    android:textSize="15dp" />
-                <Button
-                    android:layout_width="30dp"
-                    android:layout_height= "30dp"
-                    android:id="@+id/complete_date_btn"
-                    android:background="@drawable/ic_date_chang_request"
-                    />
-                <EditText
-                    android:id="@+id/task_completed_date"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="2dp"
-                    android:layout_marginRight="2dp"
-                    android:layout_marginTop="4dp"
-                    android:layout_weight="1"
-                    android:gravity="center_vertical"
-                    android:textColor="#808080"
-                    android:visibility="visible">
-                </EditText>
-            </LinearLayout>
-            <View
-                android:layout_width="wrap_content"
-                android:layout_height="1.20dp"
-                android:layout_marginTop="10dp"
-                android:background="@color/gray" />
+
             <LinearLayout
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"

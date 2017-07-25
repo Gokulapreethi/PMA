@@ -321,9 +321,12 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
     boolean isFromPauseClick = false;
     boolean isOracleStatusList=false ;
     ArrayList<String> custom_1MediaList;
+    String date_current1=null;
+    Date cur_date=null;
+    Date Eod_selectedDate=null;
     private HashMap<Integer, String> statusCompletedFieldValues = new HashMap<Integer, String>();
     String TravelStartdate, TravelEnddate, status_signature, photo_signature, tech_signature, PickDate, travel_endDate;
-    String FromTravelStart, FromTravelEnd, ActivityStartdate, ActivityEnddate, TotravelStart, ToTravelEnd,taskCompletedDate;
+    String FromTravelStart, FromTravelEnd, ActivityStartdate, ActivityEnddate, TotravelStart, ToTravelEnd,taskCompletedDate,completedate_display;
     String observationStatus, actiontakenStatus, custsignnameStatus, HMReadingStatus;
     ArrayList<String> travel_date_details;
     String dir_path = Environment.getExternalStorageDirectory() + "/High Message/downloads/";
@@ -920,7 +923,7 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
 
         String query = "select status from projectStatus where projectId='" + projectId + "' and userId='" + Appreference.loginuserdetails.getId() + "' and taskId= '" + webtaskId + "'";
         int disable_by_current_status = VideoCallDataBase.getDB(context).getCurrentStatus(query);
-        if (disable_by_current_status == 10)
+        if (disable_by_current_status == 5)
             isTaskCompleted = true;
         Log.i("desc123", "is template=======> " + template + " taskStatus--> " + taskStatus);
         if (taskStatus != null && taskStatus.equalsIgnoreCase("draft") || taskStatus.equalsIgnoreCase("Unassigned")) {
@@ -1900,7 +1903,7 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                                                     showToast("When task is in hold % should not been send ");
                                                 } else if (isProjectFromOracle && current_status == 3) {
                                                     showToast("When task is in pause % should not been send ");
-                                                } else if (isProjectFromOracle && current_status == 10) {
+                                                } else if (isProjectFromOracle && current_status == 5) {
                                                     showToast("Task is already completed ");
                                                 } else {
                                                     Intent intent = new Intent(NewTaskConversation.this, UpdateTaskActivity.class);
@@ -3031,7 +3034,7 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                         showToast("When task is in hold % should not been send ");
                     } else if (isProjectFromOracle && current_status == 3) {
                         showToast("When task is in pause % should not been send ");
-                    } else if (isProjectFromOracle && current_status == 10) {
+                    } else if (isProjectFromOracle && current_status == 5) {
                         showToast("Task is already completed ");
                     } else if ((!isTaskName && !takerCheck) || isProjectFromOracle) {
                         Intent intent = new Intent(NewTaskConversation.this, UpdateTaskActivity.class);
@@ -3234,7 +3237,7 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                 if (isProjectFromOracle) {
                     String query = "select status from projectStatus where projectId='" + projectId + "' and userId='" + Appreference.loginuserdetails.getId() + "' and taskId= '" + webtaskId + "'";
                     int disable_by_current_status = VideoCallDataBase.getDB(context).getCurrentStatus(query);
-                    if (disable_by_current_status == 10)
+                    if (disable_by_current_status == 5)
                         Toast.makeText(context, "You cannot send text for completed Task", Toast.LENGTH_SHORT).show();
                 }
                 TaskDetailsBean task = new TaskDetailsBean();
@@ -4007,6 +4010,7 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
             TextView action_taken_show = (TextView) dialog.findViewById(R.id.action_taken_show);
             TextView cust_sign_name_show = (TextView) dialog.findViewById(R.id.cust_sign_name_show);
             TextView HM_Reading_show = (TextView) dialog.findViewById(R.id.HM_Reading_show);
+            TextView task_completed_date_show = (TextView) dialog.findViewById(R.id.task_completed_date_show);
 
             final TextView travel_start = (TextView) dialog.findViewById(R.id.travel_start);
             final TextView travel_end = (TextView) dialog.findViewById(R.id.travel_end);
@@ -4047,6 +4051,8 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
             action_taken_show.setText(detailsBean.getActionTaken());
             cust_sign_name_show.setText(detailsBean.getCustomerSignatureName());
             HM_Reading_show.setText(detailsBean.getHMReading());
+            task_completed_date_show.setText(detailsBean.getTaskCompletedDate());
+
 
 
             Log.i("custom1", "signature--> " + detailsBean.getCustomerSignature());
@@ -4095,36 +4101,15 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                     tech_signature_path1.setVisibility(View.VISIBLE);
                 }
             }
-//            signature_path1.setText(detailsBean.getCustomerSignature());
-//            photo_path1.setText(detailsBean.getPhotoPath());
-//            tech_signature_path1.setText(detailsBean.getTechnicianSignature());
-            travel_start.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent i = new Intent(getApplicationContext(), DisplayList.class);
-                    i.putExtra("projectId", projectId);
-                    i.putExtra("webtaskId", webtaskId);
-                    i.putExtra("date_type", "travel_start");
-                    startActivity(i);
-                }
-            });
-
-            travel_end.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent i = new Intent(getApplicationContext(), DisplayList.class);
-                    i.putExtra("projectId", projectId);
-                    i.putExtra("webtaskId", webtaskId);
-                    i.putExtra("date_type", "travel_end");
-                    startActivity(i);
-                }
-            });
             activity_start.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    Log.i("custom1", "dateDisplay-->$ ");
                     Intent i = new Intent(getApplicationContext(), DisplayList.class);
                     i.putExtra("projectId", projectId);
                     i.putExtra("webtaskId", webtaskId);
+                    i.putExtra("completedate_display",completedate_display);
+                    i.putExtra("isFromcustom1", true);
                     i.putExtra("date_type", "travel_start");
                     startActivity(i);
                 }
@@ -4398,12 +4383,12 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
         String query = "select status from projectStatus where projectId='" + projectId + "' and userId='" + Appreference.loginuserdetails.getId() + "' and taskId= '" + webtaskId + "'";
         int current_status = VideoCallDataBase.getDB(context).getCurrentStatus(query);
 
-        if (current_status == 7 || current_status == 9) {
+        if (current_status == 7 || current_status == 9 ||current_status==10) {
             /*String query123 = "select status from projectStatus where projectId='" + projectId + "' and userId='" + Appreference.loginuserdetails.getId() + "' and taskId= '" + webtaskId + "' order by id DESC LIMIT 2";
             int last_beforeStatus = VideoCallDataBase.getDB(context).getCurrentStatus(query123);
             Log.i("output123", "project CurrentStatus from DB====>" + last_beforeStatus);
             current_status = last_beforeStatus;*/
-            String status_info = "select status from projectStatus where projectId='" + projectId + "' and userId='" + Appreference.loginuserdetails.getId() + "' and taskId= '" + webtaskId + "' and status!='7' and status!= '9' order by id DESC";
+            String status_info = "select status from projectStatus where projectId='" + projectId + "' and userId='" + Appreference.loginuserdetails.getId() + "' and taskId= '" + webtaskId + "' and status!='7' and status!= '9'and status!= '10'order by id DESC";
             ArrayList<String> status_all = VideoCallDataBase.getDB(context).getAllCurrentStatus(status_info);
             Log.i("output123", "project CurrentStatus from DB====>" + status_all.size());
             if (status_all.size() > 0) {
@@ -4470,17 +4455,7 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                 popup.getMenu().getItem(5).setVisible(false);
                 popup.getMenu().getItem(6).setVisible(false);
                 Toast.makeText(getApplicationContext(), "Task has been Completed", Toast.LENGTH_SHORT).show();
-            }else if (current_status == 10) {
-                completed_work = true;
-                popup.getMenu().getItem(0).setVisible(false);
-                popup.getMenu().getItem(1).setVisible(false);
-                popup.getMenu().getItem(2).setVisible(false);
-                popup.getMenu().getItem(3).setVisible(false);
-                popup.getMenu().getItem(4).setVisible(false);
-                popup.getMenu().getItem(5).setVisible(false);
-                popup.getMenu().getItem(6).setVisible(false);
-                Toast.makeText(getApplicationContext(), "Task has been Completed", Toast.LENGTH_SHORT).show();
-            } else if (current_status == 6) {
+            }else if (current_status == 6) {
                 popup.getMenu().getItem(0).setVisible(false);
                 popup.getMenu().getItem(1).setVisible(false);
                 popup.getMenu().getItem(2).setVisible(false);
@@ -4618,21 +4593,30 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                             Log.i("conv123", "TravelEntry==>" + travelentry);
                             String query = "select * from projectStatus where projectId='" + projectId + "'  and taskId= '" + webtaskId + "' and status = '7'";
                             final int count = VideoCallDataBase.getDB(context).getCountForTravelEntry(query);
+
+                            String qry_status = "select status from projectStatus where projectId='" + projectId + "' and taskId= '" + webtaskId + "'";
+                            final int check_status = VideoCallDataBase.getDB(context).getCurrentStatus(qry_status);
+
                             AlertDialog.Builder saveDialog = new AlertDialog.Builder(context);
                             saveDialog.setTitle("Complete Task");
                             saveDialog.setCancelable(false);
                             saveDialog.setMessage("Are You sure want to complete this job " + taskName);
                             saveDialog.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int which) {
-                                    if (count != 0) {
-                                        if (travelentry == 0) {
-                                            sendStatus_webservice("5", "", "", "Completed", "complete");
+                                    if (check_status != 1 && check_status != 3 ) {
+                                        if (count != 0) {
+                                            if (travelentry == 0) {
+                                                sendStatus_webservice("5", "", "", "Completed", "complete");
+                                            } else {
+                                                Toast.makeText(NewTaskConversation.this, "Enter end date and time and then proceed to complete the task.", Toast.LENGTH_SHORT).show();
+                                                dialog.cancel();
+                                            }
                                         } else {
-                                            Toast.makeText(NewTaskConversation.this, "Enter end date and time and then proceed to complete the task.", Toast.LENGTH_SHORT).show();
+                                            Toast.makeText(NewTaskConversation.this, "No StartEndTime Found", Toast.LENGTH_SHORT).show();
                                             dialog.cancel();
                                         }
                                     } else {
-                                        Toast.makeText(NewTaskConversation.this, "No StartEndTime Found", Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(NewTaskConversation.this, "can't able to complete this task ", Toast.LENGTH_SHORT).show();
                                         dialog.cancel();
                                     }
                                 }
@@ -4684,7 +4668,7 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                     final EditText action_taken = (EditText) dialog.findViewById(R.id.action_taken);
                     final EditText cust_sign_name = (EditText) dialog.findViewById(R.id.cust_sign_name);
                     final EditText HMReading = (EditText) dialog.findViewById(R.id.hour_meter_reading);
-                    final EditText task_completed_date = (EditText) dialog.findViewById(R.id.task_completed_date);
+                    final TextView task_completed_date = (TextView) dialog.findViewById(R.id.task_completed_date);
                     TextView proj_activity = (TextView) dialog.findViewById(R.id.proj_activity);
                     final TextView travel_start = (TextView) dialog.findViewById(R.id.travel_start);
                     final TextView travel_end = (TextView) dialog.findViewById(R.id.travel_end);
@@ -4713,24 +4697,72 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                             Intent i = new Intent(getApplicationContext(), DisplayList.class);
                             i.putExtra("projectId", projectId);
                             i.putExtra("webtaskId", webtaskId);
+                            i.putExtra("completedate_display",completedate_display);
+                            i.putExtra("isFromcustom1", false);
                             i.putExtra("date_type", "travel_start");
                             startActivity(i);
                         }
                     });
+                    final Calendar calendar = Calendar.getInstance();
+                    final SimpleDateFormat mdformat = new SimpleDateFormat("yyyy-MM-dd");
+                    task_completed_date.setText(mdformat.format(calendar.getTime()));
+                    taskCompletedDate=task_completed_date.getText().toString()+ " " +"00:00:00";
+                    Log.i("oracle123","getCompleted default====>"+taskCompletedDate);
+                    completedate_display=mdformat.format(calendar.getTime());
+
+                    final String currentDateTimeString = DateFormat.getDateTimeInstance().format(new Date());
+                    final SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
+                    final SimpleDateFormat sdformat = new SimpleDateFormat("yyyy-MM-dd");
+
                     complete_date_btn.setOnClickListener(new View.OnClickListener() {
+                        final Calendar c = Calendar.getInstance();
+
                         @Override
                         public void onClick(View v) {
-                            final Calendar c = Calendar.getInstance();
 
                             DatePickerDialog dpd = new DatePickerDialog(context,
                                     new DatePickerDialog.OnDateSetListener() {
                                         @Override
                                         public void onDateSet(DatePicker view, int year,
                                                               int monthOfYear, int dayOfMonth) {
-                                            task_completed_date.setText(dayOfMonth + "-"
-                                                    + (monthOfYear + 1) + "-" + year);
-                                            taskCompletedDate = dayOfMonth + "-"
-                                                    + (monthOfYear + 1) + "-" + year+" "+"00:00:00";
+
+                                            String months = "";
+                                            if ((monthOfYear + 1) < 10) {
+                                                months = "0" + (monthOfYear + 1);
+                                            } else {
+                                                months = String.valueOf(monthOfYear + 1);
+                                            }
+                                            String days = "";
+                                            if (dayOfMonth < 10) {
+                                                days = "0" + dayOfMonth;
+                                            } else {
+                                                days = String.valueOf(dayOfMonth);
+                                            }
+                                            completedate_display=year + "-" + months + "-" + days;
+                                            task_completed_date.setText(completedate_display);
+                                            taskCompletedDate = completedate_display+ " " + "00:00:00";
+                                           /* String selected_date=year + "-"
+                                                       + "0"+(monthOfYear + 1) + "-" + dayOfMonth;
+                                            try {
+                                                Eod_selectedDate = sdf.parse(selected_date);
+
+                                            } catch (Exception e) {
+                                                e.printStackTrace();
+                                            }
+                                            try {
+                                                cur_date = sdf.parse(mdformat.format(c.getTime()));
+                                            } catch (Exception e) {
+                                                e.printStackTrace();
+                                            }
+
+                                            if (cur_date!=null && Eod_selectedDate!=null && Eod_selectedDate.compareTo(cur_date) < 0 && Eod_selectedDate.compareTo(cur_date) ==0) {
+                                                task_completed_date.setText(dayOfMonth + "-"
+                                                        + (monthOfYear + 1) + "-" + year);
+                                                taskCompletedDate = dayOfMonth + "-"
+                                                        + (monthOfYear + 1) + "-" + year + " " + "00:00:00";
+                                            } else{
+                                                Toast.makeText(getApplicationContext(), "please Select date till today", Toast.LENGTH_SHORT).show();
+                                            }*/
                                         }
                                     }, c.get(Calendar.YEAR), c.get(Calendar.MONTH), c.get(Calendar.DATE));
                             dpd.show();
@@ -5173,7 +5205,7 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                 }
                 SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
                 SimpleDateFormat dateParse = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-                SimpleDateFormat taskDateParse = new SimpleDateFormat("dd-M-yyyy HH:mm:ss");
+                SimpleDateFormat taskDateParse = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
                 SimpleDateFormat taskDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
                 String dateTime = dateFormat.format(new Date());
                 dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
@@ -5279,17 +5311,21 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                     jsonObject.put("actionTaken", actiontakenStatus);
                 } else
                     jsonObject.put("actionTaken", "");
+                Log.i("oracle123","taskCompletedDate w/s===>"+taskCompletedDate);
+
                 if (taskCompletedDate != null && !taskCompletedDate.equalsIgnoreCase("")) {
                     try {
                         date2 = taskDateParse.parse(taskCompletedDate);
                         taskCompletedDateUTC = taskDateFormat.format(date2);
                     } catch (Exception e) {
+                    Log.i("oracle123","taskCompletedDateUTC===>"+e.getMessage());
                         e.printStackTrace();
                     }
                 }
+                Log.i("oracle123","taskCompletedDateUTC===>"+taskCompletedDateUTC);
 
                 if (taskCompletedDateUTC != null && !taskCompletedDateUTC.equalsIgnoreCase("")) {
-                    taskDetailsBean.setTaskCompletedDate(taskCompletedDateUTC);
+                    taskDetailsBean.setTaskCompletedDate(taskCompletedDate);
                     jsonObject.put("taskcompletedDate", taskCompletedDateUTC);
                 } else
                     jsonObject.put("taskcompletedDate", "");
@@ -14153,6 +14189,7 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                     Log.i("deassign123", "map -----> " + chatBean.getTaskDescription());
                     if (remquotes_2.equalsIgnoreCase("map") && chatBean.getMimeType().equalsIgnoreCase("map")) {
                         chatBean.setSubType("percentageCompleted");
+                        chatBean.setTaskStatus("completed");
                     }
                 }
                 if (linearforimage != null && linearforimage.getVisibility() == View.VISIBLE) {
@@ -15148,7 +15185,10 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                 } else {
                     Log.i("newtaskconversation", " compose taskStatus 2 " + cmbean.getTaskStatus());
                     if (cmbean.getOwnerOfTask().equalsIgnoreCase(Appreference.loginuserdetails.getUsername())) {
-                        buffer.append(" taskStatus=" + quotes + "Closed" + quotes);
+                        if (isProjectFromOracle)
+                            buffer.append(" taskStatus=" + quotes + "completed" + quotes);
+                        else
+                            buffer.append(" taskStatus=" + quotes + "Closed" + quotes);
                     } else {
                         buffer.append(" taskStatus=" + quotes + "Completed" + quotes);
                     }
@@ -17535,7 +17575,6 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
 
     public void oracle_percentage(String getMediaType, String getMediaPath, String getExt, String sig_id, int isDateorUpdateorNormal) {
         try {
-            getTaskListforPercentage1 = new ArrayList<>();
             SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
             String dateTime = dateFormat.format(new Date());
             dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
@@ -17564,8 +17603,8 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
             String project_deassignMems = "";
             Log.i("selfassign", "Self_assign==> " + Self_assign + " oracleProjectOwner --> " + oracleProjectOwner);
             chatBean.setOwnerOfTask(ownerOfTask);
-            chatBean.setTaskStatus(taskStatus);
-
+            chatBean.setTaskStatus("completed");
+            taskStatus = "completed";
             chatBean.setTaskReceiver(taskReceiver);
             chatBean.setToUserName(toUserName);
             chatBean.setToUserId(String.valueOf(toUserId));
@@ -17600,8 +17639,6 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                 Log.i("task", "msg Status " + chatBean.getMsg_status());
                 refresh();
             }
-            getTaskListforPercentage1.add(chatBean);
-
             String parent_id = "";
             JSONObject jsonObject = new JSONObject();
             JSONObject jsonObject1 = new JSONObject();
@@ -17620,7 +17657,7 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
             jsonObject.put("taskNo", task_No);
             jsonObject.put("requestType", "percentageCompleted");
             jsonObject.put("taskStatus", "completed");
-            Appreference.jsonRequestSender.taskConversationEntry(EnumJsonWebservicename.taskConversationEntry, jsonObject, NewTaskConversation.this, getTaskListforPercentage1, null);
+            Appreference.jsonRequestSender.taskConversationEntry(EnumJsonWebservicename.taskConversationEntry, jsonObject, NewTaskConversation.this, null, chatBean);
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -18073,6 +18110,18 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                                     tv_reassign.setText("Assign Task");
                                     status_job.setVisibility(View.GONE);
                                     travel_job.setVisibility(View.GONE);
+                                }
+                            });
+                        }else if(!taskDetailsBean.getTaskStatus().equalsIgnoreCase("") && taskDetailsBean.getTaskStatus()!=null && taskDetailsBean.getTaskStatus().equalsIgnoreCase("completed")){
+                            handler.post(new Runnable() {
+                                @Override
+                                public void run() {
+                                    if (oracleProjectOwner != null && !oracleProjectOwner.equalsIgnoreCase(Appreference.loginuserdetails.getUsername())) {
+                                        status_job.setVisibility(View.GONE);
+                                        travel_job.setVisibility(View.GONE);
+                                    } else {
+                                        status_job.setVisibility(View.GONE);
+                                    }
                                 }
                             });
                         }
@@ -18641,11 +18690,7 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
 //                                VideoCallDataBase.getDB(context).update_Project_history(taskDetailsBean);
 //                                if (VideoCallDataBase.getDB(context).DuplicateProjectTaskIdChecker(taskDetailsBean.getTaskId())) {
                                 VideoCallDataBase.getDB(context).insert_new_Project_history(taskDetailsBean);
-                                if (taskDetailsBean.getTaskStatus() != null && taskDetailsBean.getTaskStatus().equalsIgnoreCase("Started")) {
-                                    taskDetailsBean.setProjectStatus("0");
-                                } else {
-                                    taskDetailsBean.setProjectStatus(taskDetailsBean.getTaskStatus());
-                                }
+                                Log.i("conversation", "getTaskStatus ## " + taskDetailsBean.getTaskStatus());
                                 if (taskDetailsBean.getTaskStatus() != null) {
 //                                    VideoCallDataBase.getDB(context).update_Project_history(taskDetailsBean);
                                     VideoCallDataBase.getDB(context).insertORupdate_Task_history(taskDetailsBean);

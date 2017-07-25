@@ -1574,7 +1574,6 @@ public class ProjectHistory extends Activity implements WebServiceInterface, Swi
                             task_giver.setText("Task Giver : NA");
                         }
                     }
-
                     Log.i("conv123","Status GiverSide===>"+projectDetailsBean.getTaskStatus());
                     if (projectDetailsBean.getTaskStatus() != null && projectDetailsBean.getTaskStatus().equalsIgnoreCase("reminder")) {
                         Log.i("ProjectHistory", "projectDetailsBean.getTaskStatus() 4 " + projectDetailsBean.getTaskStatus());
