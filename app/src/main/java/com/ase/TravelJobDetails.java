@@ -294,18 +294,13 @@ public class TravelJobDetails extends Activity implements View.OnClickListener, 
                 status_job.setVisibility(View.GONE);
             }
         }
-        if(!taskStatus.equalsIgnoreCase("") && taskStatus!=null && taskStatus.equalsIgnoreCase("completed")){
-                    handler.post(new Runnable() {
-                        @Override
-                        public void run() {
-                    if (oracleProjectOwner != null && !oracleProjectOwner.equalsIgnoreCase(Appreference.loginuserdetails.getUsername())) {
-                        ll_2.setVisibility(View.GONE);
-                        status_job.setVisibility(View.GONE);
-                        travel_job.setVisibility(View.GONE);
-                    } else {
-                        ll_2.setVisibility(View.GONE);
-                        status_job.setVisibility(View.GONE);
-                    }
+        if (taskStatus != null && (taskStatus.equalsIgnoreCase("completed") || taskStatus.equalsIgnoreCase("complete"))) {
+            handler.post(new Runnable() {
+                @Override
+                public void run() {
+                    ll_2.setVisibility(View.GONE);
+                    status_job.setVisibility(View.GONE);
+                    travel_job.setVisibility(View.GONE);
                 }
             });
         }
@@ -429,7 +424,8 @@ public class TravelJobDetails extends Activity implements View.OnClickListener, 
     }
 
     public void projectBackgroundProcess() {
-        cancelDialog();
+//        cancelDialog();
+        Log.i("getTask123","TTT getTask projectBackgroundProcess*************");
 
         try {
             String query_1 = "select * from taskDetailsInfo where (loginuser='" + Appreference.loginuserdetails.getEmail() + "') and (taskStatus!='note' and taskStatus!='draft') and (taskId='" + webtaskId + "') and (projectId='" + projectId + "') and customTagVisible = '1';";
@@ -484,29 +480,24 @@ public class TravelJobDetails extends Activity implements View.OnClickListener, 
                         travel_job.setVisibility(View.GONE);
                     }
                 });
-            }else if(!taskDetailsBean.getTaskStatus().equalsIgnoreCase("") && taskDetailsBean.getTaskStatus()!=null && taskDetailsBean.getTaskStatus().equalsIgnoreCase("completed")){
+            } else if (taskDetailsBean.getTaskStatus() != null && (taskDetailsBean.getTaskStatus().equalsIgnoreCase("completed") || taskDetailsBean.getTaskStatus().equalsIgnoreCase("complete"))) {
                 handler.post(new Runnable() {
                     @Override
                     public void run() {
-                        if (oracleProjectOwner != null && !oracleProjectOwner.equalsIgnoreCase(Appreference.loginuserdetails.getUsername())) {
-                            ll_2.setVisibility(View.GONE);
-                            status_job.setVisibility(View.GONE);
-                            travel_job.setVisibility(View.GONE);
-                        } else {
-                            ll_2.setVisibility(View.GONE);
-                            status_job.setVisibility(View.GONE);
-                        }
+                        ll_2.setVisibility(View.GONE);
+                        status_job.setVisibility(View.GONE);
+                        travel_job.setVisibility(View.GONE);
                     }
                 });
             }
             Log.i("status", "status*** 1 " + taskDetailsBean.getTaskStatus());
-            if (taskDetailsBean.getTaskStatus() != null && !taskDetailsBean.getTaskStatus().equalsIgnoreCase("")) {
+            /*if (taskDetailsBean.getTaskStatus() != null && !taskDetailsBean.getTaskStatus().equalsIgnoreCase("")) {
                 if (taskDetailsBean.getTaskStatus() != null && taskDetailsBean.getTaskStatus().equalsIgnoreCase("Started")) {
                     taskDetailsBean.setProjectStatus("0");
                 } else {
                     taskDetailsBean.setProjectStatus(taskDetailsBean.getTaskStatus());
                 }
-            }
+            }*/
             VideoCallDataBase.getDB(context).update_Project_history(taskDetailsBean);
             VideoCallDataBase.getDB(context).insertORupdate_Task_history(taskDetailsBean);
             VideoCallDataBase.getDB(context).insertORupdateStatus(taskDetailsBean);
@@ -516,13 +507,13 @@ public class TravelJobDetails extends Activity implements View.OnClickListener, 
         } else {
             Log.i(tab, "notifyTaskReceived 2 " + webtaskId);
             if (!isSignalidSame) {
-                if (taskDetailsBean.getTaskStatus() != null && !taskDetailsBean.getTaskStatus().equalsIgnoreCase("")) {
+                /*if (taskDetailsBean.getTaskStatus() != null && !taskDetailsBean.getTaskStatus().equalsIgnoreCase("")) {
                     if (taskDetailsBean.getTaskStatus() != null && taskDetailsBean.getTaskStatus().equalsIgnoreCase("Started")) {
                         taskDetailsBean.setProjectStatus("0");
                     } else {
                         taskDetailsBean.setProjectStatus(taskDetailsBean.getTaskStatus());
                     }
-                }
+                }*/
                 VideoCallDataBase.getDB(context).update_Project_history(taskDetailsBean);
                 VideoCallDataBase.getDB(context).insertORupdate_Task_history(taskDetailsBean);
                 VideoCallDataBase.getDB(context).insertORupdateStatus(taskDetailsBean);
@@ -1518,14 +1509,24 @@ public class TravelJobDetails extends Activity implements View.OnClickListener, 
 
     public void refresh() {
         try {
-            runOnUiThread(new Runnable() {
+            Log.i("getTask123","TTT getTask refresh*************");
+            handler.post(new Runnable() {
+                @Override
+                public void run() {
+                    if (medialistadapter != null) {
+                        medialistadapter.notifyDataSetChanged();
+                    }
+                    Log.i("conv123", "Refresh medialistadapter done-----------");
+                }
+            });
+           /* runOnUiThread(new Runnable() {
                 public void run() {
                     if (medialistadapter != null) {
                         medialistadapter.notifyDataSetChanged();
                     }
                     Log.i("NewTaskConversation", "Refresh Handled here");
                 }
-            });
+            });*/
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -1876,6 +1877,8 @@ public class TravelJobDetails extends Activity implements View.OnClickListener, 
 
     public void sortTaskMessage() {
         try {
+            Log.i("getTask123","TTT getTask sortTaskMessage*************");
+
             Collections.sort(taskList, new Comparator<TaskDetailsBean>() {
                 public int compare(TaskDetailsBean o1, TaskDetailsBean o2) {
                     if (o1.getDateTime() == null || o2.getDateTime() == null)
@@ -2117,6 +2120,8 @@ public class TravelJobDetails extends Activity implements View.OnClickListener, 
 
     public void gettaskwebservice() {
 //        showprogressforpriority("sync task details inprogress...");
+        Log.i("getTask123","TTT getTask gettaskwebservice*************");
+
         showStatusprogress("Sync Task.....");
         Log.i("gettask", "get task webservice " + webtaskId);
         List<NameValuePair> nameValuePairs1 = new ArrayList<NameValuePair>(1);
@@ -2125,9 +2130,9 @@ public class TravelJobDetails extends Activity implements View.OnClickListener, 
     }
 
     private void showStatusprogress(final String message) {
-        handler.post(new Runnable() {
-            @Override
-            public void run() {
+//        handler.post(new Runnable() {
+//            @Override
+//            public void run() {
                 try {
                     Log.i("expand", "inside show progress--------->");
                     if (progress == null) {
@@ -2142,24 +2147,29 @@ public class TravelJobDetails extends Activity implements View.OnClickListener, 
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-            }
-        });
+//            }
+//        });
     }
 
     public void cancelDialog() {
-        try {
-            if (progress != null && progress.isShowing()) {
-                Log.i("register", "--progress bar end-----");
-                progress.dismiss();
-                Appreference.isRequested_date = false;
-                progress = null;
-            }
-        } catch (Exception e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            Log.i("getTask123","TTT getTask cancelDialog*************");
+//            handler.post(new Runnable() {
+//                @Override
+//                public void run() {
+                    try {
+                        if (progress != null && progress.isShowing()) {
+                            Log.i("register", "--progress bar end-----");
+                            progress.dismiss();
+                            Appreference.isRequested_date = false;
+                            progress = null;
+                        }
+                    } catch (Exception e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                }
+//                }
+//            });
         }
-
-    }
 
     public void complete_task_check() {
         if (OracleStatusList.size() > 0) {
@@ -2541,6 +2551,8 @@ public class TravelJobDetails extends Activity implements View.OnClickListener, 
             }
         } else if (WebServiceEnum_Response != null && WebServiceEnum_Response.equalsIgnoreCase("getTask")) {
             Log.i(tab, "Notes  31 ");
+            Log.i("getTask123","TTT getTask Got W/S Response*************");
+
             String test1 = server_Response_string.toString();
             ProjectHistory projectHistory = (ProjectHistory) Appreference.context_table.get("projecthistory");
             if (projectHistory != null)
@@ -2589,6 +2601,10 @@ public class TravelJobDetails extends Activity implements View.OnClickListener, 
                     }
                 }
             });
+        } else {
+            cancelDialog();
+            Log.i(tab, "unhandleresponse " + WebServiceEnum_Response);
+            Toast.makeText(getApplicationContext(),WebServiceEnum_Response,Toast.LENGTH_SHORT).show();
         }
     }
 

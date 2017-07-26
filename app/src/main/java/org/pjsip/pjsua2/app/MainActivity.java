@@ -5390,77 +5390,11 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback,
                                     }
                                     // create sip registeration
 
-                           /* if (VideoCallDataBase.getDB(mainContext).getContact(appSharedpreferences.getString("loginUserName")) != null) {
 
-                                Log.i("Contact", "Database");
-                                ArrayList<ContactBean> buddyList;
-                                buddyList = VideoCallDataBase.getDB(mainContext).getContact(appSharedpreferences.getString("loginUserName"));
-                                Log.i("ContactValue", "Arraysize" + buddyList.size());
-                                Log.i("userState", "Response Method");
-                                if(MainActivity.account.buddyList!=null &&MainActivity.account.buddyList.size()>0){
-                                    Log.i("sipTest","Buddy list size()--->"+MainActivity.account.buddyList.size());
-                                    Log.i("register"," MainActivity.account.buddyList.size()>0 && Buddy Add after register successfully");
-                                    HashMap<String,String> tempvalue=new HashMap<String, String>();
-                                    for (int i = 0; i < MainActivity.account.buddyList.size(); i++) {
-                                        String name = MainActivity.account.buddyList.get(i).cfg.getUri();
-                                        tempvalue.put(name,name);
-                                    }
-                                    for (ContactBean contactBean : buddyList) {
-                                        if(tempvalue!=null && contactBean.getUsername()!=null){
-                                            String name="sip:"+contactBean.getUsername()+"@"+getResources().getString(R.string.server_ip);
-                                         if(!tempvalue.containsKey(name)) {
-                                             BuddyConfig cfg = new BuddyConfig();
-                                    Log.i("Contact", "Database " + appSharedpreferences.getString("loginUserName"));
-                                    ArrayList<ContactBean> buddyList;
-                                    buddyList = VideoCallDataBase.getDB(mainContext).getContact(appSharedpreferences.getString("loginUserName"));
-                                    contactList.addAll(buddyList);
-                                    Log.i("ContactValue", "Arraysize" + buddyList.size());
-                                    if (MainActivity.account.buddyList != null && MainActivity.account.buddyList.size() > 0) {
-                                        Log.i("sipTest", "Buddy list size()--->" + MainActivity.account.buddyList.size());
-                                        HashMap<String, String> tempvalue = new HashMap<String, String>();
-                                        for (int i = 0; i < MainActivity.account.buddyList.size(); i++) {
-                                            String name = MainActivity.account.buddyList.get(i).cfg.getUri();
-                                            tempvalue.put(name, name);
-                                        }
-                                        for (ContactBean contactBean : buddyList) {
-                                            if (tempvalue != null && contactBean.getUsername() != null) {
-                                                String name = "sip:" + contactBean.getUsername() + "@" + getResources().getString(R.string.server_ip);
-                                                if (!tempvalue.containsKey(name)) {
-                                                    BuddyConfig cfg = new BuddyConfig();
-
-                                             String b_uri = "sip:" + contactBean.getUsername()
-                                                     + "@" + getResources().getString(R.string.server_ip);
-                                             Log.i("sipTest", "b_uri     " + b_uri);
-                                             cfg.setUri(b_uri);
-                                             cfg.setSubscribe(true);
-                                             account.addBuddy(cfg);
-                                          }
-                                        }
-                                        Appreference.buddy_details.put(contactBean.getUsername(),contactBean);
-                                    }
-
-                                }else{
-                                    Log.i("sipTest","Buddy list size()--->"+0);
-                                    Log.i("register","Buddy Add after register successfully");
-                                    for (ContactBean contactBean : buddyList) {
-
-                                        BuddyConfig cfg = new BuddyConfig();
-
-                                        String b_uri = "sip:" + contactBean.getUsername()
-                                                + "@" + getResources().getString(R.string.server_ip);
-                                        Log.i("sipTest", "b_uri     "+b_uri);
-                                        cfg.setUri(b_uri);
-                                        cfg.setSubscribe(true);
-                                        account.addBuddy(cfg);
-                                        Appreference.buddy_details.put(contactBean.getUsername(),contactBean);
-                                    }
-                                }
-
-
-                            }*/
                                     Log.i("contacts", "Response Method");
                                     if (Appreference.context_table.containsKey("contactsfragment")) {
                                         Log.i("contacts", "Response Method 1");
+                                        Log.i("updateContacts123","show dialog......");
                                         ContactsFragment contactsFragment = (ContactsFragment) Appreference.context_table.get("contactsfragment");
                                         showprogress("Updating Contacts.....");
                                         contactsFragment.referesh();
@@ -6780,6 +6714,8 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback,
     }
 
     private void showprogress(String name) {
+        Log.i("updateContacts123","showprogress==updating Contacts........");
+
         try {
             if (progress == null || !progress.isShowing()) {
                 progress = new ProgressDialog(context);
@@ -6794,6 +6730,8 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback,
     }
 
     public void cancelDialog() {
+        Log.i("updateContacts123","==cancelDialog........");
+
         try {
             if (progress != null && progress.isShowing()) {
                 Log.i("register", "--progress bar end-----");

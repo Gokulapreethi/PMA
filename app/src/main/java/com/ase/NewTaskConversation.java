@@ -962,6 +962,16 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                 sendBtn.setEnabled(false);
             }
         }
+        if (taskStatus != null && (taskStatus.equalsIgnoreCase("completed") || taskStatus.equalsIgnoreCase("complete"))) {
+            handler.post(new Runnable() {
+                @Override
+                public void run() {
+                    assign_taskview.setVisibility(View.GONE);
+                    status_job.setVisibility(View.GONE);
+                    travel_job.setVisibility(View.GONE);
+                }
+            });
+        }
         status_job.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -4665,6 +4675,21 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                     TextView address = (TextView) dialog.findViewById(R.id.address);
                     TextView description = (TextView) dialog.findViewById(R.id.description);
                     final EditText observation = (EditText) dialog.findViewById(R.id.observation);
+                    observation.addTextChangedListener(new TextWatcher() {
+
+                        public void afterTextChanged(Editable s) {
+                        }
+
+                        public void beforeTextChanged(CharSequence s, int start,
+                                                      int count, int after) {
+                        }
+
+                        public void onTextChanged(CharSequence s, int start,
+                                                  int before, int count) {
+                            Log.i("oracle123","onTextEnteredCount===>"+count);
+
+                        }
+                    });
                     final EditText action_taken = (EditText) dialog.findViewById(R.id.action_taken);
                     final EditText cust_sign_name = (EditText) dialog.findViewById(R.id.cust_sign_name);
                     final EditText HMReading = (EditText) dialog.findViewById(R.id.hour_meter_reading);
@@ -12506,6 +12531,14 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                     }
                     Log.i("projects", "listOfMembers in project " + listOfObservers);
                 }
+                if (listOfObservers != null && listOfObservers.size() > 0) {
+                    for (int i = 0; i < listOfObservers.size(); i++) {
+                        project_toUsers = project_toUsers.concat(listOfObservers.get(i)) + ",";
+                    }
+                }
+                if (project_toUsers != null && project_toUsers.contains(",")) {
+                    project_toUsers = project_toUsers.substring(0, project_toUsers.length() - 1);
+                }
                 project_SipUser = new ArrayList<>();
                 if (MainActivity.account.buddyList != null && MainActivity.account.buddyList.size() > 0) {
                     Log.i("sipTest", "Buddy list size()--->" + MainActivity.account.buddyList.size());
@@ -18112,16 +18145,13 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                                     travel_job.setVisibility(View.GONE);
                                 }
                             });
-                        }else if(!taskDetailsBean.getTaskStatus().equalsIgnoreCase("") && taskDetailsBean.getTaskStatus()!=null && taskDetailsBean.getTaskStatus().equalsIgnoreCase("completed")){
+                        }else if (taskDetailsBean.getTaskStatus() != null && (taskDetailsBean.getTaskStatus().equalsIgnoreCase("completed") || taskDetailsBean.getTaskStatus().equalsIgnoreCase("complete"))) {
                             handler.post(new Runnable() {
                                 @Override
                                 public void run() {
-                                    if (oracleProjectOwner != null && !oracleProjectOwner.equalsIgnoreCase(Appreference.loginuserdetails.getUsername())) {
-                                        status_job.setVisibility(View.GONE);
-                                        travel_job.setVisibility(View.GONE);
-                                    } else {
-                                        status_job.setVisibility(View.GONE);
-                                    }
+                                    assign_taskview.setVisibility(View.GONE);
+                                    status_job.setVisibility(View.GONE);
+                                    travel_job.setVisibility(View.GONE);
                                 }
                             });
                         }
@@ -19137,11 +19167,11 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                     /*8888888888888888888888888888888*/
                     if (taskDetailsBean.getProjectId() != null && !taskDetailsBean.getProjectId().equalsIgnoreCase("null") && !taskDetailsBean.getProjectId().equalsIgnoreCase("") && !taskDetailsBean.getProjectId().equalsIgnoreCase("(null)")) {
                         VideoCallDataBase.getDB(context).update_Project_history(taskDetailsBean);
-                        if (taskDetailsBean.getTaskStatus() != null && taskDetailsBean.getTaskStatus().equalsIgnoreCase("Started")) {
+                       /* if (taskDetailsBean.getTaskStatus() != null && taskDetailsBean.getTaskStatus().equalsIgnoreCase("Started")) {
                             taskDetailsBean.setProjectStatus("0");
                         } else {
                             taskDetailsBean.setProjectStatus(taskDetailsBean.getTaskStatus());
-                        }
+                        }*/
                         if (taskDetailsBean.getTaskStatus() != null) {
 //                            VideoCallDataBase.getDB(context).update_Project_history(taskDetailsBean);
                             VideoCallDataBase.getDB(context).insertORupdate_Task_history(taskDetailsBean);

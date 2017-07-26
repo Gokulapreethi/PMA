@@ -150,6 +150,7 @@ public class ProjectHistory extends Activity implements WebServiceInterface, Swi
             Collections.reverse(projectDetailsBeans);
             for (ProjectDetailsBean projectDetailsBean : projectDetailsBeans) {
                 }
+            Collections.sort(projectDetailsBeans, new projectStatusComparator());
             buddyArrayAdapter = new TaskArrayAdapter(context, projectDetailsBeans);
             listView.setAdapter(buddyArrayAdapter);
 //            swipeRefreshLayout.setRefreshing(false);
@@ -540,6 +541,8 @@ public class ProjectHistory extends Activity implements WebServiceInterface, Swi
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
+                    Collections.sort(projectDetailsBeans, new projectStatusComparator());
+
                     Log.i("projectHistoryFill ", "size of issue_task ** " + projectDetailsBeans.size());
                     buddyArrayAdapter = new TaskArrayAdapter(context, projectDetailsBeans);
                     Log.i("projectHistoryFill ", "size of issue_task ** " + projectDetailsBeans.size());
@@ -989,6 +992,8 @@ public class ProjectHistory extends Activity implements WebServiceInterface, Swi
             projectDetailsBeanslist_ForSearch = VideoCallDataBase.getDB(context).getProjectHistory(query);
             Log.i("DBQuery", "size of history " + projectDetailsBeans.size());
             Log.i("DBQuery", "userName " + userName);
+            Collections.sort(projectDetailsBeans, new projectStatusComparator());
+
             buddyArrayAdapter = new TaskArrayAdapter(context, projectDetailsBeans);
 
             handler.post(new Runnable() {
@@ -1417,8 +1422,11 @@ public class ProjectHistory extends Activity implements WebServiceInterface, Swi
                 viewforparent.setVisibility(View.GONE);
                 TextView parent_enddate = (TextView) conView.findViewById(R.id.parent_enddate);
                 TextView exclation_counter = (TextView) conView.findViewById(R.id.exclation_counter);
+                TextView header_title = (TextView) conView.findViewById(R.id.header_title);
                 LinearLayout layoutcard=(LinearLayout)conView.findViewById(R.id.layoutcardview);
+                header_title.setVisibility(View.VISIBLE);
 
+                header_title.setText(projectDetailsBean.getTaskStatus());
                 ImageView selectedimage = (ImageView) conView.findViewById(R.id.selected);
                 TextView catagory = (TextView) conView.findViewById(R.id.catagory);
                 ImageView dependency_icon = (ImageView) conView.findViewById(R.id.dependency_icon);
@@ -1475,6 +1483,20 @@ public class ProjectHistory extends Activity implements WebServiceInterface, Swi
 
                     }
                 });
+
+
+
+                if(pos>0) {
+                    final ProjectDetailsBean pcBean = arrayBuddyList.get(pos - 1);
+                    if(pcBean.getTaskStatus().equalsIgnoreCase(projectDetailsBean.getTaskStatus()))
+                    {
+                        header_title.setVisibility(View.GONE);
+                    }
+                    else{
+                        header_title.setVisibility(View.VISIBLE);
+                    }
+                }
+
 
                 if (projectDetailsBean.getParentTaskId() != null && projectDetailsBean.getTaskId() != null) {
                     task_taker.setVisibility(View.VISIBLE);

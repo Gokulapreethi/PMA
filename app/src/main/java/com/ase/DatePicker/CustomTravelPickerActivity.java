@@ -133,6 +133,8 @@ public class CustomTravelPickerActivity extends Activity implements DateTimePick
                             String result_string = mDateTimePicker.getMonth() + "-" + String.valueOf(mDateTimePicker.getDay()) + "-" + String.valueOf(mDateTimePicker.getYear())
                                     + "  " + String.valueOf(mDateTimePicker.getHour()) + ":" + String.valueOf(mDateTimePicker.getMinute());
                             Date date_from=null;
+                            final Calendar c_date1 = Calendar.getInstance();
+
                             try {
                                 date_from=new SimpleDateFormat("MMM-d-yyyy HH:mm").parse(result_string);
                             } catch (ParseException e) {
@@ -141,7 +143,7 @@ public class CustomTravelPickerActivity extends Activity implements DateTimePick
 
                             if (date3 == null) {
                                 try {
-                                    date3 = sdf.format(c.getTime());
+                                    date3 = sdf.format(c_date1.getTime());
                                     date_from = new SimpleDateFormat("MMM-d-yyyy HH:mm").parse(result_string);
                                 } catch (Exception e) {
                                     e.printStackTrace();

@@ -858,7 +858,7 @@ public class AddTaskReassign extends Activity implements View.OnClickListener, W
                         Toast.makeText(AddTaskReassign.this, result, Toast.LENGTH_LONG).show();
                     }
 
-                    handler.post(new Runnable() {
+                    /*handler.post(new Runnable() {
                         @Override
                         public void run() {
 //                            dialog.dismiss();
@@ -871,7 +871,7 @@ public class AddTaskReassign extends Activity implements View.OnClickListener, W
 
 
                         }
-                    });
+                    });*/
                 }
             } else {
                 JsonElement jelement = new JsonParser().parse(response);
