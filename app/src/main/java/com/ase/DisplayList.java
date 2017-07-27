@@ -28,7 +28,7 @@ public class DisplayList extends Activity {
     List<String> number = new ArrayList<String>();
     Context context;
     //    List<Contact> contacts = new ArrayList<Contact>();
-    ArrayList<TaskDetailsBean> list_date = new ArrayList<TaskDetailsBean>();
+    ArrayList<TaskDetailsBean> list_date;
     ListView list;
     View view1;
     boolean isFromcustom1;
@@ -46,7 +46,7 @@ public class DisplayList extends Activity {
         context = this;
         view1 = this.getCurrentFocus();
         list = (ListView) findViewById(R.id.travel_list);
-
+        list_date = new ArrayList<TaskDetailsBean>();
         projectId = getIntent().getStringExtra("projectId");
         webtaskId = getIntent().getStringExtra("webtaskId");
         date_type = getIntent().getStringExtra("date_type");
@@ -57,7 +57,7 @@ public class DisplayList extends Activity {
             query = "Select * from projectStatus where projectId ='" + projectId + "' and taskId = '" + webtaskId + "' and (status ='7' or status='9') and " + (("travelStartTime like '" + completedate_display + "%" + "' and travelEndTime like '" + completedate_display + "%" + "'") + " or " + ("travelStartTime like '" + completedate_display + "%" + "' and travelEndTime IS NULL") + " or " + ("travelStartTime IS NULL and travelEndTime like '" + completedate_display + "%" + "'"));
         }else
              query = "Select * from projectStatus where projectId ='" + projectId + "' and taskId = '" + webtaskId + "' and (status ='7' or status='9')";
-
+        list_date.clear();
         list_date = VideoCallDataBase.getDB(context).getTravelDetails(query);
         Log.i("DisplayList", "query and list_date " + query + " " + list_date.size());
         adapter = new ListAct(context, list_date);

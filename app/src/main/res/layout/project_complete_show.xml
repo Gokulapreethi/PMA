@@ -222,7 +222,8 @@
                 android:layout_marginLeft="2dp"
                 android:layout_marginRight="2dp"
                 android:layout_marginTop="2dp"
-                android:orientation="horizontal" >
+                android:orientation="horizontal">
+
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
@@ -230,8 +231,8 @@
                     android:background="#FFFFFF"
                     android:gravity="left"
                     android:padding="7dp"
-                    android:text="M/c Model"
                     android:singleLine="true"
+                    android:text="M/c Model"
                     android:textColor="@color/black"
                     android:textSize="15dp" />
 
@@ -248,18 +249,21 @@
                     android:textColor="#808080"
                     android:visibility="visible" />
             </LinearLayout>
+
             <View
                 android:layout_width="wrap_content"
                 android:layout_height="1.20dp"
                 android:layout_marginTop="10dp"
                 android:background="@color/gray" />
+
             <LinearLayout
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="2dp"
                 android:layout_marginRight="2dp"
                 android:layout_marginTop="2dp"
-                android:orientation="horizontal" >
+                android:orientation="horizontal">
+
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
@@ -267,8 +271,8 @@
                     android:background="#FFFFFF"
                     android:gravity="left"
                     android:padding="7dp"
-                    android:text="M/c Sr No"
                     android:singleLine="true"
+                    android:text="M/c Sr No"
                     android:textColor="@color/black"
                     android:textSize="15dp" />
 
@@ -285,11 +289,12 @@
                     android:textColor="#808080"
                     android:visibility="visible" />
             </LinearLayout>
+
             <View
                 android:layout_width="wrap_content"
                 android:layout_height="1.20dp"
-                android:layout_marginTop="10dp"
                 android:layout_below="@+id/tablerow1"
+                android:layout_marginTop="10dp"
                 android:background="@color/gray" />
 
             <LinearLayout
@@ -300,6 +305,7 @@
                 android:layout_marginTop="2dp"
                 android:orientation="horizontal"
                 android:visibility="gone">
+
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
@@ -307,10 +313,11 @@
                     android:background="#FFFFFF"
                     android:gravity="left"
                     android:padding="7dp"
-                    android:text="Estimated Travel Hrs"
                     android:singleLine="true"
+                    android:text="Estimated Travel Hrs"
                     android:textColor="@color/black"
                     android:textSize="15dp" />
+
                 <TextView
                     android:id="@+id/estimatedTravelhrs"
                     android:layout_width="0dp"
@@ -324,19 +331,22 @@
                     android:textColor="#808080"
                     android:visibility="visible" />
             </LinearLayout>
+
             <View
                 android:layout_width="wrap_content"
                 android:layout_height="1.20dp"
                 android:layout_marginTop="10dp"
                 android:background="@color/gray"
-                android:visibility="gone"/>
+                android:visibility="gone" />
+
             <LinearLayout
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="2dp"
                 android:layout_marginRight="2dp"
                 android:layout_marginTop="2dp"
-                android:orientation="horizontal" >
+                android:orientation="horizontal">
+
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
@@ -344,10 +354,11 @@
                     android:background="#FFFFFF"
                     android:gravity="left"
                     android:padding="7dp"
-                    android:text="Estimated Activity Hrs"
                     android:singleLine="true"
+                    android:text="Estimated Activity Hrs"
                     android:textColor="@color/black"
                     android:textSize="15dp" />
+
                 <TextView
                     android:id="@+id/estimatedActivityhrs"
                     android:layout_width="0dp"
@@ -361,6 +372,7 @@
                     android:textColor="#808080"
                     android:visibility="visible" />
             </LinearLayout>
+
             <View
                 android:layout_width="wrap_content"
                 android:layout_height="1.20dp"
@@ -633,13 +645,16 @@
                 android:layout_height="1.20dp"
                 android:layout_marginTop="10dp"
                 android:background="@color/gray" />
+
+
             <LinearLayout
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="2dp"
                 android:layout_marginRight="2dp"
                 android:layout_marginTop="2dp"
-                android:orientation="horizontal" >
+                android:orientation="horizontal">
+
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
@@ -647,29 +662,40 @@
                     android:background="#FFFFFF"
                     android:gravity="left"
                     android:padding="7dp"
-                    android:text="Observation"
                     android:singleLine="true"
+                    android:text="Observation"
                     android:textColor="@color/black"
                     android:textSize="15dp" />
 
                 <TextView
-                android:id="@+id/observation_show"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="2dp"
-                android:layout_marginRight="2dp"
-                android:layout_marginTop="4dp"
-                android:layout_weight="1"
-                android:gravity="center_vertical"
-                android:maxLength="100"
-                android:textColor="#808080"
-                android:visibility="visible" />
+                    android:id="@+id/observation_show"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="2dp"
+                    android:layout_marginRight="2dp"
+                    android:layout_marginTop="4dp"
+                    android:layout_weight="1"
+                    android:gravity="center_vertical"
+                    android:maxLength="100"
+                    android:textColor="#808080"
+                    android:visibility="gone" />
+
+                <ImageView
+                    android:id="@+id/observation_show_custom1"
+                    android:layout_width="80dp"
+                    android:layout_height="80dp"
+                    android:layout_marginEnd="10dp"
+                    android:layout_marginRight="3dp"
+                    android:layout_marginTop="5dp"
+                    android:visibility="gone" />
             </LinearLayout>
+
             <View
                 android:layout_width="wrap_content"
                 android:layout_height="1.20dp"
                 android:layout_marginTop="10dp"
                 android:background="@color/gray" />
+
             <LinearLayout
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
@@ -714,7 +740,8 @@
                 android:layout_marginLeft="2dp"
                 android:layout_marginRight="2dp"
                 android:layout_marginTop="2dp"
-                android:orientation="horizontal" >
+                android:orientation="horizontal">
+
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
@@ -722,10 +749,11 @@
                     android:background="#FFFFFF"
                     android:gravity="left"
                     android:padding="7dp"
-                    android:text="Action Taken"
                     android:singleLine="true"
+                    android:text="Action Taken"
                     android:textColor="@color/black"
                     android:textSize="15dp" />
+
                 <TextView
                     android:id="@+id/action_taken_show"
                     android:layout_width="0dp"
@@ -737,13 +765,23 @@
                     android:gravity="center_vertical"
                     android:maxLength="100"
                     android:textColor="#808080"
-                    android:visibility="visible" />
+                    android:visibility="gone" />
+                <ImageView
+                    android:id="@+id/action_taken_show_custom1"
+                    android:layout_width="80dp"
+                    android:layout_height="80dp"
+                    android:layout_marginEnd="10dp"
+                    android:layout_marginRight="3dp"
+                    android:layout_marginTop="5dp"
+                    android:visibility="gone" />
             </LinearLayout>
+
             <View
                 android:layout_width="wrap_content"
                 android:layout_height="1.20dp"
                 android:layout_marginTop="10dp"
                 android:background="@color/gray" />
+
             <LinearLayout
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
@@ -822,7 +860,8 @@
                 android:layout_marginLeft="2dp"
                 android:layout_marginRight="2dp"
                 android:layout_marginTop="2dp"
-                android:orientation="horizontal" >
+                android:orientation="horizontal">
+
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
@@ -830,10 +869,11 @@
                     android:background="#FFFFFF"
                     android:gravity="left"
                     android:padding="7dp"
-                    android:text="Remarks"
                     android:singleLine="true"
+                    android:text="Remarks"
                     android:textColor="@color/black"
                     android:textSize="15dp" />
+
                 <TextView
                     android:id="@+id/remarks_complete"
                     android:layout_width="0dp"
@@ -845,15 +885,24 @@
                     android:gravity="center_vertical"
                     android:maxLength="100"
                     android:textColor="#808080"
-                    android:visibility="visible">
-                </TextView>
+                    android:visibility="gone"/>
+                <ImageView
+                    android:id="@+id/remarks_complete_custom1"
+                    android:layout_width="80dp"
+                    android:layout_height="80dp"
+                    android:layout_marginEnd="10dp"
+                    android:layout_marginRight="3dp"
+                    android:layout_marginTop="5dp"
+                    android:visibility="gone" />
 
             </LinearLayout>
+
             <View
                 android:layout_width="wrap_content"
                 android:layout_height="1.20dp"
                 android:layout_marginTop="10dp"
                 android:background="@color/gray" />
+
             <LinearLayout
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"

@@ -75,10 +75,10 @@ public class SearchMediaWebView extends AppCompatActivity {
             String url=null;
             if(getIntent()!=null && getIntent().getStringExtra("urlload")!=null &&
                     getIntent().getStringExtra("urlload").equalsIgnoreCase("searchmedia")) {
-                url = "http://151.253.12.203/ASE/mediaView";
+                url = getResources().getString(R.string.app_url)+"mediaView";
             }else if(getIntent()!=null && getIntent().getStringExtra("urlload")!=null &&
                     getIntent().getStringExtra("urlload").equalsIgnoreCase("tnareport")){
-                url = "http://151.253.12.203/ASE/tnaReport";
+                url =  getResources().getString(R.string.app_url)+"tnaReport";
                 title_header.setText("TNA Report");
             }
             Log.i("webview", "URL-->" + url);

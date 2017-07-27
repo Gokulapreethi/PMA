@@ -771,6 +771,8 @@ public class ProjectHistory extends Activity implements WebServiceInterface, Swi
                             Log.i("conv123","getOwnerOfTask====>"+taskDetailsBean.getOwnerOfTask());
                             Log.i("conv123","LoginUser====>"+Appreference.loginuserdetails.getUsername());
                             Log.i("conv123","getTaskObservers====>"+taskDetailsBean.getTaskObservers());
+                            Log.i("conv123","getRoleId====>"+Appreference.loginuserdetails.getRoleId());
+                            Log.i("conv123","getOwnerOfTask====>"+taskDetailsBean.getOwnerOfTask());
                             if (taskDetailsBean != null &&
                                     (taskDetailsBean.getTaskReceiver() != null && taskDetailsBean.getTaskReceiver().equalsIgnoreCase(Appreference.loginuserdetails.getUsername())) ||
                                     (taskDetailsBean.getOwnerOfTask()!=null && taskDetailsBean.getOwnerOfTask().equalsIgnoreCase(Appreference.loginuserdetails.getUsername())) ||
@@ -778,8 +780,11 @@ public class ProjectHistory extends Activity implements WebServiceInterface, Swi
                                 Log.i("task", String.valueOf(position));
 
                                 if (taskDetailsBean.getTaskName() != null && taskDetailsBean.getTaskName().equalsIgnoreCase("Travel Time")) {
-                                    if(Appreference.loginuserdetails!=null && Appreference.loginuserdetails.getRoleId()!=null
-                                            && !Appreference.loginuserdetails.getRoleId().equalsIgnoreCase("2")){
+                                    if((Appreference.loginuserdetails!=null && Appreference.loginuserdetails.getRoleId()!=null
+                                            && Appreference.loginuserdetails.getRoleId().equalsIgnoreCase("2")
+                                            && taskDetailsBean.getOwnerOfTask().equalsIgnoreCase(Appreference.loginuserdetails.getUsername()))
+                                            ||(Appreference.loginuserdetails!=null && Appreference.loginuserdetails.getRoleId()!=null
+                                            && Appreference.loginuserdetails.getRoleId().equalsIgnoreCase("3"))){
                                         showDialog();
                                         Intent intent = new Intent(context, TravelJobDetails.class);
                                         intent.putExtra("task", "projectHistory");
@@ -797,8 +802,11 @@ public class ProjectHistory extends Activity implements WebServiceInterface, Swi
                                         Toast.makeText(getApplicationContext(), "Group admin user not authorized to view the task details..", Toast.LENGTH_SHORT).show();
                                     }
                                 } else {
-                                    if(Appreference.loginuserdetails!=null && Appreference.loginuserdetails.getRoleId()!=null
-                                            && !Appreference.loginuserdetails.getRoleId().equalsIgnoreCase("2")){
+                                    if((Appreference.loginuserdetails!=null && Appreference.loginuserdetails.getRoleId()!=null
+                                            && Appreference.loginuserdetails.getRoleId().equalsIgnoreCase("2")
+                                            && taskDetailsBean.getOwnerOfTask().equalsIgnoreCase(Appreference.loginuserdetails.getUsername()))
+                                            ||(Appreference.loginuserdetails!=null && Appreference.loginuserdetails.getRoleId()!=null
+                                            && Appreference.loginuserdetails.getRoleId().equalsIgnoreCase("3"))){
                                         showDialog();
                                         Intent intent = new Intent(context, NewTaskConversation.class);
                                         intent.putExtra("task", "projectHistory");
@@ -819,13 +827,21 @@ public class ProjectHistory extends Activity implements WebServiceInterface, Swi
                             } else {
                                 Toast.makeText(getApplicationContext(), "This task is not assigned to You", Toast.LENGTH_SHORT).show();
                             }
+
                         } else if (taskDetailsBean.getTaskType().equalsIgnoreCase("Group")) {
                             Log.i("ListMembers", "projectDetailsBean.getTaskMemberList() " + taskDetailsBean.getTaskMemberList());
                             if ((taskDetailsBean.getTaskMemberList() != null && taskDetailsBean.getTaskMemberList().contains(Appreference.loginuserdetails.getUsername())) || (taskDetailsBean.getOwnerOfTask() != null && taskDetailsBean.getOwnerOfTask().equalsIgnoreCase(Appreference.loginuserdetails.getUsername())) || (taskDetailsBean.getTaskObservers() != null && taskDetailsBean.getTaskObservers().contains(Appreference.loginuserdetails.getUsername()))) {
                                 Log.i("task", String.valueOf(position));
+                                Log.i("conv123","taskType====>"+taskDetailsBean.getTaskType());
+                                Log.i("conv123","Group getRoleId====>"+Appreference.loginuserdetails.getRoleId());
+                                Log.i("conv123","Group getOwnerOfTask====>"+taskDetailsBean.getOwnerOfTask());
+                                Log.i("conv123","Group login getUsername====>"+Appreference.loginuserdetails.getUsername());
                                 if(taskDetailsBean.getTaskName()!=null && taskDetailsBean.getTaskName().equalsIgnoreCase("Travel Time")){
-                                    if(Appreference.loginuserdetails!=null && Appreference.loginuserdetails.getRoleId()!=null
-                                            && !Appreference.loginuserdetails.getRoleId().equalsIgnoreCase("2")){
+                                    if((Appreference.loginuserdetails!=null && Appreference.loginuserdetails.getRoleId()!=null
+                                            && Appreference.loginuserdetails.getRoleId().equalsIgnoreCase("2")
+                                            && taskDetailsBean.getOwnerOfTask().equalsIgnoreCase(Appreference.loginuserdetails.getUsername()))
+                                            ||(Appreference.loginuserdetails!=null && Appreference.loginuserdetails.getRoleId()!=null
+                                            && Appreference.loginuserdetails.getRoleId().equalsIgnoreCase("3"))){
                                         showDialog();
                                         Intent intent = new Intent(context, TravelJobDetails.class);
                                         intent.putExtra("task", "projectHistory");
@@ -843,8 +859,11 @@ public class ProjectHistory extends Activity implements WebServiceInterface, Swi
                                         Toast.makeText(getApplicationContext(), "Group admin user not authorized to view the task details..", Toast.LENGTH_SHORT).show();
                                     }
                                 }else {
-                                    if(Appreference.loginuserdetails!=null && Appreference.loginuserdetails.getRoleId()!=null
-                                            && !Appreference.loginuserdetails.getRoleId().equalsIgnoreCase("2")){
+                                    if((Appreference.loginuserdetails!=null && Appreference.loginuserdetails.getRoleId()!=null
+                                            && Appreference.loginuserdetails.getRoleId().equalsIgnoreCase("2")
+                                            && taskDetailsBean.getOwnerOfTask().equalsIgnoreCase(Appreference.loginuserdetails.getUsername()))
+                                            ||(Appreference.loginuserdetails!=null && Appreference.loginuserdetails.getRoleId()!=null
+                                            && Appreference.loginuserdetails.getRoleId().equalsIgnoreCase("3"))){
                                         showDialog();
                                         Intent intent = new Intent(context, NewTaskConversation.class);
                                         intent.putExtra("task", "projectHistory");

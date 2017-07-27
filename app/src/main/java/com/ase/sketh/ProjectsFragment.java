@@ -83,6 +83,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.TimeZone;
 
 import json.CommunicationBean;
 import json.EnumJsonWebservicename;
@@ -340,9 +341,35 @@ public class ProjectsFragment extends Fragment implements View.OnClickListener, 
                         public void onClick(View v) {
                             if(fsr_date!=null && !fsr_date.equalsIgnoreCase("")) {
                                 dialog.dismiss();
+                                SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                                SimpleDateFormat dateParse = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                              dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
+                                Date date = null;
+                                Date date1 = null;
+                                String FSRStartDateUTC = "";
+                                String FSREndDateUTC = "";
+                                String fsr_start_date=fsr_date+" "+"00:00:00";
+                                String fsr_end_date=fsr_date+" "+"23:59:59";
+                                if (fsr_start_date != null && !fsr_start_date.equalsIgnoreCase("")) {
+                                    try {
+                                        date = dateParse.parse(fsr_start_date);
+                                        FSRStartDateUTC = dateFormat.format(date);
+                                    } catch (Exception e) {
+                                        e.printStackTrace();
+                                    }
+                                }
+                                if (fsr_end_date != null && !fsr_end_date.equalsIgnoreCase("")) {
+                                    try {
+                                        date1 = dateParse.parse(fsr_end_date);
+                                        FSREndDateUTC = dateFormat.format(date1);
+                                    } catch (Exception e) {
+                                        e.printStackTrace();
+                                    }
+                                }
                                 List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
                                 nameValuePairs.add(new BasicNameValuePair("projectId", fsr_jobId));
-                                nameValuePairs.add(new BasicNameValuePair("taskCompletedDate", fsr_date));
+                                nameValuePairs.add(new BasicNameValuePair("taskCompletedStartDate", FSRStartDateUTC));
+                                nameValuePairs.add(new BasicNameValuePair("taskCompletedEndDate", FSREndDateUTC));
                                 showprogress("Downloading...");
                                 Appreference.jsonRequestSender.OracleFSRJOBReport(EnumJsonWebservicename.fieldServiceReportJobWise, nameValuePairs, ProjectsFragment.this);
                             }else
@@ -365,7 +392,7 @@ public class ProjectsFragment extends Fragment implements View.OnClickListener, 
                                     try {
                                         String curr_date = null;
                                         try {
-                                            SimpleDateFormat simpleDateFormat_1 = new SimpleDateFormat("yyyy-MM-dd");
+                                            SimpleDateFormat simpleDateFormat_1 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
                                             curr_date = simpleDateFormat_1.format(new Date());
                                         } catch (Exception e) {
                                             e.printStackTrace();
@@ -389,7 +416,7 @@ public class ProjectsFragment extends Fragment implements View.OnClickListener, 
                                             Toast.makeText(getActivity(), "Kindly select current date ", Toast.LENGTH_SHORT).show();
                                         } else {
                                             activity_start.setText(start_date);
-                                            TNAReportStart = start_date;
+                                            TNAReportStart = start_date+" "+"00:00:00";
                                         }
                                     } catch (Exception e) {
                                         e.printStackTrace();
@@ -415,7 +442,7 @@ public class ProjectsFragment extends Fragment implements View.OnClickListener, 
                                     try {
                                         String cur_date = null;
                                         try {
-                                            SimpleDateFormat simpleDateFormat_1 = new SimpleDateFormat("yyyy-MM-dd");
+                                            SimpleDateFormat simpleDateFormat_1 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
                                             cur_date = simpleDateFormat_1.format(new Date());
                                         } catch (Exception e) {
                                             e.printStackTrace();
@@ -441,7 +468,7 @@ public class ProjectsFragment extends Fragment implements View.OnClickListener, 
                                             Log.i("TNA", "compare ==> " + end_date.compareTo(TNAReportStart));
                                             if ((cur_date.compareTo(end_date) >= 0) && (end_date.compareTo(TNAReportStart) > 0) || (end_date.compareTo(TNAReportStart) == 0)) {
                                                 activity_end.setText(end_date);
-                                                TNAReportEnd = end_date;
+                                                TNAReportEnd = end_date+" "+"23:59:59";
                                             } else {
                                                 Toast.makeText(getActivity(), "Kindly select above start date and below current date", Toast.LENGTH_SHORT).show();
                                             }
@@ -465,9 +492,9 @@ public class ProjectsFragment extends Fragment implements View.OnClickListener, 
                         Log.i("report123", "-====>eNDdATE====>" + TNAReportEnd);
                         all_report_title.setVisibility(View.GONE);
                         tna_count = 0;
-                        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-                        SimpleDateFormat dateParse = new SimpleDateFormat("yyyy-MM-dd");
-//                    dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
+                        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                        SimpleDateFormat dateParse = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                         dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
                         Date date = null;
                         Date date1 = null;
                         String StartDateUTC = "", EndDateUTC = "";
