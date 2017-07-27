@@ -259,7 +259,13 @@ public class TravelJobDetails extends Activity implements View.OnClickListener, 
         }
         Log.i(tab, "taskStatus **$  ==> " + taskStatus);
         if (taskStatus != null && (taskStatus.equalsIgnoreCase("draft") || taskStatus.equalsIgnoreCase("Unassigned"))) {
-            ll_2.setVisibility(View.VISIBLE);
+            if(Appreference.loginuserdetails!=null && Appreference.loginuserdetails.getRoleId()!=null
+                    && Appreference.loginuserdetails.getRoleId().equalsIgnoreCase("2")
+                    && !oracleProjectOwner.equalsIgnoreCase(Appreference.loginuserdetails.getUsername())) {
+                ll_2.setVisibility(View.GONE);
+            }else{
+                ll_2.setVisibility(View.VISIBLE);
+            }
             status_job.setVisibility(View.GONE);
             travel_job.setVisibility(View.GONE);
         } else {
@@ -473,8 +479,16 @@ public class TravelJobDetails extends Activity implements View.OnClickListener, 
                 handler.post(new Runnable() {
                     @Override
                     public void run() {
-                        ll_2.setVisibility(View.VISIBLE);
-                        tv_reassign.setVisibility(View.VISIBLE);
+                        if(Appreference.loginuserdetails!=null && Appreference.loginuserdetails.getRoleId()!=null
+                                && Appreference.loginuserdetails.getRoleId().equalsIgnoreCase("2")
+                                && !oracleProjectOwner.equalsIgnoreCase(Appreference.loginuserdetails.getUsername())) {
+                            ll_2.setVisibility(View.GONE);
+                            tv_reassign.setVisibility(View.GONE);
+                        } else{
+                            ll_2.setVisibility(View.VISIBLE);
+                            tv_reassign.setVisibility(View.VISIBLE);
+                        }
+
                         tv_reassign.setText("Assign Task");
                         status_job.setVisibility(View.GONE);
                         travel_job.setVisibility(View.GONE);

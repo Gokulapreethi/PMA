@@ -8570,6 +8570,7 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
                     taskDetailsBean.setProjectName(cur.getString(cur.getColumnIndex("projectName")));
                     taskDetailsBean.setTaskId(cur.getString(cur.getColumnIndex("oracleTaskId")));
                     taskDetailsBean.setMcModel(cur.getString(cur.getColumnIndex("mcModel")));
+                    taskDetailsBean.setMachineMac(cur.getString(cur.getColumnIndex("machineMake")));
                     taskDetailsBean.setMcSrNo(cur.getString(cur.getColumnIndex("mcSrNo")));
                     taskDetailsBean.setEstimatedTravel(cur.getString(cur.getColumnIndex("estimatedTravelHrs")));
                     taskDetailsBean.setEstimatedActivity(cur.getString(cur.getColumnIndex("estimatedActivityHrs")));

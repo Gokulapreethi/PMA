@@ -927,7 +927,13 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
             isTaskCompleted = true;
         Log.i("desc123", "is template=======> " + template + " taskStatus--> " + taskStatus);
         if (taskStatus != null && taskStatus.equalsIgnoreCase("draft") || taskStatus.equalsIgnoreCase("Unassigned")) {
-            assign_taskview.setVisibility(View.VISIBLE);
+            if (Appreference.loginuserdetails != null && Appreference.loginuserdetails.getRoleId() != null
+                    && Appreference.loginuserdetails.getRoleId().equalsIgnoreCase("2")
+                    && isProjectFromOracle && !oracleProjectOwner.equalsIgnoreCase(Appreference.loginuserdetails.getUsername())) {
+                assign_taskview.setVisibility(View.GONE);
+            }else{
+                assign_taskview.setVisibility(View.VISIBLE);
+            }
             status_job.setVisibility(View.GONE);
             travel_job.setVisibility(View.GONE);
         } else {
@@ -939,7 +945,13 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
             assign_taskview.setVisibility(View.VISIBLE);
             tv_reassign.setText("Assign Task");
         } else if (isProjectFromOracle && !oracleProjectOwner.equalsIgnoreCase(Appreference.loginuserdetails.getUsername())) {
-            assign_taskview.setVisibility(View.VISIBLE);
+            if(Appreference.loginuserdetails!=null && Appreference.loginuserdetails.getRoleId()!=null
+                    && Appreference.loginuserdetails.getRoleId().equalsIgnoreCase("2")) {
+                assign_taskview.setVisibility(View.GONE);
+            }else
+            {
+                assign_taskview.setVisibility(View.VISIBLE);
+            }
             tv_reassign.setText("Assign to me");
             Self_assign = true;
         }
@@ -2687,7 +2699,13 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                                 View_Task_View.setVisibility(View.GONE);
                             } else if (isProjectFromOracle && !oracleProjectOwner.equalsIgnoreCase(Appreference.loginuserdetails.getUsername())) {
                                    /*if Oracleproject is Group*/
-                                tv_reassign.setVisibility(View.VISIBLE);
+                                if(Appreference.loginuserdetails!=null && Appreference.loginuserdetails.getRoleId()!=null
+                                        && Appreference.loginuserdetails.getRoleId().equalsIgnoreCase("2")) {
+                                    tv_reassign.setVisibility(View.GONE);
+                                }else
+                                {
+                                    tv_reassign.setVisibility(View.VISIBLE);
+                                }
                                 tv_reassign.setText("Assign to me");
                                 Self_assign = true;
                                 addobserverRowView.setVisibility(View.GONE);
@@ -4008,6 +4026,7 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
             TextView task_id = (TextView) dialog.findViewById(R.id.task_id);
 //                    TextView employee_name=(TextView)dialog.findViewById(R.id.emp_name);
             TextView mcModel = (TextView) dialog.findViewById(R.id.mac_model);
+            TextView machine_make_show = (TextView) dialog.findViewById(R.id.machine_make_show);
             TextView mcSrNo = (TextView) dialog.findViewById(R.id.mac_no);
             TextView est_travel = (TextView) dialog.findViewById(R.id.estimatedTravelhrs);
             TextView est_activity = (TextView) dialog.findViewById(R.id.estimatedActivityhrs);
@@ -4046,6 +4065,7 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                 project_name.setText("Job Card No :" + JobCodeNo + "\nActivity Code :" + ActivityCode);
                 task_id.setText(ActivityCode);
                 mcModel.setText(existing_entry.getMcModel());
+                machine_make_show.setText(existing_entry.getMachineMac());
                 mcSrNo.setText(existing_entry.getMcSrNo());
                 service_date.setText(existing_entry.getDateTime());
                 est_travel.setText(existing_entry.getEstimatedTravel());
@@ -4667,6 +4687,7 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                     TextView task_id = (TextView) dialog.findViewById(R.id.task_id);
 //                    TextView employee_name=(TextView)dialog.findViewById(R.id.emp_name);
                     TextView mcModel = (TextView) dialog.findViewById(R.id.mac_model);
+                    TextView machine_make = (TextView) dialog.findViewById(R.id.machine_make);
                     TextView mcSrNo = (TextView) dialog.findViewById(R.id.mac_no);
                     TextView est_travel = (TextView) dialog.findViewById(R.id.estimatedTravelhrs);
                     TextView est_activity = (TextView) dialog.findViewById(R.id.estimatedActivityhrs);
@@ -4807,6 +4828,7 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                         mcModel.setText(detailsBean.getMcModel());
                         statusCompletedFieldValues.put(4, "McModel :" + detailsBean.getMcModel());
                         mcSrNo.setText(detailsBean.getMcSrNo());
+                        machine_make.setText(detailsBean.getMachineMac());
                         statusCompletedFieldValues.put(5, "McSrNo :" + detailsBean.getMcSrNo());
                         est_travel.setText(detailsBean.getEstimatedTravel());
                         statusCompletedFieldValues.put(6, "EstimatedTravel :" + detailsBean.getEstimatedTravel());
@@ -18139,7 +18161,15 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                                 @Override
                                 public void run() {
                                     assign_taskview.setVisibility(View.GONE);
-                                    tv_reassign.setVisibility(View.VISIBLE);
+                                    if(Appreference.loginuserdetails!=null && Appreference.loginuserdetails.getRoleId()!=null
+                                            && Appreference.loginuserdetails.getRoleId().equalsIgnoreCase("2")
+                                            && !oracleProjectOwner.equalsIgnoreCase(Appreference.loginuserdetails.getUsername())) {
+                                        tv_reassign.setVisibility(View.GONE);
+                                    }else
+                                    {
+                                        tv_reassign.setVisibility(View.VISIBLE);
+
+                                    }
                                     tv_reassign.setText("Assign Task");
                                     status_job.setVisibility(View.GONE);
                                     travel_job.setVisibility(View.GONE);

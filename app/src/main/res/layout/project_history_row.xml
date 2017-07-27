@@ -32,7 +32,7 @@
                 android:padding="5dp"
                 android:text="Header"
                 android:textColor="@color/appcolor"
-                android:textSize="20dp"
+                android:textSize="16dp"
                 android:visibility="gone" />
 
             <RelativeLayout

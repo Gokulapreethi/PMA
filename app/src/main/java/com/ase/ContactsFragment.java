@@ -3169,6 +3169,7 @@ public class ContactsFragment extends Fragment implements View.OnClickListener, 
 
     public void referesh() {
         Log.i("contacts", "referesh Method");
+        cancelDialog();
         if (buddyList != null && buddyList.size() == 0) {
             if (VideoCallDataBase.getDB(classContext).getContact(Appreference.loginuserdetails.getUsername()) != null) {
                 list = "Contact";

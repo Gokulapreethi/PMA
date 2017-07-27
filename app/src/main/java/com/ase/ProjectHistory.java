@@ -716,8 +716,8 @@ public class ProjectHistory extends Activity implements WebServiceInterface, Swi
                                 || (taskDetailsBean.getTaskStatus() != null && taskDetailsBean.getTaskStatus().equalsIgnoreCase("Unassigned"))) {
                             Log.i("task", String.valueOf(position));
                             if (taskDetailsBean.getTaskName() != null && taskDetailsBean.getTaskName().equalsIgnoreCase("Travel Time")) {
-                                if(Appreference.loginuserdetails!=null && Appreference.loginuserdetails.getRoleId()!=null
-                                        && !Appreference.loginuserdetails.getRoleId().equalsIgnoreCase("2")){
+//                                if(Appreference.loginuserdetails!=null && Appreference.loginuserdetails.getRoleId()!=null
+//                                        && !Appreference.loginuserdetails.getRoleId().equalsIgnoreCase("2")){
                                     showDialog();
                                     Intent intent = new Intent(context, TravelJobDetails.class);
                                     intent.putExtra("task", "ProjectTemplateview");
@@ -732,14 +732,14 @@ public class ProjectHistory extends Activity implements WebServiceInterface, Swi
                                     }
                                     check = true;
                                     startActivity(intent);
-                                }else
-                                {
-                                    Toast.makeText(getApplicationContext(), "Group admin user not authorized to view the task details..", Toast.LENGTH_SHORT).show();
-                                }
+//                                }else
+//                                {
+//                                    Toast.makeText(getApplicationContext(), "Group admin user not authorized to view the task details..", Toast.LENGTH_SHORT).show();
+//                                }
 
                             } else {
-                                if(Appreference.loginuserdetails!=null && Appreference.loginuserdetails.getRoleId()!=null
-                                        && !Appreference.loginuserdetails.getRoleId().equalsIgnoreCase("2")){
+//                                if(Appreference.loginuserdetails!=null && Appreference.loginuserdetails.getRoleId()!=null
+//                                        && !Appreference.loginuserdetails.getRoleId().equalsIgnoreCase("2")){
                                     showDialog();
                                     Intent intent = new Intent(context, NewTaskConversation.class);
                                     intent.putExtra("task", "ProjectTemplateview");
@@ -756,10 +756,10 @@ public class ProjectHistory extends Activity implements WebServiceInterface, Swi
                                     check = true;
                                     startActivity(intent);
                                     overridePendingTransition(R.anim.right_anim, R.anim.left_anim);
-                                }else
-                                {
-                                    Toast.makeText(getApplicationContext(), "Group admin user not authorized to view the task details..", Toast.LENGTH_SHORT).show();
-                                }
+//                                }else
+//                                {
+//                                    Toast.makeText(getApplicationContext(), "Group admin user not authorized to view the task details..", Toast.LENGTH_SHORT).show();
+//                                }
 
                             }
 //                            } else {
@@ -1424,9 +1424,16 @@ public class ProjectHistory extends Activity implements WebServiceInterface, Swi
                 TextView exclation_counter = (TextView) conView.findViewById(R.id.exclation_counter);
                 TextView header_title = (TextView) conView.findViewById(R.id.header_title);
                 LinearLayout layoutcard=(LinearLayout)conView.findViewById(R.id.layoutcardview);
+                Log.i("header123","isGroupTask===>"+projectDetailsBean.getTaskType());
+                Log.i("header123","TaskStatus===>"+projectDetailsBean.getTaskStatus());
                 header_title.setVisibility(View.VISIBLE);
+//                header_title.setText(projectDetailsBean.getTaskStatus());
 
-                header_title.setText(projectDetailsBean.getTaskStatus());
+                if(projectDetailsBean.getTaskStatus().equalsIgnoreCase("draft")) {
+                    header_title.setText("Unassigned");
+                }else{
+                    header_title.setText(projectDetailsBean.getTaskStatus());
+                }
                 ImageView selectedimage = (ImageView) conView.findViewById(R.id.selected);
                 TextView catagory = (TextView) conView.findViewById(R.id.catagory);
                 ImageView dependency_icon = (ImageView) conView.findViewById(R.id.dependency_icon);
