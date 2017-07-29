@@ -3,6 +3,7 @@ package com.ase;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Rect;
@@ -10,6 +11,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.app.AlertDialog;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Base64;
@@ -24,6 +26,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Filter;
 import android.widget.Filterable;
@@ -33,14 +36,14 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.ase.Bean.ProjectDetailsBean;
+import com.ase.Bean.TaskDetailsBean;
+import com.ase.DB.VideoCallDataBase;
 import com.baoyz.swipemenulistview.SwipeMenu;
 import com.baoyz.swipemenulistview.SwipeMenuCreator;
 import com.baoyz.swipemenulistview.SwipeMenuItem;
 import com.baoyz.swipemenulistview.SwipeMenuListView;
 import com.google.gson.Gson;
-import com.ase.Bean.ProjectDetailsBean;
-import com.ase.Bean.TaskDetailsBean;
-import com.ase.DB.VideoCallDataBase;
 
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
@@ -148,8 +151,7 @@ public class ProjectHistory extends Activity implements WebServiceInterface, Swi
 //
             Collections.sort(projectDetailsBeans, new StringDateComparator());
             Collections.reverse(projectDetailsBeans);
-            for (ProjectDetailsBean projectDetailsBean : projectDetailsBeans) {
-                }
+
             Collections.sort(projectDetailsBeans, new projectStatusComparator());
             buddyArrayAdapter = new TaskArrayAdapter(context, projectDetailsBeans);
             listView.setAdapter(buddyArrayAdapter);
@@ -221,14 +223,7 @@ public class ProjectHistory extends Activity implements WebServiceInterface, Swi
             Search_EditText = (EditText) findViewById(R.id.searchtext);
             Noresult = (TextView) findViewById(R.id.Noresult);
             active_task = (TextView) findViewById(R.id.txtView01);
-            spinner_layout = (LinearLayout) findViewById(R.id.spinner_layout);
-            spinner_layout.setVisibility(View.GONE);
-            spin1 = (Spinner) findViewById(R.id.spinner1);
-            spin2 = (Spinner) findViewById(R.id.spinner2);
-            spin3 = (Spinner) findViewById(R.id.spinner3);
-            cancelbutton = (TextView) findViewById(R.id.cancelbutton);
-            donebutton = (TextView) findViewById(R.id.donebutton);
-            clearbutton = (TextView) findViewById(R.id.clearbutton);
+
             view_mems = (TextView) findViewById(R.id.view_mems);
             options = (LinearLayout) findViewById(R.id.options);
             options.setVisibility(View.GONE);
@@ -238,12 +233,6 @@ public class ProjectHistory extends Activity implements WebServiceInterface, Swi
             listMembers = new String();
             fill = (ImageView) findViewById(R.id.fill);
             listofProjectMembers = new ArrayList<>();
-//        spin1pos=4;
-            spin1.getId();
-//        spin2pos=5;
-//        spin3pos=2;
-            spin2.setSelection(spin2.getBottom());
-            spin3.setSelection(spin3.getBottom());
             non_activebean = new ArrayList<>();
             if (getIntent() != null) {
                 project_id = getIntent().getExtras().getString("projectId");
@@ -322,261 +311,127 @@ public class ProjectHistory extends Activity implements WebServiceInterface, Swi
             fill.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    check = true;
-                   if (spinner_layout.getVisibility() == View.GONE) {
-                        spinner_layout.setVisibility(View.VISIBLE);
-                        Search_EditText.setVisibility(View.GONE);
-                        listView.setEnabled(false);
-                        listView.setClickable(false);
-                        fill.setBackgroundResource(R.drawable.filterenabled);
-                    } else {
-                        spinner_layout.setVisibility(View.GONE);
-                        Search_EditText.setVisibility(View.VISIBLE);
-                        listView.setEnabled(true);
-                        listView.setClickable(true);
-                        fill.setBackgroundResource(R.drawable.filterdisabled);
-                    }
-                    List<String> categories = new ArrayList<String>();
-                    categories.add("Task");
-                   /* categories.add("issue");
-                    categories.add("note");*/
-                    categories.add("Template");
-                    categories.add("All");
-                    catestring1 = categories.toArray(new String[categories.size()]);
-                    spin1.setAdapter(new MyAdapter1(getApplicationContext(), R.layout.customspin, catestring1));
-                    spin1.setPopupBackgroundResource(R.drawable.borderfordialog);
-
+                    LayoutInflater inflater = getLayoutInflater();
+                    View alertLayout = inflater.inflate(R.layout.custom_status_filter, null);
+                    final Spinner status_spinner = (Spinner) alertLayout.findViewById(R.id.status_spinner);
+                    Button submit_status_btn = (Button) alertLayout.findViewById(R.id.submit_status_btn);
+                    Button clear_status_btn = (Button) alertLayout.findViewById(R.id.clear_status_btn);
+                    Button cancel_status_btn = (Button) alertLayout.findViewById(R.id.cancel_status_btn);
+                    AlertDialog.Builder alert = new AlertDialog.Builder(ProjectHistory.this);
+                    alert.setTitle("Filter By");
+                    // this is set the view from XML inside AlertDialog
+                    alert.setView(alertLayout);
+                    // disallow cancel of AlertDialog on click of back button and outside touch
+                    alert.setCancelable(false);
                     List<String> status = new ArrayList<String>();
+                    status.add("Select All");
                     status.add("Unassigned");
                     status.add("Assigned");
-                    status.add("Start");
+                    status.add("Started");
                     status.add("Hold");
-                    status.add("Resume");
-                    status.add("Pause");
-                    status.add("Restart");
-                    status.add("Complete");
-                    status.add("All");
-                    catestring2 = status.toArray(new String[status.size()]);
-                    spin2.setAdapter(new MyAdapter2(context, R.layout.customspin, catestring2));
-                    spin2.setPopupBackgroundResource(R.drawable.borderfordialog);
+                    status.add("Resumed");
+                    status.add("Paused");
+                    status.add("Restarted");
+                    status.add("Completed");
+                    ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(ProjectHistory.this, android.R.layout.simple_spinner_item, status);
+                    // Drop down layout style - list view with radio button
+                    dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                    // attaching data adapter to spinner
+                    status_spinner.setAdapter(dataAdapter);
 
-                    List<String> categories3 = new ArrayList<String>();
-                    String givername = " ";
-                    Log.i("projectHistory", "loginuser detail" + Appreference.loginuserdetails.getEmail());
-                    givername = "select contactemail from contact where loginuser='" + Appreference.loginuserdetails.getEmail() + "'";
-                    Log.i("projectHistory", "givername " + givername);
-                    String Memberlist = "", getmemberquery = "";
-                    getmemberquery = "select taskMemberList from projectHistory where projectId='" + project_id + "'";
-                    ArrayList<String> taskmemberlist = new ArrayList<String>();
-                    Memberlist = VideoCallDataBase.getDB(context).getGroupMemberAccess(getmemberquery);
-                    int counter = 0;
-                    for (int i = 0; i < Memberlist.length(); i++) {
-                        if (Memberlist.charAt(i) == ',') {
-                            counter++;
-                        }
-                        Log.i("project_details", "Task Mem's counter size is == " + counter);
-                    }
-                    for (int j = 0; j < counter + 1; j++) {
-                        String Mem_name = Memberlist.split(",")[j];
-                        Log.i("project_details", "Task Mem's and position == " + Mem_name + " " + j);
-                        taskmemberlist.add(Mem_name);
-                    }
+                    alert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
 
-                    Log.i("projectHistory", "buddylist value is " + taskmemberlist.size());
-                    categories3.add("Me");
-                    for (int i = 0; i < taskmemberlist.size(); i++) {
-                        Log.i("projectHistory", "buddylist value is 3 " + taskmemberlist.get(i));
-                        String username = taskmemberlist.get(i);
-                        categories3.add(VideoCallDataBase.getDB(context).getname(username));
-                    }
-                    categories3.add("All");
-                    catestring3 = categories3.toArray(new String[categories3.size()]);
-                    spin3.setAdapter(new MyAdapter3(getApplicationContext(), R.layout.customspin, catestring3));
-                    spin3.setPopupBackgroundResource(R.drawable.borderfordialog);
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+                    });
+                    alert.setPositiveButton("Submit", new DialogInterface.OnClickListener() {
 
-                    if (spin1pos == 0 && spin2pos == 0 && spin3pos == 0) {
-                        spin1.setSelection(spin1.getBottom());
-                        spin2.setSelection(spin2.getBottom());
-                        spin3.setSelection(spin3.getBottom());
-                    }
-                    if (spin1pos == spin1.getCount() - 1 && spin2pos == spin2.getCount() - 1 && spin3pos == spin3.getCount() - 1) {
-                        spin1.setSelection(spin1.getCount() - 1);
-                        spin2.setSelection(spin2.getCount() - 1);
-                        spin3.setSelection(spin3.getCount() - 1);
-                    } else {
-                        if (spin1pos != spin1.getCount() - 1) {
-                            spin1.setSelection(spin1pos);
-                        } else {
-                            spin1.setSelection(spin1.getCount() - 1);
-                        }
-                        if (spin2pos != spin2.getCount() - 1) {
-                            spin2.setSelection(spin2pos);
-                        } else {
-                            spin2.setSelection(spin2.getCount() - 1);
-                        }
-                        if (spin3pos != spin3.getCount() - 1) {
-                            spin3.setSelection(spin3pos);
-                        } else {
-                            spin3.setSelection(spin3.getCount() - 1);
-                        }
-                    }
-                }
-            });
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            String selected_status = String.valueOf(status_spinner.getSelectedItem());/*selected status from spinner*/
 
-            cancelbutton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    listView.setEnabled(true);
-                    spinner_layout.setVisibility(View.GONE);
-                    Search_EditText.setVisibility(View.VISIBLE);
-                    fill.setBackgroundResource(R.drawable.filterdisabled);
-                }
-            });
-            clearbutton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    spin1.setSelection(spin1.getCount() - 1);
-                    spin2.setSelection(spin2.getCount() - 1);
-                    spin3.setSelection(spin3.getCount() - 1);
-                    spin1pos = spin1.getSelectedItemPosition();
-                    spin2pos = spin2.getSelectedItemPosition();
-                    spin3pos = spin3.getSelectedItemPosition();
-                    fill.setBackgroundResource(R.drawable.filterdisabled);
-                    //                spinner_layout.setVisibility(View.GONE);
-                    //                Search_EditText.setVisibility(View.VISIBLE);
-                    setActiveAdapter();
-                    try {
-                        handler.post(new Runnable() {
-                            @Override
-                            public void run() {
-                                buddyArrayAdapter.notifyDataSetChanged();
-                            }
-                        });
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
-            });
+                            if (!selected_status.equalsIgnoreCase("Unassigned")) {
+                                Log.i("filter123", "selected status===============>" + selected_status);
+                                String query_status = "select * from projectHistory where projectId='" + project_id + "' and taskStatus = '" + selected_status + "'";
+                                Log.i("filter123", "Query===============>" + query_status);
+                                ArrayList<ProjectDetailsBean> search_result = VideoCallDataBase.getDB(context).getProjectHistory(query_status);
+                                Log.i("filter123", "Query result===============>" + search_result.size());
 
-            donebutton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    listView.setEnabled(true);
-                    listView.setClickable(true);
-                    spinner_layout.setVisibility(View.GONE);
-                    fill.setBackgroundResource(R.drawable.filterenabled);
-                    String spinner1 = spin1.getSelectedItem().toString();
-                    spin1pos = spin1.getSelectedItemPosition();
-                    Log.i("ProjectSpinner", "spin1pos value is" + spin1pos);
-                    String spinner2 = spin2.getSelectedItem().toString();
-                    spin2pos = spin2.getSelectedItemPosition();
-                    Log.i("ProjectSpinner", "spin2pos value is" + spin2pos);
-                    String spinner3 = spin3.getSelectedItem().toString();
-                    spin3pos = spin3.getSelectedItemPosition();
-                    Log.i("ProjectSpinner", "spin3pos value is" + spin3pos);
-                    Log.i("projectHistory", spinner1);
-                    Log.i("projectHistory", spinner2);
-                    Log.i("projectHistory", spinner3);
-                    String issue_qry = " ";
-                    String spy = " ";
-                    if (!spinner3.equalsIgnoreCase("Me") && !spinner3.equalsIgnoreCase("All")) {
-                        String firstname = spinner3.split(" ")[0];
-                        String lastname = spinner3.split(" ")[1];
-                        spy = VideoCallDataBase.getDB(context).getusername(firstname, lastname);
-                    }
-                    if (!spinner1.equalsIgnoreCase("All") && !spinner2.equalsIgnoreCase("All") && !spinner3.equalsIgnoreCase("All")) {
-                        Log.i("projectHistory", "Inside 3 are selected");
-                        if (spinner3.equalsIgnoreCase("Me")) {
-                            issue_qry = "select * from projectHistory where (projectId='" + project_id + "') and ( taskStatus='" + spinner2 + "') and( category='" + spinner1 + "') and ( ownerOfTask='" + Appreference.loginuserdetails.getUsername() + "')";
-                           } else {
-                            issue_qry = "select * from projectHistory where (projectId='" + project_id + "') and ( taskStatus='" + spinner2 + "') and( category='" + spinner1 + "') and ( ownerOfTask='" + spy + "')";
-                            Log.i("projectHistory", "issue_qry value2222" + issue_qry);
-                        }
-                    } else if (spinner1.equalsIgnoreCase("All")) {
-                        Log.i("projectHistory", "Inside category is unselected");
-                        if (spinner2.equalsIgnoreCase("All")) {
-                            Log.i("projectHistory", "Inside status is unselected");
-                            if (!spinner3.equalsIgnoreCase("All")) {
-                                if (spinner3.equalsIgnoreCase("Me")) {
-                                    issue_qry = "select * from projectHistory where (projectId='" + project_id + "') and ( ownerOfTask='" + Appreference.loginuserdetails.getUsername() + "')";
-                                      } else {
-                                    issue_qry = "select * from projectHistory where (projectId='" + project_id + "') and ( ownerOfTask='" + spy + "')";
-                                    Log.i("projectHistory", "issue_qry value" + issue_qry);
-                                }
-                            }
-                        } else {
-                            if (!spinner3.equalsIgnoreCase("All")) {
-                                if (spinner3.equalsIgnoreCase("Me")) {
-                                    issue_qry = "select * from projectHistory where (projectId='" + project_id + "') and ( taskStatus='" + spinner2 + "') and ( ownerOfTask='" + Appreference.loginuserdetails.getUsername() + "')";
-                                    } else {
-                                    issue_qry = "select * from projectHistory where (projectId='" + project_id + "') and ( taskStatus='" + spinner2 + "') and ( ownerOfTask='" + spy + "')";
-                                    Log.i("projectHistory", "issue_qry value" + issue_qry);
-                                }
+                                Collections.sort(search_result, new projectStatusComparator());
+                                buddyArrayAdapter = new TaskArrayAdapter(context, search_result);
+                                listView.setAdapter(buddyArrayAdapter);
+                                handler.post(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        buddyArrayAdapter.notifyDataSetChanged();
+                                    }
+                                });
+                                dialog.dismiss();
+                            } else if (selected_status.equalsIgnoreCase("Unassigned")) {
+                                Log.i("filter123", "selected status===============>" + selected_status);
+                                String status = "draft";
+                                String query_status = "select * from projectHistory where projectId='" + project_id + "' and taskStatus = '" + status + "'";
+                                Log.i("filter123", "Query===============>" + query_status);
+                                ArrayList<ProjectDetailsBean> search_result = VideoCallDataBase.getDB(context).getProjectHistory(query_status);
+                                Log.i("filter123", "Query result===============>" + search_result.size());
+
+                                Collections.sort(search_result, new projectStatusComparator());
+                                buddyArrayAdapter = new TaskArrayAdapter(context, search_result);
+                                listView.setAdapter(buddyArrayAdapter);
+                                handler.post(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        buddyArrayAdapter.notifyDataSetChanged();
+                                    }
+                                });
+                                dialog.dismiss();
+                            }else if(selected_status.equalsIgnoreCase("Select All")){
+                                String clear_query = "select * from projectHistory where projectId='" + project_id + "'";
+                                Log.i("filter123", "Query===============>" + clear_query);
+                                ArrayList<ProjectDetailsBean> search_result = VideoCallDataBase.getDB(context).getProjectHistory(clear_query);
+                                Log.i("filter123", "Query result===============>" + search_result.size());
+
+                                Collections.sort(search_result, new projectStatusComparator());
+                                buddyArrayAdapter = new TaskArrayAdapter(context, search_result);
+                                listView.setAdapter(buddyArrayAdapter);
+                                handler.post(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        buddyArrayAdapter.notifyDataSetChanged();
+                                    }
+                                });
+                                dialog.dismiss();
                             }
                         }
-                    } else {
-                       if (spinner2.equalsIgnoreCase("All")) {
-                            Log.i("projectHistory", "Inside category selected status is unselected");
-                            if (spinner3.equalsIgnoreCase("All")) {
-                                issue_qry = "select * from projectHistory where (projectId='" + project_id + "') and ( category='" + spinner1 + "')";
-                            } else {
-                                if (spinner3.equalsIgnoreCase("Me")) {
-                                    issue_qry = "select * from projectHistory where (projectId='" + project_id + "')and ( category='" + spinner1 + "') and ( ownerOfTask='" + Appreference.loginuserdetails.getUsername() + "')";
-                                   } else {
-                                    issue_qry = "select * from projectHistory where (projectId='" + project_id + "')and ( category='" + spinner1 + "') and ( ownerOfTask='" + spy + "')";
-                                    Log.i("projectHistory", "issue_qry value" + issue_qry);
-                                }
-                            }
-                        } else {
-                            Log.i("projectHistory", "category selected and status is selected");
-                            if (spinner3.equalsIgnoreCase("All")) {
-                                issue_qry = "select * from projectHistory where (projectId='" + project_id + "') and ( taskStatus='" + spinner2 + "')and ( category='" + spinner1 + "')";
-                            }
-                        }
-                    }
-                    projectDetailsBeans.clear();
-                    Log.i("projectHistoryFill", "issue_qry value" + issue_qry);
-                    try {
-                        projectDetailsBeans = VideoCallDataBase.getDB(context).getProjectHistory(issue_qry);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                    Collections.sort(projectDetailsBeans, new projectStatusComparator());
 
-                    Log.i("projectHistoryFill ", "size of issue_task ** " + projectDetailsBeans.size());
-                    buddyArrayAdapter = new TaskArrayAdapter(context, projectDetailsBeans);
-                    Log.i("projectHistoryFill ", "size of issue_task ** " + projectDetailsBeans.size());
-                    buddyArrayAdapter.notifyDataSetChanged();
-                    listView.setAdapter(buddyArrayAdapter);
-                    if (spinner1.equalsIgnoreCase("All") && spinner2.equalsIgnoreCase("All") && spinner3.equalsIgnoreCase("All")) {
-                        setActiveAdapter();
-                        try {
+                    });
+                    alert.setNeutralButton("Clear", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            String clear_query = "select * from projectHistory where projectId='" + project_id + "'";
+                            Log.i("filter123", "Query===============>" + clear_query);
+                            ArrayList<ProjectDetailsBean> search_result = VideoCallDataBase.getDB(context).getProjectHistory(clear_query);
+                            Log.i("filter123", "Query result===============>" + search_result.size());
+
+                            Collections.sort(search_result, new projectStatusComparator());
+                            buddyArrayAdapter = new TaskArrayAdapter(context, search_result);
+                            listView.setAdapter(buddyArrayAdapter);
                             handler.post(new Runnable() {
                                 @Override
                                 public void run() {
                                     buddyArrayAdapter.notifyDataSetChanged();
                                 }
                             });
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                    }
-                    handler.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            if (projectDetailsBeans.size() == 0 || listView.getCount() == 0) {
-                                Noresult.setVisibility(View.VISIBLE);
-                                Noresult.setText("Not Available");
-                            } else {
-                                Noresult.setVisibility(View.GONE);
-                                buddyArrayAdapter.notifyDataSetChanged();
-                                listView.setAdapter(buddyArrayAdapter);
-                            }
+                            dialog.dismiss();
                         }
                     });
-                    spinner_layout.setVisibility(View.GONE);
-                    Search_EditText.setVisibility(View.VISIBLE);
+                    AlertDialog dialog = alert.create();
+                    dialog.show();
                 }
+
+
             });
 
             Search_EditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {

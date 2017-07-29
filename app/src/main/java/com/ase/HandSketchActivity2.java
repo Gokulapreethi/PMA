@@ -712,12 +712,28 @@ public class HandSketchActivity2 extends Activity implements OnClickListener {
 		// TODO Auto-generated method stub
 		if (keyCode == KeyEvent.KEYCODE_BACK) {
 			try {
-				if (isCleared)
+				/*if (isCleared)
 					showAlert();
 				else {
 					if (send)
 						finish();
-				}
+				}*/
+				AlertDialog.Builder saveDialog = new AlertDialog.Builder(HandSketchActivity2.this);
+				saveDialog.setTitle("Hand sketch");
+				saveDialog.setCancelable(false);
+				saveDialog.setMessage("Are you sure want to go back?");
+				saveDialog.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog1, int which) {
+						finish();
+						overridePendingTransition(R.anim.left_to_right, R.anim.right_to_left);
+					}
+				});
+				saveDialog.setNegativeButton("No",
+						new DialogInterface.OnClickListener() {
+							public void onClick(DialogInterface dialog1, int which) {
+							}
+						});
+				saveDialog.show();
 			} catch (Exception e) {
 				e.printStackTrace();
 				Appreference.printLog("HandSketchActivity2 onKeyDown","Exception "+e.getMessage(),"WARN",null);

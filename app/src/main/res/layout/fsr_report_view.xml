@@ -1,16 +1,16 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    android:background="#FFFFFF">
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="@color/reply">
 
     <RelativeLayout
         android:id="@+id/rlay_tilte"
-        android:layout_width="fill_parent"
+        android:layout_width="match_parent"
         android:layout_height="62dp"
         android:background="@color/lightgray"
         android:orientation="horizontal"
-        android:visibility="visible">
+        android:visibility="gone">
 
         <TextView
             android:id="@+id/fsr_back"
@@ -45,11 +45,11 @@
         android:layout_below="@+id/rlay_tilte"
         android:background="@color/gray" />
     <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_width="wrap_content"
+        android:layout_height="250dp"
         android:layout_below="@+id/rlay_tilte"
         android:orientation="vertical"
-        android:background="@drawable/borderfordialog">
+        android:background="@color/reply">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -102,7 +102,8 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="50dp">
+            android:layout_marginTop="50dp"
+            android:visibility="gone">
 
           <Button
               android:id="@+id/fsr_submit"

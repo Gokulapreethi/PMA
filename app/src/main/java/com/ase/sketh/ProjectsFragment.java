@@ -1,7 +1,6 @@
 package com.ase.sketh;
 
 import android.app.DatePickerDialog;
-import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
@@ -25,12 +24,10 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.util.TypedValue;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
@@ -253,25 +250,21 @@ public class ProjectsFragment extends Fragment implements View.OnClickListener, 
 
                 @Override
                 public void onClick(View v) {
-                    final Dialog dialog = new Dialog(getActivity());
-                    dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-                    dialog.setContentView(R.layout.fsr_report_view);
-                    WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
-                    lp.copyFrom(dialog.getWindow().getAttributes());
-                    lp.width = WindowManager.LayoutParams.MATCH_PARENT;
-                    lp.height = WindowManager.LayoutParams.MATCH_PARENT;
-                    lp.horizontalMargin = 15;
-                    Window window = dialog.getWindow();
-                    window.setBackgroundDrawableResource((R.color.white));
-                    window.setAttributes(lp);
-                    window.setGravity(Gravity.BOTTOM);
-                    dialog.show();
-                    final Spinner job_spinner = (Spinner) dialog.findViewById(R.id.job_spinner);
-                    final Spinner date_spinner = (Spinner) dialog.findViewById(R.id.date_spinner);
-                    final TextView fsr_back = (TextView) dialog.findViewById(R.id.fsr_back);
-                    final Button fsr_submit = (Button) dialog.findViewById(R.id.fsr_submit);
+
+                    LayoutInflater inflater = getActivity().getLayoutInflater();
+                    View alertLayout = inflater.inflate(R.layout.fsr_report_view, null);
+                    final Spinner job_spinner = (Spinner) alertLayout.findViewById(R.id.job_spinner);
+                    final Spinner date_spinner = (Spinner) alertLayout.findViewById(R.id.date_spinner);
+                    final TextView fsr_back = (TextView) alertLayout.findViewById(R.id.fsr_back);
+                    final Button fsr_submit = (Button) alertLayout.findViewById(R.id.fsr_submit);
+                    AlertDialog.Builder alert = new AlertDialog.Builder(getActivity());
+                    alert.setTitle("FSR REPORT");
+                    // this is set the view from XML inside AlertDialog
+                    alert.setView(alertLayout);
+                    // disallow cancel of AlertDialog on click of back button and outside touch
+                    alert.setCancelable(false);
                     /*getting list of jobcards for the user from table*/
-                    String list_query = "select * from projectDetails where loginuser = '" + Appreference.loginuserdetails.getEmail() + "' order by oracleProjectId";
+                    String list_query = "select * from projectDetails where loginuser = '" + Appreference.loginuserdetails.getEmail() + "'order by oracleProjectId";
                     ArrayList<String> My_Project = VideoCallDataBase.getDB(getActivity()).getOracleProjectIdlist(list_query);
                     ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, My_Project);
                     // Drop down layout style - list view with radio button
@@ -287,7 +280,7 @@ public class ProjectsFragment extends Fragment implements View.OnClickListener, 
                             String fsr_ProjectId = VideoCallDataBase.getDB(getActivity()).getprojectIdForOracleID(get_projectId_query);
                             fsr_jobId=fsr_ProjectId;
                             /*getting list of Eod date regarding the selected jobcard*/
-                            String list_query1 = "select distinct taskcompleteddate from projectStatus where projectId='" + fsr_ProjectId + "' order by taskcompleteddate";
+                            String list_query1 = "select distinct taskcompleteddate from projectStatus where projectId='" + fsr_ProjectId + "' and status= '10' order by taskcompleteddate";
                             ArrayList<String> My_date = VideoCallDataBase.getDB(getActivity()).getPerTaskcompletedDates(list_query1);
                             if(My_date.size()>0) {
                                 ArrayAdapter<String> dataAdapter_Date = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, My_date);
@@ -330,9 +323,50 @@ public class ProjectsFragment extends Fragment implements View.OnClickListener, 
 
                         }
                     });
-                    fsr_back.setOnClickListener(new View.OnClickListener() {
+
+                    alert.setPositiveButton("Submit", new DialogInterface.OnClickListener() {
                         @Override
-                        public void onClick(View v) {
+                        public void onClick(DialogInterface dialog, int which) {
+                            if(fsr_date!=null && !fsr_date.equalsIgnoreCase("")) {
+//                                dialog.dismiss();
+                                SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                                SimpleDateFormat dateParse = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                                dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
+                                Date date = null;
+                                Date date1 = null;
+                                String FSRStartDateUTC = "";
+                                String FSREndDateUTC = "";
+                                String fsr_start_date=fsr_date+" "+"00:00:00";
+                                String fsr_end_date=fsr_date+" "+"23:59:59";
+                                if (fsr_start_date != null && !fsr_start_date.equalsIgnoreCase("")) {
+                                    try {
+                                        date = dateParse.parse(fsr_start_date);
+                                        FSRStartDateUTC = dateFormat.format(date);
+                                    } catch (Exception e) {
+                                        e.printStackTrace();
+                                    }
+                                }
+                                if (fsr_end_date != null && !fsr_end_date.equalsIgnoreCase("")) {
+                                    try {
+                                        date1 = dateParse.parse(fsr_end_date);
+                                        FSREndDateUTC = dateFormat.format(date1);
+                                    } catch (Exception e) {
+                                        e.printStackTrace();
+                                    }
+                                }
+                                List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
+                                nameValuePairs.add(new BasicNameValuePair("projectId", fsr_jobId));
+                                nameValuePairs.add(new BasicNameValuePair("taskCompletedStartDate", FSRStartDateUTC));
+                                nameValuePairs.add(new BasicNameValuePair("taskCompletedEndDate", FSREndDateUTC));
+                                showprogress("Downloading...");
+                                Appreference.jsonRequestSender.OracleFSRJOBReport(EnumJsonWebservicename.fieldServiceReportJobWise, nameValuePairs, ProjectsFragment.this);
+                            }else
+                                Toast.makeText(getActivity(), "Please select any date...", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                    alert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
                             dialog.dismiss();
                         }
                     });
@@ -340,7 +374,7 @@ public class ProjectsFragment extends Fragment implements View.OnClickListener, 
                         @Override
                         public void onClick(View v) {
                             if(fsr_date!=null && !fsr_date.equalsIgnoreCase("")) {
-                                dialog.dismiss();
+//                                dialog.dismiss();
                                 SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
                                 SimpleDateFormat dateParse = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
                               dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
@@ -376,6 +410,8 @@ public class ProjectsFragment extends Fragment implements View.OnClickListener, 
                                 Toast.makeText(getActivity(), "Please select any date...", Toast.LENGTH_SHORT).show();
                         }
                     });
+                    AlertDialog dialog = alert.create();
+                    dialog.show();
                 }
             });
             activity_start.setOnClickListener(new View.OnClickListener() {
@@ -1195,6 +1231,8 @@ public class ProjectsFragment extends Fragment implements View.OnClickListener, 
             projectSearchList = new ArrayList<>();
             projectList = VideoCallDataBase.getDB(classContext).getProjectdetails(query_1);
             projectSearchList = VideoCallDataBase.getDB(classContext).getProjectdetails(query_1);
+
+
             projectArrayAdapter = new ProjectArrayAdapter(getActivity(), projectList);
             listview_project.setAdapter(projectArrayAdapter);
             handler.post(new Runnable() {
@@ -1309,6 +1347,7 @@ public class ProjectsFragment extends Fragment implements View.OnClickListener, 
                     projectList = VideoCallDataBase.getDB(classContext).getProjectdetails(query_1);
                     projectSearchList = VideoCallDataBase.getDB(classContext).getProjectdetails(query_1);
                     NoResults.setVisibility(View.GONE);
+
                     projectArrayAdapter = new ProjectArrayAdapter(getActivity(), projectList);
                     listview_project.setAdapter(projectArrayAdapter);
                     projectArrayAdapter.notifyDataSetChanged();
@@ -1408,6 +1447,7 @@ public class ProjectsFragment extends Fragment implements View.OnClickListener, 
                                 projectList = VideoCallDataBase.getDB(classContext).getProjectdetails(query_1);
                                 projectSearchList = VideoCallDataBase.getDB(classContext).getProjectdetails(query_1);
                                 NoResults.setVisibility(View.GONE);
+
                                 projectArrayAdapter = new ProjectArrayAdapter(getActivity(), projectList);
                                 listview_project.setAdapter(projectArrayAdapter);
                                 projectArrayAdapter.notifyDataSetChanged();
@@ -1444,6 +1484,8 @@ public class ProjectsFragment extends Fragment implements View.OnClickListener, 
                                 projectList = VideoCallDataBase.getDB(classContext).getProjectdetails(query_1);
                                 projectSearchList = VideoCallDataBase.getDB(classContext).getProjectdetails(query_1);
                                 NoResults.setVisibility(View.GONE);
+
+
                                 projectArrayAdapter = new ProjectArrayAdapter(getActivity(), projectList);
                                 listview_project.setAdapter(projectArrayAdapter);
                                 projectArrayAdapter.notifyDataSetChanged();
@@ -1546,7 +1588,7 @@ public class ProjectsFragment extends Fragment implements View.OnClickListener, 
                                    /* Intent intent = new Intent(getActivity(), WebViewActivity.class);
                                     intent.putExtra("ReportFileName", jsonObject.getString("File Name"));
                                     startActivity(intent);*/
-                                    showToast("Task_Need_assessment_report created ");
+//                                    showToast("Task_Need_assessment_report created ");
                                 } else {
                                     String result = (String) jsonObject.get("result_text");
                                     Toast.makeText(getContext(), result, Toast.LENGTH_LONG).show();

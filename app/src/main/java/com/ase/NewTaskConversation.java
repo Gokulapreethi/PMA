@@ -5463,8 +5463,12 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                                     if ((isRemarkstextselected && customer_remarksEntry != null) || (isremarksSketchselected && customerRemarks_path != null)) {
                                         //                                Toast.makeText(NewTaskConversation.this, "Send Successfully", Toast.LENGTH_SHORT).show();
                                         if (travelentry == 0) {
-                                            sendStatus_webservice("10", "", customer_remarksEntry, "EOD Details Sent..", "");
-                                            dialog.dismiss();
+                                            if(taskCompletedDate!=null) {
+                                                String selectedDate[] = taskCompletedDate.split("");
+                                                String date_s=selectedDate[0];
+                                                sendStatus_webservice("10", "", customer_remarksEntry, "EOD Sent date is " + date_s, "");
+                                                dialog.dismiss();
+                                            }
                                         } else
                                             Toast.makeText(NewTaskConversation.this, "Enter end date and time and then proceed to complete the task.", Toast.LENGTH_SHORT).show();
 
@@ -11816,7 +11820,7 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                                                   /*  Intent intent = new Intent(context, WebViewActivity.class);
                                                     intent.putExtra("ReportFileName", jsonObject.getString("filename"));
                                                     startActivity(intent);*/
-                                                 showToast("Task_Need_assessment_report created ");
+//                                                 showToast("Task_Need_assessment_report created ");
                                              } else {
                                                  String result = (String) jsonObject.get("result_text");
                                                  Toast.makeText(NewTaskConversation.this, result, Toast.LENGTH_LONG).show();

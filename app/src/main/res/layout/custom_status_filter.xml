@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/borderfordialog"
+        android:orientation="vertical">
+
+
+    <RelativeLayout
+        android:id="@+id/spinner_layout"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:background="@color/reply"
+        android:gravity=""
+        android:visibility="visible">
+
+        <TextView
+            android:id="@+id/textView16"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="15dp"
+            android:textColor="@color/background"
+            android:text="Select    :"
+
+            android:textSize="20dp"
+            android:layout_centerVertical="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true" />
+
+        <Spinner
+            android:id="@+id/status_spinner"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:prompt="@string/status_filter"
+            android:layout_toRightOf="@+id/textView16"
+            android:layout_centerVertical="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true" />
+
+    </RelativeLayout>
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_below="@+id/spinner_layout"
+            android:visibility="gone">
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:text="cancel"
+                android:layout_toLeftOf="@+id/clear_status_btn"
+                android:layout_marginRight="35dp"
+                android:id="@+id/cancel_status_btn"/>
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:text="Clear"
+                android:id="@+id/clear_status_btn"/>
+            <Button
+                android:id="@+id/submit_status_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Done"
+                android:layout_alignParentTop="true"
+                android:layout_toRightOf="@+id/clear_status_btn"
+                android:layout_toEndOf="@+id/clear_status_btn"
+                android:layout_marginLeft="35dp"
+                android:layout_marginStart="35dp" />
+        </RelativeLayout>
+    </RelativeLayout>
+
+</LinearLayout>
