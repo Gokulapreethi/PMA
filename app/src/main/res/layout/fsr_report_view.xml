@@ -4,48 +4,9 @@
     android:layout_height="wrap_content"
     android:background="@color/reply">
 
-    <RelativeLayout
-        android:id="@+id/rlay_tilte"
-        android:layout_width="match_parent"
-        android:layout_height="62dp"
-        android:background="@color/lightgray"
-        android:orientation="horizontal"
-        android:visibility="gone">
 
-        <TextView
-            android:id="@+id/fsr_back"
-            android:layout_width="50dp"
-            android:layout_height="35dp"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="5dp"
-            android:background="@color/lightgray"
-            android:gravity="center"
-            android:text="Back"
-            android:textColor="@color/appcolor"
-            android:textSize="20dp"
-            android:textStyle="bold" />
-
-        <TextView
-            android:id="@+id/project_name"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:gravity="center"
-            android:text="FSR REPORT"
-            android:textColor="@color/appcolor"
-            android:textSize="20dp"
-            android:textStyle="bold" />
-
-    </RelativeLayout>
-
-    <View
-        android:id="@+id/view_land"
-        android:layout_width="wrap_content"
-        android:layout_height="1.5dp"
-        android:layout_below="@+id/rlay_tilte"
-        android:background="@color/gray" />
     <LinearLayout
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="250dp"
         android:layout_below="@+id/rlay_tilte"
         android:orientation="vertical"
@@ -99,19 +60,6 @@
 
 
     </LinearLayout>
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="50dp"
-            android:visibility="gone">
-
-          <Button
-              android:id="@+id/fsr_submit"
-              android:layout_width="wrap_content"
-              android:layout_height="wrap_content"
-              android:text="Submit"
-              android:layout_centerHorizontal="true"/>
-        </RelativeLayout>
     </LinearLayout>
 
 </RelativeLayout>

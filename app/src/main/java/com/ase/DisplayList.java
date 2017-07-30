@@ -52,14 +52,15 @@ public class DisplayList extends Activity {
         date_type = getIntent().getStringExtra("date_type");
         isFromcustom1 = getIntent().getBooleanExtra("isFromcustom1",false);
         completedate_display = getIntent().getStringExtra("completedate_display");
-        Log.i("date", "completedate_display ==> " + completedate_display);
+        Log.i("DisplayList", "completedate_display ==> " + completedate_display);
         if(!isFromcustom1) {
-            query = "Select * from projectStatus where projectId ='" + projectId + "' and taskId = '" + webtaskId + "' and (status ='7' or status='9') and " + (("travelStartTime like '" + completedate_display + "%" + "' and travelEndTime like '" + completedate_display + "%" + "'") + " or " + ("travelStartTime like '" + completedate_display + "%" + "' and travelEndTime IS NULL") + " or " + ("travelStartTime IS NULL and travelEndTime like '" + completedate_display + "%" + "'"));
+            query = "Select * from projectStatus where (projectId ='" + projectId + "' and taskId = '" + webtaskId + "' and (status ='7' or status='9') and (travelStartTime like '" + completedate_display + "%" + "' and travelEndTime like '" + completedate_display + "%" + "'" + " or " + ("travelStartTime like '" + completedate_display + "%" + "' and travelEndTime IS NULL") + " or " + "travelStartTime IS NULL and travelEndTime like '" + completedate_display + "%" + "'))";
         }else
              query = "Select * from projectStatus where projectId ='" + projectId + "' and taskId = '" + webtaskId + "' and (status ='7' or status='9')";
         list_date.clear();
+        Log.i("DisplayList", "query ==> " + query);
         list_date = VideoCallDataBase.getDB(context).getTravelDetails(query);
-        Log.i("DisplayList", "query and list_date " + query + " " + list_date.size());
+        Log.i("DisplayList", "query and list_date " + list_date.size());
         adapter = new ListAct(context, list_date);
         list.setAdapter(adapter);
         adapter.notifyDataSetChanged();

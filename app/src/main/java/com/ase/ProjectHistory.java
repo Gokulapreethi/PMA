@@ -352,7 +352,7 @@ public class ProjectHistory extends Activity implements WebServiceInterface, Swi
                         public void onClick(DialogInterface dialog, int which) {
                             String selected_status = String.valueOf(status_spinner.getSelectedItem());/*selected status from spinner*/
 
-                            if (!selected_status.equalsIgnoreCase("Unassigned")) {
+                            if (!selected_status.equalsIgnoreCase("Unassigned") && !selected_status.equalsIgnoreCase("Select All")) {
                                 Log.i("filter123", "selected status===============>" + selected_status);
                                 String query_status = "select * from projectHistory where projectId='" + project_id + "' and taskStatus = '" + selected_status + "'";
                                 Log.i("filter123", "Query===============>" + query_status);
@@ -388,20 +388,7 @@ public class ProjectHistory extends Activity implements WebServiceInterface, Swi
                                 });
                                 dialog.dismiss();
                             }else if(selected_status.equalsIgnoreCase("Select All")){
-                                String clear_query = "select * from projectHistory where projectId='" + project_id + "'";
-                                Log.i("filter123", "Query===============>" + clear_query);
-                                ArrayList<ProjectDetailsBean> search_result = VideoCallDataBase.getDB(context).getProjectHistory(clear_query);
-                                Log.i("filter123", "Query result===============>" + search_result.size());
-
-                                Collections.sort(search_result, new projectStatusComparator());
-                                buddyArrayAdapter = new TaskArrayAdapter(context, search_result);
-                                listView.setAdapter(buddyArrayAdapter);
-                                handler.post(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        buddyArrayAdapter.notifyDataSetChanged();
-                                    }
-                                });
+                                refresh();
                                 dialog.dismiss();
                             }
                         }

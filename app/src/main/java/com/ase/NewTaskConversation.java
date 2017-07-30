@@ -327,7 +327,7 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
     private HashMap<Integer, String> statusCompletedFieldValues = new HashMap<Integer, String>();
     String TravelStartdate, TravelEnddate, status_signature, photo_signature, tech_signature, PickDate, travel_endDate, observation_path, Action_Taken_path, customerRemarks_path;
     String FromTravelStart, FromTravelEnd, ActivityStartdate, ActivityEnddate, TotravelStart, ToTravelEnd, taskCompletedDate, completedate_display;
-    String observationStatus, actiontakenStatus, custsignnameStatus, HMReadingStatus;
+    String observationStatus, actiontakenStatus, custsignnameStatus, HMReadingStatus, machine_model, machine_serialno, machine_description;
     ArrayList<String> travel_date_details;
     String dir_path = Environment.getExternalStorageDirectory() + "/High Message/downloads/";
 
@@ -3821,9 +3821,9 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
         final TaskDetailsBean detailsBean;
         String Querystatus = "Select * from projectStatus where projectId ='" + projectId + "' and taskId = '" + webtaskId + "'";
         detailsBean = VideoCallDataBase.getDB(context).getStatusCompletedProjectDetails(Querystatus);
-        Log.i("downLoadcustom1","getObservation ==> "+detailsBean.getObservation());
-        Log.i("downLoadcustom1","getActionTaken ==> "+detailsBean.getActionTaken());
-        Log.i("downLoadcustom1","getRemark ==> "+detailsBean.getRemark());
+        Log.i("downLoadcustom1", "getObservation ==> " + detailsBean.getObservation());
+        Log.i("downLoadcustom1", "getActionTaken ==> " + detailsBean.getActionTaken());
+        Log.i("downLoadcustom1", "getRemark ==> " + detailsBean.getRemark());
         if (detailsBean.getObservation() != null && !detailsBean.getObservation().equalsIgnoreCase("") && detailsBean.getObservation().contains(".jpg")) {
             File cus_observation = new File(detailsBean.getObservation());
             if (cus_observation.exists()) {
@@ -3834,7 +3834,7 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                 }
             }
         }
-        if (detailsBean.getActionTaken() != null && !detailsBean.getActionTaken().equalsIgnoreCase("")&& detailsBean.getActionTaken().contains(".jpg")) {
+        if (detailsBean.getActionTaken() != null && !detailsBean.getActionTaken().equalsIgnoreCase("") && detailsBean.getActionTaken().contains(".jpg")) {
             File cus_Actiontaken = new File(detailsBean.getActionTaken());
             if (cus_Actiontaken.exists()) {
             } else {
@@ -3844,7 +3844,7 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                 }
             }
         }
-        if (detailsBean.getRemark() != null && !detailsBean.getRemark().equalsIgnoreCase("")&& detailsBean.getRemark().contains(".jpg")) {
+        if (detailsBean.getRemark() != null && !detailsBean.getRemark().equalsIgnoreCase("") && detailsBean.getRemark().contains(".jpg")) {
             File cus_sig1 = new File(detailsBean.getRemark());
             if (cus_sig1.exists()) {
             } else {
@@ -4125,10 +4125,10 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
             Log.i("custom1", "ActionTaken--> $$ " + detailsBean.getActionTaken());
 
 
-            if(detailsBean.getRemark()!=null && !detailsBean.getRemark().equalsIgnoreCase("") && !detailsBean.getRemark().contains(".jpg")){
+            if (detailsBean.getRemark() != null && !detailsBean.getRemark().equalsIgnoreCase("") && !detailsBean.getRemark().contains(".jpg")) {
                 remarks_completion.setVisibility(View.VISIBLE);
                 remarks_completion.setText(detailsBean.getRemark());
-            }else if (detailsBean.getRemark() != null && !detailsBean.getRemark().equalsIgnoreCase("") && detailsBean.getRemark().contains(".jpg")) {
+            } else if (detailsBean.getRemark() != null && !detailsBean.getRemark().equalsIgnoreCase("") && detailsBean.getRemark().contains(".jpg")) {
                 String cus_getRemark = detailsBean.getRemark();
                 File file = new File(dir_path + cus_getRemark);
                 File file1 = new File(cus_getRemark);
@@ -4143,10 +4143,10 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                 }
             }
 
-            if(detailsBean.getObservation()!=null && !detailsBean.getObservation().equalsIgnoreCase("") && !detailsBean.getObservation().contains(".jpg")){
+            if (detailsBean.getObservation() != null && !detailsBean.getObservation().equalsIgnoreCase("") && !detailsBean.getObservation().contains(".jpg")) {
                 observation.setVisibility(View.VISIBLE);
                 observation.setText(detailsBean.getObservation());
-            }else if (detailsBean.getObservation() != null && !detailsBean.getObservation().equalsIgnoreCase("") && detailsBean.getObservation().contains(".jpg")) {
+            } else if (detailsBean.getObservation() != null && !detailsBean.getObservation().equalsIgnoreCase("") && detailsBean.getObservation().contains(".jpg")) {
                 String cus_getObservation = detailsBean.getObservation();
                 File file = new File(dir_path + cus_getObservation);
                 File file1 = new File(cus_getObservation);
@@ -4161,10 +4161,10 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                 }
             }
 
-            if(detailsBean.getActionTaken()!=null && !detailsBean.getActionTaken().equalsIgnoreCase("") && !detailsBean.getActionTaken().contains(".jpg")){
+            if (detailsBean.getActionTaken() != null && !detailsBean.getActionTaken().equalsIgnoreCase("") && !detailsBean.getActionTaken().contains(".jpg")) {
                 action_taken_show.setVisibility(View.VISIBLE);
                 action_taken_show.setText(detailsBean.getActionTaken());
-            }else if (detailsBean.getActionTaken() != null && !detailsBean.getActionTaken().equalsIgnoreCase("") && detailsBean.getActionTaken().contains(".jpg")) {
+            } else if (detailsBean.getActionTaken() != null && !detailsBean.getActionTaken().equalsIgnoreCase("") && detailsBean.getActionTaken().contains(".jpg")) {
                 String cus_getActionTaken = detailsBean.getActionTaken();
                 File file = new File(dir_path + cus_getActionTaken);
                 File file1 = new File(cus_getActionTaken);
@@ -4693,7 +4693,7 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                     saveDialog.show();
                 }
                 if (item.getTitle().toString().equalsIgnoreCase("Resume")) {
-                    sendStatus_webservice("2", "", "", "Resumed", "Resume");
+                    sendStatus_webservice("2", "", "", "Resumed", "Resumed");
                 }
                 if (item.getTitle().toString().equalsIgnoreCase("Pause")) {
                     AlertDialog.Builder saveDialog = new AlertDialog.Builder(context);
@@ -4717,7 +4717,7 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                                     Log.i("ws123", "remarks for pause====>" + name.getText().toString());
                                     isFromPauseClick = true;
                                     if (name.getText().toString() != null && !name.getText().toString().equalsIgnoreCase("")) {
-                                        sendStatus_webservice("3", "", "Pause Remarks :" + name.getText().toString(), "Paused", "Pause");
+                                        sendStatus_webservice("3", "", "Pause Remarks :" + name.getText().toString(), "Paused", "Paused");
                                         dialog1.dismiss();
                                     } else {
                                         showToast("Please enter any Remarks");
@@ -4771,7 +4771,7 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                                     if (check_status != 1 && check_status != 3) {
                                         if (count != 0) {
                                             if (travelentry == 0) {
-                                                sendStatus_webservice("5", "", "", "Completed", "complete");
+                                                sendStatus_webservice("5", "", "", "Completed", "Completed");
                                             } else {
                                                 Toast.makeText(NewTaskConversation.this, "Enter end date and time and then proceed to complete the task.", Toast.LENGTH_SHORT).show();
                                                 dialog.cancel();
@@ -4802,7 +4802,8 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                 }
 
                 if (item.getTitle().toString().equalsIgnoreCase("End of Day")) {
-                    ArrayList<TaskDetailsBean> taskDetailsBean = new ArrayList<>();
+                    ArrayList<TaskDetailsBean> taskDetailsBean1 = new ArrayList<>();
+                    ArrayList<TaskDetailsBean> taskDetailsBean2 = new ArrayList<>();
                     final Dialog dialog = new Dialog(context);
                     dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
                     dialog.setContentView(R.layout.project_complete);
@@ -4820,24 +4821,20 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                     TextView project_id = (TextView) dialog.findViewById(R.id.project_id);
                     TextView project_name = (TextView) dialog.findViewById(R.id.project_name);
                     TextView task_id = (TextView) dialog.findViewById(R.id.task_id);
-//                    TextView employee_name=(TextView)dialog.findViewById(R.id.emp_name);
-                    TextView mcModel = (TextView) dialog.findViewById(R.id.mac_model);
                     TextView machine_make = (TextView) dialog.findViewById(R.id.machine_make);
-                    TextView mcSrNo = (TextView) dialog.findViewById(R.id.mac_no);
                     TextView est_travel = (TextView) dialog.findViewById(R.id.estimatedTravelhrs);
                     TextView est_activity = (TextView) dialog.findViewById(R.id.estimatedActivityhrs);
                     TextView service_date = (TextView) dialog.findViewById(R.id.requested_date);
-
                     TextView address = (TextView) dialog.findViewById(R.id.address);
-                    TextView description = (TextView) dialog.findViewById(R.id.description);
+
                     final EditText observation = (EditText) dialog.findViewById(R.id.observation);
                     Button observation_type = (Button) dialog.findViewById(R.id.observation_type);
                     observation_1 = (ImageView) dialog.findViewById(R.id.observation_1);
                     observation_path = "";
                     Action_Taken_path = "";
                     customerRemarks_path = "";
-                    observationStatus ="";
-                    actiontakenStatus ="";
+                    observationStatus = "";
+                    actiontakenStatus = "";
                     observation_type.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
@@ -4847,14 +4844,9 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                             saveDialog.setMessage("You want to type or draw  sketch in " + taskName);
                             saveDialog.setPositiveButton("Text", new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int which) {
-//                                     isobservationSketchselected = false;
-//                                    isactionSketchselected = false;
-//                                    isremarksSketchselected = false;
                                     isobservationtextselected = true;
-//                                    isactiontextselected = false;
-//                                    isRemarkstextselected = false;
-                                    observation.setSelection(0);
-//                                    observation.setCursorVisible(true);
+                                    observation.setCursorVisible(true);
+                                    observation.setFocusableInTouchMode(true);
                                     observation_1.setVisibility(View.GONE);
                                     observation.setVisibility(View.VISIBLE);
                                     observation_path = "";
@@ -4864,13 +4856,7 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                             saveDialog.setNeutralButton("Sketch",
                                     new DialogInterface.OnClickListener() {
                                         public void onClick(DialogInterface dialog, int which) {
-//                                           isobservationSketchselected = true;
-//                                            isactionSketchselected = false;
-//                                            isremarksSketchselected = false;
                                             isobservationtextselected = false;
-//                                            isactiontextselected = false;
-//                                            isRemarkstextselected = false;
-
                                             isObservation = true;
                                             isCustomerRemarks = false;
                                             isActionTaken = false;
@@ -4899,6 +4885,10 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                     observation.addTextChangedListener(new TextWatcher() {
 
                         public void afterTextChanged(Editable s) {
+                            if (observation.getText().toString() != null && observation.getText().toString().endsWith(".jpg")) {
+                                observation.getText().clear();
+                                Toast.makeText(getApplicationContext(), "Don't text endswith .jpg", Toast.LENGTH_SHORT).show();
+                            }
                         }
 
                         public void beforeTextChanged(CharSequence s, int start,
@@ -4924,15 +4914,10 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                             saveDialog.setMessage("You want to type or draw via sketch " + taskName);
                             saveDialog.setPositiveButton("Text", new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int which) {
-//                                      isobservationSketchselected = false;
                                     isactionSketchselected = false;
-//                                    isremarksSketchselected = false;
-//                                    isobservationtextselected = false;
                                     isactiontextselected = true;
-//                                    isRemarkstextselected = false;
-                                    action_taken.setSelection(0);
-
-//                                    action_taken.setCursorVisible(true);
+                                    action_taken.setCursorVisible(true);
+                                    action_taken.setFocusableInTouchMode(true);
 
                                     action_taken_1.setVisibility(View.GONE);
                                     action_taken.setVisibility(View.VISIBLE);
@@ -4943,12 +4928,8 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                             saveDialog.setNeutralButton("Sketch",
                                     new DialogInterface.OnClickListener() {
                                         public void onClick(DialogInterface dialog, int which) {
-//                                            isobservationSketchselected = false;
                                             isactionSketchselected = true;
-//                                            isremarksSketchselected = false;
-//                                            isobservationtextselected = false;
                                             isactiontextselected = false;
-//                                            isRemarkstextselected = false;
                                             isActionTaken = true;
                                             isCustomerRemarks = false;
                                             isObservation = false;
@@ -4972,6 +4953,25 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
 
                         }
                     });
+                    action_taken.addTextChangedListener(new TextWatcher() {
+                        @Override
+                        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+                        }
+
+                        @Override
+                        public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+                        }
+
+                        @Override
+                        public void afterTextChanged(Editable s) {
+                            if (action_taken.getText().toString() != null && action_taken.getText().toString().endsWith(".jpg")) {
+                                action_taken.getText().clear();
+                                Toast.makeText(getApplicationContext(), "Don't text endswith .jpg", Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    });
 
                     final EditText remarks_completion = (EditText) dialog.findViewById(R.id.remarks_complete);
                     Button CustomerRemarks_type = (Button) dialog.findViewById(R.id.CustomerRemarks_type);
@@ -4985,16 +4985,10 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                             saveDialog.setMessage("You want to type or draw via sketch " + taskName);
                             saveDialog.setPositiveButton("Text", new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int which) {
-//                                    isobservationSketchselected = false;
-//                                    isactionSketchselected = false;
                                     isremarksSketchselected = false;
-//                                    isobservationtextselected = false;
-//                                    isactiontextselected = false;
                                     isRemarkstextselected = true;
-                                    remarks_completion.setSelection(0);
-
-//                                    remarks_completion.setCursorVisible(true);
-
+                                    remarks_completion.setCursorVisible(true);
+                                    remarks_completion.setFocusableInTouchMode(true);
                                     remarks_complete_1.setVisibility(View.GONE);
                                     remarks_completion.setVisibility(View.VISIBLE);
                                     customerRemarks_path = "";
@@ -5004,11 +4998,7 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                             saveDialog.setNeutralButton("Sketch",
                                     new DialogInterface.OnClickListener() {
                                         public void onClick(DialogInterface dialog, int which) {
-//                                            isobservationSketchselected = false;
-//                                            isactionSketchselected = false;
                                             isremarksSketchselected = true;
-//                                            isobservationtextselected = false;
-//                                            isactiontextselected = false;
                                             isRemarkstextselected = false;
                                             isCustomerRemarks = true;
                                             isActionTaken = false;
@@ -5034,7 +5024,25 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                         }
                     });
 
+                    remarks_completion.addTextChangedListener(new TextWatcher() {
+                        @Override
+                        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
+                        }
+
+                        @Override
+                        public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+                        }
+
+                        @Override
+                        public void afterTextChanged(Editable s) {
+                            if (remarks_completion.getText().toString() != null && remarks_completion.getText().toString().endsWith(".jpg")) {
+                                remarks_completion.getText().clear();
+                                Toast.makeText(getApplicationContext(), "Don't text endswith .jpg ", Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    });
                     final EditText cust_sign_name = (EditText) dialog.findViewById(R.id.cust_sign_name);
                     final EditText HMReading = (EditText) dialog.findViewById(R.id.hour_meter_reading);
                     final TextView task_completed_date = (TextView) dialog.findViewById(R.id.task_completed_date);
@@ -5043,6 +5051,10 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                     final TextView travel_end = (TextView) dialog.findViewById(R.id.travel_end);
                     final TextView activity_start = (TextView) dialog.findViewById(R.id.activity_start);
                     final TextView activity_end = (TextView) dialog.findViewById(R.id.activity_end);
+
+                    final EditText mcModel = (EditText) dialog.findViewById(R.id.mac_model);
+                    final EditText mcSrNo = (EditText) dialog.findViewById(R.id.mac_no);
+                    final EditText description = (EditText) dialog.findViewById(R.id.description);
 
                     Button travelstart_sign = (Button) dialog.findViewById(R.id.travelstart_sign);
                     Button activitystart_sign = (Button) dialog.findViewById(R.id.activitystart_sign);
@@ -5118,10 +5130,10 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                                             } catch (Exception e) {
                                                 e.printStackTrace();
                                             }
-                                            Log.i("oracle123","curr_date-==>"+curr_date);
-                                            Log.i("oracle123","selected_date-==>"+selected_date);
+                                            Log.i("oracle123", "curr_date-==>" + curr_date);
+                                            Log.i("oracle123", "selected_date-==>" + selected_date);
 
-                                            if ((curr_date != null && curr_date.compareTo(selected_date) > 0) || (curr_date != null && curr_date.compareTo(selected_date)==0)) {
+                                            if ((curr_date != null && curr_date.compareTo(selected_date) > 0) || (curr_date != null && curr_date.compareTo(selected_date) == 0)) {
                                                 task_completed_date.setText(completedate_display);
                                                 taskCompletedDate = completedate_display + " " + "00:00:00";
 
@@ -5134,9 +5146,10 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                         }
                     });
                     String Query = "Select * from projectHistory where projectId ='" + projectId + "' and taskId = '" + webtaskId + "'";
-                    taskDetailsBean = VideoCallDataBase.getDB(context).getDetails_to_complete_project(Query);
-                    if (taskDetailsBean.size() > 0) {
-                        TaskDetailsBean detailsBean = taskDetailsBean.get(0);
+                    taskDetailsBean1 = VideoCallDataBase.getDB(context).getDetails_to_complete_project(Query);
+                    Log.i("desc123", "end_fsr" + taskDetailsBean1.size());
+                    if (taskDetailsBean1.size() > 0) {
+                        TaskDetailsBean detailsBean = taskDetailsBean1.get(0);
                         project_id.setText(detailsBean.getProjectId());
                         statusCompletedFieldValues.put(1, "JobCardNo :" + detailsBean.getProjectId());
                         project_name.setText("Job Card No :" + JobCodeNo + "\nActivity Code :" + ActivityCode);
@@ -5144,10 +5157,9 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                         statusCompletedFieldValues.put(2, "ActivityCode :" + detailsBean.getTaskId());
                         Log.i("ws123", "username or employee name===>" + Appreference.loginuserdetails.getEmail());
                         mcModel.setText(detailsBean.getMcModel());
-                        statusCompletedFieldValues.put(4, "McModel :" + detailsBean.getMcModel());
                         mcSrNo.setText(detailsBean.getMcSrNo());
                         machine_make.setText(detailsBean.getMachineMac());
-                        statusCompletedFieldValues.put(5, "McSrNo :" + detailsBean.getMcSrNo());
+                        description.setText(detailsBean.getMcDescription());
                         est_travel.setText(detailsBean.getEstimatedTravel());
                         statusCompletedFieldValues.put(6, "EstimatedTravel :" + detailsBean.getEstimatedTravel());
                         est_activity.setText(detailsBean.getEstimatedTravel());
@@ -5158,13 +5170,10 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                         statusCompletedFieldValues.put(14, "Activity :" + detailsBean.getActivity());
                         address.setText(detailsBean.getAddress());
                         statusCompletedFieldValues.put(3, "Address :" + detailsBean.getAddress());
-                        description.setText(taskName);
-                        statusCompletedFieldValues.put(12, "Description :" + detailsBean.getTaskDescription());
                         signature_path.setVisibility(View.GONE);
                         photo_path.setVisibility(View.GONE);
                         tech_signature_path.setVisibility(View.GONE);
                     }
-
 
                     skech_receiver.setOnClickListener(new View.OnClickListener() {
                         @Override
@@ -5453,6 +5462,23 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                                 HMReadingStatus = HMReading.getText().toString();
                             else
                                 HMReadingStatus = "";
+                            if (mcModel.getText().toString() != null)
+                                machine_model = mcModel.getText().toString();
+                            else
+                                machine_model = "";
+                            if (mcSrNo.getText().toString() != null)
+                                machine_serialno = mcSrNo.getText().toString();
+                            else
+                                machine_serialno = "";
+                            if (description.getText().toString() != null)
+                                machine_description = description.getText().toString();
+                            else
+                                machine_description = "";
+
+                            Log.i("desc123", "machine_model @@========>" + machine_model);
+                            Log.i("desc123", "machine_serialno @@========>" + machine_serialno);
+                            Log.i("desc123", "machine_description @@========>" + machine_description);
+
                             String query_status = "select status from projectStatus where projectId='" + projectId + "' and userId='" + Appreference.loginuserdetails.getId() + "' and taskId= '" + webtaskId + "'";
                             int current_status = VideoCallDataBase.getDB(context).getCurrentStatus(query_status);
 
@@ -5463,9 +5489,9 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                                     if ((isRemarkstextselected && customer_remarksEntry != null) || (isremarksSketchselected && customerRemarks_path != null)) {
                                         //                                Toast.makeText(NewTaskConversation.this, "Send Successfully", Toast.LENGTH_SHORT).show();
                                         if (travelentry == 0) {
-                                            if(taskCompletedDate!=null) {
-                                                String selectedDate[] = taskCompletedDate.split("");
-                                                String date_s=selectedDate[0];
+                                            if (taskCompletedDate != null) {
+                                                String selectedDate[] = taskCompletedDate.split(" ");
+                                                String date_s = selectedDate[0];
                                                 sendStatus_webservice("10", "", customer_remarksEntry, "EOD Sent date is " + date_s, "");
                                                 dialog.dismiss();
                                             }
@@ -5567,7 +5593,7 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                 public void onClick(DialogInterface dialog, int which) {
                     if (count != 0) {
                         if (travelentry == 0) {
-                            sendStatus_webservice("5", "", "", "Completed", "complete");
+                            sendStatus_webservice("5", "", "", "Completed", "Completed");
                         } else {
                             Toast.makeText(NewTaskConversation.this, "Enter end date and time and then proceed to complete the task.", Toast.LENGTH_SHORT).show();
                             dialog.cancel();
@@ -5775,10 +5801,28 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                     taskDetailsBean.setHMReading(HMReadingStatus);
                 } else
                     jsonObject.put("hourMeterReading", "");
+                Log.i("desc123", "machine_model ========>" + machine_model);
+                if (machine_model != null && !machine_model.equalsIgnoreCase("")) {
+                    jsonObject.put("mcModel", machine_model);
+                    taskDetailsBean.setMcModel(machine_model);
+                } else
+                    jsonObject.put("mcModel", "");
+                Log.i("desc123", "machine_serialno ========>" + machine_serialno);
+                if (machine_serialno != null && !machine_serialno.equalsIgnoreCase("")) {
+                    jsonObject.put("mcSrNo", machine_serialno);
+                    taskDetailsBean.setMcSrNo(machine_serialno);
+                } else
+                    jsonObject.put("mcSrNo", "");
+                Log.i("desc123", "machine_description ========>" + machine_description);
+                if (machine_description != null && !machine_description.equalsIgnoreCase("")) {
+                    jsonObject.put("mcDescription", machine_description);
+                    taskDetailsBean.setMcDescription(machine_description);
+                } else
+                    jsonObject.put("mcDescription", "");
 
                 Log.i("oracle123", "taskCompletedDate w/s===>" + taskCompletedDate);
 
-                if (taskCompletedDate != null && !taskCompletedDate.equalsIgnoreCase("")) {
+                if (status != null && status.equalsIgnoreCase("10") && taskCompletedDate != null && !taskCompletedDate.equalsIgnoreCase("")) {
                     try {
                         date2 = taskDateParse.parse(taskCompletedDate);
                         taskCompletedDateUTC = taskDateFormat.format(date2);
@@ -5789,7 +5833,7 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                 }
                 Log.i("oracle123", "taskCompletedDateUTC===>" + taskCompletedDateUTC);
 
-                if (taskCompletedDateUTC != null && !taskCompletedDateUTC.equalsIgnoreCase("")) {
+                if (status != null && status.equalsIgnoreCase("10") && taskCompletedDateUTC != null && !taskCompletedDateUTC.equalsIgnoreCase("")) {
                     taskDetailsBean.setTaskCompletedDate(taskCompletedDate);
                     jsonObject.put("taskcompletedDate", taskCompletedDateUTC);
                 } else
@@ -6001,6 +6045,9 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                 } else {
                     /*DB Insert*/
                     VideoCallDataBase.getDB(context).insertORupdateStatus(taskDetailsBean);
+                }
+                if (status.equalsIgnoreCase("10")) {
+                    VideoCallDataBase.getDB(context).eod_Update(machine_model, machine_serialno, machine_description, projectId, webtaskId);
                 }
 
                 Appreference.jsonRequestSender.taskStatus(EnumJsonWebservicename.taskStatus, jsonObject, status_list, taskDetailsBean, NewTaskConversation.this);
@@ -10605,9 +10652,9 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                     try {
                         if (null != data) {
                             Log.i("desc123", "inside 120========>");
-                            ActivityStartdate = data.getStringExtra("DateStart");
-                            ActivityEnddate = data.getStringExtra("DateEnd");
-                            sendStatus_webservice("7", "", "", "travel", "");
+//                            ActivityStartdate = data.getStringExtra("DateStart");
+//                            ActivityEnddate = data.getStringExtra("DateEnd");
+//                            sendStatus_webservice("7", "", "", "travel", "");
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -13120,8 +13167,8 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                 if (Appreference.loginuserdetails.getUsername().equalsIgnoreCase(ownerOfTask)) {
                     taskgiver.setText("Me");
                 } else {
+                    String task_giver = VideoCallDataBase.getDB(context).getname(ownerOfTask);
                     if (taskReceiver != null && !taskReceiver.equals(null)) {
-                        String task_giver = VideoCallDataBase.getDB(context).getname(ownerOfTask);
                         Log.i("task", "task_giver " + task_giver);
                         Log.i("task", "taskReceiver " + taskReceiver);
                         if (task_giver == null || task_giver.equalsIgnoreCase("") || task_giver.equals(null)) {
@@ -13129,6 +13176,8 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                         } else {
                             taskgiver.setText(task_giver);
                         }
+                    } else {
+                        taskgiver.setText(task_giver);
                     }
                 }
                 groupMemberAccess = VideoCallDataBase.getDB(context).getMemberAccessList(String.valueOf(toUserId));
@@ -13776,8 +13825,13 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
             addObserver.setVisibility(View.GONE);
             savetemplate.setVisibility(View.GONE);
             save.setVisibility(View.GONE);
-            taskGiver.setVisibility(View.GONE);
-            taskgiver.setVisibility(View.GONE);
+            if (isProjectFromOracle) {
+                taskGiver.setVisibility(View.VISIBLE);
+                taskgiver.setVisibility(View.VISIBLE);
+            } else {
+                taskGiver.setVisibility(View.GONE);
+                taskgiver.setVisibility(View.GONE);
+            }
             Arrow.setVisibility(View.GONE);
             if (isProjectFromOracle)
                 bottom_layout.setVisibility(View.GONE);
@@ -17119,7 +17173,21 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                                 Log.i("taskconversation", "headername 3 ");
                             }
                         }
-                        taskgiver.setText("Me");
+                        if (Appreference.loginuserdetails.getUsername().equalsIgnoreCase(ownerOfTask)) {
+                            taskgiver.setText("Me");
+                        }else {
+                            //                    if (!taskReceiver.equals(null)) {
+                            if (taskReceiver != null) {
+                                String task_giver = VideoCallDataBase.getDB(context).getname(ownerOfTask);
+                                Log.i("task", "task_giver " + task_giver);
+                                Log.i("task", "taskReceiver " + taskReceiver);
+                                if (task_giver == null || task_giver.equalsIgnoreCase("") || task_giver.equals(null)) {
+                                    taskgiver.setText(taskReceiver.split("_")[0]);
+                                } else {
+                                    taskgiver.setText(task_giver);
+                                }
+                            }
+                        }
                         String currentDateTimeString = DateFormat.getDateTimeInstance().format(new Date());
                         int percentage1 = VideoCallDataBase.getDB(context).percentagechecker(webtaskId);
                         if ((task.getTaskStatus() != null && task.getRequestStatus() != null)) {

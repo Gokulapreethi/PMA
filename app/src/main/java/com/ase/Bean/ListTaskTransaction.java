@@ -79,6 +79,10 @@ public class ListTaskTransaction {
     @Expose
     private String taskcompletedDate;
 
+    private String mcModel;
+    private String mcSrNo;
+    private String mcDescription;
+
     public Object getId() {
         return id;
     }
@@ -267,5 +271,29 @@ public class ListTaskTransaction {
 
     public void setTaskcompletedDate(String taskcompletedDate) {
         this.taskcompletedDate = taskcompletedDate;
+    }
+
+    public String getMcModel() {
+        return mcModel;
+    }
+
+    public void setMcModel(String mcModel) {
+        this.mcModel = mcModel;
+    }
+
+    public String getMcSrNo() {
+        return mcSrNo;
+    }
+
+    public void setMcSrNo(String mcSrNo) {
+        this.mcSrNo = mcSrNo;
+    }
+
+    public String getMcDescription() {
+        return mcDescription;
+    }
+
+    public void setMcDescription(String mcDescription) {
+        this.mcDescription = mcDescription;
     }
 }

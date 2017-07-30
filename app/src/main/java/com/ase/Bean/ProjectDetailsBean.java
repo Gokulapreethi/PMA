@@ -31,6 +31,7 @@ public class ProjectDetailsBean implements Serializable {
     private String address;
     private String mcModel;
     private String mcSrNo;
+    private String mcDescription;
     private String serviceRequestDate;
     private String chasisNo;
     private String observation;
@@ -528,5 +529,13 @@ public class ProjectDetailsBean implements Serializable {
 
     public void setEstimatedTravelHours(String estimatedTravelHours) {
         this.estimatedTravelHours = estimatedTravelHours;
+    }
+
+    public String getMcDescription() {
+        return mcDescription;
+    }
+
+    public void setMcDescription(String mcDescription) {
+        this.mcDescription = mcDescription;
     }
 }

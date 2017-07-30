@@ -5396,7 +5396,7 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback,
                                         Log.i("contacts", "Response Method 1");
                                         Log.i("updateContacts123","show dialog......");
                                         ContactsFragment contactsFragment = (ContactsFragment) Appreference.context_table.get("contactsfragment");
-                                        showprogress("Updating Contacts.....");
+//                                        showprogress("Updating Contacts.....");
                                         contactsFragment.referesh();
                                         contactsFragment.ChangeLoginUserStatus("Online", "online");
                                     }

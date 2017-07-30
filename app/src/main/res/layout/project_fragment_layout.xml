@@ -113,7 +113,7 @@
             android:id="@+id/end_fsr"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="FSR"
+            android:text="SM"
             android:textStyle="bold"
             android:textColor="@color/appcolor"
             android:layout_marginRight="23dp"

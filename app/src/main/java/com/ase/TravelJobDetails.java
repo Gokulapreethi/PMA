@@ -246,8 +246,8 @@ public class TravelJobDetails extends Activity implements View.OnClickListener, 
             text12.setText("Me");
         } else {
             Log.i(tab, "ownerOfTask -->  ");
+            String task_giver = VideoCallDataBase.getDB(context).getname(ownerOfTask);
             if (taskReceiver != null) {
-                String task_giver = VideoCallDataBase.getDB(context).getname(ownerOfTask);
                 Log.i(tab, "task_giver -->  " + task_giver);
                 Log.i(tab, "taskReceiver -->  " + taskReceiver);
                 if (task_giver == null || task_giver.equalsIgnoreCase("") || task_giver.equals(null)) {
@@ -255,6 +255,8 @@ public class TravelJobDetails extends Activity implements View.OnClickListener, 
                 } else {
                     text12.setText(task_giver);
                 }
+            }else{
+                text12.setText(task_giver);
             }
         }
         Log.i(tab, "taskStatus **$  ==> " + taskStatus);

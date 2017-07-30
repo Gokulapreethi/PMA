@@ -113,6 +113,7 @@ public class TaskDetailsBean implements Serializable,Cloneable {
     private String Address;
     private String mcModel;
     private String mcSrNo;
+    private String mcDescription;
     private String reportedBy;
     private String HMReading;
     private String Observation;
@@ -1110,6 +1111,14 @@ private String sender_reply;
 
     public void setMachineMac(String machineMac) {
         this.machineMac = machineMac;
+    }
+
+    public String getMcDescription() {
+        return mcDescription;
+    }
+
+    public void setMcDescription(String mcDescription) {
+        this.mcDescription = mcDescription;
     }
 }
 
