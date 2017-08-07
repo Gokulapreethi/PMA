@@ -32,6 +32,7 @@ import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
 
 import json.CommunicationBean;
+import json.JsonOfflineRequestSender;
 import json.JsonRequestResponce;
 import json.JsonRequestSender;
 import json.Loginuserdetails;
@@ -47,6 +48,7 @@ public class Appreference {
     public static String template_page = null;
     public static HashMap<String, Object> context_table = new HashMap<>();
     public static JsonRequestSender jsonRequestSender = null;
+    public static JsonOfflineRequestSender jsonOfflineRequestSender = null;
     public static JsonRequestResponce jsonRequestResponce = null;
     public static Loginuserdetails loginuserdetails = null;
     public static Gson gson = null;

@@ -313,8 +313,8 @@ public class MediaListAdapter extends ArrayAdapter<TaskDetailsBean> {
             if (view == null) {
                 inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
                 view = inflater.inflate(R.layout.media_list_adapter, null);
-                holder.radio_ninjas = (RadioButton) view.findViewById(R.id.radio_ninjas);
-                holder.radio_layout = (LinearLayout) view.findViewById(R.id.radio_layout);
+//                holder.radio_ninjas = (RadioButton) view.findViewById(R.id.radio_ninjas);
+//                holder.radio_layout = (LinearLayout) view.findViewById(R.id.radio_layout);
                 holder.send_syn_txt = (TextView) view.findViewById(R.id.send_syn_txt);
                 holder.rcv_syn_txt = (TextView) view.findViewById(R.id.rcv_syn_txt);
                 holder.rcv_syn_img = (TextView) view.findViewById(R.id.rcv_syn_img);
@@ -557,13 +557,13 @@ public class MediaListAdapter extends ArrayAdapter<TaskDetailsBean> {
                 e.printStackTrace();
                 Appreference.printLog("MediaListAdapter", "setOnCompletionListener Exception: " + e.getMessage(), "WARN", null);
             }
-            if (Appreference.temconvert) {
+           /* if (Appreference.temconvert) {
                 holder.radio_ninjas.setVisibility(View.VISIBLE);
             } else {
                 holder.radio_ninjas.setVisibility(View.GONE);
             }
-            holder.radio_ninjas.setChecked(gcBean.isSelect());
-            holder.radio_layout.setOnClickListener(new View.OnClickListener() {
+            holder.radio_ninjas.setChecked(gcBean.isSelect());*/
+           /* holder.radio_layout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     try {
@@ -575,7 +575,7 @@ public class MediaListAdapter extends ArrayAdapter<TaskDetailsBean> {
                         Appreference.printLog("MediaListAdapter", "radio_layout Exception: " + e.getMessage(), "WARN", null);
                     }
                 }
-            });
+            });*/
             holder.send_syn_txt.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -4750,7 +4750,7 @@ public class MediaListAdapter extends ArrayAdapter<TaskDetailsBean> {
     }
 
     class ViewHolder {
-        LinearLayout media, audio_play1, txt_des_under, receiver_side_description_layout, timeview, ll_expandable_text_view_left, ll_expandable_text_view_right, radio_layout, ll_expandable_text_view_dependency;
+        LinearLayout media, audio_play1, txt_des_under, receiver_side_description_layout, timeview, ll_expandable_text_view_left, ll_expandable_text_view_right,/* radio_layout,*/ ll_expandable_text_view_dependency;
         ImageView receiver_side_doc_iconview, sender_side_doc_iconview, sender_side_location_iconview, receiver_side_location_iconview, ls_video_play_icon, ls_thumb_image, ls_thumb_audio, iv_mmstatus, video_play_icon, locatio_icon, thumb_image, thumb_audio, iv_txtstatus, iv_audiostatus, remove_btn, xbutton, play_button, dateChangeRequest_icon, dateChangeApproval_icon, imageselect, textselect, expand_remove_btn, expand_txtstatus, leave, dependency_icon;
         TextView sender_msg_type_image, receiver_msg_type_image, sender_msg_type, receiver_msg_type, receiver_side_doc_icon, sender_side_doc_icon, rcv_des, txt_des, txt_time, time, time_1, time_under_text, time_under_text_receiver, time_under_image_receiver, button_toggle_dependency;
         SeekBar seekBar;
@@ -4761,7 +4761,7 @@ public class MediaListAdapter extends ArrayAdapter<TaskDetailsBean> {
         TextView buttonToggle_left, buttonToggle_right, date_header_text;
         Chronometer cm;
         ProgressBar progress_download, progress_upload;
-        RadioButton radio_ninjas;
+//        RadioButton radio_ninjas;
         String receiver_name_name;
         TextView reply_sender_name, reply_receiver_name, reply_receiver_msg, reply_sender_msg, exclation_counter;
         ImageView dateChangeApproval_sender;

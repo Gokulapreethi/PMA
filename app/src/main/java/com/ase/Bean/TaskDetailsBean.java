@@ -140,6 +140,9 @@ public class TaskDetailsBean implements Serializable,Cloneable {
     private String actionTaken;
     private String machineMac;
     private String taskCompletedDate;
+    private String datenow;
+    private String wssendstatus;
+
 
 
 
@@ -1119,6 +1122,22 @@ private String sender_reply;
 
     public void setMcDescription(String mcDescription) {
         this.mcDescription = mcDescription;
+    }
+
+    public String getDatenow() {
+        return datenow;
+    }
+
+    public void setDatenow(String datenow) {
+        this.datenow = datenow;
+    }
+
+    public String getWssendstatus() {
+        return wssendstatus;
+    }
+
+    public void setWssendstatus(String wssendstatus) {
+        this.wssendstatus = wssendstatus;
     }
 }
 

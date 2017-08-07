@@ -8,6 +8,8 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Rect;
 import android.graphics.drawable.ColorDrawable;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -85,7 +87,7 @@ public class ProjectHistory extends Activity implements WebServiceInterface, Swi
     String userName, taskType, project_id, project_name, parent_TaskId, group_UserId, project_Owner;
     boolean isFromOracle;
     String qury = "alltask";
-    Context context;
+    public Context context;
     int spin1pos, spin2pos, spin3pos;
     static TaskHistory taskHistory;
     int rem;
@@ -544,15 +546,15 @@ public class ProjectHistory extends Activity implements WebServiceInterface, Swi
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
                     try {
-                        taskDetailsBean = projectDetailsBeans.get(position);
+                        taskDetailsBean = (ProjectDetailsBean)projectDetailsBeans.get(position);
                         ListViewCurrentPosition=position;
-
-                        Log.d("ProjectHistory", "project id  ==  " + taskDetailsBean.getId() + "task id  == " + taskDetailsBean.getTaskId());
+//
+//                        Log.d("ProjectHistory", "project id  ==  " + taskDetailsBean.getId() + "task id  == " + taskDetailsBean.getTaskId());
                         VideoCallDataBase.getDB(context).updateBadgeStatus("0", taskDetailsBean.getId());
-
-                        Search_EditText.setText("");
-
-                        Log.d("Task1", "task stststts " + taskDetailsBean.getTaskStatus());
+//
+//                        Search_EditText.setText("");
+//
+//                        Log.d("Task1", "task stststts " + taskDetailsBean.getTaskStatus());
                         if (taskDetailsBean.getTaskStatus() != null && taskDetailsBean.getTaskStatus().equalsIgnoreCase("Template")
                                 || (taskDetailsBean.getTaskStatus() != null && taskDetailsBean.getTaskStatus().equalsIgnoreCase("draft"))
                                 || (taskDetailsBean.getTaskStatus() != null && taskDetailsBean.getTaskStatus().equalsIgnoreCase("Unassigned"))) {
@@ -568,7 +570,7 @@ public class ProjectHistory extends Activity implements WebServiceInterface, Swi
                                     intent.putExtra("position",position);
                                     intent.putExtra("projectHistoryBean", taskDetailsBean);
                                     if (taskDetailsBean.getOracleProjectId() != null) {
-                                        /*if task is template*/
+                                        //*if task is template*//*
                                         intent.putExtra("oracleProjectOwner", taskDetailsBean.getOwnerOfTask());
                                         intent.putExtra("ProjectFromOracle", true);
                                     }
@@ -589,11 +591,11 @@ public class ProjectHistory extends Activity implements WebServiceInterface, Swi
                                     intent.putExtra("projectHistoryBean", taskDetailsBean);
                                     intent.putExtra("position",position);
                                     if (taskDetailsBean.getOracleProjectId() != null) {
-                                        /*if task is template*/
+                                        //*if task is template*//*
                                         intent.putExtra("oracleProjectOwner", taskDetailsBean.getOwnerOfTask());
                                         intent.putExtra("ProjectFromOracle", true);
-                                       /* intent.putExtra("projectName",taskDetailsBean.getProjectName());
-                                        intent.putExtra("parentTaskID",taskDetailsBean.getParentTaskId());*/
+                                       //* intent.putExtra("projectName",taskDetailsBean.getProjectName());
+                                        intent.putExtra("parentTaskID",taskDetailsBean.getParentTaskId());//*
                                     }
                                     check = true;
                                     startActivity(intent);
@@ -607,7 +609,8 @@ public class ProjectHistory extends Activity implements WebServiceInterface, Swi
 //                            } else {
 //                                Toast.makeText(getApplicationContext(), "You are not allowed for this Template", Toast.LENGTH_SHORT).show();
 //                            }
-                        } else if (taskDetailsBean.getTaskType().equalsIgnoreCase("individual")) {
+                        }
+                        else if (taskDetailsBean.getTaskType().equalsIgnoreCase("individual")) {
                             Log.i("conv123","taskType====>"+taskDetailsBean.getTaskType());
                             Log.i("conv123","getTaskReceiver====>"+taskDetailsBean.getTaskReceiver());
                             Log.i("conv123","getOwnerOfTask====>"+taskDetailsBean.getOwnerOfTask());
@@ -670,7 +673,8 @@ public class ProjectHistory extends Activity implements WebServiceInterface, Swi
                                 Toast.makeText(getApplicationContext(), "This task is not assigned to You", Toast.LENGTH_SHORT).show();
                             }
 
-                        } else if (taskDetailsBean.getTaskType().equalsIgnoreCase("Group")) {
+                        }
+                        else if (taskDetailsBean.getTaskType().equalsIgnoreCase("Group")) {
                             Log.i("ListMembers", "projectDetailsBean.getTaskMemberList() " + taskDetailsBean.getTaskMemberList());
                             if ((taskDetailsBean.getTaskMemberList() != null && taskDetailsBean.getTaskMemberList().contains(Appreference.loginuserdetails.getUsername())) || (taskDetailsBean.getOwnerOfTask() != null && taskDetailsBean.getOwnerOfTask().equalsIgnoreCase(Appreference.loginuserdetails.getUsername())) || (taskDetailsBean.getTaskObservers() != null && taskDetailsBean.getTaskObservers().contains(Appreference.loginuserdetails.getUsername()))) {
                                 Log.i("task", String.valueOf(position));
@@ -1060,8 +1064,7 @@ public class ProjectHistory extends Activity implements WebServiceInterface, Swi
             overridePendingTransition(R.anim.right_anim, R.anim.left_anim);
 
             check = true;
-        }else
-        {
+        } else {
             Toast.makeText(getApplicationContext(), "Group admin user not authorized to view the task details..", Toast.LENGTH_SHORT).show();
         }
     }
@@ -1332,29 +1335,32 @@ public class ProjectHistory extends Activity implements WebServiceInterface, Swi
                 status_oracle.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Log.i("ws123", "taskArrayAdapter status_oracle---------->" + projectDetailsBean.getTaskType().equalsIgnoreCase("Group"));
-                        if (projectDetailsBean.getTaskType().equalsIgnoreCase("Group")) {
-                            Intent intent = new Intent(ProjectHistory.this, GroupPercentageStatus.class);
-                            intent.putExtra("taskid", projectDetailsBean.getTaskId());
-                            intent.putExtra("groupId", group_UserId);
-                            intent.putExtra("subtype", "normal");
-                            if (isFromOracle) {
-                                intent.putExtra("isProject", "yes");
-                            } else {
-                                intent.putExtra("isProject", "no");
-                            }
-                            if (isFromOracle)
-                                intent.putExtra("isFromOracle", true);
-                            startActivity(intent);
-                        } else
-                            status_oracle.setVisibility(View.GONE);
+                        if (isNetworkAvailable()) {
+                            Log.i("ws123", "taskArrayAdapter status_oracle---------->" + projectDetailsBean.getTaskType().equalsIgnoreCase("Group"));
+                            if (projectDetailsBean.getTaskType().equalsIgnoreCase("Group")) {
+                                Intent intent = new Intent(ProjectHistory.this, GroupPercentageStatus.class);
+                                intent.putExtra("taskid", projectDetailsBean.getTaskId());
+                                intent.putExtra("groupId", group_UserId);
+                                intent.putExtra("subtype", "normal");
+                                if (isFromOracle) {
+                                    intent.putExtra("isProject", "yes");
+                                } else {
+                                    intent.putExtra("isProject", "no");
+                                }
+                                if (isFromOracle)
+                                    intent.putExtra("isFromOracle", true);
+                                startActivity(intent);
+                            } else
+                                status_oracle.setVisibility(View.GONE);
+                        } else {
+                            Toast.makeText(ProjectHistory.this, "Check your internet connection", Toast.LENGTH_SHORT).show();
+                        }
 
                     }
                 });
 
 
-
-                if(pos>0) {
+                if (pos > 0) {
                     final ProjectDetailsBean pcBean = arrayBuddyList.get(pos - 1);
                     if(pcBean.getTaskStatus().equalsIgnoreCase(projectDetailsBean.getTaskStatus()))
                     {
@@ -1793,6 +1799,12 @@ public class ProjectHistory extends Activity implements WebServiceInterface, Swi
             });
 
         }
+    }
+
+    public boolean isNetworkAvailable() {
+        ConnectivityManager connectivityManager = (ConnectivityManager) getApplicationContext().getSystemService(getApplicationContext().getApplicationContext().CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
 
     public class MyAdapter1 extends ArrayAdapter<String> {

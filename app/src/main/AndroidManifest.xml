@@ -64,7 +64,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:vmSafeMode="true">
-        <activity android:name="com.ase.AppMainActivity" />
+        <activity android:name=".AppMainActivity" />
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
@@ -81,7 +81,7 @@
         <!-- android:label="@string/title_activity_call" -->
 
         <activity
-            android:name="com.ase.Splash"
+            android:name=".Splash"
             android:configChanges="orientation"
             android:screenOrientation="portrait">
             <intent-filter>
@@ -91,10 +91,10 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="com.ase.LoginActivity"
+            android:name=".LoginActivity"
             android:screenOrientation="portrait" />
         <!-- android:label="@string/title_activity_login" -->
-        <receiver android:name="com.ase.AlarmManagerBroadcastReceiver" />
+        <receiver android:name=".AlarmManagerBroadcastReceiver" />
         <receiver android:name="org.pjsip.pjsua2.app.SipRegisterBroadastReceiver" />
 
         <!--
@@ -109,14 +109,16 @@
          </receiver>
         -->
         <!-- GCM Receiver Service -->
-        <service android:name="com.ase.gcm.GCMPushReceiverService">
+        <service android:name=".gcm.GCMPushReceiverService">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
+        <service android:name=".offlineSendService"/>
+
 
         <!-- GCM Registration Intent Service -->
-        <service android:name="com.ase.gcm.GCMTokenRefreshListenerService">
+        <service android:name=".gcm.GCMTokenRefreshListenerService">
             <intent-filter>
                 <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
             </intent-filter>
@@ -130,252 +132,252 @@
         </service>
 
         <activity
-            android:name="com.ase.AssignedTemplates"
+            android:name=".AssignedTemplates"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ase.chat.ChatActivity"
+            android:name=".chat.ChatActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ase.Takerslist"
+            android:name=".Takerslist"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ase.chat.BuddyAdd"
+            android:name=".chat.BuddyAdd"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ase.RandomNumber.IncomingCallAlert"
+            android:name=".RandomNumber.IncomingCallAlert"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:showOnLockScreen="true" />
         <activity
-            android:name="com.ase.ChangePassword"
+            android:name=".ChangePassword"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ase.CustomTagsActivity"
+            android:name=".CustomTagsActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ase.MainCustomTag"
+            android:name=".MainCustomTag"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ase.CustomHeaderTagActivity"
+            android:name=".CustomHeaderTagActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden" />
         <activity
-            android:name="com.ase.TemplateView"
+            android:name=".TemplateView"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ase.ReminderFrequencySelection"
+            android:name=".ReminderFrequencySelection"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.UserDialog" />
         <activity
-            android:name="com.ase.Audioplayer"
+            android:name=".Audioplayer"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.UserDialog" />
         <activity
-            android:name="com.ase.ReminderFrequencyLocal"
+            android:name=".ReminderFrequencyLocal"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.UserDialog" />
         <activity
-            android:name="com.ase.Task_History_Filter"
+            android:name=".Task_History_Filter"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.UserDialog" />
         <activity
-            android:name="com.ase.Contactlistpage"
+            android:name=".Contactlistpage"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.UserDialog" />
         <activity
-            android:name="com.ase.blog.BlogPostCommandActivity"
+            android:name=".blog.BlogPostCommandActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ase.CustomVideoCamera"
+            android:name=".CustomVideoCamera"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden" />
         <activity
-            android:name="com.ase.UpdateProfileActivity"
+            android:name=".UpdateProfileActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name="com.ase.ProjectHistory"
+            android:name=".ProjectHistory"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden" />
         <activity
-            android:name="com.ase.NewBlogActivity"
+            android:name=".NewBlogActivity"
             android:label="@string/title_activity_new_blog"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ase.NewTaskActivity"
+            android:name=".NewTaskActivity"
             android:label="@string/title_activity_new_blog"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ase.VideoPlayer"
+            android:name=".VideoPlayer"
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:theme="@style/Theme.UserDialog"
             android:windowSoftInputMode="stateHidden" />
-        <activity android:name="com.ase.MultipleFileUploadActivity" />
-        <activity android:name="com.ase.FilePicker" />
+        <activity android:name=".MultipleFileUploadActivity" />
+        <activity android:name=".FilePicker" />
         <activity
-            android:name="com.ase.TaskConversationActivity"
+            android:name=".TaskConversationActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ase.FullScreenImage"
+            android:name=".FullScreenImage"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ase.AudioRecorder"
+            android:name=".AudioRecorder"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Translucent.NoTitleBar"
-            android:windowSoftInputMode="stateHidden"/>
+            android:windowSoftInputMode="stateHidden" />
         <activity
-            android:name="com.ase.Task_Percentage_update"
+            android:name=".Task_Percentage_update"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name="com.ase.call_list.Call_History"
+            android:name=".call_list.Call_History"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ase.Perfomanceview"
+            android:name=".Perfomanceview"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ase.PerformanceMetrics"
+            android:name=".PerformanceMetrics"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ase.NewTaskConversation"
+            android:name=".NewTaskConversation"
             android:largeHeap="true"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden" />
         <activity
-            android:name="com.ase.NewTempConversation"
+            android:name=".NewTempConversation"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ase.UpdateTaskActivity"
+            android:name=".UpdateTaskActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Translucent.NoTitleBar"
             android:windowSoftInputMode="stateHidden" />
         <activity
-            android:name="com.ase.TaskHistory"
+            android:name=".TaskHistory"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden" />
         <activity
-            android:name="com.ase.ViewProfile"
+            android:name=".ViewProfile"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ase.TaskDateUpdate"
+            android:name=".TaskDateUpdate"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="stateHidden" />
         <activity
-            android:name="com.ase.TaskNotification"
+            android:name=".TaskNotification"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Dialog" />
-        <activity android:name="com.ase.HandSketchActivity2" />
+        <activity android:name=".HandSketchActivity2" />
         <activity
-            android:name="com.ase.AddObserver"
+            android:name=".AddObserver"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ase.TaskTakerDateRequest"
+            android:name=".TaskTakerDateRequest"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden" />
         <activity
-            android:name="com.ase.TaskConversationTagFilter"
+            android:name=".TaskConversationTagFilter"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.UserDialog" />
         <activity
-            android:name="com.ase.ListOfFiles"
+            android:name=".ListOfFiles"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.UserDialog" />
         <activity
-            android:name="com.ase.FileListAdapter"
+            android:name=".FileListAdapter"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ase.TemplateList"
+            android:name=".TemplateList"
             android:screenOrientation="portrait" />
-        <activity android:name="com.ase.Viewvideo" />
+        <activity android:name=".Viewvideo" />
         <activity
-            android:name="com.ase.Forms.FormsListActivity"
+            android:name=".Forms.FormsListActivity"
             android:launchMode="singleTask"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ase.Forms.FormEntryViewActivity"
+            android:name=".Forms.FormEntryViewActivity"
             android:launchMode="singleTask"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ase.Forms.FormsEntryActivity"
+            android:name=".Forms.FormsEntryActivity"
             android:launchMode="singleTask"
             android:screenOrientation="portrait" />
 
-        <receiver android:name="com.ase.ScheduleManager" />
+        <receiver android:name=".ScheduleManager" />
         <receiver android:name="receiver.ScheduleCallReceiver" />
         <receiver android:name="receiver.ScheduleChatReceiver" />
-        <receiver android:name="com.ase.NetWorkChange">
+        <receiver android:name=".NetWorkChange">
             <intent-filter>
                 <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
             </intent-filter>
         </receiver>
 
         <activity
-            android:name="com.ase.GroupPercentageStatus"
+            android:name=".GroupPercentageStatus"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name="com.ase.ViewProjectMembers"
+            android:name=".ViewProjectMembers"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name="com.ase.ConflictList"
+            android:name=".ConflictList"
             android:screenOrientation="portrait"
             android:theme="@style/TranslucentGreen"
             android:windowSoftInputMode="stateHidden" />
-        <activity android:name="com.ase.Leave_Request_dateSent" />
+        <activity android:name=".Leave_Request_dateSent" />
         <activity
-            android:name="com.ase.LocationFind"
+            android:name=".LocationFind"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name="com.ase.Forms.AddFormsInWebActivity"
+            android:name=".Forms.AddFormsInWebActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ase.AddTaskReassign"
+            android:name=".AddTaskReassign"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ase.Forms.FormAccessControl"
+            android:name=".Forms.FormAccessControl"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ase.activity.SchedulerActivity"
+            android:name=".activity.SchedulerActivity"
             android:showOnLockScreen="true"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name="com.ase.AllTaskList"
+            android:name=".AllTaskList"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden" />
         <activity
-            android:name="com.ase.All_Task_History_filter"
+            android:name=".All_Task_History_filter"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.UserDialog" />
         <activity
-            android:name="com.ase.chat.ChatAlert"
+            android:name=".chat.ChatAlert"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ase.BuzzAlert"
+            android:name=".BuzzAlert"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ase.Reminder_Responses"
+            android:name=".Reminder_Responses"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ase.escalations.EscalationEntryActivty"
+            android:name=".escalations.EscalationEntryActivty"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ase.escalations.EscalationEditActivity"
+            android:name=".escalations.EscalationEditActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ase.escalations.EscalationOptionsValuesActivity"
+            android:name=".escalations.EscalationOptionsValuesActivity"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.UserDialog" />
         <activity
-            android:name="com.ase.NotesList"
+            android:name=".NotesList"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ase.NoteDateUpdate"
+            android:name=".NoteDateUpdate"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name="com.ase.Forwardto"
+            android:name=".Forwardto"
             android:screenOrientation="portrait" />
         <!--
              ATTENTION: This was auto-generated to add Google Play services to your project for
@@ -386,36 +388,37 @@
             android:value="@integer/google_play_services_version" />
 
         <activity
-            android:name="com.ase.MoreFieldsEntry"
+            android:name=".MoreFieldsEntry"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ase.More_Fields"
+            android:name=".More_Fields"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ase.escalations.AddEscalation"
+            android:name=".escalations.AddEscalation"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ase.TaskReport"
+            android:name=".TaskReport"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ase.ReportView"
+            android:name=".ReportView"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ase.CommonDateTimePicker"
+            android:name=".CommonDateTimePicker"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ase.DisplayList"
+            android:name=".DisplayList"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.Light.Dialog" />
         <activity
-            android:name="com.ase.SearchMediaWebView"
+            android:name=".SearchMediaWebView"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ase.WebViewActivity"
+            android:name=".WebViewActivity"
             android:screenOrientation="portrait" />
-        <activity android:name="com.ase.TravelJobDetails"></activity>
-        <activity android:name="com.ase.DatePicker.CustomTravelPickerActivity"></activity>
-        <activity android:name="com.ase.EulaScreen"></activity>
+        <activity android:name=".TravelJobDetails" />
+        <activity android:name=".OfflineStatusSendActivity"/>
+        <activity android:name=".DatePicker.CustomTravelPickerActivity" />
+        <activity android:name=".EulaScreen" />
     </application>
 
 </manifest>

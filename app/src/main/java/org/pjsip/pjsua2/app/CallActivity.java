@@ -1443,7 +1443,10 @@ public class CallActivity extends Activity
                         Log.i("changehost", "4 hangupCall :");
                         Log.i("SipVideo", " delete: b113");
 
-                        Log.i("SipVideo", " dump: == " + MainActivity.currentCallArrayList.get(i).dump(true," "));
+//                        Log.i("SipVideo", " dump: == " + MainActivity.currentCallArrayList.get(i).dump(true," "));
+                        String dump =  MainActivity.currentCallArrayList.get(i).dump(true," ");
+                        Log.i("SipVideo", " dump: == " + dump);
+                        Appreference.printLog("Dump : ", "\n"+dump, "DEBUG", null);
 //                        MainActivity.currentCallArrayList.get(i).dump(true," ");
                         MainActivity.currentCallArrayList.get(i).delete();
 

@@ -64,7 +64,7 @@ public class CustomTravelPickerActivity extends Activity implements DateTimePick
         currentDateTimeString= df.format(c.getTime());
         Log.i("travel123", "currentTime=======>" + currentDateTimeString);
         Log.i("travel123", "todayDate=======>" + todayDate);
-        Button travelstart_sign = (Button) findViewById(R.id.travelstart_sign);
+        final Button travelstart_sign = (Button) findViewById(R.id.travelstart_sign);
         travelstart_sign.setEnabled(true);
         Button travelend_sign = (Button) findViewById(R.id.travelend_sign);
 
@@ -85,7 +85,6 @@ public class CustomTravelPickerActivity extends Activity implements DateTimePick
         project_name.setText("Job Card No : "+ jobcodeno +"\nActivity Code : "+activitycode);
         String query = "select * from projectStatus where projectId='" + projectIDshow + "' and userId='" + Appreference.loginuserdetails.getId() + "' and taskId= '" + taskIDshow + "' and status = '7'";
         TaskDetailsBean bean = VideoCallDataBase.getDB(context).getActivityTimeFromStatus(query);
-        Log.i("travel123","Travel Details"+bean.getTravelStartTime() +""+bean.getTravelEndTime());
         if (bean != null) {
             if (bean.getTravelStartTime() != null  && !bean.getTravelStartTime().equalsIgnoreCase("")
                     && bean.getTravelEndTime() != null && !bean.getTravelEndTime().equalsIgnoreCase("")) {
@@ -341,7 +340,7 @@ public class CustomTravelPickerActivity extends Activity implements DateTimePick
                 setResult(120,intentMessage);*/
                try {
 
-                   if (getNetworkState()) {
+//                   if (getNetworkState()) {
                        //New Code Start
                        SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MMM-yyyy HH:mm");
                        SimpleDateFormat originalFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -384,8 +383,8 @@ public class CustomTravelPickerActivity extends Activity implements DateTimePick
                            }
                        } else
                            Toast.makeText(CustomTravelPickerActivity.this, "Please Enter DateTime to send", Toast.LENGTH_SHORT).show();
-                   }else
-                       Toast.makeText(CustomTravelPickerActivity.this, "Check your internet connection", Toast.LENGTH_SHORT).show();
+//                   }else
+//                       Toast.makeText(CustomTravelPickerActivity.this, "Check your internet connection", Toast.LENGTH_SHORT).show();
 
                }catch (Exception e){
                    e.printStackTrace();

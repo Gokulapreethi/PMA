@@ -79,6 +79,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.ase.offlineSendService;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -275,7 +276,7 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback,
             R.drawable.ic_chat_4_1282,
             R.drawable.ic_settings_2_1281
     };
-    Handler handler1 = new Handler();
+    public static Handler handler1 = new Handler();
     Loginuserdetails loginuserdetails;
 
     public static MainActivity getIntance() {
@@ -2087,8 +2088,11 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback,
                         for (int j = 0; j < curCall.size(); j++) {
                             if (curCall.get(j).getId() == call.getId() && cur_call_info.getCallIdString().equalsIgnoreCase(call.getInfo().getCallIdString())) {
 
-                                Log.i("SipVideo", " dump : ==  " + MainActivity.currentCallArrayList.get(i).dump(true, " "));
-                                MainActivity.currentCallArrayList.get(j).dump(true, " ");
+//                                Log.i("SipVideo", " dump : ==  " + MainActivity.currentCallArrayList.get(i).dump(true, " "));
+//                                MainActivity.currentCallArrayList.get(j).dump(true, " ");
+                                String dump =  MainActivity.currentCallArrayList.get(i).dump(true," ");
+                                Log.i("SipVideo", " dump: == " + dump);
+                                Appreference.printLog(" Mainactivity Dump : ", "\n"+dump, "DEBUG", null);
                                 MainActivity.currentCallArrayList.remove(j);
 //                        break;
                                 if (MainActivity.audioMediaHashMap.containsKey(call.getId())) {
@@ -2333,6 +2337,8 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback,
             Log.i("destroy", "MainActivity OnDestroy");
             Appreference.sipRegistrationState = false;
             nwstate = false;
+            Log.i("service123", "Receieved notification about offlineSendActivity MainActivity onDestroy");
+            stopService(new Intent(getBaseContext(), offlineSendService.class));
         } catch (Exception e) {
             e.printStackTrace();
             Appreference.printLog("MainActivity", "onDestroy Exception: " + e.getMessage(), "WARN", null);
@@ -2526,8 +2532,19 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback,
 //		super.onBackPressed();
     }
 
-    public static void showToast() {
-
+    public static void showToast(final String result) {
+        handler1.post(new Runnable() {
+            @Override
+            public void run() {
+                Context context=null;
+                if(Appreference.context_table.containsKey("projecthistory")) {
+                    ProjectHistory projectHistory=(ProjectHistory)Appreference.context_table.get("projecthistory");
+                    context=projectHistory.context;
+                }
+                if(context!=null)
+                Toast.makeText(context,result,Toast.LENGTH_LONG).show();
+            }
+        });
 
     }
 

@@ -273,10 +273,38 @@
 
         </LinearLayout>
         <LinearLayout
+            android:id="@+id/sync_view"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/conflictview">
+            <TextView
+                android:id="@+id/sync_status"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="15dp"
+                android:layout_marginTop="5dp"
+                android:layout_weight="1"
+                android:paddingBottom="11dp"
+                android:text="sync status"
+                android:layout_gravity="center"
+                android:textSize="20dp"
+                android:textStyle="bold" />
+
+            <Button
+                android:id="@+id/sync_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_marginTop="1dp"
+                android:layout_weight="1"
+               android:text="Sync" />
+
+        </LinearLayout>
+        <LinearLayout
             android:id="@+id/ll_version"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/conflictview">
+            android:layout_below="@+id/sync_view">
 
             <Button
                 android:id="@+id/version"

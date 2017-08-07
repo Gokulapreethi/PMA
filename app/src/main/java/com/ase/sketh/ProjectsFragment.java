@@ -861,8 +861,30 @@ public class ProjectsFragment extends Fragment implements View.OnClickListener, 
                             Log.i("ws123", " projectDetailsBean.userId()=========>" + String.valueOf(Appreference.loginuserdetails.getId()));
                             showprogress("Getting ActivityCode...");
                             Appreference.jsonRequestSender.getTaskForJobID(EnumJsonWebservicename.getTaskForJobID, nameValuePairs, ProjectsFragment.this);
-                        } else
+                        } else {
                             Toast.makeText(getActivity(), "Check your internet connection", Toast.LENGTH_SHORT).show();
+                            Intent intent = new Intent(getActivity(), ProjectHistory.class);
+                            intent.putExtra("projectId", project_id);
+                            intent.putExtra("projectName", project_name);
+                            //                intent.putExtra("parentTaskId", parentTask_Id);
+                            if (Appreference.isPauseStartFrom) {
+                                Appreference.isPauseStartFrom = false;
+                                intent.putExtra("isFromNewTaskConv", true);
+                            } else {
+                                if (Appreference.context_table.containsKey("projecthistory")) {
+                                    Appreference.context_table.remove("projecthistory");
+                                }
+                                intent.putExtra("isFromNewTaskConv", false);
+                            }
+                            intent.putExtra("projectOwner", project_owner);
+                            intent.putExtra("groupUserId", groupuser_Id);
+                            if (oracleProjectId != null)
+                                intent.putExtra("fromOracle", true);
+                            else
+                                intent.putExtra("fromOracle", false);
+                            startActivity(intent);
+                            getActivity().overridePendingTransition(R.anim.right_anim, R.anim.left_anim);
+                        }
 
                     } catch (Exception e) {
                         e.printStackTrace();

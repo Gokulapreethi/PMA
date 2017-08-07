@@ -130,35 +130,15 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         TextView highmessage = (TextView) findViewById(R.id.highmessage);
         this.context = this;
         loginActivity = this;
-
         logoutSuccess = getIntent().getBooleanExtra("logout", false);
         // Set up the login form.
         mEmailView = (AutoCompleteTextView) findViewById(R.id.email);
         populateAutoComplete();
 
         appSharedpreferences = AppSharedpreferences.getInstance(context);
-
-
-     /*   StrictMode.ThreadPolicy policy = new StrictMode.
-                ThreadPolicy.Builder().permitAll().build();
-        StrictMode.setThreadPolicy(policy);*/
-
         IntentFilter filter = new IntentFilter(Intent.ACTION_SCREEN_ON);
         filter.addAction(Intent.ACTION_SCREEN_OFF);
-//        ScreenReceiver mReceiver = new ScreenReceiver();
-//        registerReceiver(mReceiver, filter);
         imageView = (ImageView) findViewById(R.id.logo);
-
-      /*  imageView.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-
-                final Animation myRotation = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.rotator);
-                imageView.startAnimation(myRotation);
-                return  false;
-            }
-
-        });*/
 
         checkeula=(CheckBox)findViewById(R.id.check_eula);
         checkeula.setChecked(true);
@@ -241,6 +221,14 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             mPasswordView.setText("");
         }
         appSharedpreferences.saveBoolean("login",false);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Log.i("service123", "Receieved notification about offlineSendActivity Called");
+        startService(new Intent(getApplicationContext(), offlineSendService.class));
+
     }
 
     public void loginMethod(View view){
