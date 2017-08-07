@@ -263,7 +263,7 @@ public class ProjectsFragment extends Fragment implements View.OnClickListener, 
                     // disallow cancel of AlertDialog on click of back button and outside touch
                     alert.setCancelable(false);
                     /*getting list of jobcards for the user from table*/
-                    String list_query = "select *,cast(oracleProjectId as unsigned) as t from projectDetails where loginuser = '" + Appreference.loginuserdetails.getEmail() + "' order by t";
+                    String list_query = "select *,cast(oracleProjectId as unsigned) as t from projectDetails where loginuser = '" + Appreference.loginuserdetails.getEmail() + "' order by t DESC";
                     ArrayList<String> My_Project = VideoCallDataBase.getDB(getActivity()).getOracleProjectIdlist(list_query);
                     ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, My_Project);
                     // Drop down layout style - list view with radio button
@@ -1206,7 +1206,7 @@ public class ProjectsFragment extends Fragment implements View.OnClickListener, 
         super.onResume();
 
         try {
-            String query_1 = "select *,cast(oracleProjectId as unsigned) as t from projectDetails where loginuser = '" + Appreference.loginuserdetails.getEmail() + "'and projectcompletedstatus NOT IN (select projectcompletedstatus where projectcompletedstatus like '1') order by t";
+            String query_1 = "select *,cast(oracleProjectId as unsigned) as t from projectDetails where loginuser = '" + Appreference.loginuserdetails.getEmail() + "'and projectcompletedstatus NOT IN (select projectcompletedstatus where projectcompletedstatus like '1') order by t DESC";
             projectList = new ArrayList<>();
             projectSearchList = new ArrayList<>();
             projectList = VideoCallDataBase.getDB(classContext).getProjectdetails(query_1);
@@ -1319,7 +1319,7 @@ public class ProjectsFragment extends Fragment implements View.OnClickListener, 
             @Override
             public void run() {
                 try {
-                    String query_1 = "select *,cast(oracleProjectId as unsigned) as t from projectDetails where loginuser = '" + Appreference.loginuserdetails.getEmail() + "'and projectcompletedstatus NOT IN (select projectcompletedstatus where projectcompletedstatus like '1') order by t";
+                    String query_1 = "select *,cast(oracleProjectId as unsigned) as t from projectDetails where loginuser = '" + Appreference.loginuserdetails.getEmail() + "'and projectcompletedstatus NOT IN (select projectcompletedstatus where projectcompletedstatus like '1') order by t DESC";
                     projectList = new ArrayList<>();
                     projectSearchList = new ArrayList<>();
                     projectList = VideoCallDataBase.getDB(classContext).getProjectdetails(query_1);
@@ -1418,7 +1418,7 @@ public class ProjectsFragment extends Fragment implements View.OnClickListener, 
                                         }
                                     }
                                 }
-                                String query_1 = "select *,cast(oracleProjectId as unsigned) as t from projectDetails where loginuser = '" + Appreference.loginuserdetails.getEmail() + "'and projectcompletedstatus NOT IN (select projectcompletedstatus where projectcompletedstatus like '1') order by t";
+                                String query_1 = "select *,cast(oracleProjectId as unsigned) as t from projectDetails where loginuser = '" + Appreference.loginuserdetails.getEmail() + "'and projectcompletedstatus NOT IN (select projectcompletedstatus where projectcompletedstatus like '1') order by t DESC";
                                 projectList = new ArrayList<>();
                                 projectSearchList = new ArrayList<>();
                                 projectList = VideoCallDataBase.getDB(classContext).getProjectdetails(query_1);
@@ -1454,7 +1454,7 @@ public class ProjectsFragment extends Fragment implements View.OnClickListener, 
                                         }
                                     }
                                 }
-                                String query_1 = "select *,cast(oracleProjectId as unsigned) as t from projectDetails where loginuser = '" + Appreference.loginuserdetails.getEmail() + "'and projectcompletedstatus NOT IN (select projectcompletedstatus where projectcompletedstatus like '1') order by t";
+                                String query_1 = "select *,cast(oracleProjectId as unsigned) as t from projectDetails where loginuser = '" + Appreference.loginuserdetails.getEmail() + "'and projectcompletedstatus NOT IN (select projectcompletedstatus where projectcompletedstatus like '1') order by t DESC";
                                 projectList = new ArrayList<>();
                                 projectSearchList = new ArrayList<>();
                                 projectList = VideoCallDataBase.getDB(classContext).getProjectdetails(query_1);

@@ -66,7 +66,6 @@ import json.EnumJsonWebservicename;
 import json.JsonRequestSender;
 import json.WebServiceInterface;
 
-import static org.pjsip.pjsua2.app.MainActivity.showToast;
 
 /**
  * Created by prasanth on 6/24/2017.
@@ -391,10 +390,10 @@ public class TravelJobDetails extends Activity implements View.OnClickListener, 
             public void onClick(View v) {
                 String query = "select status from projectStatus where projectId='" + projectId + "' and userId='" + Appreference.loginuserdetails.getId() + "' and taskId= '" + webtaskId + "'";
                 int current_status = VideoCallDataBase.getDB(context).getCurrentStatus(query);
-                if (current_status == -1)
+                if (current_status == -1) {
 //                    travel_job.setEnabled(false);
                     Toast.makeText(TravelJobDetails.this, "The Task has not yet started...", Toast.LENGTH_SHORT).show();
-                else {
+                }else {
                     travel_job.setEnabled(true);
                     showtravelTimePopup(v);
                 }
@@ -1056,7 +1055,7 @@ public class TravelJobDetails extends Activity implements View.OnClickListener, 
         // send status 0 is send 1 is unsend
         chatBean.setSendStatus("0");
         chatBean.setMsg_status(0);
-        chatBean.setWs_send("000");
+//        chatBean.setWs_send("000");
         chatBean.setCustomTagVisible(true);
         chatBean.setCatagory(category);
         chatBean.setSubType("normal");

@@ -88,7 +88,9 @@ public class JsonRequestResponce extends Thread {
 
                 if (obj != null) {
                     inter = obj.getAccess();
-                    Log.i("JsonLeave", "inside json request responce");
+                    Log.i("JsonLeave", "inside json request responce  == >> "+inter);
+                    Log.i("offline123", "json request responce object==**-=====>" + inter);
+
                     HttpParams httpParameters = new BasicHttpParams();
                     HttpConnectionParams.setConnectionTimeout(httpParameters, 120000);
                     HttpConnectionParams.setSoTimeout(httpParameters, 120000);

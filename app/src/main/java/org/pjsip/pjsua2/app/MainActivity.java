@@ -2540,7 +2540,14 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback,
                 if(Appreference.context_table.containsKey("projecthistory")) {
                     ProjectHistory projectHistory=(ProjectHistory)Appreference.context_table.get("projecthistory");
                     context=projectHistory.context;
+                } else if(Appreference.context_table.containsKey("taskcoversation")) {
+                    NewTaskConversation newTaskConversation=(NewTaskConversation)Appreference.context_table.get("taskcoversation");
+                    context=newTaskConversation.context;
+                }else if(Appreference.context_table.containsKey("settingsfragment")) {
+                    SettingsFragment settingsfragment=(SettingsFragment)Appreference.context_table.get("settingsfragment");
+                    context=settingsfragment.getContext();
                 }
+
                 if(context!=null)
                 Toast.makeText(context,result,Toast.LENGTH_LONG).show();
             }

@@ -122,8 +122,6 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="10dp"
                     android:ellipsize="end"
-                    android:maxLength="200"
-                    android:maxLines="2"
                     android:text="Project Name"
                     android:textColor="@color/black"
                     android:textSize="15sp"

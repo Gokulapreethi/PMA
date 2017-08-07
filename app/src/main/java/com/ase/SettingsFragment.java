@@ -78,7 +78,7 @@ public class SettingsFragment extends Fragment implements WebServiceInterface {
     TextView username, em, edit, signout, changepass, exclation_counter;
     ImageView imageview;
     LinearLayout files;
-    static Context classContext;
+    public static Context classContext;
     ImageLoader imageLoader;
     private ProgressDialog progress;
     static SettingsFragment settingsFragment;
@@ -134,6 +134,8 @@ public class SettingsFragment extends Fragment implements WebServiceInterface {
         conflicttask = (Switch) rootView.findViewById(R.id.conflictswitch);
         exclation_counter = (TextView) rootView.findViewById(R.id.exclation_counter);
         listOfObservers = new ArrayList<>();
+        Appreference.context_table.put("settingsfragment", this);
+
         try {
             Log.i("SettingsFragment", "Result 0 " + appSharedpreferences.getBoolean("conflictTask"));
             con = appSharedpreferences.getBoolean("conflictTask");
@@ -306,7 +308,7 @@ public class SettingsFragment extends Fragment implements WebServiceInterface {
                 try {
                     Log.i("offline123", "sync_btn clicklistener=====>");
 
-                    /*OfflineSendMessage offlineSendMessage=new OfflineSendMessage(getActivity());
+                   /* OfflineSendMessage offlineSendMessage=new OfflineSendMessage();
                     offlineSendMessage.sendOfflineMessages();*/
                     sendOfflineMessages();
                 } catch (Exception e) {
@@ -541,12 +543,44 @@ public class SettingsFragment extends Fragment implements WebServiceInterface {
                         travel_date_details = new ArrayList<>();
                         String desc_query = "Select * from projectHistory where projectId ='" + detailsBean.getProjectId() + "' and taskId = '" + detailsBean.getTaskId() + "'";
                         machineDetailsBean = VideoCallDataBase.getDB(classContext).getDetails_to_complete_project(desc_query);
+                        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                        SimpleDateFormat dateParse = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                        SimpleDateFormat taskDateParse = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                        SimpleDateFormat taskDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                        dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
+                        taskDateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
+                        Date date = null;
+                        Date date1 = null;
+                        Date date2 = null;
+                        String StartDateUTC = "", EndDateUTC = "", taskCompletedDateUTC = "";
+                        if (detailsBean.getTravelStartTime() != null && !detailsBean.getTravelStartTime().equalsIgnoreCase("")) {
+                            try {
+                                date = dateParse.parse(detailsBean.getTravelStartTime());
+                                StartDateUTC = dateFormat.format(date);
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        }
+                        if (detailsBean.getTravelEndTime() != null && !detailsBean.getTravelEndTime().equalsIgnoreCase("")) {
+                            try {
+                                date1 = dateParse.parse(detailsBean.getTravelEndTime());
+                                EndDateUTC = dateFormat.format(date1);
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        }
+                        if (detailsBean.getProjectStatus() != null && detailsBean.getProjectStatus().equalsIgnoreCase("10")
+                                && detailsBean.getTaskCompletedDate() != null && !detailsBean.getTaskCompletedDate().equalsIgnoreCase("")) {
+                            try {
+                                date2 = taskDateParse.parse(detailsBean.getTaskCompletedDate());
+                                taskCompletedDateUTC = taskDateFormat.format(date2);
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        }
                         JSONObject jsonObject = new JSONObject();
                         JSONObject jsonObject1 = new JSONObject();
                         TaskDetailsBean statusBean = new TaskDetailsBean();
-                        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-                        SimpleDateFormat dateParse = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-                        dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
                         String tasktime = dateFormat.format(new Date());
                         String dateforrow = dateFormat.format(new Date());
                         try {
@@ -567,13 +601,13 @@ public class SettingsFragment extends Fragment implements WebServiceInterface {
                         statusBean.setSignalid(detailsBean.getSignalid());
 
                         if (detailsBean.getTravelStartTime() != null && !detailsBean.getTravelStartTime().equalsIgnoreCase("")) {
-                            jsonObject.put("travelStartTime", detailsBean.getTravelStartTime());
+                            jsonObject.put("travelStartTime", StartDateUTC);
                             statusBean.setTravelStartTime(detailsBean.getTravelStartTime());
                         } else {
                             jsonObject.put("travelStartTime", "");
                         }
                         if (detailsBean.getTravelEndTime() != null && !detailsBean.getTravelEndTime().equalsIgnoreCase("")) {
-                            jsonObject.put("travelEndTime", detailsBean.getTravelEndTime());
+                            jsonObject.put("travelEndTime",EndDateUTC);
                             statusBean.setTravelEndTime(detailsBean.getTravelEndTime());
                         } else {
                             jsonObject.put("travelEndTime", "");
@@ -634,7 +668,7 @@ public class SettingsFragment extends Fragment implements WebServiceInterface {
                             jsonObject.put("hourMeterReading", "");
                         }
                         if (detailsBean.getTaskCompletedDate() != null && !detailsBean.getTaskCompletedDate().equalsIgnoreCase("")) {
-                            jsonObject.put("taskcompletedDate", detailsBean.getTaskCompletedDate());
+                            jsonObject.put("taskcompletedDate", taskCompletedDateUTC);
                             statusBean.setTaskCompletedDate(detailsBean.getTaskCompletedDate());
                         } else {
                             jsonObject.put("taskcompletedDate", "");
@@ -1668,6 +1702,7 @@ public class SettingsFragment extends Fragment implements WebServiceInterface {
                                 String fileName = jobject.get("fileName").toString();
                                 fileName = fileName.split("\"")[1];
                                 detailsBean.setServerFileName(fileName);
+                                detailsBean.setTaskDescription(fileName);
                                 Log.i("taskConversationEntry", "fileName $$ ===> " + fileName);
                             }
                             if (detailsBean != null) {

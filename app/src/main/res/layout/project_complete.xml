@@ -825,7 +825,7 @@
                     android:background="#FFFFFF"
                     android:gravity="left"
                     android:padding="7dp"
-                    android:text="HM Reading"
+                    android:text="HM Reading *"
                     android:singleLine="true"
                     android:textColor="@color/black"
                     android:textSize="15dp" />
