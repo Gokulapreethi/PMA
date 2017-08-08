@@ -88,7 +88,7 @@ public class SettingsFragment extends Fragment implements WebServiceInterface {
     Handler timerHandler = new Handler();
     String need_to_call_listallmytask;
     boolean con;
-    ArrayList<String> travel_date_details;
+    ArrayList<TaskDetailsBean> travel_date_details;
     public static ArrayList<String> listOfObservers;
     private String quotes = "\"";
 
@@ -143,18 +143,7 @@ public class SettingsFragment extends Fragment implements WebServiceInterface {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        /*String Query="select * from projectStatus where wssendstatus= '000' order by datenow";
-        Log.i("offline123","OfflineStatusSendActivity query-=====>"+Query);
 
-        ArrayList<TaskDetailsBean> AlltaskBean = VideoCallDataBase.getDB(classContext).getofflinesendlist(Query);
-        if(AlltaskBean.size()>0)
-        {
-            sync_btn.setBackgroundResource(R.color.rednew);
-        }else
-        {
-            sync_btn.setBackgroundResource(R.color.gray);
-
-        }*/
         Log.i("SettingsFragment", "Result " + con);
         if (con) {
             conflicttask.setChecked(true);
@@ -185,6 +174,7 @@ public class SettingsFragment extends Fragment implements WebServiceInterface {
         changepass = (TextView) rootView.findViewById(R.id.change_password);
         version_no = (Button) rootView.findViewById(R.id.version);
         sync_btn = (Button) rootView.findViewById(R.id.sync_btn);
+
         signout = (TextView) rootView.findViewById(R.id.signout);
 
         imageview = (ImageView) rootView.findViewById(R.id.imageView_round);
@@ -301,16 +291,35 @@ public class SettingsFragment extends Fragment implements WebServiceInterface {
                 timerHandler.postDelayed(timerRunnable, 5000);
             }
         });
+        Log.i("Appreference", "OncreateView check sync size --=====>-------->" );
 
+        String Query = "select * from projectStatus where wssendstatus= '000' order by datenow";
+        ArrayList<TaskDetailsBean> AlltaskBean = VideoCallDataBase.getDB(classContext).getofflinesendlist(Query);
+
+        String Query_media = "select * from taskDetailsInfo where wssendstatus= '000'";
+        ArrayList<TaskDetailsBean> AlltaskMediaBean = VideoCallDataBase.getDB(classContext).getTaskDetailsInfo(Query_media);
+        if (AlltaskBean!=null && AlltaskBean.size() > 0 || AlltaskMediaBean!=null && AlltaskMediaBean.size()>0 ) {
+            sync_btn.setBackgroundResource(R.color.rednew);
+        } else {
+            sync_btn.setBackgroundResource(R.color.gray);
+
+        }
+      /*  if(Appreference.isSyncDone)
+            sync_btn.setBackgroundResource(R.color.rednew);
+        else
+            sync_btn.setBackgroundResource(R.color.gray);
+*/
         sync_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 try {
                     Log.i("offline123", "sync_btn clicklistener=====>");
+                    sync_btn.setBackgroundResource(R.color.gray);
 
-                   /* OfflineSendMessage offlineSendMessage=new OfflineSendMessage();
-                    offlineSendMessage.sendOfflineMessages();*/
-                    sendOfflineMessages();
+                    OfflineSendMessage offlineSendMessage = new OfflineSendMessage();
+                    offlineSendMessage.sendOfflineMessages();
+
+//                    sendOfflineMessages();
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -527,6 +536,9 @@ public class SettingsFragment extends Fragment implements WebServiceInterface {
         TaskDetailsBean taskDetailsBean = new TaskDetailsBean();
         ArrayList<TaskDetailsBean> AlltaskBean;
         TaskDetailsBean machineDetailsBean;
+        TaskDetailsBean traveldatebean;
+        travel_date_details = null;
+        travel_date_details = new ArrayList<>();
         try {
             if (isNetworkAvailable()) {
                 showprogress("Please wait...");
@@ -539,8 +551,7 @@ public class SettingsFragment extends Fragment implements WebServiceInterface {
                 Log.i("offline123", "OfflineStatusSendActivity query-=====>" + AlltaskBean.size());
                 if (AlltaskBean != null && AlltaskBean.size() > 0) {
                     for (TaskDetailsBean detailsBean : AlltaskBean) {
-                        travel_date_details = null;
-                        travel_date_details = new ArrayList<>();
+                        traveldatebean = new TaskDetailsBean();
                         String desc_query = "Select * from projectHistory where projectId ='" + detailsBean.getProjectId() + "' and taskId = '" + detailsBean.getTaskId() + "'";
                         machineDetailsBean = VideoCallDataBase.getDB(classContext).getDetails_to_complete_project(desc_query);
                         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -607,7 +618,7 @@ public class SettingsFragment extends Fragment implements WebServiceInterface {
                             jsonObject.put("travelStartTime", "");
                         }
                         if (detailsBean.getTravelEndTime() != null && !detailsBean.getTravelEndTime().equalsIgnoreCase("")) {
-                            jsonObject.put("travelEndTime",EndDateUTC);
+                            jsonObject.put("travelEndTime", EndDateUTC);
                             statusBean.setTravelEndTime(detailsBean.getTravelEndTime());
                         } else {
                             jsonObject.put("travelEndTime", "");
@@ -616,15 +627,26 @@ public class SettingsFragment extends Fragment implements WebServiceInterface {
                         Log.i("offlilne", "travelEnddate ==> " + detailsBean.getTravelEndTime());
 
                         if (detailsBean.getTravelStartTime() != null && !detailsBean.getTravelStartTime().equalsIgnoreCase("")
+                                && !detailsBean.getProjectStatus().equalsIgnoreCase("9")
+                                && detailsBean.getEnd_dateStatus() != null && !detailsBean.getEnd_dateStatus().equalsIgnoreCase("")
+                                && detailsBean.getEnd_dateStatus().equalsIgnoreCase("9")) {
+                            Log.i("offlilne", "travelstartdate added==> # " + detailsBean.getTravelStartTime());
+                        } else if (detailsBean.getTravelStartTime() != null && !detailsBean.getTravelStartTime().equalsIgnoreCase("")
                                 && !detailsBean.getProjectStatus().equalsIgnoreCase("9")) {
-                            travel_date_details.add("StartTime : " + detailsBean.getTravelStartTime());
-                            Log.i("offlilne", "travelstartdate added==> " + detailsBean.getTravelStartTime());
+//                            travel_date_details.add("StartTime : " + detailsBean.getTravelStartTime());
+                            traveldatebean.setTravelStartTime(detailsBean.getTravelStartTime());
+                            traveldatebean.setSignalid(detailsBean.getSignalid());
+                            Log.i("offlilne", "travelstartdate added==> $" + detailsBean.getTravelStartTime());
 
                         }
                         if (detailsBean.getTravelEndTime() != null && !detailsBean.getTravelEndTime().equalsIgnoreCase("")) {
-                            travel_date_details.add("EndTime : " + detailsBean.getTravelEndTime());
+//                            travel_date_details.add("EndTime : " + detailsBean.getTravelEndTime());
+                            traveldatebean.setTravelEndTime(detailsBean.getTravelEndTime());
+                            traveldatebean.setSignalid(detailsBean.getSignalid());
                             Log.i("offlilne", "travelEnddate added ==> " + detailsBean.getTravelEndTime());
+                            Log.i("offlilne", "getSignalid ==> " + detailsBean.getSignalid());
                         }
+                        travel_date_details.add(traveldatebean);
                         jsonObject.put("activityStartTime", "");
                         jsonObject.put("activityEndTime", "");
                         jsonObject.put("toTravelStartDateTime", "");
@@ -1601,6 +1623,8 @@ public class SettingsFragment extends Fragment implements WebServiceInterface {
     @Override
     public void onResume() {
         super.onResume();
+        Log.i("Appreference", "onResume inside--=====>-------->" );
+
         File myFile = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/High Message/profilePic/" + Appreference.loginuserdetails.getProfileImage());
         if (Appreference.loginuserdetails.getProfileImage() != null) {
             if (myFile.exists()) {
@@ -1614,6 +1638,21 @@ public class SettingsFragment extends Fragment implements WebServiceInterface {
                 mainActivity.callprofile(getResources().getString(R.string.user_upload) + Appreference.loginuserdetails.getProfileImage());
             }
         }
+        String Query = "select * from projectStatus where wssendstatus= '000' order by datenow";
+        ArrayList<TaskDetailsBean> AlltaskBean = VideoCallDataBase.getDB(classContext).getofflinesendlist(Query);
+
+        String Query_media = "select * from taskDetailsInfo where wssendstatus= '000'";
+        ArrayList<TaskDetailsBean> AlltaskMediaBean = VideoCallDataBase.getDB(classContext).getTaskDetailsInfo(Query_media);
+        if (AlltaskBean!=null && AlltaskBean.size() > 0 || AlltaskMediaBean!=null && AlltaskMediaBean.size()>0 ) {
+            sync_btn.setBackgroundResource(R.color.rednew);
+        } else {
+            sync_btn.setBackgroundResource(R.color.gray);
+
+        }
+       /* if(Appreference.isSyncDone)
+            sync_btn.setBackgroundResource(R.color.rednew);
+        else
+            sync_btn.setBackgroundResource(R.color.gray);*/
     }
 
     @Override
@@ -1667,21 +1706,45 @@ public class SettingsFragment extends Fragment implements WebServiceInterface {
 
                                     if (detailsBean.getCustomerRemarks() != null && !detailsBean.getCustomerRemarks().equalsIgnoreCase("") && !detailsBean.getCustomerRemarks().equalsIgnoreCase("null")
                                             && !detailsBean.getProjectStatus().equalsIgnoreCase("10")) {
-                                        if (projectCurrentStatus != null && !projectCurrentStatus.equalsIgnoreCase("Completed"))
+                                        if (projectCurrentStatus != null && !projectCurrentStatus.equalsIgnoreCase("Completed")) {
+                                            Log.i("offline123", "webservice 3  ");
                                             PercentageWebService("text", detailsBean.getCustomerRemarks(), "", Utility.getSessionID(), 0, detailsBean);
+                                        }
 
                                     }
-                                    if (travel_date_details != null && travel_date_details.size() > 0) {
-                                        int sec = 0;
+                                    Log.i("offline123", "travel_date_details ==> " + travel_date_details);
+                                    Log.i("offline123", "travel_date_details.size() ==> " + travel_date_details.size());
+                                    /*if (travel_date_details != null && travel_date_details.size() > 0 && detailsBean.getTaskDescription().equalsIgnoreCase("Gathering Details...")) {
+//                                        int sec = 0;
                                         for (final String travel : travel_date_details) {
-                                            sec = sec + 2000;
-                                            handler.postDelayed(new Runnable() {
-                                                @Override
-                                                public void run() {
-                                                    PercentageWebService("text", travel, "", Utility.getSessionID(), 0, detailsBean);
-
+//                                            sec = sec + 2000;
+//                                            handler.postDelayed(new Runnable() {
+//                                                @Override
+//                                                public void run() {
+                                            Log.i("offline123", "webservice 4 ");
+                                            Log.i("offline123", "webservice_travel " + travel);
+                                            Log.i("offline123", "webservice_travel ##  " + detailsBean.getTaskDescription());
+                                            PercentageWebService("text", travel, "", Utility.getSessionID(), 0, detailsBean);
+                                             *//*   }
+                                            }, sec);*//*
+                                        }
+                                    }*/
+                                    if (travel_date_details != null && travel_date_details.size() > 0 && detailsBean.getTaskDescription().equalsIgnoreCase("Gathering Details...")) {
+                                        for (final TaskDetailsBean detailsBean1 : travel_date_details) {
+                                            Log.i("offline123", "webservice 4 ");
+                                            Log.i("offline123", "traveldatebean 1 "+detailsBean1.getTravelStartTime());
+                                            Log.i("offline123", "traveldatebean 2 "+detailsBean1.getTravelEndTime());
+                                            Log.i("offline123", "traveldatebean 3 "+detailsBean1.getSignalid());
+                                            Log.i("offline123", "traveldatebean 4 "+detailsBean.getSignalid());
+                                            if(detailsBean1.getSignalid()!=null && detailsBean1.getSignalid().equalsIgnoreCase(detailsBean.getSignalid())){
+                                                if (detailsBean1.getTravelStartTime() != null) {
+                                                    PercentageWebService("text", detailsBean1.getTravelStartTime(), "", Utility.getSessionID(), 0, detailsBean);
                                                 }
-                                            }, sec);
+                                                if (detailsBean1.getTravelEndTime() != null) {
+                                                    Log.i("offline123", "traveldatebean === > "+detailsBean1.getTravelEndTime());
+                                                    PercentageWebService("text", detailsBean1.getTravelEndTime(), "", Utility.getSessionID(), 0, detailsBean);
+                                                }
+                                            }
                                         }
                                     }
                                 } catch (Exception e) {

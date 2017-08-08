@@ -83,7 +83,7 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
     public static final String CREATE_TABLE_PROJECT_HISTORY = "create table if not exists projectHistory(id integer primary key autoincrement,loginuser varchar(100),projectId varchar(100),parentTaskId varchar(100),projectOwner varchar(100),projectName TEXT,fromUserId varchar(100),toUserId varchar(100),fromUserName varchar(100),toUserName varchar(100),projectDescription varchar(100),projectOrganisation varchar(100),plannedStartDateTime varchar(100),plannedEndDateTime varchar(100),taskMemberList varchar(100),taskStatus varchar(100),ownerOfTask varchar(100),taskReceiver varchar(100),taskObservers TEXT,taskNo varchar(100),taskName varchar(100),taskDescription varchar(100),taskType varchar(100),mimeType varchar(100),taskId varchar(100),signalId varchar(100),completedPercentage varchar(100),readStatus varchar(5),category varchar(10),isParentTask varchar(5),issueParentId varchar(100),requestStatus varchar(100),oracleTaskId varchar(100),estimatedTravelHrs integer,estimatedActivityHrs integer,activity varchar(100),oracleProjectId varchar(100),customerName varchar(100),address varchar(100),mcModel varchar(100),mcSrNo varchar(100),serviceRequestDate varchar(100),chasisNo varchar(100),observation varchar(100),oracleCustomerId integer,processFlag varchar(100),projectcompletedstatus varchar(100),isActiveStatus varchar(100),jobCardType varchar(100),machineMake varchar(100),mcDescription varchar(100))";
     public static final String CREATE_TABLE_FORM_ACCESS = "create table if not exists FormAccess(id integer primary key autoincrement,taskId varchar(50),formId varchar(50),formAccessId varchar(50),taskGiver varchar(50),memberName varchar(50),accessMode varchar(50))";
     public static final String CREATE_TABLE_List_User_Group_Member_Access = "create table if not exists listUserGroupMemberAccess(userid integer,groupid integer,groupname varchar(100),loginuser varchar(100),respondVideo varchar(50),respondFiles varchar(50),accessForms varchar(50),respondAudio varchar(50),videoAccess varchar(50),adminAccess varchar(50),respondDateChange varchar(50),respondLocation varchar(50),respondConfCall varchar(50),audioAccess varchar(50),chatAccess varchar(50),respondText varchar(50),respondPrivate varchar(50),respondPhoto varchar(50),accessReminder varchar(50),respondSketch varchar(50),respondTask varchar(50),accessScheduledCNF varchar(50),GroupTask varchar(50),ReassignTask varchar(50),ChangeTaskName varchar(50),TaskDescriptions varchar(50),TemplateExistingTask varchar(50),ApproveLeave varchar(50),RemindMe varchar(50),AddObserver varchar(50),TaskPriority varchar(50),Escalations varchar(50))";
-    public static final String CREATE_TABLE_PROJECT_STATUS = "create table if not exists projectStatus(id integer primary key autoincrement,userId integer,projectId integer,taskId integer,taskDescription varchar(100),travelStartTime varchar(100),activityStartTime varchar(100),activityEndTime varchar(100),travelEndTime varchar(100),totravelstartdatetime varchar(100),totravelenddatetime varchar(100),remarks varchar(500),hourMeterReading varchar(100),status varchar(100),customersignaturename varchar(100),photo varchar(100),techniciansignature varchar(100),customersignature varchar(100),observation varchar(500),actionTaken varchar(500),taskcompleteddate varchar(100),datenow varchar(100),wssendstatus varchar(100),signalId varchar(100))";
+    public static final String CREATE_TABLE_PROJECT_STATUS = "create table if not exists projectStatus(id integer primary key autoincrement,userId integer,projectId integer,taskId integer,taskDescription varchar(100),travelStartTime varchar(100),activityStartTime varchar(100),activityEndTime varchar(100),travelEndTime varchar(100),totravelstartdatetime varchar(100),totravelenddatetime varchar(100),remarks varchar(500),hourMeterReading varchar(100),status varchar(100),customersignaturename varchar(100),photo varchar(100),techniciansignature varchar(100),customersignature varchar(100),observation varchar(500),actionTaken varchar(500),taskcompleteddate varchar(100),datenow varchar(100),wssendstatus varchar(100),signalId varchar(100),dateStatus varchar(100))";
 
     public static final String EULATABLE = "eulaagree";
     public static final String EULACREATE = "create table if not exists '" + EULATABLE + "'(id integer (1),selection varchar(1))";
@@ -3382,7 +3382,18 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
         db.update("projectHistory", cv1, "taskId" + "= ?", new String[]{taskId});
         Log.i("task", "status updated");
     }
-
+    public void update_enddate_status(String enddate_time, String projectId, String taskId,String userId) {
+        ContentValues cv = new ContentValues();
+        String start=null;
+        String end=null;
+        Log.i("task", "update_enddate_status ==> "+start);
+        Log.i("task", "update_enddate_status ==> "+end);
+        cv.put("travelEndTime", enddate_time);
+        cv.put("dateStatus", "9");
+        cv.put("wssendstatus", "000");
+        db.update("projectStatus", cv, "taskId" + "= ? and " + "projectId" + "= ? and " + "userId" + "= ? and " + "travelStartTime" + "!= ? and " + "travelEndTime" + "= ? ", new String[]{taskId, projectId ,userId,start,end});
+        Log.i("task", "status updated ");
+    }
     public void taskIdUpdate(String query, String taskNo) {
 
         String query1 = "UPDATE " + "taskDetailsInfo" + " SET " + "taskId = '" + query + "' WHERE " + "taskNo" + " = " + taskNo;
@@ -8941,6 +8952,7 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
                     taskDetailsBean.setDatenow(cur.getString(cur.getColumnIndex("datenow")));
                     taskDetailsBean.setWssendstatus(cur.getString(cur.getColumnIndex("wssendstatus")));
                     taskDetailsBean.setSignalid(cur.getString(cur.getColumnIndex("signalId")));
+                    taskDetailsBean.setEnd_dateStatus(cur.getString(cur.getColumnIndex("dateStatus")));
                     arrayList.add(taskDetailsBean);
                     cur.moveToNext();
                 }

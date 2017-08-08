@@ -91,6 +91,7 @@ public class Appreference {
     public static boolean isLeaveConflict = false;
     public static boolean isAssignLeave = false;
     public static boolean isProject = false;
+    public static boolean isSyncDone = false;
     //    public static boolean isSelectforTemplate = false;
     public static String demo = "add";
 

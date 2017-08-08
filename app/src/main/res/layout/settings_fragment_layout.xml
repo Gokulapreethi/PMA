@@ -2,6 +2,7 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
+
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -10,7 +11,6 @@
             android:id="@+id/relativeLayout2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
-
 
 
             <TextView
@@ -30,8 +30,8 @@
                 android:layout_height="32dp"
                 android:layout_marginRight="8dp"
                 android:layout_marginTop="5dp"
-                android:background="@drawable/exclation_counter"
                 android:layout_toLeftOf="@+id/status_icon"
+                android:background="@drawable/exclation_counter"
                 android:gravity="center"
                 android:textColor="#FFFFFF"
                 android:textSize="12sp"
@@ -138,19 +138,19 @@
         <LinearLayout
             android:id="@+id/ll_size"
             android:layout_width="fill_parent"
-            android:visibility="gone"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/signout">
+            android:layout_below="@+id/signout"
+            android:visibility="gone">
 
             <TextView
                 android:id="@+id/size"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_gravity="top"
                 android:layout_marginLeft="15dp"
                 android:layout_marginTop="11dp"
                 android:layout_weight="1"
                 android:paddingBottom="5dp"
-                android:layout_gravity="top"
                 android:text="High Quality Video"
                 android:textSize="35px"
                 android:textStyle="bold" />
@@ -183,10 +183,10 @@
                 android:id="@+id/s_file"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_gravity="bottom"
                 android:layout_marginLeft="15dp"
                 android:layout_marginTop="5dp"
                 android:layout_weight="1"
-                android:layout_gravity="bottom"
                 android:text="Files "
                 android:textSize="35px"
                 android:textStyle="bold" />
@@ -207,18 +207,18 @@
             android:id="@+id/ll_sync"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
             android:layout_below="@+id/ll_file"
+            android:layout_marginTop="5dp"
             android:visibility="gone">
 
             <TextView
                 android:id="@+id/s_sync"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_gravity="bottom"
                 android:layout_marginLeft="15dp"
                 android:layout_marginTop="5dp"
                 android:layout_weight="1"
-                android:layout_gravity="bottom"
                 android:text="Sync Tasks "
                 android:textSize="35px"
                 android:textStyle="bold" />
@@ -228,12 +228,12 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
-                android:text="Click here to sync"
                 android:layout_marginTop="1dp"
-                android:textColor="@color/blue"
                 android:layout_toRightOf="@+id/s_file"
                 android:paddingRight="10dp"
-                android:src="@drawable/right_arrow" />
+                android:src="@drawable/right_arrow"
+                android:text="Click here to sync"
+                android:textColor="@color/blue" />
 
         </LinearLayout>
 
@@ -243,16 +243,17 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/ll_sync">
+
             <TextView
                 android:id="@+id/conflict"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_gravity="center"
                 android:layout_marginLeft="15dp"
                 android:layout_marginTop="5dp"
                 android:layout_weight="1"
                 android:paddingBottom="11dp"
                 android:text="Check Task Conflicts"
-                android:layout_gravity="center"
                 android:textSize="35px"
                 android:textStyle="bold" />
 
@@ -267,26 +268,29 @@
                 android:switchMinWidth="50dp"
                 android:textOff=" "
                 android:textOn=" "
-                android:thumbTextPadding="10dp"
                 android:thumb="@drawable/switchthump"
+                android:thumbTextPadding="10dp"
                 android:track="@drawable/switchtracter" />
 
         </LinearLayout>
+
         <LinearLayout
             android:id="@+id/sync_view"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/conflictview">
+            android:layout_below="@+id/conflictview"
+            android:visibility="visible" >
+
             <TextView
                 android:id="@+id/sync_status"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_gravity="center"
                 android:layout_marginLeft="15dp"
                 android:layout_marginTop="5dp"
                 android:layout_weight="1"
                 android:paddingBottom="11dp"
                 android:text="sync status"
-                android:layout_gravity="center"
                 android:textSize="20dp"
                 android:textStyle="bold" />
 
@@ -297,9 +301,10 @@
                 android:layout_alignParentRight="true"
                 android:layout_marginTop="1dp"
                 android:layout_weight="1"
-               android:text="Sync" />
+                android:text="Sync"/>
 
         </LinearLayout>
+
         <LinearLayout
             android:id="@+id/ll_version"
             android:layout_width="wrap_content"
@@ -329,8 +334,7 @@
                 android:text="Send Log"
                 android:textAllCaps="false"
                 android:textColor="@color/white"
-                android:visibility="gone"
-                />
+                android:visibility="gone" />
         </LinearLayout>
 
 

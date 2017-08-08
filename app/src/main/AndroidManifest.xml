@@ -416,7 +416,6 @@
             android:name=".WebViewActivity"
             android:screenOrientation="portrait" />
         <activity android:name=".TravelJobDetails" />
-        <activity android:name=".OfflineStatusSendActivity"/>
         <activity android:name=".DatePicker.CustomTravelPickerActivity" />
         <activity android:name=".EulaScreen" />
     </application>

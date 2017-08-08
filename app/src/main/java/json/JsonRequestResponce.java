@@ -747,11 +747,13 @@ public class JsonRequestResponce extends Thread {
                    case searchMedia:
                         obj.setEmail(responseString);
                         obj.setFirstname("searchMedia");
+
                         inter.ResponceMethod(obj);
                         break;
                     case taskStatus:
                         obj.setEmail(responseString);
                         obj.setFirstname("taskStatus");
+                        Log.i("sendofflinemsg","response taskstatus-->"+inter);
                         inter.ResponceMethod(obj);
                         break;
                     case taskNeedAssessmentReport:

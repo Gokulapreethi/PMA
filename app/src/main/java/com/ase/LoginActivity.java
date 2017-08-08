@@ -227,8 +227,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     protected void onResume() {
         super.onResume();
         Log.i("service123", "Receieved notification about offlineSendActivity Called");
-//        startService(new Intent(getApplicationContext(), offlineSendService.class));
-
+        startService(new Intent(getApplicationContext(), offlineSendService.class));
     }
 
     public void loginMethod(View view){
@@ -267,7 +266,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                     e.printStackTrace();
                 }
             } else {
-                Toast.makeText(getApplicationContext(), "Please Check Your Internet", Toast.LENGTH_LONG).show();
+//                Toast.makeText(getApplicationContext(), "Please Check Your Internet", Toast.LENGTH_LONG).show();
             }
         }
 

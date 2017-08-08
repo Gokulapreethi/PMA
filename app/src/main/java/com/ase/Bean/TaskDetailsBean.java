@@ -142,6 +142,7 @@ public class TaskDetailsBean implements Serializable,Cloneable {
     private String taskCompletedDate;
     private String datenow;
     private String wssendstatus;
+    private String end_dateStatus;
 
 
 
@@ -1138,6 +1139,14 @@ private String sender_reply;
 
     public void setWssendstatus(String wssendstatus) {
         this.wssendstatus = wssendstatus;
+    }
+
+    public String getEnd_dateStatus() {
+        return end_dateStatus;
+    }
+
+    public void setEnd_dateStatus(String end_dateStatus) {
+        this.end_dateStatus = end_dateStatus;
     }
 }
 
