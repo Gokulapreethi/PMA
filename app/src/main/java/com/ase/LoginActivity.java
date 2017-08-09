@@ -206,15 +206,23 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                 nameValuePairs.add(new BasicNameValuePair("password", mPasswordView.getText().toString()));
                 JsonRequestSender jsonRequestParser = new JsonRequestSender();
                 Appreference.jsonRequestSender = jsonRequestParser;
+                Log.i("login123","Login webservice calling oncreate.......");
                 jsonRequestParser.login(EnumJsonWebservicename.loginMobile, nameValuePairs, LoginActivity.this);
                 jsonRequestParser.start();
                 if(progress == null)
                 progress = new ProgressDialog(context);
                 progress.setMessage("Loading");
                 progress.show();
-            } else {
-                Toast.makeText(getApplicationContext(), "Please Check Your Internet", Toast.LENGTH_LONG).show();
+            } else if(appSharedpreferences.getBoolean("login")){
+                if (Appreference.jsonRequestSender == null) {
+                    JsonRequestSender jsonRequestParser = new JsonRequestSender();
+                    Appreference.jsonRequestSender = jsonRequestParser;
+                }
+                attemptLogin();
             }
+            /*else {
+                Toast.makeText(getApplicationContext(), "Please Check Your Internet", Toast.LENGTH_LONG).show();
+            }*/
         } else {
             Log.i("autologin", "username ,password==null && logoutSuccess=true");
             mEmailView.setText("");
@@ -248,6 +256,8 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                     nameValuePairs.add(new BasicNameValuePair("password", mPasswordView.getText().toString()));
                     JsonRequestSender jsonRequestParser = new JsonRequestSender();
                     Appreference.jsonRequestSender = jsonRequestParser;
+                    Log.i("login123","Login webservice calling loginMethod.......");
+
                     jsonRequestParser.login(EnumJsonWebservicename.loginMobile, nameValuePairs, LoginActivity.this);
                     jsonRequestParser.start();
                     InputMethodManager imm = (InputMethodManager) loginActivity.getSystemService(Activity.INPUT_METHOD_SERVICE);
@@ -504,6 +514,8 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                     if (!jelement.getAsJsonObject().equals(null)) {
                         JsonObject jobject = jelement.getAsJsonObject();
                         if (jobject.has("result_code")) {
+                            Log.i("login123","Login webservice jobject.has(\"result_code\").......");
+
                             String result = jobject.get("result_text").toString();
                             Log.i("Responce", "demo" + result);
                             NegativeValue u = g.fromJson(test, NegativeValue.class);
@@ -512,6 +524,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                             Answer = result;
                             progress.dismiss();
                         } else {
+                            Log.i("login123","Login webservice not jobject.has(\"result_code\").......");
 
                             Gson g1 = new Gson();
                             String test1 = s1.toString();

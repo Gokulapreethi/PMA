@@ -266,7 +266,8 @@
             android:name=".TaskNotification"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Dialog" />
-        <activity android:name=".HandSketchActivity2" />
+        <activity android:name=".HandSketchActivity2"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".AddObserver"
             android:screenOrientation="portrait" />

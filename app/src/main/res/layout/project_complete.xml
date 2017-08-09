@@ -515,7 +515,7 @@
                     android:layout_height= "30dp"
                     android:id="@+id/complete_date_btn"
                     android:background="@drawable/ic_date_chang_request"
-                    />
+                    android:visibility="gone" />
                 <TextView
                     android:id="@+id/task_completed_date"
                     android:layout_width="0dp"

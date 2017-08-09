@@ -116,6 +116,7 @@ public class Appreference {
     public static String loginuser_status = null;
     public static boolean networkState = false;
     public static boolean sipRegistrationState = false;
+    public static boolean isAlreadyCalled = false;
     public static boolean isPN = false;
     //    public static boolean isTemplateAccept = false;
     public static boolean changehost_request_received = false;

@@ -290,7 +290,7 @@ public class CustomTravelPickerActivity extends Activity implements DateTimePick
                                 }
                                 mDateTimeDialog.dismiss();
                             }else{
-                                Toast.makeText(getApplicationContext(), "Plese Fill Start Date Time", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(getApplicationContext(), "Please Fill Start Date Time", Toast.LENGTH_SHORT).show();
                             }
                         }
                     });

@@ -777,7 +777,9 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback,
         alarmManager.setRepeating(AlarmManager.RTC_WAKEUP,
                 System.currentTimeMillis(), 1 * 60000, pendingIntent);*/
 
-        LoadBackGroundWebService();
+        if (isNetworkAvailable()) {
+            LoadBackGroundWebService();
+        }
 
         if (AppSharedpreferences.getInstance(mainContext).getString("fcmTokenId") == null) {
             try {

@@ -271,15 +271,34 @@ public class SettingsFragment extends Fragment implements WebServiceInterface {
         signout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (Appreference.loginuserdetails.getId() != 0) {
-                    List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
-                    nameValuePairs.add(new BasicNameValuePair("userId", String.valueOf(Appreference.loginuserdetails.getId())));
-                    nameValuePairs.add(new BasicNameValuePair("deviceId", AppSharedpreferences.getInstance(getContext()).getString("fcmTokenId")));
-                    Log.i("Request", "Message " + nameValuePairs);
-                    progress = new ProgressDialog(getActivity());
-                    progress.setMessage("Loading");
-                    progress.show();
-                    Appreference.jsonRequestSender.logoutMobile(EnumJsonWebservicename.logoutMobile, nameValuePairs, SettingsFragment.this);
+                try {
+                    if (isNetworkAvailable()) {
+                        if (Appreference.loginuserdetails.getId() != 0) {
+                            List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
+
+                            nameValuePairs.add(new BasicNameValuePair("userId", String.valueOf(Appreference.loginuserdetails.getId())));
+                            nameValuePairs.add(new BasicNameValuePair("deviceId", AppSharedpreferences.getInstance(getActivity()).getString("fcmTokenId")));
+                            Log.i("login123","userId. logoutMobile......"+String.valueOf(Appreference.loginuserdetails.getId()));
+                            Log.i("login123","deviceId..logoutMobile ....."+AppSharedpreferences.getInstance(getActivity()).getString("fcmTokenId"));
+
+                           /* Log.i("Request", "Message " + nameValuePairs);
+                            progress = new ProgressDialog(getActivity());
+                            progress.setMessage("Loading");
+                            progress.show();*/
+                           showprogress("Loading");
+                            Log.i("login123","Appreference.jsonRequestSender..logoutMobile ....."+Appreference.jsonRequestSender);
+                            Log.i("login123","EnumJsonWebservicename.logoutMobile..logoutMobile ....."+EnumJsonWebservicename.logoutMobile);
+                            Log.i("login123","nameValuePairs..logoutMobile ....."+nameValuePairs);
+                            Log.i("login123","SettingsFragment.this..logoutMobile ....."+SettingsFragment.this);
+
+                            Appreference.jsonRequestSender.logoutMobile(EnumJsonWebservicename.logoutMobile, nameValuePairs, SettingsFragment.this);
+                        }
+                    }else{
+                        Toast.makeText(getActivity(), "Please Check Your Internet", Toast.LENGTH_LONG).show();
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    Log.i("login123","Exception..logoutMobile ....."+e.getMessage());
                 }
             }
         });

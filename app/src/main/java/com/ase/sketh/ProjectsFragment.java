@@ -149,13 +149,20 @@ public class ProjectsFragment extends Fragment implements View.OnClickListener, 
                     showprogress_1();
                     List<NameValuePair> tagNameValuePairs = new ArrayList<NameValuePair>();
                     tagNameValuePairs.add(new BasicNameValuePair("userId", String.valueOf(Appreference.loginuserdetails.getId())));
-//                Appreference.jsonRequestSender.listAllProject(EnumJsonWebservicename.listAllProject, tagNameValuePairs, this);
-//                Appreference.jsonRequestSender.listAllMyProject(EnumJsonWebservicename.listAllMyProject, tagNameValuePairs, this);
                     Log.i("ws123", "getAllJobDetails request");
                     Appreference.jsonRequestSender.getAllJobDetails(EnumJsonWebservicename.getAllJobDetails, tagNameValuePairs, this);
-                } else
+                } else {
                     Toast.makeText(getActivity(), "Check your internet connection", Toast.LENGTH_SHORT).show();
-
+                    String query_1 = "select *,cast(oracleProjectId as unsigned) as t from projectDetails where loginuser = '" + Appreference.loginuserdetails.getEmail() + "'and projectcompletedstatus NOT IN (select projectcompletedstatus where projectcompletedstatus like '1') order by t DESC";
+                    projectList = new ArrayList<>();
+                    projectSearchList = new ArrayList<>();
+                    projectList = VideoCallDataBase.getDB(classContext).getProjectdetails(query_1);
+                    projectSearchList = VideoCallDataBase.getDB(classContext).getProjectdetails(query_1);
+                    NoResults.setVisibility(View.GONE);
+                    projectArrayAdapter = new ProjectArrayAdapter(getActivity(), projectList);
+                    listview_project.setAdapter(projectArrayAdapter);
+                    projectArrayAdapter.notifyDataSetChanged();
+                }
 
             } catch (Exception e) {
                 e.printStackTrace();

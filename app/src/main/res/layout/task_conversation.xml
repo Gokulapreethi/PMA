@@ -780,7 +780,6 @@
                     android:background="@drawable/task_editstyle"
                     android:gravity="left"
                     android:inputType="textCapSentences|textMultiLine"
-                    android:maxLength="2000"
                     android:maxLines="4"
                     android:cursorVisible="true"
                     android:paddingLeft="5dp" />
