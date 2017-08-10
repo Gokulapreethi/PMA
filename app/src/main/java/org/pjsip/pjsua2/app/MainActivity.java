@@ -792,35 +792,37 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback,
 
             Log.d("fcm", "tokenId is   = " + "in side main class else");
             JSONObject jsonObject = null;
-            try {
+            if (isNetworkAvailable()) {
+                try {
 
-                Appreference.isFCMRegister = false;
+                    Appreference.isFCMRegister = false;
 
-                AppSharedpreferences.getInstance(mainContext).saveBoolean("login", true);
-                jsonObject = new JSONObject();
+                    AppSharedpreferences.getInstance(mainContext).saveBoolean("login", true);
+                    jsonObject = new JSONObject();
 
-                JSONObject jsonObject1 = new JSONObject();
-                jsonObject1.put("id", String.valueOf(appSharedpreferences.getString("loginId")));
+                    JSONObject jsonObject1 = new JSONObject();
+                    jsonObject1.put("id", String.valueOf(appSharedpreferences.getString("loginId")));
 
-                jsonObject.put("user", jsonObject1);
-                jsonObject.put("imeiNo", Appreference.getIMEINumber(getApplicationContext()));
-                jsonObject.put("tokenId", AppSharedpreferences.getInstance(mainContext).getString("fcmTokenId"));
-                jsonObject.put("osType", "Android");
-                jsonObject.put("osVersion", Appreference.getRELEASE(getApplicationContext()));
-                jsonObject.put("deviceModel", Appreference.getMANUFACTURER(getApplicationContext()));
+                    jsonObject.put("user", jsonObject1);
+                    jsonObject.put("imeiNo", Appreference.getIMEINumber(getApplicationContext()));
+                    jsonObject.put("tokenId", AppSharedpreferences.getInstance(mainContext).getString("fcmTokenId"));
+                    jsonObject.put("osType", "Android");
+                    jsonObject.put("osVersion", Appreference.getRELEASE(getApplicationContext()));
+                    jsonObject.put("deviceModel", Appreference.getMANUFACTURER(getApplicationContext()));
 
-                Log.d("fcm", "tokenId is  imeiNo  = " + Appreference.getIMEINumber(getApplicationContext()));
-                Log.d("fcm", "tokenId is  tokenId = " + AppSharedpreferences.getInstance(mainContext).getString("fcmTokenId"));
-                Log.d("fcm", "tokenId is osType  = " + Appreference.getMODEL(getApplicationContext()));
-                Log.d("fcm", "tokenId is   = " + "osVersion  " + Appreference.getRELEASE(getApplicationContext()));
-                Log.d("fcm", "tokenId is   = " + "deviceModel   " + Appreference.getMANUFACTURER(getApplicationContext()));
-                Appreference.jsonRequestSender.userDeviceRegistration(EnumJsonWebservicename.userDeviceRegistration, jsonObject);
-            } catch (JSONException e) {
-                e.printStackTrace();
-                Appreference.printLog("MainActivity", "onCreate Exception " + e.getMessage(), "WARN", null);
-            } catch (Exception e) {
-                e.printStackTrace();
-                Appreference.printLog("MainActivity", "onCreate Exception " + e.getMessage(), "WARN", null);
+                    Log.d("fcm", "tokenId is  imeiNo  = " + Appreference.getIMEINumber(getApplicationContext()));
+                    Log.d("fcm", "tokenId is  tokenId = " + AppSharedpreferences.getInstance(mainContext).getString("fcmTokenId"));
+                    Log.d("fcm", "tokenId is osType  = " + Appreference.getMODEL(getApplicationContext()));
+                    Log.d("fcm", "tokenId is   = " + "osVersion  " + Appreference.getRELEASE(getApplicationContext()));
+                    Log.d("fcm", "tokenId is   = " + "deviceModel   " + Appreference.getMANUFACTURER(getApplicationContext()));
+                    Appreference.jsonRequestSender.userDeviceRegistration(EnumJsonWebservicename.userDeviceRegistration, jsonObject);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                    Appreference.printLog("MainActivity", "onCreate Exception " + e.getMessage(), "WARN", null);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    Appreference.printLog("MainActivity", "onCreate Exception " + e.getMessage(), "WARN", null);
+                }
             }
         }
         received_intent_value = getIntent();

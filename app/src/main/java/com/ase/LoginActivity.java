@@ -207,16 +207,38 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                 JsonRequestSender jsonRequestParser = new JsonRequestSender();
                 Appreference.jsonRequestSender = jsonRequestParser;
                 Log.i("login123","Login webservice calling oncreate.......");
+
                 jsonRequestParser.login(EnumJsonWebservicename.loginMobile, nameValuePairs, LoginActivity.this);
                 jsonRequestParser.start();
-                if(progress == null)
-                progress = new ProgressDialog(context);
-                progress.setMessage("Loading");
-                progress.show();
+                if(progress == null) {
+                    progress = new ProgressDialog(context);
+                    progress.setMessage("Loading");
+                    progress.show();
+                }
+                final ProgressDialog dialog1 = ProgressDialog.show(LoginActivity.this, "", "Signing in...",
+                        true);
+                dialog1.show();
+                Handler handler = new Handler();
+                handler.postDelayed(new Runnable() {
+                    public void run() {
+                        dialog1.dismiss();
+                    }
+                }, 3000);
+
             } else if(appSharedpreferences.getBoolean("login")){
+                final ProgressDialog dialog1 = ProgressDialog.show(LoginActivity.this, "", "Signing in...",
+                        true);
+                dialog1.show();
+                Handler handler = new Handler();
+                handler.postDelayed(new Runnable() {
+                    public void run() {
+                        dialog1.dismiss();
+                    }
+                }, 2000);
                 if (Appreference.jsonRequestSender == null) {
                     JsonRequestSender jsonRequestParser = new JsonRequestSender();
                     Appreference.jsonRequestSender = jsonRequestParser;
+                    jsonRequestParser.start();
                 }
                 attemptLogin();
             }
@@ -257,7 +279,11 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                     JsonRequestSender jsonRequestParser = new JsonRequestSender();
                     Appreference.jsonRequestSender = jsonRequestParser;
                     Log.i("login123","Login webservice calling loginMethod.......");
-
+                    if(progress == null) {
+                        progress = new ProgressDialog(context);
+                        progress.setMessage("Loading");
+                        progress.show();
+                    }
                     jsonRequestParser.login(EnumJsonWebservicename.loginMobile, nameValuePairs, LoginActivity.this);
                     jsonRequestParser.start();
                     InputMethodManager imm = (InputMethodManager) loginActivity.getSystemService(Activity.INPUT_METHOD_SERVICE);
@@ -268,10 +294,11 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                         view1 = new View(loginActivity);
                     }
                     imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
-                    if(progress == null)
+                    if(progress == null) {
                         progress = new ProgressDialog(context);
-                    progress.setMessage("Loading");
-                    progress.show();
+                        progress.setMessage("Loading");
+                        progress.show();
+                    }
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

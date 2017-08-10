@@ -4874,33 +4874,40 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                 }
 
                 if (item.getTitle().toString().equalsIgnoreCase("End of Day")) {
-                    int travelentry = VideoCallDataBase.getDB(context).CheckTravelEntryDetails("select * from projectStatus where projectId ='" + projectId + "' and taskId = '" + webtaskId + "' and travelStartTime IS NOT NULL and travelEndTime IS NULL");
+                    final Calendar calendar = Calendar.getInstance();
+                    final SimpleDateFormat mdformat = new SimpleDateFormat("yyyy-MM-dd");
+                    String taskcomplete_date = mdformat.format(calendar.getTime());
+//                    taskcomplete_date = taskcomplete_date.toString() + " " + "00:00:00";
+                    Log.i("ws123", "taskcomplete_ddate $$--> " + taskcomplete_date);
+                    int complete_travel = VideoCallDataBase.getDB(context).CheckTravelEntryDetails("select * from projectStatus where projectId ='" + projectId + "' and status = '10' and taskcompleteddate like '" + taskcomplete_date + "%" + "'");
+                    Log.i("ws123", "complete_travel $$--> " + complete_travel);
+                    if (complete_travel == 0) {
+                        int travelentry = VideoCallDataBase.getDB(context).CheckTravelEntryDetails("select * from projectStatus where projectId ='" + projectId + "' and taskId = '" + webtaskId + "' and travelStartTime IS NOT NULL and travelEndTime IS NULL");
+                        if (travelentry == 0) {
+                            TaskDetailsBean detailsBean = new TaskDetailsBean();
+                            ArrayList<TaskDetailsBean> taskDetailsBean2 = new ArrayList<>();
+                            final Dialog dialog = new Dialog(context);
+                            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                            dialog.setContentView(R.layout.project_complete);
+                            WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
+                            lp.copyFrom(dialog.getWindow().getAttributes());
+                            lp.width = WindowManager.LayoutParams.MATCH_PARENT;
+                            lp.height = WindowManager.LayoutParams.MATCH_PARENT;
+                            lp.horizontalMargin = 15;
+                            Window window = dialog.getWindow();
+                            window.setBackgroundDrawableResource((R.color.white));
+                            window.setAttributes(lp);
+                            window.setGravity(Gravity.BOTTOM);
+                            dialog.show();
 
-                    if (travelentry == 0) {
-                        TaskDetailsBean detailsBean = new TaskDetailsBean();
-                        ArrayList<TaskDetailsBean> taskDetailsBean2 = new ArrayList<>();
-                        final Dialog dialog = new Dialog(context);
-                        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-                        dialog.setContentView(R.layout.project_complete);
-                        WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
-                        lp.copyFrom(dialog.getWindow().getAttributes());
-                        lp.width = WindowManager.LayoutParams.MATCH_PARENT;
-                        lp.height = WindowManager.LayoutParams.MATCH_PARENT;
-                        lp.horizontalMargin = 15;
-                        Window window = dialog.getWindow();
-                        window.setBackgroundDrawableResource((R.color.white));
-                        window.setAttributes(lp);
-                        window.setGravity(Gravity.BOTTOM);
-                        dialog.show();
-
-                        TextView project_id = (TextView) dialog.findViewById(R.id.project_id);
-                        TextView project_name = (TextView) dialog.findViewById(R.id.project_name);
-                        TextView task_id = (TextView) dialog.findViewById(R.id.task_id);
-                        TextView machine_make = (TextView) dialog.findViewById(R.id.machine_make);
-                        TextView est_travel = (TextView) dialog.findViewById(R.id.estimatedTravelhrs);
-                        TextView est_activity = (TextView) dialog.findViewById(R.id.estimatedActivityhrs);
-                        TextView service_date = (TextView) dialog.findViewById(R.id.requested_date);
-                        TextView address = (TextView) dialog.findViewById(R.id.address);
+                            TextView project_id = (TextView) dialog.findViewById(R.id.project_id);
+                            TextView project_name = (TextView) dialog.findViewById(R.id.project_name);
+                            TextView task_id = (TextView) dialog.findViewById(R.id.task_id);
+                            TextView machine_make = (TextView) dialog.findViewById(R.id.machine_make);
+                            TextView est_travel = (TextView) dialog.findViewById(R.id.estimatedTravelhrs);
+                            TextView est_activity = (TextView) dialog.findViewById(R.id.estimatedActivityhrs);
+                            TextView service_date = (TextView) dialog.findViewById(R.id.requested_date);
+                            TextView address = (TextView) dialog.findViewById(R.id.address);
 
                         final EditText observation = (EditText) dialog.findViewById(R.id.observation);
                         Button observation_type = (Button) dialog.findViewById(R.id.observation_type);
@@ -5147,24 +5154,24 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                         Button tech_sign_receiver = (Button) dialog.findViewById(R.id.tech_sign_btn);
 
 
-                        activitystart_sign.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                Intent i = new Intent(getApplicationContext(), DisplayList.class);
-                                i.putExtra("projectId", projectId);
-                                i.putExtra("webtaskId", webtaskId);
-                                i.putExtra("completedate_display", completedate_display);
-                                i.putExtra("isFromcustom1", false);
-                                i.putExtra("date_type", "travel_start");
-                                startActivity(i);
-                            }
-                        });
-                        final Calendar calendar = Calendar.getInstance();
-                        final SimpleDateFormat mdformat = new SimpleDateFormat("yyyy-MM-dd");
-                        task_completed_date.setText(mdformat.format(calendar.getTime()));
-                        taskCompletedDate = task_completed_date.getText().toString() + " " + "00:00:00";
-                        Log.i("oracle123", "getCompleted default====>" + taskCompletedDate);
-                        completedate_display = mdformat.format(calendar.getTime());
+                            activitystart_sign.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    Intent i = new Intent(getApplicationContext(), DisplayList.class);
+                                    i.putExtra("projectId", projectId);
+                                    i.putExtra("webtaskId", webtaskId);
+                                    i.putExtra("completedate_display", completedate_display);
+                                    i.putExtra("isFromcustom1", false);
+                                    i.putExtra("date_type", "travel_start");
+                                    startActivity(i);
+                                }
+                            });
+//                            final Calendar calendar = Calendar.getInstance();
+//                            final SimpleDateFormat mdformat = new SimpleDateFormat("yyyy-MM-dd");
+                            task_completed_date.setText(mdformat.format(calendar.getTime()));
+                            taskCompletedDate = task_completed_date.getText().toString() + " " + "00:00:00";
+                            Log.i("oracle123", "getCompleted default====>" + taskCompletedDate);
+                            completedate_display = mdformat.format(calendar.getTime());
 
                         final String currentDateTimeString = DateFormat.getDateTimeInstance().format(new Date());
                         final SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
@@ -5570,17 +5577,20 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                                             } else
                                                 Toast.makeText(NewTaskConversation.this, "Enter end date and time and then proceed to complete the task.", Toast.LENGTH_SHORT).show();
 
+                                            } else
+                                                Toast.makeText(NewTaskConversation.this, "Please type Remarks", Toast.LENGTH_SHORT).show();
                                         } else
-                                            Toast.makeText(NewTaskConversation.this, "Please type Remarks", Toast.LENGTH_SHORT).show();
-                                    } else
-                                        Toast.makeText(NewTaskConversation.this, "No StartEndTime Found", Toast.LENGTH_SHORT).show();
-                                } else {
-                                    Toast.makeText(NewTaskConversation.this, "Please fill the Mandatory field", Toast.LENGTH_SHORT).show();
+                                            Toast.makeText(NewTaskConversation.this, "No StartEndTime Found", Toast.LENGTH_SHORT).show();
+                                    } else {
+                                        Toast.makeText(NewTaskConversation.this, "Please fill the Mandatory field", Toast.LENGTH_SHORT).show();
+                                    }
                                 }
-                            }
-                        });
+                            });
+                        } else {
+                            Toast.makeText(NewTaskConversation.this, "Enter end date and time and then proceed to complete the task.", Toast.LENGTH_SHORT).show();
+                        }
                     } else {
-                        Toast.makeText(NewTaskConversation.this, "Enter end date and time and then proceed to complete the task.", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(NewTaskConversation.this, "Already EOD sent", Toast.LENGTH_SHORT).show();
                     }
 
                 }
@@ -5833,6 +5843,9 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                     jsonObject.put("travelEndTime", EndDateUTC);
                     taskDetailsBean.setTravelStartTime(ActivityStartdate);
                     taskDetailsBean.setTravelEndTime(ActivityEnddate);
+                    if(!isNetworkAvailable()){
+                        taskDetailsBean.setEnd_dateStatus("7");
+                    }
                     travel_date_details = new ArrayList<>();
                     if (ActivityStartdate != null && !ActivityStartdate.equalsIgnoreCase("") && !status.equalsIgnoreCase("9")) {
                         travel_date_details.add("StartTime : " + ActivityStartdate);
@@ -6125,24 +6138,45 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                         Log.i("output123", "projectUpdate travel====>" + bean.getActivityStartTime());
                         Log.i("output123", "projectUpdate travel====>" + bean.getActivityEndTime());
                         if (!isNetworkAvailable()) {
-                            SimpleDateFormat simpleDateFormat_1 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-                            String curr_date = simpleDateFormat_1.format(new Date());
-                            Log.i("travel123", "setWssendstatus set successfully===>" + isNetworkAvailable());
-                            String date_new = curr_date;
-                            String signal_Id = Utility.getSessionID();
-                            String task_description = "Gathering Details...";
-                            String queryUpdate_1 = "update projectStatus set travelEndTime='" + ActivityEnddate + "' , wssendstatus='000' where projectId='" + projectId + "' and userId='" + Appreference.loginuserdetails.getId() + "' and taskId= '" + webtaskId + "' and travelStartTime IS NOT NULL and travelEndTime IS NULL";
-                            String queryUpdate_2 = "update projectStatus set dateStatus='9' where projectId='" + projectId + "' and userId='" + Appreference.loginuserdetails.getId() + "' and taskId= '" + webtaskId + "' and travelStartTime IS NOT NULL and travelEndTime IS NULL";
-                            String queryUpdate_3 = "update projectStatus set datenow='" + date_new + "' where projectId='" + projectId + "' and userId='" + Appreference.loginuserdetails.getId() + "' and taskId= '" + webtaskId + "' and travelStartTime IS NOT NULL and travelEndTime IS NULL";
-                            String queryUpdate_4 = "update projectStatus set signalId='" + signal_Id + "' where projectId='" + projectId + "' and userId='" + Appreference.loginuserdetails.getId() + "' and taskId= '" + webtaskId + "' and travelStartTime IS NOT NULL and travelEndTime IS NULL";
-                            String queryUpdate_5 = "update projectStatus set taskDescription='" + task_description + "' where projectId='" + projectId + "' and userId='" + Appreference.loginuserdetails.getId() + "' and taskId= '" + webtaskId + "' and travelStartTime IS NOT NULL and travelEndTime IS NULL";
-                            Log.i("output123", "projectUpdate queryUpdate_1 " + queryUpdate_1);
-                            Log.i("output123", "projectUpdate queryUpdate_2 " + queryUpdate_2);
-                            VideoCallDataBase.getDB(context).updateaccept(queryUpdate_2);
-                            VideoCallDataBase.getDB(context).updateaccept(queryUpdate_3);
-                            VideoCallDataBase.getDB(context).updateaccept(queryUpdate_4);
-                            VideoCallDataBase.getDB(context).updateaccept(queryUpdate_5);
-                            VideoCallDataBase.getDB(context).updateaccept(queryUpdate_1);
+                            if (bean.getWssendstatus()!=null && bean.getWssendstatus().equalsIgnoreCase("000")) {
+                                SimpleDateFormat simpleDateFormat_1 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                                String curr_date = simpleDateFormat_1.format(new Date());
+                                Log.i("travel123", "setWssendstatus set successfully===>" + isNetworkAvailable());
+                                String date_new = curr_date;
+                                String signal_Id = Utility.getSessionID();
+                                String task_description = "Gathering Details...";
+                                String queryUpdate_1 = "update projectStatus set travelEndTime='" + ActivityEnddate + "' , wssendstatus='000' where projectId='" + projectId + "' and userId='" + Appreference.loginuserdetails.getId() + "' and taskId= '" + webtaskId + "' and travelStartTime IS NOT NULL and travelEndTime IS NULL";
+                                String queryUpdate_2 = "update projectStatus set dateStatus='7' where projectId='" + projectId + "' and userId='" + Appreference.loginuserdetails.getId() + "' and taskId= '" + webtaskId + "' and travelStartTime IS NOT NULL and travelEndTime IS NULL";
+                                String queryUpdate_3 = "update projectStatus set datenow='" + date_new + "' where projectId='" + projectId + "' and userId='" + Appreference.loginuserdetails.getId() + "' and taskId= '" + webtaskId + "' and travelStartTime IS NOT NULL and travelEndTime IS NULL";
+                                String queryUpdate_4 = "update projectStatus set signalId='" + signal_Id + "' where projectId='" + projectId + "' and userId='" + Appreference.loginuserdetails.getId() + "' and taskId= '" + webtaskId + "' and travelStartTime IS NOT NULL and travelEndTime IS NULL";
+                                String queryUpdate_5 = "update projectStatus set taskDescription='" + task_description + "' where projectId='" + projectId + "' and userId='" + Appreference.loginuserdetails.getId() + "' and taskId= '" + webtaskId + "' and travelStartTime IS NOT NULL and travelEndTime IS NULL";
+                                Log.i("output123", "projectUpdate queryUpdate_1 " + queryUpdate_1);
+                                Log.i("output123", "projectUpdate queryUpdate_2 " + queryUpdate_2);
+                                VideoCallDataBase.getDB(context).updateaccept(queryUpdate_2);
+                                VideoCallDataBase.getDB(context).updateaccept(queryUpdate_3);
+                                VideoCallDataBase.getDB(context).updateaccept(queryUpdate_4);
+                                VideoCallDataBase.getDB(context).updateaccept(queryUpdate_5);
+                                VideoCallDataBase.getDB(context).updateaccept(queryUpdate_1);
+                            } else {
+                                SimpleDateFormat simpleDateFormat_1 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                                String curr_date = simpleDateFormat_1.format(new Date());
+                                Log.i("travel123", "setWssendstatus set successfully===>" + isNetworkAvailable());
+                                String date_new = curr_date;
+                                String signal_Id = Utility.getSessionID();
+                                String task_description = "Gathering Details...";
+                                String queryUpdate_1 = "update projectStatus set travelEndTime='" + ActivityEnddate + "' , wssendstatus='000' where projectId='" + projectId + "' and userId='" + Appreference.loginuserdetails.getId() + "' and taskId= '" + webtaskId + "' and travelStartTime IS NOT NULL and travelEndTime IS NULL";
+                                String queryUpdate_2 = "update projectStatus set dateStatus='9' where projectId='" + projectId + "' and userId='" + Appreference.loginuserdetails.getId() + "' and taskId= '" + webtaskId + "' and travelStartTime IS NOT NULL and travelEndTime IS NULL";
+                                String queryUpdate_3 = "update projectStatus set datenow='" + date_new + "' where projectId='" + projectId + "' and userId='" + Appreference.loginuserdetails.getId() + "' and taskId= '" + webtaskId + "' and travelStartTime IS NOT NULL and travelEndTime IS NULL";
+                                String queryUpdate_4 = "update projectStatus set signalId='" + signal_Id + "' where projectId='" + projectId + "' and userId='" + Appreference.loginuserdetails.getId() + "' and taskId= '" + webtaskId + "' and travelStartTime IS NOT NULL and travelEndTime IS NULL";
+                                String queryUpdate_5 = "update projectStatus set taskDescription='" + task_description + "' where projectId='" + projectId + "' and userId='" + Appreference.loginuserdetails.getId() + "' and taskId= '" + webtaskId + "' and travelStartTime IS NOT NULL and travelEndTime IS NULL";
+                                Log.i("output123", "projectUpdate queryUpdate_1 " + queryUpdate_1);
+                                Log.i("output123", "projectUpdate queryUpdate_2 " + queryUpdate_2);
+                                VideoCallDataBase.getDB(context).updateaccept(queryUpdate_2);
+                                VideoCallDataBase.getDB(context).updateaccept(queryUpdate_3);
+                                VideoCallDataBase.getDB(context).updateaccept(queryUpdate_4);
+                                VideoCallDataBase.getDB(context).updateaccept(queryUpdate_5);
+                                VideoCallDataBase.getDB(context).updateaccept(queryUpdate_1);
+                            }
 //                            VideoCallDataBase.getDB(context).update_enddate_status(ActivityEnddate,projectId,webtaskId,String.valueOf(Appreference.loginuserdetails.getId()));
                         } else {
                             String queryUpdate = "update projectStatus set travelEndTime='" + ActivityEnddate + "' where projectId='" + projectId + "' and userId='" + Appreference.loginuserdetails.getId() + "' and taskId= '" + webtaskId + "' and travelStartTime IS NOT NULL and travelEndTime IS NULL";

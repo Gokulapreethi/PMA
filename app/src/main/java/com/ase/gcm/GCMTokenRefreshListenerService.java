@@ -50,21 +50,15 @@ public class GCMTokenRefreshListenerService extends FirebaseInstanceIdService {
         {
             if (Appreference.isFCMRegister && AppSharedpreferences.getInstance(this).getBoolean("login")) {
                 try {
-
                     JSONObject jsonObject = new JSONObject();
-
-
                     JSONObject jsonObject1 = new JSONObject();
                     jsonObject1.put("id", String.valueOf(Appreference.loginuserdetails.getId()));
-
-
                     jsonObject.put("user", jsonObject1);
                     jsonObject.put("imeiNo", Appreference.getIMEINumber(getApplicationContext()));
                     jsonObject.put("tokenId", token);
                     jsonObject.put("osType", Appreference.getMODEL(getApplicationContext()));
                     jsonObject.put("osVersion", Appreference.getRELEASE(getApplicationContext()));
                     jsonObject.put("deviceModel", Appreference.getMANUFACTURER(getApplicationContext()));
-
                     Appreference.jsonRequestSender.userDeviceRegistration(EnumJsonWebservicename.userDeviceRegistration, jsonObject);
 
                 } catch (JSONException e) {

@@ -8262,6 +8262,7 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
             cv.put("datenow", taskDetailsBean.getDatenow());
             cv.put("wssendstatus", taskDetailsBean.getWssendstatus());
             cv.put("signalId", taskDetailsBean.getSignalid());
+            cv.put("dateStatus", taskDetailsBean.getEnd_dateStatus());
 
 
 //            cv.put("activity", taskDetailsBean.getActivity());
@@ -8685,6 +8686,7 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
                 while (!cur.isAfterLast()) {
                     taskDetailsBean.setTravelStartTime(cur.getString(cur.getColumnIndex("travelStartTime")));
                     taskDetailsBean.setTravelEndTime(cur.getString(cur.getColumnIndex("travelEndTime")));
+                    taskDetailsBean.setWssendstatus(cur.getString(cur.getColumnIndex("wssendstatus")));
                     cur.moveToNext();
                 }
                 cur.close();
