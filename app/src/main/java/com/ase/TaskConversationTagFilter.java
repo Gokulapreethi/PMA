@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 /**
@@ -11,6 +12,7 @@ import android.widget.TextView;
  */
 public class TaskConversationTagFilter extends Activity {
     TextView Audio,Image,Video,Reminder,Text,remove,Date,Completion,TaskDescription,Private,cancel;
+    LinearLayout cancel_layout;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -27,7 +29,7 @@ public class TaskConversationTagFilter extends Activity {
         Private=(TextView)findViewById(R.id.filter_private);
         remove=(TextView)findViewById(R.id.removeAllTag);
         cancel=(TextView)findViewById(R.id.ca);
-
+        cancel_layout = (LinearLayout) findViewById(R.id.l2);
         Audio.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -128,7 +130,7 @@ public class TaskConversationTagFilter extends Activity {
                 finish();
             }
         });
-        cancel.setOnClickListener(new View.OnClickListener() {
+        cancel_layout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 finish();

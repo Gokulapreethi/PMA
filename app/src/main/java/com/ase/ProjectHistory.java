@@ -1508,7 +1508,7 @@ public class ProjectHistory extends Activity implements WebServiceInterface, Swi
                         }else {*/
 //                            task_status.setText("NA");
                             int current_status;
-                            String status_info = "select status from projectStatus where projectId='" + projectDetailsBean.getId() + "' and userId='" + Appreference.loginuserdetails.getId() + "' and taskId= '" + projectDetailsBean.getTaskId() + "' and status!='7' and status!= '9' order by id DESC";
+                            String status_info = "select status from projectStatus where projectId='" + projectDetailsBean.getId() + "' and taskId= '" + projectDetailsBean.getTaskId() + "' and status!='7' and status!= '9' order by id DESC";
                             ArrayList<String> status_all = VideoCallDataBase.getDB(context).getAllCurrentStatus(status_info);
                             if (status_all.size() > 0) {
                                 current_status = Integer.parseInt(status_all.get(0));
@@ -1526,7 +1526,7 @@ public class ProjectHistory extends Activity implements WebServiceInterface, Swi
                                     task_status.setText("Restarted");
                                 else if (current_status == 5)
                                     task_status.setText("Completed");
-                                else if (current_status == 6)
+                                else if (current_status == 8)
                                     task_status.setText("Unassigned");
                             }else if(projectDetailsBean.getTaskId()!=null && Appreference.old_status.containsKey(projectDetailsBean.getTaskId()) && !status.equalsIgnoreCase("draft")){
                                 task_status.setText(Appreference.old_status.get(projectDetailsBean.getTaskId()));

@@ -4032,27 +4032,15 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback,
                                 Log.i("Mainactivity", "new task conversation 111");
                                 if (taskDetailsBean.getProjectId() != null && !taskDetailsBean.getProjectId().equalsIgnoreCase("null") && !taskDetailsBean.getProjectId().equalsIgnoreCase("") && !taskDetailsBean.getProjectId().equalsIgnoreCase("(null)")) {
                                     Log.i("Mainactivity", "projectid 3");
-                                    /*8888888888888888*/
-//                                    VideoCallDataBase.getDB(context).update_Project_history(taskDetailsBean);
-//                                    if (VideoCallDataBase.getDB(context).DuplicateProjectTaskIdChecker(taskDetailsBean.getTaskId())) {
                                     VideoCallDataBase.getDB(context).insert_new_Project_history(taskDetailsBean);
-                                    Log.i("status", "new task $$$  "+taskDetailsBean.getProjectStatus());
-                                    if (taskDetailsBean.getTaskStatus()!=null && !taskDetailsBean.getTaskStatus().equalsIgnoreCase("")) {
-                                        if (taskDetailsBean.getTaskStatus()!=null && taskDetailsBean.getTaskStatus().equalsIgnoreCase("Started")) {
-                                            taskDetailsBean.setProjectStatus("0");
-                                        } else {
-                                            taskDetailsBean.setProjectStatus(taskDetailsBean.getTaskStatus());
-                                        }
-                                    }
-                                    if (taskDetailsBean.getTaskStatus() != null && taskDetailsBean.getTaskStatus().length() > 0) {
-//                                        VideoCallDataBase.getDB(context).update_Project_history(taskDetailsBean);
-//                                        VideoCallDataBase.getDB(context).insertORupdate_Task_history(taskDetailsBean);
+                                    Log.i("status", "new task $$$ ==>  " + taskDetailsBean.getProjectStatus());
+                                    Log.i("status", "new task $$$$  "+taskDetailsBean.getTaskStatus());
+
+                                    if (taskDetailsBean.getProjectStatus() != null) {
                                         VideoCallDataBase.getDB(context).insertORupdateStatus(taskDetailsBean);
                                     } else if (taskDetailsBean.getMimeType().equalsIgnoreCase("assigntask")) {
-//                                        VideoCallDataBase.getDB(context).insertORupdate_Task_history(taskDetailsBean);
                                         VideoCallDataBase.getDB(context).insertORupdateStatus(taskDetailsBean);
                                     }
-//                                    }
                                 } else {
                                     Log.i("Mainactivity", "projectid 4");
                                     taskDetailsBean.setProjectId(null);
@@ -6960,6 +6948,10 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback,
                     NewTaskConversation newTaskConversation = (NewTaskConversation) Appreference.context_table.get("taskcoversation");
                     newTaskConversation.showNetworkStateUI();
                 }
+                if (Appreference.context_table.containsKey("traveljobdetails")) {
+                    TravelJobDetails travelJobDetails = (TravelJobDetails) Appreference.context_table.get("traveljobdetails");
+                    travelJobDetails.showNetworkStateUI();
+                }
                 if (Appreference.context_table.containsKey("chatactivity")) {
                     ChatActivity chatActivity = (ChatActivity) Appreference.context_table.get("chatactivity");
                     chatActivity.showNetworkStateUI();
@@ -6995,6 +6987,10 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback,
                 if (Appreference.context_table.containsKey("taskcoversation")) {
                     NewTaskConversation newTaskConversation = (NewTaskConversation) Appreference.context_table.get("taskcoversation");
                     newTaskConversation.showNetWorkConnectedState();
+                }
+                if (Appreference.context_table.containsKey("traveljobdetails")) {
+                    TravelJobDetails travelJobDetails = (TravelJobDetails) Appreference.context_table.get("traveljobdetails");
+                    travelJobDetails.showNetWorkConnectedState();
                 }
                 if (Appreference.context_table.containsKey("chatactivity")) {
                     ChatActivity chatActivity = (ChatActivity) Appreference.context_table.get("chatactivity");

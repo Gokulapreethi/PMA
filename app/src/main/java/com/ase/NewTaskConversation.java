@@ -3953,7 +3953,7 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                     if (projectHistory.projectDetailsBeans != null && projectHistory.projectDetailsBeans.size() > 0 && projectHistory.buddyArrayAdapter != null) {
 
                         ProjectDetailsBean projectDetailsBean = projectHistory.projectDetailsBeans.get(clickPosition);
-                        projectDetailsBean.setTaskStatus("assigned");
+                        projectDetailsBean.setTaskStatus("Assigned");
                         projectDetailsBean.setTaskReceiver(Appreference.loginuserdetails.getUsername());
 
                         Log.i("ProjectHistory", "inside refresh  status NewTaskConveratio ========>" + projectCurrentStatus);
@@ -4013,7 +4013,7 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                     taskDetailsBean.setSignalid(Utility.getSessionID());
                     taskDetailsBean.setDateTime(dateforrow);
                     taskDetailsBean.setSendStatus("0");
-                    taskDetailsBean.setTaskStatus("assigned");
+                    taskDetailsBean.setTaskStatus("Assigned");
 //                taskDetailsBean.setOwnerOfTask(detailsBean.getOwnerOfTask());
 
                     taskDetailsBean.setTaskType("individual");
@@ -4038,7 +4038,7 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                     taskReceiver = Appreference.loginuserdetails.getUsername();
                     taskType = "individual";
                     category = "Task";
-                    taskStatus = "inprogress";
+                    taskStatus = "Assigned";
                     toUserId = Integer.valueOf(Appreference.loginuserdetails.getId());
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -5640,11 +5640,6 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
             Log.d("test1", "appSharedpreferences.getString " + webtaskId);
             List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
             nameValuePairs.add(new BasicNameValuePair("taskId", webtaskId));
-            if (Appreference.jsonRequestSender == null) {
-                JsonRequestSender jsonRequestParser = new JsonRequestSender();
-                Appreference.jsonRequestSender = jsonRequestParser;
-                jsonRequestParser.start();
-            }
             Appreference.jsonRequestSender.listGroupTaskUsers(EnumJsonWebservicename.listGroupTaskUsers, nameValuePairs, this);
         } catch (Exception e) {
             e.printStackTrace();
@@ -11738,7 +11733,7 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                                                  }
                                                  if (project && template) {
                                                      VideoCallDataBase.getDB(context).updateaccept("update taskDetailsInfo set mimeType='dates' where taskid='" + detailsBean1.getTaskId() + "' and mimeType='date' and duration!='' and durationunit!=''");
-                                                     VideoCallDataBase.getDB(context).updateaccept("update taskDetailsInfo set taskStatus='inprogress' where taskid='" + detailsBean1.getTaskId() + "'");
+                                                     VideoCallDataBase.getDB(context).updateaccept("update taskDetailsInfo set taskStatus='Assigned' where taskid='" + detailsBean1.getTaskId() + "'");
                                                      Log.i("Rassign", "project template updated" + detailsBean1.getTaskId());
                                                  }
 
@@ -14711,9 +14706,9 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
 
                         chatBean.setSubType("deassign");
                         chatBean.setTaskRequestType("nornal");
-                        chatBean.setTaskStatus("unassigned");
+                        chatBean.setTaskStatus("Unassigned");
                         chatBean.setCatagory("Template");
-                        taskStatus = "unassigned";
+                        taskStatus = "Unassigned";
                         chatBean.setCompletedPercentage("0");
                         String project_deassignMems = "";
                         if (projectGroup_Mems != null) {
@@ -17860,8 +17855,8 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
             Log.i("NoInternet", "taskStatus===> ## " + taskStatus);
         }
         if (isDeassign) {
-            chatBean.setTaskStatus("unassigned");
-            taskStatus = "unassigned";
+            chatBean.setTaskStatus("Unassigned");
+            taskStatus = "Unassigned";
             chatBean.setTaskReceiver("");
             chatBean.setToUserName("");
             chatBean.setToUserId("");
@@ -18058,14 +18053,15 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
             if (Self_assign && oracleProjectOwner != null && !oracleProjectOwner.equalsIgnoreCase("")) {
                 chatBean.setOwnerOfTask(oracleProjectOwner);
                 chatBean.setTaskStatus("Assigned");
+                taskStatus="Assigned";
                 ownerOfTask = oracleProjectOwner;
             } else {
                 chatBean.setOwnerOfTask(ownerOfTask);
                 chatBean.setTaskStatus(taskStatus);
             }
             if (isDeassign) {
-                chatBean.setTaskStatus("unassigned");
-                taskStatus = "unassigned";
+                chatBean.setTaskStatus("Unassigned");
+                taskStatus = "Unassigned";
                 chatBean.setTaskReceiver("");
                 chatBean.setToUserName("");
                 chatBean.setToUserId("");
@@ -18259,11 +18255,11 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                         jsonObject.put("requestType", "percentageCompleted");
                         jsonObject.put("taskStatus", "Completed");
                         jsonObject.put("percentageCompleted", "100");
-                    } else if (isDeassign) {
+                    } /*else if (isDeassign) {
                         jsonObject.put("requestType", "percentageCompleted");
                         Log.i("deassign123", "isDeassign $ ==> ");
                         jsonObject.put("percentageCompleted", "0");
-                    } else if (isDateorUpdateorNormal == 1) {
+                    }*/ else if (isDateorUpdateorNormal == 1) {
                         jsonObject.put("requestType", "percentageCompleted");
                     } else if (isDateorUpdateorNormal == 2) {
                         jsonObject.put("requestType", "taskDateChangeRequest");
@@ -20753,7 +20749,8 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
 //        taskDetailsBean.setCatagory("Task");
         Log.i("taskconversation", "db updated projectId " + taskDetailsBean.getProjectId());
         if (taskDetailsBean.getProjectId() != null) {
-            taskDetailsBean.setTaskStatus("inprogress");
+            taskDetailsBean.setTaskStatus("Assigned");
+            taskStatus="Assigned";
             if (taskDetailsBean.getTaskMemberList() != null && taskDetailsBean.getTaskMemberList().contains(",")) {
                 taskDetailsBean.setGroupTaskMembers(taskDetailsBean.getTaskMemberList());
             } else {
@@ -20771,7 +20768,7 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
         if (!listOfObservers.contains(newReceiver)) {
             listOfObservers.add(newReceiver);
         }
-        String query1 = "select * from taskHistoryInfo where loginuser ='" + Appreference.loginuserdetails.getEmail() + "' and taskId='" + taskDetailsBean.getTaskId() + "' order by id";
+        /*String query1 = "select * from taskHistoryInfo where loginuser ='" + Appreference.loginuserdetails.getEmail() + "' and taskId='" + taskDetailsBean.getTaskId() + "' order by id";
         Log.d("TaskObserver", "get Observer query  " + query1);
         ArrayList<TaskDetailsBean> arrayList;
         arrayList = VideoCallDataBase.getDB(context).getTaskHistoryInfo(query1);
@@ -20811,7 +20808,7 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                 VideoCallDataBase.getDB(context).updateaccept("update taskHistoryInfo set taskObservers='" + name + "' where taskId='" + taskDetailsBean.getTaskId() + "'");
                 Log.i("mainactivity", "taskObservers updated " + name);
             }
-        }
+        }*/
         Log.i("Rassign", "values " + taskDetailsBean.getToUserId() + " " + taskDetailsBean.getToUserName());
         if (taskDetailsBean.getToUserId() != null && !taskDetailsBean.getToUserId().equalsIgnoreCase("")) {
             toUserId = Integer.parseInt(taskDetailsBean.getToUserId());
@@ -20824,7 +20821,7 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
         }
         if (project && template) {
             VideoCallDataBase.getDB(context).updateaccept("update taskDetailsInfo set mimeType='dates' where taskid='" + taskDetailsBean.getTaskId() + "' and mimeType='date' and duration!='' and durationunit!=''");
-            VideoCallDataBase.getDB(context).updateaccept("update taskDetailsInfo set taskStatus='inprogress' where taskid='" + taskDetailsBean.getTaskId() + "'");
+            VideoCallDataBase.getDB(context).updateaccept("update taskDetailsInfo set taskStatus='Assigned' where taskid='" + taskDetailsBean.getTaskId() + "'");
             Log.i("Rassign", "project template updated" + taskDetailsBean.getTaskId());
         }
 

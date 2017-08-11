@@ -494,7 +494,7 @@ public class xmlparser {
                     taskDetailsBean.setProjectStatus("4");
                 } else if (project_status != null && (project_status.equalsIgnoreCase("Completed") || project_status.equalsIgnoreCase("Complete"))) {
                     taskDetailsBean.setProjectStatus("5");
-                } else if (project_status != null && project_status.equalsIgnoreCase("DeAssign")) {
+                } else if (project_status != null && project_status.equalsIgnoreCase("Unassigned")) {
                     taskDetailsBean.setProjectStatus("8");
                 } else {
                     taskDetailsBean.setTaskStatus(nodeMap.getNamedItem("taskStatus").getNodeValue());

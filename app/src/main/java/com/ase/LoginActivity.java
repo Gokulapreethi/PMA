@@ -234,7 +234,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                     public void run() {
                         dialog1.dismiss();
                     }
-                }, 2000);
+                }, 3000);
                 if (Appreference.jsonRequestSender == null) {
                     JsonRequestSender jsonRequestParser = new JsonRequestSender();
                     Appreference.jsonRequestSender = jsonRequestParser;

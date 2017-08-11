@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 /**
@@ -11,7 +12,7 @@ import android.widget.TextView;
  */
 public class ListOfFiles extends Activity {
     TextView everyminute, daily, hourly, weekly, monthly, yearly, none, cancel;
-
+    LinearLayout cancel_layout;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -36,7 +37,7 @@ public class ListOfFiles extends Activity {
         yearly.setText("Remove All Tags");
         yearly.setVisibility(View.GONE);
         cancel = (TextView) findViewById(R.id.ca);
-
+        cancel_layout = (LinearLayout) findViewById(R.id.l2);
 
         /*Window window = getWindow();
         WindowManager.LayoutParams param = window.getAttributes();
@@ -114,7 +115,7 @@ public class ListOfFiles extends Activity {
                 finish();
             }
         });*/
-        cancel.setOnClickListener(new View.OnClickListener() {
+        cancel_layout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 finish();
