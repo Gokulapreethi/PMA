@@ -114,7 +114,7 @@
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
-        <service android:name=".offlineSendService"/>
+        <service android:name=".offlineSendService" />
 
 
         <!-- GCM Registration Intent Service -->
@@ -266,7 +266,8 @@
             android:name=".TaskNotification"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Dialog" />
-        <activity android:name=".HandSketchActivity2"
+        <activity
+            android:name=".HandSketchActivity2"
             android:screenOrientation="portrait" />
         <activity
             android:name=".AddObserver"
@@ -417,8 +418,11 @@
             android:name=".WebViewActivity"
             android:screenOrientation="portrait" />
         <activity android:name=".TravelJobDetails" />
-        <activity android:name=".DatePicker.CustomTravelPickerActivity" />
-        <activity android:name=".EulaScreen" />
+        <activity
+            android:name=".DatePicker.CustomTravelPickerActivity"
+            android:screenOrientation="portrait" />
+        <activity android:name=".EulaScreen"
+            android:screenOrientation="portrait"/>
     </application>
 
 </manifest>

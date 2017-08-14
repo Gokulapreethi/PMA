@@ -1239,9 +1239,9 @@ public class ProjectsFragment extends Fragment implements View.OnClickListener, 
     }
 
     private void showprogress(final String message) {
-        handler.post(new Runnable() {
-            @Override
-            public void run() {
+//        handler.post(new Runnable() {
+//            @Override
+//            public void run() {
                 try {
                     Log.i("expand", "inside show progress--------->");
                     if (progress == null) {
@@ -1256,8 +1256,8 @@ public class ProjectsFragment extends Fragment implements View.OnClickListener, 
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-            }
-        });
+//            }
+//        });
     }
 
     private void showprogress_1() {
