@@ -69,19 +69,19 @@
                     android:text="0%"
                     android:textSize="12sp"
                     android:textStyle="bold"
-                    android:visibility="visible" />
+                    android:visibility="invisible" />
 
                 <RelativeLayout
                     android:id="@+id/rl_status"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
-                    android:layout_marginRight="20dp"
+                    android:layout_marginRight="30dp"
                     android:layout_toLeftOf="@+id/percent_update">
 
                     <TextView
                         android:id="@+id/project_status"
-                        android:layout_width="105dp"
+                        android:layout_width="wrap_content"
                         android:layout_height="20dp"
                         android:layout_marginTop="8dp"
                         android:gravity="left"
@@ -125,58 +125,15 @@
                     android:text="Project Name"
                     android:textColor="@color/black"
                     android:textSize="15sp"
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:id="@+id/task_giver"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentLeft="true"
-                    android:layout_below="@+id/project_name"
-                    android:layout_marginLeft="10dp"
-                    android:layout_toLeftOf="@+id/remain_count"
-                    android:ellipsize="end"
                     android:maxLength="200"
-                    android:maxLines="1"
-                    android:text="Task Giver  :"
-                    android:textColor="@color/black"
-                    android:textSize="15sp" />
-
-                <TextView
-                    android:id="@+id/item_counter"
-                    android:layout_width="25dp"
-                    android:layout_height="25dp"
-                    android:layout_alignParentRight="true"
-                    android:layout_below="@+id/project_name"
-                    android:layout_marginRight="5dp"
-                    android:background="@drawable/rectangle1"
-                    android:gravity="center"
-                    android:singleLine="true"
-                    android:text="10"
-                    android:textColor="@color/white"
-                    android:textSize="12sp"
-                    android:textStyle="bold"
-                    android:visibility="invisible" />
-
-                <TextView
-                    android:id="@+id/exclation_counter"
-                    android:layout_width="25dp"
-                    android:layout_height="25dp"
-                    android:layout_alignParentRight="true"
-                    android:layout_below="@+id/project_name"
-                    android:layout_marginRight="31dp"
-                    android:layout_toLeftOf="@+id/item_counter"
-                    android:background="@drawable/exclation_counter"
-                    android:gravity="center"
-                    android:textColor="#FFFFFF"
-                    android:textSize="12sp"
+                    android:maxLines="2"
                     android:textStyle="bold" />
 
                 <TextView
                     android:id="@+id/task_taker"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_below="@+id/task_giver"
+                    android:layout_below="@+id/task_giverdetails_layout"
                     android:layout_marginLeft="10dp"
                     android:singleLine="true"
                     android:text="Task Taker :"
@@ -197,11 +154,58 @@
                     android:textSize="15sp"
                     android:visibility="gone" />
 
+            <RelativeLayout
+                android:id="@+id/task_giverdetails_layout"
+                android:layout_width="fill_parent"
+                android:layout_below="@+id/project_name"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center">
+
+                <TextView
+                    android:id="@+id/task_giver"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_marginLeft="10dp"
+                    android:layout_toLeftOf="@+id/remain_count"
+                    android:ellipsize="end"
+                    android:maxLength="200"
+                    android:maxLines="1"
+                    android:text="Task Giver  :"
+                    android:textColor="@color/black"
+                    android:textSize="15sp" />
+
+                <TextView
+                    android:id="@+id/item_counter"
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginRight="5dp"
+                    android:background="@drawable/rectangle1"
+                    android:gravity="center"
+                    android:singleLine="true"
+                    android:text="10"
+                    android:textColor="@color/white"
+                    android:textSize="12sp"
+                    android:textStyle="bold"
+                    android:visibility="invisible" />
+
+                <TextView
+                    android:id="@+id/exclation_counter"
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginRight="31dp"
+                    android:layout_toLeftOf="@+id/item_counter"
+                    android:background="@drawable/exclation_counter"
+                    android:gravity="center"
+                    android:textColor="#FFFFFF"
+                    android:textSize="12sp"
+                    android:textStyle="bold" />
                 <TextView
                     android:id="@+id/remain_count"
                     android:layout_width="100dp"
                     android:layout_height="wrap_content"
-                    android:layout_below="@+id/project_name"
                     android:layout_marginRight="10dp"
                     android:layout_toLeftOf="@+id/exclation_counter"
                     android:background="@color/red"
@@ -210,8 +214,9 @@
                     android:text="Reminder : "
                     android:textColor="@color/white"
                     android:visibility="visible" />
+                </RelativeLayout>
 
-                <TextView
+                <!--<TextView
                     android:id="@+id/parent_startdate"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -233,7 +238,7 @@
                     android:text="Task End date : NA"
                     android:textColor="@color/black"
                     android:textSize="15sp"
-                    android:visibility="gone" />
+                    android:visibility="gone" />-->
 
             </RelativeLayout>
 

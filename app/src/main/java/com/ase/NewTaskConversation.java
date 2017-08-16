@@ -320,7 +320,7 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
     private HashMap<Integer, String> statusCompletedFieldValues = new HashMap<Integer, String>();
     String TravelStartdate, TravelEnddate, status_signature, photo_signature, tech_signature, PickDate, travel_endDate, observation_path, Action_Taken_path, customerRemarks_path;
     String FromTravelStart, FromTravelEnd, ActivityStartdate, ActivityEnddate, TotravelStart, ToTravelEnd, taskCompletedDate, completedate_display;
-    String observationStatus, actiontakenStatus, custsignnameStatus, HMReadingStatus, machine_model, machine_serialno, machine_description;
+    String observationStatus, actiontakenStatus, custsignnameStatus, HMReadingStatus, machine_model, machine_serialno, machine_description, machion_make_edit;
     ArrayList<String> travel_date_details;
     String dir_path = Environment.getExternalStorageDirectory() + "/High Message/downloads/";
 
@@ -2757,7 +2757,7 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
         });
 
 
-        tv_reassign.setOnClickListener(new View.OnClickListener() {
+        assign_taskview.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 //                assign_taskview.setVisibility(View.GONE);
@@ -4165,7 +4165,7 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
             project_name.setText("Job Card No :" + JobCodeNo + "\nActivity Code :" + ActivityCode);
             task_id.setText(ActivityCode);
             mcModel.setText(existing_entry.getMcModel());
-            machine_make_show.setText(existing_entry.getMachineMac());
+            machine_make_show.setText(existing_entry.getMachineMake());
             mcSrNo.setText(existing_entry.getMcSrNo());
             service_date.setText(existing_entry.getDateTime());
             est_travel.setText(existing_entry.getEstimatedTravel());
@@ -4905,7 +4905,7 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                             TextView project_id = (TextView) dialog.findViewById(R.id.project_id);
                             TextView project_name = (TextView) dialog.findViewById(R.id.project_name);
                             TextView task_id = (TextView) dialog.findViewById(R.id.task_id);
-                            TextView machine_make = (TextView) dialog.findViewById(R.id.machine_make);
+//                            TextView machine_make = (TextView) dialog.findViewById(R.id.machine_make);
                             TextView est_travel = (TextView) dialog.findViewById(R.id.estimatedTravelhrs);
                             TextView est_activity = (TextView) dialog.findViewById(R.id.estimatedActivityhrs);
                             TextView service_date = (TextView) dialog.findViewById(R.id.requested_date);
@@ -5139,6 +5139,7 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                             final EditText mcModel = (EditText) dialog.findViewById(R.id.mac_model);
                             final EditText mcSrNo = (EditText) dialog.findViewById(R.id.mac_no);
                             final EditText description = (EditText) dialog.findViewById(R.id.description);
+                            final EditText machine_make = (EditText) dialog.findViewById(R.id.machine_make);
 
                             Button travelstart_sign = (Button) dialog.findViewById(R.id.travelstart_sign);
                             Button activitystart_sign = (Button) dialog.findViewById(R.id.activitystart_sign);
@@ -5239,7 +5240,7 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                             Log.i("ws123", "username or employee name===>" + Appreference.loginuserdetails.getEmail());
                             mcModel.setText(detailsBean.getMcModel());
                             mcSrNo.setText(detailsBean.getMcSrNo());
-                            machine_make.setText(detailsBean.getMachineMac());
+                            machine_make.setText(detailsBean.getMachineMake());
                             description.setText(detailsBean.getMcDescription());
                             est_travel.setText(detailsBean.getEstimatedTravel());
                             statusCompletedFieldValues.put(6, "EstimatedTravel :" + detailsBean.getEstimatedTravel());
@@ -5555,7 +5556,10 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                                         machine_description = description.getText().toString();
                                     else
                                         machine_description = "";
-
+                                    if (machine_make.getText().toString() != null)
+                                        machion_make_edit = machine_make.getText().toString();
+                                    else
+                                        machion_make_edit = "";
                                     Log.i("desc123", "machine_model @@========>" + machine_model);
                                     Log.i("desc123", "machine_serialno @@========>" + machine_serialno);
                                     Log.i("desc123", "machine_description @@========>" + machine_description);
@@ -5912,7 +5916,12 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                 taskDetailsBean.setMcDescription(machine_description);
             } else
                 jsonObject.put("mcDescription", "");
-
+            Log.i("desc123", "machine_model ========>" + machion_make_edit);
+            if (machion_make_edit != null && !machion_make_edit.equalsIgnoreCase("")) {
+                jsonObject.put("machineMake", machion_make_edit);
+                taskDetailsBean.setMachineMake(machion_make_edit);
+            } else
+                jsonObject.put("machineMake", "");
             Log.i("oracle123", "taskCompletedDate w/s===>" + taskCompletedDate);
 
             if (status != null && status.equalsIgnoreCase("10") && taskCompletedDate != null && !taskCompletedDate.equalsIgnoreCase("")) {
@@ -6187,7 +6196,7 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                 VideoCallDataBase.getDB(context).insertORupdateStatus(taskDetailsBean);
             }
             if (status.equalsIgnoreCase("10")) {
-                VideoCallDataBase.getDB(context).eod_Update(machine_model, machine_serialno, machine_description, projectId, webtaskId);
+                VideoCallDataBase.getDB(context).eod_Update(machine_model, machine_serialno, machine_description, projectId, webtaskId, machion_make_edit);
             }
             if (isNetworkAvailable()) {
                 Appreference.jsonRequestSender.taskStatus(EnumJsonWebservicename.taskStatus, jsonObject, status_list, taskDetailsBean, NewTaskConversation.this);
@@ -11687,7 +11696,7 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                                                  if (isDeassign) {
                                                      isDeassign = false;
                                                      Log.i("conv123", "isDeassign ProgressBarInvisible calling....===>");
-                                                     handler.post(new Runnable() {
+                                                     handler.postDelayed(new Runnable() {
                                                          @Override
                                                          public void run() {
                                                              ProjectHistory projectHistory = (ProjectHistory) Appreference.context_table.get("projecthistory");
@@ -11697,7 +11706,7 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                                                              }
                                                              NewTaskConversation.this.finish();
                                                          }
-                                                     });
+                                                     },500);
                                                  }
 
                                              } catch (Exception e) {
@@ -18929,7 +18938,9 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                                             && Appreference.loginuserdetails.getRoleId().equalsIgnoreCase("2")
                                             && !oracleProjectOwner.equalsIgnoreCase(Appreference.loginuserdetails.getUsername())) {
                                         tv_reassign.setVisibility(View.GONE);
+                                        assign_taskview.setVisibility(View.GONE);
                                     } else {
+                                        assign_taskview.setVisibility(View.VISIBLE);
                                         tv_reassign.setVisibility(View.VISIBLE);
 
                                     }

@@ -765,17 +765,17 @@ public class ProjectHistory extends Activity implements WebServiceInterface, Swi
     }
 
     public void showDialog() {
-        handler.post(new Runnable() {
+        /*handler.post(new Runnable() {
             @Override
-            public void run() {
+            public void run() {*/
                 dialog = new ProgressDialog(ProjectHistory.this);
                 dialog.setMessage("Loading Task...");
                 dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
                 dialog.setProgress(0);
                 dialog.setMax(100);
                 dialog.show();
-            }
-        });
+           /* }
+        });*/
     }
 
     public void cancelDialog() {
@@ -1281,10 +1281,10 @@ public class ProjectHistory extends Activity implements WebServiceInterface, Swi
                 TextView remain = (TextView) conView.findViewById(R.id.remain_count);
                 TextView percentage_1 = (TextView) conView.findViewById(R.id.percent_update);
                 TextView task_status = (TextView) conView.findViewById(R.id.project_status);
-                TextView parent_startdate = (TextView) conView.findViewById(R.id.parent_startdate);
+//                TextView parent_startdate = (TextView) conView.findViewById(R.id.parent_startdate);
                 View viewforparent = (View) conView.findViewById(R.id.viewforparent);
                 viewforparent.setVisibility(View.GONE);
-                TextView parent_enddate = (TextView) conView.findViewById(R.id.parent_enddate);
+//                TextView parent_enddate = (TextView) conView.findViewById(R.id.parent_enddate);
                 TextView exclation_counter = (TextView) conView.findViewById(R.id.exclation_counter);
                 TextView header_title = (TextView) conView.findViewById(R.id.header_title);
                 LinearLayout layoutcard=(LinearLayout)conView.findViewById(R.id.layoutcardview);
@@ -1309,11 +1309,11 @@ public class ProjectHistory extends Activity implements WebServiceInterface, Swi
                     status_oracle.setVisibility(View.GONE);
                     task_status.setVisibility(View.VISIBLE);
                 }
-                if(projectDetailsBean.getTaskName() !=null && projectDetailsBean.getTaskName().equalsIgnoreCase("Travel Time")){
+               /* if(projectDetailsBean.getTaskName() !=null && projectDetailsBean.getTaskName().equalsIgnoreCase("Travel Time")){
                     percentage_1.setVisibility(View.GONE);
                 }else{
                     percentage_1.setVisibility(View.VISIBLE);
-                }
+                }*/
                 conView.setBackgroundResource(R.color.white);
                 dependency_icon.setVisibility(View.GONE);
                 String oracle_taskId = VideoCallDataBase.getDB(context).getProjectParentTaskId("select oracleTaskId from projectHistory where projectId='" + project_id + "' and taskId='" + projectDetailsBean.getTaskId() + "'");
@@ -1378,17 +1378,17 @@ public class ProjectHistory extends Activity implements WebServiceInterface, Swi
                         task_observer.setVisibility(View.GONE);
                     else
                         task_observer.setVisibility(View.VISIBLE);
-                    parent_startdate.setVisibility(View.GONE);
-                    parent_enddate.setVisibility(View.GONE);
+//                    parent_startdate.setVisibility(View.GONE);
+//                    parent_enddate.setVisibility(View.GONE);
                     taskName.setTextColor(Color.BLACK);
                     Log.i("task", "Project");
-                    if (projectDetailsBean.getRequestStatus() != null && projectDetailsBean.getRequestStatus().equalsIgnoreCase("Open")) {
+                   /* if (projectDetailsBean.getRequestStatus() != null && projectDetailsBean.getRequestStatus().equalsIgnoreCase("Open")) {
                         dependency_icon.setVisibility(View.VISIBLE);
                         Log.i("attention", "resolved " + projectDetailsBean.getRequestStatus());
                     } else {
                         Log.i("attention", "resolved else " + projectDetailsBean.getRequestStatus());
                         dependency_icon.setVisibility(View.GONE);
-                    }
+                    }*/
                     int project_unReadMsg_count = VideoCallDataBase.getDB(context).getTaskUnReadMsgCount(projectDetailsBean.getTaskId());
                     if (project_unReadMsg_count == 0) {
                         Log.d("ProjectHistory", "unRead_project_count is 0");
@@ -1411,15 +1411,18 @@ public class ProjectHistory extends Activity implements WebServiceInterface, Swi
                         Log.i("ProjectHistory", "project_reminder_count is " + project_reminder_count);
                     }
                     Log.i("ProjectHistory", "project_members is " + projectDetailsBean.getTaskMemberList());
-                    if (projectDetailsBean.getCompletedPercentage() != null && projectDetailsBean.getCompletedPercentage().equalsIgnoreCase("100")) {
-                        percentage_1.setText(projectDetailsBean.getCompletedPercentage() + "%");
-                        percentage_1.setTextColor(Color.GREEN);
-                    } else if (projectDetailsBean.getCompletedPercentage() != null && !projectDetailsBean.getCompletedPercentage().equalsIgnoreCase(null) && !projectDetailsBean.getCompletedPercentage().equalsIgnoreCase("") && !projectDetailsBean.getCompletedPercentage().equalsIgnoreCase("null") && !projectDetailsBean.getCompletedPercentage().equalsIgnoreCase("(null)")) {
-                        percentage_1.setText(projectDetailsBean.getCompletedPercentage() + "%");
-                        percentage_1.setTextColor(Color.RED);
-                    } else {
-                        percentage_1.setText("0%");
-                        percentage_1.setTextColor(Color.RED);
+                    if (projectDetailsBean.getTaskName() !=null && !projectDetailsBean.getTaskName().equalsIgnoreCase("Travel Time")) {
+                        percentage_1.setVisibility(View.VISIBLE);
+                        if (projectDetailsBean.getCompletedPercentage() != null && projectDetailsBean.getCompletedPercentage().equalsIgnoreCase("100")) {
+                            percentage_1.setText(projectDetailsBean.getCompletedPercentage() + "%");
+                            percentage_1.setTextColor(Color.GREEN);
+                        } else if (projectDetailsBean.getCompletedPercentage() != null && !projectDetailsBean.getCompletedPercentage().equalsIgnoreCase(null) && !projectDetailsBean.getCompletedPercentage().equalsIgnoreCase("") && !projectDetailsBean.getCompletedPercentage().equalsIgnoreCase("null") && !projectDetailsBean.getCompletedPercentage().equalsIgnoreCase("(null)")) {
+                            percentage_1.setText(projectDetailsBean.getCompletedPercentage() + "%");
+                            percentage_1.setTextColor(Color.RED);
+                        } else {
+                            percentage_1.setText("0%");
+                            percentage_1.setTextColor(Color.RED);
+                        }
                     }
                     Log.i("ProjectHistory", "projectDetailsBean.getCatagory() " + projectDetailsBean.getCatagory());
                     if (projectDetailsBean.getCatagory() != null && (projectDetailsBean.getCatagory().equalsIgnoreCase("Task") || projectDetailsBean.getCatagory().equalsIgnoreCase("taskCreation"))) {

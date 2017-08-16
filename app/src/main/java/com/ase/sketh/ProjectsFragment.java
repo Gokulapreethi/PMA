@@ -173,8 +173,7 @@ public class ProjectsFragment extends Fragment implements View.OnClickListener, 
 
     @Nullable
     @Override
-    public View
-    onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         view = inflater.inflate(R.layout.project_fragment_layout, container, false);
         try {
@@ -254,7 +253,7 @@ public class ProjectsFragment extends Fragment implements View.OnClickListener, 
             });
 
             fsrDetails.setOnClickListener(new View.OnClickListener() {
-                 String fsr_jobId,fsr_date;
+                String fsr_jobId, fsr_date;
 
                 @Override
                 public void onClick(View v) {
@@ -284,20 +283,19 @@ public class ProjectsFragment extends Fragment implements View.OnClickListener, 
                             /*getting projectid from table relevant to oracleprojectId*/
                             String get_projectId_query = "select projectId from projectDetails where loginuser = '" + Appreference.loginuserdetails.getEmail() + "'and oracleProjectId='" + selected_jobcard + "'";
                             String fsr_ProjectId = VideoCallDataBase.getDB(getActivity()).getprojectIdForOracleID(get_projectId_query);
-                            fsr_jobId=fsr_ProjectId;
+                            fsr_jobId = fsr_ProjectId;
                             /*getting list of Eod date regarding the selected jobcard*/
                             String list_query1 = "select distinct taskcompleteddate from projectStatus where projectId='" + fsr_ProjectId + "' and status= '10' order by taskcompleteddate";
                             ArrayList<String> My_date = VideoCallDataBase.getDB(getActivity()).getPerTaskcompletedDates(list_query1);
-                            if(My_date.size()>0) {
+                            if (My_date.size() > 0) {
                                 ArrayAdapter<String> dataAdapter_Date = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, My_date);
                                 // Drop down layout style - list view with radio button
                                 dataAdapter_Date.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                                 // attaching data adapter to spinner
                                 date_spinner.setAdapter(dataAdapter_Date);
 
-                            }else
-                            {
-                                fsr_date="";
+                            } else {
+                                fsr_date = "";
                                 Toast.makeText(getActivity(), "No EOD Dates Found..", Toast.LENGTH_SHORT).show();
                                 ArrayAdapter<String> dataAdapter_Date = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, My_date);
                                 // Drop down layout style - list view with radio button
@@ -307,6 +305,7 @@ public class ProjectsFragment extends Fragment implements View.OnClickListener, 
 
                             }
                         }
+
                         @Override
                         public void onNothingSelected(AdapterView<?> parent) {
                         }
@@ -316,8 +315,8 @@ public class ProjectsFragment extends Fragment implements View.OnClickListener, 
                         public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                             String selected_date = String.valueOf(date_spinner.getSelectedItem());/*selected date from spinner*/
                             try {
-                                if(selected_date!=null)
-                                    fsr_date=selected_date;
+                                if (selected_date != null)
+                                    fsr_date = selected_date;
                             } catch (Exception e) {
                                 e.printStackTrace();
                             }
@@ -333,7 +332,7 @@ public class ProjectsFragment extends Fragment implements View.OnClickListener, 
                     alert.setPositiveButton("Submit", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-                            if(fsr_date!=null && !fsr_date.equalsIgnoreCase("")) {
+                            if (fsr_date != null && !fsr_date.equalsIgnoreCase("")) {
 //                                dialog.dismiss();
                                 SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
                                 SimpleDateFormat dateParse = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -342,8 +341,8 @@ public class ProjectsFragment extends Fragment implements View.OnClickListener, 
                                 Date date1 = null;
                                 String FSRStartDateUTC = "";
                                 String FSREndDateUTC = "";
-                                String fsr_start_date=fsr_date+" "+"00:00:00";
-                                String fsr_end_date=fsr_date+" "+"23:59:59";
+                                String fsr_start_date = fsr_date + " " + "00:00:00";
+                                String fsr_end_date = fsr_date + " " + "23:59:59";
                                 if (fsr_start_date != null && !fsr_start_date.equalsIgnoreCase("")) {
                                     try {
                                         date = dateParse.parse(fsr_start_date);
@@ -366,7 +365,7 @@ public class ProjectsFragment extends Fragment implements View.OnClickListener, 
                                 nameValuePairs.add(new BasicNameValuePair("taskCompletedEndDate", FSREndDateUTC));
                                 showprogress("Downloading...");
                                 Appreference.jsonRequestSender.OracleFSRJOBReport(EnumJsonWebservicename.fieldServiceReportJobWise, nameValuePairs, ProjectsFragment.this);
-                            }else
+                            } else
                                 Toast.makeText(getActivity(), "Please select any date...", Toast.LENGTH_SHORT).show();
                         }
                     });
@@ -419,7 +418,7 @@ public class ProjectsFragment extends Fragment implements View.OnClickListener, 
                                             Toast.makeText(getActivity(), "Kindly select current date ", Toast.LENGTH_SHORT).show();
                                         } else {
                                             activity_start.setText(start_date);
-                                            TNAReportStart = start_date+" "+"00:00:00";
+                                            TNAReportStart = start_date + " " + "00:00:00";
                                         }
                                     } catch (Exception e) {
                                         e.printStackTrace();
@@ -464,12 +463,12 @@ public class ProjectsFragment extends Fragment implements View.OnClickListener, 
                                         }
                                         String end_date = year + "-" + months + "-" + days;
                                         if (TNAReportStart != null && !TNAReportStart.equalsIgnoreCase("")) {
-                                            String TnaStart[]=TNAReportStart.split(" ");
-                                            String ReportStart=TnaStart[0];
+                                            String TnaStart[] = TNAReportStart.split(" ");
+                                            String ReportStart = TnaStart[0];
 
                                             if ((end_date.compareTo(ReportStart) == 0) || ((cur_date.compareTo(end_date) >= 0) && (end_date.compareTo(ReportStart) > 0))) {
                                                 activity_end.setText(end_date);
-                                                TNAReportEnd = end_date+" "+"23:59:59";
+                                                TNAReportEnd = end_date + " " + "23:59:59";
                                             } else {
                                                 Toast.makeText(getActivity(), "Kindly select above start date and below current date", Toast.LENGTH_SHORT).show();
                                             }
@@ -495,7 +494,7 @@ public class ProjectsFragment extends Fragment implements View.OnClickListener, 
                         tna_count = 0;
                         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
                         SimpleDateFormat dateParse = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-                         dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
+                        dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
                         Date date = null;
                         Date date1 = null;
                         String StartDateUTC = "", EndDateUTC = "";
@@ -517,7 +516,7 @@ public class ProjectsFragment extends Fragment implements View.OnClickListener, 
                         }
                         Log.i("report123", "-====>startdATE UTC====>" + StartDateUTC);
                         Log.i("report123", "-====>eNDdATE UTC====>" + EndDateUTC);
-                        if ((date != null && date1 != null && !date.after(date1)) || (date.compareTo(date1)==0)) {
+                        if ((date != null && date1 != null && !date.after(date1)) || (date.compareTo(date1) == 0)) {
                             List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
                             nameValuePairs.add(new BasicNameValuePair("userId", String.valueOf(Appreference.loginuserdetails.getId())));
                             nameValuePairs.add(new BasicNameValuePair("travelStartDate", StartDateUTC));
@@ -833,23 +832,15 @@ public class ProjectsFragment extends Fragment implements View.OnClickListener, 
                 public void afterTextChanged(Editable s) {
                 }
             });
-        /*ProjectSearch.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                if (hasFocus){
-                    Log.i("Focus"," 1 "+hasFocus);
-                    ProjectSearch.setCursorVisible(true);
-                }else {
-                    Log.i("Focus"," 2 "+hasFocus);
-                    ProjectSearch.setCursorVisible(false);
-                }
-            }
-        });*/
+
 
             listview_project.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                     try {
+                        Log.i("progress123", "inside listview_project OnClick--------->");
+                        Log.i("progress123", "===============================> ");
+
                         ProjectSearch.setText("");
                         ProjectDetailsBean projectDetailsBean = projectList.get(position);
                         project_id = projectDetailsBean.getId();
@@ -1211,7 +1202,7 @@ public class ProjectsFragment extends Fragment implements View.OnClickListener, 
     @Override
     public void onResume() {
         super.onResume();
-
+        Log.i("progress123", "inside onResume--------->");
         try {
             String query_1 = "select *,cast(oracleProjectId as unsigned) as t from projectDetails where loginuser = '" + Appreference.loginuserdetails.getEmail() + "'and projectcompletedstatus NOT IN (select projectcompletedstatus where projectcompletedstatus like '1') order by t DESC";
             projectList = new ArrayList<>();
@@ -1242,20 +1233,26 @@ public class ProjectsFragment extends Fragment implements View.OnClickListener, 
 //        handler.post(new Runnable() {
 //            @Override
 //            public void run() {
-                try {
-                    Log.i("expand", "inside show progress--------->");
-                    if (progress == null) {
-                        progress = new ProgressDialog(getActivity());
-                        progress.setCancelable(false);
-                        progress.setMessage(message);
-                        progress.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-                        progress.setProgress(0);
-                        progress.setMax(1000);
-                        progress.show();
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+        try {
+            Log.i("progress123", "inside show progress--------->");
+            Log.i("progress123", "$$$$$$$$$$$$$$$$$$$$$$$$$$$$$");
+//                    if (progress == null) {
+//                        Log.i("progress123", "inside show progress=====. progress NULL--------->");
+            progress = new ProgressDialog(getActivity());
+            progress.setCancelable(false);
+            progress.setMessage(message);
+            progress.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+            progress.setProgress(0);
+            progress.setMax(1000);
+            progress.show();
+            Log.i("progress123", "inside show progress showing--------->");
+
+//                    }
+        } catch (Exception e) {
+            e.printStackTrace();
+            Log.i("progress123", "EXCEPTION show progress showing- error-------->" + e.getMessage());
+
+        }
 //            }
 //        });
     }
@@ -1288,6 +1285,7 @@ public class ProjectsFragment extends Fragment implements View.OnClickListener, 
         try {
             if (progress != null && progress.isShowing()) {
                 Log.i("register", "--progress bar end-----");
+                Log.i("progress123", "inside cancelDialog--------->");
                 progress.dismiss();
                 progress = null;
             }
@@ -1566,7 +1564,7 @@ public class ProjectsFragment extends Fragment implements View.OnClickListener, 
                                     String pdfURL = getResources().getString(R.string.task_reminder) + jsonObject.getString("filename");
                                     Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(pdfURL));
                                     startActivity(browserIntent);
-                                }else if(((String) jsonObject.get("result_text")).equalsIgnoreCase("Work_service_report job successed")){
+                                } else if (((String) jsonObject.get("result_text")).equalsIgnoreCase("Work_service_report job successed")) {
                                     Log.i("output123", " Filename" + jsonObject.getString("filename"));
                                     String pdfURL = getResources().getString(R.string.task_reminder) + jsonObject.getString("filename");
                                     Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(pdfURL));

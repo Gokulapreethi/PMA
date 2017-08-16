@@ -212,7 +212,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                 jsonRequestParser.start();
                 if(progress == null) {
                     progress = new ProgressDialog(context);
-                    progress.setMessage("Loading");
+                    progress.setMessage("Signing in...");
                     progress.show();
                 }
                 final ProgressDialog dialog1 = ProgressDialog.show(LoginActivity.this, "", "Signing in...",
@@ -226,13 +226,13 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                 }, 3000);
 
             } else if(appSharedpreferences.getBoolean("login")){
-                final ProgressDialog dialog1 = ProgressDialog.show(LoginActivity.this, "", "Signing in...",
+                final ProgressDialog dialog2 = ProgressDialog.show(LoginActivity.this, "", "Signing in...",
                         true);
-                dialog1.show();
+                dialog2.show();
                 Handler handler = new Handler();
                 handler.postDelayed(new Runnable() {
                     public void run() {
-                        dialog1.dismiss();
+                        dialog2.dismiss();
                     }
                 }, 3000);
                 if (Appreference.jsonRequestSender == null) {
@@ -273,17 +273,14 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         } else {
             if (isNetworkAvailable()) {
                 try {
+
                     List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
                     nameValuePairs.add(new BasicNameValuePair("email", mEmailView.getText().toString()));
                     nameValuePairs.add(new BasicNameValuePair("password", mPasswordView.getText().toString()));
                     JsonRequestSender jsonRequestParser = new JsonRequestSender();
                     Appreference.jsonRequestSender = jsonRequestParser;
                     Log.i("login123","Login webservice calling loginMethod.......");
-                    if(progress == null) {
-                        progress = new ProgressDialog(context);
-                        progress.setMessage("Loading");
-                        progress.show();
-                    }
+
                     jsonRequestParser.login(EnumJsonWebservicename.loginMobile, nameValuePairs, LoginActivity.this);
                     jsonRequestParser.start();
                     InputMethodManager imm = (InputMethodManager) loginActivity.getSystemService(Activity.INPUT_METHOD_SERVICE);
@@ -296,9 +293,10 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                     imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
                     if(progress == null) {
                         progress = new ProgressDialog(context);
-                        progress.setMessage("Loading");
+                        progress.setMessage("Signing in...");
                         progress.show();
                     }
+
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -623,6 +621,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
                     }
 
+
                 } catch (Exception e) {
                     e.printStackTrace();
                     Toast.makeText(getApplicationContext(), "Unable to Login...", Toast.LENGTH_LONG).show();
@@ -710,6 +709,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                 return false;
             }
 
+
             for (String credential : DUMMY_CREDENTIALS) {
                 String[] pieces = credential.split(":");
                 if (pieces[0].equals(mEmail)) {
@@ -731,6 +731,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                 finish();
 //                SingleInstance.LoginUser=mEmail;
 //                SingleInstance.Password=mPassword;
+
                 Intent intent = new Intent(context, MainActivity.class);
                 intent.putExtra("mEmail", mEmail);
                 intent.putExtra("mPassword", mPassword);

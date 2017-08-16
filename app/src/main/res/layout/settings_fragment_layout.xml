@@ -336,7 +336,27 @@
                 android:textColor="@color/white"
                 android:visibility="gone" />
         </LinearLayout>
+        <LinearLayout
+            android:id="@+id/reles_version_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/ll_version"
+            android:layout_marginTop="5dp">
 
+        <Button
+            android:id="@+id/release_version"
+            android:layout_width="wrap_content"
+            android:layout_height="35dp"
+            android:layout_below="@+id/s_file"
+            android:layout_marginLeft="15dp"
+            android:background="@color/appcolor"
+            android:paddingLeft="3dp"
+            android:paddingRight="3dp"
+            android:text="Release version: "
+            android:textAllCaps="false"
+            android:textColor="@color/white"
+            android:textSize="16dp" />
+        </LinearLayout>
 
     </RelativeLayout>
 </ScrollView>

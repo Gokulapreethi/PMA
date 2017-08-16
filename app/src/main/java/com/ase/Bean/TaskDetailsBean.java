@@ -138,7 +138,7 @@ public class TaskDetailsBean implements Serializable,Cloneable {
     private String technicianSignature;
     private String customerSignatureName;
     private String actionTaken;
-    private String machineMac;
+    private String machineMake;
     private String taskCompletedDate;
     private String datenow;
     private String wssendstatus;
@@ -1109,14 +1109,6 @@ private String sender_reply;
         this.taskCompletedDate = taskCompletedDate;
     }
 
-    public String getMachineMac() {
-        return machineMac;
-    }
-
-    public void setMachineMac(String machineMac) {
-        this.machineMac = machineMac;
-    }
-
     public String getMcDescription() {
         return mcDescription;
     }
@@ -1147,6 +1139,14 @@ private String sender_reply;
 
     public void setEnd_dateStatus(String end_dateStatus) {
         this.end_dateStatus = end_dateStatus;
+    }
+
+    public String getMachineMake() {
+        return machineMake;
+    }
+
+    public void setMachineMake(String machineMake) {
+        this.machineMake = machineMake;
     }
 }
 

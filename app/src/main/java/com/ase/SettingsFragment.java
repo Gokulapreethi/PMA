@@ -74,7 +74,7 @@ public class SettingsFragment extends Fragment implements WebServiceInterface {
     TextView status;
     Handler handler = new Handler();
     String gender = null;
-    Button version_no, show_log, sync_btn;
+    Button version_no, show_log, sync_btn,release_version;
     TextView username, em, edit, signout, changepass, exclation_counter;
     ImageView imageview;
     LinearLayout files;
@@ -173,6 +173,7 @@ public class SettingsFragment extends Fragment implements WebServiceInterface {
         edit = (TextView) rootView.findViewById(R.id.edit_profile);
         changepass = (TextView) rootView.findViewById(R.id.change_password);
         version_no = (Button) rootView.findViewById(R.id.version);
+        release_version = (Button) rootView.findViewById(R.id.release_version);
         sync_btn = (Button) rootView.findViewById(R.id.sync_btn);
 
         signout = (TextView) rootView.findViewById(R.id.signout);
@@ -192,6 +193,7 @@ public class SettingsFragment extends Fragment implements WebServiceInterface {
         no = simple.format(calender.getTime());
         Log.i("settingsfragment", "no value is" + no);
         version_no.setText(getResources().getString(R.string.app_versionDate));
+        release_version.setText(getResources().getString(R.string.app_releaseDate));
         Log.i("settingsfragment", version_no.getText().toString());
 
         try {
