@@ -955,34 +955,38 @@ public class ProjectsFragment extends Fragment implements View.OnClickListener, 
                 TextView project_name = (TextView) finalConView.findViewById(R.id.project_name);
                 TextView project_id = (TextView) finalConView.findViewById(R.id.project_id);
                 TextView task_giver = (TextView) finalConView.findViewById(R.id.task_giver);
-                TextView project_status = (TextView) finalConView.findViewById(R.id.project_status);
-                TextView percent_update = (TextView) finalConView.findViewById(R.id.percent_update);
+//                TextView project_status = (TextView) finalConView.findViewById(R.id.project_status);
+//                TextView percent_update = (TextView) finalConView.findViewById(R.id.percent_update);
                 TextView msg_count = (TextView) finalConView.findViewById(R.id.item_counter);
-                TextView project_type = (TextView) finalConView.findViewById(R.id.catagory);
+//                TextView project_type = (TextView) finalConView.findViewById(R.id.catagory);
                 LinearLayout layoutcard = (LinearLayout) finalConView.findViewById(R.id.layoutcardview);
-                project_type.setVisibility(View.GONE);
-                ImageView project_icon = (ImageView) finalConView.findViewById(R.id.selected);
+//                project_type.setVisibility(View.GONE);
+//                ImageView project_icon = (ImageView) finalConView.findViewById(R.id.selected);
                 View viewforparent = (View) finalConView.findViewById(R.id.viewforparent);
-                ImageView dependency_icon = (ImageView) finalConView.findViewById(R.id.dependency_icon);
+//                ImageView dependency_icon = (ImageView) finalConView.findViewById(R.id.dependency_icon);
                 final ImageView completed_status = (ImageView) finalConView.findViewById(R.id.completed_status);
                 viewforparent.setVisibility(View.GONE);
-                project_icon.setVisibility(View.GONE);
-                project_status.setVisibility(View.GONE);
-                percent_update.setVisibility(View.GONE);
-                dependency_icon.setVisibility(View.GONE);
+//                project_icon.setVisibility(View.GONE);
+//                project_status.setVisibility(View.GONE);
+//                percent_update.setVisibility(View.GONE);
+//                dependency_icon.setVisibility(View.GONE);
                 completed_status.setVisibility(View.GONE);
-                project_name.setVisibility(view.GONE);
-                task_giver.setVisibility(View.GONE);
+//                project_name.setVisibility(view.GONE);
+//                task_giver.setVisibility(View.GONE);
                 Log.i("job123", "project name8*********** " + projectDetailsBean.getProjectName());
                 Log.i("job123", "projct Status isActivestatus*********** " + projectDetailsBean.getProjectName() + "isAcvtiveStatus===>" + projectDetailsBean.getIsActiveStatus());
 
-               /* if(projectDetailsBean.getIsActiveStatus()!=null && projectDetailsBean.getIsActiveStatus().equalsIgnoreCase("1")) {
-                    proj_layout.setBackgroundResource(R.color.lightgray);
-                }else
-                    proj_layout.setBackgroundResource(R.color.white);*/
+                if(projectDetailsBean.getIsActiveStatus()!=null && projectDetailsBean.getIsActiveStatus().equalsIgnoreCase("1")) {
+                    layoutcard.setBackgroundResource(R.color.red);
+                    project_id.setTextColor(getResources().getColor(android.R.color.white));
+                }else {
+                    layoutcard.setBackgroundResource(R.color.white);
+                    project_id.setTextColor(getResources().getColor(android.R.color.black));
+                }
 
-                project_id.setText("Job Card Number  : " + projectDetailsBean.getOracleProjectId());
-//                project_name.setText("Job Card Number  : " +projectDetailsBean.getProjectName());
+                  project_id.setText("Job Card Number : " + projectDetailsBean.getOracleProjectId());
+                project_name.setText("Customer Name   : " +projectDetailsBean.getCustomerName());
+                  task_giver.setText("Description     : "+projectDetailsBean.getJobDescription());
                 String pjt_owner = null;
                 Log.i("Fragment", "projectDetailsBean getProject_ownerName() " + projectDetailsBean.getProject_ownerName());
                 if (projectDetailsBean.getProject_ownerName() != null && projectDetailsBean.getProject_ownerName().contains("@")) {
@@ -1006,36 +1010,36 @@ public class ProjectsFragment extends Fragment implements View.OnClickListener, 
                         pjt_owner = "Project Owner : " + projectDetailsBean.getProject_ownerName();
                     }
                 }
-                task_giver.setText(pjt_owner);
-                if (projectDetailsBean.getProjectCompletedPercentage() != null && projectDetailsBean.getProjectCompletedPercentage().equalsIgnoreCase("100")) {
-                    project_status.setText("Closed");
-                } else {
-                    project_status.setText("Open");
-                }
-                if (projectDetailsBean.getProjectCompletedPercentage() != null) {
-                    percent_update.setText(projectDetailsBean.getProjectCompletedPercentage() + "%");
-                } else {
-                    percent_update.setText("0%");
-                }
-                percent_update.setTextColor(RED);
+
+//                if (projectDetailsBean.getProjectCompletedPercentage() != null && projectDetailsBean.getProjectCompletedPercentage().equalsIgnoreCase("100")) {
+//                    project_status.setText("Closed");
+//                } else {
+//                    project_status.setText("Open");
+//                }
+//                if (projectDetailsBean.getProjectCompletedPercentage() != null) {
+//                    percent_update.setText(projectDetailsBean.getProjectCompletedPercentage() + "%");
+//                } else {
+//                    percent_update.setText("0%");
+//                }
+//                percent_update.setTextColor(RED);
                 int project_unReadMsg_count = VideoCallDataBase.getDB(classContext).getProjectsUnReadMsgCount(projectDetailsBean.getId());
                 if (project_unReadMsg_count == 0) {
                     Log.d("ProjectHistory", "unRead_project_count is 0");
                     msg_count.setVisibility(View.GONE);
-                    project_status.setPadding(0, 0, 0, 0);
+//                    project_status.setPadding(0, 0, 0, 0);
                 } else {
                     Log.i("ProjectHistory", "unRead_project_count is " + project_unReadMsg_count);
                     msg_count.setVisibility(View.VISIBLE);
                     msg_count.setText(String.valueOf(project_unReadMsg_count));
-                    project_status.setPadding(0, 0, 40, 0);
+//                    project_status.setPadding(0, 0, 40, 0);
                 }
-                if (projectDetailsBean.getRequestStatus() != null && projectDetailsBean.getRequestStatus().equalsIgnoreCase("Open")) {
-                    dependency_icon.setVisibility(View.VISIBLE);
-                    Log.i("attention", "resolved 1 " + projectDetailsBean.getRequestStatus());
-                } else {
-                    dependency_icon.setVisibility(View.GONE);
-                    Log.i("attention", "resolved 2 " + projectDetailsBean.getRequestStatus());
-                }
+//                if (projectDetailsBean.getRequestStatus() != null && projectDetailsBean.getRequestStatus().equalsIgnoreCase("Open")) {
+//                    dependency_icon.setVisibility(View.VISIBLE);
+//                    Log.i("attention", "resolved 1 " + projectDetailsBean.getRequestStatus());
+//                } else {
+//                    dependency_icon.setVisibility(View.GONE);
+//                    Log.i("attention", "resolved 2 " + projectDetailsBean.getRequestStatus());
+//                }
                 completed_status.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {

@@ -82,6 +82,9 @@ public class ListTaskTransaction {
     private String mcModel;
     private String mcSrNo;
     private String mcDescription;
+    private String synopsis;
+
+
 
     public Object getId() {
         return id;
@@ -295,5 +298,13 @@ public class ListTaskTransaction {
 
     public void setMcDescription(String mcDescription) {
         this.mcDescription = mcDescription;
+    }
+
+    public String getSynopsis() {
+        return synopsis;
+    }
+
+    public void setSynopsis(String synopsis) {
+        this.synopsis = synopsis;
     }
 }

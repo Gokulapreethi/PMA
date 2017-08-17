@@ -248,7 +248,7 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
     boolean tem = false, edit = false;
     boolean template = false, isswipe = false, project = false, note = false, chat = false;
     boolean isNewTemplate = false;
-    boolean remove_check = false, isobservationSketchselected, isactionSketchselected, isremarksSketchselected, isobservationtextselected, isactiontextselected, isRemarkstextselected;
+    boolean remove_check = false, isobservationSketchselected, isactionSketchselected, isremarksSketchselected, isobservationtextselected, isactiontextselected, isRemarkstextselected, isSynopsistextselected,isSynopsisSketchselected;
     String percentage = "0";
     String test, groupname, checker, mime_Type, escalation_to_users;
     String type;
@@ -264,9 +264,9 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
     ProgressBar progress_updating;
     RelativeLayout task_accept_layout;
     TextView tv_networkstate = null, head, mute;
-    ImageView signature_path, photo_path, tech_signature_path, observation_1, action_taken_1, remarks_complete_1;
+    ImageView signature_path, photo_path, tech_signature_path, observation_1, action_taken_1, remarks_complete_1, synopsis_img;
     public static boolean conflict = false;
-    boolean arrow = false, isTask_Over = false, istask_issue, isNote = false, isProjectFromOracle, isCustomerSign, isObservation, isActionTaken, isCustomerRemarks;
+    boolean arrow = false, isTask_Over = false, istask_issue, isNote = false, isProjectFromOracle, isCustomerSign, isObservation, isActionTaken, isCustomerRemarks, isSynopsis;
     int vie = 0;
     AppSharedpreferences appSharedpreferences;
     public static boolean calender = false;
@@ -318,9 +318,9 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
     Date cur_date = null;
     Date Eod_selectedDate = null;
     private HashMap<Integer, String> statusCompletedFieldValues = new HashMap<Integer, String>();
-    String TravelStartdate, TravelEnddate, status_signature, photo_signature, tech_signature, PickDate, travel_endDate, observation_path, Action_Taken_path, customerRemarks_path;
+    String TravelStartdate, TravelEnddate, status_signature, photo_signature, tech_signature, PickDate, travel_endDate, observation_path, Action_Taken_path, customerRemarks_path, synopsis_path;
     String FromTravelStart, FromTravelEnd, ActivityStartdate, ActivityEnddate, TotravelStart, ToTravelEnd, taskCompletedDate, completedate_display;
-    String observationStatus, actiontakenStatus, custsignnameStatus, HMReadingStatus, machine_model, machine_serialno, machine_description, machion_make_edit;
+    String observationStatus, actiontakenStatus, custsignnameStatus, HMReadingStatus, machine_model, machine_serialno, machine_description, machion_make_edit, synopsis_status;
     ArrayList<String> travel_date_details;
     String dir_path = Environment.getExternalStorageDirectory() + "/High Message/downloads/";
 
@@ -980,9 +980,16 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
         status_job.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showStatusPopupWindow(v);
-            }
+                String Query = "Select * from projectHistory where projectId ='" + projectId + "' and taskId = '" + webtaskId + "'";
+                TaskDetailsBean MonthlyJobBean = VideoCallDataBase.getDB(context).getDetails_to_complete_project(Query);
+                Log.i("taker123","status_job clickListener -=============> "+MonthlyJobBean.getIsActiveStatus());
 
+                if(MonthlyJobBean.getIsActiveStatus()!=null && MonthlyJobBean.getIsActiveStatus().equalsIgnoreCase("1") && !MonthlyJobBean.getIsActiveStatus().equalsIgnoreCase("null")) {
+                    showToast("You are not Allowed..");
+                }else {
+                    showStatusPopupWindow(v);
+                }
+            }
         });
 
         travel_job.setOnClickListener(new View.OnClickListener() {
@@ -2625,37 +2632,7 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                                         View_Task_TR.setVisibility(View.VISIBLE);
                                         View_Task_View.setVisibility(View.VISIBLE);
                                     }
-                                } /*else if (isProjectFromOracle && oracleProjectOwner.equalsIgnoreCase(Appreference.loginuserdetails.getUsername())) {
-                                       *//*if Oracleproject is individual*//*
-                                    tv_reassign.setVisibility(View.VISIBLE);
-                                    tv_reassign.setText("Assign Task");
-
-                                    addobserverRowView.setVisibility(View.GONE);
-                                    tv_percompletion.setVisibility(View.GONE);
-                                    assignFromTemplateView.setVisibility(View.GONE);
-                                    assignFromTemplate.setVisibility(View.GONE);
-                                    addobserverRow.setVisibility(View.GONE);
-                                    percentCompletionView.setVisibility(View.GONE);
-                                    percentcompletion_tr.setVisibility(View.GONE);
-                                    mute_audio.setVisibility(View.GONE);
-                                    View_Task_TR.setVisibility(View.GONE);
-                                    View_Task_View.setVisibility(View.GONE);
-                                } else if (isProjectFromOracle && !oracleProjectOwner.equalsIgnoreCase(Appreference.loginuserdetails.getUsername())) {
-                                       *//*if Oracleproject is Group*//*
-                                    tv_reassign.setVisibility(View.VISIBLE);
-                                    tv_reassign.setText("Assign to me");
-                                    Self_assign = true;
-                                    addobserverRowView.setVisibility(View.GONE);
-                                    tv_percompletion.setVisibility(View.GONE);
-                                    assignFromTemplateView.setVisibility(View.GONE);
-                                    assignFromTemplate.setVisibility(View.GONE);
-                                    addobserverRow.setVisibility(View.GONE);
-                                    percentCompletionView.setVisibility(View.GONE);
-                                    percentcompletion_tr.setVisibility(View.GONE);
-                                    mute_audio.setVisibility(View.GONE);
-                                    View_Task_TR.setVisibility(View.GONE);
-                                    View_Task_View.setVisibility(View.GONE);
-                                }*/ else {
+                                } else {
                                     options.setVisibility(View.VISIBLE);
                                     addobserverRowView.setVisibility(View.GONE);
                                     assignFromTemplateView.setVisibility(View.GONE);
@@ -2682,42 +2659,7 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                                         View_Task_TR.setVisibility(View.VISIBLE);
                                         View_Task_View.setVisibility(View.VISIBLE);
                                     }
-                                } /*else if (isProjectFromOracle && oracleProjectOwner.equalsIgnoreCase(Appreference.loginuserdetails.getUsername())) {
-                                       *//*if Oracleproject is Group*//*
-                                    tv_reassign.setVisibility(View.VISIBLE);
-                                    tv_reassign.setText("Assign Task");
-
-                                    addobserverRowView.setVisibility(View.GONE);
-                                    tv_percompletion.setVisibility(View.GONE);
-                                    assignFromTemplateView.setVisibility(View.GONE);
-                                    assignFromTemplate.setVisibility(View.GONE);
-                                    addobserverRow.setVisibility(View.GONE);
-                                    percentCompletionView.setVisibility(View.GONE);
-                                    percentcompletion_tr.setVisibility(View.GONE);
-                                    mute_audio.setVisibility(View.GONE);
-                                    View_Task_TR.setVisibility(View.GONE);
-                                    View_Task_View.setVisibility(View.GONE);
-                                } else if (isProjectFromOracle && !oracleProjectOwner.equalsIgnoreCase(Appreference.loginuserdetails.getUsername())) {
-                                       *//*if Oracleproject is Group*//*
-                                    if (Appreference.loginuserdetails != null && Appreference.loginuserdetails.getRoleId() != null
-                                            && Appreference.loginuserdetails.getRoleId().equalsIgnoreCase("2")) {
-                                        tv_reassign.setVisibility(View.GONE);
-                                    } else {
-                                        tv_reassign.setVisibility(View.VISIBLE);
-                                    }
-                                    tv_reassign.setText("Assign to me");
-                                    Self_assign = true;
-                                    addobserverRowView.setVisibility(View.GONE);
-                                    tv_percompletion.setVisibility(View.GONE);
-                                    assignFromTemplateView.setVisibility(View.GONE);
-                                    assignFromTemplate.setVisibility(View.GONE);
-                                    addobserverRow.setVisibility(View.GONE);
-                                    percentCompletionView.setVisibility(View.GONE);
-                                    percentcompletion_tr.setVisibility(View.GONE);
-                                    mute_audio.setVisibility(View.GONE);
-                                    View_Task_TR.setVisibility(View.GONE);
-                                    View_Task_View.setVisibility(View.GONE);
-                                }*/ else {
+                                } else {
                                       /*if tasktype is Group ==>taker side*/
                                     addobserverRowView.setVisibility(View.GONE);
                                     assignFromTemplateView.setVisibility(View.VISIBLE);
@@ -2752,6 +2694,29 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                             vie = 0;
                         }
                     }
+                }else
+                {
+                    LayoutInflater inflater = getLayoutInflater();
+                    View alertLayout = inflater.inflate(R.layout.list_task_description, null);
+                    AlertDialog.Builder alert = new AlertDialog.Builder(context);
+                    TextView my_taskName=(TextView) alertLayout.findViewById(R.id.my_taskName);
+                    alert.setTitle("TASK NAME");
+                    // this is set the view from XML inside AlertDialog
+                    alert.setView(alertLayout);
+                    // disallow cancel of AlertDialog on click of back button and outside touch
+                    alert.setCancelable(false);
+                    String Query = "Select * from projectHistory where projectId ='" + projectId + "' and taskId = '" + webtaskId + "'";
+                    TaskDetailsBean taskBean = VideoCallDataBase.getDB(context).getDetails_to_complete_project(Query);
+                    my_taskName.setText(taskBean.getTaskName());
+                    alert.setPositiveButton("cancel", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface taskdialog, int which) {
+                            taskdialog.dismiss();
+                        }
+                    });
+
+                    AlertDialog dialog = alert.create();
+                    dialog.show();
                 }
             }
         });
@@ -4072,6 +4037,7 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
         observation_path = "";
         Action_Taken_path = "";
         customerRemarks_path = "";
+        synopsis_path = "";
         observationStatus = "";
         actiontakenStatus = "";
         HMReadingStatus = "";
@@ -4079,6 +4045,7 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
         custsignnameStatus = "";
         photo_signature = "";
         tech_signature = "";
+        synopsis_status = "";
         if (startTime != null && !startTime.equalsIgnoreCase(""))
             sendStatus_webservice(status, "", "", "travel", "");
         else
@@ -4628,6 +4595,7 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
         observation_path = "";
         Action_Taken_path = "";
         customerRemarks_path = "";
+        synopsis_path = "";
         observationStatus = "";
         actiontakenStatus = "";
         HMReadingStatus = "";
@@ -4635,6 +4603,7 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
         custsignnameStatus = "";
         photo_signature = "";
         tech_signature = "";
+        synopsis_status = "";
         Log.i("ws123", "project CurrentStatus from DB====>" + current_status);
         if (oracleProjectOwner != null && !oracleProjectOwner.equalsIgnoreCase(Appreference.loginuserdetails.getUsername())) {
 //            popup.getMenu().getItem(7).setVisible(false);
@@ -4879,10 +4848,13 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                     final Calendar calendar = Calendar.getInstance();
                     final SimpleDateFormat mdformat = new SimpleDateFormat("yyyy-MM-dd");
                     String taskcomplete_date = mdformat.format(calendar.getTime());
-//                    taskcomplete_date = taskcomplete_date.toString() + " " + "00:00:00";
                     Log.i("ws123", "taskcomplete_ddate $$--> " + taskcomplete_date);
                     int complete_travel = VideoCallDataBase.getDB(context).CheckTravelEntryDetails("select * from projectStatus where projectId ='" + projectId + "' and status = '10' and taskcompleteddate like '" + taskcomplete_date + "%" + "'");
                     Log.i("ws123", "complete_travel $$--> " + complete_travel);
+                    String TraveltimeQuery = "Select * from projectHistory where projectId ='" + projectId + "'";
+                    boolean isTravelTaskAvailable= VideoCallDataBase.getDB(context).getTraveltaskExistsOrNot(TraveltimeQuery);
+                    Log.i("travel123","gettravel Task available or not========> "+isTravelTaskAvailable);
+
                     if (complete_travel == 0) {
                         int travelentry = VideoCallDataBase.getDB(context).CheckTravelEntryDetails("select * from projectStatus where projectId ='" + projectId + "' and taskId = '" + webtaskId + "' and travelStartTime IS NOT NULL and travelEndTime IS NULL");
                         if (travelentry == 0) {
@@ -4917,8 +4889,10 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                             observation_path = "";
                             Action_Taken_path = "";
                             customerRemarks_path = "";
+                        synopsis_path = "";
                             observationStatus = "";
                             actiontakenStatus = "";
+                        synopsis_status = "";
                             observation_type.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
@@ -4941,10 +4915,12 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                                             new DialogInterface.OnClickListener() {
                                                 public void onClick(DialogInterface dialog, int which) {
                                                     isobservationtextselected = false;
+                                                    isobservationSketchselected = true;
                                                     isObservation = true;
                                                     isCustomerRemarks = false;
                                                     isActionTaken = false;
                                                     isCustomerSign = false;
+                                                isSynopsis = false;
                                                     isForOracleProject = true;
                                                     observation.setVisibility(View.GONE);
                                                     observation.getText().clear();
@@ -5018,6 +4994,7 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                                                     isCustomerRemarks = false;
                                                     isObservation = false;
                                                     isCustomerSign = false;
+                                                isSynopsis = false;
                                                     isForOracleProject = true;
                                                     action_taken.getText().clear();
                                                     action_taken.setVisibility(View.GONE);
@@ -5088,6 +5065,7 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                                                     isActionTaken = false;
                                                     isObservation = false;
                                                     isCustomerSign = false;
+                                                isSynopsis = false;
                                                     isForOracleProject = true;
                                                     remarks_completion.getText().clear();
                                                     remarks_completion.setVisibility(View.GONE);
@@ -5127,14 +5105,86 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                                     }
                                 }
                             });
-                            final EditText cust_sign_name = (EditText) dialog.findViewById(R.id.cust_sign_name);
-                            final EditText HMReading = (EditText) dialog.findViewById(R.id.hour_meter_reading);
-                            final TextView task_completed_date = (TextView) dialog.findViewById(R.id.task_completed_date);
-                            TextView proj_activity = (TextView) dialog.findViewById(R.id.proj_activity);
-                            final TextView travel_start = (TextView) dialog.findViewById(R.id.travel_start);
-                            final TextView travel_end = (TextView) dialog.findViewById(R.id.travel_end);
-                            final TextView activity_start = (TextView) dialog.findViewById(R.id.activity_start);
-                            final TextView activity_end = (TextView) dialog.findViewById(R.id.activity_end);
+                        final EditText synopsis_text = (EditText) dialog.findViewById(R.id.synopsis_text);
+                        final Button synopsis_type = (Button) dialog.findViewById(R.id.synopsis_type);
+                        synopsis_img = (ImageView) dialog.findViewById(R.id.synopsis_img);
+                        synopsis_type.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                AlertDialog.Builder saveDialog = new AlertDialog.Builder(context);
+                                saveDialog.setTitle("Synopsis Type");
+                                saveDialog.setCancelable(false);
+                                saveDialog.setMessage("You want to type or draw  sketch in " + taskName);
+                                saveDialog.setPositiveButton("Text", new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        isSynopsistextselected = true;
+                                        synopsis_text.setCursorVisible(true);
+                                        synopsis_text.setFocusableInTouchMode(true);
+                                        synopsis_img.setVisibility(View.GONE);
+                                        synopsis_text.setVisibility(View.VISIBLE);
+                                        synopsis_path = "";
+                                        dialog.cancel();
+                                    }
+                                });
+                                saveDialog.setNeutralButton("Sketch",
+                                        new DialogInterface.OnClickListener() {
+                                            public void onClick(DialogInterface dialog, int which) {
+                                                isSynopsistextselected = false;
+                                                isSynopsisSketchselected = true;
+                                                isSynopsis = true;
+                                                isObservation = false;
+                                                isCustomerRemarks = false;
+                                                isActionTaken = false;
+                                                isCustomerSign = false;
+                                                isForOracleProject = true;
+                                                synopsis_text.setVisibility(View.GONE);
+                                                synopsis_text.getText().clear();
+                                                synopsis_img.setVisibility(View.VISIBLE);
+                                                Intent i = new Intent(getApplicationContext(), HandSketchActivity2.class);
+                                                //                                            i.putExtra("observation","observation");
+                                                startActivityForResult(i, 423);
+                                                dialog.cancel();
+                                            }
+                                        });
+                                saveDialog.setNegativeButton("Cancel",
+                                        new DialogInterface.OnClickListener() {
+                                            public void onClick(DialogInterface dialog, int which) {
+                                                dialog.cancel();
+                                            }
+                                        });
+                                saveDialog.show();
+
+                            }
+                        });
+
+                        synopsis_text.addTextChangedListener(new TextWatcher() {
+
+                            public void afterTextChanged(Editable s) {
+                                if (synopsis_text.getText().toString() != null && synopsis_text.getText().toString().endsWith(".jpg")) {
+                                    synopsis_text.getText().clear();
+                                    Toast.makeText(getApplicationContext(), "Don't text endswith .jpg", Toast.LENGTH_SHORT).show();
+                                }
+                            }
+
+                            public void beforeTextChanged(CharSequence s, int start,
+                                                          int count, int after) {
+                            }
+
+                            public void onTextChanged(CharSequence s, int start,
+                                                      int before, int count) {
+                                Log.i("oracle123", "onTextEnteredCount===>" + count);
+
+                            }
+                        });
+
+                        final EditText cust_sign_name = (EditText) dialog.findViewById(R.id.cust_sign_name);
+                        final EditText HMReading = (EditText) dialog.findViewById(R.id.hour_meter_reading);
+                        final TextView task_completed_date = (TextView) dialog.findViewById(R.id.task_completed_date);
+                        TextView proj_activity = (TextView) dialog.findViewById(R.id.proj_activity);
+                        final TextView travel_start = (TextView) dialog.findViewById(R.id.travel_start);
+                        final TextView travel_end = (TextView) dialog.findViewById(R.id.travel_end);
+                        final TextView activity_start = (TextView) dialog.findViewById(R.id.activity_start);
+                        final TextView activity_end = (TextView) dialog.findViewById(R.id.activity_end);
 
                             final EditText mcModel = (EditText) dialog.findViewById(R.id.mac_model);
                             final EditText mcSrNo = (EditText) dialog.findViewById(R.id.mac_no);
@@ -5264,6 +5314,7 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                                     isObservation = false;
                                     isCustomerRemarks = false;
                                     isActionTaken = false;
+                                isSynopsis = false;
                                     isForOracleProject = true;
                                     Intent i = new Intent(getApplicationContext(), HandSketchActivity2.class);
                                     startActivityForResult(i, 423);
@@ -5276,6 +5327,7 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                                     isObservation = false;
                                     isCustomerRemarks = false;
                                     isActionTaken = false;
+                                isSynopsis = false;
                                     isForOracleProject = true;
                                     Intent i = new Intent(getApplicationContext(), HandSketchActivity2.class);
                                     startActivityForResult(i, 423);
@@ -5456,11 +5508,37 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                                     } else
                                         Toast.makeText(NewTaskConversation.this, "Please Set any Image to View", Toast.LENGTH_SHORT).show();
 
-                                }
-                            });
-                            back.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
+                            }
+                        });
+
+                        synopsis_img.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                String ImageName = synopsis_path;
+                                File file = null;
+                                if (ImageName != null && !ImageName.equalsIgnoreCase("")) {
+                                    file = new File(ImageName);
+                                    if (file.exists()) {
+                                        Intent intent = new Intent(context, FullScreenImage.class);
+                                        intent.putExtra("image", file.toString());
+                                        context.startActivity(intent);
+                                    } else {
+                                        File file1 = null;
+                                        file1 = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/High Message/" + ImageName);
+                                        if (file1.exists()) {
+                                            Intent intent = new Intent(context, FullScreenImage.class);
+                                            intent.putExtra("image", file1.toString());
+                                            context.startActivity(intent);
+                                        }
+                                    }
+                                } else
+                                    Toast.makeText(NewTaskConversation.this, "Please Set any Image to View", Toast.LENGTH_SHORT).show();
+
+                            }
+                        });
+                        back.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
 
                                     AlertDialog.Builder saveDialog = new AlertDialog.Builder(context);
                                     saveDialog.setTitle("JobCode Completion");
@@ -5528,67 +5606,78 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                                     //                            statusCompletedFieldValues.put(16, "ActionTaken :" + action_taken.getText().toString());
                                     statusCompletedFieldValues.put(17, "CustomerSignName :" + cust_sign_name.getText().toString());
                                     statusCompletedFieldValues.put(18, "HMR :" + HMReading.getText().toString());
-                                    if (isobservationtextselected)
-                                        observationStatus = observation.getText().toString();
-                                    else
-                                        observationStatus = "";
-                                    if (isactiontextselected)
-                                        actiontakenStatus = action_taken.getText().toString();
-                                    else
-                                        actiontakenStatus = "";
-                                    if (cust_sign_name.getText().toString() != null)
-                                        custsignnameStatus = cust_sign_name.getText().toString();
-                                    else
-                                        custsignnameStatus = "";
-                                    if (HMReading.getText().toString() != null)
-                                        HMReadingStatus = HMReading.getText().toString();
-                                    else
-                                        HMReadingStatus = "";
-                                    if (mcModel.getText().toString() != null)
-                                        machine_model = mcModel.getText().toString();
-                                    else
-                                        machine_model = "";
-                                    if (mcSrNo.getText().toString() != null)
-                                        machine_serialno = mcSrNo.getText().toString();
-                                    else
-                                        machine_serialno = "";
-                                    if (description.getText().toString() != null)
-                                        machine_description = description.getText().toString();
-                                    else
-                                        machine_description = "";
-                                    if (machine_make.getText().toString() != null)
-                                        machion_make_edit = machine_make.getText().toString();
-                                    else
-                                        machion_make_edit = "";
-                                    Log.i("desc123", "machine_model @@========>" + machine_model);
-                                    Log.i("desc123", "machine_serialno @@========>" + machine_serialno);
-                                    Log.i("desc123", "machine_description @@========>" + machine_description);
+                                if (isSynopsistextselected)
+                                    synopsis_status = synopsis_text.getText().toString();
+                                else
+                                    synopsis_status = "";
+
+                                if (isobservationtextselected)
+                                    observationStatus = observation.getText().toString();
+                                else
+                                    observationStatus = "";
+                                if (isactiontextselected)
+                                    actiontakenStatus = action_taken.getText().toString();
+                                else
+                                    actiontakenStatus = "";
+                                if (cust_sign_name.getText().toString() != null)
+                                    custsignnameStatus = cust_sign_name.getText().toString();
+                                else
+                                    custsignnameStatus = "";
+                                if (HMReading.getText().toString() != null)
+                                    HMReadingStatus = HMReading.getText().toString();
+                                else
+                                    HMReadingStatus = "";
+                                if (mcModel.getText().toString() != null)
+                                    machine_model = mcModel.getText().toString();
+                                else
+                                    machine_model = "";
+                                if (mcSrNo.getText().toString() != null)
+                                    machine_serialno = mcSrNo.getText().toString();
+                                else
+                                    machine_serialno = "";
+                                if (description.getText().toString() != null)
+                                    machine_description = description.getText().toString();
+                                else
+                                    machine_description = "";
+                                if (machine_make.getText().toString() != null)
+                                    machion_make_edit = machine_make.getText().toString();
+                                else
+                                    machion_make_edit = "";
+                                Log.i("desc123", "machine_model @@========>" + machine_model);
+                                Log.i("desc123", "machine_serialno @@========>" + machine_serialno);
+                                Log.i("desc123", "machine_description @@========>" + machine_description);
 
                                     String query_status = "select status from projectStatus where projectId='" + projectId + "' and userId='" + Appreference.loginuserdetails.getId() + "' and taskId= '" + webtaskId + "'";
                                     int current_status = VideoCallDataBase.getDB(context).getCurrentStatus(query_status);
+                                    Log.i("EOD123", "tech_signature ==> " + tech_signature);
+                                    Log.i("EOD123", "status_signature ==> " + status_signature);
+                                    Log.i("EOD123", "photo_signature ==> " + photo_signature);
 
-                                    if (taskCompletedDate != null && !taskCompletedDate.equalsIgnoreCase("") && HMReadingStatus != null && !HMReadingStatus.equalsIgnoreCase("")) {
+                                    if (taskCompletedDate != null && !taskCompletedDate.equalsIgnoreCase("")
+                                            && HMReadingStatus != null && !HMReadingStatus.equalsIgnoreCase("")
+                                            && machion_make_edit!=null && !machion_make_edit.equalsIgnoreCase("")
+                                            && machine_model!=null && !machine_model.equalsIgnoreCase("")
+                                            && machine_serialno!=null && !machine_serialno.equalsIgnoreCase("")
+                                            && machine_description!=null && !machine_description.equalsIgnoreCase("")
+                                            && custsignnameStatus!=null && !custsignnameStatus.equalsIgnoreCase("")
+                                            && status_signature!=null && !status_signature.equalsIgnoreCase("")
+                                            && photo_signature!=null && !photo_signature.equalsIgnoreCase("")
+                                            && tech_signature!=null && !tech_signature.equalsIgnoreCase("")
+                                            && (isRemarkstextselected && customer_remarksEntry != null) || (isremarksSketchselected && customerRemarks_path != null)
+                                            && (isobservationtextselected && observationStatus != null) || (isobservationSketchselected && observation_path != null)
+                                            && (isactiontextselected && actiontakenStatus != null) || (isactionSketchselected && Action_Taken_path != null)
+                                            && (isSynopsistextselected && synopsis_status != null) || (isSynopsisSketchselected && synopsis_path != null)) {
+
                                         if (count != 0) {
-                                            Log.i("EOD", "isRemarkstextselected ==> " + isRemarkstextselected);
                                             Log.i("EOD", "customer_remarksEntry ==> " + customer_remarksEntry);
-                                            if ((isRemarkstextselected && customer_remarksEntry != null) || (isremarksSketchselected && customerRemarks_path != null)) {
-                                                //                                Toast.makeText(NewTaskConversation.this, "Send Successfully", Toast.LENGTH_SHORT).show();
-                                                if (travelentry == 0) {
-                                                    if (taskCompletedDate != null) {
                                                         String selectedDate[] = taskCompletedDate.split(" ");
                                                         String date_s = selectedDate[0];
                                                         sendStatus_webservice("10", "", customer_remarksEntry, "EOD Sent date is " + date_s, "");
                                                         dialog.dismiss();
-                                                    }
-                                                } else
-                                                    Toast.makeText(NewTaskConversation.this, "Enter end date and time and then proceed to complete the task.", Toast.LENGTH_SHORT).show();
-
-                                            } else
-                                                Toast.makeText(NewTaskConversation.this, "Please type Remarks", Toast.LENGTH_SHORT).show();
                                         } else
                                             Toast.makeText(NewTaskConversation.this, "No StartEndTime Found", Toast.LENGTH_SHORT).show();
                                     } else {
-                                        Toast.makeText(NewTaskConversation.this, "Please fill the Mandatory field", Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(NewTaskConversation.this, "Please Fill Mandatory Fields", Toast.LENGTH_SHORT).show();
                                     }
                                 }
                             });
@@ -5873,6 +5962,12 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                 jsonObject.put("remarks", "");
             jsonObject.put("status", status);
 
+            if (synopsis_status != null && !synopsis_status.equalsIgnoreCase("")) {
+                jsonObject.put("synopsis", synopsis_status);
+                taskDetailsBean.setSynopsis(synopsis_status);
+            } else
+                jsonObject.put("synopsis", "");
+
             if (observationStatus != null && !observationStatus.equalsIgnoreCase("")) {
                 jsonObject.put("observation", observationStatus);
                 taskDetailsBean.setObservation(observationStatus);
@@ -6125,7 +6220,23 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                     e.printStackTrace();
                 }
             }
-
+            Log.i("travel123", "synopsis_path ===>" + synopsis_path);
+            JSONObject jsonObject10 = new JSONObject();
+            if (synopsis_path != null && !synopsis_path.equalsIgnoreCase(null) && !synopsis_path.equalsIgnoreCase("")) {
+                try {
+                    TaskDetailsBean taskbean2 = (TaskDetailsBean) taskDetailsBean.clone();
+                    taskbean2.setMimeType("image");
+                    taskbean2.setTaskRequestType("synopsis");
+                    taskbean2.setTaskDescription(synopsis_path);
+                    jsonObject10.put("fileContent", encodeTobase64(BitmapFactory.decodeFile(synopsis_path)));
+                    jsonObject10.put("taskFileExt", "jpg");
+                    jsonObject10.put("synopsisImage", jsonObject10);
+                    status_list.add(taskbean2);
+                    taskDetailsBean.setSynopsis(synopsis_path);
+                } catch (CloneNotSupportedException e) {
+                    e.printStackTrace();
+                }
+            }
             Log.i("listobservers", "ownerOfTask ** " + ownerOfTask);
             listOfObservers.clear();
             if (ownerOfTask != null && !ownerOfTask.equalsIgnoreCase(Appreference.loginuserdetails.getUsername())) {
@@ -9769,6 +9880,18 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                                 }
                                 remarks_complete_1.setVisibility(View.VISIBLE);
                                 Log.i("result_handsketch", "remarks_complete_1==>$$ !! " + strIPath);
+                            }
+                        } else if (isSynopsis) {
+                            Log.i("result_handsketch", "isSynopsis==> " + strIPath);
+                            synopsis_path = strIPath;
+                            if (synopsis_img != null) {
+                                File imgFile = new File(synopsis_path);
+                                if (imgFile.exists()) {
+                                    Bitmap myBitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
+                                    synopsis_img.setImageBitmap(myBitmap);
+                                }
+                                synopsis_img.setVisibility(View.VISIBLE);
+                                Log.i("result_handsketch", "synopsis_path==>$$ !! " + synopsis_path);
                             }
                         } else {
                             tech_signature = strIPath;

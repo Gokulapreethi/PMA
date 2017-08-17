@@ -72,7 +72,7 @@ public class ProjectDetailsBean implements Serializable {
     private String isActiveStatus;
     private String jobCardType;
     private String machineMake;
-
+    private String jobDescription;
 
     public String getId() {
         return id;
@@ -537,5 +537,13 @@ public class ProjectDetailsBean implements Serializable {
 
     public void setMcDescription(String mcDescription) {
         this.mcDescription = mcDescription;
+    }
+
+    public String getJobDescription() {
+        return jobDescription;
+    }
+
+    public void setJobDescription(String jobDescription) {
+        this.jobDescription = jobDescription;
     }
 }

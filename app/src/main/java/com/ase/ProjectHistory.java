@@ -1272,10 +1272,12 @@ public class ProjectHistory extends Activity implements WebServiceInterface, Swi
                 }
                 final ProjectDetailsBean projectDetailsBean = arrayBuddyList.get(pos);
                 TextView task_giver = (TextView) conView.findViewById(R.id.task_giver);
+                TextView task_taker = (TextView) conView.findViewById(R.id.task_taker);
+
+
 //                ImageView imageView = (ImageView) conView.findViewById(R.id.state);
 
                 TextView msg_count = (TextView) conView.findViewById(R.id.item_counter);
-                TextView task_taker = (TextView) conView.findViewById(R.id.task_taker);
                 TextView task_observer = (TextView) conView.findViewById(R.id.task_observer);
                 TextView taskName = (TextView) conView.findViewById(R.id.project_name);
                 TextView remain = (TextView) conView.findViewById(R.id.remain_count);
@@ -1372,8 +1374,16 @@ public class ProjectHistory extends Activity implements WebServiceInterface, Swi
                 }
 
 
-                if (projectDetailsBean.getParentTaskId() != null && projectDetailsBean.getTaskId() != null) {
-                    task_taker.setVisibility(View.VISIBLE);
+                Log.i("taker123","Taker isActiveStatus -=============> "+projectDetailsBean.getIsActiveStatus());
+                if (projectDetailsBean.getParentTaskId() != null && projectDetailsBean.getTaskId() != null){
+                    Log.i("taker123","Taker inside if -=============> "+projectDetailsBean.getIsActiveStatus());
+                    if(projectDetailsBean.getIsActiveStatus()!=null && projectDetailsBean.getIsActiveStatus().equalsIgnoreCase("1") && !projectDetailsBean.getIsActiveStatus().equalsIgnoreCase("null")) {
+                        task_taker.setVisibility(View.GONE);
+                        task_giver.setVisibility(View.GONE);
+                    }else
+                    {
+                        task_taker.setVisibility(View.VISIBLE);
+                    }
                     if (isFromOracle)
                         task_observer.setVisibility(View.GONE);
                     else
@@ -1538,7 +1548,8 @@ public class ProjectHistory extends Activity implements WebServiceInterface, Swi
                     if (projectDetailsBean.getTaskStatus().equalsIgnoreCase("note")) {
                         selectedimage.setBackgroundResource(R.drawable.ic_note_32_2);
                         catagory.setText("Activity Code : Name");
-                    } else if (projectDetailsBean.getTaskReceiver() != null && projectDetailsBean.getOwnerOfTask() != null && projectDetailsBean.getTaskReceiver().equalsIgnoreCase(projectDetailsBean.getOwnerOfTask())) {
+                    } else if (projectDetailsBean.getTaskReceiver() != null && projectDetailsBean.getOwnerOfTask() != null
+                            && projectDetailsBean.getTaskReceiver().equalsIgnoreCase(projectDetailsBean.getOwnerOfTask())) {
                         task_taker.setVisibility(View.VISIBLE);
                         task_taker.setText("Me");
                     }

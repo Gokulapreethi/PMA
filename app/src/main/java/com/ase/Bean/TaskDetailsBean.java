@@ -143,6 +143,8 @@ public class TaskDetailsBean implements Serializable,Cloneable {
     private String datenow;
     private String wssendstatus;
     private String end_dateStatus;
+    private String synopsis;
+    private String isActiveStatus;
 
 
 
@@ -1147,6 +1149,22 @@ private String sender_reply;
 
     public void setMachineMake(String machineMake) {
         this.machineMake = machineMake;
+    }
+
+    public String getSynopsis() {
+        return synopsis;
+    }
+
+    public void setSynopsis(String synopsis) {
+        this.synopsis = synopsis;
+    }
+
+    public String getIsActiveStatus() {
+        return isActiveStatus;
+    }
+
+    public void setIsActiveStatus(String isActiveStatus) {
+        this.isActiveStatus = isActiveStatus;
     }
 }
 
