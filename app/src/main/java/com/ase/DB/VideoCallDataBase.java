@@ -9479,7 +9479,7 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
         }
     }
 
-    public ArrayList<String> getOracleProjectIdlist(String query) {
+    public ArrayList<String> getOracleProjectIdlist(String query,String fieldNameTogetResult) {
         ArrayList<String> arrayList = new ArrayList<>();
         Cursor cur;
         try {
@@ -9492,9 +9492,9 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
                     cur = db.rawQuery(query, null);
                     cur.moveToFirst();
                     while (!cur.isAfterLast()) {
-                        if (cur.getString(cur.getColumnIndex("oracleProjectId")) != null && !cur.getString(cur.getColumnIndex("oracleProjectId")).equalsIgnoreCase("")) {
-                            arrayList.add(cur.getString(cur.getColumnIndex("oracleProjectId")));
-                            Log.i("oracle123", "Error====>oracleProjectId list===>" + cur.getString(cur.getColumnIndex("oracleProjectId")));
+                        if (cur.getString(cur.getColumnIndex(fieldNameTogetResult)) != null && !cur.getString(cur.getColumnIndex(fieldNameTogetResult)).equalsIgnoreCase("")) {
+                            arrayList.add(cur.getString(cur.getColumnIndex(fieldNameTogetResult)));
+                            Log.i("oracle123", "Error====>oracleProjectId list===>" + cur.getString(cur.getColumnIndex(fieldNameTogetResult)));
                         }
 
                         cur.moveToNext();

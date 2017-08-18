@@ -424,6 +424,11 @@
             android:screenOrientation="portrait" />
         <activity android:name=".EulaScreen"
             android:screenOrientation="portrait"/>
+
+        <activity android:name=".ListFullTaskName"
+            android:screenOrientation="portrait"
+            android:excludeFromRecents="true"
+            android:theme="@style/Theme.AppCompat.Light.Dialog"/>
     </application>
 
 </manifest>

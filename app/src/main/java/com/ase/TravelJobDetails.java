@@ -394,7 +394,7 @@ public class TravelJobDetails extends Activity implements View.OnClickListener, 
             public void onClick(View v) {
                 String query = "select status from projectStatus where projectId='" + projectId + "' and userId='" + Appreference.loginuserdetails.getId() + "' and taskId= '" + webtaskId + "'";
                 int current_status = VideoCallDataBase.getDB(context).getCurrentStatus(query);
-                if (current_status == -1) {
+                if (current_status == -1|| current_status==8) {
 //                    travel_job.setEnabled(false);
                     Toast.makeText(TravelJobDetails.this, "The Task has not yet started...", Toast.LENGTH_SHORT).show();
                 }else {
@@ -408,7 +408,10 @@ public class TravelJobDetails extends Activity implements View.OnClickListener, 
     }
 
     public void Project_backgroundProcess() {
-
+        if (webtaskId != null && !webtaskId.equalsIgnoreCase("")) {
+            Log.d("task", "Updated Task Read status");
+            VideoCallDataBase.getDB(context).updateprojectMsgReadStatus(webtaskId);
+        }
         String query_1 = "select * from taskDetailsInfo where (loginuser='" + Appreference.loginuserdetails.getEmail() + "') and (taskStatus!='note' and taskStatus!='draft') and (taskId='" + webtaskId + "') and (projectId='" + projectId + "') and customTagVisible = '1';";
 
         if (VideoCallDataBase.getDB(context).getTaskHistory(query_1) != null) {
@@ -602,8 +605,16 @@ public class TravelJobDetails extends Activity implements View.OnClickListener, 
         popup.getMenu().getItem(1).setVisible(false);
 
         String query = "select status from projectStatus where projectId='" + projectId + "' and userId='" + Appreference.loginuserdetails.getId() + "' and taskId= '" + webtaskId + "'";
-        final int current_status = VideoCallDataBase.getDB(context).getCurrentStatus(query);
-
+        int current_status = VideoCallDataBase.getDB(context).getCurrentStatus(query);
+        if (current_status == 7 || current_status == 9) {
+            String status_info = "select status from projectStatus where projectId='" + projectId + "' and userId='" + Appreference.loginuserdetails.getId() + "' and taskId= '" + webtaskId + "' and status!='7' and status!= '9'order by id DESC";
+            ArrayList<String> status_all = VideoCallDataBase.getDB(context).getAllCurrentStatus(status_info);
+            Log.i("output123", "project CurrentStatus from DB====>" + status_all.size());
+            if (status_all.size() > 0) {
+                current_status = Integer.parseInt(status_all.get(0));
+                Log.i("output123", "project CurrentStatus from current_status " + current_status);
+            }
+        }
         Log.i(tab, "project CurrentStatus from DB====>" + current_status);
         if (oracleProjectOwner != null && !oracleProjectOwner.equalsIgnoreCase(Appreference.loginuserdetails.getUsername())) {
             if (current_status == -1) {
@@ -613,7 +624,7 @@ public class TravelJobDetails extends Activity implements View.OnClickListener, 
                 popup.getMenu().getItem(3).setVisible(false);
                 popup.getMenu().getItem(4).setVisible(false);
                 popup.getMenu().getItem(5).setVisible(false);
-                popup.getMenu().getItem(6).setVisible(false);
+                popup.getMenu().getItem(6).setVisible(true);
                 popup.getMenu().getItem(7).setVisible(false);
             }
 //        popup.getMenu().getItem(6).setVisible(true);
@@ -654,7 +665,7 @@ public class TravelJobDetails extends Activity implements View.OnClickListener, 
                 popup.getMenu().getItem(3).setVisible(false);
                 popup.getMenu().getItem(4).setVisible(false);
                 popup.getMenu().getItem(5).setVisible(false);
-                popup.getMenu().getItem(6).setVisible(false);
+                popup.getMenu().getItem(6).setVisible(true);
                 popup.getMenu().getItem(7).setVisible(false);
             }
         } else {

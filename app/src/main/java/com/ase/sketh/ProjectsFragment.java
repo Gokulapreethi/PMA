@@ -1,6 +1,7 @@
 package com.ase.sketh;
 
 import android.app.DatePickerDialog;
+import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
@@ -28,6 +29,7 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
@@ -48,6 +50,7 @@ import com.ase.Bean.ListallProjectBean;
 import com.ase.Bean.ProjectDetailsBean;
 import com.ase.Bean.TaskDetailsBean;
 import com.ase.DB.VideoCallDataBase;
+import com.ase.DateTimePicker;
 import com.ase.ImageLoader;
 import com.ase.ListAllgetTaskDetails;
 import com.ase.ProjectHistory;
@@ -94,7 +97,7 @@ import static android.graphics.Color.rgb;
 /**
  * Created by prasanth on 12/7/2016.
  */
-public class ProjectsFragment extends Fragment implements View.OnClickListener, WebServiceInterface {
+public class ProjectsFragment extends Fragment implements View.OnClickListener, WebServiceInterface, DateTimePicker.DateWatcher {
     public View view;
     private SwipeMenuListView listview_project;
     TextView heading_project, exclation_counter, first_fsr, end_fsr, tna_middle;
@@ -245,10 +248,6 @@ public class ProjectsFragment extends Fragment implements View.OnClickListener, 
                         all_report_title.setVisibility(View.GONE);
                         tna_count = 0;
                     }
-                  /*  Intent intent = new Intent(getActivity(), SearchMediaWebView.class);
-                    intent.putExtra("urlload","tnareport");
-                    startActivity(intent);
-                    getActivity().overridePendingTransition(R.anim.right_anim, R.anim.left_anim);*/
                 }
             });
 
@@ -259,6 +258,123 @@ public class ProjectsFragment extends Fragment implements View.OnClickListener, 
                 public void onClick(View v) {
 
                     LayoutInflater inflater = getActivity().getLayoutInflater();
+                    View alertLayout = inflater.inflate(R.layout.fsr_request_view, null);
+                    final Spinner machine_no_spinner = (Spinner) alertLayout.findViewById(R.id.machine_no_spinner);
+                    final Button fsr_start_btn = (Button) alertLayout.findViewById(R.id.fsr_start_btn);
+                    final Button fsr_end_btn = (Button) alertLayout.findViewById(R.id.fsr_end_btn);
+                    final TextView tx_fst_start = (TextView) alertLayout.findViewById(R.id.fst_start);
+                    final TextView tx_fst_end = (TextView) alertLayout.findViewById(R.id.fst_end);
+                    AlertDialog.Builder alert = new AlertDialog.Builder(getActivity());
+                    alert.setTitle("FSR REPORT");
+                    // this is set the view from XML inside AlertDialog
+                    alert.setView(alertLayout);
+                    // disallow cancel of AlertDialog on click of back button and outside touch
+                    alert.setCancelable(false);
+                    /*getting list of jobcards for the user from table*/
+                    String list_query = "select *,cast(oracleProjectId as unsigned) as t from projectDetails where loginuser = '" + Appreference.loginuserdetails.getEmail() + "' order by t DESC";
+                    ArrayList<String> ar_My_machineSerialNo = VideoCallDataBase.getDB(getActivity()).getOracleProjectIdlist(list_query,"mcSrNo");
+                    ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, ar_My_machineSerialNo);
+                    // Drop down layout style - list view with radio button
+                    dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                    // attaching data adapter to spinner
+                    machine_no_spinner.setAdapter(dataAdapter);
+                    machine_no_spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                        @Override
+                        public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                            String selected_jobcard = String.valueOf(machine_no_spinner.getSelectedItem());/*selected jobcard from spinner*/
+
+                        }
+
+                        @Override
+                        public void onNothingSelected(AdapterView<?> parent) {
+                        }
+                    });
+                    fsr_start_btn.setOnClickListener(new View.OnClickListener() {
+                        final Calendar c = Calendar.getInstance();
+                        @Override
+                        public void onClick(View v) {
+                            try {
+                                DatePickerDialog dpd = new DatePickerDialog(getActivity(),
+                                        new DatePickerDialog.OnDateSetListener() {
+                                            @Override
+                                            public void onDateSet(DatePicker view, int year,
+                                                                  int monthOfYear, int dayOfMonth) {
+
+                                                String months = "";
+                                                if ((monthOfYear + 1) < 10) {
+                                                    months = "0" + (monthOfYear + 1);
+                                                } else {
+                                                    months = String.valueOf(monthOfYear + 1);
+                                                }
+                                                String days = "";
+                                                if (dayOfMonth < 10) {
+                                                    days = "0" + dayOfMonth;
+                                                } else {
+                                                    days = String.valueOf(dayOfMonth);
+                                                }
+                                                String completedate_display = year + "-" + months + "-" + days;
+                                                tx_fst_start.setText(completedate_display);
+                                            }
+                                        }, c.get(Calendar.YEAR), c.get(Calendar.MONTH), c.get(Calendar.DATE));
+                                dpd.show();
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    });
+                    fsr_end_btn.setOnClickListener(new View.OnClickListener() {
+                        final Calendar c = Calendar.getInstance();
+
+                        @Override
+                        public void onClick(View v) {
+                            try {
+                                DatePickerDialog dpd = new DatePickerDialog(getActivity(),
+                                        new DatePickerDialog.OnDateSetListener() {
+                                            @Override
+                                            public void onDateSet(DatePicker view, int year,
+                                                                  int monthOfYear, int dayOfMonth) {
+
+                                                String months = "";
+                                                if ((monthOfYear + 1) < 10) {
+                                                    months = "0" + (monthOfYear + 1);
+                                                } else {
+                                                    months = String.valueOf(monthOfYear + 1);
+                                                }
+                                                String days = "";
+                                                if (dayOfMonth < 10) {
+                                                    days = "0" + dayOfMonth;
+                                                } else {
+                                                    days = String.valueOf(dayOfMonth);
+                                                }
+                                                String completedate_display = year + "-" + months + "-" + days;
+                                                 tx_fst_end.setText(completedate_display);
+                                            }
+                                        }, c.get(Calendar.YEAR), c.get(Calendar.MONTH), c.get(Calendar.DATE));
+                                dpd.show();
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    });
+                    alert.setPositiveButton("Submit", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+
+                        }
+                    });
+                    alert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+                    });
+
+                    AlertDialog dialog = alert.create();
+                    dialog.show();
+
+
+
+                    /*LayoutInflater inflater = getActivity().getLayoutInflater();
                     View alertLayout = inflater.inflate(R.layout.fsr_report_view, null);
                     final Spinner job_spinner = (Spinner) alertLayout.findViewById(R.id.job_spinner);
                     final Spinner date_spinner = (Spinner) alertLayout.findViewById(R.id.date_spinner);
@@ -268,7 +384,7 @@ public class ProjectsFragment extends Fragment implements View.OnClickListener, 
                     alert.setView(alertLayout);
                     // disallow cancel of AlertDialog on click of back button and outside touch
                     alert.setCancelable(false);
-                    /*getting list of jobcards for the user from table*/
+                    *//*getting list of jobcards for the user from table*//*
                     String list_query = "select *,cast(oracleProjectId as unsigned) as t from projectDetails where loginuser = '" + Appreference.loginuserdetails.getEmail() + "' order by t DESC";
                     ArrayList<String> My_Project = VideoCallDataBase.getDB(getActivity()).getOracleProjectIdlist(list_query);
                     ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, My_Project);
@@ -279,12 +395,12 @@ public class ProjectsFragment extends Fragment implements View.OnClickListener, 
                     job_spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                         @Override
                         public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                            String selected_jobcard = String.valueOf(job_spinner.getSelectedItem());/*selected jobcard from spinner*/
-                            /*getting projectid from table relevant to oracleprojectId*/
+                            String selected_jobcard = String.valueOf(job_spinner.getSelectedItem());*//*selected jobcard from spinner*//*
+                            *//*getting projectid from table relevant to oracleprojectId*//*
                             String get_projectId_query = "select projectId from projectDetails where loginuser = '" + Appreference.loginuserdetails.getEmail() + "'and oracleProjectId='" + selected_jobcard + "'";
                             String fsr_ProjectId = VideoCallDataBase.getDB(getActivity()).getprojectIdForOracleID(get_projectId_query);
                             fsr_jobId = fsr_ProjectId;
-                            /*getting list of Eod date regarding the selected jobcard*/
+                            *//*getting list of Eod date regarding the selected jobcard*//*
                             String list_query1 = "select distinct taskcompleteddate from projectStatus where projectId='" + fsr_ProjectId + "' and status= '10' order by taskcompleteddate";
                             ArrayList<String> My_date = VideoCallDataBase.getDB(getActivity()).getPerTaskcompletedDates(list_query1);
                             if (My_date.size() > 0) {
@@ -313,7 +429,7 @@ public class ProjectsFragment extends Fragment implements View.OnClickListener, 
                     date_spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                         @Override
                         public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                            String selected_date = String.valueOf(date_spinner.getSelectedItem());/*selected date from spinner*/
+                            String selected_date = String.valueOf(date_spinner.getSelectedItem());*//*selected date from spinner*//*
                             try {
                                 if (selected_date != null)
                                     fsr_date = selected_date;
@@ -377,9 +493,12 @@ public class ProjectsFragment extends Fragment implements View.OnClickListener, 
                     });
 
                     AlertDialog dialog = alert.create();
-                    dialog.show();
+                    dialog.show();*/
                 }
             });
+
+
+
             activity_start.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -535,8 +654,6 @@ public class ProjectsFragment extends Fragment implements View.OnClickListener, 
 
                 @Override
                 public void create(SwipeMenu menu) {
-    /*if(taskDetailsBean!=null) {
-        if (taskDetailsBean.getFromUserEmail().equalsIgnoreCase(Appreference.loginuserdetails.getEmail())) {*/
                     switch (menu.getViewType()) {
 
                         case 1:
@@ -556,41 +673,8 @@ public class ProjectsFragment extends Fragment implements View.OnClickListener, 
                             openItem.setTitleColor(WHITE);
                             // add to menu
                             menu.addMenuItem(openItem);
-       /* }
-    }*/
-
-                            /*// create "delete" item
-                            SwipeMenuItem deleteItem = new SwipeMenuItem(
-                                    classContext.getApplicationContext());
-                            // set item background
-                            deleteItem.setBackground(new ColorDrawable(Color.rgb(0xFf,
-                                    0x00, 0x00)));
-                            // set item width
-                            deleteItem.setWidth(dp2px(90));
-                            // set a icon
-                            deleteItem.setTitle("Delete");
-                            deleteItem.setTitleSize(18);
-                            deleteItem.setTitleColor(Color.WHITE);
-    //            deleteItem.setIcon(R.drawable.ic_delete_32);
-                            // add to menu
-                            menu.addMenuItem(deleteItem);*/
                             break;
                         case 0:
-
-                            /*SwipeMenuItem deleteItem1 = new SwipeMenuItem(
-                                    classContext.getApplicationContext());
-                            // set item background
-                            deleteItem1.setBackground(new ColorDrawable(Color.rgb(0xFf,
-                                    0x00, 0x00)));
-                            // set item width
-                            deleteItem1.setWidth(dp2px(90));
-                            // set a icon
-                            deleteItem1.setTitle("Delete");
-                            deleteItem1.setTitleSize(18);
-                            deleteItem1.setTitleColor(Color.WHITE);
-    //            deleteItem.setIcon(R.drawable.ic_delete_32);
-                            // add to menu
-                            menu.addMenuItem(deleteItem1);*/
                             break;
                         case 2:
                             SwipeMenuItem openItem2 = new SwipeMenuItem(
@@ -608,24 +692,6 @@ public class ProjectsFragment extends Fragment implements View.OnClickListener, 
                             openItem2.setTitleColor(WHITE);
                             // add to menu
                             menu.addMenuItem(openItem2);
-       /* }
-    }*/
-
-                           /* // create "delete" item
-                            SwipeMenuItem deleteItem2 = new SwipeMenuItem(
-                                    classContext.getApplicationContext());
-                            // set item background
-                            deleteItem2.setBackground(new ColorDrawable(Color.rgb(0xFf,
-                                    0x00, 0x00)));
-                            // set item width
-                            deleteItem2.setWidth(dp2px(90));
-                            // set a icon
-                            deleteItem2.setTitle("Delete");
-                            deleteItem2.setTitleSize(18);
-                            deleteItem2.setTitleColor(Color.WHITE);
-    //            deleteItem.setIcon(R.drawable.ic_delete_32);
-                            // add to menu
-                            menu.addMenuItem(deleteItem2);*/
                             break;
 
                         case 3:
@@ -646,22 +712,6 @@ public class ProjectsFragment extends Fragment implements View.OnClickListener, 
                             // add to menu
                             menu.addMenuItem(openItem1);
 
-
-                           /* // create "delete" item
-                            SwipeMenuItem deleteItems = new SwipeMenuItem(
-                                    classContext.getApplicationContext());
-                            // set item background
-                            deleteItems.setBackground(new ColorDrawable(Color.rgb(0xFf,
-                                    0x00, 0x00)));
-                            // set item width
-                            deleteItems.setWidth(dp2px(90));
-                            // set a icon
-                            deleteItems.setTitle("Delete");
-                            deleteItems.setTitleSize(18);
-                            deleteItems.setTitleColor(Color.WHITE);
-    //            deleteItem.setIcon(R.drawable.ic_delete_32);
-                            // add to menu
-                            menu.addMenuItem(deleteItems);*/
                             break;
 
                     }
@@ -674,111 +724,9 @@ public class ProjectsFragment extends Fragment implements View.OnClickListener, 
                 @Override
                 public boolean onMenuItemClick(final int position, SwipeMenu menu, int index) {
                     ProjectDetailsBean projectDetailsBean = projectList.get(position);
-                    //                taskDetailsBean = taskDetailsBeen.get(position);
-                    //                String query;
-                    //                if (taskDetailsBean.getOwnerOfTask() != null && taskDetailsBean.getToUserId() != null) {
-                    //                    if (taskDetailsBean.getOwnerOfTask().equals(Appreference.loginuserdetails.getUsername())) {
-                    //                        menu.getMenuItem(index).getTitle();
-                    //                        Log.i("task", "case" + menu.getMenuItem(index).getTitle());
-                    //                        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-                    //                        String dateTime = dateFormat.format(new Date());
-                    //                        dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
-                    //                        String dateforrow = dateFormat.format(new Date());
-                    //                        String tasktime = dateTime;
-                    //                        tasktime = tasktime.split(" ")[1];
-                    //                        Log.i("task", "tasktime" + tasktime);
-                    //                        Log.i("UTC", "sendMessage utc time" + dateforrow);
-                    //                        String taskUTCtime = dateforrow;
-                    //                        taskDetailsBean.setDateTime(dateTime);
-                    //                        taskDetailsBean.setTaskUTCDateTime(dateforrow);
-                    //                        taskDetailsBean.setTaskUTCTime(taskUTCtime);
-                    //                        taskDetailsBean.setTasktime(tasktime);
-                    //                        taskDetailsBean.setMimeType("text");
-                    //                        taskDetailsBean.setSignalid(Utility.getSessionID());
                     if (menu.getMenuItem(index).getTitle().equalsIgnoreCase("Activate")) {
-                        //                            Log.i("task", "case------>0" + menu.getMenuItem(index).getTitle());
-                        //                            taskDetailsBean.setTaskStatus("inprogress");
-                        //
-                        //                            Log.i("task", "case------>1");
-                        //                            String query3 = "update taskDetailsInfo  set taskStatus = 'inprogress' where ('" + taskDetailsBean.getTaskId() + "'= taskId ) and loginuser='" + Appreference.loginuserdetails.getEmail() + "';";
-                        //                            Log.i("task", "case------>2");
-                        //                            VideoCallDataBase.getDB(context).getTaskHistory(query3);
-                        //                            Log.i("task", "case------>3");
-                        //                            JSONObject jsonObject = new JSONObject();
-                        //                            try {
-                        //
-                        //                                JSONObject jsonObject1 = new JSONObject();
-                        //                                jsonObject1.put("id", Integer.parseInt(taskDetailsBean.getTaskId()));
-                        //
-                        //                                jsonObject.put("task", jsonObject1);
-                        //
-                        //                                JSONObject jsonObject2 = new JSONObject();
-                        //                                jsonObject2.put("id", Appreference.loginuserdetails.getId());
-                        //
-                        //                                jsonObject.put("from", jsonObject2);
-                        //
-                        //                                JSONObject jsonObject3 = new JSONObject();
-                        //                                jsonObject3.put("id", Integer.parseInt(taskDetailsBean.getToUserId()));
-                        //
-                        //                                jsonObject.put("to", jsonObject3);
-                        //                                jsonObject.put("signalId", taskDetailsBean.getSignalid());
-                        //                                jsonObject.put("parentId", taskDetailsBean.getParentId());
-                        //                                jsonObject.put("createdDate", taskDetailsBean.getDateTime());
-                        //                                jsonObject.put("percentageCompleted", taskDetailsBean.getCompletedPercentage());
-                        //                                jsonObject.put("requestType", "percentageCompleted");
-                        //                                jsonObject.put("taskStatus", "inprogress");
-                        //                            } catch (JSONException e) {
-                        //                                e.printStackTrace();
-                        //                            }
-                        //                            Log.i("beforewebcall", taskDetailsBean.getTaskStatus());
-                        //                            Log.i("jsonrequest", jsonObject.toString());
-                        //                            Appreference.jsonRequestSender.taskConversationEntry(EnumJsonWebservicename.taskConversationEntry, jsonObject, TaskHistory.this, null, taskDetailsBean);
-                        //                            Log.i("webservice ", "called.abandoned");
-                        //                            taskDetailsBeen.remove(position);
-                        //                            taskDetailsBeanArraylist.remove(position);
-                        //                            buddyArrayAdapter.notifyDataSetChanged();
 
                     } else if (menu.getMenuItem(index).getTitle().equalsIgnoreCase("Abandon")) {
-                        //                            taskDetailsBean.setTaskStatus("abandoned");
-                        //                            JSONObject jsonObject = new JSONObject();
-                        //                            Log.i("task", "taskid" + taskDetailsBean.getTaskId());
-                        //
-                        //                            try {
-                        //
-                        //                                JSONObject jsonObject1 = new JSONObject();
-                        //                                jsonObject1.put("id", Integer.parseInt(taskDetailsBean.getTaskId()));
-                        //
-                        //                                jsonObject.put("task", jsonObject1);
-                        //
-                        //                                JSONObject jsonObject2 = new JSONObject();
-                        //                                jsonObject2.put("id", Appreference.loginuserdetails.getId());
-                        //
-                        //                                jsonObject.put("from", jsonObject2);
-                        //
-                        //                                JSONObject jsonObject3 = new JSONObject();
-                        //                                jsonObject3.put("id", Integer.parseInt(taskDetailsBean.getToUserId()));
-                        //
-                        //                                jsonObject.put("to", jsonObject3);
-                        //                                jsonObject.put("signalId", taskDetailsBean.getSignalid());
-                        //                                jsonObject.put("parentId", taskDetailsBean.getParentId());
-                        //                                jsonObject.put("createdDate", taskDetailsBean.getDateTime());
-                        //                                jsonObject.put("percentageCompleted", taskDetailsBean.getCompletedPercentage());
-                        //                                jsonObject.put("requestType", "percentageCompleted");
-                        //                                jsonObject.put("taskStatus", "abandoned");
-                        //                            } catch (JSONException e) {
-                        //                                e.printStackTrace();
-                        //                            }
-                        //
-                        //                            Log.i("beforewebcall", taskDetailsBean.getTaskStatus());
-                        //                            Log.i("jsonrequest", jsonObject.toString());
-                        //                            Appreference.jsonRequestSender.taskConversationEntry(EnumJsonWebservicename.taskConversationEntry, jsonObject, TaskHistory.this, null, taskDetailsBean);
-                        //                            Log.e("webservice ", "called.active");
-                        //
-                        //                                VideoCallDataBase.getDB(context).insertORupdate_Task_history(taskDetailsBean);
-                        //                            taskDetailsBeen.remove(position);
-                        //                            taskDetailsBeanArraylist.remove(position);
-                        //                            buddyArrayAdapter.notifyDataSetChanged();
-                        //
                     } else {
                         Log.i("task", "cance1 ");
                         projectList.remove(position);
@@ -901,6 +849,11 @@ public class ProjectsFragment extends Fragment implements View.OnClickListener, 
 
     }
 
+    @Override
+    public void onDateChanged(Calendar c) {
+
+    }
+
 
     public class ProjectArrayAdapter extends ArrayAdapter<ProjectDetailsBean> {
 
@@ -955,38 +908,28 @@ public class ProjectsFragment extends Fragment implements View.OnClickListener, 
                 TextView project_name = (TextView) finalConView.findViewById(R.id.project_name);
                 TextView project_id = (TextView) finalConView.findViewById(R.id.project_id);
                 TextView task_giver = (TextView) finalConView.findViewById(R.id.task_giver);
-//                TextView project_status = (TextView) finalConView.findViewById(R.id.project_status);
-//                TextView percent_update = (TextView) finalConView.findViewById(R.id.percent_update);
                 TextView msg_count = (TextView) finalConView.findViewById(R.id.item_counter);
-//                TextView project_type = (TextView) finalConView.findViewById(R.id.catagory);
                 LinearLayout layoutcard = (LinearLayout) finalConView.findViewById(R.id.layoutcardview);
-//                project_type.setVisibility(View.GONE);
-//                ImageView project_icon = (ImageView) finalConView.findViewById(R.id.selected);
                 View viewforparent = (View) finalConView.findViewById(R.id.viewforparent);
-//                ImageView dependency_icon = (ImageView) finalConView.findViewById(R.id.dependency_icon);
                 final ImageView completed_status = (ImageView) finalConView.findViewById(R.id.completed_status);
                 viewforparent.setVisibility(View.GONE);
-//                project_icon.setVisibility(View.GONE);
-//                project_status.setVisibility(View.GONE);
-//                percent_update.setVisibility(View.GONE);
-//                dependency_icon.setVisibility(View.GONE);
                 completed_status.setVisibility(View.GONE);
-//                project_name.setVisibility(view.GONE);
-//                task_giver.setVisibility(View.GONE);
-                Log.i("job123", "project name8*********** " + projectDetailsBean.getProjectName());
-                Log.i("job123", "projct Status isActivestatus*********** " + projectDetailsBean.getProjectName() + "isAcvtiveStatus===>" + projectDetailsBean.getIsActiveStatus());
 
-                if(projectDetailsBean.getIsActiveStatus()!=null && projectDetailsBean.getIsActiveStatus().equalsIgnoreCase("1")) {
+                if (projectDetailsBean.getIsActiveStatus() != null && projectDetailsBean.getIsActiveStatus().equalsIgnoreCase("1")) {
                     layoutcard.setBackgroundResource(R.color.red);
                     project_id.setTextColor(getResources().getColor(android.R.color.white));
-                }else {
+                    project_name.setTextColor(getResources().getColor(android.R.color.white));
+                    task_giver.setTextColor(getResources().getColor(android.R.color.white));
+                } else {
                     layoutcard.setBackgroundResource(R.color.white);
                     project_id.setTextColor(getResources().getColor(android.R.color.black));
+                    project_name.setTextColor(getResources().getColor(android.R.color.black));
+                    task_giver.setTextColor(getResources().getColor(android.R.color.black));
                 }
 
-                  project_id.setText("Job Card Number : " + projectDetailsBean.getOracleProjectId());
-                project_name.setText("Customer Name   : " +projectDetailsBean.getCustomerName());
-                  task_giver.setText("Description     : "+projectDetailsBean.getJobDescription());
+                project_id.setText("Job Card Number : " + projectDetailsBean.getOracleProjectId());
+                project_name.setText("Customer Name   : " + projectDetailsBean.getCustomerName());
+                task_giver.setText("Description     : " + projectDetailsBean.getJobDescription());
                 String pjt_owner = null;
                 Log.i("Fragment", "projectDetailsBean getProject_ownerName() " + projectDetailsBean.getProject_ownerName());
                 if (projectDetailsBean.getProject_ownerName() != null && projectDetailsBean.getProject_ownerName().contains("@")) {
@@ -1011,50 +954,23 @@ public class ProjectsFragment extends Fragment implements View.OnClickListener, 
                     }
                 }
 
-//                if (projectDetailsBean.getProjectCompletedPercentage() != null && projectDetailsBean.getProjectCompletedPercentage().equalsIgnoreCase("100")) {
-//                    project_status.setText("Closed");
-//                } else {
-//                    project_status.setText("Open");
-//                }
-//                if (projectDetailsBean.getProjectCompletedPercentage() != null) {
-//                    percent_update.setText(projectDetailsBean.getProjectCompletedPercentage() + "%");
-//                } else {
-//                    percent_update.setText("0%");
-//                }
-//                percent_update.setTextColor(RED);
                 int project_unReadMsg_count = VideoCallDataBase.getDB(classContext).getProjectsUnReadMsgCount(projectDetailsBean.getId());
                 if (project_unReadMsg_count == 0) {
                     Log.d("ProjectHistory", "unRead_project_count is 0");
                     msg_count.setVisibility(View.GONE);
-//                    project_status.setPadding(0, 0, 0, 0);
                 } else {
                     Log.i("ProjectHistory", "unRead_project_count is " + project_unReadMsg_count);
                     msg_count.setVisibility(View.VISIBLE);
                     msg_count.setText(String.valueOf(project_unReadMsg_count));
-//                    project_status.setPadding(0, 0, 40, 0);
                 }
-//                if (projectDetailsBean.getRequestStatus() != null && projectDetailsBean.getRequestStatus().equalsIgnoreCase("Open")) {
-//                    dependency_icon.setVisibility(View.VISIBLE);
-//                    Log.i("attention", "resolved 1 " + projectDetailsBean.getRequestStatus());
-//                } else {
-//                    dependency_icon.setVisibility(View.GONE);
-//                    Log.i("attention", "resolved 2 " + projectDetailsBean.getRequestStatus());
-//                }
                 completed_status.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         PopupMenu popup = new PopupMenu(getActivity(), completed_status);
                         popup.getMenuInflater().inflate(R.menu.project_pop_menu, popup.getMenu());
-                      /*  if(Appreference.loginuserdetails != null && Appreference.loginuserdetails.getRoleId() != null
-                                && Appreference.loginuserdetails.getRoleId().equalsIgnoreCase("2")){
-                            popup.getMenu().getItem(1).setVisible(false);
-
-                        }*/
                         popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                             public boolean onMenuItemClick(MenuItem item) {
-                                /*Toast.makeText(getActivity(),
-                                        "Clicked popup menu item " + item.getTitle(),
-                                        Toast.LENGTH_SHORT).show();*/
+
                                 if (item.getTitle().toString().equalsIgnoreCase("FSR Report")) {
                                     List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
                                     nameValuePairs.add(new BasicNameValuePair("projectId", projectDetailsBean.getId()));
@@ -1079,7 +995,6 @@ public class ProjectsFragment extends Fragment implements View.OnClickListener, 
                                                 } catch (Exception e) {
                                                     e.printStackTrace();
                                                 }
-                                                //                                            Toast.makeText(getContext(), "Project Completed", Toast.LENGTH_LONG).show();
                                             }
                                         });
                                         saveDialog.setNegativeButton("Cancel",

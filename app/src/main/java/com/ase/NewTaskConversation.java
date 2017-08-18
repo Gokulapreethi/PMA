@@ -997,7 +997,7 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
             public void onClick(View v) {
                 String query = "select status from projectStatus where projectId='" + projectId + "' and userId='" + Appreference.loginuserdetails.getId() + "' and taskId= '" + webtaskId + "'";
                 int current_status = VideoCallDataBase.getDB(context).getCurrentStatus(query);
-                if (current_status == -1) {
+                if (current_status == -1 || current_status==8) {
 //                    travel_job.setEnabled(false);
                     showToast("The task has not yet started...");
                 } else if (current_status == 1 || current_status == 3) {
@@ -2696,7 +2696,12 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                     }
                 }else
                 {
-                    LayoutInflater inflater = getLayoutInflater();
+                    Intent intent=new Intent(NewTaskConversation.this,ListFullTaskName.class);
+                    intent.putExtra("t_projectId",projectId);
+                    intent.putExtra("t_taskId",webtaskId);
+                    startActivity(intent);
+
+                    /*LayoutInflater inflater = getLayoutInflater();
                     View alertLayout = inflater.inflate(R.layout.list_task_description, null);
                     AlertDialog.Builder alert = new AlertDialog.Builder(context);
                     TextView my_taskName=(TextView) alertLayout.findViewById(R.id.my_taskName);
@@ -2716,7 +2721,7 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                     });
 
                     AlertDialog dialog = alert.create();
-                    dialog.show();
+                    dialog.show();*/
                 }
             }
         });
@@ -4663,14 +4668,14 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                 popup.getMenu().getItem(5).setVisible(false);
                 popup.getMenu().getItem(6).setVisible(false);
                 Toast.makeText(getApplicationContext(), "Task has been Completed", Toast.LENGTH_SHORT).show();
-            } else if (current_status == 6) {
-                popup.getMenu().getItem(0).setVisible(false);
+            } else if (current_status == 8) {
+                popup.getMenu().getItem(0).setVisible(true);
                 popup.getMenu().getItem(1).setVisible(false);
                 popup.getMenu().getItem(2).setVisible(false);
                 popup.getMenu().getItem(3).setVisible(false);
                 popup.getMenu().getItem(4).setVisible(false);
                 popup.getMenu().getItem(5).setVisible(false);
-                popup.getMenu().getItem(6).setVisible(false);
+                popup.getMenu().getItem(6).setVisible(true);
                 Toast.makeText(getApplicationContext(), "Task has been DeAssigned", Toast.LENGTH_SHORT).show();
             }
         } else {
@@ -4924,6 +4929,7 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                                                     isForOracleProject = true;
                                                     observation.setVisibility(View.GONE);
                                                     observation.getText().clear();
+                                                observationStatus = "";
                                                     observation_1.setVisibility(View.VISIBLE);
                                                     Intent i = new Intent(getApplicationContext(), HandSketchActivity2.class);
                                                     //                                            i.putExtra("observation","observation");
@@ -4997,6 +5003,7 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                                                 isSynopsis = false;
                                                     isForOracleProject = true;
                                                     action_taken.getText().clear();
+                                                actiontakenStatus = "";
                                                     action_taken.setVisibility(View.GONE);
                                                     action_taken_1.setVisibility(View.VISIBLE);
                                                     Intent i = new Intent(getApplicationContext(), HandSketchActivity2.class);
@@ -5139,6 +5146,7 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                                                 isForOracleProject = true;
                                                 synopsis_text.setVisibility(View.GONE);
                                                 synopsis_text.getText().clear();
+                                                synopsis_status = "";
                                                 synopsis_img.setVisibility(View.VISIBLE);
                                                 Intent i = new Intent(getApplicationContext(), HandSketchActivity2.class);
                                                 //                                            i.putExtra("observation","observation");
@@ -5647,26 +5655,29 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                                 Log.i("desc123", "machine_serialno @@========>" + machine_serialno);
                                 Log.i("desc123", "machine_description @@========>" + machine_description);
 
-                                    String query_status = "select status from projectStatus where projectId='" + projectId + "' and userId='" + Appreference.loginuserdetails.getId() + "' and taskId= '" + webtaskId + "'";
-                                    int current_status = VideoCallDataBase.getDB(context).getCurrentStatus(query_status);
-                                    Log.i("EOD123", "tech_signature ==> " + tech_signature);
-                                    Log.i("EOD123", "status_signature ==> " + status_signature);
-                                    Log.i("EOD123", "photo_signature ==> " + photo_signature);
-
-                                    if (taskCompletedDate != null && !taskCompletedDate.equalsIgnoreCase("")
-                                            && HMReadingStatus != null && !HMReadingStatus.equalsIgnoreCase("")
-                                            && machion_make_edit!=null && !machion_make_edit.equalsIgnoreCase("")
-                                            && machine_model!=null && !machine_model.equalsIgnoreCase("")
-                                            && machine_serialno!=null && !machine_serialno.equalsIgnoreCase("")
-                                            && machine_description!=null && !machine_description.equalsIgnoreCase("")
-                                            && custsignnameStatus!=null && !custsignnameStatus.equalsIgnoreCase("")
-                                            && status_signature!=null && !status_signature.equalsIgnoreCase("")
-                                            && photo_signature!=null && !photo_signature.equalsIgnoreCase("")
-                                            && tech_signature!=null && !tech_signature.equalsIgnoreCase("")
-                                            && (isRemarkstextselected && customer_remarksEntry != null) || (isremarksSketchselected && customerRemarks_path != null)
-                                            && (isobservationtextselected && observationStatus != null) || (isobservationSketchselected && observation_path != null)
-                                            && (isactiontextselected && actiontakenStatus != null) || (isactionSketchselected && Action_Taken_path != null)
-                                            && (isSynopsistextselected && synopsis_status != null) || (isSynopsisSketchselected && synopsis_path != null)) {
+                                String query_status = "select status from projectStatus where projectId='" + projectId + "' and userId='" + Appreference.loginuserdetails.getId() + "' and taskId= '" + webtaskId + "'";
+                                int current_status = VideoCallDataBase.getDB(context).getCurrentStatus(query_status);
+                                Log.i("EOD123", "tech_signature ==> " + tech_signature);
+                                Log.i("EOD123", "status_signature ==> " + status_signature);
+                                Log.i("EOD123", "photo_signature ==> " + photo_signature);
+                                if ((taskCompletedDate != null && !taskCompletedDate.equalsIgnoreCase("") && !taskCompletedDate.equalsIgnoreCase(null))
+                                        && (HMReadingStatus != null && !HMReadingStatus.equalsIgnoreCase("") && !HMReadingStatus.equalsIgnoreCase(null))
+                                        && (machion_make_edit != null && !machion_make_edit.equalsIgnoreCase("") && !machion_make_edit.equalsIgnoreCase(null))
+                                        && (machine_model != null && !machine_model.equalsIgnoreCase("") && !machine_model.equalsIgnoreCase(null))
+                                        && (machine_serialno != null && !machine_serialno.equalsIgnoreCase("") && !machine_serialno.equalsIgnoreCase(null))
+                                        && (machine_description != null && !machine_description.equalsIgnoreCase("") && !machine_description.equalsIgnoreCase(null))
+                                        && (custsignnameStatus != null && !custsignnameStatus.equalsIgnoreCase("") && !custsignnameStatus.equalsIgnoreCase(null))
+                                        && (status_signature != null && !status_signature.equalsIgnoreCase("") && !status_signature.equalsIgnoreCase(null))
+                                        && (photo_signature != null && !photo_signature.equalsIgnoreCase("") && !photo_signature.equalsIgnoreCase(null))
+                                        && (tech_signature != null && !tech_signature.equalsIgnoreCase("") && !tech_signature.equalsIgnoreCase(null))
+                                        && ((isRemarkstextselected && !customer_remarksEntry.equalsIgnoreCase("") && customer_remarksEntry != null && !customer_remarksEntry.equalsIgnoreCase(null))
+                                        || (isremarksSketchselected && !customerRemarks_path.equalsIgnoreCase("") && customerRemarks_path != null && !customerRemarks_path.equalsIgnoreCase(null)))
+                                        && ((isobservationtextselected && !observationStatus.equalsIgnoreCase("") && observationStatus != null && !observationStatus.equalsIgnoreCase(null))
+                                        || (isobservationSketchselected && !observation_path.equalsIgnoreCase("") && observation_path != null && !observation_path.equalsIgnoreCase(null)))
+                                        && ((isactiontextselected && !actiontakenStatus.equalsIgnoreCase("") && actiontakenStatus != null && !actiontakenStatus.equalsIgnoreCase(null))
+                                        || (isactionSketchselected && !Action_Taken_path.equalsIgnoreCase("") && Action_Taken_path != null && !Action_Taken_path.equalsIgnoreCase(null)))
+                                        && ((isSynopsistextselected && !synopsis_status.equalsIgnoreCase("") && synopsis_status != null && !synopsis_status.equalsIgnoreCase(null))
+                                        || (isSynopsisSketchselected && !synopsis_path.equalsIgnoreCase("") && synopsis_path != null && !synopsis_path.equalsIgnoreCase(null)))) {
 
                                         if (count != 0) {
                                             Log.i("EOD", "customer_remarksEntry ==> " + customer_remarksEntry);
@@ -5882,7 +5893,9 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
             Date date = null;
             Date date1 = null;
             Date date2 = null;
-            String StartDateUTC = "", EndDateUTC = "", taskCompletedDateUTC = "";
+            Date end_date = null;
+            Date start_date = null;
+            String StartDateUTC = "", EndDateUTC = "", taskCompletedDateUTC = "", Eod_StartDateUTC = "", Eod_EndDateUTC = "";
             if (ActivityStartdate != null && !ActivityStartdate.equalsIgnoreCase("")) {
                 try {
                     date = dateParse.parse(ActivityStartdate);
@@ -6019,6 +6032,27 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                 jsonObject.put("machineMake", "");
             Log.i("oracle123", "taskCompletedDate w/s===>" + taskCompletedDate);
 
+            String eod_query = "select travelEndTime from projectStatus where projectId='" + projectId + "' and userId='" + Appreference.loginuserdetails.getId() + "' and taskId= '" + webtaskId + "' and status = '7' order by id DESC";
+            String eod_end_date = VideoCallDataBase.getDB(context).getProjectParentTaskId(eod_query);
+            Log.i("Eod", "eod_end_date ==> " + eod_end_date);
+            try {
+                start_date = taskDateParse.parse(eod_end_date);
+                Eod_StartDateUTC = taskDateFormat.format(start_date);
+            } catch (Exception e) {
+                e.printStackTrace();
+                Log.i("oracle123", "taskCompletedDateUTC===>" + e.getMessage());
+            }
+            Log.i("Eod", "Eod_StartDateUTC ==> " + Eod_StartDateUTC);
+            Log.i("Eod", "dateTime ==> " + dateTime);
+            try {
+                end_date = taskDateParse.parse(dateTime);
+                Eod_EndDateUTC = taskDateFormat.format(end_date);
+            } catch (Exception e) {
+                e.printStackTrace();
+                Log.i("oracle123", "taskCompletedDateUTC===>" + e.getMessage());
+            }
+            Log.i("Eod", "Eod_EndDateUTC ==> " + Eod_EndDateUTC);
+
             if (status != null && status.equalsIgnoreCase("10") && taskCompletedDate != null && !taskCompletedDate.equalsIgnoreCase("")) {
                 try {
                     date2 = taskDateParse.parse(taskCompletedDate);
@@ -6033,6 +6067,10 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
             if (status != null && status.equalsIgnoreCase("10") && taskCompletedDateUTC != null && !taskCompletedDateUTC.equalsIgnoreCase("")) {
                 taskDetailsBean.setTaskCompletedDate(taskCompletedDate);
                 jsonObject.put("taskcompletedDate", taskCompletedDateUTC);
+                jsonObject.put("travelStartTime", Eod_StartDateUTC);
+                jsonObject.put("travelEndTime", Eod_EndDateUTC);
+                taskDetailsBean.setTravelStartTime(eod_end_date);
+                taskDetailsBean.setTravelEndTime(dateTime);
             } else
                 jsonObject.put("taskcompletedDate", "");
 
@@ -8632,7 +8670,9 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                                     VideoCallDataBase.getDB(context).updatetaskstatus(chatBean.getTaskId());
                                 } else {
                                     if (percentage != null && !percentage.equalsIgnoreCase("100")) {
-                                        taskStatus = "inprogress";
+                                        if (!isProjectFromOracle) {
+                                            taskStatus = "inprogress";
+                                        }
                                     }
                                     VideoCallDataBase.getDB(context).updateGroupTaskStatus(chatBean.getTaskId(), percentage);
                                     Log.i("Accept", "value_taskStatus isnow " + taskStatus + " " + percentage);
@@ -8788,7 +8828,11 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                             } else if (percentage.equalsIgnoreCase("100") && !ownerOfTask.equalsIgnoreCase(Appreference.loginuserdetails.getUsername())) {
                                 jsonObject.put("taskStatus", "completed");
                             } else {
-                                jsonObject.put("taskStatus", "inprogress");
+                                if (isProjectFromOracle) {
+                                    jsonObject.put("taskStatus", taskStatus);
+                                } else {
+                                    jsonObject.put("taskStatus", "inprogress");
+                                }
                             }
                             percent = percentage;
                             Log.i("TaskEntry", "taskConversationEntry 1");
