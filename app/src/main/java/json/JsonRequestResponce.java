@@ -117,9 +117,9 @@ public class JsonRequestResponce extends Thread {
 
 //                        HttpPost httppost = new HttpPost("https://122.165.92.171:8443/kamailioWeb/" + obj.getEnumJsonWebservicename());
 
-                        HttpPost httppost = new HttpPost("https://66.109.17.204/ASE/" + obj.getEnumJsonWebservicename());//
+//                        HttpPost httppost = new HttpPost("https://66.109.17.204/ASE/" + obj.getEnumJsonWebservicename());//
 
-//                          HttpPost httppost = new HttpPost("https://192.168.1.3:8443/ASE/" + obj.getEnumJsonWebservicename());
+                          HttpPost httppost = new HttpPost("https://192.168.1.3:8443/ASE/" + obj.getEnumJsonWebservicename());
 
 //                          HttpPost httppost = new HttpPost("http://151.253.12.203/ASE/" + obj.getEnumJsonWebservicename());
 
@@ -295,6 +295,8 @@ public class JsonRequestResponce extends Thread {
                                 obj.setFirstname("fieldServiceReport");
                             } else if (obj.getEnumJsonWebservicename().toString().equals("fieldServiceReportJobWise")) {
                                 obj.setFirstname("fieldServiceReportJobWise");
+                            }else if (obj.getEnumJsonWebservicename().toString().equals("fieldServiceSearch")) {
+                                obj.setFirstname("fieldServiceSearch");
                             }else if (obj.getEnumJsonWebservicename().toString().equals("tnaReportForDateWise")) {
                                 obj.setFirstname("tnaReportForDateWise");
                             } else if (obj.getEnumJsonWebservicename().toString().equals("getTask")) {
@@ -472,6 +474,11 @@ public class JsonRequestResponce extends Thread {
                 inter.ErrorMethod(obj);
                 break;
             case fieldServiceReportJobWise:
+                ProjectsFragment.getInstance().cancelDialog();
+                ProjectsFragment.getInstance().showToast(result);
+                inter.ErrorMethod(obj);
+                break;
+             case fieldServiceSearch:
                 ProjectsFragment.getInstance().cancelDialog();
                 ProjectsFragment.getInstance().showToast(result);
                 inter.ErrorMethod(obj);
@@ -771,6 +778,11 @@ public class JsonRequestResponce extends Thread {
                    case fieldServiceReportJobWise:
                         obj.setEmail(responseString);
                         obj.setFirstname("fieldServiceReportJobWise");
+                        inter.ResponceMethod(obj);
+                        break;
+                   case fieldServiceSearch:
+                        obj.setEmail(responseString);
+                        obj.setFirstname("fieldServiceSearch");
                         inter.ResponceMethod(obj);
                         break;
                     case tnaReportForDateWise:

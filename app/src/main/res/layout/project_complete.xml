@@ -2,7 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:background="#FFFFFF" >
+    android:background="#FFFFFF">
 
     <RelativeLayout
         android:id="@+id/rlay_tilte"
@@ -10,7 +10,8 @@
         android:layout_height="wrap_content"
         android:background="@color/white"
         android:orientation="horizontal"
-        android:visibility="visible" >
+        android:visibility="visible">
+
         <TextView
             android:id="@+id/back"
             android:layout_width="50dp"
@@ -20,9 +21,9 @@
             android:background="@color/white"
             android:gravity="center"
             android:text="Back"
-            android:textStyle="bold"
             android:textColor="@color/appcolor"
-            android:textSize="20dp" />
+            android:textSize="20dp"
+            android:textStyle="bold" />
 
         <TextView
             android:id="@+id/project_name"
@@ -34,23 +35,24 @@
             android:textColor="@color/appcolor"
             android:textSize="20dp"
             android:textStyle="bold" />
+
         <ImageView
             android:id="@+id/send_completion"
             android:layout_width="45dp"
             android:layout_height="35dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="10dp"
+            android:layout_marginLeft="58dp"
+            android:layout_marginRight="40dp"
+            android:layout_toLeftOf="@+id/send"
             android:background="@drawable/ic_arrow_34_xl"
             android:gravity="center"
-            android:layout_alignParentRight="true"
             android:text="Send"
-            android:visibility="visible"
             android:textColor="@color/appcolor"
             android:textSize="20dp"
             android:textStyle="bold"
-            android:layout_centerVertical="true"
-            android:layout_toLeftOf="@+id/send"
-            android:layout_marginLeft="58dp"
-            android:layout_marginRight="40dp"
-            android:layout_marginEnd="10dp"/>
+            android:visibility="visible" />
     </RelativeLayout>
 
     <View
@@ -59,15 +61,18 @@
         android:layout_height="1.5dp"
         android:layout_below="@+id/rlay_tilte"
         android:background="@color/gray" />
+
     <ScrollView
         android:id="@+id/scrl_seccard"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/view_land" >
+        android:layout_below="@+id/view_land">
+
         <LinearLayout
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
             android:orientation="vertical">
+
             <LinearLayout
                 android:id="@+id/linearsLayout3"
                 android:layout_width="fill_parent"
@@ -75,7 +80,8 @@
                 android:layout_marginLeft="2dp"
                 android:layout_marginRight="2dp"
                 android:layout_marginTop="2dp"
-                android:orientation="horizontal" >
+                android:orientation="horizontal">
+
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
@@ -83,10 +89,11 @@
                     android:background="#FFFFFF"
                     android:gravity="left"
                     android:padding="7dp"
-                    android:text="Job Card No"
                     android:singleLine="true"
+                    android:text="Job Card No"
                     android:textColor="@color/black"
                     android:textSize="15dp" />
+
                 <TextView
                     android:id="@+id/project_id"
                     android:layout_width="0dp"
@@ -100,11 +107,13 @@
                     android:textColor="#808080"
                     android:visibility="visible" />
             </LinearLayout>
+
             <View
                 android:layout_width="wrap_content"
                 android:layout_height="1.20dp"
                 android:layout_marginTop="10dp"
                 android:background="@color/gray" />
+
             <LinearLayout
                 android:id="@+id/linearsLayout22"
                 android:layout_width="fill_parent"
@@ -112,7 +121,8 @@
                 android:layout_marginLeft="2dp"
                 android:layout_marginRight="2dp"
                 android:layout_marginTop="2dp"
-                android:orientation="horizontal" >
+                android:orientation="horizontal">
+
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
@@ -120,10 +130,11 @@
                     android:background="#FFFFFF"
                     android:gravity="left"
                     android:padding="7dp"
-                    android:text="ActivityCode"
                     android:singleLine="true"
+                    android:text="ActivityCode"
                     android:textColor="@color/black"
                     android:textSize="15dp" />
+
                 <TextView
                     android:id="@+id/task_id"
                     android:layout_width="0dp"
@@ -137,6 +148,7 @@
                     android:textColor="#808080"
                     android:visibility="visible" />
             </LinearLayout>
+
             <View
                 android:layout_width="wrap_content"
                 android:layout_height="1.20dp"
@@ -150,7 +162,8 @@
                 android:layout_marginLeft="2dp"
                 android:layout_marginRight="2dp"
                 android:layout_marginTop="2dp"
-                android:orientation="horizontal" >
+                android:orientation="horizontal">
+
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
@@ -158,8 +171,8 @@
                     android:background="#FFFFFF"
                     android:gravity="left"
                     android:padding="7dp"
-                    android:text="Address"
                     android:singleLine="true"
+                    android:text="Address"
                     android:textColor="@color/black"
                     android:textSize="15dp" />
 
@@ -176,6 +189,7 @@
                     android:textColor="#808080"
                     android:visibility="visible" />
             </LinearLayout>
+
             <View
                 android:layout_width="wrap_content"
                 android:layout_height="1.20dp"
@@ -188,7 +202,8 @@
                 android:layout_marginLeft="2dp"
                 android:layout_marginRight="2dp"
                 android:layout_marginTop="2dp"
-                android:orientation="horizontal" >
+                android:orientation="horizontal">
+
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
@@ -196,8 +211,8 @@
                     android:background="#FFFFFF"
                     android:gravity="left"
                     android:padding="7dp"
-                    android:text="Machine Make *"
                     android:singleLine="true"
+                    android:text="Machine Make *"
                     android:textColor="@color/black"
                     android:textSize="15dp" />
 
@@ -214,18 +229,21 @@
                     android:textColor="#808080"
                     android:visibility="visible" />
             </LinearLayout>
+
             <View
                 android:layout_width="wrap_content"
                 android:layout_height="1.20dp"
                 android:layout_marginTop="10dp"
                 android:background="@color/gray" />
+
             <LinearLayout
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="2dp"
                 android:layout_marginRight="2dp"
                 android:layout_marginTop="2dp"
-                android:orientation="horizontal" >
+                android:orientation="horizontal">
+
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
@@ -233,8 +251,8 @@
                     android:background="#FFFFFF"
                     android:gravity="left"
                     android:padding="7dp"
-                    android:text="M/c Model *"
                     android:singleLine="true"
+                    android:text="M/c Model *"
                     android:textColor="@color/black"
                     android:textSize="15dp" />
 
@@ -251,18 +269,21 @@
                     android:textColor="#808080"
                     android:visibility="visible" />
             </LinearLayout>
+
             <View
                 android:layout_width="wrap_content"
                 android:layout_height="1.20dp"
                 android:layout_marginTop="10dp"
                 android:background="@color/gray" />
+
             <LinearLayout
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="2dp"
                 android:layout_marginRight="2dp"
                 android:layout_marginTop="2dp"
-                android:orientation="horizontal" >
+                android:orientation="horizontal">
+
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
@@ -270,8 +291,8 @@
                     android:background="#FFFFFF"
                     android:gravity="left"
                     android:padding="7dp"
-                    android:text="M/c Sr No *"
                     android:singleLine="true"
+                    android:text="M/c Sr No *"
                     android:textColor="@color/black"
                     android:textSize="15dp" />
 
@@ -288,11 +309,12 @@
                     android:textColor="#808080"
                     android:visibility="visible" />
             </LinearLayout>
+
             <View
                 android:layout_width="wrap_content"
                 android:layout_height="1.20dp"
-                android:layout_marginTop="10dp"
                 android:layout_below="@+id/tablerow1"
+                android:layout_marginTop="10dp"
                 android:background="@color/gray" />
 
             <LinearLayout
@@ -303,6 +325,7 @@
                 android:layout_marginTop="2dp"
                 android:orientation="horizontal"
                 android:visibility="gone">
+
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
@@ -310,10 +333,11 @@
                     android:background="#FFFFFF"
                     android:gravity="left"
                     android:padding="7dp"
-                    android:text="Estimated Travel Hrs"
                     android:singleLine="true"
+                    android:text="Estimated Travel Hrs"
                     android:textColor="@color/black"
                     android:textSize="15dp" />
+
                 <TextView
                     android:id="@+id/estimatedTravelhrs"
                     android:layout_width="0dp"
@@ -327,19 +351,22 @@
                     android:textColor="#808080"
                     android:visibility="visible" />
             </LinearLayout>
+
             <View
                 android:layout_width="wrap_content"
                 android:layout_height="1.20dp"
                 android:layout_marginTop="10dp"
                 android:background="@color/gray"
-                android:visibility="gone"/>
+                android:visibility="gone" />
+
             <LinearLayout
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="2dp"
                 android:layout_marginRight="2dp"
                 android:layout_marginTop="2dp"
-                android:orientation="horizontal" >
+                android:orientation="horizontal">
+
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
@@ -347,10 +374,11 @@
                     android:background="#FFFFFF"
                     android:gravity="left"
                     android:padding="7dp"
-                    android:text="Estimated Activity Hrs"
                     android:singleLine="true"
+                    android:text="Estimated Activity Hrs"
                     android:textColor="@color/black"
                     android:textSize="15dp" />
+
                 <TextView
                     android:id="@+id/estimatedActivityhrs"
                     android:layout_width="0dp"
@@ -364,18 +392,21 @@
                     android:textColor="#808080"
                     android:visibility="visible" />
             </LinearLayout>
+
             <View
                 android:layout_width="wrap_content"
                 android:layout_height="1.20dp"
                 android:layout_marginTop="10dp"
                 android:background="@color/gray" />
+
             <LinearLayout
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="2dp"
                 android:layout_marginRight="2dp"
                 android:layout_marginTop="2dp"
-                android:orientation="horizontal" >
+                android:orientation="horizontal">
+
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
@@ -383,10 +414,11 @@
                     android:background="#FFFFFF"
                     android:gravity="left"
                     android:padding="7dp"
-                    android:text="Service Requested Date"
                     android:singleLine="true"
+                    android:text="Service Requested Date"
                     android:textColor="@color/black"
                     android:textSize="15dp" />
+
                 <TextView
                     android:id="@+id/requested_date"
                     android:layout_width="0dp"
@@ -400,257 +432,7 @@
                     android:textColor="#808080"
                     android:visibility="visible" />
             </LinearLayout>
-            <View
-                android:layout_width="wrap_content"
-                android:layout_height="1.20dp"
-                android:layout_marginTop="10dp"
-                android:background="@color/gray" />
-            <LinearLayout
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="2dp"
-                android:layout_marginRight="2dp"
-                android:layout_marginTop="2dp"
-                android:orientation="horizontal"
-                android:visibility="gone">
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:background="#FFFFFF"
-                    android:gravity="left"
-                    android:padding="7dp"
-                    android:text="Travel Start"
-                    android:singleLine="true"
-                    android:textColor="@color/black"
-                    android:textSize="15dp" />
-                <Button
-                    android:layout_width="30dp"
-                    android:layout_height= "30dp"
-                    android:id="@+id/travelstart_sign"
-                    android:background="@drawable/ic_date_chang_request" />
-                <TextView
-                    android:id="@+id/travel_start"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="2dp"
-                    android:layout_marginRight="2dp"
-                    android:layout_marginTop="4dp"
-                    android:layout_weight="1"
-                    android:gravity="center_vertical"
-                    android:maxLength="100"
-                    android:textColor="#808080"
-                    android:visibility="visible" />
-            </LinearLayout>
-            <View
-                android:layout_width="wrap_content"
-                android:layout_height="1.20dp"
-                android:layout_marginTop="10dp"
-                android:background="@color/gray"
-                android:visibility="gone"/>
-            <LinearLayout
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="2dp"
-                android:layout_marginRight="2dp"
-                android:layout_marginTop="2dp"
-                android:orientation="horizontal"
-                android:visibility="gone">
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:background="#FFFFFF"
-                    android:gravity="left"
-                    android:padding="7dp"
-                    android:text="Travel End Date"
-                    android:singleLine="true"
-                    android:textColor="@color/black"
-                    android:textSize="15dp" />
-                <Button
-                    android:layout_width="30dp"
-                    android:layout_height= "30dp"
-                    android:id="@+id/travelend_sign"
-                    android:background="@drawable/ic_date_chang_request"
-                    />
-                <TextView
-                    android:id="@+id/travel_end"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="2dp"
-                    android:layout_marginRight="2dp"
-                    android:layout_marginTop="4dp"
-                    android:layout_weight="1"
-                    android:gravity="center_vertical"
-                    android:maxLength="100"
-                    android:textColor="#808080"
-                    android:visibility="visible" />
-            </LinearLayout>
-            <View
-                android:layout_width="wrap_content"
-                android:layout_height="1.20dp"
-                android:layout_marginTop="10dp"
-                android:background="@color/gray"
-                android:visibility="gone"/>
-            <LinearLayout
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="2dp"
-                android:layout_marginRight="2dp"
-                android:layout_marginTop="2dp"
-                android:orientation="horizontal" >
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:background="#FFFFFF"
-                    android:gravity="left"
-                    android:padding="7dp"
-                    android:text="EOD Completed Date *"
-                    android:singleLine="true"
-                    android:textColor="@color/black"
-                    android:textSize="15dp" />
-                <Button
-                    android:layout_width="30dp"
-                    android:layout_height= "30dp"
-                    android:id="@+id/complete_date_btn"
-                    android:background="@drawable/ic_date_chang_request"
-                    android:visibility="gone" />
-                <TextView
-                    android:id="@+id/task_completed_date"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="2dp"
-                    android:layout_marginRight="2dp"
-                    android:layout_marginTop="4dp"
-                    android:layout_weight="1"
-                    android:gravity="center_vertical"
-                    android:textColor="#808080"
-                    android:visibility="visible">
-                </TextView>
-            </LinearLayout>
-            <View
-                android:layout_width="wrap_content"
-                android:layout_height="1.20dp"
-                android:layout_marginTop="10dp"
-                android:background="@color/gray" />
-            <LinearLayout
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="2dp"
-                android:layout_marginRight="2dp"
-                android:layout_marginTop="2dp"
-                android:orientation="horizontal" >
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:background="#FFFFFF"
-                    android:gravity="left"
-                    android:padding="7dp"
-                    android:text="Activity Start &amp; End"
-                    android:singleLine="true"
-                    android:textColor="@color/black"
-                    android:textSize="15dp" />
-                <Button
-                    android:layout_width="30dp"
-                    android:layout_height= "30dp"
-                    android:id="@+id/activitystart_sign"
-                    android:background="@drawable/ic_date_chang_request"
-                    />
-                <TextView
-                    android:id="@+id/activity_start"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="2dp"
-                    android:layout_marginRight="2dp"
-                    android:layout_marginTop="4dp"
-                    android:layout_weight="1"
-                    android:hint="click here to view activity details"
-                    android:gravity="center_vertical"
-                    android:maxLength="100"
-                    android:textColor="#808080"
-                    android:visibility="visible" />
-            </LinearLayout>
-            <View
-                android:layout_width="wrap_content"
-                android:layout_height="1.20dp"
-                android:layout_marginTop="10dp"
-                android:background="@color/gray" />
-            <LinearLayout
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="2dp"
-                android:layout_marginRight="2dp"
-                android:layout_marginTop="2dp"
-                android:orientation="horizontal"
-                android:visibility="gone">
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:background="#FFFFFF"
-                    android:gravity="left"
-                    android:padding="7dp"
-                    android:text="Travel End"
-                    android:singleLine="true"
-                    android:textColor="@color/black"
-                    android:textSize="15dp" />
-                <Button
-                    android:layout_width="30dp"
-                    android:layout_height= "30dp"
-                    android:id="@+id/activityend_sign"
-                    android:background="@drawable/ic_date_chang_request"
-                    />
-                <TextView
-                    android:id="@+id/activity_end"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="2dp"
-                    android:layout_marginRight="2dp"
-                    android:layout_marginTop="4dp"
-                    android:layout_weight="1"
-                    android:gravity="center_vertical"
-                    android:maxLength="100"
-                    android:textColor="#808080"
-                    android:visibility="visible" />
-            </LinearLayout>
-            <View
-                android:layout_width="wrap_content"
-                android:layout_height="1.20dp"
-                android:layout_marginTop="10dp"
-                android:background="@color/gray"
-                android:visibility="gone"/>
-            <LinearLayout
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="2dp"
-                android:layout_marginRight="2dp"
-                android:layout_marginTop="2dp"
-                android:orientation="horizontal" >
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:background="#FFFFFF"
-                    android:gravity="left"
-                    android:padding="7dp"
-                    android:text="Task Description *"
-                    android:singleLine="true"
-                    android:textColor="@color/black"
-                    android:textSize="15dp" />
-                <EditText
-                    android:id="@+id/description"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="10dp"
-                    android:layout_marginRight="2dp"
-                    android:layout_marginTop="4dp"
-                    android:layout_weight="1"
-                    android:gravity="center_vertical"
-                    android:textColor="#808080"
-                    android:visibility="visible" />
-            </LinearLayout>
+
             <View
                 android:layout_width="wrap_content"
                 android:layout_height="1.20dp"
@@ -665,6 +447,7 @@
                 android:layout_marginTop="2dp"
                 android:orientation="horizontal"
                 android:visibility="gone">
+
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
@@ -672,10 +455,287 @@
                     android:background="#FFFFFF"
                     android:gravity="left"
                     android:padding="7dp"
-                    android:text="Activity"
                     android:singleLine="true"
+                    android:text="Travel Start"
                     android:textColor="@color/black"
                     android:textSize="15dp" />
+
+                <Button
+                    android:id="@+id/travelstart_sign"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:background="@drawable/ic_date_chang_request" />
+
+                <TextView
+                    android:id="@+id/travel_start"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="2dp"
+                    android:layout_marginRight="2dp"
+                    android:layout_marginTop="4dp"
+                    android:layout_weight="1"
+                    android:gravity="center_vertical"
+                    android:maxLength="100"
+                    android:textColor="#808080"
+                    android:visibility="visible" />
+            </LinearLayout>
+
+            <View
+                android:layout_width="wrap_content"
+                android:layout_height="1.20dp"
+                android:layout_marginTop="10dp"
+                android:background="@color/gray"
+                android:visibility="gone" />
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="2dp"
+                android:layout_marginRight="2dp"
+                android:layout_marginTop="2dp"
+                android:orientation="horizontal"
+                android:visibility="gone">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="#FFFFFF"
+                    android:gravity="left"
+                    android:padding="7dp"
+                    android:singleLine="true"
+                    android:text="Travel End Date"
+                    android:textColor="@color/black"
+                    android:textSize="15dp" />
+
+                <Button
+                    android:id="@+id/travelend_sign"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:background="@drawable/ic_date_chang_request" />
+
+                <TextView
+                    android:id="@+id/travel_end"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="2dp"
+                    android:layout_marginRight="2dp"
+                    android:layout_marginTop="4dp"
+                    android:layout_weight="1"
+                    android:gravity="center_vertical"
+                    android:maxLength="100"
+                    android:textColor="#808080"
+                    android:visibility="visible" />
+            </LinearLayout>
+
+            <View
+                android:layout_width="wrap_content"
+                android:layout_height="1.20dp"
+                android:layout_marginTop="10dp"
+                android:background="@color/gray"
+                android:visibility="gone" />
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="2dp"
+                android:layout_marginRight="2dp"
+                android:layout_marginTop="2dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="#FFFFFF"
+                    android:gravity="left"
+                    android:padding="7dp"
+                    android:singleLine="true"
+                    android:text="EOD Completed Date *"
+                    android:textColor="@color/black"
+                    android:textSize="15dp" />
+
+                <Button
+                    android:id="@+id/complete_date_btn"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:background="@drawable/ic_date_chang_request"
+                    android:visibility="gone" />
+
+                <TextView
+                    android:id="@+id/task_completed_date"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="2dp"
+                    android:layout_marginRight="2dp"
+                    android:layout_marginTop="4dp"
+                    android:layout_weight="1"
+                    android:gravity="center_vertical"
+                    android:textColor="#808080"
+                    android:visibility="visible"></TextView>
+            </LinearLayout>
+
+            <View
+                android:layout_width="wrap_content"
+                android:layout_height="1.20dp"
+                android:layout_marginTop="10dp"
+                android:background="@color/gray" />
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="2dp"
+                android:layout_marginRight="2dp"
+                android:layout_marginTop="2dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="#FFFFFF"
+                    android:gravity="left"
+                    android:padding="7dp"
+                    android:singleLine="true"
+                    android:text="Activity Start &amp; End"
+                    android:textColor="@color/black"
+                    android:textSize="15dp" />
+
+                <Button
+                    android:id="@+id/activitystart_sign"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:background="@drawable/ic_date_chang_request" />
+
+                <TextView
+                    android:id="@+id/activity_start"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="2dp"
+                    android:layout_marginRight="2dp"
+                    android:layout_marginTop="4dp"
+                    android:layout_weight="1"
+                    android:gravity="center_vertical"
+                    android:hint="click here to view activity details"
+                    android:maxLength="100"
+                    android:textColor="#808080"
+                    android:visibility="visible" />
+            </LinearLayout>
+
+            <View
+                android:layout_width="wrap_content"
+                android:layout_height="1.20dp"
+                android:layout_marginTop="10dp"
+                android:background="@color/gray" />
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="2dp"
+                android:layout_marginRight="2dp"
+                android:layout_marginTop="2dp"
+                android:orientation="horizontal"
+                android:visibility="gone">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="#FFFFFF"
+                    android:gravity="left"
+                    android:padding="7dp"
+                    android:singleLine="true"
+                    android:text="Travel End"
+                    android:textColor="@color/black"
+                    android:textSize="15dp" />
+
+                <Button
+                    android:id="@+id/activityend_sign"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:background="@drawable/ic_date_chang_request" />
+
+                <TextView
+                    android:id="@+id/activity_end"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="2dp"
+                    android:layout_marginRight="2dp"
+                    android:layout_marginTop="4dp"
+                    android:layout_weight="1"
+                    android:gravity="center_vertical"
+                    android:maxLength="100"
+                    android:textColor="#808080"
+                    android:visibility="visible" />
+            </LinearLayout>
+
+            <View
+                android:layout_width="wrap_content"
+                android:layout_height="1.20dp"
+                android:layout_marginTop="10dp"
+                android:background="@color/gray"
+                android:visibility="gone" />
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="2dp"
+                android:layout_marginRight="2dp"
+                android:layout_marginTop="2dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="#FFFFFF"
+                    android:gravity="left"
+                    android:padding="7dp"
+                    android:singleLine="true"
+                    android:text="Task Description *"
+                    android:textColor="@color/black"
+                    android:textSize="15dp" />
+
+                <EditText
+                    android:id="@+id/description"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="10dp"
+                    android:layout_marginRight="2dp"
+                    android:layout_marginTop="4dp"
+                    android:layout_weight="1"
+                    android:gravity="center_vertical"
+                    android:textColor="#808080"
+                    android:visibility="visible" />
+            </LinearLayout>
+
+            <View
+                android:layout_width="wrap_content"
+                android:layout_height="1.20dp"
+                android:layout_marginTop="10dp"
+                android:background="@color/gray" />
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="2dp"
+                android:layout_marginRight="2dp"
+                android:layout_marginTop="2dp"
+                android:orientation="horizontal"
+                android:visibility="gone">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="#FFFFFF"
+                    android:gravity="left"
+                    android:padding="7dp"
+                    android:singleLine="true"
+                    android:text="Activity"
+                    android:textColor="@color/black"
+                    android:textSize="15dp" />
+
                 <TextView
                     android:id="@+id/proj_activity"
                     android:layout_width="0dp"
@@ -689,12 +749,13 @@
                     android:textColor="#808080"
                     android:visibility="visible" />
             </LinearLayout>
+
             <View
                 android:layout_width="wrap_content"
                 android:layout_height="1.20dp"
                 android:layout_marginTop="10dp"
                 android:background="@color/gray"
-                android:visibility="gone"/>
+                android:visibility="gone" />
 
 
             <LinearLayout
@@ -728,15 +789,16 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="2dp"
+                    android:layout_marginLeft="3dp"
                     android:layout_marginRight="2dp"
                     android:layout_marginTop="4dp"
-                    android:hint="write here"
-                    android:layout_marginLeft="3dp"
                     android:layout_weight="1"
                     android:gravity="center_vertical"
+                    android:hint="write here"
                     android:maxLength="500"
                     android:textColor="#808080"
                     android:visibility="invisible"></EditText>
+
                 <ImageView
                     android:id="@+id/observation_1"
                     android:layout_width="80dp"
@@ -785,15 +847,16 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="2dp"
+                    android:layout_marginLeft="3dp"
                     android:layout_marginRight="2dp"
                     android:layout_marginTop="4dp"
                     android:layout_weight="1"
-                    android:hint="write here"
-                    android:layout_marginLeft="3dp"
                     android:gravity="center_vertical"
+                    android:hint="write here"
                     android:maxLength="500"
                     android:textColor="#808080"
                     android:visibility="invisible"></EditText>
+
                 <ImageView
                     android:id="@+id/action_taken_1"
                     android:layout_width="80dp"
@@ -817,7 +880,8 @@
                 android:layout_marginLeft="2dp"
                 android:layout_marginRight="2dp"
                 android:layout_marginTop="2dp"
-                android:orientation="horizontal" >
+                android:orientation="horizontal">
+
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
@@ -825,10 +889,11 @@
                     android:background="#FFFFFF"
                     android:gravity="left"
                     android:padding="7dp"
-                    android:text="HM Reading *"
                     android:singleLine="true"
+                    android:text="HM Reading *"
                     android:textColor="@color/black"
                     android:textSize="15dp" />
+
                 <EditText
                     android:id="@+id/hour_meter_reading"
                     android:layout_width="0dp"
@@ -837,13 +902,13 @@
                     android:layout_marginRight="2dp"
                     android:layout_marginTop="4dp"
                     android:layout_weight="1"
+                    android:digits="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890.,"
                     android:gravity="center_vertical"
                     android:maxLength="100"
-                    android:digits="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890.,"
                     android:textColor="#808080"
-                    android:visibility="visible">
-                </EditText>
+                    android:visibility="visible"></EditText>
             </LinearLayout>
+
             <View
                 android:layout_width="wrap_content"
                 android:layout_height="1.20dp"
@@ -881,15 +946,16 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="2dp"
+                    android:layout_marginLeft="3dp"
                     android:layout_marginRight="2dp"
                     android:layout_marginTop="4dp"
                     android:layout_weight="1"
-                    android:hint="write here"
                     android:gravity="center_vertical"
-                    android:layout_marginLeft="3dp"
+                    android:hint="write here"
                     android:maxLength="500"
                     android:textColor="#808080"
                     android:visibility="invisible"></EditText>
+
                 <ImageView
                     android:id="@+id/remarks_complete_1"
                     android:layout_width="80dp"
@@ -914,8 +980,10 @@
                 android:layout_marginLeft="2dp"
                 android:layout_marginRight="2dp"
                 android:layout_marginTop="2dp"
-                android:orientation="horizontal" >
+                android:orientation="horizontal">
+
                 <TextView
+                    android:id="@+id/tx__cust_name"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -923,9 +991,9 @@
                     android:gravity="left"
                     android:padding="7dp"
                     android:text="Customer Sign Name *"
-                    android:singleLine="true"
                     android:textColor="@color/black"
                     android:textSize="15dp" />
+
                 <EditText
                     android:id="@+id/cust_sign_name"
                     android:layout_width="0dp"
@@ -937,9 +1005,9 @@
                     android:gravity="center_vertical"
                     android:maxLength="100"
                     android:textColor="#808080"
-                    android:visibility="visible">
-                </EditText>
+                    android:visibility="visible"></EditText>
             </LinearLayout>
+
             <View
                 android:layout_width="wrap_content"
                 android:layout_height="1.20dp"
@@ -953,7 +1021,8 @@
                 android:layout_marginRight="2dp"
                 android:layout_marginTop="2dp"
                 android:layout_weight="4"
-                android:orientation="horizontal" >
+                android:orientation="horizontal">
+
                 <TextView
                     android:id="@+id/sign"
                     android:layout_width="180dp"
@@ -971,17 +1040,17 @@
                     android:layout_width="30dp"
                     android:layout_height="30dp"
                     android:background="@drawable/gallery_pic" />
-               <!-- <TextView
-                    android:layout_width="40dp"
-                    android:layout_height="wrap_content"
-                    android:text=""/>-->
+                <!-- <TextView
+                     android:layout_width="40dp"
+                     android:layout_height="wrap_content"
+                     android:text=""/>-->
 
                 <ImageView
                     android:id="@+id/signature_path"
                     android:layout_width="80dp"
                     android:layout_height="80dp"
-                    android:layout_marginRight="3dp"
                     android:layout_marginEnd="10dp"
+                    android:layout_marginRight="3dp"
                     android:layout_marginTop="5dp"
                     android:visibility="gone" />
 
@@ -1019,24 +1088,26 @@
                     android:layout_width="40dp"
                     android:layout_height="40dp"
                     android:background="@drawable/ic_compact_camera_100" />
-               <!-- <TextView
-                    android:layout_width="40dp"
-                    android:layout_height="wrap_content"
-                    android:text=""/>-->
+                <!-- <TextView
+                     android:layout_width="40dp"
+                     android:layout_height="wrap_content"
+                     android:text=""/>-->
                 <ImageView
                     android:id="@+id/photo_path"
                     android:layout_width="50dp"
                     android:layout_height="50dp"
-                    android:layout_marginRight="3dp"
                     android:layout_marginEnd="10dp"
+                    android:layout_marginRight="3dp"
                     android:layout_marginTop="5dp"
                     android:visibility="gone" />
             </LinearLayout>
+
             <View
                 android:layout_width="wrap_content"
                 android:layout_height="1.20dp"
                 android:layout_marginTop="10dp"
                 android:background="@color/gray" />
+
             <LinearLayout
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
@@ -1044,7 +1115,8 @@
                 android:layout_marginRight="2dp"
                 android:layout_marginTop="2dp"
                 android:layout_weight="4"
-                android:orientation="horizontal" >
+                android:orientation="horizontal">
+
                 <TextView
                     android:id="@+id/tech_sign"
                     android:layout_width="180dp"
@@ -1056,6 +1128,7 @@
                     android:text="Technician Sign *"
                     android:textColor="@color/black"
                     android:textSize="15dp" />
+
                 <Button
                     android:id="@+id/tech_sign_btn"
                     android:layout_width="30dp"
@@ -1069,8 +1142,8 @@
                     android:id="@+id/tech_signature_path"
                     android:layout_width="80dp"
                     android:layout_height="80dp"
-                    android:layout_marginRight="3dp"
                     android:layout_marginEnd="10dp"
+                    android:layout_marginRight="3dp"
                     android:layout_marginTop="5dp"
                     android:visibility="gone" />
 
@@ -1081,7 +1154,6 @@
                 android:layout_height="1.20dp"
                 android:layout_marginTop="10dp"
                 android:background="@color/gray" />
-
 
             <LinearLayout
                 android:layout_width="fill_parent"
@@ -1098,16 +1170,52 @@
                     android:background="#FFFFFF"
                     android:gravity="left"
                     android:padding="7dp"
-                    android:singleLine="true"
+                    android:text="Are you sure want to complete this task "
+                    android:textColor="@color/black"
+                    android:textSize="15dp" />
+
+                <RadioGroup
+                    android:id="@+id/radioyesNo"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <RadioButton
+                        android:id="@+id/yes_btn"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="yes" />
+
+                    <RadioButton
+                        android:id="@+id/no_btn"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="no" />
+                </RadioGroup>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/synopsis_layout"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="2dp"
+                android:layout_marginRight="2dp"
+                android:layout_marginTop="2dp"
+                android:layout_weight="3"
+                android:orientation="horizontal"
+                android:visibility="gone">
+
+                <TextView
+                    android:layout_width="180dp"
+                    android:layout_height="wrap_content"
+                    android:background="#FFFFFF"
+                    android:gravity="left"
+                    android:padding="7dp"
                     android:text="Synopsis *"
                     android:textColor="@color/black"
                     android:textSize="15dp" />
 
-                <!--<Button
-                    android:id="@+id/synopsis_type1"
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
-                    android:background="@drawable/writeordraw" />-->
                 <Button
                     android:id="@+id/synopsis_type"
                     android:layout_width="30dp"
@@ -1119,15 +1227,16 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="2dp"
+                    android:layout_marginLeft="3dp"
                     android:layout_marginRight="2dp"
                     android:layout_marginTop="4dp"
-                    android:hint="write here"
-                    android:layout_marginLeft="3dp"
                     android:layout_weight="1"
                     android:gravity="center_vertical"
+                    android:hint="write here"
                     android:maxLength="500"
                     android:textColor="#808080"
                     android:visibility="invisible"></EditText>
+
                 <ImageView
                     android:id="@+id/synopsis_img"
                     android:layout_width="80dp"
@@ -1143,15 +1252,15 @@
                 android:layout_width="wrap_content"
                 android:layout_height="3.20dp"
                 android:layout_marginTop="10dp"
-                android:background="@color/gray"/>
+                android:background="@color/gray" />
+
             <LinearLayout
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="2dp"
                 android:layout_marginRight="2dp"
                 android:layout_marginTop="2dp"
-                android:orientation="horizontal" >
-            </LinearLayout>
+                android:orientation="horizontal"></LinearLayout>
         </LinearLayout>
     </ScrollView>
 </RelativeLayout>

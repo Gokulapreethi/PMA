@@ -46,6 +46,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.ase.Appreference;
+import com.ase.Bean.FSRResultBean;
+import com.ase.Bean.FSRSearchResults;
 import com.ase.Bean.ListallProjectBean;
 import com.ase.Bean.ProjectDetailsBean;
 import com.ase.Bean.TaskDetailsBean;
@@ -82,6 +84,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.TimeZone;
 
@@ -252,7 +255,7 @@ public class ProjectsFragment extends Fragment implements View.OnClickListener, 
             });
 
             fsrDetails.setOnClickListener(new View.OnClickListener() {
-                String fsr_jobId, fsr_date;
+                String fsr_jobId, fsr_date, selected_mcSrNo = " ", search_startDate, search_endDate;
 
                 @Override
                 public void onClick(View v) {
@@ -272,7 +275,7 @@ public class ProjectsFragment extends Fragment implements View.OnClickListener, 
                     alert.setCancelable(false);
                     /*getting list of jobcards for the user from table*/
                     String list_query = "select *,cast(oracleProjectId as unsigned) as t from projectDetails where loginuser = '" + Appreference.loginuserdetails.getEmail() + "' order by t DESC";
-                    ArrayList<String> ar_My_machineSerialNo = VideoCallDataBase.getDB(getActivity()).getOracleProjectIdlist(list_query,"mcSrNo");
+                    ArrayList<String> ar_My_machineSerialNo = VideoCallDataBase.getDB(getActivity()).getOracleProjectIdlist(list_query, "mcSrNo");
                     ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, ar_My_machineSerialNo);
                     // Drop down layout style - list view with radio button
                     dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -281,8 +284,7 @@ public class ProjectsFragment extends Fragment implements View.OnClickListener, 
                     machine_no_spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                         @Override
                         public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                            String selected_jobcard = String.valueOf(machine_no_spinner.getSelectedItem());/*selected jobcard from spinner*/
-
+                            selected_mcSrNo = String.valueOf(machine_no_spinner.getSelectedItem());/*selected jobcard from spinner*/
                         }
 
                         @Override
@@ -291,6 +293,7 @@ public class ProjectsFragment extends Fragment implements View.OnClickListener, 
                     });
                     fsr_start_btn.setOnClickListener(new View.OnClickListener() {
                         final Calendar c = Calendar.getInstance();
+
                         @Override
                         public void onClick(View v) {
                             try {
@@ -313,6 +316,7 @@ public class ProjectsFragment extends Fragment implements View.OnClickListener, 
                                                     days = String.valueOf(dayOfMonth);
                                                 }
                                                 String completedate_display = year + "-" + months + "-" + days;
+                                                search_startDate = completedate_display + " " + "00:00:00";
                                                 tx_fst_start.setText(completedate_display);
                                             }
                                         }, c.get(Calendar.YEAR), c.get(Calendar.MONTH), c.get(Calendar.DATE));
@@ -347,7 +351,8 @@ public class ProjectsFragment extends Fragment implements View.OnClickListener, 
                                                     days = String.valueOf(dayOfMonth);
                                                 }
                                                 String completedate_display = year + "-" + months + "-" + days;
-                                                 tx_fst_end.setText(completedate_display);
+                                                search_endDate = completedate_display + " " + "23:59:59";
+                                                tx_fst_end.setText(completedate_display);
                                             }
                                         }, c.get(Calendar.YEAR), c.get(Calendar.MONTH), c.get(Calendar.DATE));
                                 dpd.show();
@@ -359,7 +364,41 @@ public class ProjectsFragment extends Fragment implements View.OnClickListener, 
                     alert.setPositiveButton("Submit", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
+                            if (selected_mcSrNo != null && !selected_mcSrNo.equalsIgnoreCase(" ") && search_startDate != null && !search_startDate.equalsIgnoreCase(" ") && search_endDate != null && !search_endDate.equalsIgnoreCase(" ")) {
+                                dialog.dismiss();
+                                SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                                SimpleDateFormat dateParse = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                                dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
+                                Date date = null;
+                                Date date1 = null;
+                                String FSRStartDateUTC = "";
+                                String FSREndDateUTC = "";
 
+                                if (search_startDate != null && !search_startDate.equalsIgnoreCase("")) {
+                                    try {
+                                        date = dateParse.parse(search_startDate);
+                                        FSRStartDateUTC = dateFormat.format(date);
+                                    } catch (Exception e) {
+                                        e.printStackTrace();
+                                    }
+                                }
+                                if (search_endDate != null && !search_endDate.equalsIgnoreCase("")) {
+                                    try {
+                                        date1 = dateParse.parse(search_endDate);
+                                        FSREndDateUTC = dateFormat.format(date1);
+                                    } catch (Exception e) {
+                                        e.printStackTrace();
+                                    }
+                                }
+                                List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
+                                nameValuePairs.add(new BasicNameValuePair("mcSrNo", selected_mcSrNo));
+                                nameValuePairs.add(new BasicNameValuePair("taskCompletedStartDate", FSRStartDateUTC));
+                                nameValuePairs.add(new BasicNameValuePair("taskCompletedEndDate", FSREndDateUTC));
+                                showprogress("searching....");
+                                Appreference.jsonRequestSender.OraclefieldServiceSearch(EnumJsonWebservicename.fieldServiceSearch, nameValuePairs, ProjectsFragment.this);
+                            } else {
+                                Toast.makeText(getActivity(), "Please Enter correct Start/End Date", Toast.LENGTH_SHORT).show();
+                            }
                         }
                     });
                     alert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -496,7 +535,6 @@ public class ProjectsFragment extends Fragment implements View.OnClickListener, 
                     dialog.show();*/
                 }
             });
-
 
 
             activity_start.setOnClickListener(new View.OnClickListener() {
@@ -1517,6 +1555,36 @@ public class ProjectsFragment extends Fragment implements View.OnClickListener, 
                             } catch (Exception e) {
                                 e.printStackTrace();
                             }
+                        } else if (s2 != null && s2.equalsIgnoreCase(("fieldServiceSearch"))) {
+                            Log.i("output123", "projectFragment fieldServiceSearch  Responce Received" + s1);
+                            final JSONObject jsonObject = new JSONObject(opr.getEmail());
+                            cancelDialog();
+                            try {
+                                if (((String) jsonObject.get("result_text")).equalsIgnoreCase("fetch data loaded successed")) {
+                                    HashMap<String, List<String>> fsr_key_value = new HashMap<>();
+                                    ArrayList<String> allJobcardlist=new ArrayList<String>();
+                                    Type collectionType = new TypeToken<FSRResultBean>() {
+                                    }.getType();
+                                    FSRResultBean resultBean = new Gson().fromJson(s1, collectionType);
+                                    if (resultBean.getListProject().size() > 0) {
+                                        for (int i = 0; i < resultBean.getListProject().size(); i++) {
+                                            FSRSearchResults fsrSearchResults = (FSRSearchResults) resultBean.getListProject().get(i);
+                                            fsr_key_value.put(fsrSearchResults.getOracleProjectId(), fsrSearchResults.getTaskcompleteddates());
+                                            allJobcardlist.add(fsrSearchResults.getOracleProjectId());
+                                        }
+                                    }
+                                    Log.i("fsrReport123", "fsrReport123=========>" + fsr_key_value.size());
+                                    show_FSRJobList(fsr_key_value,allJobcardlist);
+
+                                } else {
+                                    String result = (String) jsonObject.get("result_text");
+                                    Toast.makeText(getContext(), result, Toast.LENGTH_LONG).show();
+                                }
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -1526,6 +1594,123 @@ public class ProjectsFragment extends Fragment implements View.OnClickListener, 
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+    String fsr_jobId, fsr_date;
+    private void show_FSRJobList(final HashMap<String, List<String>> fsr_key_value, ArrayList showAllJobCard) {
+
+
+        LayoutInflater inflater = getActivity().getLayoutInflater();
+        View alertLayout = inflater.inflate(R.layout.fsr_report_view, null);
+        final Spinner job_spinner = (Spinner) alertLayout.findViewById(R.id.job_spinner);
+        final Spinner date_spinner = (Spinner) alertLayout.findViewById(R.id.date_spinner);
+        AlertDialog.Builder alert = new AlertDialog.Builder(getActivity());
+        alert.setTitle("FSR REPORT");
+        // this is set the view from XML inside AlertDialog
+        alert.setView(alertLayout);
+        // disallow cancel of AlertDialog on click of back button and outside touch
+        alert.setCancelable(false);
+        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, showAllJobCard);
+        // Drop down layout style - list view with radio button
+        dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        // attaching data adapter to spinner
+        job_spinner.setAdapter(dataAdapter);
+        job_spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                String selected_jobcard = String.valueOf(job_spinner.getSelectedItem());
+//                            getting projectid from table relevant to oracleprojectId
+                if(fsr_key_value.containsKey(selected_jobcard)) {
+                    Log.i("fsrReport123", "fsr_key_value.get(\"fsr_key_value\").get(0);=========>" + fsr_key_value.get(selected_jobcard).get(0));
+                    String ListDates=fsr_key_value.get(selected_jobcard).get(0);
+                    String separate_date[]=ListDates.split(",");
+                    ArrayList<String> MyDate=new ArrayList<String>();
+                    if(separate_date.length>0){
+                        for(int j=0;j<separate_date.length;j++){
+                            MyDate.add(Appreference.utcToLocalTime(separate_date[j]));
+                        }
+                    }
+                    ArrayAdapter<String> dataAdapter_Date = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, MyDate);
+                    // Drop down layout style - list view with radio button
+                    dataAdapter_Date.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                    // attaching data adapter to spinner
+                    date_spinner.setAdapter(dataAdapter_Date);
+
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+            }
+        });
+        date_spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                String selected_date = String.valueOf(date_spinner.getSelectedItem());
+//                selected date from spinner
+                try {
+                    if (selected_date != null)
+                        fsr_date = selected_date;
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
+        alert.setPositiveButton("Submit", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                if (fsr_date != null && !fsr_date.equalsIgnoreCase("")) {
+//                                dialog.dismiss();
+                    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                    SimpleDateFormat dateParse = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                    dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
+                    Date date = null;
+                    Date date1 = null;
+                    String FSRStartDateUTC = "";
+                    String FSREndDateUTC = "";
+                    String fsr_start_date = fsr_date + " " + "00:00:00";
+                    String fsr_end_date = fsr_date + " " + "23:59:59";
+                    if (fsr_start_date != null && !fsr_start_date.equalsIgnoreCase("")) {
+                        try {
+                            date = dateParse.parse(fsr_start_date);
+                            FSRStartDateUTC = dateFormat.format(date);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                    if (fsr_end_date != null && !fsr_end_date.equalsIgnoreCase("")) {
+                        try {
+                            date1 = dateParse.parse(fsr_end_date);
+                            FSREndDateUTC = dateFormat.format(date1);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                    List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
+                    nameValuePairs.add(new BasicNameValuePair("projectId", fsr_jobId));
+                    nameValuePairs.add(new BasicNameValuePair("taskCompletedStartDate", FSRStartDateUTC));
+                    nameValuePairs.add(new BasicNameValuePair("taskCompletedEndDate", FSREndDateUTC));
+                    showprogress("Downloading...");
+                    Appreference.jsonRequestSender.OracleFSRJOBReport(EnumJsonWebservicename.fieldServiceReportJobWise, nameValuePairs, ProjectsFragment.this);
+                } else
+                    Toast.makeText(getActivity(), "Please select any date...", Toast.LENGTH_SHORT).show();
+            }
+        });
+        alert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+
+        AlertDialog dialog = alert.create();
+        dialog.show();
     }
 
     @Override

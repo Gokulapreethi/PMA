@@ -1433,6 +1433,8 @@ public class ProjectHistory extends Activity implements WebServiceInterface, Swi
                             percentage_1.setText("0%");
                             percentage_1.setTextColor(Color.RED);
                         }
+                    }else{
+                        percentage_1.setVisibility(View.GONE);
                     }
                     Log.i("ProjectHistory", "projectDetailsBean.getCatagory() " + projectDetailsBean.getCatagory());
                     if (projectDetailsBean.getCatagory() != null && (projectDetailsBean.getCatagory().equalsIgnoreCase("Task") || projectDetailsBean.getCatagory().equalsIgnoreCase("taskCreation"))) {

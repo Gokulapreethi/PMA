@@ -940,9 +940,12 @@ public class TravelJobDetails extends Activity implements View.OnClickListener, 
 
             jsonObject.put("hourMeterReading", "");
             listOfObservers.clear();
+            String taskMemberList_qry = "select taskMemberList from projectHistory where projectId='" + projectId + "'  and taskId= '" + webtaskId + "'";
+            String taskMemberList = VideoCallDataBase.getDB(context).getProjectParentTaskId(taskMemberList_qry);
+            Log.i(tab,"taskMemberList==> "+taskMemberList);
             if (ownerOfTask != null && !ownerOfTask.equalsIgnoreCase(Appreference.loginuserdetails.getUsername())) {
                 listOfObservers.add(ownerOfTask);
-                project_toUsers = ownerOfTask;
+                project_toUsers = taskMemberList;
             } else {
                 listOfObservers.add(project_toUsers);
             }
