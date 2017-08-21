@@ -9,6 +9,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -82,6 +83,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -122,6 +124,8 @@ public class ProjectsFragment extends Fragment implements View.OnClickListener, 
     RelativeLayout all_report_title;
     Button submit_button;
     String TNAReportStart, TNAReportEnd;
+    String User_selected_mcsrNo,User_selected_startDate,User_selected_endDate;
+
 
     public static ProjectsFragment getInstance() {
         return projectsFragment;
@@ -255,7 +259,7 @@ public class ProjectsFragment extends Fragment implements View.OnClickListener, 
             });
 
             fsrDetails.setOnClickListener(new View.OnClickListener() {
-                String fsr_jobId, fsr_date, selected_mcSrNo = " ", search_startDate, search_endDate;
+                String fsr_jobId, fsr_date, selected_mcSrNo = " ", search_startDate = "", search_endDate="";
 
                 @Override
                 public void onClick(View v) {
@@ -265,26 +269,66 @@ public class ProjectsFragment extends Fragment implements View.OnClickListener, 
                     final Spinner machine_no_spinner = (Spinner) alertLayout.findViewById(R.id.machine_no_spinner);
                     final Button fsr_start_btn = (Button) alertLayout.findViewById(R.id.fsr_start_btn);
                     final Button fsr_end_btn = (Button) alertLayout.findViewById(R.id.fsr_end_btn);
+                    final LinearLayout ll_second_layout=(LinearLayout) alertLayout.findViewById(R.id.second_layout);
+                    ll_second_layout.setVisibility(View.GONE);
                     final TextView tx_fst_start = (TextView) alertLayout.findViewById(R.id.fst_start);
                     final TextView tx_fst_end = (TextView) alertLayout.findViewById(R.id.fst_end);
                     AlertDialog.Builder alert = new AlertDialog.Builder(getActivity());
                     alert.setTitle("FSR REPORT");
                     // this is set the view from XML inside AlertDialog
                     alert.setView(alertLayout);
+                    alert.setPositiveButton("Submit", null);
+                    alert.setNegativeButton("Cancel", null);
                     // disallow cancel of AlertDialog on click of back button and outside touch
                     alert.setCancelable(false);
                     /*getting list of jobcards for the user from table*/
                     String list_query = "select *,cast(oracleProjectId as unsigned) as t from projectDetails where loginuser = '" + Appreference.loginuserdetails.getEmail() + "' order by t DESC";
                     ArrayList<String> ar_My_machineSerialNo = VideoCallDataBase.getDB(getActivity()).getOracleProjectIdlist(list_query, "mcSrNo");
-                    ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, ar_My_machineSerialNo);
+                    ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, ar_My_machineSerialNo){
+                        @Override
+                        public boolean isEnabled(int position) {
+                            if(position == 0)
+                            {
+                                // Disable the first item from Spinner
+                                // First item will be use for hint
+                                return false;
+                            }
+                            else
+                            {
+                                return true;
+                            }
+                        }
+
+                        @Override
+                        public View getDropDownView(int position, View convertView, ViewGroup parent) {
+                            View view = super.getDropDownView(position, convertView, parent);
+                            TextView tv = (TextView) view;
+                            if(position == 0){
+                                // Set the hint text color gray
+                                tv.setTextColor(Color.GRAY);
+                            }
+                            else {
+                                tv.setTextColor(Color.BLACK);
+                            }
+                            return view;
+                        }
+                    };
                     // Drop down layout style - list view with radio button
                     dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                     // attaching data adapter to spinner
                     machine_no_spinner.setAdapter(dataAdapter);
+                    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+                    final String dateTime = dateFormat.format(new Date());
+                    search_startDate = "";
+                    search_endDate="";
                     machine_no_spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                         @Override
                         public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                            String selectedItemText = (String) parent.getItemAtPosition(position);
+                            if(position > 0){
                             selected_mcSrNo = String.valueOf(machine_no_spinner.getSelectedItem());/*selected jobcard from spinner*/
+                            User_selected_mcsrNo=selected_mcSrNo;
+							}
                         }
 
                         @Override
@@ -317,7 +361,20 @@ public class ProjectsFragment extends Fragment implements View.OnClickListener, 
                                                 }
                                                 String completedate_display = year + "-" + months + "-" + days;
                                                 search_startDate = completedate_display + " " + "00:00:00";
-                                                tx_fst_start.setText(completedate_display);
+                                                Log.i("FSR", "completedate_display ==> " + completedate_display);
+                                                Log.i("FSR", "dateTime ==> " + completedate_display.compareTo(dateTime));
+												
+                                                if (completedate_display.compareTo(dateTime) <= 0) {
+//                                                   
+                                                        tx_fst_start.setText(completedate_display);
+														User_selected_startDate=completedate_display;
+//                                                   
+                                                } else {
+                                                    Toast.makeText(ProjectsFragment.classContext, "Dont pick future date", Toast.LENGTH_SHORT).show();
+                                                    Log.i("FSR", "tx_fst_start ==> " + tx_fst_start.getText().toString());
+                                                    search_startDate = tx_fst_start.getText().toString();
+													User_selected_startDate=tx_fst_start.getText().toString();
+                                                }
                                             }
                                         }, c.get(Calendar.YEAR), c.get(Calendar.MONTH), c.get(Calendar.DATE));
                                 dpd.show();
@@ -331,71 +388,180 @@ public class ProjectsFragment extends Fragment implements View.OnClickListener, 
 
                         @Override
                         public void onClick(View v) {
-                            try {
-                                DatePickerDialog dpd = new DatePickerDialog(getActivity(),
-                                        new DatePickerDialog.OnDateSetListener() {
-                                            @Override
-                                            public void onDateSet(DatePicker view, int year,
-                                                                  int monthOfYear, int dayOfMonth) {
+                            if (search_startDate != null && !search_startDate.equalsIgnoreCase("") && !search_startDate.equalsIgnoreCase(null)) {
+                                try {
+                                    DatePickerDialog dpd = new DatePickerDialog(getActivity(),
+                                            new DatePickerDialog.OnDateSetListener() {
+                                                @Override
+                                                public void onDateSet(DatePicker view, int year,
+                                                                      int monthOfYear, int dayOfMonth) {
 
-                                                String months = "";
-                                                if ((monthOfYear + 1) < 10) {
-                                                    months = "0" + (monthOfYear + 1);
-                                                } else {
-                                                    months = String.valueOf(monthOfYear + 1);
+                                                    String months = "";
+                                                    if ((monthOfYear + 1) < 10) {
+                                                        months = "0" + (monthOfYear + 1);
+                                                    } else {
+                                                        months = String.valueOf(monthOfYear + 1);
+                                                    }
+                                                    String days = "";
+                                                    if (dayOfMonth < 10) {
+                                                        days = "0" + dayOfMonth;
+                                                    } else {
+                                                        days = String.valueOf(dayOfMonth);
+                                                    }
+                                                    String completedate_display = year + "-" + months + "-" + days;
+                                                    search_endDate = completedate_display + " " + "23:59:59";
+
+                                                    Log.i("FSR", "completedate_display ==> # " + completedate_display);
+                                                    Log.i("FSR", "dateTime ==> # " + completedate_display.compareTo(dateTime));
+
+                                                    if (completedate_display.compareTo(dateTime) <= 0) {
+                                                        String start_date = search_startDate.split(" ")[0];
+                                                        Log.i("FSR", "start_date ==> " + start_date);
+                                                        Log.i("FSR", "diff ==> " + completedate_display.compareTo(start_date));
+                                                        if (completedate_display.compareTo(start_date) >= 0) {
+                                                            tx_fst_end.setText(completedate_display);
+															User_selected_endDate=completedate_display;
+                                                        } else {
+                                                            Toast.makeText(ProjectsFragment.classContext, "Please select end date after start date ", Toast.LENGTH_SHORT).show();
+                                                            Log.i("FSR", "tx_fst_end ==> " + tx_fst_end.getText().toString());
+                                                            search_endDate = tx_fst_end.getText().toString();
+															User_selected_endDate=tx_fst_end.getText().toString();
+                                                        }
+                                                    } else {
+                                                        Toast.makeText(ProjectsFragment.classContext, "Dont pick future date", Toast.LENGTH_SHORT).show();
+                                                        Log.i("FSR", "tx_fst_end ==> " + tx_fst_end.getText().toString());
+                                                        search_endDate = tx_fst_end.getText().toString();
+														User_selected_endDate=tx_fst_end.getText().toString();
+                                                    }
+
                                                 }
-                                                String days = "";
-                                                if (dayOfMonth < 10) {
-                                                    days = "0" + dayOfMonth;
-                                                } else {
-                                                    days = String.valueOf(dayOfMonth);
-                                                }
-                                                String completedate_display = year + "-" + months + "-" + days;
-                                                search_endDate = completedate_display + " " + "23:59:59";
-                                                tx_fst_end.setText(completedate_display);
-                                            }
-                                        }, c.get(Calendar.YEAR), c.get(Calendar.MONTH), c.get(Calendar.DATE));
-                                dpd.show();
-                            } catch (Exception e) {
-                                e.printStackTrace();
+                                            }, c.get(Calendar.YEAR), c.get(Calendar.MONTH), c.get(Calendar.DATE));
+                                    dpd.show();
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
+                            } else {
+                                Toast.makeText(ProjectsFragment.classContext, "Please select start date ", Toast.LENGTH_SHORT).show();
                             }
                         }
                     });
-                    alert.setPositiveButton("Submit", new DialogInterface.OnClickListener() {
+                    final AlertDialog mAlertDialog = alert.create();
+                    mAlertDialog.setOnShowListener(new DialogInterface.OnShowListener() {
+
+                        @Override
+                        public void onShow(final DialogInterface dialog) {
+
+                            Button b = mAlertDialog.getButton(AlertDialog.BUTTON_POSITIVE);
+                            b.setOnClickListener(new View.OnClickListener() {
+
+                                @Override
+                                public void onClick(View view) {
+                                    // TODO Do something
+                                    if (selected_mcSrNo != null && !selected_mcSrNo.equalsIgnoreCase("") && !selected_mcSrNo.equalsIgnoreCase(null)
+                                            && search_startDate != null && !search_startDate.equalsIgnoreCase("") && !search_startDate.equalsIgnoreCase(null)
+                                            && search_endDate != null && !search_endDate.equalsIgnoreCase("") && !search_endDate.equalsIgnoreCase(null)) {
+                                        Log.i("FSR","submit_search_startDate "+search_startDate);
+                                        Log.i("FSR","submit_search_endDate "+search_endDate);
+                                        if (search_startDate.compareTo(search_endDate)<=0) {
+                                            Log.i("FSR","submit_search_startDate ==> "+search_startDate);
+                                            Log.i("FSR","submit_search_endDate ==>  "+search_endDate);
+                                            dialog.dismiss();
+                                            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                                            SimpleDateFormat dateParse = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                                            dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
+                                            Date date = null;
+                                            Date date1 = null;
+                                            String FSRStartDateUTC = "";
+                                            String FSREndDateUTC = "";
+
+                                            if (search_startDate != null && !search_startDate.equalsIgnoreCase("")) {
+                                                try {
+                                                    date = dateParse.parse(search_startDate);
+                                                    FSRStartDateUTC = dateFormat.format(date);
+                                                } catch (Exception e) {
+                                                    e.printStackTrace();
+                                                }
+                                            }
+                                            if (search_endDate != null && !search_endDate.equalsIgnoreCase("")) {
+                                                try {
+                                                    date1 = dateParse.parse(search_endDate);
+                                                    FSREndDateUTC = dateFormat.format(date1);
+                                                } catch (Exception e) {
+                                                    e.printStackTrace();
+                                                }
+                                            }
+                                            List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
+                                            nameValuePairs.add(new BasicNameValuePair("mcSrNo", selected_mcSrNo));
+                                            nameValuePairs.add(new BasicNameValuePair("taskCompletedStartDate", FSRStartDateUTC));
+                                            nameValuePairs.add(new BasicNameValuePair("taskCompletedEndDate", FSREndDateUTC));
+                                            showprogress("searching....");
+                                            Appreference.jsonRequestSender.OraclefieldServiceSearch(EnumJsonWebservicename.fieldServiceSearch, nameValuePairs, ProjectsFragment.this);
+                                        } else {
+                                            Toast.makeText(getActivity(), "Please pick end date after start date", Toast.LENGTH_SHORT).show();
+                                        }
+                                    } else {
+                                        Toast.makeText(getActivity(), "Please Enter correct Start/End Date", Toast.LENGTH_SHORT).show();
+                                    }
+
+                                }
+                            });
+                            Button a = mAlertDialog.getButton(AlertDialog.BUTTON_NEGATIVE);
+                            a.setOnClickListener(new View.OnClickListener() {
+
+                                @Override
+                                public void onClick(View view) {
+                                    // TODO Do something
+                                    dialog.dismiss();
+                                }
+                            });
+                        }
+                    });
+                    mAlertDialog.show();
+/*                    alert.setPositiveButton("Submit", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-                            if (selected_mcSrNo != null && !selected_mcSrNo.equalsIgnoreCase(" ") && search_startDate != null && !search_startDate.equalsIgnoreCase(" ") && search_endDate != null && !search_endDate.equalsIgnoreCase(" ")) {
-                                dialog.dismiss();
-                                SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-                                SimpleDateFormat dateParse = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-                                dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
-                                Date date = null;
-                                Date date1 = null;
-                                String FSRStartDateUTC = "";
-                                String FSREndDateUTC = "";
+                            if (selected_mcSrNo != null && !selected_mcSrNo.equalsIgnoreCase("") && !selected_mcSrNo.equalsIgnoreCase(null)
+                                    && search_startDate != null && !search_startDate.equalsIgnoreCase("") && !search_startDate.equalsIgnoreCase(null)
+                                    && search_endDate != null && !search_endDate.equalsIgnoreCase("") && !search_endDate.equalsIgnoreCase(null)) {
+                               Log.i("FSR","submit_search_startDate "+search_startDate);
+                                Log.i("FSR","submit_search_endDate "+search_endDate);
+                                if (search_startDate.compareTo(search_endDate)<=0) {
+                                    Log.i("FSR","submit_search_startDate ==> "+search_startDate);
+                                    Log.i("FSR","submit_search_endDate ==>  "+search_endDate);
+                                    dialog.dismiss();
+                                    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                                    SimpleDateFormat dateParse = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                                    dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
+                                    Date date = null;
+                                    Date date1 = null;
+                                    String FSRStartDateUTC = "";
+                                    String FSREndDateUTC = "";
 
-                                if (search_startDate != null && !search_startDate.equalsIgnoreCase("")) {
-                                    try {
-                                        date = dateParse.parse(search_startDate);
-                                        FSRStartDateUTC = dateFormat.format(date);
-                                    } catch (Exception e) {
-                                        e.printStackTrace();
+                                    if (search_startDate != null && !search_startDate.equalsIgnoreCase("")) {
+                                        try {
+                                            date = dateParse.parse(search_startDate);
+                                            FSRStartDateUTC = dateFormat.format(date);
+                                        } catch (Exception e) {
+                                            e.printStackTrace();
+                                        }
                                     }
-                                }
-                                if (search_endDate != null && !search_endDate.equalsIgnoreCase("")) {
-                                    try {
-                                        date1 = dateParse.parse(search_endDate);
-                                        FSREndDateUTC = dateFormat.format(date1);
-                                    } catch (Exception e) {
-                                        e.printStackTrace();
+                                    if (search_endDate != null && !search_endDate.equalsIgnoreCase("")) {
+                                        try {
+                                            date1 = dateParse.parse(search_endDate);
+                                            FSREndDateUTC = dateFormat.format(date1);
+                                        } catch (Exception e) {
+                                            e.printStackTrace();
+                                        }
                                     }
+                                    List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
+                                    nameValuePairs.add(new BasicNameValuePair("mcSrNo", selected_mcSrNo));
+                                    nameValuePairs.add(new BasicNameValuePair("taskCompletedStartDate", FSRStartDateUTC));
+                                    nameValuePairs.add(new BasicNameValuePair("taskCompletedEndDate", FSREndDateUTC));
+                                    showprogress("searching....");
+                                    Appreference.jsonRequestSender.OraclefieldServiceSearch(EnumJsonWebservicename.fieldServiceSearch, nameValuePairs, ProjectsFragment.this);
+                                } else {
+                                    Toast.makeText(getActivity(), "Please pick end date after start date", Toast.LENGTH_SHORT).show();
                                 }
-                                List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
-                                nameValuePairs.add(new BasicNameValuePair("mcSrNo", selected_mcSrNo));
-                                nameValuePairs.add(new BasicNameValuePair("taskCompletedStartDate", FSRStartDateUTC));
-                                nameValuePairs.add(new BasicNameValuePair("taskCompletedEndDate", FSREndDateUTC));
-                                showprogress("searching....");
-                                Appreference.jsonRequestSender.OraclefieldServiceSearch(EnumJsonWebservicename.fieldServiceSearch, nameValuePairs, ProjectsFragment.this);
                             } else {
                                 Toast.makeText(getActivity(), "Please Enter correct Start/End Date", Toast.LENGTH_SHORT).show();
                             }
@@ -409,7 +575,7 @@ public class ProjectsFragment extends Fragment implements View.OnClickListener, 
                     });
 
                     AlertDialog dialog = alert.create();
-                    dialog.show();
+                    dialog.show();*/
 
 
 
@@ -1597,10 +1763,13 @@ public class ProjectsFragment extends Fragment implements View.OnClickListener, 
     }
     String fsr_jobId, fsr_date;
     private void show_FSRJobList(final HashMap<String, List<String>> fsr_key_value, ArrayList showAllJobCard) {
-
-
         LayoutInflater inflater = getActivity().getLayoutInflater();
-        View alertLayout = inflater.inflate(R.layout.fsr_report_view, null);
+        View alertLayout = inflater.inflate(R.layout.fsr_request_view, null);
+        final LinearLayout ll_second_layout=(LinearLayout) alertLayout.findViewById(R.id.second_layout);
+        ll_second_layout.setVisibility(View.VISIBLE);
+        final Spinner machine_no_spinner = (Spinner) alertLayout.findViewById(R.id.machine_no_spinner);
+        final TextView fst_start = (TextView) alertLayout.findViewById(R.id.fst_start);
+        final TextView fst_end = (TextView) alertLayout.findViewById(R.id.fst_end);
         final Spinner job_spinner = (Spinner) alertLayout.findViewById(R.id.job_spinner);
         final Spinner date_spinner = (Spinner) alertLayout.findViewById(R.id.date_spinner);
         AlertDialog.Builder alert = new AlertDialog.Builder(getActivity());
@@ -1609,24 +1778,40 @@ public class ProjectsFragment extends Fragment implements View.OnClickListener, 
         alert.setView(alertLayout);
         // disallow cancel of AlertDialog on click of back button and outside touch
         alert.setCancelable(false);
+
+
+
+        String[] list = new String[] {User_selected_mcsrNo};
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(),
+                android.R.layout.simple_spinner_item, list);
+        machine_no_spinner.setAdapter(adapter);
+        fst_start.setText(User_selected_startDate);
+        fst_end.setText(User_selected_endDate);
         ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, showAllJobCard);
         // Drop down layout style - list view with radio button
         dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         // attaching data adapter to spinner
         job_spinner.setAdapter(dataAdapter);
+
         job_spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 String selected_jobcard = String.valueOf(job_spinner.getSelectedItem());
-//                            getting projectid from table relevant to oracleprojectId
+
+                //*getting projectid from table relevant to oracleprojectId*//*
+                String get_projectId_query = "select projectId from projectDetails where loginuser = '" + Appreference.loginuserdetails.getEmail() + "'and oracleProjectId='" + selected_jobcard + "'";
+                String fsr_ProjectId = VideoCallDataBase.getDB(getActivity()).getprojectIdForOracleID(get_projectId_query);
+                fsr_jobId = fsr_ProjectId;
+
                 if(fsr_key_value.containsKey(selected_jobcard)) {
-                    Log.i("fsrReport123", "fsr_key_value.get(\"fsr_key_value\").get(0);=========>" + fsr_key_value.get(selected_jobcard).get(0));
-                    String ListDates=fsr_key_value.get(selected_jobcard).get(0);
-                    String separate_date[]=ListDates.split(",");
+
+                    List<String> myList = new ArrayList<String>(Arrays.asList(fsr_key_value.get(selected_jobcard).get(0).split(",")));
+
                     ArrayList<String> MyDate=new ArrayList<String>();
-                    if(separate_date.length>0){
-                        for(int j=0;j<separate_date.length;j++){
-                            MyDate.add(Appreference.utcToLocalTime(separate_date[j]));
+                    if(myList.size()>0){
+                        for(int j=0;j<myList.size();j++){
+                            String list=Appreference.utcToLocalTime(myList.get(j));
+                            MyDate.add(list.substring(0,list.indexOf(' ')));
                         }
                     }
                     ArrayAdapter<String> dataAdapter_Date = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, MyDate);

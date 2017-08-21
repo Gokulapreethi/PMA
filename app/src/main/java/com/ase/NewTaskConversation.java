@@ -981,18 +981,18 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                 }
             });
         }
+        String Query = "Select * from projectHistory where projectId ='" + projectId + "' and taskId = '" + webtaskId + "'";
+        TaskDetailsBean MonthlyJobBean = VideoCallDataBase.getDB(context).getDetails_to_complete_project(Query);
+
+        if (MonthlyJobBean.getIsActiveStatus() != null && MonthlyJobBean.getIsActiveStatus().equalsIgnoreCase("1") && !MonthlyJobBean.getIsActiveStatus().equalsIgnoreCase("null")) {
+            status_job.setVisibility(View.INVISIBLE);
+        }
+
         status_job.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String Query = "Select * from projectHistory where projectId ='" + projectId + "' and taskId = '" + webtaskId + "'";
-                TaskDetailsBean MonthlyJobBean = VideoCallDataBase.getDB(context).getDetails_to_complete_project(Query);
-                Log.i("taker123", "status_job clickListener -=============> " + MonthlyJobBean.getIsActiveStatus());
 
-                if (MonthlyJobBean.getIsActiveStatus() != null && MonthlyJobBean.getIsActiveStatus().equalsIgnoreCase("1") && !MonthlyJobBean.getIsActiveStatus().equalsIgnoreCase("null")) {
-                    showToast("You are not Allowed..");
-                } else {
                     showStatusPopupWindow(v);
-                }
             }
         });
 
@@ -1001,7 +1001,10 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
             public void onClick(View v) {
                 String query = "select status from projectStatus where projectId='" + projectId + "' and userId='" + Appreference.loginuserdetails.getId() + "' and taskId= '" + webtaskId + "'";
                 int current_status = VideoCallDataBase.getDB(context).getCurrentStatus(query);
-                if (current_status == -1 || current_status == 8) {
+
+                String Query = "Select * from projectHistory where projectId ='" + projectId + "' and taskId = '" + webtaskId + "'";
+                TaskDetailsBean MonthlyJobBean = VideoCallDataBase.getDB(context).getDetails_to_complete_project(Query);
+                if ((MonthlyJobBean.getIsActiveStatus() != null && !MonthlyJobBean.getIsActiveStatus().equalsIgnoreCase("1") && current_status == -1 )|| current_status == 8 || current_status == -1) {
 //                    travel_job.setEnabled(false);
                     showToast("The task has not yet started...");
                 } else if (current_status == 1 || current_status == 3) {
@@ -5698,8 +5701,8 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                                             && (machine_model != null && !machine_model.equalsIgnoreCase("") && !machine_model.equalsIgnoreCase(null))
                                             && (machine_serialno != null && !machine_serialno.equalsIgnoreCase("") && !machine_serialno.equalsIgnoreCase(null))
                                             && (machine_description != null && !machine_description.equalsIgnoreCase("") && !machine_description.equalsIgnoreCase(null))
-                                            && (isTravelTaskAvailable && custsignnameStatus != null && !custsignnameStatus.equalsIgnoreCase("") && !custsignnameStatus.equalsIgnoreCase(null))
-                                            && (isTravelTaskAvailable && status_signature != null && !status_signature.equalsIgnoreCase("") && !status_signature.equalsIgnoreCase(null))
+                                            && ((isTravelTaskAvailable && (custsignnameStatus != null && !custsignnameStatus.equalsIgnoreCase("") && !custsignnameStatus.equalsIgnoreCase(null)
+                                            && (status_signature != null && !status_signature.equalsIgnoreCase("") && !status_signature.equalsIgnoreCase(null)))) || !isTravelTaskAvailable)
                                             && (photo_signature != null && !photo_signature.equalsIgnoreCase("") && !photo_signature.equalsIgnoreCase(null))
                                             && (tech_signature != null && !tech_signature.equalsIgnoreCase("") && !tech_signature.equalsIgnoreCase(null))
                                             && ((isRemarkstextselected && !customer_remarksEntry.equalsIgnoreCase("") && customer_remarksEntry != null && !customer_remarksEntry.equalsIgnoreCase(null))
@@ -5708,8 +5711,8 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                                             || (isobservationSketchselected && !observation_path.equalsIgnoreCase("") && observation_path != null && !observation_path.equalsIgnoreCase(null)))
                                             && ((isactiontextselected && !actiontakenStatus.equalsIgnoreCase("") && actiontakenStatus != null && !actiontakenStatus.equalsIgnoreCase(null))
                                             || (isactionSketchselected && !Action_Taken_path.equalsIgnoreCase("") && Action_Taken_path != null && !Action_Taken_path.equalsIgnoreCase(null)))
-                                            && ((!istaskCompletebyUser && isSynopsistextselected && !synopsis_status.equalsIgnoreCase("") && synopsis_status != null && !synopsis_status.equalsIgnoreCase(null))
-                                            || (!istaskCompletebyUser && isSynopsisSketchselected && !synopsis_path.equalsIgnoreCase("") && synopsis_path != null && !synopsis_path.equalsIgnoreCase(null)))) {
+                                            && ((!istaskCompletebyUser &&(isSynopsistextselected && !synopsis_status.equalsIgnoreCase("") && synopsis_status != null && !synopsis_status.equalsIgnoreCase(null))
+                                            || (isSynopsisSketchselected && !synopsis_path.equalsIgnoreCase("") && synopsis_path != null && !synopsis_path.equalsIgnoreCase(null))) || istaskCompletebyUser)){
 
                                         if (count != 0) {
                                             Log.i("EOD", "customer_remarksEntry ==> " + customer_remarksEntry);
@@ -11951,6 +11954,11 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                                                                  bottom_layout.setVisibility(View.VISIBLE);
                                                                  status_job.setVisibility(View.VISIBLE);
                                                                  travel_job.setVisibility(View.VISIBLE);
+                                                                 String Query = "Select * from projectHistory where projectId ='" + projectId + "' and taskId = '" + webtaskId + "'";
+                                                                 TaskDetailsBean MonthlyJobBean = VideoCallDataBase.getDB(context).getDetails_to_complete_project(Query);
+                                                                 if (MonthlyJobBean.getIsActiveStatus() != null && MonthlyJobBean.getIsActiveStatus().equalsIgnoreCase("1") && !MonthlyJobBean.getIsActiveStatus().equalsIgnoreCase("null")) {
+                                                                     status_job.setVisibility(View.INVISIBLE);
+                                                                 }
                                                              }
                                                              assign_taskview.setVisibility(View.GONE);
                                                          }
@@ -19695,6 +19703,11 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                                         bottom_layout.setVisibility(View.VISIBLE);
                                         Arrow.setVisibility(View.VISIBLE);
                                     }
+                                    String Query = "Select * from projectHistory where projectId ='" + projectId + "' and taskId = '" + webtaskId + "'";
+                                    TaskDetailsBean MonthlyJobBean = VideoCallDataBase.getDB(context).getDetails_to_complete_project(Query);
+                                    if (MonthlyJobBean.getIsActiveStatus() != null && MonthlyJobBean.getIsActiveStatus().equalsIgnoreCase("1") && !MonthlyJobBean.getIsActiveStatus().equalsIgnoreCase("null")) {
+                                        status_job.setVisibility(View.INVISIBLE);
+                                    }
                                 }
                             });
                         } else if (taskDetailsBean.getSubType() != null && taskDetailsBean.getSubType().equalsIgnoreCase("deassign")) {
@@ -21139,6 +21152,12 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
         assign_taskview.setVisibility(View.GONE);
         options.setVisibility(View.GONE);
         status_job.setVisibility(View.VISIBLE);
+
+        String Query = "Select * from projectHistory where projectId ='" + projectId + "' and taskId = '" + webtaskId + "'";
+        TaskDetailsBean MonthlyJobBean = VideoCallDataBase.getDB(context).getDetails_to_complete_project(Query);
+        if (MonthlyJobBean.getIsActiveStatus() != null && MonthlyJobBean.getIsActiveStatus().equalsIgnoreCase("1") && !MonthlyJobBean.getIsActiveStatus().equalsIgnoreCase("null")) {
+            status_job.setVisibility(View.INVISIBLE);
+        }
         if (template) {
             Log.i("reassign", "istemplate==> 3 " + template);
             template = false;

@@ -2,20 +2,19 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:background="@color/reply">
+    android:background="@android:drawable/dialog_holo_light_frame">
 
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="250dp"
-        android:layout_below="@+id/rlay_tilte"
+        android:layout_height="230dp"
+        android:id="@+id/head_title"
         android:orientation="vertical"
         android:background="@color/lgyellow">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/rlay_tilte"
             android:id="@+id/fsr_machine_no"
             android:layout_marginTop="40dp"
             android:orientation="horizontal">
@@ -26,6 +25,7 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/view_land"
                 android:layout_marginLeft="20dp"
+                android:background="@drawable/textview_border"
                 android:textColor="@color/background"
                 android:text="Machine Serial No :"
                 android:textSize="20dp" />
@@ -33,8 +33,8 @@
             <Spinner
                 android:id="@+id/machine_no_spinner"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:prompt="@string/jobcard"/>
+                android:spinnerMode="dialog"
+                android:layout_height="wrap_content"/>
         </LinearLayout>
         <LinearLayout
             android:layout_width="match_parent"
@@ -50,6 +50,7 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/view_land"
                 android:layout_marginLeft="20dp"
+                android:background="@drawable/textview_border"
                 android:text="Start Date                :"
                 android:textColor="@color/background"
                 android:textSize="20dp" />
@@ -89,6 +90,7 @@
                 android:layout_marginLeft="20dp"
                 android:layout_below="@+id/view_land"
                 android:textColor="@color/background"
+                android:background="@drawable/textview_border"
                 android:text="End Date                  :"
                 android:textSize="20dp" />
             <Button
@@ -111,7 +113,71 @@
                 android:textColor="#808080"
                 android:visibility="visible" />
 
+        </LinearLayout>
 
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:orientation="vertical"
+        android:id="@+id/second_layout"
+        android:layout_below="@+id/head_title"
+        android:background="@color/lgyellow"
+        android:visibility="gone">
+        <View
+            android:layout_width="wrap_content"
+            android:layout_height="3.20dp"
+            android:layout_marginTop="10dp"
+            android:background="@color/bluegraynew" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/rlay_tilte"
+            android:id="@+id/jobcard_number"
+            android:layout_marginTop="40dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/textView16"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/view_land"
+                android:layout_marginLeft="20dp"
+                android:background="@drawable/textview_border"
+                android:textColor="@color/background"
+                android:text="Job Card NO :"
+                android:textSize="20dp" />
+
+            <Spinner
+                android:id="@+id/job_spinner"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:prompt="@string/jobcard"/>
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="30dp"
+            android:layout_below="@+id/jobcard_number">
+
+            <TextView
+                android:id="@+id/Date_list"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:layout_below="@+id/view_land"
+                android:background="@drawable/textview_border"
+                android:textColor="@color/background"
+                android:text="Date:                "
+                android:textSize="20dp" />
+            <Spinner
+                android:id="@+id/date_spinner"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:prompt="@string/date"/>
         </LinearLayout>
     </LinearLayout>
 

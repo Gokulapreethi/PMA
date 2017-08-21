@@ -113,6 +113,7 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
         if (db == null) {
 
             try {
+
                 db = dbHelper.getWritableDatabase();
             } catch (Exception e) {
                 e.printStackTrace();
@@ -9481,6 +9482,7 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
 
     public ArrayList<String> getOracleProjectIdlist(String query,String fieldNameTogetResult) {
         ArrayList<String> arrayList = new ArrayList<>();
+        arrayList.add("Pick anyone ");
         Cursor cur;
         try {
             if (db == null)
