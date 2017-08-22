@@ -309,9 +309,9 @@ static GroupPercentageStatus groupPercentageStatus;
     }
 
     private void showprogress(final String name) {
-        handler.post(new Runnable() {
-            @Override
-            public void run() {
+//        handler.post(new Runnable() {
+//            @Override
+//            public void run() {
                 try {
                     Log.i("login123", "inside showProgressDialog");
                     if (progress == null)
@@ -326,10 +326,8 @@ static GroupPercentageStatus groupPercentageStatus;
                     e.printStackTrace();
                     Appreference.printLog("GroupPercentageStatus showProgress","Exception "+e.getMessage(),"WARN",null);
                 }
-            }
-
-
-        });
+//            }
+// });
     }
 
 

@@ -9495,7 +9495,9 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
                     cur.moveToFirst();
                     while (!cur.isAfterLast()) {
                         if (cur.getString(cur.getColumnIndex(fieldNameTogetResult)) != null && !cur.getString(cur.getColumnIndex(fieldNameTogetResult)).equalsIgnoreCase("")) {
-                            arrayList.add(cur.getString(cur.getColumnIndex(fieldNameTogetResult)));
+                            if(!arrayList.contains(cur.getString(cur.getColumnIndex(fieldNameTogetResult)))) {
+                                arrayList.add(cur.getString(cur.getColumnIndex(fieldNameTogetResult)));
+                            }
                             Log.i("oracle123", "Error====>oracleProjectId list===>" + cur.getString(cur.getColumnIndex(fieldNameTogetResult)));
                         }
 

@@ -755,18 +755,22 @@ public class ContactsFragment extends Fragment implements View.OnClickListener, 
                     group_batch.setVisibility(View.GONE);
                 }
                 Log.i("contact", "group_count before " + group_count);
-                buddyList.toString();
-                Collections.sort(buddyList, new CustomComparator());
+                try {
+                    buddyList.toString();
+                    Collections.sort(buddyList, new CustomComparator());
 //                if (alphaSelected) {
 //                    alphaSelectionEnable();
 //                } else if (onlineSelected) {
 //                    onlineSelectionEnable();
 //                }
-                Log.i("list", "buddyList" + String.valueOf(buddyList));
-                buddyArrayAdapter = new BuddyArrayAdapter(getActivity(), buddyList);
-                buddyListView.setAdapter(buddyArrayAdapter);
-                buddyArrayAdapter.notifyDataSetChanged();
-                ContactsArrangement();
+                    Log.i("list", "buddyList" + String.valueOf(buddyList));
+                    buddyArrayAdapter = new BuddyArrayAdapter(getActivity(), buddyList);
+                    buddyListView.setAdapter(buddyArrayAdapter);
+                    buddyArrayAdapter.notifyDataSetChanged();
+                    ContactsArrangement();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
              /*   String test=Appreference.demo;
                 if(test.equals("add")){
                     getIndexList(char1);
@@ -1018,7 +1022,11 @@ public class ContactsFragment extends Fragment implements View.OnClickListener, 
                         }
 //                           }
                     }
-                    buddyArrayAdapter.notifyDataSetChanged();
+                    try {
+                        buddyArrayAdapter.notifyDataSetChanged();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
 //                    }
                 }
                 if (menu.getMenuItem(index).getTitle().equalsIgnoreCase("Audio call")) {
@@ -1123,7 +1131,11 @@ public class ContactsFragment extends Fragment implements View.OnClickListener, 
 //                        i.putExtra("chattype", "SecureChat");
 //                        startActivity(i);
 //                    }
-                    buddyArrayAdapter.notifyDataSetChanged();
+                    try {
+                        buddyArrayAdapter.notifyDataSetChanged();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 }
                 if (menu.getMenuItem(index).getTitle().equalsIgnoreCase("Tasks")) {
                     buddyListSelectedIdx = position;
@@ -1296,19 +1308,31 @@ public class ContactsFragment extends Fragment implements View.OnClickListener, 
         hand.post(new Runnable() {
             @Override
             public void run() {
-                if (alpha_sort.getDrawable() != null && alpha_sort.getDrawable().equals(R.drawable.z_to_a)) {
-//                    alpha_sort.setImageResource(0);
-                    Log.i("ContactsFragment", "inside if condition alpha check");
-                    alpha_sort.setBackgroundResource(R.drawable.a_to_z);
-                    Collections.sort(buddyList, new CustomComparator());
-                    buddyArrayAdapter.notifyDataSetChanged();
-//            alpha_sort.setTextColor(Color.BLACK);
-                } else {
-                    alpha_sort.setBackgroundResource(R.drawable.z_to_a);
-                    Log.i("ContactsFragment", "inside else condition alpha check");
-                    Collections.reverse(buddyList);
-                    buddyArrayAdapter.notifyDataSetChanged();
-//            alpha_sort.setTextColor(Color.BLACK);
+                try {
+                    if (alpha_sort.getDrawable() != null && alpha_sort.getDrawable().equals(R.drawable.z_to_a)) {
+                        //                    alpha_sort.setImageResource(0);
+                        Log.i("ContactsFragment", "inside if condition alpha check");
+                        try {
+                            alpha_sort.setBackgroundResource(R.drawable.a_to_z);
+                            Collections.sort(buddyList, new CustomComparator());
+                            buddyArrayAdapter.notifyDataSetChanged();
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                        //            alpha_sort.setTextColor(Color.BLACK);
+                    } else {
+                        try {
+                            Log.i("ContactsFragment", "inside else condition alpha check");
+                            alpha_sort.setBackgroundResource(R.drawable.z_to_a);
+                            Collections.reverse(buddyList);
+                            buddyArrayAdapter.notifyDataSetChanged();
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                        //            alpha_sort.setTextColor(Color.BLACK);
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
             }
         });
@@ -1350,13 +1374,17 @@ public class ContactsFragment extends Fragment implements View.OnClickListener, 
                 emptylist.add(contactBean);
             }
         }
-        buddyList.clear();
-        buddyList.addAll(onlinelist);
-        buddyList.addAll(awaylist);
-        buddyList.addAll(busylist);
-        buddyList.addAll(offlinelist);
-        buddyList.addAll(emptylist);
-        buddyArrayAdapter.notifyDataSetChanged();
+        try {
+            buddyList.clear();
+            buddyList.addAll(onlinelist);
+            buddyList.addAll(awaylist);
+            buddyList.addAll(busylist);
+            buddyList.addAll(offlinelist);
+            buddyList.addAll(emptylist);
+            buddyArrayAdapter.notifyDataSetChanged();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
 
@@ -1487,16 +1515,20 @@ public class ContactsFragment extends Fragment implements View.OnClickListener, 
             } catch (Exception e) {
                 e.printStackTrace();
             }
-            if (buddyList.size() == 0)
-                contact.performClick();
+            try {
+                if (buddyList.size() == 0)
+                    contact.performClick();
 
 /*            int msgCount = VideoCallDataBase.getDB(getActivity().getApplicationContext()).getContactsUnReadMsgCount(contactBean.getUsername());
             for (ContactBean contactBean:buddyList) {
                 contactBean.setMsg_count(msgCount);
             }*/
-            buddyArrayAdapter = new BuddyArrayAdapter(getActivity(), buddyList);
-            buddyListView.setAdapter(buddyArrayAdapter);
-            buddyArrayAdapter.notifyDataSetChanged();
+                buddyArrayAdapter = new BuddyArrayAdapter(getActivity(), buddyList);
+                buddyListView.setAdapter(buddyArrayAdapter);
+                buddyArrayAdapter.notifyDataSetChanged();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
             /*handler.post(new Runnable() {
                 @Override
                 public void run() {
@@ -1725,7 +1757,11 @@ public class ContactsFragment extends Fragment implements View.OnClickListener, 
                     startActivity(i);
 
                 }
-                buddyArrayAdapter.notifyDataSetChanged();
+                try {
+                    buddyArrayAdapter.notifyDataSetChanged();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
                 break;
 
             case R.id.call:
@@ -2070,33 +2106,41 @@ public class ContactsFragment extends Fragment implements View.OnClickListener, 
                 cfg.setSubscribe(cbSubs.isChecked());
                 Log.i("buddyadd", "add button click");
                 if (is_add) {
-                    MainActivity.account.addBuddy(cfg);
-                    total_buddyList.add(putData(cfg.getUri(), "", "unselected"));
-                    Log.i("contact", "add is_add");
-                    filterbuddy = (ArrayList<ContactBean>) totalbuddy.clone();
-                    filter_buddyList = (ArrayList<Map<String, String>>) total_buddyList.clone();
-                    buddyArrayAdapter.clear();
-                    for (int i = 0, l = filter_buddyList.size(); i < l; i++)
-                        buddyArrayAdapter.add(filterbuddy.get(i));
-                    buddyArrayAdapter.notifyDataSetChanged();
-
-                    buddyListSelectedIdx = -1;
-                } else {
-                    if (!old_cfg.getUri().equals(cfg.getUri())) {
-                        MainActivity.account.delBuddy(buddyListSelectedIdx);
+                    try {
                         MainActivity.account.addBuddy(cfg);
-                        total_buddyList.remove(buddyListSelectedIdx);
                         total_buddyList.add(putData(cfg.getUri(), "", "unselected"));
-                        // buddyListAdapter.notifyDataSetChanged();
-                        Log.i("contact", "add is_add else");
+                        Log.i("contact", "add is_add");
                         filterbuddy = (ArrayList<ContactBean>) totalbuddy.clone();
                         filter_buddyList = (ArrayList<Map<String, String>>) total_buddyList.clone();
                         buddyArrayAdapter.clear();
                         for (int i = 0, l = filter_buddyList.size(); i < l; i++)
                             buddyArrayAdapter.add(filterbuddy.get(i));
                         buddyArrayAdapter.notifyDataSetChanged();
-//                        buddyArrayAdapter.notifyDataSetChanged();
+
                         buddyListSelectedIdx = -1;
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                } else {
+                    if (!old_cfg.getUri().equals(cfg.getUri())) {
+                        try {
+                            MainActivity.account.delBuddy(buddyListSelectedIdx);
+                            MainActivity.account.addBuddy(cfg);
+                            total_buddyList.remove(buddyListSelectedIdx);
+                            total_buddyList.add(putData(cfg.getUri(), "", "unselected"));
+                            // buddyListAdapter.notifyDataSetChanged();
+                            Log.i("contact", "add is_add else");
+                            filterbuddy = (ArrayList<ContactBean>) totalbuddy.clone();
+                            filter_buddyList = (ArrayList<Map<String, String>>) total_buddyList.clone();
+                            buddyArrayAdapter.clear();
+                            for (int i = 0, l = filter_buddyList.size(); i < l; i++)
+                                buddyArrayAdapter.add(filterbuddy.get(i));
+                            buddyArrayAdapter.notifyDataSetChanged();
+//                        buddyArrayAdapter.notifyDataSetChanged();
+                            buddyListSelectedIdx = -1;
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
                     } else if (old_cfg.getSubscribe() != cfg.getSubscribe()) {
                         Log.i("contact", "add is_add else if");
                         MyBuddy bud = MainActivity.account.buddyList
@@ -2139,17 +2183,21 @@ public class ContactsFragment extends Fragment implements View.OnClickListener, 
             public void onClick(DialogInterface dialog, int which) {
                 switch (which) {
                     case DialogInterface.BUTTON_POSITIVE:
-                        MainActivity.account.delBuddy(buddyListSelectedIdx);
-                        total_buddyList.remove(item);
-                        // buddyListAdapter.notifyDataSetChanged();
-                        Log.i("contact", "delete buddy");
-                        filterbuddy = (ArrayList<ContactBean>) totalbuddy.clone();
-                        filter_buddyList = (ArrayList<Map<String, String>>) total_buddyList.clone();
-                        buddyArrayAdapter.clear();
-                        for (int i = 0, l = filter_buddyList.size(); i < l; i++)
-                            buddyArrayAdapter.add(filterbuddy.get(i));
-                        buddyArrayAdapter.notifyDataSetChanged();
-                        buddyListSelectedIdx = -1;
+                        try {
+                            MainActivity.account.delBuddy(buddyListSelectedIdx);
+                            total_buddyList.remove(item);
+                            // buddyListAdapter.notifyDataSetChanged();
+                            Log.i("contact", "delete buddy");
+                            filterbuddy = (ArrayList<ContactBean>) totalbuddy.clone();
+                            filter_buddyList = (ArrayList<Map<String, String>>) total_buddyList.clone();
+                            buddyArrayAdapter.clear();
+                            for (int i = 0, l = filter_buddyList.size(); i < l; i++)
+                                buddyArrayAdapter.add(filterbuddy.get(i));
+                            buddyArrayAdapter.notifyDataSetChanged();
+                            buddyListSelectedIdx = -1;
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
                         break;
                     case DialogInterface.BUTTON_NEGATIVE:
                         break;
@@ -2205,19 +2253,23 @@ public class ContactsFragment extends Fragment implements View.OnClickListener, 
 			 * in account and UI are sync-ed.
 			 */
             if (idx >= 0 && MainActivity.account.buddyList.size() == total_buddyList.size()) {
-                total_buddyList.get(idx).put("status", buddy.getStatusText());
-                // buddyListAdapter.notifyDataSetChanged();
-                buddyArrayAdapter.notifyDataSetChanged();
-                // TODO: selection color/mark is gone after this,
-                // dont know how to return it back.
-                // buddyListView.setSelection(buddyListSelectedIdx);
-                // buddyListView.performItemClick(buddyListView,
-                // buddyListSelectedIdx,
-                // buddyListView.
-                // getItemIdAtPosition(buddyListSelectedIdx));
+                try {
+                    total_buddyList.get(idx).put("status", buddy.getStatusText());
+                    // buddyListAdapter.notifyDataSetChanged();
+                    buddyArrayAdapter.notifyDataSetChanged();
+                    // TODO: selection color/mark is gone after this,
+                    // dont know how to return it back.
+                    // buddyListView.setSelection(buddyListSelectedIdx);
+                    // buddyListView.performItemClick(buddyListView,
+                    // buddyListSelectedIdx,
+                    // buddyListView.
+                    // getItemIdAtPosition(buddyListSelectedIdx));
 
 				/* Return back Call activity */
-                notifyCallState(MainActivity.currentCall);
+                    notifyCallState(MainActivity.currentCall);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
 
         } else if (m.what == MSG_TYPE.REG_STATE) {
@@ -2595,7 +2647,11 @@ public class ContactsFragment extends Fragment implements View.OnClickListener, 
                 }
             }
         }
-        buddyArrayAdapter.notifyDataSetChanged();
+        try {
+            buddyArrayAdapter.notifyDataSetChanged();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         Log.i("SipVideo", "MainActivity.currentCallArrayList.size()--->" + MainActivity.currentCallArrayList.size());
         if (MainActivity.currentCallArrayList.size() > 0) {
             Appreference.play_call_dial_tone = true;
@@ -2638,7 +2694,11 @@ public class ContactsFragment extends Fragment implements View.OnClickListener, 
             handler.post(new Runnable() {
                 @Override
                 public void run() {
-                    buddyArrayAdapter.notifyDataSetChanged();
+                    try {
+                        buddyArrayAdapter.notifyDataSetChanged();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 }
             });
 
@@ -2695,7 +2755,11 @@ public class ContactsFragment extends Fragment implements View.OnClickListener, 
                 handler.post(new Runnable() {
                     @Override
                     public void run() {
-                        buddyArrayAdapter.notifyDataSetChanged();
+                        try {
+                            buddyArrayAdapter.notifyDataSetChanged();
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
                     }
                 });
 
@@ -3068,7 +3132,11 @@ public class ContactsFragment extends Fragment implements View.OnClickListener, 
             handler.post(new Runnable() {
                 @Override
                 public void run() {
-                    buddyArrayAdapter.notifyDataSetChanged();
+                    try {
+                        buddyArrayAdapter.notifyDataSetChanged();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 }
             });
 
@@ -3174,17 +3242,25 @@ public class ContactsFragment extends Fragment implements View.OnClickListener, 
             if (VideoCallDataBase.getDB(classContext).getContact(Appreference.loginuserdetails.getUsername()) != null) {
                 list = "Contact";
                 buddyList.clear();
-                buddyList = VideoCallDataBase.getDB(classContext).getContact(Appreference.loginuserdetails.getUsername());
-                Log.i("contacts", "Arraysize" + buddyList.size());
-                buddyArrayAdapter = new BuddyArrayAdapter(getActivity(), buddyList);
-                buddyListView.setAdapter(buddyArrayAdapter);
-                Collections.sort(buddyList, new CustomComparator());
-                handler.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        buddyArrayAdapter.notifyDataSetChanged();
-                    }
-                });
+                try {
+                    buddyList = VideoCallDataBase.getDB(classContext).getContact(Appreference.loginuserdetails.getUsername());
+                    Log.i("contacts", "Arraysize" + buddyList.size());
+                    buddyArrayAdapter = new BuddyArrayAdapter(getActivity(), buddyList);
+                    buddyListView.setAdapter(buddyArrayAdapter);
+                    Collections.sort(buddyList, new CustomComparator());
+                    handler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            try {
+                                buddyArrayAdapter.notifyDataSetChanged();
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    });
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
 
             }
         }
@@ -3425,7 +3501,11 @@ public class ContactsFragment extends Fragment implements View.OnClickListener, 
         handler.post(new Runnable() {
             @Override
             public void run() {
-                buddyArrayAdapter.notifyDataSetChanged();
+                try {
+                    buddyArrayAdapter.notifyDataSetChanged();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
         });
     }
@@ -3528,7 +3608,11 @@ public class ContactsFragment extends Fragment implements View.OnClickListener, 
         handler.post(new Runnable() {
             @Override
             public void run() {
-                buddyArrayAdapter.notifyDataSetChanged();
+                try {
+                    buddyArrayAdapter.notifyDataSetChanged();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
                 Log.d("WhiteScreen", " list notifydata set changed  is == " + buddyList.size());
             }
         });
@@ -3601,7 +3685,11 @@ public class ContactsFragment extends Fragment implements View.OnClickListener, 
         handler.post(new Runnable() {
             @Override
             public void run() {
-                buddyArrayAdapter.notifyDataSetChanged();
+                try {
+                    buddyArrayAdapter.notifyDataSetChanged();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
                 Log.i("gcm", "****** 10");
                 Log.d("WhiteScreen", " list notifydata set changed  is == " + buddyList.size());
             }
@@ -3616,7 +3704,11 @@ public class ContactsFragment extends Fragment implements View.OnClickListener, 
         handler.post(new Runnable() {
             @Override
             public void run() {
-                buddyArrayAdapter.notifyDataSetChanged();
+                try {
+                    buddyArrayAdapter.notifyDataSetChanged();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
                 Log.d("WhiteScreen", " list notifydata set changed  is == " + buddyList.size());
             }
         });
@@ -3654,8 +3746,12 @@ public class ContactsFragment extends Fragment implements View.OnClickListener, 
 
                         }
 
-                        Collections.sort(buddyList, new CustomComparator());
-                        buddyArrayAdapter.notifyDataSetChanged();
+                        try {
+                            Collections.sort(buddyList, new CustomComparator());
+                            buddyArrayAdapter.notifyDataSetChanged();
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -3682,9 +3778,13 @@ public class ContactsFragment extends Fragment implements View.OnClickListener, 
                     }
                     Log.i("contact", "group_count before " + group_count);
                 }
-                Collections.sort(ExpListItems, new CustomComparatorgroup());
-                ExpAdapter = new ExpandableAdapter(getActivity(), ExpListItems);
-                expandableListView.setAdapter(ExpAdapter);
+                try {
+                    Collections.sort(ExpListItems, new CustomComparatorgroup());
+                    ExpAdapter = new ExpandableAdapter(getActivity(), ExpListItems);
+                    expandableListView.setAdapter(ExpAdapter);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
         });
 
@@ -4307,27 +4407,20 @@ public class ContactsFragment extends Fragment implements View.OnClickListener, 
     }
 
     private void showprogress() {
-        handler.post(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    Log.i("expand", "inside show progress--------->");
-                    if (progress == null || !progress.isShowing()) {
-                        progress = new ProgressDialog(context);
-                        progress.setCancelable(false);
-                        progress.setMessage("Restrictions");
-                        progress.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-                        progress.setProgress(0);
-                        progress.setMax(1000);
-                        progress.show();
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+        try {
+            Log.i("expand", "inside show progress--------->");
+            if (progress == null || !progress.isShowing()) {
+                progress = new ProgressDialog(context);
+                progress.setCancelable(false);
+                progress.setMessage("Restrictions");
+                progress.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+                progress.setProgress(0);
+                progress.setMax(1000);
+                progress.show();
             }
-
-
-        });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public void ContactsArrangement() {
@@ -4338,19 +4431,31 @@ public class ContactsFragment extends Fragment implements View.OnClickListener, 
                     Log.i("ContactsFragment", "inside  1 Alfha ------> " + Appreference.contact_arrange.get("Alfha"));
                     if (Appreference.contact_arrange.get("Alfha").equalsIgnoreCase("ASC")) {
                         Log.i("ContactsFragment", "inside  1 Alfha ------> if ASC --- " + Appreference.contact_arrange.get("Alfha"));
-                        alpha_sort.setBackgroundResource(R.drawable.a_to_z);
-                        Collections.sort(buddyList, new CustomComparator());
-                        buddyArrayAdapter.notifyDataSetChanged();
+                        try {
+                            alpha_sort.setBackgroundResource(R.drawable.a_to_z);
+                            Collections.sort(buddyList, new CustomComparator());
+                            buddyArrayAdapter.notifyDataSetChanged();
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
                     } else if (Appreference.contact_arrange.get("Alfha").equalsIgnoreCase("DESC")) {
                         Log.i("ContactsFragment", "inside  1 Alfha ------>  if DESC --- " + Appreference.contact_arrange.get("Alfha"));
-                        alpha_sort.setBackgroundResource(R.drawable.z_to_a);
-                        Collections.reverse(buddyList);
-                        buddyArrayAdapter.notifyDataSetChanged();
+                        try {
+                            alpha_sort.setBackgroundResource(R.drawable.z_to_a);
+                            Collections.reverse(buddyList);
+                            buddyArrayAdapter.notifyDataSetChanged();
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
                     } else {
                         Log.i("ContactsFragment", "inside  1 Alfha ------> else " + Appreference.contact_arrange.get("Alfha"));
-                        alpha_sort.setBackgroundResource(R.drawable.a_to_z);
-                        Collections.sort(buddyList, new CustomComparator());
-                        buddyArrayAdapter.notifyDataSetChanged();
+                        try {
+                            alpha_sort.setBackgroundResource(R.drawable.a_to_z);
+                            Collections.sort(buddyList, new CustomComparator());
+                            buddyArrayAdapter.notifyDataSetChanged();
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
                     }
                 } else if (Appreference.isAlfhaOrOnline.equalsIgnoreCase("Online")) {
                     Log.i("ContactsFragment", "inside  1 Online ------> " + Appreference.contact_arrange.get("Online"));
@@ -4384,31 +4489,47 @@ public class ContactsFragment extends Fragment implements View.OnClickListener, 
                                 emptylist.add(contactBean);
                             }
                         }
-                        buddyList.clear();
-                        buddyList.addAll(onlinelist);
-                        buddyList.addAll(awaylist);
-                        buddyList.addAll(busylist);
-                        buddyList.addAll(offlinelist);
-                        buddyList.addAll(emptylist);
-                        buddyArrayAdapter.notifyDataSetChanged();
+                        try {
+                            buddyList.clear();
+                            buddyList.addAll(onlinelist);
+                            buddyList.addAll(awaylist);
+                            buddyList.addAll(busylist);
+                            buddyList.addAll(offlinelist);
+                            buddyList.addAll(emptylist);
+                            buddyArrayAdapter.notifyDataSetChanged();
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
 //                onlineSelectionEnable();
 //                buddyList.get(0).getStatus().equalsIgnoreCase("Online");
                     } else if (Appreference.contact_arrange.get("Online").equalsIgnoreCase("DESC")) {
                         Log.i("ContactsFragment", "inside  1 Online ------>  if DESC --- " + Appreference.contact_arrange.get("Online"));
+                        try {
 //                        selection = true;
-                        Collections.sort(buddyList, new CustomComparator());
-                        buddyArrayAdapter.notifyDataSetChanged();
+                            Collections.sort(buddyList, new CustomComparator());
+                            buddyArrayAdapter.notifyDataSetChanged();
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
                     } else {
                         Log.i("ContactsFragment", "inside  1 Online ------>  if else --- " + Appreference.contact_arrange.get("Online"));
-                        Collections.sort(buddyList, new CustomComparator());
-                        buddyArrayAdapter.notifyDataSetChanged();
+                        try {
+                            Collections.sort(buddyList, new CustomComparator());
+                            buddyArrayAdapter.notifyDataSetChanged();
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
                     }
 
                 } else {
                     Log.i("ContactsFragment", "inside  else condition alpha check");
-                    alpha_sort.setBackgroundResource(R.drawable.a_to_z);
-                    Collections.sort(buddyList, new CustomComparator());
-                    buddyArrayAdapter.notifyDataSetChanged();
+                    try {
+                        alpha_sort.setBackgroundResource(R.drawable.a_to_z);
+                        Collections.sort(buddyList, new CustomComparator());
+                        buddyArrayAdapter.notifyDataSetChanged();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 }
             }
         });

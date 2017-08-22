@@ -25,7 +25,6 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/view_land"
                 android:layout_marginLeft="20dp"
-                android:background="@drawable/textview_border"
                 android:textColor="@color/background"
                 android:text="Machine Serial No :"
                 android:textSize="20dp" />
@@ -50,14 +49,13 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/view_land"
                 android:layout_marginLeft="20dp"
-                android:background="@drawable/textview_border"
                 android:text="Start Date                :"
                 android:textColor="@color/background"
                 android:textSize="20dp" />
 
             <Button
-                android:layout_width="30dp"
-                android:layout_height= "30dp"
+                android:layout_width="40dp"
+                android:layout_height= "40dp"
                 android:id="@+id/fsr_start_btn"
                 android:background="@drawable/ic_date_chang_request"
                 />
@@ -90,12 +88,11 @@
                 android:layout_marginLeft="20dp"
                 android:layout_below="@+id/view_land"
                 android:textColor="@color/background"
-                android:background="@drawable/textview_border"
                 android:text="End Date                  :"
                 android:textSize="20dp" />
             <Button
-                android:layout_width="30dp"
-                android:layout_height= "30dp"
+                android:layout_width="40dp"
+                android:layout_height= "40dp"
                 android:id="@+id/fsr_end_btn"
                 android:background="@drawable/ic_date_chang_request"
                 />
@@ -145,7 +142,6 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/view_land"
                 android:layout_marginLeft="20dp"
-                android:background="@drawable/textview_border"
                 android:textColor="@color/background"
                 android:text="Job Card NO :"
                 android:textSize="20dp" />
@@ -169,9 +165,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="20dp"
                 android:layout_below="@+id/view_land"
-                android:background="@drawable/textview_border"
                 android:textColor="@color/background"
-                android:text="Date:                "
+                android:text="Date                 :"
                 android:textSize="20dp" />
             <Spinner
                 android:id="@+id/date_spinner"

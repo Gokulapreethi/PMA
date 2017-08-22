@@ -1004,9 +1004,15 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
 
                 String Query = "Select * from projectHistory where projectId ='" + projectId + "' and taskId = '" + webtaskId + "'";
                 TaskDetailsBean MonthlyJobBean = VideoCallDataBase.getDB(context).getDetails_to_complete_project(Query);
-                if ((MonthlyJobBean.getIsActiveStatus() != null && !MonthlyJobBean.getIsActiveStatus().equalsIgnoreCase("1") && current_status == -1 )|| current_status == 8 || current_status == -1) {
+                Log.i("monthly123","MonthlyJobBean===>"+MonthlyJobBean.getIsActiveStatus());
+                Log.i("monthly123","current_status===>"+current_status);
+                if ( current_status == -1 || current_status == 8){
 //                    travel_job.setEnabled(false);
-                    showToast("The task has not yet started...");
+                    if(MonthlyJobBean.getIsActiveStatus() != null) {
+                        showtravelTimePopup(v);
+                    }else{
+                        showToast("The task has not yet started...");
+                    }
                 } else if (current_status == 1 || current_status == 3) {
                     showToast("you are not allowed when you are Hold/Pause the task..");
                 } else {
@@ -5723,7 +5729,7 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                                         } else
                                             Toast.makeText(NewTaskConversation.this, "No StartEndTime Found", Toast.LENGTH_SHORT).show();
                                     } else {
-                                        Toast.makeText(NewTaskConversation.this, "Please Fill Mandatory Fields", Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(NewTaskConversation.this, "Please Fill all fields! All the fields are Mandatory !", Toast.LENGTH_SHORT).show();
                                     }
                                 }
                             });
