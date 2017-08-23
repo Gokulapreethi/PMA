@@ -19,6 +19,8 @@ public class FSRSearchResults implements Serializable {
     @Expose
     private String oracleProjectId;
 
+    private String projectId;
+
     public List<String> getTaskcompleteddates() {
         return taskcompleteddates;
     }
@@ -35,4 +37,11 @@ public class FSRSearchResults implements Serializable {
         this.oracleProjectId = oracleProjectId;
     }
 
+    public String getProjectId() {
+        return projectId;
+    }
+
+    public void setProjectId(String projectId) {
+        this.projectId = projectId;
+    }
 }

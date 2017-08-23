@@ -1508,13 +1508,17 @@ public class ProjectsFragment extends Fragment implements View.OnClickListener, 
                                 if (((String) jsonObject.get("result_text")).equalsIgnoreCase("Field_servicce_report job successed")) {
                                     Log.i("output123", " Filename" + jsonObject.getString("filename"));
                                     String pdfURL = getResources().getString(R.string.task_reminder) + jsonObject.getString("filename");
-                                    Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(pdfURL));
-                                    startActivity(browserIntent);
+                                   /* Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(pdfURL));
+                                    startActivity(browserIntent);*/
+                                    String fileName = jsonObject.getString("filename");
+                                    new DownloadImage(pdfURL, jsonObject.getString("filename")).execute();
                                 } else if (((String) jsonObject.get("result_text")).equalsIgnoreCase("Work_service_report job successed")) {
                                     Log.i("output123", " Filename" + jsonObject.getString("filename"));
                                     String pdfURL = getResources().getString(R.string.task_reminder) + jsonObject.getString("filename");
                                     Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(pdfURL));
                                     startActivity(browserIntent);
+                                   /* String fileName = jsonObject.getString("filename");
+                                    new DownloadImage(pdfURL, jsonObject.getString("filename")).execute();*/
                                 } else {
                                     String result = (String) jsonObject.get("result_text");
                                     Toast.makeText(getContext(), result, Toast.LENGTH_LONG).show();
@@ -1551,6 +1555,7 @@ public class ProjectsFragment extends Fragment implements View.OnClickListener, 
                             try {
                                 if (((String) jsonObject.get("result_text")).equalsIgnoreCase("fetch data loaded successed")) {
                                     HashMap<String, List<String>> fsr_key_value = new HashMap<>();
+                                    HashMap<String, String> projectIdForOracleId = new HashMap<>();
                                     ArrayList<String> allJobcardlist=new ArrayList<String>();
                                     Type collectionType = new TypeToken<FSRResultBean>() {
                                     }.getType();
@@ -1560,10 +1565,11 @@ public class ProjectsFragment extends Fragment implements View.OnClickListener, 
                                             FSRSearchResults fsrSearchResults = (FSRSearchResults) resultBean.getListProject().get(i);
                                             fsr_key_value.put(fsrSearchResults.getOracleProjectId(), fsrSearchResults.getTaskcompleteddates());
                                             allJobcardlist.add(fsrSearchResults.getOracleProjectId());
+                                            projectIdForOracleId.put(fsrSearchResults.getOracleProjectId(),fsrSearchResults.getProjectId());
                                         }
                                     }
                                     Log.i("fsrReport123", "fsrReport123=========>" + fsr_key_value.size());
-                                    show_FSRJobList(fsr_key_value,allJobcardlist);
+                                    show_FSRJobList(fsr_key_value,allJobcardlist,projectIdForOracleId);
 
                                 } else {
                                     String result = (String) jsonObject.get("result_text");
@@ -1585,7 +1591,7 @@ public class ProjectsFragment extends Fragment implements View.OnClickListener, 
         }
     }
     String fsr_jobId, fsr_date;
-    private void show_FSRJobList(final HashMap<String, List<String>> fsr_key_value, ArrayList showAllJobCard) {
+    private void show_FSRJobList(final HashMap<String, List<String>> fsr_key_value, ArrayList showAllJobCard, final HashMap<String,String> projectIdForOracleId) {
         LayoutInflater inflater = getActivity().getLayoutInflater();
         View alertLayout = inflater.inflate(R.layout.fsr_request_view, null);
         final LinearLayout ll_second_layout=(LinearLayout) alertLayout.findViewById(R.id.second_layout);
@@ -1622,10 +1628,13 @@ public class ProjectsFragment extends Fragment implements View.OnClickListener, 
                 String selected_jobcard = String.valueOf(job_spinner.getSelectedItem());
 
                 //*getting projectid from table relevant to oracleprojectId*//*
-                String get_projectId_query = "select projectId from projectDetails where loginuser = '" + Appreference.loginuserdetails.getEmail() + "'and oracleProjectId='" + selected_jobcard + "'";
+               /* String get_projectId_query = "select projectId from projectDetails where loginuser = '" + Appreference.loginuserdetails.getEmail() + "'and oracleProjectId='" + selected_jobcard + "'";
                 String fsr_ProjectId = VideoCallDataBase.getDB(getActivity()).getprojectIdForOracleID(get_projectId_query);
                 fsr_jobId = fsr_ProjectId;
-
+*/
+               if(projectIdForOracleId.containsKey(selected_jobcard)){
+                   fsr_jobId =projectIdForOracleId.get(selected_jobcard);
+               }
                 if(fsr_key_value.containsKey(selected_jobcard)) {
 
                     List<String> myList = new ArrayList<String>(Arrays.asList(fsr_key_value.get(selected_jobcard).get(0).split(",")));
@@ -1700,6 +1709,7 @@ public class ProjectsFragment extends Fragment implements View.OnClickListener, 
                             e.printStackTrace();
                         }
                     }
+
                     List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
                     nameValuePairs.add(new BasicNameValuePair("projectId", fsr_jobId));
                     nameValuePairs.add(new BasicNameValuePair("taskCompletedStartDate", FSRStartDateUTC));

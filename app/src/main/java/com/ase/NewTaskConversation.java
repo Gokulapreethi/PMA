@@ -6286,7 +6286,7 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
             }
             Log.i("travel123", "synopsis_path ===>" + synopsis_path);
             JSONObject jsonObject10 = new JSONObject();
-            if (synopsis_path != null && !synopsis_path.equalsIgnoreCase(null) && !synopsis_path.equalsIgnoreCase("")) {
+            if (synopsis_path != null && !synopsis_path.equalsIgnoreCase("null") && !synopsis_path.equalsIgnoreCase("")) {
                 try {
                     TaskDetailsBean taskbean2 = (TaskDetailsBean) taskDetailsBean.clone();
                     taskbean2.setMimeType("image");
@@ -6294,7 +6294,7 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                     taskbean2.setTaskDescription(synopsis_path);
                     jsonObject10.put("fileContent", encodeTobase64(BitmapFactory.decodeFile(synopsis_path)));
                     jsonObject10.put("taskFileExt", "jpg");
-                    jsonObject10.put("synopsisImage", jsonObject10);
+                    jsonObject.put("synopsisImage", jsonObject10);
                     status_list.add(taskbean2);
                     taskDetailsBean.setSynopsis(synopsis_path);
                 } catch (CloneNotSupportedException e) {
@@ -6303,9 +6303,13 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
             }
             Log.i("listobservers", "ownerOfTask ** " + ownerOfTask);
             listOfObservers.clear();
-            if (ownerOfTask != null && !ownerOfTask.equalsIgnoreCase(Appreference.loginuserdetails.getUsername())) {
-                listOfObservers.add(ownerOfTask);
-                project_toUsers = ownerOfTask;
+            TaskDetailsBean My_Owner = new TaskDetailsBean();
+
+            String Query = "Select * from projectHistory where projectId ='" + projectId + "' and taskId = '" + webtaskId + "'";
+            My_Owner = VideoCallDataBase.getDB(context).getDetails_to_complete_project(Query);
+            if (My_Owner.getOwnerOfTask() != null && !My_Owner.getOwnerOfTask().equalsIgnoreCase(Appreference.loginuserdetails.getUsername())) {
+                listOfObservers.add(My_Owner.getOwnerOfTask());
+                project_toUsers = My_Owner.getOwnerOfTask();
             } else {
                 listOfObservers.add(project_toUsers);
             }
