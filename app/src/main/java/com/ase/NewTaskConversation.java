@@ -4767,18 +4767,37 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                             dialog1.setContentView(R.layout.task_remarks);
                             dialog1.setCanceledOnTouchOutside(false);
                             TextView header = (TextView) dialog1.findViewById(R.id.template_header);
-                            TextView yes = (TextView) dialog1.findViewById(R.id.save);
-                            TextView no = (TextView) dialog1.findViewById(R.id.no);
+                            final TextView yes = (TextView) dialog1.findViewById(R.id.save);
+                            final TextView no = (TextView) dialog1.findViewById(R.id.no);
                             final EditText name = (EditText) dialog1.findViewById(R.id.remarks);
+                            final EditText ed_timer_hour = (EditText) dialog1.findViewById(R.id.timer_hour);
+                            final EditText ed_timer_minutes = (EditText) dialog1.findViewById(R.id.timer_minutes);
+                            final LinearLayout rl_Timer_entry=(LinearLayout)dialog1.findViewById(R.id.Timer_entry);
                             header.setText("Pause Remarks ");
                             yes.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
                                     Log.i("ws123", "remarks for pause====>" + name.getText().toString());
                                     isFromPauseClick = true;
+                                    if(name.getText().toString() != null && !name.getText().toString().equalsIgnoreCase("")) {
+                                        Appreference.isremarksEntered = true;
+                                    }else
+                                        Appreference.isremarksEntered = false;
+
+
                                     if (name.getText().toString() != null && !name.getText().toString().equalsIgnoreCase("")) {
-                                        sendStatus_webservice("3", "", "Pause Remarks :" + name.getText().toString(), "Paused", "Paused");
-                                        dialog1.dismiss();
+                                        if(Appreference.isremarksEntered) {
+                                            rl_Timer_entry.setVisibility(View.VISIBLE);
+                                            name.setEnabled(true);
+                                            yes.setText("set");
+                                            if(ed_timer_hour.getText().toString()!=null && !ed_timer_hour.getText().toString().equalsIgnoreCase("")
+                                                    && ed_timer_minutes.getText().toString()!=null && !ed_timer_minutes.getText().toString().equalsIgnoreCase("")){
+                                                sendStatus_webservice("3", "", "Pause Remarks :" + name.getText().toString(), "Paused", "Paused");
+                                                dialog1.dismiss();
+                                            }else{
+                                                showToast("Please enter Hour and Minutes");
+                                            }
+                                        }
                                     } else {
                                         showToast("Please enter any Remarks");
                                     }
@@ -4899,16 +4918,30 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                             TextView service_date = (TextView) dialog.findViewById(R.id.requested_date);
                             TextView address = (TextView) dialog.findViewById(R.id.address);
 
-                            final EditText observation = (EditText) dialog.findViewById(R.id.observation);
-                            Button observation_type = (Button) dialog.findViewById(R.id.observation_type);
-                            observation_1 = (ImageView) dialog.findViewById(R.id.observation_1);
+                        final TextView machine_make_tv = (TextView) dialog.findViewById(R.id.machine_make_tv);
+                        final TextView mac_model_tv = (TextView) dialog.findViewById(R.id.mac_model_tv);
+                        final TextView mac_no_tv = (TextView) dialog.findViewById(R.id.mac_no_tv);
+                        final TextView complete_date_tv = (TextView) dialog.findViewById(R.id.complete_date_tv);
+                        final TextView description_tv = (TextView) dialog.findViewById(R.id.description_tv);
+                        final TextView observation_tv = (TextView) dialog.findViewById(R.id.observation_tv);
+                        final TextView action_taken_tv = (TextView) dialog.findViewById(R.id.action_taken_tv);
+                        final TextView hour_meter_reading_tv = (TextView) dialog.findViewById(R.id.hour_meter_reading_tv);
+                        final TextView remarks_complete_tv = (TextView) dialog.findViewById(R.id.remarks_complete_tv);
+                        final TextView photo_custom1 = (TextView) dialog.findViewById(R.id.photo_custom1);
+                        final TextView tech_sign = (TextView) dialog.findViewById(R.id.tech_sign);
+                        final TextView synopsis_tv = (TextView) dialog.findViewById(R.id.synopsis_tv);
 
-                            TextView tx__cust_name = (TextView) dialog.findViewById(R.id.tx__cust_name);
-                            TextView tx_sign = (TextView) dialog.findViewById(R.id.sign);
-                            if(!isTravelTaskAvailable){
-                                tx__cust_name.setText("Customer Sign Name");
-                                tx_sign.setText("Customer Sign");
-                            }
+
+                        final EditText observation = (EditText) dialog.findViewById(R.id.observation);
+                        Button observation_type = (Button) dialog.findViewById(R.id.observation_type);
+                        observation_1 = (ImageView) dialog.findViewById(R.id.observation_1);
+
+                        final TextView tx__cust_name = (TextView) dialog.findViewById(R.id.tx__cust_name);
+                        final TextView tx_sign = (TextView) dialog.findViewById(R.id.sign);
+                        if (!isTravelTaskAvailable) {
+                            tx__cust_name.setText("Customer Sign Name");
+                            tx_sign.setText("Customer Sign");
+                        }
 
                             observation_path = "";
                             Action_Taken_path = "";
@@ -4920,6 +4953,7 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                             observation_type.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
+                                observation_tv.setTextColor(getResources().getColor(R.color.black));
                                     AlertDialog.Builder saveDialog = new AlertDialog.Builder(context);
                                     saveDialog.setTitle("Observation Type");
                                     saveDialog.setCancelable(false);
@@ -4993,6 +5027,7 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                             action_taken_type.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
+                                action_taken_tv.setTextColor(getResources().getColor(R.color.black));
                                     AlertDialog.Builder saveDialog = new AlertDialog.Builder(context);
                                     saveDialog.setTitle("Action Taken Type");
                                     saveDialog.setCancelable(false);
@@ -5066,6 +5101,7 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                             CustomerRemarks_type.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
+                                remarks_complete_tv.setTextColor(getResources().getColor(R.color.black));
                                     AlertDialog.Builder saveDialog = new AlertDialog.Builder(context);
                                     saveDialog.setTitle("Customer Remarks Type");
                                     saveDialog.setCancelable(false);
@@ -5137,6 +5173,7 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                             synopsis_type.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
+                                synopsis_tv.setTextColor(getResources().getColor(R.color.black));
                                     AlertDialog.Builder saveDialog = new AlertDialog.Builder(context);
                                     saveDialog.setTitle("Synopsis Type");
                                     saveDialog.setCancelable(false);
@@ -5235,14 +5272,121 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                             RadioGroup rg_task_complete_confirm  = (RadioGroup) dialog.findViewById(R.id.radioyesNo);
                             final LinearLayout ll_synopsis_layout  = (LinearLayout) dialog.findViewById(R.id.synopsis_layout);
 
+                        machine_make.addTextChangedListener(new TextWatcher() {
 
-                            rg_task_complete_confirm.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
-                                @Override
-                                public void onCheckedChanged(RadioGroup group, @IdRes int checkedId) {
-                                    if(group.getCheckedRadioButtonId()!=-1){
-                                        View radioButton = group.findViewById(group.getCheckedRadioButtonId());
-                                        int radioId = group.indexOfChild(radioButton);
-                                        Log.i("travel123", "radioId========> " + radioId);
+                            public void afterTextChanged(Editable s) {
+                                machine_make_tv.setTextColor(getResources().getColor(R.color.black));
+                                Log.i("machine_make_tv", "machine_make_tv===> ");
+                            }
+
+                            public void beforeTextChanged(CharSequence s, int start,
+                                                          int count, int after) {
+                                Log.i("machine_make_tv", "beforeTextChanged===> " + count);
+                            }
+
+                            public void onTextChanged(CharSequence s, int start,
+                                                      int before, int count) {
+                                Log.i("machine_make_tv", "onTextChanged===> " + count);
+
+                            }
+                        });
+                        mcModel.addTextChangedListener(new TextWatcher() {
+
+                            public void afterTextChanged(Editable s) {
+                                mac_model_tv.setTextColor(getResources().getColor(R.color.black));
+                                Log.i("machine_make_tv", "machine_make_tv===> ");
+                            }
+
+                            public void beforeTextChanged(CharSequence s, int start,
+                                                          int count, int after) {
+                                Log.i("machine_make_tv", "beforeTextChanged===> " + count);
+                            }
+
+                            public void onTextChanged(CharSequence s, int start,
+                                                      int before, int count) {
+                                Log.i("machine_make_tv", "onTextChanged===> " + count);
+
+                            }
+                        });
+                        mcSrNo.addTextChangedListener(new TextWatcher() {
+
+                            public void afterTextChanged(Editable s) {
+                                mac_no_tv.setTextColor(getResources().getColor(R.color.black));
+                                Log.i("machine_make_tv", "machine_make_tv===> ");
+                            }
+
+                            public void beforeTextChanged(CharSequence s, int start,
+                                                          int count, int after) {
+                                Log.i("machine_make_tv", "beforeTextChanged===> " + count);
+                            }
+
+                            public void onTextChanged(CharSequence s, int start,
+                                                      int before, int count) {
+                                Log.i("machine_make_tv", "onTextChanged===> " + count);
+
+                            }
+                        });
+                        description.addTextChangedListener(new TextWatcher() {
+
+                            public void afterTextChanged(Editable s) {
+                                description_tv.setTextColor(getResources().getColor(R.color.black));
+                                Log.i("machine_make_tv", "machine_make_tv===> ");
+                            }
+
+                            public void beforeTextChanged(CharSequence s, int start,
+                                                          int count, int after) {
+                                Log.i("machine_make_tv", "beforeTextChanged===> " + count);
+                            }
+
+                            public void onTextChanged(CharSequence s, int start,
+                                                      int before, int count) {
+                                Log.i("machine_make_tv", "onTextChanged===> " + count);
+
+                            }
+                        });
+                        cust_sign_name.addTextChangedListener(new TextWatcher() {
+
+                            public void afterTextChanged(Editable s) {
+                                tx__cust_name.setTextColor(getResources().getColor(R.color.black));
+                                Log.i("machine_make_tv", "machine_make_tv===> ");
+                            }
+
+                            public void beforeTextChanged(CharSequence s, int start,
+                                                          int count, int after) {
+                                Log.i("machine_make_tv", "beforeTextChanged===> " + count);
+                            }
+
+                            public void onTextChanged(CharSequence s, int start,
+                                                      int before, int count) {
+                                Log.i("machine_make_tv", "onTextChanged===> " + count);
+
+                            }
+                        });
+                        HMReading.addTextChangedListener(new TextWatcher() {
+
+                            public void afterTextChanged(Editable s) {
+                                hour_meter_reading_tv.setTextColor(getResources().getColor(R.color.black));
+                                Log.i("machine_make_tv", "machine_make_tv===> ");
+                            }
+
+                            public void beforeTextChanged(CharSequence s, int start,
+                                                          int count, int after) {
+                                Log.i("machine_make_tv", "beforeTextChanged===> " + count);
+                            }
+
+                            public void onTextChanged(CharSequence s, int start,
+                                                      int before, int count) {
+                                Log.i("machine_make_tv", "onTextChanged===> " + count);
+
+                            }
+                        });
+                        rg_task_complete_confirm.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+                            @Override
+                            public void onCheckedChanged(RadioGroup group, @IdRes int checkedId) {
+                                if (group.getCheckedRadioButtonId() != -1) {
+                                    View radioButton = group.findViewById(group.getCheckedRadioButtonId());
+                                    int radioId = group.indexOfChild(radioButton);
+                                    Log.i("travel123", "radioId========> " + radioId);
 
                                         RadioButton btn = (RadioButton) group.getChildAt(radioId);
                                         String radio_selected_text = (String) btn.getText();
@@ -5359,6 +5503,7 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                             skech_receiver.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
+                                tx_sign.setTextColor(getResources().getColor(R.color.black));
                                     isCustomerSign = true;
                                     isObservation = false;
                                     isCustomerRemarks = false;
@@ -5372,6 +5517,7 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                             tech_sign_receiver.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
+                                tech_sign.setTextColor(getResources().getColor(R.color.black));
                                     isCustomerSign = false;
                                     isObservation = false;
                                     isCustomerRemarks = false;
@@ -5385,6 +5531,7 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                             photo_receiver.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
+                                photo_custom1.setTextColor(getResources().getColor(R.color.black));
                                     try {
                                         isForOracleProject = true;
                                         final String path = Environment.getExternalStorageDirectory() + "/High Message/";
@@ -5720,22 +5867,80 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                                             && ((!istaskCompletebyUser &&(isSynopsistextselected && !synopsis_status.equalsIgnoreCase("") && synopsis_status != null && !synopsis_status.equalsIgnoreCase(null))
                                             || (isSynopsisSketchselected && !synopsis_path.equalsIgnoreCase("") && synopsis_path != null && !synopsis_path.equalsIgnoreCase(null))) || istaskCompletebyUser)){
 
-                                        if (count != 0) {
-                                            Log.i("EOD", "customer_remarksEntry ==> " + customer_remarksEntry);
-                                            String selectedDate[] = taskCompletedDate.split(" ");
-                                            String date_s = selectedDate[0];
-                                            sendStatus_webservice("10", "", customer_remarksEntry, "EOD Sent date is " + date_s, "");
-                                            dialog.dismiss();
-                                        } else
-                                            Toast.makeText(NewTaskConversation.this, "No StartEndTime Found", Toast.LENGTH_SHORT).show();
-                                    } else {
-                                        Toast.makeText(NewTaskConversation.this, "Please Fill all fields! All the fields are Mandatory !", Toast.LENGTH_SHORT).show();
+                                    if (count != 0) {
+                                        Log.i("EOD", "customer_remarksEntry ==> " + customer_remarksEntry);
+                                        String selectedDate[] = taskCompletedDate.split(" ");
+                                        String date_s = selectedDate[0];
+                                        sendStatus_webservice("10", "", customer_remarksEntry, "EOD Sent date is " + date_s, "");
+                                        dialog.dismiss();
+                                    } else
+                                        Toast.makeText(NewTaskConversation.this, "No StartEndTime Found", Toast.LENGTH_SHORT).show();
+                                } else {
+                                    Log.i("EOD_submit", "HMReadingStatus===> " + HMReadingStatus);
+                                    Log.i("EOD_submit", "photo_signature===> " + photo_signature);
+                                    Log.i("EOD_submit", "tech_signature===> " + tech_signature);
+
+                                    Toast.makeText(NewTaskConversation.this, "Please Fill the red marked fields! ", Toast.LENGTH_SHORT).show();
+
+                                    if (machion_make_edit == null || machion_make_edit.equalsIgnoreCase("") || machion_make_edit.equalsIgnoreCase(null)) {
+                                        machine_make_tv.setTextColor(getResources().getColor(R.color.red));
                                     }
+                                    if (machine_model == null || machine_model.equalsIgnoreCase("") || machine_model.equalsIgnoreCase(null)) {
+                                        mac_model_tv.setTextColor(getResources().getColor(R.color.red));
+                                    }
+                                    if (machine_serialno == null || machine_serialno.equalsIgnoreCase("") || machine_serialno.equalsIgnoreCase(null)) {
+                                        mac_no_tv.setTextColor(getResources().getColor(R.color.red));
+                                    }
+                                    if (taskCompletedDate == null || taskCompletedDate.equalsIgnoreCase("") || taskCompletedDate.equalsIgnoreCase(null)) {
+                                        complete_date_tv.setTextColor(getResources().getColor(R.color.red));
+                                    }
+                                    if (machine_description == null || machine_description.equalsIgnoreCase("") || machine_description.equalsIgnoreCase(null)) {
+                                        description_tv.setTextColor(getResources().getColor(R.color.red));
+                                    }
+                                    if ((isobservationtextselected && !observationStatus.equalsIgnoreCase("") && observationStatus != null && !observationStatus.equalsIgnoreCase(null))
+                                            || (isobservationSketchselected && !observation_path.equalsIgnoreCase("") && observation_path != null && !observation_path.equalsIgnoreCase(null))) {
+                                    } else {
+                                        observation_tv.setTextColor(getResources().getColor(R.color.red));
+                                    }
+                                    if ((isactiontextselected && !actiontakenStatus.equalsIgnoreCase("") && actiontakenStatus != null && !actiontakenStatus.equalsIgnoreCase(null))
+                                            || (isactionSketchselected && !Action_Taken_path.equalsIgnoreCase("") && Action_Taken_path != null && !Action_Taken_path.equalsIgnoreCase(null))) {
+                                    } else {
+                                        action_taken_tv.setTextColor(getResources().getColor(R.color.red));
+                                    }
+                                    if (HMReadingStatus == null || HMReadingStatus.equalsIgnoreCase("") || HMReadingStatus.equalsIgnoreCase(null)) {
+                                        hour_meter_reading_tv.setTextColor(getResources().getColor(R.color.red));
+                                    }
+                                    if ((isRemarkstextselected && !customer_remarksEntry.equalsIgnoreCase("") && customer_remarksEntry != null && !customer_remarksEntry.equalsIgnoreCase(null))
+                                            || (isremarksSketchselected && !customerRemarks_path.equalsIgnoreCase("") && customerRemarks_path != null && !customerRemarks_path.equalsIgnoreCase(null))) {
+                                    } else {
+                                        remarks_complete_tv.setTextColor(getResources().getColor(R.color.red));
+                                    }
+                                    if ((isTravelTaskAvailable && custsignnameStatus != null && !custsignnameStatus.equalsIgnoreCase("") && !custsignnameStatus.equalsIgnoreCase(null)) || !isTravelTaskAvailable) {
+                                    } else {
+                                        tx__cust_name.setTextColor(getResources().getColor(R.color.red));
+                                    }
+                                    if ((isTravelTaskAvailable && status_signature != null && !status_signature.equalsIgnoreCase("") && !status_signature.equalsIgnoreCase(null)) || !isTravelTaskAvailable) {
+                                    } else {
+                                        tx_sign.setTextColor(getResources().getColor(R.color.red));
+                                    }
+                                    if (photo_signature == null || photo_signature.equalsIgnoreCase("") || photo_signature.equalsIgnoreCase(null)) {
+                                        photo_custom1.setTextColor(getResources().getColor(R.color.red));
+                                    }
+                                    if (tech_signature == null || tech_signature.equalsIgnoreCase("") || tech_signature.equalsIgnoreCase(null)) {
+                                        tech_sign.setTextColor(getResources().getColor(R.color.red));
+                                    }
+                                    if ((!istaskCompletebyUser && (isSynopsistextselected && !synopsis_status.equalsIgnoreCase("") && synopsis_status != null && !synopsis_status.equalsIgnoreCase(null))
+                                            || (isSynopsisSketchselected && !synopsis_path.equalsIgnoreCase("") && synopsis_path != null && !synopsis_path.equalsIgnoreCase(null))) || istaskCompletebyUser) {
+                                    } else {
+                                        synopsis_tv.setTextColor(getResources().getColor(R.color.red));
+                                    }
+
                                 }
-                            });
-                        } else {
-                            Toast.makeText(NewTaskConversation.this, "Enter end date and time and then proceed to complete the task.", Toast.LENGTH_SHORT).show();
-                        }
+                            }
+                        });
+                    } else {
+                        Toast.makeText(NewTaskConversation.this, "Enter end date and time and then proceed to complete the task.", Toast.LENGTH_SHORT).show();
+                    }
                     } else {
                         Toast.makeText(NewTaskConversation.this, "Already EOD sent", Toast.LENGTH_SHORT).show();
                     }
@@ -6065,6 +6270,8 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
             if (machine_serialno != null && !machine_serialno.equalsIgnoreCase("")) {
                 jsonObject.put("mcSrNo", machine_serialno);
                 taskDetailsBean.setMcSrNo(machine_serialno);
+                String updateMachineSerialNo = "update projectDetails set mcSrNo='" + machine_serialno + "' where projectId='" + projectId + "' and userId='" + Appreference.loginuserdetails.getId() + "'";
+                VideoCallDataBase.getDB(context).updateaccept(updateMachineSerialNo);
             } else
                 jsonObject.put("mcSrNo", "");
             Log.i("desc123", "machine_description ========>" + machine_description);
@@ -6286,7 +6493,7 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
             }
             Log.i("travel123", "synopsis_path ===>" + synopsis_path);
             JSONObject jsonObject10 = new JSONObject();
-            if (synopsis_path != null && !synopsis_path.equalsIgnoreCase("null") && !synopsis_path.equalsIgnoreCase("")) {
+            if (synopsis_path != null && !synopsis_path.equalsIgnoreCase(null) && !synopsis_path.equalsIgnoreCase("")) {
                 try {
                     TaskDetailsBean taskbean2 = (TaskDetailsBean) taskDetailsBean.clone();
                     taskbean2.setMimeType("image");
