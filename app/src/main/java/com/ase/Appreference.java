@@ -66,6 +66,8 @@ public class Appreference {
     //For ASE
     public static boolean isPauseStartFrom=false;
     public static HashMap<String,String> old_status=new HashMap<>();
+    public static boolean isremarksEntered=false;
+    public static String HoldOrPauseTimervalue=" ";
 
     public static boolean isImageSelected=false;
     public static boolean isLocation = false;

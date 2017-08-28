@@ -113,10 +113,11 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
         if (db == null) {
 
             try {
-
                 db = dbHelper.getWritableDatabase();
             } catch (Exception e) {
                 e.printStackTrace();
+                Appreference.printLog("openDatabase","Exception "+e.getMessage(),"WARN",null);
+
             }
         }
     }
@@ -193,6 +194,7 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
         } catch (Exception e) {
             // TODO: handle exception
             e.printStackTrace();
+            Appreference.printLog("insertChat_history ","Exception "+e.getMessage(),"WARN",null);
         }
     }
 
@@ -234,6 +236,7 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
             }
         } catch (Exception e) {
             e.printStackTrace();
+            Appreference.printLog("getChatBean ","Exception "+e.getMessage(),"WARN",null);
         } finally {
             return chatBean;
         }
@@ -252,6 +255,8 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
             Log.d("chatdb", "ScheduleMessage DB updated");
         } catch (Exception e) {
             e.printStackTrace();
+            Appreference.printLog("ChatMsg_StatusUpdate ","Exception "+e.getMessage(),"WARN",null);
+
         }
     }
 
@@ -266,6 +271,7 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
             Log.d("chatdb", "ScheduleMessage DB deleted");
         } catch (Exception e) {
             e.printStackTrace();
+            Appreference.printLog("ChatMsgDelete ","Exception "+e.getMessage(),"WARN",null);
         }
     }
 
@@ -288,6 +294,7 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
         } catch (Exception e) {
             // TODO: handle exception
             e.printStackTrace();
+            Appreference.printLog("insertCall_history ","Exception "+e.getMessage(),"WARN",null);
         }
     }
 
@@ -304,6 +311,7 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
         } catch (Exception e) {
             // TODO: handle exception
             e.printStackTrace();
+            Appreference.printLog("isAgendaRecordExists ","Exception "+e.getMessage(),"WARN",null);
         } finally {
             if (cur != null)
                 cur.close();
@@ -353,6 +361,7 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
         } catch (Exception e) {
             // TODO: handle exception
             e.printStackTrace();
+            Appreference.printLog("insertContact_history ","Exception "+e.getMessage(),"WARN",null);
         }
     }
 
@@ -3944,9 +3953,6 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
                             taskDetailsBean.setFromTaskName(cur.getString(cur.getColumnIndex("fromTaskName")));
                         if (cur.getString(cur.getColumnIndex("toTaskName")) != null)
                             taskDetailsBean.setToTaskName(cur.getString(cur.getColumnIndex("toTaskName")));
-                        //                    taskDetailsBean.setCatagory(cur.getString(cur.getColumnIndex("category")));
-                        //                    taskDetailsBean.setIssueId(cur.getString(cur.getColumnIndex("issueId")));
-                        //                    Log.d("Db_Insert", " Get Issues Id   ==  " + cur.getString(cur.getColumnIndex("issueId")));
                         if (cur.getString(cur.getColumnIndex("msgstatus")) != null && !cur.getString(cur.getColumnIndex("msgstatus")).equalsIgnoreCase(""))
                             taskDetailsBean.setMsg_status(Integer.parseInt(cur.getString(cur.getColumnIndex("msgstatus"))));
                         if (cur.getString(cur.getColumnIndex("showprogress")) != null && !cur.getString(cur.getColumnIndex("showprogress")).equalsIgnoreCase("")) {

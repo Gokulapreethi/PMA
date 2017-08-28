@@ -32,9 +32,60 @@
         <requestFocus />
     </EditText>
 
+
+    <LinearLayout
+        android:id="@+id/Timer_entry"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:layout_marginTop="10dp"
+        android:weightSum="4"
+        android:visibility="gone">
+
+        <TextView
+            android:id="@+id/My_hour"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginLeft="10dp"
+            android:text="Hour  :"
+            android:textSize="20dp" />
+
+        <EditText
+            android:id="@+id/timer_hour"
+            android:layout_width="70dp"
+            android:layout_height="40dp"
+            android:layout_marginLeft="5dp"
+            android:inputType="number"
+            android:ems="10"
+            android:background="@layout/iphone_edittext_into_android"
+            android:hint=""></EditText>
+
+        <TextView
+            android:id="@+id/My_minutes"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Minute :"
+            android:layout_marginLeft="5dp"
+            android:layout_centerVertical="true"
+            android:textSize="20dp" />
+
+        <EditText
+            android:id="@+id/timer_minutes"
+            android:layout_width="70dp"
+            android:layout_height="40dp"
+            android:layout_marginLeft="5dp"
+            android:inputType="number"
+            android:ems="10"
+            android:background="@layout/iphone_edittext_into_android"
+            android:hint=""></EditText>
+
+    </LinearLayout>
     <View
         android:layout_width="match_parent"
-        android:layout_height="5dp" />
+        android:layout_height="10dp" />
+
 
     <View
         android:layout_width="match_parent"
