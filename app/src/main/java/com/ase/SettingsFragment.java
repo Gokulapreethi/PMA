@@ -70,6 +70,7 @@ import json.WebServiceInterface;
  * Created by Amuthan on 22/03/2016.
  */
 public class SettingsFragment extends Fragment implements WebServiceInterface {
+    public View rootView;
     static SettingsFragment fragment;
     TextView status;
     Handler handler = new Handler();
@@ -114,7 +115,14 @@ public class SettingsFragment extends Fragment implements WebServiceInterface {
         try {
             String s = "select * from taskDetailsInfo where msgstatus='12' and loginuser='" + Appreference.loginuserdetails.getEmail() + "'";
             ArrayList<ProjectDetailsBean> projectDetailsBeen = VideoCallDataBase.getDB(getContext()).getExclationdetails(s);
-
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        try {
+            if (rootView != null) {
+                InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(getActivity().INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(getView().getWindowToken(), 0);
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -124,7 +132,7 @@ public class SettingsFragment extends Fragment implements WebServiceInterface {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 //        return super.onCreateView(inflater, container, savedInstanceState);
-        View rootView = inflater.inflate(R.layout.settings_fragment_layout, container, false);
+        rootView = inflater.inflate(R.layout.settings_fragment_layout, container, false);
         settingsFragment = this;
 
 

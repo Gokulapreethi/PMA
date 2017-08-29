@@ -35,6 +35,7 @@ import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
@@ -251,6 +252,7 @@ public class ProjectsFragment extends Fragment implements View.OnClickListener, 
             reportdetails.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    hideKeyboard();
                     if (tna_count == 0) {
                         all_report_title.setVisibility(View.VISIBLE);
                         tna_count = 1;
@@ -266,12 +268,13 @@ public class ProjectsFragment extends Fragment implements View.OnClickListener, 
 
                 @Override
                 public void onClick(View v) {
-
+                    hideKeyboard();
                     LayoutInflater inflater = getActivity().getLayoutInflater();
                     View alertLayout = inflater.inflate(R.layout.fsr_request_view, null);
-                    final Spinner machine_no_spinner = (Spinner) alertLayout.findViewById(R.id.machine_no_spinner);
-                    final Button fsr_start_btn = (Button) alertLayout.findViewById(R.id.fsr_start_btn);
-                    final Button fsr_end_btn = (Button) alertLayout.findViewById(R.id.fsr_end_btn);
+//                    final Spinner machine_no_spinner = (Spinner) alertLayout.findViewById(R.id.machine_no_spinner);
+                    final AutoCompleteTextView ac_machine_no_spinner=(AutoCompleteTextView) alertLayout.findViewById(R.id.auto_complete);
+                    /*final Button fsr_start_btn = (Button) alertLayout.findViewById(R.id.fsr_start_btn);
+                    final Button fsr_end_btn = (Button) alertLayout.findViewById(R.id.fsr_end_btn);*/
                     final LinearLayout ll_second_layout=(LinearLayout) alertLayout.findViewById(R.id.second_layout);
                     ll_second_layout.setVisibility(View.GONE);
                     final TextView tx_fst_start = (TextView) alertLayout.findViewById(R.id.fst_start);
@@ -289,8 +292,8 @@ public class ProjectsFragment extends Fragment implements View.OnClickListener, 
                     ArrayList<String> ar_My_machineSerialNo = VideoCallDataBase.getDB(getActivity()).getOracleProjectIdlist(list_query, "mcSrNo");
 //                    Collections.sort(ar_My_machineSerialNo);
 
-                    ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, ar_My_machineSerialNo){
-                        @Override
+                    ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.select_dialog_item, ar_My_machineSerialNo){
+                      /*  @Override
                         public boolean isEnabled(int position) {
                             if(position == 0)
                             {
@@ -303,7 +306,7 @@ public class ProjectsFragment extends Fragment implements View.OnClickListener, 
                                 return true;
                             }
                         }
-
+*/
                         @Override
                         public View getDropDownView(int position, View convertView, ViewGroup parent) {
                             View view = super.getDropDownView(position, convertView, parent);
@@ -319,28 +322,39 @@ public class ProjectsFragment extends Fragment implements View.OnClickListener, 
                         }
                     };
                     // Drop down layout style - list view with radio button
-                    dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+//                    dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                    ac_machine_no_spinner.setThreshold(1);
                     // attaching data adapter to spinner
-                    machine_no_spinner.setAdapter(dataAdapter);
+                    ac_machine_no_spinner.setAdapter(dataAdapter);
                     SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
                     final String dateTime = dateFormat.format(new Date());
                     search_startDate = "";
                     search_endDate="";
-                    machine_no_spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+
+                    ac_machine_no_spinner.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                         @Override
-                        public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                             String selectedItemText = (String) parent.getItemAtPosition(position);
-                            if(position > 0){
-                            selected_mcSrNo = String.valueOf(machine_no_spinner.getSelectedItem());/*selected jobcard from spinner*/
+                            Log.i("FSR", "ac_machine_no_spinner selectedItemText ==> " + selectedItemText);
+                            Log.i("FSR", "String.valueOf(ac_machine_no_spinner.getAdapter().getItem(position)) ==> " + String.valueOf(ac_machine_no_spinner.getAdapter().getItem(position)));
+                            selected_mcSrNo = String.valueOf(ac_machine_no_spinner.getAdapter().getItem(position));/*selected jobcard from spinner*/
                             User_selected_mcsrNo=selected_mcSrNo;
-							}
                         }
+                    });
+                 /*   ac_machine_no_spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                            @Override
+                            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                                String selectedItemText = (String) parent.getItemAtPosition(position);
+                                Log.i("FSR", "ac_machine_no_spinner selectedItemText ==> " + selectedItemText);
+                                selected_mcSrNo = String.valueOf(ac_machine_no_spinner.getAdapter().getItem(position));*//*selected jobcard from spinner*//*
+                                User_selected_mcsrNo=selected_mcSrNo;
+                            }
 
                         @Override
                         public void onNothingSelected(AdapterView<?> parent) {
                         }
-                    });
-                    fsr_start_btn.setOnClickListener(new View.OnClickListener() {
+                    });*/
+                    tx_fst_start.setOnClickListener(new View.OnClickListener() {
                         final Calendar c = Calendar.getInstance();
 
                         @Override
@@ -388,7 +402,7 @@ public class ProjectsFragment extends Fragment implements View.OnClickListener, 
                             }
                         }
                     });
-                    fsr_end_btn.setOnClickListener(new View.OnClickListener() {
+                    tx_fst_end.setOnClickListener(new View.OnClickListener() {
                         final Calendar c = Calendar.getInstance();
 
                         @Override
@@ -772,6 +786,7 @@ public class ProjectsFragment extends Fragment implements View.OnClickListener, 
             image_search.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    hideKeyboard();
                     Intent intent = new Intent(getActivity(), SearchMediaWebView.class);
                     intent.putExtra("urlload", "searchmedia");
                     startActivity(intent);
@@ -817,6 +832,7 @@ public class ProjectsFragment extends Fragment implements View.OnClickListener, 
                         Log.i("progress123", "===============================> ");
 
                         ProjectSearch.setText("");
+                        hideKeyboard();
                         ProjectDetailsBean projectDetailsBean = projectList.get(position);
                         project_id = projectDetailsBean.getId();
                         project_name = projectDetailsBean.getProjectName();
@@ -1319,6 +1335,16 @@ public class ProjectsFragment extends Fragment implements View.OnClickListener, 
 //        }
 //
 //    }
+    private void hideKeyboard() {
+        InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(getActivity().INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(ProjectSearch.getWindowToken(), 0);
+    }
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        hideKeyboard();
+        Log.i("Fragmentstate", "onDestroyView  ProjectFragment");
+    }
 
     @Override
     public void ResponceMethod(final Object object) {
@@ -1596,7 +1622,9 @@ public class ProjectsFragment extends Fragment implements View.OnClickListener, 
         View alertLayout = inflater.inflate(R.layout.fsr_request_view, null);
         final LinearLayout ll_second_layout=(LinearLayout) alertLayout.findViewById(R.id.second_layout);
         ll_second_layout.setVisibility(View.VISIBLE);
-        final Spinner machine_no_spinner = (Spinner) alertLayout.findViewById(R.id.machine_no_spinner);
+//        final Spinner machine_no_spinner = (Spinner) alertLayout.findViewById(R.id.machine_no_spinner);
+        final AutoCompleteTextView machine_no_spinner=(AutoCompleteTextView) alertLayout.findViewById(R.id.auto_complete);
+
         final TextView fst_start = (TextView) alertLayout.findViewById(R.id.fst_start);
         final TextView fst_end = (TextView) alertLayout.findViewById(R.id.fst_end);
         final Spinner job_spinner = (Spinner) alertLayout.findViewById(R.id.job_spinner);
@@ -1610,10 +1638,12 @@ public class ProjectsFragment extends Fragment implements View.OnClickListener, 
 
 
 
-        String[] list = new String[] {User_selected_mcsrNo};
+       /* String[] list = new String[] {User_selected_mcsrNo};
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(),
                 android.R.layout.simple_spinner_item, list);
-        machine_no_spinner.setAdapter(adapter);
+        machine_no_spinner.setAdapter(adapter);*/
+        machine_no_spinner.setText(User_selected_mcsrNo);
+        machine_no_spinner.setEnabled(true);
         fst_start.setText(User_selected_startDate);
         fst_end.setText(User_selected_endDate);
         ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, showAllJobCard);

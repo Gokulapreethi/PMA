@@ -7,17 +7,20 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="230dp"
+        android:layout_height="wrap_content"
         android:id="@+id/head_title"
         android:orientation="vertical"
-        android:background="@color/lgyellow">
+        android:background="@color/lgyellow"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true">
 
         <LinearLayout
+            android:id="@+id/fsr_machine_no"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/fsr_machine_no"
             android:layout_marginTop="40dp"
-            android:orientation="horizontal">
+            android:orientation="vertical">
 
             <TextView
                 android:id="@+id/fsr_msn"
@@ -25,23 +28,34 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/view_land"
                 android:layout_marginLeft="20dp"
-                android:textColor="@color/background"
                 android:text="Machine Serial No :"
+                android:textColor="@color/background"
                 android:textSize="20dp" />
 
-            <Spinner
+            <AutoCompleteTextView
+                android:id="@+id/auto_complete"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/fsr_msn"
+                android:layout_marginTop="5dp"
+                android:layout_marginLeft="20dp"
+                android:ems="5"
+                android:hint=" Enter your number">
+            </AutoCompleteTextView>
+            <!--  <Spinner
                 android:id="@+id/machine_no_spinner"
                 android:layout_width="match_parent"
                 android:spinnerMode="dialog"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content"/>-->
         </LinearLayout>
+
         <LinearLayout
+            android:id="@+id/start_date_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginTop="30dp"
-            android:id="@+id/start_date_layout"
-            android:layout_below="@+id/fsr_machine_no">
+            android:layout_below="@+id/fsr_machine_no"
+            android:layout_marginTop="10dp"
+            android:orientation="vertical">
 
             <TextView
                 android:id="@+id/start_date_list"
@@ -53,32 +67,27 @@
                 android:textColor="@color/background"
                 android:textSize="20dp" />
 
-            <Button
-                android:layout_width="40dp"
-                android:layout_height= "40dp"
-                android:id="@+id/fsr_start_btn"
-                android:background="@drawable/ic_date_chang_request"
-                />
+
             <TextView
                 android:id="@+id/fst_start"
-                android:layout_width="0dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="2dp"
-                android:layout_marginRight="2dp"
-                android:layout_marginTop="4dp"
-                android:layout_weight="1"
-                android:hint="select start date"
-                android:gravity="center_vertical"
-                android:maxLength="100"
                 android:textColor="#808080"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="4dp"
+                android:gravity="center_vertical"
+                android:hint="select start date"
+                android:textSize="19dp"
+                android:drawableRight="@drawable/ic_date_chang_request"
                 android:visibility="visible" />
 
         </LinearLayout>
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginTop="30dp"
+            android:orientation="vertical"
+            android:layout_marginTop="10dp"
             android:layout_below="@+id/start_date_layout">
 
             <TextView
@@ -90,23 +99,17 @@
                 android:textColor="@color/background"
                 android:text="End Date                  :"
                 android:textSize="20dp" />
-            <Button
-                android:layout_width="40dp"
-                android:layout_height= "40dp"
-                android:id="@+id/fsr_end_btn"
-                android:background="@drawable/ic_date_chang_request"
-                />
+
             <TextView
                 android:id="@+id/fst_end"
-                android:layout_width="0dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="2dp"
-                android:layout_marginRight="2dp"
+                android:layout_marginLeft="20dp"
                 android:layout_marginTop="4dp"
-                android:layout_weight="1"
-                android:hint="select end date"
+                android:drawableRight="@drawable/ic_date_chang_request"
                 android:gravity="center_vertical"
-                android:maxLength="100"
+                android:hint="select end date"
+                android:textSize="19dp"
                 android:textColor="#808080"
                 android:visibility="visible" />
 
@@ -133,8 +136,8 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/rlay_tilte"
             android:id="@+id/jobcard_number"
-            android:layout_marginTop="40dp"
-            android:orientation="horizontal">
+            android:layout_marginTop="20dp"
+            android:orientation="vertical">
 
             <TextView
                 android:id="@+id/textView16"
@@ -150,13 +153,15 @@
                 android:id="@+id/job_spinner"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:layout_marginLeft="20dp"
                 android:prompt="@string/jobcard"/>
         </LinearLayout>
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginTop="30dp"
+            android:orientation="vertical"
+            android:layout_marginTop="10dp"
             android:layout_below="@+id/jobcard_number">
 
             <TextView
@@ -172,6 +177,8 @@
                 android:id="@+id/date_spinner"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="5dp"
                 android:prompt="@string/date"/>
         </LinearLayout>
     </LinearLayout>

@@ -4810,6 +4810,7 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                                                 final java.sql.Date todayDate = new java.sql.Date(System.currentTimeMillis());
                                                 if (selectedHour != 0 && selectedMinute != 0) {
                                                     String showTimerDate=todayDate+ " " +selectedHour +":"+selectedMinute;
+                                                    Log.i("timer123","Pause Remarks=====================>"+name.getText().toString());
                                                     sendStatus_webservice("3", showTimerDate, "Pause Remarks :" + name.getText().toString(), "Paused", "Paused");
                                                     dialog1.dismiss();
                                                 } else {
@@ -4848,20 +4849,32 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                     sendStatus_webservice("4", "", "", "Restarted", "Restarted");
                 }
                 if (item.getTitle().toString().equalsIgnoreCase("Complete")) {
-                    Log.i("ws123", "completed $$--> " + taskType);
+                    Log.i("Givercomplete", "taskType ==> " + taskType);
                     if (taskType != null && taskType.equalsIgnoreCase("group")) {
                         getgroupStatus();
                     } else {
-                        String query_status = "select * from projectStatus where projectId='" + projectId + "'  and taskId= '" + webtaskId + "' and status = '0'";
-                        final int count_status = VideoCallDataBase.getDB(context).getCountForTravelEntry(query_status);
+                        String query_forstart = "select * from projectStatus where projectId='" + projectId + "'  and taskId= '" + webtaskId + "' and status = '0'";
+                        Log.i("Givercomplete", "query_forstart==> " + query_forstart);
+                        final int count_status = VideoCallDataBase.getDB(context).getCountForTravelEntry(query_forstart);
+                        Log.i("Givercomplete", "count_status==> " + count_status);
                         if (count_status != 0) {
-                            final int travelentry = VideoCallDataBase.getDB(context).CheckTravelEntryDetails("select * from projectStatus where projectId ='" + projectId + "' and taskId = '" + webtaskId + "' and travelStartTime IS NOT NULL and travelEndTime IS NULL");
-                            Log.i("conv123", "TravelEntry==>" + travelentry);
-                            String query = "select * from projectStatus where projectId='" + projectId + "'  and taskId= '" + webtaskId + "' and status = '7'";
-                            final int count = VideoCallDataBase.getDB(context).getCountForTravelEntry(query);
-
+                            String query_enddatenull ="select * from projectStatus where projectId='" + projectId + "' and taskId= '" + webtaskId + "' and travelStartTime IS NOT NULL and travelEndTime IS NULL";
+                            final int travelentry = VideoCallDataBase.getDB(context).getCountForTravelEntry(query_enddatenull);
+                            Log.i("Givercomplete", "query_enddatenull==>" + query_enddatenull);
+                            Log.i("Givercomplete", "TravelEntry==>" + travelentry);
+                            String query_forstartend = "select * from projectStatus where projectId='" + projectId + "'  and taskId= '" + webtaskId + "' and status = '7'";
+                            final int count_fortravel = VideoCallDataBase.getDB(context).getCountForTravelEntry(query_forstartend);
+                            Log.i("Givercomplete", "query_forstartend==> " + query_forstartend);
+                            Log.i("Givercomplete", "count_fortravel==> " + count_fortravel);
                             String qry_status = "select status from projectStatus where projectId='" + projectId + "' and taskId= '" + webtaskId + "'";
                             final int check_status = VideoCallDataBase.getDB(context).getCurrentStatus(qry_status);
+                            Log.i("Givercomplete", "qry_status==> " + qry_status);
+                            Log.i("Givercomplete", "check_status==> " + check_status);
+
+                            String query_forEod = "select * from projectStatus where projectId='" + projectId + "'  and taskId= '" + webtaskId + "' and status = '10'";
+                            final int count_forEod = VideoCallDataBase.getDB(context).getCountForTravelEntry(query_forEod);
+                            Log.i("Givercomplete", "query_forEod==> " + query_forEod);
+                            Log.i("Givercomplete", "count_forEod==> " + count_forEod);
 
                             AlertDialog.Builder saveDialog = new AlertDialog.Builder(context);
                             saveDialog.setTitle("Complete Task");
@@ -4870,9 +4883,14 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                             saveDialog.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int which) {
                                     if (check_status != 1 && check_status != 3) {
-                                        if (count != 0) {
+                                        if (count_fortravel != 0) {
                                             if (travelentry == 0) {
-                                                sendStatus_webservice("5", "", "", "Completed", "Completed");
+                                                if(count_forEod != 0) {
+                                                    sendStatus_webservice("5", "", "", "Completed", "Completed");
+                                                }else{
+                                                    Toast.makeText(NewTaskConversation.this, "This task has no Eod ", Toast.LENGTH_SHORT).show();
+                                                    dialog.cancel();
+                                                }
                                             } else {
                                                 Toast.makeText(NewTaskConversation.this, "Enter end date and time and then proceed to complete the task.", Toast.LENGTH_SHORT).show();
                                                 dialog.cancel();
@@ -4882,7 +4900,7 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                                             dialog.cancel();
                                         }
                                     } else {
-                                        Toast.makeText(NewTaskConversation.this, "can't able to complete this task ", Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(NewTaskConversation.this, "Task is in Hold state", Toast.LENGTH_SHORT).show();
                                         dialog.cancel();
                                     }
                                 }
@@ -4895,7 +4913,7 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                                     });
                             saveDialog.show();
                         } else {
-                            Toast.makeText(NewTaskConversation.this, "can't able to complete this task", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(NewTaskConversation.this, "Task is not yet to Started", Toast.LENGTH_SHORT).show();
 
                         }
                     }
@@ -5902,7 +5920,7 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                                         Log.i("EOD_submit", "photo_signature===> " + photo_signature);
                                         Log.i("EOD_submit", "tech_signature===> " + tech_signature);
 
-                                        Toast.makeText(NewTaskConversation.this, "Please Fill the red marked fields! ", Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(NewTaskConversation.this, "Please fill the field(s) marked in RED", Toast.LENGTH_SHORT).show();
 
                                         if (machion_make_edit == null || machion_make_edit.equalsIgnoreCase("") || machion_make_edit.equalsIgnoreCase(null)) {
                                             machine_make_tv.setTextColor(getResources().getColor(R.color.red));
@@ -6051,7 +6069,15 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                 public void onClick(DialogInterface dialog, int which) {
                     if (count != 0) {
                         if (travelentry == 0) {
-                            sendStatus_webservice("5", "", "", "Completed", "Completed");
+                            String query_forEod = "select * from projectStatus where projectId='" + projectId + "'  and taskId= '" + webtaskId + "' and status = '10'";
+                            final int count_forEod = VideoCallDataBase.getDB(context).getCountForTravelEntry(query_forEod);
+                            Log.i("conv123", "count_forEod==> $$ " + count_forEod);
+                            if(count_forEod !=0) {
+                                sendStatus_webservice("5", "", "", "Completed", "Completed");
+                            }else{
+                                Toast.makeText(NewTaskConversation.this, "This task has no Eod ", Toast.LENGTH_SHORT).show();
+                                dialog.cancel();
+                            }
                         } else {
                             Toast.makeText(NewTaskConversation.this, "Enter end date and time and then proceed to complete the task.", Toast.LENGTH_SHORT).show();
                             dialog.cancel();
@@ -6345,14 +6371,16 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
             taskDetailsBean.setTaskStatus(projectCurrentStatus);
             taskDetailsBean.setSendStatus("0");
             taskDetailsBean.setTaskType(taskType);
-            if(status.equalsIgnoreCase("1") || status.equalsIgnoreCase("3")){
+            /*if(status.equalsIgnoreCase("1") || status.equalsIgnoreCase("3")){
                 taskDetailsBean.setMimeType("taskBreak");
+                Log.i("timer123","HoldOrPauseTimervalue===>"+timer);
                 Appreference.HoldOrPauseTimervalue=timer;
                 taskDetailsBean.setPlannedEndDateTime(timer);
-            }else {
+            }else {*/
                 taskDetailsBean.setMimeType("text");
                 taskDetailsBean.setPlannedEndDateTime("");
-            }
+                 Appreference.HoldOrPauseTimervalue=timer;
+//            }
             taskStatus = StatusUI;
 
             taskDetailsBean.setUtcPlannedStartDateTime(Appreference.customLocalDateToUTC(null));
@@ -12138,9 +12166,9 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                                                      timerstop();
                                                      oracle_percentage("text", "Completed Percentage 100%", "", Utility.getSessionID(), 0);
                                                  }
-                                                 if(detailsBean.getProjectStatus().equalsIgnoreCase("1") || detailsBean.getProjectStatus().equalsIgnoreCase("3")) {
+                                                /* if(detailsBean.getProjectStatus().equalsIgnoreCase("1") || detailsBean.getProjectStatus().equalsIgnoreCase("3")) {
                                                      PercentageWebService("taskBreak", detailsBean.getTaskDescription(), "", detailsBean.getSignalid(), 0);
-                                                 }else
+                                                 }else*/
                                                      PercentageWebService("text", detailsBean.getTaskDescription(), "", detailsBean.getSignalid(), 0);
 
 
@@ -18539,10 +18567,15 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                 chatBean.setCompletedPercentage("0");
             }
             chatBean.setPlannedStartDateTime("");
-            if(getMediaType.equalsIgnoreCase("taskBreak") && Appreference.HoldOrPauseTimervalue!=null && !Appreference.HoldOrPauseTimervalue.equalsIgnoreCase(" ")){
+            Log.i("timer123","Appreference.HoldOrPauseTimervalue percentageWEbservice===>"+Appreference.HoldOrPauseTimervalue);
+
+          /*  if(getMediaType.equalsIgnoreCase("taskBreak") && Appreference.HoldOrPauseTimervalue!=null && !Appreference.HoldOrPauseTimervalue.equalsIgnoreCase("")){
                 chatBean.setPlannedEndDateTime(Appreference.HoldOrPauseTimervalue);
-            }else
+                Log.i("timer123","IF Appreference.HoldOrPauseTimervalue chatBean.getPlannedEndDateTime()====>"+chatBean.getPlannedEndDateTime());
+            }else {*/
                 chatBean.setPlannedEndDateTime("");
+                Log.i("timer123", "ELSE Appreference.HoldOrPauseTimervalue chatBean.getPlannedEndDateTime()====>" + chatBean.getPlannedEndDateTime());
+//            }
 
             chatBean.setRemainderFrequency("");
             chatBean.setTaskUTCDateTime(dateforrow);
@@ -18818,12 +18851,7 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                             jsonObject4.put("fileType", "assigntask");
                             jsonObject4.put("description", getMediaPath);
                             break;
-                      case "taskBreak":
-                            Log.i("taskconversation", "mediaListBean.getMimeType() --------> 18 " + getMediaType);
-                            jsonObject4.put("fileType", "taskBreak");
-                            jsonObject4.put("description", getMediaPath);
-                            break;
-                        case "map":
+                      case "map":
                             Log.i("taskconversation", "mediaListBean.getMimeType() --------> 19 " + getMediaType);
                             jsonObject4.put("fileType", "map");
                             jsonObject4.put("description", getMediaPath);

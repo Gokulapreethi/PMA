@@ -9488,7 +9488,6 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
 
     public ArrayList<String> getOracleProjectIdlist(String query,String fieldNameTogetResult) {
         ArrayList<String> arrayList = new ArrayList<>();
-        arrayList.add("Pick anyone ");
         Cursor cur;
         try {
             if (db == null)
