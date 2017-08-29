@@ -3814,6 +3814,59 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
         return 0;
     }
 
+    public ArrayList<TaskDetailsBean> getTimerDateForHoldOrPause(String query) {
+        ArrayList<TaskDetailsBean> arrayList = new ArrayList<>();
+        Cursor cur;
+        try {
+            if (db == null)
+                db = getReadableDatabase();
+
+            try {
+                if (db != null) {
+                    if (!db.isOpen())
+                        openDatabase();
+                    cur = db.rawQuery(query, null);
+                    cur.moveToFirst();
+
+                    while (!cur.isAfterLast()) {
+                        TaskDetailsBean taskDetailsBean = new TaskDetailsBean();
+                        if (cur.getString(cur.getColumnIndex("fromUserId")) != null)
+                            taskDetailsBean.setFromUserId(cur.getString(cur.getColumnIndex("fromUserId")));
+                        if (cur.getString(cur.getColumnIndex("toUserId")) != null)
+                            taskDetailsBean.setToUserId(cur.getString(cur.getColumnIndex("toUserId")));
+                        if (cur.getString(cur.getColumnIndex("taskNo")) != null)
+                            taskDetailsBean.setTaskNo(cur.getString(cur.getColumnIndex("taskNo")));
+                        if (cur.getString(cur.getColumnIndex("plannedStartDateTime")) != null && !cur.getString(cur.getColumnIndex("plannedStartDateTime")).equalsIgnoreCase("(null)")) {
+                            taskDetailsBean.setPlannedStartDateTime(cur.getString(cur.getColumnIndex("plannedStartDateTime")));
+                        }
+                        if (cur.getString(cur.getColumnIndex("plannedEndDateTime")) != null && !cur.getString(cur.getColumnIndex("plannedEndDateTime")).equalsIgnoreCase("(null)")) {
+                            taskDetailsBean.setPlannedEndDateTime(cur.getString(cur.getColumnIndex("plannedEndDateTime")));
+                        }
+                        if (cur.getString(cur.getColumnIndex("signalid")) != null)
+                            taskDetailsBean.setSignalid(cur.getString(cur.getColumnIndex("signalid")));
+                        if (cur.getString(cur.getColumnIndex("taskId")) != null)
+                            taskDetailsBean.setTaskId(cur.getString(cur.getColumnIndex("taskId")));
+                        if (taskDetailsBean.getSignalid() != null)
+                            arrayList.add(taskDetailsBean);
+                        cur.moveToNext();
+                    }
+                    cur.close();
+                }
+            } catch (NumberFormatException e) {
+                e.printStackTrace();
+                Appreference.printLog("getTimerDateForHoldOrPause","Exception "+e.getMessage(),"WARN",null);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            Appreference.printLog("getTimerDateForHoldOrPause","Exception "+e.getMessage(),"WARN",null);
+
+        } finally {
+            return arrayList;
+        }
+    }
+
+
+
     public ArrayList<TaskDetailsBean> getTaskHistory(String query) {
         ArrayList<TaskDetailsBean> arrayList = new ArrayList<>();
         Cursor cur;
@@ -3842,26 +3895,16 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
                             taskDetailsBean.setToUserId(cur.getString(cur.getColumnIndex("toUserId")));
                         if (cur.getString(cur.getColumnIndex("taskNo")) != null)
                             taskDetailsBean.setTaskNo(cur.getString(cur.getColumnIndex("taskNo")));
-                        //                    taskDetailsBean.setTaskName(cur.getString(cur.getColumnIndex("taskName")));
                         if (cur.getString(cur.getColumnIndex("plannedStartDateTime")) != null && !cur.getString(cur.getColumnIndex("plannedStartDateTime")).equalsIgnoreCase("(null)")) {
-                            Log.i("VideoCallDB", "getTaskHistory plannedStartDateTime * " + cur.getString(cur.getColumnIndex("plannedStartDateTime")));
-                            Log.i("VideoCallDB", "getTaskHistory plannedStartDateTime * * " + Appreference.utcToLocalTime(cur.getString(cur.getColumnIndex("plannedStartDateTime"))));
-                            taskDetailsBean.setPlannedStartDateTime(Appreference.utcToLocalTime(cur.getString(cur.getColumnIndex("plannedStartDateTime"))));
-                            //                        taskDetailsBean.setUtcPlannedStartDateTime(cur.getString(cur.getColumnIndex("plannedStartDateTime")));
+                             taskDetailsBean.setPlannedStartDateTime(Appreference.utcToLocalTime(cur.getString(cur.getColumnIndex("plannedStartDateTime"))));
                         }
                         Log.i("xmlparser", "taskDetailsBean getPlannedStartDateTime " + taskDetailsBean.getPlannedStartDateTime());
                         if (cur.getString(cur.getColumnIndex("plannedEndDateTime")) != null && !cur.getString(cur.getColumnIndex("plannedEndDateTime")).equalsIgnoreCase("(null)")) {
-                            Log.i("VideoCallDB", "getTaskHistory plannedEndDateTime * " + cur.getString(cur.getColumnIndex("plannedEndDateTime")));
-                            Log.i("VideoCallDB", "getTaskHistory plannedEndDateTime * * " + Appreference.utcToLocalTime(cur.getString(cur.getColumnIndex("plannedEndDateTime"))));
                             taskDetailsBean.setPlannedEndDateTime(Appreference.utcToLocalTime(cur.getString(cur.getColumnIndex("plannedEndDateTime"))));
-                            //                        taskDetailsBean.setUtcplannedEndDateTime(cur.getString(cur.getColumnIndex("plannedEndDateTime")));
                         }
                         Log.i("xmlparser", "String value ---> " + cur.getString(cur.getColumnIndex("remainderFrequency")));
                         if (cur.getString(cur.getColumnIndex("remainderFrequency")) != null && !cur.getString(cur.getColumnIndex("remainderFrequency")).equalsIgnoreCase("(null)") && !cur.getString(cur.getColumnIndex("remainderFrequency")).equalsIgnoreCase("")) {
-                            Log.i("VideoCallDB", "getTaskHistory remainderFrequency * " + cur.getString(cur.getColumnIndex("remainderFrequency")));
-                            Log.i("VideoCallDB", "getTaskHistory remainderFrequency * * " + Appreference.utcToLocalTime(cur.getString(cur.getColumnIndex("remainderFrequency"))));
                             taskDetailsBean.setRemainderFrequency(Appreference.utcToLocalTime(cur.getString(cur.getColumnIndex("remainderFrequency"))));
-                            //                        taskDetailsBean.setUtcPemainderFrequency(cur.getString(cur.getColumnIndex("remainderFrequency")));
                         }
                         if (cur.getString(cur.getColumnIndex("duration")) != null)
                             taskDetailsBean.setDuration(cur.getString(cur.getColumnIndex("duration")));

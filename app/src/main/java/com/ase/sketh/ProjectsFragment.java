@@ -1643,7 +1643,7 @@ public class ProjectsFragment extends Fragment implements View.OnClickListener, 
                 android.R.layout.simple_spinner_item, list);
         machine_no_spinner.setAdapter(adapter);*/
         machine_no_spinner.setText(User_selected_mcsrNo);
-        machine_no_spinner.setEnabled(true);
+        machine_no_spinner.setEnabled(false);
         fst_start.setText(User_selected_startDate);
         fst_end.setText(User_selected_endDate);
         ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, showAllJobCard);

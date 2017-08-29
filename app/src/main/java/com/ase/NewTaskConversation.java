@@ -926,6 +926,10 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
         int disable_by_current_status = VideoCallDataBase.getDB(context).getCurrentStatus(query);
         if (disable_by_current_status == 5)
             isTaskCompleted = true;
+        if(disable_by_current_status==1 || disable_by_current_status==3) {
+            ShowHoldOrPauseTimerDisplay();
+        }
+
         if (taskStatus != null && !taskStatus.equalsIgnoreCase("null") && (taskStatus.equalsIgnoreCase("draft") || taskStatus.equalsIgnoreCase("Unassigned"))) {
             if (Appreference.loginuserdetails != null && Appreference.loginuserdetails.getRoleId() != null
                     && Appreference.loginuserdetails.getRoleId().equalsIgnoreCase("2")
@@ -4728,96 +4732,48 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                                 @Override
                                 public void onClick(View v) {
                                     Log.i("ws123", "remarks for Hold====>" + name.getText().toString());
-                                    if (name.getText().toString() != null && !name.getText().toString().equalsIgnoreCase("")) {
-                                        sendStatus_webservice("1", "", "Hold Remarks :" + name.getText().toString(), "hold", "Hold");
-                                        dialog1.dismiss();
-                                    } else {
-                                        showToast("Please enter any Remarks");
-                                    }
 
-                                }
-                            });
-                            no.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    dialog1.dismiss();
-                                }
-                            });
-                            dialog1.show();
-                        }
-                    });
-                    saveDialog.setNegativeButton("No",
-                            new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int which) {
-                                    dialog.cancel();
-                                }
-                            });
-                    saveDialog.show();
-                }
-                if (item.getTitle().toString().equalsIgnoreCase("Resume")) {
-                    sendStatus_webservice("2", "", "", "Resumed", "Resumed");
-                }
-                if (item.getTitle().toString().equalsIgnoreCase("Pause")) {
-                    AlertDialog.Builder saveDialog = new AlertDialog.Builder(context);
-                    saveDialog.setTitle("Pause Work");
-                    saveDialog.setCancelable(false);
-                    saveDialog.setMessage("Are you sure want to pause this task " + taskName);
-                    saveDialog.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int which) {
-                            final Dialog dialog1 = new Dialog(context);
-                            dialog1.requestWindowFeature(Window.FEATURE_NO_TITLE);
-                            dialog1.setContentView(R.layout.task_remarks);
-                            dialog1.setCanceledOnTouchOutside(false);
-                            TextView header = (TextView) dialog1.findViewById(R.id.template_header);
-                            final TextView yes = (TextView) dialog1.findViewById(R.id.save);
-                            final TextView no = (TextView) dialog1.findViewById(R.id.no);
-                            final EditText name = (EditText) dialog1.findViewById(R.id.remarks);
-                            final EditText ed_timer_hour = (EditText) dialog1.findViewById(R.id.timer_hour);
-                            final EditText ed_timer_minutes = (EditText) dialog1.findViewById(R.id.timer_minutes);
-                            final LinearLayout rl_Timer_entry = (LinearLayout) dialog1.findViewById(R.id.Timer_entry);
-                            header.setText("Pause Remarks ");
-                            yes.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    Log.i("ws123", "remarks for pause====>" + name.getText().toString());
-                                    isFromPauseClick = true;
                                     if (name.getText().toString() != null && !name.getText().toString().equalsIgnoreCase("")) {
                                         Appreference.isremarksEntered = true;
                                     } else
                                         Appreference.isremarksEntered = false;
 
                                     if (Appreference.isremarksEntered) {
-                                            /*rl_Timer_entry.setVisibility(View.VISIBLE);
-                                            name.setEnabled(true);
-                                            yes.setText("set");
-                                            if(ed_timer_hour.getText().toString()!=null && !ed_timer_hour.getText().toString().equalsIgnoreCase("")
-                                                    && ed_timer_minutes.getText().toString()!=null && !ed_timer_minutes.getText().toString().equalsIgnoreCase("")){
-                                                sendStatus_webservice("3", "", "Pause Remarks :" + name.getText().toString(), "Paused", "Paused");
-                                                dialog1.dismiss();
-                                            }else{
-                                                showToast("Please enter Hour and Minutes");
-                                            }*/
-
-
-                                        Calendar mcurrentTime = Calendar.getInstance();
+                                        final Calendar mcurrentTime = Calendar.getInstance();
                                         int hour = mcurrentTime.get(Calendar.HOUR_OF_DAY);
                                         int minute = mcurrentTime.get(Calendar.MINUTE);
                                         TimePickerDialog mTimePicker;
                                         mTimePicker = new TimePickerDialog(NewTaskConversation.this, new TimePickerDialog.OnTimeSetListener() {
                                             @Override
                                             public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
-                                                showToast(" enter Hour and Minutes====> " + selectedHour + ":" + selectedMinute);
                                                 final java.sql.Date todayDate = new java.sql.Date(System.currentTimeMillis());
-                                                if (selectedHour != 0 && selectedMinute != 0) {
+                                                int hour = mcurrentTime.get(Calendar.HOUR_OF_DAY);
+                                                int minute = mcurrentTime.get(Calendar.MINUTE);
+                                                final SimpleDateFormat sdf=new SimpleDateFormat("HH:mm");
+                                                final String HourMinuteNow= hour+":"+minute;
+                                                Date date1=null;
+                                                Date date2=null;
+                                                try {
+                                                    date1=sdf.parse(HourMinuteNow);
+                                                } catch (ParseException e) {
+                                                    e.printStackTrace();
+                                                }
+                                                String selectedTimer=selectedHour +":"+selectedMinute;
+                                                try {
+                                                    date2=sdf.parse(selectedTimer);
+                                                } catch (ParseException e) {
+                                                    e.printStackTrace();
+                                                }
+                                                if (!date2.before(date1) && !(date2.compareTo(date1) ==0) && selectedHour != 0 && selectedMinute != 0) {
                                                     String showTimerDate=todayDate+ " " +selectedHour +":"+selectedMinute;
                                                     Log.i("timer123","Pause Remarks=====================>"+name.getText().toString());
-                                                    sendStatus_webservice("3", showTimerDate, "Pause Remarks :" + name.getText().toString(), "Paused", "Paused");
-                                                    dialog1.dismiss();
+                                                    Appreference.isremarksEntered=false;
+                                                    Appreference.isTimeUpshown=false;
+                                                    sendStatus_webservice("1", showTimerDate, "Hold Remarks :" + name.getText().toString(), "hold", "Hold");                                                    dialog1.dismiss();
                                                 } else {
-                                                    showToast("Please set Timer...");
+                                                    showToast("Please set correct Timer...");
                                                 }
                                             }
-//                                                    eReminderTime.setText( selectedHour + ":" + selectedMinute);
                                         }, hour, minute, true);//Yes 24 hour time
                                         mTimePicker.setTitle("Set Timer...");
                                         mTimePicker.show();
@@ -4843,9 +4799,103 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                                 }
                             });
                     saveDialog.show();
+                }
+                if (item.getTitle().toString().equalsIgnoreCase("Resume")) {
+                    timerstop();
+                    sendStatus_webservice("2", "", "", "Resumed", "Resumed");
+                }
+                if (item.getTitle().toString().equalsIgnoreCase("Pause")) {
+                    AlertDialog.Builder saveDialog = new AlertDialog.Builder(context);
+                    saveDialog.setTitle("Pause Work");
+                    saveDialog.setCancelable(false);
+                    saveDialog.setMessage("Are you sure want to pause this task " + taskName);
+                    saveDialog.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            final Dialog dialog1 = new Dialog(context);
+                            dialog1.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                            dialog1.setContentView(R.layout.task_remarks);
+                            dialog1.setCanceledOnTouchOutside(false);
+                            TextView header = (TextView) dialog1.findViewById(R.id.template_header);
+                            final TextView yes = (TextView) dialog1.findViewById(R.id.save);
+                            final TextView no = (TextView) dialog1.findViewById(R.id.no);
+                            final EditText name = (EditText) dialog1.findViewById(R.id.remarks);
+
+                            header.setText("Pause Remarks ");
+                            yes.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    Log.i("ws123", "remarks for pause====>" + name.getText().toString());
+                                    isFromPauseClick = true;
+                                    if (name.getText().toString() != null && !name.getText().toString().equalsIgnoreCase("")) {
+                                        Appreference.isremarksEntered = true;
+                                    } else
+                                        Appreference.isremarksEntered = false;
+
+                                    if (Appreference.isremarksEntered) {
+                                        final Calendar mcurrentTime = Calendar.getInstance();
+                                        int hour = mcurrentTime.get(Calendar.HOUR_OF_DAY);
+                                        int minute = mcurrentTime.get(Calendar.MINUTE);
+                                        TimePickerDialog mTimePicker;
+                                        mTimePicker = new TimePickerDialog(NewTaskConversation.this, new TimePickerDialog.OnTimeSetListener() {
+                                            @Override
+                                            public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
+                                                final java.sql.Date todayDate = new java.sql.Date(System.currentTimeMillis());
+                                                int hour = mcurrentTime.get(Calendar.HOUR_OF_DAY);
+                                                int minute = mcurrentTime.get(Calendar.MINUTE);
+                                                final SimpleDateFormat sdf=new SimpleDateFormat("HH:mm");
+                                                final String HourMinuteNow= hour+":"+minute;
+                                                Date date1=null;
+                                                Date date2=null;
+                                                try {
+                                                    date1=sdf.parse(HourMinuteNow);
+                                                } catch (ParseException e) {
+                                                    e.printStackTrace();
+                                                }
+                                                String selectedTimer=selectedHour +":"+selectedMinute;
+                                                try {
+                                                    date2=sdf.parse(selectedTimer);
+                                                } catch (ParseException e) {
+                                                    e.printStackTrace();
+                                                }
+                                                if (!date2.before(date1) && !(date2.compareTo(date1) ==0) && selectedHour != 0 && selectedMinute != 0) {
+                                                    String showTimerDate=todayDate+ " " +selectedHour +":"+selectedMinute;
+                                                    Log.i("timer123","Pause Remarks=====================>"+name.getText().toString());
+                                                    Appreference.isremarksEntered=false;
+                                                    Appreference.isTimeUpshown=false;
+                                                    sendStatus_webservice("3", showTimerDate, "Pause Remarks :" + name.getText().toString(), "Paused", "Paused");
+                                                    dialog1.dismiss();
+                                                } else {
+                                                    showToast("Please set Correct Timer...");
+                                                }
+                                            }
+                                        }, hour, minute, true);//Yes 24 hour time
+                                        mTimePicker.setTitle("Set Timer...");
+                                        mTimePicker.show();
+                                    } else {
+                                        showToast("Please enter any Remarks");
+                                    }
+                                }
+                            });
+                            no.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    dialog1.dismiss();
+                                }
+                            });
+                            dialog1.show();
+                        }
+                    });
+                    saveDialog.setNegativeButton("No",
+                            new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.cancel();
+                                }
+                            });
+                    saveDialog.show();
 
                 }
                 if (item.getTitle().toString().equalsIgnoreCase("Restart")) {
+                    timerstop();
                     sendStatus_webservice("4", "", "", "Restarted", "Restarted");
                 }
                 if (item.getTitle().toString().equalsIgnoreCase("Complete")) {
@@ -11779,15 +11829,17 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
 
     public void ShowHoldOrPauseTimerDisplay() {
         ArrayList<TaskDetailsBean> getTimeBean = new ArrayList<>();
-        String getTimerdetailsQuery = "select * from taskDetailsInfo where (loginuser='" + Appreference.loginuserdetails.getEmail() + "') and (taskId='" + webtaskId + "') and (mimeType='taskBreak')";
+        String getTimerdetailsQuery = "select * from taskDetailsInfo where (loginuser='" + Appreference.loginuserdetails.getEmail() + "') and (taskId='" + webtaskId + "') and (taskStatus='Hold' or taskStatus='Paused')";
         Log.i("timer123", "Reminder Timer query " + getTimerdetailsQuery);
-        getTimeBean = VideoCallDataBase.getDB(context).getTaskHistory(getTimerdetailsQuery);
+        getTimeBean = VideoCallDataBase.getDB(context).getTimerDateForHoldOrPause(getTimerdetailsQuery);
         Log.i("timer123", "getTimeBean size" + getTimeBean.size());
         if (getTimeBean.size() > 0) {
             final TaskDetailsBean MyTimerBean = getTimeBean.get(getTimeBean.size() - 1);
-            if (MyTimerBean.getMimeType().equals("date") && MyTimerBean.getPlannedEndDateTime() != null) {
+            Log.i("timer123", "MyTimerBean.getPlannedEndDateTime()" + MyTimerBean.getPlannedEndDateTime());
+
+            if (MyTimerBean.getPlannedEndDateTime() != null) {
                 final Calendar c = Calendar.getInstance();
-                SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm");
                 Log.d("timer123", "Current date " + c.getTime());
                 String formattedDate = df.format(c.getTime());
                 Log.d("timer123", "Formatted current date " + formattedDate);
@@ -11819,6 +11871,34 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                                     counter.start();
                                 }
                             });
+                        }else{
+                            String query = "select status from projectStatus where projectId='" + projectId + "' and userId='" + Appreference.loginuserdetails.getId() + "' and taskId= '" + webtaskId + "'";
+                            int timer_Alert_by_current_status = VideoCallDataBase.getDB(context).getCurrentStatus(query);
+                            String StatusTask;
+                            if (timer_Alert_by_current_status==1 || timer_Alert_by_current_status==3) {
+                                if (!Appreference.isTimeUpshown) {
+                                    if(timer_Alert_by_current_status==1) {
+                                        StatusTask="Hold";
+                                    }else{
+                                        StatusTask="Pause";
+                                    }
+                                    Appreference.isTimeUpshown=true;
+                                    AlertDialog.Builder alertadd = new AlertDialog.Builder(NewTaskConversation.this);
+                                    LayoutInflater factory = LayoutInflater.from(NewTaskConversation.this);
+                                    final View view = factory.inflate(R.layout.showtimeup, null);
+                                    alertadd.setView(view);
+                                    alertadd.setTitle("Task is "+StatusTask);
+
+                                    alertadd.setNeutralButton("OK", new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog1, int sumthin) {
+                                            dialog1.dismiss();
+
+                                        }
+                                    });
+
+                                    alertadd.show();
+                                }
+                            }
                         }
                         Log.d("timer123", "counter started");
                     }
@@ -12166,6 +12246,7 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                                                      timerstop();
                                                      oracle_percentage("text", "Completed Percentage 100%", "", Utility.getSessionID(), 0);
                                                  }
+
                                                 /* if(detailsBean.getProjectStatus().equalsIgnoreCase("1") || detailsBean.getProjectStatus().equalsIgnoreCase("3")) {
                                                      PercentageWebService("taskBreak", detailsBean.getTaskDescription(), "", detailsBean.getSignalid(), 0);
                                                  }else*/
@@ -12177,6 +12258,9 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                                                      if (projectCurrentStatus != null && !projectCurrentStatus.equalsIgnoreCase("Completed") && !isremarksSketchselected && !isRemarkstextselected)
                                                          PercentageWebService("text", detailsBean.getCustomerRemarks(), "", Utility.getSessionID(), 0);
 
+                                                 }
+                                                 if(detailsBean.getProjectStatus().equalsIgnoreCase("1") || detailsBean.getProjectStatus().equalsIgnoreCase("3")) {
+                                                     ShowHoldOrPauseTimerDisplay();
                                                  }
                                                  if (travel_date_details != null && travel_date_details.size() > 0) {
                                                      int sec = 0;
@@ -18567,16 +18651,9 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                 chatBean.setCompletedPercentage("0");
             }
             chatBean.setPlannedStartDateTime("");
+            chatBean.setPlannedEndDateTime("");
             Log.i("timer123","Appreference.HoldOrPauseTimervalue percentageWEbservice===>"+Appreference.HoldOrPauseTimervalue);
-
-          /*  if(getMediaType.equalsIgnoreCase("taskBreak") && Appreference.HoldOrPauseTimervalue!=null && !Appreference.HoldOrPauseTimervalue.equalsIgnoreCase("")){
-                chatBean.setPlannedEndDateTime(Appreference.HoldOrPauseTimervalue);
-                Log.i("timer123","IF Appreference.HoldOrPauseTimervalue chatBean.getPlannedEndDateTime()====>"+chatBean.getPlannedEndDateTime());
-            }else {*/
-                chatBean.setPlannedEndDateTime("");
-                Log.i("timer123", "ELSE Appreference.HoldOrPauseTimervalue chatBean.getPlannedEndDateTime()====>" + chatBean.getPlannedEndDateTime());
-//            }
-
+            chatBean.setUtcplannedEndDateTime(Appreference.HoldOrPauseTimervalue);
             chatBean.setRemainderFrequency("");
             chatBean.setTaskUTCDateTime(dateforrow);
             chatBean.setDateTime(dateTime);
@@ -22264,29 +22341,12 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                         Map.Entry mapEntry = (Map.Entry) iterator1.next();
                         if (namevalue.equalsIgnoreCase(((TaskDetailsBean) mapEntry.getValue()).getCustomerSignature())) {
                             Log.i("Template creation", "mm " + namevalue);
-                            //                        Log.i("Template creation", "TaskDescription " + detailsBean.getTaskDescription());
                             detailsBean = (TaskDetailsBean) mapEntry.getValue();
                             File imageFile = new File(Environment.getExternalStorageDirectory()
                                     + "/High Message/downloads/" + detailsBean.getCustomerSignature());
-//                            if (imageFile.exists()) {
-//                                Log.i("Template creation", "TaskDescription11 " + detailsBean.getTaskDescription());
-//                                if (detailsBean.getSignalid() != null) {
-//                                    VideoCallDataBase.getDB(context).updateTaskProgressStatus(detailsBean.getSignalid());
-//                                }
-//                            }
                         }
                     }
                 }
-
-               /* if (Appreference.context_table.containsKey("taskcoversation")) {
-
-                    if (detailsBean != null) {
-                        Log.i("Template creation", "TaskDescription111 ");
-                        NewTaskConversation.getInstance().MMdownloadCompleted(detailsBean);
-                    }
-                    *//*NewTaskConversation  newTaskConversation = new NewTaskConversation();
-                    newTaskConversation.loadUI();*//*
-                }*/
             } catch (Exception e) {
                 e.printStackTrace();
                 Appreference.printLog("MainActivity onPostExecute", "DownloadImage Exception: " + e.getMessage(), "WARN", null);
@@ -22316,7 +22376,35 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
 
         @Override
         public void onFinish() {
+            Log.i("timer123","onFinish Timer======>");
             reminingtime.setVisibility(View.GONE);
+            String query = "select status from projectStatus where projectId='" + projectId + "' and userId='" + Appreference.loginuserdetails.getId() + "' and taskId= '" + webtaskId + "'";
+            int timer_Alert_by_current_status = VideoCallDataBase.getDB(context).getCurrentStatus(query);
+            String StatusTask;
+            if (timer_Alert_by_current_status==1 || timer_Alert_by_current_status==3) {
+                if (!Appreference.isTimeUpshown) {
+                    if(timer_Alert_by_current_status==1) {
+                         StatusTask="Hold";
+                    }else{
+                         StatusTask="Pause";
+                    }
+                    Appreference.isTimeUpshown=true;
+                    AlertDialog.Builder alertadd = new AlertDialog.Builder(NewTaskConversation.this);
+                    LayoutInflater factory = LayoutInflater.from(NewTaskConversation.this);
+                    final View view = factory.inflate(R.layout.showtimeup, null);
+                    alertadd.setView(view);
+                    alertadd.setTitle("Task is "+StatusTask);
+
+                    alertadd.setNeutralButton("OK", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog1, int sumthin) {
+                            dialog1.dismiss();
+
+                        }
+                    });
+
+                    alertadd.show();
+                }
+            }
         }
 
         @Override

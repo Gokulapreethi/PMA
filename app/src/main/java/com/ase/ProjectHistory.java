@@ -1461,7 +1461,7 @@ public class ProjectHistory extends Activity implements WebServiceInterface, Swi
                                 }
                             }
                         } else {
-                            if (Appreference.loginuserdetails.getUsername() != null && projectDetailsBean.getOwnerOfTask() != null && projectDetailsBean.getOwnerOfTask().equalsIgnoreCase(Appreference.loginuserdetails.getUsername())) {
+                            if (Appreference.loginuserdetails!=null && Appreference.loginuserdetails.getUsername() != null && projectDetailsBean.getOwnerOfTask() != null && projectDetailsBean.getOwnerOfTask().equalsIgnoreCase(Appreference.loginuserdetails.getUsername())) {
                                 task_giver.setText("Task Giver : Me");
                             } else {
 
