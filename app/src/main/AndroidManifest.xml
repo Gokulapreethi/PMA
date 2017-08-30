@@ -306,6 +306,7 @@
             android:screenOrientation="portrait" />
 
         <receiver android:name=".ScheduleManager" />
+        <receiver android:name=".StatusAlarmManager" />
         <receiver android:name="receiver.ScheduleCallReceiver" />
         <receiver android:name="receiver.ScheduleChatReceiver" />
         <receiver android:name=".NetWorkChange">

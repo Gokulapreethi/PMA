@@ -32,14 +32,18 @@
                 android:textColor="@color/background"
                 android:textSize="20dp" />
 
+
             <AutoCompleteTextView
                 android:id="@+id/auto_complete"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/fsr_msn"
                 android:layout_marginTop="5dp"
+                android:dropDownHeight="200dp"
                 android:layout_marginLeft="20dp"
                 android:ems="5"
+                android:singleLine="true"
+                android:scrollbars="vertical"
                 android:hint=" Enter your number">
             </AutoCompleteTextView>
             <!--  <Spinner

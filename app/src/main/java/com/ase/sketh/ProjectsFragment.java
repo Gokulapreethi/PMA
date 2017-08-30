@@ -7,6 +7,7 @@ import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
@@ -136,13 +137,18 @@ public class ProjectsFragment extends Fragment implements View.OnClickListener, 
     }
 
     public static ProjectsFragment newInstance(int sectionNumber, Context context) {
-        if (fragment == null) {
-            Log.i("task", "checked int" + sectionNumber);
-            fragment = new ProjectsFragment();
-            Bundle args = new Bundle();
-            classContext = context;
-            fragment.setArguments(args);
-            Appreference.isProject = true;
+        try {
+            if (fragment == null) {
+                Log.i("task", "checked int" + sectionNumber);
+                fragment = new ProjectsFragment();
+                Bundle args = new Bundle();
+                classContext = context;
+                fragment.setArguments(args);
+                Appreference.isProject = true;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            Appreference.printLog("ProjectFragment", "newInstance Exception : " + e.getMessage(), "WARN", null);
         }
         return fragment;
     }
@@ -155,33 +161,43 @@ public class ProjectsFragment extends Fragment implements View.OnClickListener, 
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
-        Log.i("LifeCycle", " projectFragment isVisibleToUser : " + isVisibleToUser);
-        isCurrentlyActivie = isVisibleToUser;
-        if (isVisibleToUser) {
-            try {
-                if (getNetworkState()) {
-                    showprogress_1();
-                    List<NameValuePair> tagNameValuePairs = new ArrayList<NameValuePair>();
-                    tagNameValuePairs.add(new BasicNameValuePair("userId", String.valueOf(Appreference.loginuserdetails.getId())));
-                    Log.i("ws123", "getAllJobDetails request");
-                    Appreference.jsonRequestSender.getAllJobDetails(EnumJsonWebservicename.getAllJobDetails, tagNameValuePairs, this);
-                } else {
-                    Toast.makeText(getActivity(), "Check your internet connection", Toast.LENGTH_SHORT).show();
-                    String query_1 = "select *,cast(oracleProjectId as unsigned) as t from projectDetails where loginuser = '" + Appreference.loginuserdetails.getEmail() + "'and projectcompletedstatus NOT IN (select projectcompletedstatus where projectcompletedstatus like '1') order by t DESC";
-                    projectList = new ArrayList<>();
-                    projectSearchList = new ArrayList<>();
-                    projectList = VideoCallDataBase.getDB(classContext).getProjectdetails(query_1);
-                    projectSearchList = VideoCallDataBase.getDB(classContext).getProjectdetails(query_1);
-                    NoResults.setVisibility(View.GONE);
-                    projectArrayAdapter = new ProjectArrayAdapter(getActivity(), projectList);
-                    listview_project.setAdapter(projectArrayAdapter);
-                    projectArrayAdapter.notifyDataSetChanged();
+        try {
+            Log.i("LifeCycle", " projectFragment isVisibleToUser : " + isVisibleToUser);
+            isCurrentlyActivie = isVisibleToUser;
+            if (isVisibleToUser) {
+                try {
+                    if (getNetworkState()) {
+                        try {
+                            showprogress_1();
+                            List<NameValuePair> tagNameValuePairs = new ArrayList<NameValuePair>();
+                            tagNameValuePairs.add(new BasicNameValuePair("userId", String.valueOf(Appreference.loginuserdetails.getId())));
+                            Log.i("ws123", "getAllJobDetails request");
+                            Appreference.jsonRequestSender.getAllJobDetails(EnumJsonWebservicename.getAllJobDetails, tagNameValuePairs, this);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                            Appreference.printLog("ProjectFragment", "setUserVisibleHint getAllJobDetails Exception : " + e.getMessage(), "WARN", null);
+                        }
+                    } else {
+                        Toast.makeText(getActivity(), "Check your internet connection", Toast.LENGTH_SHORT).show();
+                        String query_1 = "select *,cast(oracleProjectId as unsigned) as t from projectDetails where loginuser = '" + Appreference.loginuserdetails.getEmail() + "'and projectcompletedstatus NOT IN (select projectcompletedstatus where projectcompletedstatus like '1') order by t DESC";
+                        projectList = new ArrayList<>();
+                        projectSearchList = new ArrayList<>();
+                        projectList = VideoCallDataBase.getDB(classContext).getProjectdetails(query_1);
+                        projectSearchList = VideoCallDataBase.getDB(classContext).getProjectdetails(query_1);
+                        NoResults.setVisibility(View.GONE);
+                        projectArrayAdapter = new ProjectArrayAdapter(getActivity(), projectList);
+                        listview_project.setAdapter(projectArrayAdapter);
+                        projectArrayAdapter.notifyDataSetChanged();
+                    }
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    Appreference.printLog("ProjectFragment", "setUserVisibleHint Exception : " + e.getMessage(), "WARN", null);
                 }
-
-            } catch (Exception e) {
-                e.printStackTrace();
             }
-
+        } catch (Exception e) {
+            e.printStackTrace();
+            Appreference.printLog("ProjectFragment", "setUserVisibleHint Exception : " + e.getMessage(), "WARN", null);
         }
     }
 
@@ -208,35 +224,45 @@ public class ProjectsFragment extends Fragment implements View.OnClickListener, 
             reportdetails.setOnClickListener(this);
             fsrDetails.setOnClickListener(this);
 
-            if (Appreference.loginuserdetails != null && Appreference.loginuserdetails.getRoleId() != null
-                    && Appreference.loginuserdetails.getRoleId().equalsIgnoreCase("2")) {
-                image_search.setVisibility(View.VISIBLE);
-                reportdetails.setVisibility(View.VISIBLE);
-                fsrDetails.setVisibility(View.VISIBLE);
-                tna_middle.setVisibility(View.VISIBLE);
-                first_fsr.setVisibility(View.VISIBLE);
-                end_fsr.setVisibility(View.VISIBLE);
-            } else {
-                image_search.setVisibility(View.GONE);
-                reportdetails.setVisibility(View.GONE);
-                fsrDetails.setVisibility(View.VISIBLE);
-                tna_middle.setVisibility(View.GONE);
-                first_fsr.setVisibility(View.GONE);
-                end_fsr.setVisibility(View.VISIBLE);
-                end_fsr.setText("FSR");
+            try {
+                if (Appreference.loginuserdetails != null && Appreference.loginuserdetails.getRoleId() != null
+                        && Appreference.loginuserdetails.getRoleId().equalsIgnoreCase("2")) {
+                    image_search.setVisibility(View.VISIBLE);
+                    reportdetails.setVisibility(View.VISIBLE);
+                    fsrDetails.setVisibility(View.VISIBLE);
+                    tna_middle.setVisibility(View.VISIBLE);
+                    first_fsr.setVisibility(View.VISIBLE);
+                    end_fsr.setVisibility(View.VISIBLE);
+                } else {
+                    image_search.setVisibility(View.GONE);
+                    reportdetails.setVisibility(View.GONE);
+                    fsrDetails.setVisibility(View.VISIBLE);
+                    tna_middle.setVisibility(View.GONE);
+                    first_fsr.setVisibility(View.GONE);
+                    end_fsr.setVisibility(View.VISIBLE);
+                    end_fsr.setText("FSR");
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                Appreference.printLog("ProjectFragment", "onCreateView icons Exception : " + e.getMessage(), "WARN", null);
             }
 
 
-            Log.i("task", "project");
-            InputMethodManager inputMethodManager = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-            inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), 0);
-            projectsFragment = this;
-            exclation_counter = (TextView) view.findViewById(R.id.exclation_counter);
+            try {
+                Log.i("task", "project");
+                InputMethodManager inputMethodManager = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), 0);
+                projectsFragment = this;
+                exclation_counter = (TextView) view.findViewById(R.id.exclation_counter);
 
-            activity_start = (TextView) view.findViewById(R.id.activity_start);
-            activity_end = (TextView) view.findViewById(R.id.activity_end);
-            submit_button = (Button) view.findViewById(R.id.submit_button);
-            all_report_title = (RelativeLayout) view.findViewById(R.id.all_report_title);
+                activity_start = (TextView) view.findViewById(R.id.activity_start);
+                activity_end = (TextView) view.findViewById(R.id.activity_end);
+                submit_button = (Button) view.findViewById(R.id.submit_button);
+                all_report_title = (RelativeLayout) view.findViewById(R.id.all_report_title);
+            } catch (Exception e) {
+                e.printStackTrace();
+                Appreference.printLog("ProjectFragment", "onCreateView softkeyListener Exception : " + e.getMessage(), "WARN", null);
+            }
 
             try {
                 String s = "select * from taskDetailsInfo where readStatus='1'";
@@ -248,17 +274,23 @@ public class ProjectsFragment extends Fragment implements View.OnClickListener, 
 
             } catch (Exception e) {
                 e.printStackTrace();
+                Appreference.printLog("ProjectFragment", "onCreateView exclation_counter Exception : " + e.getMessage(), "WARN", null);
             }
             reportdetails.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    hideKeyboard();
-                    if (tna_count == 0) {
-                        all_report_title.setVisibility(View.VISIBLE);
-                        tna_count = 1;
-                    } else {
-                        all_report_title.setVisibility(View.GONE);
-                        tna_count = 0;
+                    try {
+                        hideKeyboard();
+                        if (tna_count == 0) {
+                            all_report_title.setVisibility(View.VISIBLE);
+                            tna_count = 1;
+                        } else {
+                            all_report_title.setVisibility(View.GONE);
+                            tna_count = 0;
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        Appreference.printLog("ProjectFragment", "reportdetails click Exception : " + e.getMessage(), "WARN", null);
                     }
                 }
             });
@@ -268,9 +300,11 @@ public class ProjectsFragment extends Fragment implements View.OnClickListener, 
 
                 @Override
                 public void onClick(View v) {
-                    hideKeyboard();
-                    LayoutInflater inflater = getActivity().getLayoutInflater();
-                    View alertLayout = inflater.inflate(R.layout.fsr_request_view, null);
+
+                    try {
+                        hideKeyboard();
+                        LayoutInflater inflater = getActivity().getLayoutInflater();
+                        View alertLayout = inflater.inflate(R.layout.fsr_request_view, null);
 //                    final Spinner machine_no_spinner = (Spinner) alertLayout.findViewById(R.id.machine_no_spinner);
                     final AutoCompleteTextView ac_machine_no_spinner=(AutoCompleteTextView) alertLayout.findViewById(R.id.auto_complete);
                     /*final Button fsr_start_btn = (Button) alertLayout.findViewById(R.id.fsr_start_btn);
@@ -292,36 +326,35 @@ public class ProjectsFragment extends Fragment implements View.OnClickListener, 
                     ArrayList<String> ar_My_machineSerialNo = VideoCallDataBase.getDB(getActivity()).getOracleProjectIdlist(list_query, "mcSrNo");
 //                    Collections.sort(ar_My_machineSerialNo);
 
-                    ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.select_dialog_item, ar_My_machineSerialNo){
-                      /*  @Override
-                        public boolean isEnabled(int position) {
-                            if(position == 0)
-                            {
-                                // Disable the first item from Spinner
-                                // First item will be use for hint
-                                return false;
+                        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.select_dialog_item, ar_My_machineSerialNo) {
+                            /*  @Override
+                              public boolean isEnabled(int position) {
+                                  if(position == 0)
+                                  {
+                                      // Disable the first item from Spinner
+                                      // First item will be use for hint
+                                      return false;
+                                  }
+                                  else
+                                  {
+                                      return true;
+                                  }
+                              }
+      */
+                            @Override
+                            public View getDropDownView(int position, View convertView, ViewGroup parent) {
+                                View view = super.getDropDownView(position, convertView, parent);
+                                TextView tv = (TextView) view;
+                                if (position == 0) {
+                                    // Set the hint text color gray
+                                    tv.setTextColor(Color.GRAY);
+                                } else {
+                                    tv.setTextColor(Color.BLACK);
+                                }
+                                return view;
                             }
-                            else
-                            {
-                                return true;
-                            }
-                        }
-*/
-                        @Override
-                        public View getDropDownView(int position, View convertView, ViewGroup parent) {
-                            View view = super.getDropDownView(position, convertView, parent);
-                            TextView tv = (TextView) view;
-                            if(position == 0){
-                                // Set the hint text color gray
-                                tv.setTextColor(Color.GRAY);
-                            }
-                            else {
-                                tv.setTextColor(Color.BLACK);
-                            }
-                            return view;
-                        }
-                    };
-                    // Drop down layout style - list view with radio button
+                        };
+                        // Drop down layout style - list view with radio button
 //                    dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                     ac_machine_no_spinner.setThreshold(1);
                     // attaching data adapter to spinner
@@ -331,16 +364,21 @@ public class ProjectsFragment extends Fragment implements View.OnClickListener, 
                     search_startDate = "";
                     search_endDate="";
 
-                    ac_machine_no_spinner.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                        @Override
-                        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                            String selectedItemText = (String) parent.getItemAtPosition(position);
-                            Log.i("FSR", "ac_machine_no_spinner selectedItemText ==> " + selectedItemText);
-                            Log.i("FSR", "String.valueOf(ac_machine_no_spinner.getAdapter().getItem(position)) ==> " + String.valueOf(ac_machine_no_spinner.getAdapter().getItem(position)));
-                            selected_mcSrNo = String.valueOf(ac_machine_no_spinner.getAdapter().getItem(position));/*selected jobcard from spinner*/
-                            User_selected_mcsrNo=selected_mcSrNo;
-                        }
-                    });
+                        ac_machine_no_spinner.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                            @Override
+                            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                                try {
+                                    String selectedItemText = (String) parent.getItemAtPosition(position);
+                                    Log.i("FSR", "ac_machine_no_spinner selectedItemText ==> " + selectedItemText);
+                                    Log.i("FSR", "String.valueOf(ac_machine_no_spinner.getAdapter().getItem(position)) ==> " + String.valueOf(ac_machine_no_spinner.getAdapter().getItem(position)));
+                                    selected_mcSrNo = String.valueOf(ac_machine_no_spinner.getAdapter().getItem(position));/*selected jobcard from spinner*/
+                                    User_selected_mcsrNo = selected_mcSrNo;
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                    Appreference.printLog("ProjectFragment", "fsrDetails ac_machine_no_spinner Exception : " + e.getMessage(), "WARN", null);
+                                }
+                            }
+                        });
                  /*   ac_machine_no_spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                             @Override
                             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -386,24 +424,25 @@ public class ProjectsFragment extends Fragment implements View.OnClickListener, 
                                                 if (completedate_display.compareTo(dateTime) <= 0) {
 //
                                                         tx_fst_start.setText(completedate_display);
-														User_selected_startDate=completedate_display;
-//
-                                                } else {
-                                                    Toast.makeText(ProjectsFragment.classContext, "Dont pick future date", Toast.LENGTH_SHORT).show();
-                                                    Log.i("FSR", "tx_fst_start ==> " + tx_fst_start.getText().toString());
-                                                    search_startDate = tx_fst_start.getText().toString();
-													User_selected_startDate=tx_fst_start.getText().toString();
+                                                        User_selected_startDate = completedate_display;
+                                                        //
+                                                    } else {
+                                                        Toast.makeText(ProjectsFragment.classContext, "Dont pick future date", Toast.LENGTH_SHORT).show();
+                                                        Log.i("FSR", "tx_fst_start ==> " + tx_fst_start.getText().toString());
+                                                        search_startDate = tx_fst_start.getText().toString();
+                                                        User_selected_startDate = tx_fst_start.getText().toString();
+                                                    }
                                                 }
-                                            }
-                                        }, c.get(Calendar.YEAR), c.get(Calendar.MONTH), c.get(Calendar.DATE));
-                                dpd.show();
-                            } catch (Exception e) {
-                                e.printStackTrace();
+                                            }, c.get(Calendar.YEAR), c.get(Calendar.MONTH), c.get(Calendar.DATE));
+                                    dpd.show();
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                    Appreference.printLog("ProjectFragment", "fsrDetails tx_fst_start Exception : " + e.getMessage(), "WARN", null);
+                                }
                             }
-                        }
-                    });
-                    tx_fst_end.setOnClickListener(new View.OnClickListener() {
-                        final Calendar c = Calendar.getInstance();
+                        });
+                        tx_fst_end.setOnClickListener(new View.OnClickListener() {
+                            final Calendar c = Calendar.getInstance();
 
                         @Override
                         public void onClick(View v) {
@@ -453,19 +492,20 @@ public class ProjectsFragment extends Fragment implements View.OnClickListener, 
 														User_selected_endDate=tx_fst_end.getText().toString();
                                                     }
 
-                                                }
-                                            }, c.get(Calendar.YEAR), c.get(Calendar.MONTH), c.get(Calendar.DATE));
-                                    dpd.show();
-                                } catch (Exception e) {
-                                    e.printStackTrace();
+                                                    }
+                                                }, c.get(Calendar.YEAR), c.get(Calendar.MONTH), c.get(Calendar.DATE));
+                                        dpd.show();
+                                    } catch (Exception e) {
+                                        e.printStackTrace();
+                                        Appreference.printLog("ProjectFragment", "fsrDetails tx_fst_end Exception : " + e.getMessage(), "WARN", null);
+                                    }
+                                } else {
+                                    Toast.makeText(ProjectsFragment.classContext, "Please select start date ", Toast.LENGTH_SHORT).show();
                                 }
-                            } else {
-                                Toast.makeText(ProjectsFragment.classContext, "Please select start date ", Toast.LENGTH_SHORT).show();
                             }
-                        }
-                    });
-                    final AlertDialog mAlertDialog = alert.create();
-                    mAlertDialog.setOnShowListener(new DialogInterface.OnShowListener() {
+                        });
+                        final AlertDialog mAlertDialog = alert.create();
+                        mAlertDialog.setOnShowListener(new DialogInterface.OnShowListener() {
 
                         @Override
                         public void onShow(final DialogInterface dialog) {
@@ -473,50 +513,62 @@ public class ProjectsFragment extends Fragment implements View.OnClickListener, 
                             Button b = mAlertDialog.getButton(AlertDialog.BUTTON_POSITIVE);
                             b.setOnClickListener(new View.OnClickListener() {
 
-                                @Override
-                                public void onClick(View view) {
-                                    // TODO Do something
-                                    if (selected_mcSrNo != null && !selected_mcSrNo.equalsIgnoreCase("") && !selected_mcSrNo.equalsIgnoreCase(null)
-                                            && search_startDate != null && !search_startDate.equalsIgnoreCase("") && !search_startDate.equalsIgnoreCase(null)
-                                            && search_endDate != null && !search_endDate.equalsIgnoreCase("") && !search_endDate.equalsIgnoreCase(null)) {
-                                        if (search_startDate.compareTo(search_endDate)<=0) {
-                                            dialog.dismiss();
-                                            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-                                            SimpleDateFormat dateParse = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-                                            dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
-                                            Date date = null;
-                                            Date date1 = null;
-                                            String FSRStartDateUTC = "";
-                                            String FSREndDateUTC = "";
+                                    @Override
+                                    public void onClick(View view) {
+                                        // TODO Do something
+                                        try {
+                                            if (selected_mcSrNo != null && !selected_mcSrNo.equalsIgnoreCase("") && !selected_mcSrNo.equalsIgnoreCase(null)
+                                                    && search_startDate != null && !search_startDate.equalsIgnoreCase("") && !search_startDate.equalsIgnoreCase(null)
+                                                    && search_endDate != null && !search_endDate.equalsIgnoreCase("") && !search_endDate.equalsIgnoreCase(null)) {
+                                                if (search_startDate.compareTo(search_endDate) <= 0) {
+                                                    dialog.dismiss();
+                                                    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                                                    SimpleDateFormat dateParse = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                                                    dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
+                                                    Date date = null;
+                                                    Date date1 = null;
+                                                    String FSRStartDateUTC = "";
+                                                    String FSREndDateUTC = "";
 
-                                            if (search_startDate != null && !search_startDate.equalsIgnoreCase("")) {
-                                                try {
-                                                    date = dateParse.parse(search_startDate);
-                                                    FSRStartDateUTC = dateFormat.format(date);
-                                                } catch (Exception e) {
-                                                    e.printStackTrace();
+                                                    if (search_startDate != null && !search_startDate.equalsIgnoreCase("")) {
+                                                        try {
+                                                            date = dateParse.parse(search_startDate);
+                                                            FSRStartDateUTC = dateFormat.format(date);
+                                                        } catch (Exception e) {
+                                                            e.printStackTrace();
+                                                            Appreference.printLog("ProjectFragment", "fsrDetails search_startDate Exception : " + e.getMessage(), "WARN", null);
+                                                        }
+                                                    }
+                                                    if (search_endDate != null && !search_endDate.equalsIgnoreCase("")) {
+                                                        try {
+                                                            date1 = dateParse.parse(search_endDate);
+                                                            FSREndDateUTC = dateFormat.format(date1);
+                                                        } catch (Exception e) {
+                                                            e.printStackTrace();
+                                                            Appreference.printLog("ProjectFragment", "fsrDetails search_endDate Exception : " + e.getMessage(), "WARN", null);
+                                                        }
+                                                    }
+                                                    try {
+                                                        List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
+                                                        nameValuePairs.add(new BasicNameValuePair("mcSrNo", selected_mcSrNo));
+                                                        nameValuePairs.add(new BasicNameValuePair("taskCompletedStartDate", FSRStartDateUTC));
+                                                        nameValuePairs.add(new BasicNameValuePair("taskCompletedEndDate", FSREndDateUTC));
+                                                        showprogress("searching....");
+                                                        Appreference.jsonRequestSender.OraclefieldServiceSearch(EnumJsonWebservicename.fieldServiceSearch, nameValuePairs, ProjectsFragment.this);
+                                                    } catch (Exception e) {
+                                                        e.printStackTrace();
+                                                        Appreference.printLog("ProjectFragment", "OraclefieldServiceSearch Exception : " + e.getMessage(), "WARN", null);
+                                                    }
+                                                } else {
+                                                    Toast.makeText(getActivity(), "Please pick end date after start date", Toast.LENGTH_SHORT).show();
                                                 }
+                                            } else {
+                                                Toast.makeText(getActivity(), "Please Fill All values", Toast.LENGTH_SHORT).show();
                                             }
-                                            if (search_endDate != null && !search_endDate.equalsIgnoreCase("")) {
-                                                try {
-                                                    date1 = dateParse.parse(search_endDate);
-                                                    FSREndDateUTC = dateFormat.format(date1);
-                                                } catch (Exception e) {
-                                                    e.printStackTrace();
-                                                }
-                                            }
-                                            List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
-                                            nameValuePairs.add(new BasicNameValuePair("mcSrNo", selected_mcSrNo));
-                                            nameValuePairs.add(new BasicNameValuePair("taskCompletedStartDate", FSRStartDateUTC));
-                                            nameValuePairs.add(new BasicNameValuePair("taskCompletedEndDate", FSREndDateUTC));
-                                            showprogress("searching....");
-                                            Appreference.jsonRequestSender.OraclefieldServiceSearch(EnumJsonWebservicename.fieldServiceSearch, nameValuePairs, ProjectsFragment.this);
-                                        } else {
-                                            Toast.makeText(getActivity(), "Please pick end date after start date", Toast.LENGTH_SHORT).show();
+                                        } catch (Exception e) {
+                                            e.printStackTrace();
+                                            Appreference.printLog("ProjectFragment", "fsrDetails mAlertDialog_showListener Exception : " + e.getMessage(), "WARN", null);
                                         }
-                                    } else {
-                                        Toast.makeText(getActivity(), "Please Fill All values", Toast.LENGTH_SHORT).show();
-                                    }
 
                                 }
                             });
@@ -536,6 +588,10 @@ public class ProjectsFragment extends Fragment implements View.OnClickListener, 
                         mAlertDialog.show();
                     }
 //                    mAlertDialog.show();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        Appreference.printLog("ProjectFragment", "fsrDetails onclick Exception : " + e.getMessage(), "WARN", null);
+                    }
                 }
             });
 
@@ -558,6 +614,7 @@ public class ProjectsFragment extends Fragment implements View.OnClickListener, 
                                             curr_date = simpleDateFormat_1.format(new Date());
                                         } catch (Exception e) {
                                             e.printStackTrace();
+                                            Appreference.printLog("ProjectFragment", "activity_start curr_date Exception : " + e.getMessage(), "WARN", null);
                                         }
                                         String months = "";
                                         if ((monthOfYear + 1) < 10) {
@@ -582,6 +639,7 @@ public class ProjectsFragment extends Fragment implements View.OnClickListener, 
                                         }
                                     } catch (Exception e) {
                                         e.printStackTrace();
+                                        Appreference.printLog("ProjectFragment", "activity_start TNAReportStart  Exception : " + e.getMessage(), "WARN", null);
                                     }
 
                                 }
@@ -608,6 +666,7 @@ public class ProjectsFragment extends Fragment implements View.OnClickListener, 
                                             cur_date = simpleDateFormat_1.format(new Date());
                                         } catch (Exception e) {
                                             e.printStackTrace();
+                                            Appreference.printLog("ProjectFragment", "activity_end cur_date Exception : " + e.getMessage(), "WARN", null);
                                         }
                                         String months = "";
                                         if ((monthOfYear + 1) < 10) {
@@ -637,6 +696,7 @@ public class ProjectsFragment extends Fragment implements View.OnClickListener, 
                                         }
                                     } catch (Exception e) {
                                         e.printStackTrace();
+                                        Appreference.printLog("ProjectFragment", "activity_end TNAReportEnd Exception : " + e.getMessage(), "WARN", null);
                                     }
                                 }
                             }, c.get(Calendar.YEAR), c.get(Calendar.MONTH), c.get(Calendar.DATE));
@@ -664,6 +724,7 @@ public class ProjectsFragment extends Fragment implements View.OnClickListener, 
                                 StartDateUTC = dateFormat.format(date);
                             } catch (Exception e) {
                                 e.printStackTrace();
+                                Appreference.printLog("ProjectFragment", "submit_button TNAReportStart Exception : " + e.getMessage(), "WARN", null);
                             }
                         }
                         if (TNAReportEnd != null && !TNAReportEnd.equalsIgnoreCase("")) {
@@ -672,22 +733,29 @@ public class ProjectsFragment extends Fragment implements View.OnClickListener, 
                                 EndDateUTC = dateFormat.format(date1);
                             } catch (Exception e) {
                                 e.printStackTrace();
+                                Appreference.printLog("ProjectFragment", "submit_button TNAReportEnd Exception : " + e.getMessage(), "WARN", null);
                             }
                         }
                         Log.i("report123", "-====>startdATE UTC====>" + StartDateUTC);
                         Log.i("report123", "-====>eNDdATE UTC====>" + EndDateUTC);
                         if ((date != null && date1 != null && !date.after(date1)) || (date.compareTo(date1) == 0)) {
-                            List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
-                            nameValuePairs.add(new BasicNameValuePair("userId", String.valueOf(Appreference.loginuserdetails.getId())));
-                            nameValuePairs.add(new BasicNameValuePair("travelStartDate", StartDateUTC));
-                            nameValuePairs.add(new BasicNameValuePair("travelEndDate", EndDateUTC));
-                            showprogress("Downloading....");
-                            Appreference.jsonRequestSender.OracleTNAJobReport(EnumJsonWebservicename.tnaReportForDateWise, nameValuePairs, ProjectsFragment.this);
+                            try {
+                                List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
+                                nameValuePairs.add(new BasicNameValuePair("userId", String.valueOf(Appreference.loginuserdetails.getId())));
+                                nameValuePairs.add(new BasicNameValuePair("travelStartDate", StartDateUTC));
+                                nameValuePairs.add(new BasicNameValuePair("travelEndDate", EndDateUTC));
+                                showprogress("Downloading....");
+                                Appreference.jsonRequestSender.OracleTNAJobReport(EnumJsonWebservicename.tnaReportForDateWise, nameValuePairs, ProjectsFragment.this);
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                                Appreference.printLog("ProjectFragment", "submit_button OracleTNAJobReport Exception : " + e.getMessage(), "WARN", null);
+                            }
                         } else {
                             Toast.makeText(getActivity(), "Please Enter correct Start/End Date", Toast.LENGTH_SHORT).show();
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
+                        Appreference.printLog("ProjectFragment", "submit_button Exception : " + e.getMessage(), "WARN", null);
                     }
                 }
             });
@@ -764,20 +832,25 @@ public class ProjectsFragment extends Fragment implements View.OnClickListener, 
             listview_project.setOnMenuItemClickListener(new SwipeMenuListView.OnMenuItemClickListener() {
                 @Override
                 public boolean onMenuItemClick(final int position, SwipeMenu menu, int index) {
-                    ProjectDetailsBean projectDetailsBean = projectList.get(position);
-                    if (menu.getMenuItem(index).getTitle().equalsIgnoreCase("Activate")) {
+                    try {
+                        ProjectDetailsBean projectDetailsBean = projectList.get(position);
+                        if (menu.getMenuItem(index).getTitle().equalsIgnoreCase("Activate")) {
 
-                    } else if (menu.getMenuItem(index).getTitle().equalsIgnoreCase("Abandon")) {
-                    } else {
-                        Log.i("task", "cance1 ");
-                        projectList.remove(position);
-                        Log.i("task", "cance1 ! ");
+                        } else if (menu.getMenuItem(index).getTitle().equalsIgnoreCase("Abandon")) {
+                        } else {
+                            Log.i("task", "cance1 ");
+                            projectList.remove(position);
+                            Log.i("task", "cance1 ! ");
 
-                        Log.i("task", "cance1 !! " + projectDetailsBean.getId());
-                        projectSearchList.remove(position);
-                        projectArrayAdapter.notifyDataSetChanged();
-                        //                            String query1 = "delete from projectDetails where('" + projectDetailsBean.getId() + "'= projectId ) and loginuser='" + Appreference.loginuserdetails.getEmail() + "';";
-                        VideoCallDataBase.getDB(classContext.getApplicationContext()).deleteProjects(projectDetailsBean.getId());
+                            Log.i("task", "cance1 !! " + projectDetailsBean.getId());
+                            projectSearchList.remove(position);
+                            projectArrayAdapter.notifyDataSetChanged();
+                            //                            String query1 = "delete from projectDetails where('" + projectDetailsBean.getId() + "'= projectId ) and loginuser='" + Appreference.loginuserdetails.getEmail() + "';";
+                            VideoCallDataBase.getDB(classContext.getApplicationContext()).deleteProjects(projectDetailsBean.getId());
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        Appreference.printLog("ProjectFragment", "listview_project menuItem Exception : " + e.getMessage(), "WARN", null);
                     }
                     return false;
                 }
@@ -786,11 +859,16 @@ public class ProjectsFragment extends Fragment implements View.OnClickListener, 
             image_search.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    hideKeyboard();
-                    Intent intent = new Intent(getActivity(), SearchMediaWebView.class);
-                    intent.putExtra("urlload", "searchmedia");
-                    startActivity(intent);
-                    getActivity().overridePendingTransition(R.anim.right_anim, R.anim.left_anim);
+                    try {
+                        hideKeyboard();
+                        Intent intent = new Intent(getActivity(), SearchMediaWebView.class);
+                        intent.putExtra("urlload", "searchmedia");
+                        startActivity(intent);
+                        getActivity().overridePendingTransition(R.anim.right_anim, R.anim.left_anim);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        Appreference.printLog("ProjectFragment", "image_search Exception : " + e.getMessage(), "WARN", null);
+                    }
 
                 }
             });
@@ -809,6 +887,7 @@ public class ProjectsFragment extends Fragment implements View.OnClickListener, 
                                     ProjectsFragment.this.projectArrayAdapter.getFilter().filter(s);
                             } catch (Exception e) {
                                 e.printStackTrace();
+                                Appreference.printLog("ProjectFragment", "ProjectSearch TextchangeListener Exception : " + e.getMessage(), "WARN", null);
                             }
                         }
                     });
@@ -849,40 +928,52 @@ public class ProjectsFragment extends Fragment implements View.OnClickListener, 
                             Log.i("ws123", " projectDetailsBean.getOracleProjectId()=========>" + projectDetailsBean.getId());
                             Log.i("ws123", " projectDetailsBean.userId()=========>" + String.valueOf(Appreference.loginuserdetails.getId()));
                             showprogress("Getting ActivityCode...");
-                            Appreference.jsonRequestSender.getTaskForJobID(EnumJsonWebservicename.getTaskForJobID, nameValuePairs, ProjectsFragment.this);
-                        } else {
-                            Toast.makeText(getActivity(), "Check your internet connection", Toast.LENGTH_SHORT).show();
-                            Intent intent = new Intent(getActivity(), ProjectHistory.class);
-                            intent.putExtra("projectId", project_id);
-                            intent.putExtra("projectName", project_name);
-                            //                intent.putExtra("parentTaskId", parentTask_Id);
-                            if (Appreference.isPauseStartFrom) {
-                                Appreference.isPauseStartFrom = false;
-                                intent.putExtra("isFromNewTaskConv", true);
-                            } else {
-                                if (Appreference.context_table.containsKey("projecthistory")) {
-                                    Appreference.context_table.remove("projecthistory");
-                                }
-                                intent.putExtra("isFromNewTaskConv", false);
+                            try {
+                                Appreference.jsonRequestSender.getTaskForJobID(EnumJsonWebservicename.getTaskForJobID, nameValuePairs, ProjectsFragment.this);
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                                Appreference.printLog("ProjectFragment", "listview_project getTaskForJobID Exception : " + e.getMessage(), "WARN", null);
                             }
-                            intent.putExtra("projectOwner", project_owner);
-                            intent.putExtra("groupUserId", groupuser_Id);
-                            if (oracleProjectId != null)
-                                intent.putExtra("fromOracle", true);
-                            else
-                                intent.putExtra("fromOracle", false);
-                            startActivity(intent);
-                            getActivity().overridePendingTransition(R.anim.right_anim, R.anim.left_anim);
+                        } else {
+                            try {
+                                Toast.makeText(getActivity(), "Check your internet connection", Toast.LENGTH_SHORT).show();
+                                Intent intent = new Intent(getActivity(), ProjectHistory.class);
+                                intent.putExtra("projectId", project_id);
+                                intent.putExtra("projectName", project_name);
+                                //                intent.putExtra("parentTaskId", parentTask_Id);
+                                if (Appreference.isPauseStartFrom) {
+                                    Appreference.isPauseStartFrom = false;
+                                    intent.putExtra("isFromNewTaskConv", true);
+                                } else {
+                                    if (Appreference.context_table.containsKey("projecthistory")) {
+                                        Appreference.context_table.remove("projecthistory");
+                                    }
+                                    intent.putExtra("isFromNewTaskConv", false);
+                                }
+                                intent.putExtra("projectOwner", project_owner);
+                                intent.putExtra("groupUserId", groupuser_Id);
+                                if (oracleProjectId != null)
+                                    intent.putExtra("fromOracle", true);
+                                else
+                                    intent.putExtra("fromOracle", false);
+                                startActivity(intent);
+                                getActivity().overridePendingTransition(R.anim.right_anim, R.anim.left_anim);
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                                Appreference.printLog("ProjectFragment", "listview_project ProjectHistory Exception : " + e.getMessage(), "WARN", null);
+                            }
                         }
 
                     } catch (Exception e) {
                         e.printStackTrace();
+                        Appreference.printLog("ProjectFragment", "listview_project ItemClick Exception : " + e.getMessage(), "WARN", null);
                     }
                 }
             });
             Log.i("task", "checkedProject" + Appreference.isProject);
         } catch (Exception e) {
             e.printStackTrace();
+            Appreference.printLog("ProjectFragment", "onCreateView Exception : " + e.getMessage(), "WARN", null);
         }
         return view;
     }
@@ -958,53 +1049,61 @@ public class ProjectsFragment extends Fragment implements View.OnClickListener, 
                 viewforparent.setVisibility(View.GONE);
                 completed_status.setVisibility(View.GONE);
 
-                if (projectDetailsBean.getIsActiveStatus() != null && projectDetailsBean.getIsActiveStatus().equalsIgnoreCase("1")) {
-                    layoutcard.setBackgroundResource(R.color.red);
-                    project_id.setTextColor(getResources().getColor(android.R.color.white));
-                    project_name.setTextColor(getResources().getColor(android.R.color.white));
-                    task_giver.setTextColor(getResources().getColor(android.R.color.white));
-                } else {
-                    layoutcard.setBackgroundResource(R.color.white);
-                    project_id.setTextColor(getResources().getColor(android.R.color.black));
-                    project_name.setTextColor(getResources().getColor(android.R.color.black));
-                    task_giver.setTextColor(getResources().getColor(android.R.color.black));
-                }
-
-                project_id.setText("Job Card Number : " + projectDetailsBean.getOracleProjectId());
-                project_name.setText("Customer Name   : " + projectDetailsBean.getCustomerName());
-                task_giver.setText("Description     : " + projectDetailsBean.getJobDescription());
-                String pjt_owner = null;
-                Log.i("Fragment", "projectDetailsBean getProject_ownerName() " + projectDetailsBean.getProject_ownerName());
-                if (projectDetailsBean.getProject_ownerName() != null && projectDetailsBean.getProject_ownerName().contains("@")) {
-                    pjt_owner = projectDetailsBean.getProject_ownerName().replace("@", "_");
-                } else {
-                    pjt_owner = projectDetailsBean.getProject_ownerName();
-                }
-                Log.i("Fragment", "pjt_owner ==> " + pjt_owner);
-                if (pjt_owner != null && pjt_owner.equalsIgnoreCase(Appreference.loginuserdetails.getUsername())
-                        || Appreference.loginuserdetails != null && Appreference.loginuserdetails.getRoleId() != null
-                        && Appreference.loginuserdetails.getRoleId().equalsIgnoreCase("2")) {
-                    completed_status.setVisibility(View.VISIBLE);
-                }
-                if (pjt_owner != null && pjt_owner.equalsIgnoreCase(Appreference.loginuserdetails.getUsername())) {
-                    pjt_owner = "Project Owner : Me";
-                } else {
-                    pjt_owner = VideoCallDataBase.getDB(classContext).getname(pjt_owner);
-                    if (pjt_owner != null) {
-                        pjt_owner = "Project Owner : " + pjt_owner;
+                try {
+                    if (projectDetailsBean.getIsActiveStatus() != null && projectDetailsBean.getIsActiveStatus().equalsIgnoreCase("1")) {
+                        layoutcard.setBackgroundResource(R.color.red);
+                        project_id.setTextColor(getResources().getColor(android.R.color.white));
+                        project_name.setTextColor(getResources().getColor(android.R.color.white));
+                        task_giver.setTextColor(getResources().getColor(android.R.color.white));
                     } else {
-                        pjt_owner = "Project Owner : " + projectDetailsBean.getProject_ownerName();
+                        layoutcard.setBackgroundResource(R.color.white);
+                        project_id.setTextColor(getResources().getColor(android.R.color.black));
+                        project_name.setTextColor(getResources().getColor(android.R.color.black));
+                        task_giver.setTextColor(getResources().getColor(android.R.color.black));
                     }
-                }
 
-                int project_unReadMsg_count = VideoCallDataBase.getDB(classContext).getProjectsUnReadMsgCount(projectDetailsBean.getId());
-                if (project_unReadMsg_count == 0) {
-                    Log.d("ProjectHistory", "unRead_project_count is 0");
-                    msg_count.setVisibility(View.GONE);
-                } else {
-                    Log.i("ProjectHistory", "unRead_project_count is " + project_unReadMsg_count);
-                    msg_count.setVisibility(View.VISIBLE);
-                    msg_count.setText(String.valueOf(project_unReadMsg_count));
+                    project_id.setText("Job Card Number : " + projectDetailsBean.getOracleProjectId());
+                    project_name.setText("Customer Name   : " + projectDetailsBean.getCustomerName());
+                    task_giver.setText("Description     : " + projectDetailsBean.getJobDescription());
+                    String pjt_owner = null;
+                    Log.i("Fragment", "projectDetailsBean getProject_ownerName() " + projectDetailsBean.getProject_ownerName());
+                    if (projectDetailsBean.getProject_ownerName() != null && projectDetailsBean.getProject_ownerName().contains("@")) {
+                        pjt_owner = projectDetailsBean.getProject_ownerName().replace("@", "_");
+                    } else {
+                        pjt_owner = projectDetailsBean.getProject_ownerName();
+                    }
+                    Log.i("Fragment", "pjt_owner ==> " + pjt_owner);
+                    if (pjt_owner != null && pjt_owner.equalsIgnoreCase(Appreference.loginuserdetails.getUsername())
+                            || Appreference.loginuserdetails != null && Appreference.loginuserdetails.getRoleId() != null
+                            && Appreference.loginuserdetails.getRoleId().equalsIgnoreCase("2")) {
+                        completed_status.setVisibility(View.VISIBLE);
+                    }
+                    if (pjt_owner != null && pjt_owner.equalsIgnoreCase(Appreference.loginuserdetails.getUsername())) {
+                        pjt_owner = "Project Owner : Me";
+                    } else {
+                        pjt_owner = VideoCallDataBase.getDB(classContext).getname(pjt_owner);
+                        if (pjt_owner != null) {
+                            pjt_owner = "Project Owner : " + pjt_owner;
+                        } else {
+                            pjt_owner = "Project Owner : " + projectDetailsBean.getProject_ownerName();
+                        }
+                    }
+
+                    int project_unReadMsg_count = VideoCallDataBase.getDB(classContext).getProjectsUnReadMsgCount(projectDetailsBean.getId());
+                    if (project_unReadMsg_count == 0) {
+                        Log.d("ProjectHistory", "unRead_project_count is 0");
+                        msg_count.setVisibility(View.GONE);
+                    } else {
+                        Log.i("ProjectHistory", "unRead_project_count is " + project_unReadMsg_count);
+                        msg_count.setVisibility(View.VISIBLE);
+                        msg_count.setText(String.valueOf(project_unReadMsg_count));
+                    }
+                } catch (Resources.NotFoundException e) {
+                    e.printStackTrace();
+                    Appreference.printLog("ProjectFragment", "ProjectArrayAdapter icons Exception : " + e.getMessage(), "WARN", null);
+                }catch (Exception e) {
+                    e.printStackTrace();
+                    Appreference.printLog("ProjectFragment", "ProjectArrayAdapter icons Exception : " + e.getMessage(), "WARN", null);
                 }
                 completed_status.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -1015,10 +1114,15 @@ public class ProjectsFragment extends Fragment implements View.OnClickListener, 
                             public boolean onMenuItemClick(MenuItem item) {
 
                                 if (item.getTitle().toString().equalsIgnoreCase("FSR Report")) {
-                                    List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
-                                    nameValuePairs.add(new BasicNameValuePair("projectId", projectDetailsBean.getId()));
-                                    showprogress("Downloading...");
-                                    Appreference.jsonRequestSender.OracleFSRJOBReport(EnumJsonWebservicename.fieldServiceReportJobWise, nameValuePairs, ProjectsFragment.this);
+                                    try {
+                                        List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
+                                        nameValuePairs.add(new BasicNameValuePair("projectId", projectDetailsBean.getId()));
+                                        showprogress("Downloading...");
+                                        Appreference.jsonRequestSender.OracleFSRJOBReport(EnumJsonWebservicename.fieldServiceReportJobWise, nameValuePairs, ProjectsFragment.this);
+                                    } catch (Exception e) {
+                                        e.printStackTrace();
+                                        Appreference.printLog("ProjectFragment", "ProjectArrayAdapter OracleFSRJOBReport Exception : " + e.getMessage(), "WARN", null);
+                                    }
 
                                 } else if (item.getTitle().toString().equalsIgnoreCase("Complete")) {
                                     try {
@@ -1037,6 +1141,7 @@ public class ProjectsFragment extends Fragment implements View.OnClickListener, 
                                                     showprogress("Please wait...");
                                                 } catch (Exception e) {
                                                     e.printStackTrace();
+                                                    Appreference.printLog("ProjectFragment", "ProjectArrayAdapter projectCompleted Exception : " + e.getMessage(), "WARN", null);
                                                 }
                                             }
                                         });
@@ -1049,6 +1154,7 @@ public class ProjectsFragment extends Fragment implements View.OnClickListener, 
                                         saveDialog.show();
                                     } catch (Exception e) {
                                         e.printStackTrace();
+                                        Appreference.printLog("ProjectFragment", "ProjectArrayAdapter cancel Exception : " + e.getMessage(), "WARN", null);
                                     }
                                 }
                                 return true;
@@ -1061,6 +1167,7 @@ public class ProjectsFragment extends Fragment implements View.OnClickListener, 
 
             } catch (Exception e) {
                 e.printStackTrace();
+                Appreference.printLog("ProjectFragment", "ProjectArrayAdapter getView Exception : " + e.getMessage(), "WARN", null);
             }
             return conView;
         }
@@ -1074,6 +1181,7 @@ public class ProjectsFragment extends Fragment implements View.OnClickListener, 
                 }
             } catch (Exception e) {
                 e.printStackTrace();
+                Appreference.printLog("ProjectFragment", "getFilter Exception : " + e.getMessage(), "WARN", null);
             }
             return filter;
         }
@@ -1128,6 +1236,7 @@ public class ProjectsFragment extends Fragment implements View.OnClickListener, 
                 }
             } catch (Exception e) {
                 e.printStackTrace();
+                Appreference.printLog("ProjectFragment", "ProjectFilter Exception : " + e.getMessage(), "WARN", null);
             }
             return result;
         }
@@ -1137,27 +1246,32 @@ public class ProjectsFragment extends Fragment implements View.OnClickListener, 
         protected void publishResults(CharSequence constraint,
                                       FilterResults results) {
 
-            Log.d("constraint", "JNDSEJBJW  11 " + results.count);
-            projectList.clear();
-            filterbuddy = (ArrayList<ProjectDetailsBean>) results.values;
+            try {
+                Log.d("constraint", "JNDSEJBJW  11 " + results.count);
+                projectList.clear();
+                filterbuddy = (ArrayList<ProjectDetailsBean>) results.values;
 //            Log.i("filterbuddy", "filterbuddy" + filterbuddy.toString());
-            //            buddyList.clear();
-            if (filterbuddy.size() > 0) {
-                NoResults.setVisibility(View.GONE);
-                for (int i = 0, l = filterbuddy.size(); i < l; i++) {
-                    Log.d("constraint", "JNDSEJBJW  12 " + results.count);
-                    projectList.add(filterbuddy.get(i));
+                //            buddyList.clear();
+                if (filterbuddy.size() > 0) {
+                    NoResults.setVisibility(View.GONE);
+                    for (int i = 0, l = filterbuddy.size(); i < l; i++) {
+                        Log.d("constraint", "JNDSEJBJW  12 " + results.count);
+                        projectList.add(filterbuddy.get(i));
+                    }
+                } else {
+                    NoResults.setVisibility(View.VISIBLE);
                 }
-            } else {
-                NoResults.setVisibility(View.VISIBLE);
+                handler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        Log.d("constraint", "JNDSEJBJW  13 ");
+                        projectArrayAdapter.notifyDataSetChanged();
+                    }
+                });
+            } catch (Exception e) {
+                e.printStackTrace();
+                Appreference.printLog("ProjectFragment", "publishResults Exception : " + e.getMessage(), "WARN", null);
             }
-            handler.post(new Runnable() {
-                @Override
-                public void run() {
-                    Log.d("constraint", "JNDSEJBJW  13 ");
-                    projectArrayAdapter.notifyDataSetChanged();
-                }
-            });
         }
     }
 
@@ -1187,6 +1301,7 @@ public class ProjectsFragment extends Fragment implements View.OnClickListener, 
 
         } catch (Exception e) {
             e.printStackTrace();
+            Appreference.printLog("ProjectFragment", "onResume Exception : " + e.getMessage(), "WARN", null);
         }
 
     }
@@ -1212,6 +1327,7 @@ public class ProjectsFragment extends Fragment implements View.OnClickListener, 
 //                    }
         } catch (Exception e) {
             e.printStackTrace();
+            Appreference.printLog("ProjectFragment", "showprogress Exception : " + e.getMessage(), "WARN", null);
             Log.i("progress123", "EXCEPTION show progress showing- error-------->" + e.getMessage());
 
         }
@@ -1237,6 +1353,7 @@ public class ProjectsFragment extends Fragment implements View.OnClickListener, 
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
+                        Appreference.printLog("ProjectFragment", "showprogress_1 Exception : " + e.getMessage(), "WARN", null);
                     }
                 }
             });
@@ -1254,17 +1371,23 @@ public class ProjectsFragment extends Fragment implements View.OnClickListener, 
         } catch (Exception e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
+            Appreference.printLog("ProjectFragment", "cancelDialog Exception : " + e.getMessage(), "WARN", null);
         }
     }
 
     public void showToast(final String msg) {
-        handler.post(new Runnable() {
-            @Override
-            public void run() {
-                Toast.makeText(getContext(), msg, Toast.LENGTH_LONG)
-                        .show();
-            }
-        });
+        try {
+            handler.post(new Runnable() {
+                @Override
+                public void run() {
+                    Toast.makeText(getContext(), msg, Toast.LENGTH_LONG)
+                            .show();
+                }
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+            Appreference.printLog("ProjectFragment", "showToast Exception : " + e.getMessage(), "WARN", null);
+        }
     }
 
     public void refresh() {
@@ -1276,6 +1399,7 @@ public class ProjectsFragment extends Fragment implements View.OnClickListener, 
                     Log.i("NewTaskConversation", "Refresh Handled here");
                 } catch (Exception e) {
                     e.printStackTrace();
+                    Appreference.printLog("ProjectFragment", "refresh() Exception : " + e.getMessage(), "WARN", null);
                 }
             }
         });
@@ -1297,6 +1421,7 @@ public class ProjectsFragment extends Fragment implements View.OnClickListener, 
                     projectArrayAdapter.notifyDataSetChanged();
                 } catch (Exception e) {
                     e.printStackTrace();
+                    Appreference.printLog("ProjectFragment", "notifyNewProjectReceived Exception : " + e.getMessage(), "WARN", null);
                 }
             }
         });
@@ -1304,13 +1429,18 @@ public class ProjectsFragment extends Fragment implements View.OnClickListener, 
 
     private boolean getNetworkState() {
         boolean isNetwork = false;
-        ConnectivityManager ConnectionManager = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
-        if (ConnectionManager != null) {
-            NetworkInfo networkInfo = ConnectionManager.getActiveNetworkInfo();
-            if (networkInfo != null && networkInfo.isConnected() == true)
-                isNetwork = true;
-            else
-                isNetwork = false;
+        try {
+            ConnectivityManager ConnectionManager = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
+            if (ConnectionManager != null) {
+                NetworkInfo networkInfo = ConnectionManager.getActiveNetworkInfo();
+                if (networkInfo != null && networkInfo.isConnected() == true)
+                    isNetwork = true;
+                else
+                    isNetwork = false;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            Appreference.printLog("ProjectFragment", "getNetworkState Exception : " + e.getMessage(), "WARN", null);
         }
         return isNetwork;
     }
@@ -1336,14 +1466,24 @@ public class ProjectsFragment extends Fragment implements View.OnClickListener, 
 //
 //    }
     private void hideKeyboard() {
-        InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(getActivity().INPUT_METHOD_SERVICE);
-        imm.hideSoftInputFromWindow(ProjectSearch.getWindowToken(), 0);
+        try {
+            InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(getActivity().INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(ProjectSearch.getWindowToken(), 0);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Appreference.printLog("ProjectFragment", "hideKeyboard Exception : " + e.getMessage(), "WARN", null);
+        }
     }
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        hideKeyboard();
-        Log.i("Fragmentstate", "onDestroyView  ProjectFragment");
+        try {
+            hideKeyboard();
+            Log.i("Fragmentstate", "onDestroyView  ProjectFragment");
+        } catch (Exception e) {
+            e.printStackTrace();
+            Appreference.printLog("ProjectFragment", "onDestroyView Exception : " + e.getMessage(), "WARN", null);
+        }
     }
 
     @Override
@@ -1358,24 +1498,30 @@ public class ProjectsFragment extends Fragment implements View.OnClickListener, 
                         String s1 = opr.getEmail();
                         String s2 = opr.getFirstname();
                         if (s2.equalsIgnoreCase("getProject")) {
-                            Log.i("Response", "getProject " + s1);
                             try {
-                                Type collectionType = new TypeToken<ProjectDetailsBean>() {
-                                }.getType();
-                                ProjectDetailsBean pdb = new Gson().fromJson(s1, collectionType);
-                                Log.i("Response", "getProject name " + pdb.getProjectName());
-//                                VideoCallDataBase.getDB(classContext).insertProject_history(pdb);
+                                Log.i("Response", "getProject " + s1);
+                                try {
+                                    Type collectionType = new TypeToken<ProjectDetailsBean>() {
+                                    }.getType();
+                                    ProjectDetailsBean pdb = new Gson().fromJson(s1, collectionType);
+                                    Log.i("Response", "getProject name " + pdb.getProjectName());
+    //                                VideoCallDataBase.getDB(classContext).insertProject_history(pdb);
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                    Appreference.printLog("ProjectFragment", "ResponceMethod getProject Exception : " + e.getMessage(), "WARN", null);
+                                }
+                                cancelDialog();
+                                Intent intent = new Intent(getActivity(), ProjectHistory.class);
+                                intent.putExtra("projectId", project_id);
+                                intent.putExtra("projectName", project_name);
+                                //                intent.putExtra("parentTaskId", parentTask_Id);
+                                intent.putExtra("projectOwner", project_owner);
+                                intent.putExtra("groupUserId", groupuser_Id);
+                                startActivity(intent);
                             } catch (Exception e) {
                                 e.printStackTrace();
+                                Appreference.printLog("ProjectFragment", "ResponceMethod getProject_ProjectHistory Exception : " + e.getMessage(), "WARN", null);
                             }
-                            cancelDialog();
-                            Intent intent = new Intent(getActivity(), ProjectHistory.class);
-                            intent.putExtra("projectId", project_id);
-                            intent.putExtra("projectName", project_name);
-                            //                intent.putExtra("parentTaskId", parentTask_Id);
-                            intent.putExtra("projectOwner", project_owner);
-                            intent.putExtra("groupUserId", groupuser_Id);
-                            startActivity(intent);
                         } else if (s2.equalsIgnoreCase("listAllMyProject")) {
                             cancelDialog();
                             Log.i("listAllMyProject", "webservice response " + s1);
@@ -1406,6 +1552,7 @@ public class ProjectsFragment extends Fragment implements View.OnClickListener, 
                                 projectArrayAdapter.notifyDataSetChanged();
                             } catch (Exception e) {
                                 e.printStackTrace();
+                                Appreference.printLog("ProjectFragment", "ResponceMethod listAllMyProject Exception : " + e.getMessage(), "WARN", null);
                             }
                         } else if (s2.equalsIgnoreCase("getAllJobDetails")) {
                             Log.i("ws123", "inside Response of json webservice**************************");
@@ -1443,6 +1590,7 @@ public class ProjectsFragment extends Fragment implements View.OnClickListener, 
                                 cancelDialog();
                             } catch (Exception e) {
                                 e.printStackTrace();
+                                Appreference.printLog("ProjectFragment", "ResponceMethod getAllJobDetails Exception : " + e.getMessage(), "WARN", null);
                             }
                         } else if (s2.equalsIgnoreCase("getTaskForJobID")) {
                             Log.i("ws123", "******getTaskForJobID********** Response String " + s1);
@@ -1483,30 +1631,36 @@ public class ProjectsFragment extends Fragment implements View.OnClickListener, 
                                 }
                             } catch (Exception e) {
                                 e.printStackTrace();
+                                Appreference.printLog("ProjectFragment", "ResponceMethod getTaskForJobID Exception : " + e.getMessage(), "WARN", null);
                             }
                             cancelDialog();
                             if (Success) {
-                                Intent intent = new Intent(getActivity(), ProjectHistory.class);
-                                intent.putExtra("projectId", project_id);
-                                intent.putExtra("projectName", project_name);
-                                //                intent.putExtra("parentTaskId", parentTask_Id);
-                                if (Appreference.isPauseStartFrom) {
-                                    Appreference.isPauseStartFrom = false;
-                                    intent.putExtra("isFromNewTaskConv", true);
-                                } else {
-                                    if (Appreference.context_table.containsKey("projecthistory")) {
-                                        Appreference.context_table.remove("projecthistory");
+                                try {
+                                    Intent intent = new Intent(getActivity(), ProjectHistory.class);
+                                    intent.putExtra("projectId", project_id);
+                                    intent.putExtra("projectName", project_name);
+                                    //                intent.putExtra("parentTaskId", parentTask_Id);
+                                    if (Appreference.isPauseStartFrom) {
+                                        Appreference.isPauseStartFrom = false;
+                                        intent.putExtra("isFromNewTaskConv", true);
+                                    } else {
+                                        if (Appreference.context_table.containsKey("projecthistory")) {
+                                            Appreference.context_table.remove("projecthistory");
+                                        }
+                                        intent.putExtra("isFromNewTaskConv", false);
                                     }
-                                    intent.putExtra("isFromNewTaskConv", false);
+                                    intent.putExtra("projectOwner", project_owner);
+                                    intent.putExtra("groupUserId", groupuser_Id);
+                                    if (oracleProjectId != null)
+                                        intent.putExtra("fromOracle", true);
+                                    else
+                                        intent.putExtra("fromOracle", false);
+                                    startActivity(intent);
+                                    getActivity().overridePendingTransition(R.anim.right_anim, R.anim.left_anim);
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                    Appreference.printLog("ProjectFragment", "ResponceMethod ProjectHistory Exception : " + e.getMessage(), "WARN", null);
                                 }
-                                intent.putExtra("projectOwner", project_owner);
-                                intent.putExtra("groupUserId", groupuser_Id);
-                                if (oracleProjectId != null)
-                                    intent.putExtra("fromOracle", true);
-                                else
-                                    intent.putExtra("fromOracle", false);
-                                startActivity(intent);
-                                getActivity().overridePendingTransition(R.anim.right_anim, R.anim.left_anim);
                             }
                         } else if (s2.equalsIgnoreCase("projectCompleted")) {
                             Log.i("projectCompleted", "******projectCompleted********** Response String " + s1);
@@ -1525,6 +1679,7 @@ public class ProjectsFragment extends Fragment implements View.OnClickListener, 
                                 }
                             } catch (Exception e) {
                                 e.printStackTrace();
+                                Appreference.printLog("ProjectFragment", "ResponceMethod projectCompleted Exception : " + e.getMessage(), "WARN", null);
                             }
                         } else if (s2 != null && s2.equalsIgnoreCase(("fieldServiceReportJobWise"))) {
                             Log.i("output123", "projectFragment fieldServiceReportJobWise  Responce Received" + s1);
@@ -1551,8 +1706,10 @@ public class ProjectsFragment extends Fragment implements View.OnClickListener, 
                                 }
                             } catch (JSONException e) {
                                 e.printStackTrace();
+                                Appreference.printLog("ProjectFragment", "ResponceMethod fieldServiceReportJobWise Exception : " + e.getMessage(), "WARN", null);
                             } catch (Exception e) {
                                 e.printStackTrace();
+                                Appreference.printLog("ProjectFragment", "ResponceMethod fieldServiceReportJobWise Exception : " + e.getMessage(), "WARN", null);
                             }
                         } else if (s2 != null && s2.equalsIgnoreCase(("tnaReportForDateWise"))) {
                             Log.i("report123", "projectFragment tnaReportForDateWise  Responce Received===>" + s1);
@@ -1571,8 +1728,10 @@ public class ProjectsFragment extends Fragment implements View.OnClickListener, 
                                 }
                             } catch (JSONException e) {
                                 e.printStackTrace();
+                                Appreference.printLog("ProjectFragment", "ResponceMethod tnaReportForDateWise Exception : " + e.getMessage(), "WARN", null);
                             } catch (Exception e) {
                                 e.printStackTrace();
+                                Appreference.printLog("ProjectFragment", "ResponceMethod tnaReportForDateWise Exception : " + e.getMessage(), "WARN", null);
                             }
                         } else if (s2 != null && s2.equalsIgnoreCase(("fieldServiceSearch"))) {
                             Log.i("output123", "projectFragment fieldServiceSearch  Responce Received" + s1);
@@ -1603,25 +1762,32 @@ public class ProjectsFragment extends Fragment implements View.OnClickListener, 
                                 }
                             } catch (JSONException e) {
                                 e.printStackTrace();
+                                Appreference.printLog("ProjectFragment", "ResponceMethod fieldServiceSearch Exception : " + e.getMessage(), "WARN", null);
                             } catch (Exception e) {
                                 e.printStackTrace();
+                                Appreference.printLog("ProjectFragment", "ResponceMethod fieldServiceSearch Exception : " + e.getMessage(), "WARN", null);
                             }
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
+                        Appreference.printLog("ProjectFragment", "ResponceMethod Exception : " + e.getMessage(), "WARN", null);
                     }
                 }
             });
         } catch (Exception e) {
             e.printStackTrace();
+            Appreference.printLog("ProjectFragment", "ResponceMethod Exception : " + e.getMessage(), "WARN", null);
         }
     }
     String fsr_jobId, fsr_date;
-    private void show_FSRJobList(final HashMap<String, List<String>> fsr_key_value, ArrayList showAllJobCard, final HashMap<String,String> projectIdForOracleId) {
-        LayoutInflater inflater = getActivity().getLayoutInflater();
-        View alertLayout = inflater.inflate(R.layout.fsr_request_view, null);
-        final LinearLayout ll_second_layout=(LinearLayout) alertLayout.findViewById(R.id.second_layout);
-        ll_second_layout.setVisibility(View.VISIBLE);
+
+    private void show_FSRJobList(final HashMap<String, List<String>> fsr_key_value, ArrayList showAllJobCard, final HashMap<String, String> projectIdForOracleId) {
+
+        try {
+            LayoutInflater inflater = getActivity().getLayoutInflater();
+            View alertLayout = inflater.inflate(R.layout.fsr_request_view, null);
+            final LinearLayout ll_second_layout = (LinearLayout) alertLayout.findViewById(R.id.second_layout);
+            ll_second_layout.setVisibility(View.VISIBLE);
 //        final Spinner machine_no_spinner = (Spinner) alertLayout.findViewById(R.id.machine_no_spinner);
         final AutoCompleteTextView machine_no_spinner=(AutoCompleteTextView) alertLayout.findViewById(R.id.auto_complete);
 
@@ -1685,21 +1851,22 @@ public class ProjectsFragment extends Fragment implements View.OnClickListener, 
                 }
             }
 
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-            }
-        });
-        date_spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                String selected_date = String.valueOf(date_spinner.getSelectedItem());
-//                selected date from spinner
-                try {
-                    if (selected_date != null)
-                        fsr_date = selected_date;
-                } catch (Exception e) {
-                    e.printStackTrace();
+                @Override
+                public void onNothingSelected(AdapterView<?> parent) {
                 }
+            });
+            date_spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                @Override
+                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                    String selected_date = String.valueOf(date_spinner.getSelectedItem());
+    //                selected date from spinner
+                    try {
+                        if (selected_date != null)
+                            fsr_date = selected_date;
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        Appreference.printLog("ProjectFragment", "show_FSRJobList date_spinner Exception : " + e.getMessage(), "WARN", null);
+                    }
 
             }
 
@@ -1709,53 +1876,65 @@ public class ProjectsFragment extends Fragment implements View.OnClickListener, 
             }
         });
 
-        alert.setPositiveButton("Submit", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                if (fsr_date != null && !fsr_date.equalsIgnoreCase("")) {
-//                                dialog.dismiss();
-                    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-                    SimpleDateFormat dateParse = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-                    dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
-                    Date date = null;
-                    Date date1 = null;
-                    String FSRStartDateUTC = "";
-                    String FSREndDateUTC = "";
-                    String fsr_start_date = fsr_date + " " + "00:00:00";
-                    String fsr_end_date = fsr_date + " " + "23:59:59";
-                    if (fsr_start_date != null && !fsr_start_date.equalsIgnoreCase("")) {
-                        try {
-                            date = dateParse.parse(fsr_start_date);
-                            FSRStartDateUTC = dateFormat.format(date);
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                    }
-                    if (fsr_end_date != null && !fsr_end_date.equalsIgnoreCase("")) {
-                        try {
-                            date1 = dateParse.parse(fsr_end_date);
-                            FSREndDateUTC = dateFormat.format(date1);
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                    }
+            alert.setPositiveButton("Submit", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    try {
+                        if (fsr_date != null && !fsr_date.equalsIgnoreCase("")) {
+        //                                dialog.dismiss();
+                            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                            SimpleDateFormat dateParse = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                            dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
+                            Date date = null;
+                            Date date1 = null;
+                            String FSRStartDateUTC = "";
+                            String FSREndDateUTC = "";
+                            String fsr_start_date = fsr_date + " " + "00:00:00";
+                            String fsr_end_date = fsr_date + " " + "23:59:59";
+                            if (fsr_start_date != null && !fsr_start_date.equalsIgnoreCase("")) {
+                                try {
+                                    date = dateParse.parse(fsr_start_date);
+                                    FSRStartDateUTC = dateFormat.format(date);
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                    Appreference.printLog("ProjectFragment", "show_FSRJobList Submit Exception : " + e.getMessage(), "WARN", null);
+                                }
+                            }
+                            if (fsr_end_date != null && !fsr_end_date.equalsIgnoreCase("")) {
+                                try {
+                                    date1 = dateParse.parse(fsr_end_date);
+                                    FSREndDateUTC = dateFormat.format(date1);
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                    Appreference.printLog("ProjectFragment", "show_FSRJobList FSREndDateUTC Exception : " + e.getMessage(), "WARN", null);
+                                }
+                            }
 
-                    List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
-                    nameValuePairs.add(new BasicNameValuePair("projectId", fsr_jobId));
-                    nameValuePairs.add(new BasicNameValuePair("taskCompletedStartDate", FSRStartDateUTC));
-                    nameValuePairs.add(new BasicNameValuePair("taskCompletedEndDate", FSREndDateUTC));
-                    showprogress("Downloading...");
-                    Appreference.jsonRequestSender.OracleFSRJOBReport(EnumJsonWebservicename.fieldServiceReportJobWise, nameValuePairs, ProjectsFragment.this);
-                } else
-                    Toast.makeText(getActivity(), "Please select any date...", Toast.LENGTH_SHORT).show();
-            }
-        });
-        alert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
-            }
-        });
+                            try {
+                                List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
+                                nameValuePairs.add(new BasicNameValuePair("projectId", fsr_jobId));
+                                nameValuePairs.add(new BasicNameValuePair("taskCompletedStartDate", FSRStartDateUTC));
+                                nameValuePairs.add(new BasicNameValuePair("taskCompletedEndDate", FSREndDateUTC));
+                                showprogress("Downloading...");
+                                Appreference.jsonRequestSender.OracleFSRJOBReport(EnumJsonWebservicename.fieldServiceReportJobWise, nameValuePairs, ProjectsFragment.this);
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                                Appreference.printLog("ProjectFragment", "show_FSRJobList OracleFSRJOBReport Exception : " + e.getMessage(), "WARN", null);
+                            }
+                        } else
+                            Toast.makeText(getActivity(), "Please select any date...", Toast.LENGTH_SHORT).show();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        Appreference.printLog("ProjectFragment", "show_FSRJobList OracleFSRJOBReport Exception : " + e.getMessage(), "WARN", null);
+                    }
+                }
+            });
+            alert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.dismiss();
+                }
+            });
 
         AlertDialog dialog = alert.create();
         if (!dialog.isShowing() )
@@ -1763,6 +1942,10 @@ public class ProjectsFragment extends Fragment implements View.OnClickListener, 
             dialog.show();
         }
 //        dialog.show();
+        } catch (Exception e) {
+            e.printStackTrace();
+            Appreference.printLog("ProjectFragment", "show_FSRJobList Exception : " + e.getMessage(), "WARN", null);
+        }
     }
 
     @Override
@@ -1837,10 +2020,10 @@ public class ProjectsFragment extends Fragment implements View.OnClickListener, 
                                 }
                             } catch (FileNotFoundException e) {
                                 e.printStackTrace();
-                                Appreference.printLog("MainActivity", "DownloadImage Exception: " + e.getMessage(), "WARN", null);
+                                Appreference.printLog("ProjectFragment", "DownloadImage doInBackground Exception : " + e.getMessage(), "WARN", null);
                             } catch (Exception e) {
                                 e.printStackTrace();
-                                Appreference.printLog("MainActivity", "DownloadImage Exception: " + e.getMessage(), "WARN", null);
+                                Appreference.printLog("ProjectFragment", "DownloadImage doInBackground Exception : " + e.getMessage(), "WARN", null);
                             }
                         }
                     }
@@ -1850,7 +2033,7 @@ public class ProjectsFragment extends Fragment implements View.OnClickListener, 
 
             } catch (Exception e) {
                 e.printStackTrace();
-                Appreference.printLog("MainActivity", "DownloadImage Exception: " + e.getMessage(), "WARN", null);
+                Appreference.printLog("ProjectFragment", "DownloadImage Exception : " + e.getMessage(), "WARN", null);
             }
             return response;
         }
@@ -1869,6 +2052,10 @@ public class ProjectsFragment extends Fragment implements View.OnClickListener, 
                     try {
                         startActivity(pdfOpenintent);
                     } catch (ActivityNotFoundException e) {
+                        Appreference.printLog("ProjectFragment", "DownloadImage onPostExecute Exception : " + e.getMessage(), "WARN", null);
+                        Toast.makeText(getActivity(), "Please Install MS-Excel app to view the file", Toast.LENGTH_SHORT).show();
+                    } catch (Exception e) {
+                        Appreference.printLog("ProjectFragment", "DownloadImage onPostExecute Exception : " + e.getMessage(), "WARN", null);
                         Toast.makeText(getActivity(), "Please Install MS-Excel app to view the file", Toast.LENGTH_SHORT).show();
                     }
                 } else {
@@ -1877,7 +2064,7 @@ public class ProjectsFragment extends Fragment implements View.OnClickListener, 
 
             } catch (Exception e) {
                 e.printStackTrace();
-                Appreference.printLog("MainActivity onPostExecute", "DownloadImage Exception: " + e.getMessage(), "WARN", null);
+                Appreference.printLog("ProjectFragment", "DownloadImage Exception : " + e.getMessage(), "WARN", null);
             }
         }
 
