@@ -205,6 +205,7 @@
                 android:orientation="horizontal">
 
                 <TextView
+                    android:id="@+id/machine_make_tv"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -245,6 +246,7 @@
                 android:orientation="horizontal">
 
                 <TextView
+                    android:id="@+id/mac_model_tv"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -285,6 +287,7 @@
                 android:orientation="horizontal">
 
                 <TextView
+                    android:id="@+id/mac_no_tv"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -544,6 +547,7 @@
                 android:orientation="horizontal">
 
                 <TextView
+                    android:id="@+id/complete_date_tv"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -685,6 +689,7 @@
                 android:orientation="horizontal">
 
                 <TextView
+                    android:id="@+id/description_tv"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -768,6 +773,7 @@
                 android:orientation="horizontal">
 
                 <TextView
+                    android:id="@+id/observation_tv"
                     android:layout_width="180dp"
                     android:layout_height="wrap_content"
                     android:background="#FFFFFF"
@@ -826,6 +832,7 @@
                 android:orientation="horizontal">
 
                 <TextView
+                    android:id="@+id/action_taken_tv"
                     android:layout_width="180dp"
                     android:layout_height="wrap_content"
                     android:background="#FFFFFF"
@@ -883,6 +890,7 @@
                 android:orientation="horizontal">
 
                 <TextView
+                    android:id="@+id/hour_meter_reading_tv"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -925,6 +933,7 @@
                 android:orientation="horizontal">
 
                 <TextView
+                    android:id="@+id/remarks_complete_tv"
                     android:layout_width="180dp"
                     android:layout_height="wrap_content"
                     android:background="#FFFFFF"
@@ -1165,6 +1174,7 @@
                 android:orientation="horizontal">
 
                 <TextView
+                    android:id="@+id/synopsis_tv"
                     android:layout_width="180dp"
                     android:layout_height="wrap_content"
                     android:background="#FFFFFF"

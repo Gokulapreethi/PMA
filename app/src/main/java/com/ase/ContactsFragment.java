@@ -6,6 +6,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -27,6 +28,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.BaseExpandableListAdapter;
@@ -159,7 +161,7 @@ public class ContactsFragment extends Fragment implements View.OnClickListener, 
     Handler ui_handler = new Handler();
     final String[] alphabaticalList = {"A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"};
     TextView loginuserStatus;
-    ImageView alpha_sort, online_sort,reportdetails;
+    ImageView alpha_sort, online_sort, reportdetails;
     RelativeLayout ll_statusChange;
     LinearLayout ll_networkUI = null, sortlayout;
     TextView tv_networkstate = null, exclation_counter, name;
@@ -174,12 +176,17 @@ public class ContactsFragment extends Fragment implements View.OnClickListener, 
 //    boolean swipe_touch=false;
 
     public static ContactsFragment newInstance(int sectionNumber, Context context) {
-        if (fragment == null) {
-            fragment = new ContactsFragment();
-            classContext = context;
-            Bundle args = new Bundle();
-//        args.putInt(ARG_SECTION_NUMBER, sectionNumber);
-            fragment.setArguments(args);
+        try {
+            if (fragment == null) {
+                fragment = new ContactsFragment();
+                classContext = context;
+                Bundle args = new Bundle();
+                //        args.putInt(ARG_SECTION_NUMBER, sectionNumber);
+                fragment.setArguments(args);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            Appreference.printLog("ContactFragment", "newInstance Exception : " + e.getMessage(), "WARN", null);
         }
         return fragment;
     }
@@ -198,6 +205,7 @@ public class ContactsFragment extends Fragment implements View.OnClickListener, 
         } catch (Exception e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
+            Appreference.printLog("ContactFragment", "cancelDialog() Exception : " + e.getMessage(), "WARN", null);
         }
     }
 
@@ -223,6 +231,15 @@ public class ContactsFragment extends Fragment implements View.OnClickListener, 
                     exclation_counter.setVisibility(View.GONE);
             }
 
+        } catch (Exception e) {
+            e.printStackTrace();
+            Appreference.printLog("ContactFragment", "setUserVisibleHint Exception : " + e.getMessage(), "WARN", null);
+        }
+        try {
+            if (getView() != null) {
+                InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(getActivity().INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(getView().getWindowToken(), 0);
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -328,14 +345,22 @@ public class ContactsFragment extends Fragment implements View.OnClickListener, 
         t1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (indexLayout.getVisibility() == View.VISIBLE && alpha.getVisibility() == View.VISIBLE) {
-                    indexLayout.setVisibility(View.GONE);
-                    t1.setBackground(getResources().getDrawable(R.drawable.ic_arrow_bwd));
-                    alpha.setVisibility(View.GONE);
-                } else {
-                    indexLayout.setVisibility(View.VISIBLE);
-                    t1.setBackground(getResources().getDrawable(R.drawable.ic_arrow_fwd));
-                    alpha.setVisibility(View.VISIBLE);
+                try {
+                    if (indexLayout.getVisibility() == View.VISIBLE && alpha.getVisibility() == View.VISIBLE) {
+                        indexLayout.setVisibility(View.GONE);
+                        t1.setBackground(getResources().getDrawable(R.drawable.ic_arrow_bwd));
+                        alpha.setVisibility(View.GONE);
+                    } else {
+                        indexLayout.setVisibility(View.VISIBLE);
+                        t1.setBackground(getResources().getDrawable(R.drawable.ic_arrow_fwd));
+                        alpha.setVisibility(View.VISIBLE);
+                    }
+                } catch (Resources.NotFoundException e) {
+                    e.printStackTrace();
+                    Appreference.printLog("ContactFragment", "onCreateView t1 clicklistener Exception : " + e.getMessage(), "WARN", null);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    Appreference.printLog("ContactFragment", "onCreateView t1 clicklistener Exception : " + e.getMessage(), "WARN", null);
                 }
 
             }
@@ -343,43 +368,60 @@ public class ContactsFragment extends Fragment implements View.OnClickListener, 
         t2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (indexLayout1.getVisibility() == View.VISIBLE && alpha1.getVisibility() == View.VISIBLE) {
-                    indexLayout1.setVisibility(View.GONE);
-                    t2.setBackground(getResources().getDrawable(R.drawable.ic_arrow_bwd));
-                    alpha1.setVisibility(View.GONE);
-                } else {
-                    indexLayout1.setVisibility(View.VISIBLE);
-                    t2.setBackground(getResources().getDrawable(R.drawable.ic_arrow_fwd));
-                    alpha1.setVisibility(View.VISIBLE);
+                try {
+                    if (indexLayout1.getVisibility() == View.VISIBLE && alpha1.getVisibility() == View.VISIBLE) {
+                        indexLayout1.setVisibility(View.GONE);
+                        t2.setBackground(getResources().getDrawable(R.drawable.ic_arrow_bwd));
+                        alpha1.setVisibility(View.GONE);
+                    } else {
+                        indexLayout1.setVisibility(View.VISIBLE);
+                        t2.setBackground(getResources().getDrawable(R.drawable.ic_arrow_fwd));
+                        alpha1.setVisibility(View.VISIBLE);
+                    }
+                } catch (Resources.NotFoundException e) {
+                    e.printStackTrace();
+                    Appreference.printLog("ContactFragment", "onCreateView t2 clicklistener Exception : " + e.getMessage(), "WARN", null);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    Appreference.printLog("ContactFragment", "onCreateView t2 clicklistener Exception : " + e.getMessage(), "WARN", null);
                 }
             }
         });
-        Log.i("Appreference", "getprofileimage-------->" + Appreference.loginuserdetails.getProfileImage());
-        final ImageView imageView = (ImageView) rootView.findViewById(R.id.contactimage);
-        File myFile = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/High Message/profilePic/" + Appreference.loginuserdetails.getProfileImage());
-        if (Appreference.loginuserdetails.getProfileImage() != null) {
-            if (myFile.exists()) {
-                imageLoader = new ImageLoader(context);
-                Log.i("Appreference", "if-------->" + Appreference.loginuserdetails.getProfileImage());
-                imageLoader.DisplayImage(Environment.getExternalStorageDirectory().getAbsolutePath() + "/High Message/profilePic/" + Appreference.loginuserdetails.getProfileImage(), imageView, R.drawable.default_person_circle);
-            } else {
-                Picasso.with(getContext()).load(getResources().getString(R.string.user_upload) + Appreference.loginuserdetails.getProfileImage()).into(imageView);
-                MainActivity mainActivity = (MainActivity) Appreference.context_table.get("mainactivity");
-                mainActivity.callprofile(getResources().getString(R.string.user_upload) + Appreference.loginuserdetails.getProfileImage());
-            }
+        try {
+            Log.i("Appreference", "getprofileimage-------->" + Appreference.loginuserdetails.getProfileImage());
+            final ImageView imageView = (ImageView) rootView.findViewById(R.id.contactimage);
+            File myFile = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/High Message/profilePic/" + Appreference.loginuserdetails.getProfileImage());
+            if (Appreference.loginuserdetails.getProfileImage() != null) {
+                if (myFile.exists()) {
+                    imageLoader = new ImageLoader(context);
+                    Log.i("Appreference", "if-------->" + Appreference.loginuserdetails.getProfileImage());
+                    imageLoader.DisplayImage(Environment.getExternalStorageDirectory().getAbsolutePath() + "/High Message/profilePic/" + Appreference.loginuserdetails.getProfileImage(), imageView, R.drawable.default_person_circle);
+                } else {
+                    Picasso.with(getContext()).load(getResources().getString(R.string.user_upload) + Appreference.loginuserdetails.getProfileImage()).into(imageView);
+                    MainActivity mainActivity = (MainActivity) Appreference.context_table.get("mainactivity");
+                    mainActivity.callprofile(getResources().getString(R.string.user_upload) + Appreference.loginuserdetails.getProfileImage());
+                }
 
+            }
+        } catch (Resources.NotFoundException e) {
+            e.printStackTrace();
+            Appreference.printLog("ContactFragment", "onCreateView imageLoader Exception : " + e.getMessage(), "WARN", null);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Appreference.printLog("ContactFragment", "onCreateView imageLoader  Exception : " + e.getMessage(), "WARN", null);
         }
 
         try {
             String s = "select * from taskDetailsInfo where msgstatus='12' and loginuser='" + Appreference.loginuserdetails.getEmail() + "'";
             ArrayList<ProjectDetailsBean> projectDetailsBeen = VideoCallDataBase.getDB(classContext).getExclationdetails(s);
-            if(projectDetailsBeen.size() > 0)
+            if (projectDetailsBeen.size() > 0)
                 exclation_counter.setVisibility(View.VISIBLE);
             else
                 exclation_counter.setVisibility(View.GONE);
 
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
+            Appreference.printLog("ContactFragment", "onCreateView exclation_counter Exception : " + e.getMessage(), "WARN", null);
         }
 
         final TextView add_buddy = (TextView) rootView.findViewById(R.id.add);
@@ -396,7 +438,7 @@ public class ContactsFragment extends Fragment implements View.OnClickListener, 
         group_view.setBackgroundColor(getResources().getColor(R.color.grey_dark));
         add_buddy.setOnClickListener(this);
         //contact.setTypeface(roboto_medium);
-      //  group.setTypeface(roboto_medium);
+        //  group.setTypeface(roboto_medium);
 //        String b_uri = "sip:" + "amuthan2".toString()+ "@" + getResources().getString(R.string.server_ip);
         total_buddyList = new ArrayList<Map<String, String>>();
 //        total_buddyList.add(putData(b_uri,""));
@@ -423,9 +465,14 @@ public class ContactsFragment extends Fragment implements View.OnClickListener, 
         exclation_counter.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent tent = new Intent(classContext, AllTaskList.class);
-                tent.putExtra("AllTaskList", "true");
-                startActivity(tent);
+                try {
+                    Intent tent = new Intent(classContext, AllTaskList.class);
+                    tent.putExtra("AllTaskList", "true");
+                    startActivity(tent);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    Appreference.printLog("ContactFragment", "exclation_counter clickListener  Exception : " + e.getMessage(), "WARN", null);
+                }
             }
         });
 
@@ -556,33 +603,34 @@ public class ContactsFragment extends Fragment implements View.OnClickListener, 
         alpha_sort.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                try {
 //                alphaSelectionEnable();
-                if (!alphaSelected) {
-                    alphaSelected = true;
-                    onlineSelected = false;
-                } else {
-                    onlineSelected = false;
-                    alphaSelected = false;
-                }
-                Appreference.isAlfhaOrOnline = "Alfha";
-                if (Appreference.isAlfhaOrOnline.equalsIgnoreCase("Alfha")) {
-                    if (Appreference.contact_arrange.containsKey("Alfha")) {
-                        if (Appreference.contact_arrange.get("Alfha").equalsIgnoreCase("ASC")) {
-                            Appreference.contact_arrange.put("Alfha", "DESC");
+                    if (!alphaSelected) {
+                        alphaSelected = true;
+                        onlineSelected = false;
+                    } else {
+                        onlineSelected = false;
+                        alphaSelected = false;
+                    }
+                    Appreference.isAlfhaOrOnline = "Alfha";
+                    if (Appreference.isAlfhaOrOnline.equalsIgnoreCase("Alfha")) {
+                        if (Appreference.contact_arrange.containsKey("Alfha")) {
+                            if (Appreference.contact_arrange.get("Alfha").equalsIgnoreCase("ASC")) {
+                                Appreference.contact_arrange.put("Alfha", "DESC");
+                            } else {
+                                Appreference.contact_arrange.put("Alfha", "ASC");
+                            }
+                            Log.i("ContactsFragment", " HashMap Value Alfha if " + Appreference.contact_arrange.get("Alfha"));
+                            //                    Toast.makeText(context,Appreference.map.get("Alfha").toString(),Toast.LENGTH_SHORT).show();
                         } else {
                             Appreference.contact_arrange.put("Alfha", "ASC");
+                            Log.i("ContactsFragment", " HashMap Value Alfha else  " + Appreference.contact_arrange.get("Alfha"));
+                            //                    Toast.makeText(context,Appreference.map.get("Alfha").toString(),Toast.LENGTH_SHORT).show();
                         }
-                        Log.i("ContactsFragment", " HashMap Value Alfha if " + Appreference.contact_arrange.get("Alfha"));
-//                    Toast.makeText(context,Appreference.map.get("Alfha").toString(),Toast.LENGTH_SHORT).show();
-                    } else {
-                        Appreference.contact_arrange.put("Alfha", "ASC");
-                        Log.i("ContactsFragment", " HashMap Value Alfha else  " + Appreference.contact_arrange.get("Alfha"));
-//                    Toast.makeText(context,Appreference.map.get("Alfha").toString(),Toast.LENGTH_SHORT).show();
                     }
-                }
-                ContactsArrangement();
+                    ContactsArrangement();
 //                Appreference.isAlfhaOrOnline = "Alfha";
-                Log.i("ContactsFragment", " HashMap Value Alfha else  outer ----->  >  > " + Appreference.contact_arrange.get("Alfha"));
+                    Log.i("ContactsFragment", " HashMap Value Alfha else  outer ----->  >  > " + Appreference.contact_arrange.get("Alfha"));
 //                Appreference.map.put("Alfha","ASC");
 //                alpha_sort.setTextColor(getResources().getColor(R.color.white));
 //                online_sort.setTextColor(getResources().getColor(R.color.black));
@@ -606,6 +654,10 @@ public class ContactsFragment extends Fragment implements View.OnClickListener, 
                         }
                     }
                 });*/
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    Appreference.printLog("ContactFragment", "alpha_sort Exception : " + e.getMessage(), "WARN", null);
+                }
             }
         });
 
@@ -614,31 +666,36 @@ public class ContactsFragment extends Fragment implements View.OnClickListener, 
             public void onClick(View v) {
 //                alpha_sort.setTextColor(Color.BLACK);
 //                online_sort.setTextColor(Color.BLACK);
-                if (!onlineSelected) {
-                    alphaSelected = false;
-                    onlineSelected = true;
-                } else {
-                    alphaSelected = false;
-                    onlineSelected = false;
-                }
-                Appreference.isAlfhaOrOnline = "Online";
-                if (Appreference.isAlfhaOrOnline.equalsIgnoreCase("Online")) {
-                    if (Appreference.contact_arrange.containsKey("Online")) {
-                        if (Appreference.contact_arrange.get("Online").equalsIgnoreCase("ASC")) {
-                            Appreference.contact_arrange.put("Online", "DESC");
+                try {
+                    if (!onlineSelected) {
+                        alphaSelected = false;
+                        onlineSelected = true;
+                    } else {
+                        alphaSelected = false;
+                        onlineSelected = false;
+                    }
+                    Appreference.isAlfhaOrOnline = "Online";
+                    if (Appreference.isAlfhaOrOnline.equalsIgnoreCase("Online")) {
+                        if (Appreference.contact_arrange.containsKey("Online")) {
+                            if (Appreference.contact_arrange.get("Online").equalsIgnoreCase("ASC")) {
+                                Appreference.contact_arrange.put("Online", "DESC");
+                            } else {
+                                Appreference.contact_arrange.put("Online", "ASC");
+                            }
+                            Log.i("ContactsFrageent", " HashMap Value Online if " + Appreference.contact_arrange.get("Online"));
+                            //                    Toast.makeText(context,Appreference.map.get("Alfha").toString(),Toast.LENGTH_SHORT).show();
                         } else {
                             Appreference.contact_arrange.put("Online", "ASC");
+                            Log.i("ContactsFrageent", " HashMap Value Online else  " + Appreference.contact_arrange.get("Online"));
+                            //                    Toast.makeText(context,Appreference.map.get("Alfha").toString(),Toast.LENGTH_SHORT).show();
                         }
-                        Log.i("ContactsFrageent", " HashMap Value Online if " + Appreference.contact_arrange.get("Online"));
-//                    Toast.makeText(context,Appreference.map.get("Alfha").toString(),Toast.LENGTH_SHORT).show();
-                    } else {
-                        Appreference.contact_arrange.put("Online", "ASC");
-                        Log.i("ContactsFrageent", " HashMap Value Online else  " + Appreference.contact_arrange.get("Online"));
-//                    Toast.makeText(context,Appreference.map.get("Alfha").toString(),Toast.LENGTH_SHORT).show();
                     }
+                    Log.i("ContactsFrageent", " HashMap Value Online else Outer--------  " + Appreference.contact_arrange.get("Online"));
+                    ContactsArrangement();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    Appreference.printLog("ContactFragment", "online_sort Exception : " + e.getMessage(), "WARN", null);
                 }
-                Log.i("ContactsFrageent", " HashMap Value Online else Outer--------  " + Appreference.contact_arrange.get("Online"));
-                ContactsArrangement();
 //                Appreference.isAlfhaOrOnline = "Online";
 //                Appreference.contact_arrange.put("Online", "ASC");
 //                onlineSelected="true";
@@ -692,84 +749,93 @@ public class ContactsFragment extends Fragment implements View.OnClickListener, 
         contact.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                sortlayout.setVisibility(View.VISIBLE);
-//                alpha_sort.setText("A > Z");
-                indexLayout1.setVisibility(View.GONE);
-                indexLayout.setVisibility(View.GONE);
-                alpha.setVisibility(View.GONE);
-//                reportdetails.setVisibility(View.VISIBLE);
-                alpha1.setVisibility(View.GONE);
-                t1.setVisibility(View.GONE);
-                t2.setVisibility(View.GONE);
-                indexLayout.setVisibility(View.GONE);
-                alpha.setVisibility(View.GONE);
-                chat.setVisibility(View.GONE);
-                template.setVisibility(View.VISIBLE);
-                notes.setVisibility(View.VISIBLE);
-//                notes.setVisibility(View.GONE);
-                contact_batch.setVisibility(View.GONE);
-//                video_call.setVisibility(View.VISIBLE);
-                audio_call.setVisibility(View.GONE);
-                buddyList1 = new ArrayList<ContactBean>();
-                buddyList = new ArrayList<ContactBean>();
-
-                contactTab = true;
-                contactTab_1 = true;
-                buddyListView.setVisibility(View.VISIBLE);
-                expandableListView.setVisibility(View.GONE);
-                contact.setTextColor(getResources().getColor(R.color.white));
-                group.setTextColor(getResources().getColor(R.color.black));
-                contact.setBackgroundColor(getResources().getColor(R.color.appcolor));
-                contact_view.setBackgroundColor(getResources().getColor(R.color.appcolor));
-                group.setBackgroundColor(getResources().getColor(R.color.grey_dark));
-                group_view.setBackgroundColor(getResources().getColor(R.color.grey_dark));
-                Log.i("Contact", "MainPage " + Appreference.loginuserdetails.getUsername());
-                list = "Contact";
-                if (VideoCallDataBase.getDB(classContext).getContact(Appreference.loginuserdetails.getUsername()) != null) {
-                    Log.i("Contact", "Database");
-                    if (Appreference.loginuserdetails.getFirstName() != null && Appreference.loginuserdetails.getLastName() != null) {
-                        buddyList1 = VideoCallDataBase.getDB(classContext).getContact(Appreference.loginuserdetails.getUsername());
-                        for (ContactBean contactBean : buddyList1) {
-                            int msgCount = VideoCallDataBase.getDB(classContext).getContactsUnReadMsgCount(String.valueOf(contactBean.getUserid()), "Individual");
-                            contactBean.setMsg_count(msgCount);
-                            buddyList.add(contactBean);
-                            totalbuddy.add(contactBean);
-                        }
-                        Log.i("Contact", "Database " + buddyList.size());
-                    }
-                    /*else if (Appreference.loginuserdetails.getFirstName()!=null)
-                    {
-                        buddyList=VideoCallDataBase.getDB(classContext).getContact(Appreference.loginuserdetails.getFirstName());
-                    }
-                    else
-                    {
-                        buddyList=VideoCallDataBase.getDB(classContext).getContact(Appreference.loginuserdetails.getEmail());
-                    }*/
-                    //buddyList=VideoCallDataBase.getDB(classContext).getContact(Appreference.loginuserdetails.getUsername());
-                    Log.i("ContactValue", "Arraysize" + buddyList.size());
-                }
-                if (group_count != 0 && group_count > 0) {
-                    group_batch.setVisibility(View.VISIBLE);
-                    group_batch.setText(String.valueOf(group_count));
-                } else {
-                    group_batch.setVisibility(View.GONE);
-                }
-                Log.i("contact", "group_count before " + group_count);
                 try {
-                    buddyList.toString();
-                    Collections.sort(buddyList, new CustomComparator());
-//                if (alphaSelected) {
-//                    alphaSelectionEnable();
-//                } else if (onlineSelected) {
-//                    onlineSelectionEnable();
-//                }
-                    Log.i("list", "buddyList" + String.valueOf(buddyList));
-                    buddyArrayAdapter = new BuddyArrayAdapter(getActivity(), buddyList);
-                    buddyListView.setAdapter(buddyArrayAdapter);
-                    buddyArrayAdapter.notifyDataSetChanged();
-                    ContactsArrangement();
+                    sortlayout.setVisibility(View.VISIBLE);
+//                alpha_sort.setText("A > Z");
+                    indexLayout1.setVisibility(View.GONE);
+                    indexLayout.setVisibility(View.GONE);
+                    alpha.setVisibility(View.GONE);
+//                reportdetails.setVisibility(View.VISIBLE);
+                    alpha1.setVisibility(View.GONE);
+                    t1.setVisibility(View.GONE);
+                    t2.setVisibility(View.GONE);
+                    indexLayout.setVisibility(View.GONE);
+                    alpha.setVisibility(View.GONE);
+                    chat.setVisibility(View.GONE);
+                    template.setVisibility(View.VISIBLE);
+                    notes.setVisibility(View.VISIBLE);
+//                notes.setVisibility(View.GONE);
+                    contact_batch.setVisibility(View.GONE);
+//                video_call.setVisibility(View.VISIBLE);
+                    audio_call.setVisibility(View.GONE);
+                    buddyList1 = new ArrayList<ContactBean>();
+                    buddyList = new ArrayList<ContactBean>();
+
+                    contactTab = true;
+                    contactTab_1 = true;
+                    buddyListView.setVisibility(View.VISIBLE);
+                    expandableListView.setVisibility(View.GONE);
+                    contact.setTextColor(getResources().getColor(R.color.white));
+                    group.setTextColor(getResources().getColor(R.color.black));
+                    contact.setBackgroundColor(getResources().getColor(R.color.appcolor));
+                    contact_view.setBackgroundColor(getResources().getColor(R.color.appcolor));
+                    group.setBackgroundColor(getResources().getColor(R.color.grey_dark));
+                    group_view.setBackgroundColor(getResources().getColor(R.color.grey_dark));
+                    Log.i("Contact", "MainPage " + Appreference.loginuserdetails.getUsername());
+                    list = "Contact";
+                    if (VideoCallDataBase.getDB(classContext).getContact(Appreference.loginuserdetails.getUsername()) != null) {
+                        Log.i("Contact", "Database");
+                        if (Appreference.loginuserdetails.getFirstName() != null && Appreference.loginuserdetails.getLastName() != null) {
+                            buddyList1 = VideoCallDataBase.getDB(classContext).getContact(Appreference.loginuserdetails.getUsername());
+                            for (ContactBean contactBean : buddyList1) {
+                                int msgCount = VideoCallDataBase.getDB(classContext).getContactsUnReadMsgCount(String.valueOf(contactBean.getUserid()), "Individual");
+                                contactBean.setMsg_count(msgCount);
+                                buddyList.add(contactBean);
+                                totalbuddy.add(contactBean);
+                            }
+                            Log.i("Contact", "Database " + buddyList.size());
+                        }
+                        /*else if (Appreference.loginuserdetails.getFirstName()!=null)
+                        {
+                            buddyList=VideoCallDataBase.getDB(classContext).getContact(Appreference.loginuserdetails.getFirstName());
+                        }
+                        else
+                        {
+                            buddyList=VideoCallDataBase.getDB(classContext).getContact(Appreference.loginuserdetails.getEmail());
+                        }*/
+                        //buddyList=VideoCallDataBase.getDB(classContext).getContact(Appreference.loginuserdetails.getUsername());
+                        Log.i("ContactValue", "Arraysize" + buddyList.size());
+                    }
+                    if (group_count != 0 && group_count > 0) {
+                        group_batch.setVisibility(View.VISIBLE);
+                        group_batch.setText(String.valueOf(group_count));
+                    } else {
+                        group_batch.setVisibility(View.GONE);
+                    }
+                    Log.i("contact", "group_count before " + group_count);
+                    try {
+                        buddyList.toString();
+                        Collections.sort(buddyList, new CustomComparator());
+                        //                if (alphaSelected) {
+                        //                    alphaSelectionEnable();
+                        //                } else if (onlineSelected) {
+                        //                    onlineSelectionEnable();
+                        //                }
+                        Log.i("list", "buddyList" + String.valueOf(buddyList));
+                        buddyArrayAdapter = new BuddyArrayAdapter(getActivity(), buddyList);
+                        buddyListView.setAdapter(buddyArrayAdapter);
+                        buddyArrayAdapter.notifyDataSetChanged();
+                        ContactsArrangement();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        Appreference.printLog("ContactFragment", "contact clickListener notify Exception : " + e.getMessage(), "WARN", null);
+                    }
+                } catch (Resources.NotFoundException e) {
+                    e.printStackTrace();
+                    Appreference.printLog("ContactFragment", "contact clickListener Exception : " + e.getMessage(), "WARN", null);
                 } catch (Exception e) {
                     e.printStackTrace();
+                    Appreference.printLog("ContactFragment", "contact clickListener Exception : " + e.getMessage(), "WARN", null);
                 }
              /*   String test=Appreference.demo;
                 if(test.equals("add")){
@@ -782,34 +848,44 @@ public class ContactsFragment extends Fragment implements View.OnClickListener, 
         alpha.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                String s1 = alpha.getItemAtPosition(position).toString();
-                int count = buddyListView.getCount();
-                for (int i = 0; i < count; i++) {
-                    String s = buddyList.get(i).firstname;
-                    // Toast.makeText(getContext(),s,Toast.LENGTH_SHORT).show();
-                    if (s1.equalsIgnoreCase(s.substring(0, 1))) {
-                        buddyListView.setSelection(i);
-                        break;
-                    } else {
-                        buddyListView.setSelection(0);
+                try {
+                    String s1 = alpha.getItemAtPosition(position).toString();
+                    int count = buddyListView.getCount();
+                    for (int i = 0; i < count; i++) {
+                        String s = buddyList.get(i).firstname;
+                        // Toast.makeText(getContext(),s,Toast.LENGTH_SHORT).show();
+                        if (s1.equalsIgnoreCase(s.substring(0, 1))) {
+                            buddyListView.setSelection(i);
+                            break;
+                        } else {
+                            buddyListView.setSelection(0);
+                        }
                     }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    Appreference.printLog("ContactFragment", "alpha clickListener Exception : " + e.getMessage(), "WARN", null);
                 }
             }
         });
         alpha1.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                String s1 = alpha1.getItemAtPosition(position).toString();
-                int count = expandableListView.getCount();
-                for (int i = 0; i < count; i++) {
-                    String s = ExpListItems.get(i).getName();
-                    // Toast.makeText(getContext(),s,Toast.LENGTH_SHORT).show();
-                    if (s1.equalsIgnoreCase(s.substring(0, 1))) {
-                        expandableListView.setSelection(i);
-                        break;
-                    } else {
-                        expandableListView.setSelection(0);
+                try {
+                    String s1 = alpha1.getItemAtPosition(position).toString();
+                    int count = expandableListView.getCount();
+                    for (int i = 0; i < count; i++) {
+                        String s = ExpListItems.get(i).getName();
+                        // Toast.makeText(getContext(),s,Toast.LENGTH_SHORT).show();
+                        if (s1.equalsIgnoreCase(s.substring(0, 1))) {
+                            expandableListView.setSelection(i);
+                            break;
+                        } else {
+                            expandableListView.setSelection(0);
+                        }
                     }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    Appreference.printLog("ContactFragment", "alpha1 clickListener Exception : " + e.getMessage(), "WARN", null);
                 }
             }
         });
@@ -817,40 +893,48 @@ public class ContactsFragment extends Fragment implements View.OnClickListener, 
         group.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                sortlayout.setVisibility(View.GONE);
-                contactTab = false;
-                contactTab_1 = false;
-                indexLayout.setVisibility(View.GONE);
-                alpha.setVisibility(View.GONE);
-                indexLayout1.setVisibility(View.GONE);
-                alpha1.setVisibility(View.GONE);
-                template.setVisibility(View.GONE);
-                chat.setVisibility(View.GONE);
+                try {
+                    sortlayout.setVisibility(View.GONE);
+                    contactTab = false;
+                    contactTab_1 = false;
+                    indexLayout.setVisibility(View.GONE);
+                    alpha.setVisibility(View.GONE);
+                    indexLayout1.setVisibility(View.GONE);
+                    alpha1.setVisibility(View.GONE);
+                    template.setVisibility(View.GONE);
+                    chat.setVisibility(View.GONE);
 //                reportdetails.setVisibility(View.VISIBLE);
-                notes.setVisibility(View.GONE);
-                audio_call.setVisibility(View.GONE);
-                group_batch.setVisibility(View.GONE);
+                    notes.setVisibility(View.GONE);
+                    audio_call.setVisibility(View.GONE);
+                    group_batch.setVisibility(View.GONE);
 //                video_call.setVisibility(View.VISIBLE);
-                contact.setTextColor(getResources().getColor(R.color.black));
-                group.setTextColor(getResources().getColor(R.color.white));
+                    contact.setTextColor(getResources().getColor(R.color.black));
+                    group.setTextColor(getResources().getColor(R.color.white));
 //                t2.setVisibility(View.VISIBLE);
-                t1.setVisibility(View.GONE);
-                //alpha1.setVisibility(View.VISIBLE);
-                buddyListView.setVisibility(View.GONE);
-                expandableListView.setVisibility(View.VISIBLE);
-                group.setBackgroundColor(getResources().getColor(R.color.appcolor));
-                group_view.setBackgroundColor(getResources().getColor(R.color.appcolor));
-                contact.setBackgroundColor(getResources().getColor(R.color.grey_dark));
-                contact_view.setBackgroundColor(getResources().getColor(R.color.grey_dark));
-                if (contact_count != 0 && contact_count > 0) {
-                    contact_batch.setVisibility(View.VISIBLE);
-                    contact_batch.setText(String.valueOf(contact_count));
-                } else {
-                    contact_batch.setVisibility(View.GONE);
-                }
-                Log.i("contact", "contact_count before " + contact_count);
+                    t1.setVisibility(View.GONE);
+                    //alpha1.setVisibility(View.VISIBLE);
+                    buddyListView.setVisibility(View.GONE);
+                    expandableListView.setVisibility(View.VISIBLE);
+                    group.setBackgroundColor(getResources().getColor(R.color.appcolor));
+                    group_view.setBackgroundColor(getResources().getColor(R.color.appcolor));
+                    contact.setBackgroundColor(getResources().getColor(R.color.grey_dark));
+                    contact_view.setBackgroundColor(getResources().getColor(R.color.grey_dark));
+                    if (contact_count != 0 && contact_count > 0) {
+                        contact_batch.setVisibility(View.VISIBLE);
+                        contact_batch.setText(String.valueOf(contact_count));
+                    } else {
+                        contact_batch.setVisibility(View.GONE);
+                    }
+                    Log.i("contact", "contact_count before " + contact_count);
 
-                groupListRefresh();
+                    groupListRefresh();
+                } catch (Resources.NotFoundException e) {
+                    e.printStackTrace();
+                    Appreference.printLog("ContactFragment", "group clickListener Exception : " + e.getMessage(), "WARN", null);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    Appreference.printLog("ContactFragment", "group clickListener Exception : " + e.getMessage(), "WARN", null);
+                }
 
             }
         });
@@ -858,19 +942,21 @@ public class ContactsFragment extends Fragment implements View.OnClickListener, 
         expandableListView.setOnGroupClickListener(new ExpandableListView.OnGroupClickListener() {
             @Override
             public boolean onGroupClick(ExpandableListView parent, View v, int groupPosition, long id) {
-                Log.i("ContactFragment", "expandableListView.setOnGroupClickListener ");
-                buddyListSelectedIdx = groupPosition;
-                Group group = ExpListItems.get(groupPosition);
-                if (!group.getIscheck()) {
-                    Log.e("sipTest", "Inside True");
-                    group.setIscheck(true);
-                } else {
-                    Log.e("sipTest", "Inside False");
-                    group.setIscheck(false);
-                }
 
-                ExpAdapter.notifyDataSetChanged();
-                showprogress();
+                try {
+                    Log.i("ContactFragment", "expandableListView.setOnGroupClickListener ");
+                    buddyListSelectedIdx = groupPosition;
+                    Group group = ExpListItems.get(groupPosition);
+                    if (!group.getIscheck()) {
+                        Log.e("sipTest", "Inside True");
+                        group.setIscheck(true);
+                    } else {
+                        Log.e("sipTest", "Inside False");
+                        group.setIscheck(false);
+                    }
+
+                    ExpAdapter.notifyDataSetChanged();
+                    showprogress();
 //                int group1 = Integer.parseInt(ExpListItems.get(groupPosition).getId());
 //                String groupId = String.valueOf(group1);
 //                Log.i("expand", "groupId" + groupId);
@@ -879,6 +965,10 @@ public class ContactsFragment extends Fragment implements View.OnClickListener, 
 //                nameValuePairs1.add(new BasicNameValuePair("userId", userId));
 //                nameValuePairs1.add(new BasicNameValuePair("groupId", groupId));
 //                Appreference.jsonRequestSender.listUserGroupMemberAccess(EnumJsonWebservicename.listUserGroupMemberAccess, nameValuePairs1, ContactsFragment.this);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    Appreference.printLog("ContactFragment", "expandableListView clicklistener Exception : " + e.getMessage(), "WARN", null);
+                }
                 return false;
             }
         });
@@ -886,20 +976,25 @@ public class ContactsFragment extends Fragment implements View.OnClickListener, 
         expandableListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Group group = ExpListItems.get(position);
-                Log.i("ContactFragment", "expandableListView.setOnItemClickListener ");
+                try {
+                    Group group = ExpListItems.get(position);
+                    Log.i("ContactFragment", "expandableListView.setOnItemClickListener ");
                 /*Intent i = new Intent(context, TaskHistory.class);
                 i.putExtra("userId", group.getName());
                 Log.i("TaskStatus", "value 1 " + group.getName() + group.getId());
                 i.putExtra("taskType", "Group");
                 startActivity(i);*/
-                Intent intent = new Intent(getContext(), Contactlistpage.class);
-                intent.putExtra("contact", String.valueOf(group));
-                intent.putExtra("userId", group.getId());
-                intent.putExtra("groupname", group.getName());
-                Log.i("contact", "groupid " + group.getId());
-                intent.putExtra("taskType", "Group");
-                startActivity(intent);
+                    Intent intent = new Intent(getContext(), Contactlistpage.class);
+                    intent.putExtra("contact", String.valueOf(group));
+                    intent.putExtra("userId", group.getId());
+                    intent.putExtra("groupname", group.getName());
+                    Log.i("contact", "groupid " + group.getId());
+                    intent.putExtra("taskType", "Group");
+                    startActivity(intent);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    Appreference.printLog("ContactFragment", "expandableListView itemclick Exception : " + e.getMessage(), "WARN", null);
+                }
             }
         });
 
@@ -916,27 +1011,31 @@ public class ContactsFragment extends Fragment implements View.OnClickListener, 
                 } else if (itemType == ExpandableListView.PACKED_POSITION_TYPE_GROUP) {
                     Group group = ExpListItems.get(position);
                     final String assing_New = VideoCallDataBase.getDB(context).getGroupMemberAccess("select GroupTask from listUserGroupMemberAccess where groupid ='" + group.getId() + "'");
-                    if (assing_New != null && assing_New.contains("0")) {
-                        Toast.makeText(classContext, "You are not rights to GroupTaskAccess ", Toast.LENGTH_SHORT).show();
-                    } else {
-                        Log.i("contactfragment", "groupMemberAccess getGroup_Task " + position);
-                        Intent intent = new Intent(classContext, NewTaskConversation.class);
-                        Log.d("task", "toUserId" + group.getId());
-                        TaskDetailsBean taskDetailsBean = new TaskDetailsBean();
-                        taskDetailsBean.setToUserId(group.getId());
-                        taskDetailsBean.setToUserName(group.getName());
-                        taskDetailsBean.setTaskType("Group");
-                        intent.putExtra("task", "Newtask");
-                        intent.putExtra("newTaskBean", taskDetailsBean);
-                        startActivity(intent);
-                        Log.d("Group", "ItemLongClicked group true ==  " + ExpandableListView.PACKED_POSITION_TYPE_GROUP);
-                        Log.d("Group", "ItemLongClicked group true itemType ==  " + itemType);
+                    try {
+                        if (assing_New != null && assing_New.contains("0")) {
+                            Toast.makeText(classContext, "You are not rights to GroupTaskAccess ", Toast.LENGTH_SHORT).show();
+                        } else {
+                            Log.i("contactfragment", "groupMemberAccess getGroup_Task " + position);
+                            Intent intent = new Intent(classContext, NewTaskConversation.class);
+                            Log.d("task", "toUserId" + group.getId());
+                            TaskDetailsBean taskDetailsBean = new TaskDetailsBean();
+                            taskDetailsBean.setToUserId(group.getId());
+                            taskDetailsBean.setToUserName(group.getName());
+                            taskDetailsBean.setTaskType("Group");
+                            intent.putExtra("task", "Newtask");
+                            intent.putExtra("newTaskBean", taskDetailsBean);
+                            startActivity(intent);
+                            Log.d("Group", "ItemLongClicked group true ==  " + ExpandableListView.PACKED_POSITION_TYPE_GROUP);
+                            Log.d("Group", "ItemLongClicked group true itemType ==  " + itemType);
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        Appreference.printLog("ContactFragment", "expandableListView ItemLongClickListener Exception : " + e.getMessage(), "WARN", null);
                     }
                     return true;
                 } else {
                     return true;
                 }
-
             }
         });
 
@@ -997,99 +1096,111 @@ public class ContactsFragment extends Fragment implements View.OnClickListener, 
 //               item1.setIsprofile(false);
 //               Log.i("statusIcon", "visibility**** " + contactBean.getIsprofile());
                 if (menu.getMenuItem(index).getTitle().equalsIgnoreCase("Video call")) {
-                    Log.i("list ----------- > ", buddyList.get(position) + "");
-                    ContactBean item = buddyList.get(position);
-                    String buddy_uri = item.getUsername();
-                    Log.i("swipe call ", "name video " + buddy_uri);
-                    buddyList.get(position).setIscheck(true);
-                    if (buddyList.size() > 0) {
-                        check = false;
-                        dialog = new ProgressDialog(classContext);
-                        dialog.setMessage("Call Connecting...");
-                        dialog.setCancelable(false);
-                        dialog.show();
-//                        for (ContactBean contactBean : buddyList) {
-//                            ContactBean item1 = buddyList.get(position);
-//                            if (contactBean.getIscheck()) {
-                        MainActivity.isAudioCall = false;
-//                        callNotification(item1.userid, Appreference.loginuserdetails.getId());
-//                        Appreference.broadcast_call = false;
-                        ArrayList<Integer> group_list_id = new ArrayList<Integer>();
-                        group_list_id.add(item.userid);
-                        if(group_list_id.size() > 0) {
-                            callNotification(group_list_id, Appreference.loginuserdetails.getId());
-                            Appreference.broadcast_call = false;
-                        }
-//                           }
-                    }
                     try {
-                        buddyArrayAdapter.notifyDataSetChanged();
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-//                    }
-                }
-                if (menu.getMenuItem(index).getTitle().equalsIgnoreCase("Audio call")) {
-                    Log.i("list ----------- > ", buddyList.get(position) + "");
-                    ContactBean item = buddyList.get(position);
-                    String buddy_uri_audio = item.getUsername();
-                    buddyList.get(position).setIscheck(true);
-                    Log.i("swipe call ", "name audio ** " + buddy_uri_audio);
-                    Log.i("swipe call ", "name audio call---->  " + buddy_uri_audio);
-                    if (MainActivity.gsmCallState == TelephonyManager.CALL_STATE_IDLE) {
+                        Log.i("list ----------- > ", buddyList.get(position) + "");
+                        ContactBean item = buddyList.get(position);
+                        String buddy_uri = item.getUsername();
+                        Log.i("swipe call ", "name video " + buddy_uri);
+                        buddyList.get(position).setIscheck(true);
                         if (buddyList.size() > 0) {
                             check = false;
                             dialog = new ProgressDialog(classContext);
                             dialog.setMessage("Call Connecting...");
                             dialog.setCancelable(false);
                             dialog.show();
-//                            for (ContactBean contactBean : buddyList) {
-//                                ContactBean item1 = buddyList.get(position);
-//                                if (contactBean.getIscheck()) {
-                            MainActivity.isAudioCall = true;
-//                            callNotification(item1.userid, Appreference.loginuserdetails.getId());
-//                            Log.i("swipe call ", "name audio item1.userid " + item1.userid);
-//                            Appreference.broadcast_call = false;
+                            //                        for (ContactBean contactBean : buddyList) {
+                            //                            ContactBean item1 = buddyList.get(position);
+                            //                            if (contactBean.getIscheck()) {
+                            MainActivity.isAudioCall = false;
+                            //                        callNotification(item1.userid, Appreference.loginuserdetails.getId());
+                            //                        Appreference.broadcast_call = false;
                             ArrayList<Integer> group_list_id = new ArrayList<Integer>();
                             group_list_id.add(item.userid);
-                            if(group_list_id.size() > 0) {
+                            if (group_list_id.size() > 0) {
                                 callNotification(group_list_id, Appreference.loginuserdetails.getId());
                                 Appreference.broadcast_call = false;
                             }
-//                                }
+                            //                           }
                         }
-                        buddyArrayAdapter.notifyDataSetChanged();
-//                        }
+                        try {
+                            buddyArrayAdapter.notifyDataSetChanged();
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                            Appreference.printLog("ContactFragment", "buddyListView MenuItemClick_videocall Exception : " + e.getMessage(), "WARN", null);
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        Appreference.printLog("ContactFragment", "buddyListView MenuItemClick_videocall Exception : " + e.getMessage(), "WARN", null);
+                    }
+//                    }
+                }
+                if (menu.getMenuItem(index).getTitle().equalsIgnoreCase("Audio call")) {
+                    try {
+                        Log.i("list ----------- > ", buddyList.get(position) + "");
+                        ContactBean item = buddyList.get(position);
+                        String buddy_uri_audio = item.getUsername();
+                        buddyList.get(position).setIscheck(true);
+                        Log.i("swipe call ", "name audio ** " + buddy_uri_audio);
+                        Log.i("swipe call ", "name audio call---->  " + buddy_uri_audio);
+                        if (MainActivity.gsmCallState == TelephonyManager.CALL_STATE_IDLE) {
+                            if (buddyList.size() > 0) {
+                                check = false;
+                                dialog = new ProgressDialog(classContext);
+                                dialog.setMessage("Call Connecting...");
+                                dialog.setCancelable(false);
+                                dialog.show();
+                                //                            for (ContactBean contactBean : buddyList) {
+                                //                                ContactBean item1 = buddyList.get(position);
+                                //                                if (contactBean.getIscheck()) {
+                                MainActivity.isAudioCall = true;
+                                //                            callNotification(item1.userid, Appreference.loginuserdetails.getId());
+                                //                            Log.i("swipe call ", "name audio item1.userid " + item1.userid);
+                                //                            Appreference.broadcast_call = false;
+                                ArrayList<Integer> group_list_id = new ArrayList<Integer>();
+                                group_list_id.add(item.userid);
+                                if (group_list_id.size() > 0) {
+                                    callNotification(group_list_id, Appreference.loginuserdetails.getId());
+                                    Appreference.broadcast_call = false;
+                                }
+                                //                                }
+                            }
+                            buddyArrayAdapter.notifyDataSetChanged();
+                            //                        }
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        Appreference.printLog("ContactFragment", "buddyListView MenuItemClick_audiocall Exception : " + e.getMessage(), "WARN", null);
                     }
                 }
                 if (menu.getMenuItem(index).getTitle().equalsIgnoreCase("Chat")) {
 //                    for (int pos = 0; pos < buddyList.size(); pos++) {
-                    ContactBean item = buddyList.get(position);
-                    String buddy_uri = item.getUsername();
+                    try {
+                        ContactBean item = buddyList.get(position);
+                        String buddy_uri = item.getUsername();
 
 
-                    Intent i = new Intent(getContext(), NewTaskConversation.class);
+                        Intent i = new Intent(getContext(), NewTaskConversation.class);
 
-                    Log.i("chat", "chat Selected user-->" + buddy_uri);
-                    ArrayList<TaskDetailsBean> taskDetailsBean = VideoCallDataBase.getDB(classContext).getChatnames(buddy_uri,"individual");
-                    if (taskDetailsBean != null && taskDetailsBean.size() > 0 && taskDetailsBean.get(0) != null) {
-                        Log.i("chat", "Chatetails size--->" + taskDetailsBean.get(0).getToUserId());
-                        Log.i("chat", "db datetime-->" + taskDetailsBean.get(0));
-                        Log.i("chat", "db cahtid--->" + taskDetailsBean.get(0));
-                        i.putExtra("chatid", taskDetailsBean.get(0).getTaskId());
-                        i.putExtra("task", "chathistory");
-                        i.putExtra("chatHistoryBean", taskDetailsBean.get(0));
-                        i.putExtra("catagory", taskDetailsBean.get(0).getCatagory());
-                    } else {
-                        i.putExtra("task", "chat");
-                        i.putExtra("type", "individual");
-                        i.putExtra("touser", buddy_uri);
-                        i.putExtra("touserid", String.valueOf(item.getUserid()));
-                    }
+                        Log.i("chat", "chat Selected user-->" + buddy_uri);
+                        ArrayList<TaskDetailsBean> taskDetailsBean = VideoCallDataBase.getDB(classContext).getChatnames(buddy_uri, "individual");
+                        if (taskDetailsBean != null && taskDetailsBean.size() > 0 && taskDetailsBean.get(0) != null) {
+                            Log.i("chat", "Chatetails size--->" + taskDetailsBean.get(0).getToUserId());
+                            Log.i("chat", "db datetime-->" + taskDetailsBean.get(0));
+                            Log.i("chat", "db cahtid--->" + taskDetailsBean.get(0));
+                            i.putExtra("chatid", taskDetailsBean.get(0).getTaskId());
+                            i.putExtra("task", "chathistory");
+                            i.putExtra("chatHistoryBean", taskDetailsBean.get(0));
+                            i.putExtra("catagory", taskDetailsBean.get(0).getCatagory());
+                        } else {
+                            i.putExtra("task", "chat");
+                            i.putExtra("type", "individual");
+                            i.putExtra("touser", buddy_uri);
+                            i.putExtra("touserid", String.valueOf(item.getUserid()));
+                        }
 
-                    startActivity(i);
+                        startActivity(i);
 //                    chatUsers.add(buddy_uri);
-                    Log.i("chat", "chat Selected user-->" + buddy_uri);
+                        Log.i("chat", "chat Selected user-->" + buddy_uri);
 //                    }
 //                    if (chatUsers != null && chatUsers.size() > 0) {
 //                        Log.i("chat", "chat user size-->" + chatUsers.size());
@@ -1131,22 +1242,32 @@ public class ContactsFragment extends Fragment implements View.OnClickListener, 
 //                        i.putExtra("chattype", "SecureChat");
 //                        startActivity(i);
 //                    }
-                    try {
-                        buddyArrayAdapter.notifyDataSetChanged();
+                        try {
+                            buddyArrayAdapter.notifyDataSetChanged();
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                            Appreference.printLog("ContactFragment", "buddyListView MenuItemClick_chat Exception : " + e.getMessage(), "WARN", null);
+                        }
                     } catch (Exception e) {
                         e.printStackTrace();
+                        Appreference.printLog("ContactFragment", "buddyListView MenuItemClick_chat Exception : " + e.getMessage(), "WARN", null);
                     }
                 }
                 if (menu.getMenuItem(index).getTitle().equalsIgnoreCase("Tasks")) {
-                    buddyListSelectedIdx = position;
-                    Log.i("ContactsFragment ", "buddyListView.setOnItemClickListener *********" + buddyList.get(position) + "");
-                    ContactBean item = buddyList.get(position);
-                    String buddy_uri = item.getUsername();
-                    Intent intent = new Intent(getContext(), TaskHistory.class);
-                    intent.putExtra("contact", item);
-                    intent.putExtra("userId", item.getUsername());
-                    intent.putExtra("taskType", "Individual");
-                    startActivity(intent);
+                    try {
+                        buddyListSelectedIdx = position;
+                        Log.i("ContactsFragment ", "buddyListView.setOnItemClickListener *********" + buddyList.get(position) + "");
+                        ContactBean item = buddyList.get(position);
+                        String buddy_uri = item.getUsername();
+                        Intent intent = new Intent(getContext(), TaskHistory.class);
+                        intent.putExtra("contact", item);
+                        intent.putExtra("userId", item.getUsername());
+                        intent.putExtra("taskType", "Individual");
+                        startActivity(intent);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        Appreference.printLog("ContactFragment", "buddyListView MenuItemClick_Tasks Exception : " + e.getMessage(), "WARN", null);
+                    }
                 }
                 return false;
             }
@@ -1168,6 +1289,7 @@ public class ContactsFragment extends Fragment implements View.OnClickListener, 
                     startActivity(intent);
                 } catch (Exception e) {
                     e.printStackTrace();
+                    Appreference.printLog("ContactFragment", "buddyListView onItemclick Exception : " + e.getMessage(), "WARN", null);
                 }
 //                if (!item.getIscheck()) {
 //                    Log.e("sipTest", "Inside True");
@@ -1221,6 +1343,7 @@ public class ContactsFragment extends Fragment implements View.OnClickListener, 
 //                startActivity(intent);
                 } catch (Exception e) {
                     e.printStackTrace();
+                    Appreference.printLog("ContactFragment", "buddyListView OnItemLongClick Exception : " + e.getMessage(), "WARN", null);
                 }
                 return true;
             }
@@ -1249,41 +1372,46 @@ public class ContactsFragment extends Fragment implements View.OnClickListener, 
         ll_statusChange.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Context wrapper = new ContextThemeWrapper(getContext(), R.style.myPopupMenuStyle);
-                PopupMenu popup = new PopupMenu(wrapper, ll_statusChange);
-                //Inflating the Popup using xml file
+                try {
+                    Context wrapper = new ContextThemeWrapper(getContext(), R.style.myPopupMenuStyle);
+                    PopupMenu popup = new PopupMenu(wrapper, ll_statusChange);
+                    //Inflating the Popup using xml file
 //               popup.getMenu().getItem(1).setChecked(true);
-                popup.getMenuInflater().inflate(R.menu.loginuserstatus_menu, popup.getMenu());
-                //registering popup with OnMenuItemClickListener
-                popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-                    public boolean onMenuItemClick(MenuItem item) {
-                        if (item.getTitle().equals("Online")) {
-                            ChangeLoginUserStatus("Online", "online");
-                            loginuserStatus.setText("Online");
-                            iv_txtstatus.setBackground(getResources().getDrawable(R.drawable.online1));
-                            Appreference.loginuser_status = loginuserStatus.getText().toString().trim();
-                            Log.i("presence", "Online " + Appreference.loginuser_status);
-                        } else if (item.getTitle().equals("Away")) {
-                            ChangeLoginUserStatus("Away", "online");
-                            loginuserStatus.setText("Away");
-                            iv_txtstatus.setBackground(getResources().getDrawable(R.drawable.away));
-                            Appreference.loginuser_status = loginuserStatus.getText().toString().trim();
-                            Log.i("presence", "Away " + Appreference.loginuser_status);
-                        } else if (item.getTitle().equals("Busy")) {
-                            ChangeLoginUserStatus("Busy", "online");
-                            loginuserStatus.setText("Busy");
-                            iv_txtstatus.setBackground(getResources().getDrawable(R.drawable.busy));
-                            Appreference.loginuser_status = loginuserStatus.getText().toString().trim();
-                        }/* else if (item.getTitle().equals("Offline")) {
-                            ChangeLoginUserStatus("Offline", "Offline");
-                            loginuserStatus.setText("Offline");
-                            iv_txtstatus.setBackground(getResources().getDrawable(R.drawable.off_line1));
-                            Appreference.loginuser_status = loginuserStatus.getText().toString().trim();
-                        }*/
-                        return true;
-                    }
-                });
-                popup.show();
+                    popup.getMenuInflater().inflate(R.menu.loginuserstatus_menu, popup.getMenu());
+                    //registering popup with OnMenuItemClickListener
+                    popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                        public boolean onMenuItemClick(MenuItem item) {
+                            if (item.getTitle().equals("Online")) {
+                                ChangeLoginUserStatus("Online", "online");
+                                loginuserStatus.setText("Online");
+                                iv_txtstatus.setBackground(getResources().getDrawable(R.drawable.online1));
+                                Appreference.loginuser_status = loginuserStatus.getText().toString().trim();
+                                Log.i("presence", "Online " + Appreference.loginuser_status);
+                            } else if (item.getTitle().equals("Away")) {
+                                ChangeLoginUserStatus("Away", "online");
+                                loginuserStatus.setText("Away");
+                                iv_txtstatus.setBackground(getResources().getDrawable(R.drawable.away));
+                                Appreference.loginuser_status = loginuserStatus.getText().toString().trim();
+                                Log.i("presence", "Away " + Appreference.loginuser_status);
+                            } else if (item.getTitle().equals("Busy")) {
+                                ChangeLoginUserStatus("Busy", "online");
+                                loginuserStatus.setText("Busy");
+                                iv_txtstatus.setBackground(getResources().getDrawable(R.drawable.busy));
+                                Appreference.loginuser_status = loginuserStatus.getText().toString().trim();
+                            }/* else if (item.getTitle().equals("Offline")) {
+                                ChangeLoginUserStatus("Offline", "Offline");
+                                loginuserStatus.setText("Offline");
+                                iv_txtstatus.setBackground(getResources().getDrawable(R.drawable.off_line1));
+                                Appreference.loginuser_status = loginuserStatus.getText().toString().trim();
+                            }*/
+                            return true;
+                        }
+                    });
+                    popup.show();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    Appreference.printLog("ContactFragment", "ll_statusChange Exception : " + e.getMessage(), "WARN", null);
+                }
             }
 
 
@@ -1318,6 +1446,7 @@ public class ContactsFragment extends Fragment implements View.OnClickListener, 
                             buddyArrayAdapter.notifyDataSetChanged();
                         } catch (Exception e) {
                             e.printStackTrace();
+                            Appreference.printLog("ContactFragment", "alphaSelectionEnable Exception : " + e.getMessage(), "WARN", null);
                         }
                         //            alpha_sort.setTextColor(Color.BLACK);
                     } else {
@@ -1328,11 +1457,13 @@ public class ContactsFragment extends Fragment implements View.OnClickListener, 
                             buddyArrayAdapter.notifyDataSetChanged();
                         } catch (Exception e) {
                             e.printStackTrace();
+                            Appreference.printLog("ContactFragment", "alphaSelectionEnable Exception : " + e.getMessage(), "WARN", null);
                         }
                         //            alpha_sort.setTextColor(Color.BLACK);
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
+                    Appreference.printLog("ContactFragment", "alphaSelectionEnable Exception : " + e.getMessage(), "WARN", null);
                 }
             }
         });
@@ -1384,22 +1515,34 @@ public class ContactsFragment extends Fragment implements View.OnClickListener, 
             buddyArrayAdapter.notifyDataSetChanged();
         } catch (Exception e) {
             e.printStackTrace();
+            Appreference.printLog("ContactFragment", "onlineSelectionEnable Exception : " + e.getMessage(), "WARN", null);
         }
     }
 
 
     private void displayIndex() {
-        adapter = new ArrayAdapter<String>(getContext(), R.layout.item, alphaindex);
-        alpha.setAdapter(adapter);
-        alpha1.setAdapter(adapter);
+        try {
+            adapter = new ArrayAdapter<String>(getContext(), R.layout.item, alphaindex);
+            alpha.setAdapter(adapter);
+            alpha1.setAdapter(adapter);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Appreference.printLog("ContactFragment", "displayIndex Exception : " + e.getMessage(), "WARN", null);
+        }
     }
 
     private void getIndex(String[] alphabaticalList) {
-        alphaindex = new ArrayList<String>();
-        Collections.addAll(alphaindex, alphabaticalList);
+
+        try {
+            alphaindex = new ArrayList<String>();
+            Collections.addAll(alphaindex, alphabaticalList);
 //        for (int i = 0; i < alphabaticalList.length; i++) {
 //            alphaindex.add(alphabaticalList[i]);
 //        }
+        } catch (Exception e) {
+            e.printStackTrace();
+            Appreference.printLog("ContactFragment", "getIndex Exception : " + e.getMessage(), "WARN", null);
+        }
     }
 
     private int GetPixelFromDips(float pixels) {
@@ -1427,117 +1570,121 @@ public class ContactsFragment extends Fragment implements View.OnClickListener, 
     @Override
     public void onResume() {
         super.onResume();
-        contact_count = 0;
-        group_count = 0;
-        contactTab_1 = true;
-        Log.d("LifeCycle", "Fragment ==  onResume");
-        showNetworkStateUI();
-        if (Appreference.context_table.containsKey("mainactivity")) {
-            Log.d("Task1", "Inside if in contactFragment onResume");
-            MainActivity mainActivity = (MainActivity) Appreference.context_table.get("mainactivity");
-            mainActivity.BadgeReferece();
-        }
-
         try {
-            String s = "select * from taskDetailsInfo where msgstatus='12' and loginuser='" + Appreference.loginuserdetails.getEmail() + "'";
-            ArrayList<ProjectDetailsBean> projectDetailsBeen = VideoCallDataBase.getDB(classContext).getExclationdetails(s);
-            if(projectDetailsBeen.size() > 0)
-                exclation_counter.setVisibility(View.VISIBLE);
-            else
-                exclation_counter.setVisibility(View.GONE);
-
-        }catch (Exception e){
-            e.printStackTrace();
-        }
-
-        if (Appreference.loginuser_status != null) {
-            Log.i("ss", "ContactFragment OncreateView!=null");
-            Log.i("presence", "OnResume " + Appreference.loginuser_status);
-            loginuserStatus.setText(Appreference.loginuser_status);
-            switch (Appreference.loginuser_status) {
-                case "Online":
-                    loginuserStatus.setText(Appreference.loginuser_status);
-                    iv_txtstatus.setBackground(getResources().getDrawable(R.drawable.online1));
-                    break;
-                case "Away":
-                    loginuserStatus.setText(Appreference.loginuser_status);
-                    iv_txtstatus.setBackground(getResources().getDrawable(R.drawable.away));
-                    break;
-                case "Busy":
-                    loginuserStatus.setText(Appreference.loginuser_status);
-                    iv_txtstatus.setBackground(getResources().getDrawable(R.drawable.busy));
-                    Log.i("presence", "OnResume busy " + Appreference.loginuser_status);
-                    break;
-                case "Offline":
-                    loginuserStatus.setText(Appreference.loginuser_status);
-                    iv_txtstatus.setBackground(getResources().getDrawable(R.drawable.off_line1));
-                    break;
-                default:
-                    break;
-
-            }
-        }
-
-        if (VideoCallDataBase.getDB(classContext).getContact(Appreference.loginuserdetails.getUsername()) != null) {
-            list = "Contact";
-            Log.i("Contact", "Database");
-            if (Appreference.loginuserdetails.getFirstName() != null && Appreference.loginuserdetails.getLastName() != null) {
-                buddyList1 = VideoCallDataBase.getDB(classContext).getContact(Appreference.loginuserdetails.getUsername());
-                if (buddyList1 != null && buddyList1.size() > 0)
-                    for (ContactBean contactBean : buddyList1) {
-                        int msgCount = VideoCallDataBase.getDB(classContext).getContactsUnReadMsgCount(String.valueOf(contactBean.getUserid()), "Individual");
-                        contactBean.setMsg_count(msgCount);
-                        buddyList.add(contactBean);
-                        totalbuddy.add(contactBean);
-                    }
-            }
-           /* else if (Appreference.loginuserdetails.getFirstName()!=null)
-            {
-                buddyList=VideoCallDataBase.getDB(classContext).getContact(Appreference.loginuserdetails.getFirstName());
-            }
-            else
-            {
-                buddyList=VideoCallDataBase.getDB(classContext).getContact(Appreference.loginuserdetails.getEmail());
-            }*/
-            //buddyList=VideoCallDataBase.getDB(classContext).getContact(Appreference.loginuserdetails.getUsername());
-            Log.i("ContactValue", "Arraysize" + buddyList.size());
-            int cnt = buddyList.size();
-
-            for (int i = 0; i < cnt; i++) {
-                bean = buddyList.get(i);
-                String s1 = buddyList.get(i).username;
-                list1.add(s1);
+            contact_count = 0;
+            group_count = 0;
+            contactTab_1 = true;
+            Log.d("LifeCycle", "Fragment ==  onResume");
+            showNetworkStateUI();
+            if (Appreference.context_table.containsKey("mainactivity")) {
+                Log.d("Task1", "Inside if in contactFragment onResume");
+                MainActivity mainActivity = (MainActivity) Appreference.context_table.get("mainactivity");
+                mainActivity.BadgeReferece();
             }
 
-            Log.i("List", "arraylist " + list1);
             try {
-                Collections.sort(buddyList, new CustomComparator());
+                String s = "select * from taskDetailsInfo where msgstatus='12' and loginuser='" + Appreference.loginuserdetails.getEmail() + "'";
+                ArrayList<ProjectDetailsBean> projectDetailsBeen = VideoCallDataBase.getDB(classContext).getExclationdetails(s);
+                if (projectDetailsBeen.size() > 0)
+                    exclation_counter.setVisibility(View.VISIBLE);
+                else
+                    exclation_counter.setVisibility(View.GONE);
+
             } catch (Exception e) {
                 e.printStackTrace();
+                Appreference.printLog("ContactFragment", "onResume exclation_counter Exception : " + e.getMessage(), "WARN", null);
             }
-            try {
-                if (buddyList.size() == 0)
-                    contact.performClick();
 
-/*            int msgCount = VideoCallDataBase.getDB(getActivity().getApplicationContext()).getContactsUnReadMsgCount(contactBean.getUsername());
-            for (ContactBean contactBean:buddyList) {
-                contactBean.setMsg_count(msgCount);
-            }*/
-                buddyArrayAdapter = new BuddyArrayAdapter(getActivity(), buddyList);
-                buddyListView.setAdapter(buddyArrayAdapter);
-                buddyArrayAdapter.notifyDataSetChanged();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            /*handler.post(new Runnable() {
-                @Override
-                public void run() {
-                    Collections.sort(buddyList, new CustomComparator());
-                    buddyArrayAdapter.notifyDataSetChanged();
+            if (Appreference.loginuser_status != null) {
+                Log.i("ss", "ContactFragment OncreateView!=null");
+                Log.i("presence", "OnResume " + Appreference.loginuser_status);
+                loginuserStatus.setText(Appreference.loginuser_status);
+                switch (Appreference.loginuser_status) {
+                    case "Online":
+                        loginuserStatus.setText(Appreference.loginuser_status);
+                        iv_txtstatus.setBackground(getResources().getDrawable(R.drawable.online1));
+                        break;
+                    case "Away":
+                        loginuserStatus.setText(Appreference.loginuser_status);
+                        iv_txtstatus.setBackground(getResources().getDrawable(R.drawable.away));
+                        break;
+                    case "Busy":
+                        loginuserStatus.setText(Appreference.loginuser_status);
+                        iv_txtstatus.setBackground(getResources().getDrawable(R.drawable.busy));
+                        Log.i("presence", "OnResume busy " + Appreference.loginuser_status);
+                        break;
+                    case "Offline":
+                        loginuserStatus.setText(Appreference.loginuser_status);
+                        iv_txtstatus.setBackground(getResources().getDrawable(R.drawable.off_line1));
+                        break;
+                    default:
+                        break;
+
                 }
-            });*/
-            ContactsArrangement();
-        }
+            }
+
+            if (VideoCallDataBase.getDB(classContext).getContact(Appreference.loginuserdetails.getUsername()) != null) {
+                list = "Contact";
+                Log.i("Contact", "Database");
+                if (Appreference.loginuserdetails.getFirstName() != null && Appreference.loginuserdetails.getLastName() != null) {
+                    buddyList1 = VideoCallDataBase.getDB(classContext).getContact(Appreference.loginuserdetails.getUsername());
+                    if (buddyList1 != null && buddyList1.size() > 0)
+                        for (ContactBean contactBean : buddyList1) {
+                            int msgCount = VideoCallDataBase.getDB(classContext).getContactsUnReadMsgCount(String.valueOf(contactBean.getUserid()), "Individual");
+                            contactBean.setMsg_count(msgCount);
+                            buddyList.add(contactBean);
+                            totalbuddy.add(contactBean);
+                        }
+                }
+               /* else if (Appreference.loginuserdetails.getFirstName()!=null)
+                {
+                    buddyList=VideoCallDataBase.getDB(classContext).getContact(Appreference.loginuserdetails.getFirstName());
+                }
+                else
+                {
+                    buddyList=VideoCallDataBase.getDB(classContext).getContact(Appreference.loginuserdetails.getEmail());
+                }*/
+                //buddyList=VideoCallDataBase.getDB(classContext).getContact(Appreference.loginuserdetails.getUsername());
+                Log.i("ContactValue", "Arraysize" + buddyList.size());
+                int cnt = buddyList.size();
+
+                for (int i = 0; i < cnt; i++) {
+                    bean = buddyList.get(i);
+                    String s1 = buddyList.get(i).username;
+                    list1.add(s1);
+                }
+
+                Log.i("List", "arraylist " + list1);
+                try {
+                    Collections.sort(buddyList, new CustomComparator());
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    Appreference.printLog("ContactFragment", "onResume buddyList Exception : " + e.getMessage(), "WARN", null);
+                }
+                try {
+                    if (buddyList.size() == 0)
+                        contact.performClick();
+
+    /*            int msgCount = VideoCallDataBase.getDB(getActivity().getApplicationContext()).getContactsUnReadMsgCount(contactBean.getUsername());
+                for (ContactBean contactBean:buddyList) {
+                    contactBean.setMsg_count(msgCount);
+                }*/
+                    buddyArrayAdapter = new BuddyArrayAdapter(getActivity(), buddyList);
+                    buddyListView.setAdapter(buddyArrayAdapter);
+                    buddyArrayAdapter.notifyDataSetChanged();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    Appreference.printLog("ContactFragment", "onResume buddyArrayAdapter Exception : " + e.getMessage(), "WARN", null);
+                }
+                /*handler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        Collections.sort(buddyList, new CustomComparator());
+                        buddyArrayAdapter.notifyDataSetChanged();
+                    }
+                });*/
+                ContactsArrangement();
+            }
 
        /* if (Appreference.sipRegister_flag) {
             if (VideoCallDataBase.getDB(classContext).getContact(Appreference.loginuserdetails.getUsername()) != null) {
@@ -1556,63 +1703,91 @@ public class ContactsFragment extends Fragment implements View.OnClickListener, 
                 }
             }
         }*/
-        refresh();
-        Log.i("contact", "group_count before " + group_count);
-        groupListRefresh();
+            refresh();
+            Log.i("contact", "group_count before " + group_count);
+            groupListRefresh();
 //        group_count = 0;
-        Log.i("contact", "group_count before " + group_count);
+            Log.i("contact", "group_count before " + group_count);
+        } catch (Resources.NotFoundException e) {
+            e.printStackTrace();
+            Appreference.printLog("ContactFragment", "onResume Exception : " + e.getMessage(), "WARN", null);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Appreference.printLog("ContactFragment", "onResume Exception : " + e.getMessage(), "WARN", null);
+        }
 
     }
 
     private HashMap<String, String> putData(String uri, String status, String isSelected) {
-        HashMap<String, String> item = new HashMap<String, String>();
-        item.put("uri", uri);
-        item.put("status", status);
-        item.put("selected", isSelected);
+        HashMap<String, String> item = null;
+        try {
+            item = new HashMap<String, String>();
+            item.put("uri", uri);
+            item.put("status", status);
+            item.put("selected", isSelected);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Appreference.printLog("ContactFragment", "HashMap Exception : " + e.getMessage(), "WARN", null);
+        }
         return item;
     }
 
     public void addRemoveAlert() {
 
-        final Dialog dialog = new Dialog(classContext);
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.setContentView(R.layout.buddy_add_remove_alert);
-        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
-        TextView del = (TextView) dialog.findViewById(R.id.del);
-        TextView edit = (TextView) dialog.findViewById(R.id.edit);
-        TextView task = (TextView) dialog.findViewById(R.id.new_task);
+        try {
+            final Dialog dialog = new Dialog(classContext);
+            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+            dialog.setContentView(R.layout.buddy_add_remove_alert);
+            dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+            TextView del = (TextView) dialog.findViewById(R.id.del);
+            TextView edit = (TextView) dialog.findViewById(R.id.edit);
+            TextView task = (TextView) dialog.findViewById(R.id.new_task);
 
-        del.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dialog.dismiss();
-//                delBuddy();
-            }
-        });
+            del.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    dialog.dismiss();
+                    //                delBuddy();
+                }
+            });
 
-        edit.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dialog.dismiss();
-                BuddyConfig old_cfg = MainActivity.account.buddyList.get(buddyListSelectedIdx).cfg;
-                dlgAddEditBuddy(old_cfg);
-            }
-        });
+            edit.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    try {
+                        dialog.dismiss();
+                        BuddyConfig old_cfg = MainActivity.account.buddyList.get(buddyListSelectedIdx).cfg;
+                        dlgAddEditBuddy(old_cfg);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        Appreference.printLog("ContactFragment", "edit click Exception : " + e.getMessage(), "WARN", null);
+                    }
+                }
+            });
 
-        task.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+            task.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
 
-                ContactBean contactBean = buddyList.get(buddyListSelectedIdx);
+                    try {
+                        ContactBean contactBean = buddyList.get(buddyListSelectedIdx);
 
-                Intent intent = new Intent(classContext, NewTaskActivity.class);
-                Log.d("task", "toUserId" + contactBean.getUserid());
-                intent.putExtra("toUserId", contactBean.getUserid());
-                startActivity(intent);
+                        Intent intent = new Intent(classContext, NewTaskActivity.class);
+                        Log.d("task", "toUserId" + contactBean.getUserid());
+                        intent.putExtra("toUserId", contactBean.getUserid());
+                        startActivity(intent);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        Appreference.printLog("ContactFragment", "task click Exception : " + e.getMessage(), "WARN", null);
+                    }
 
-            }
-        });
-        dialog.show();
+                }
+            });
+            dialog.show();
+        } catch (Exception e) {
+            e.printStackTrace();
+            Appreference.printLog("ContactFragment", "addRemoveAlert Exception : " + e.getMessage(), "WARN", null);
+        }
     }
 //    public void makeCallAlert() {
 //
@@ -1685,18 +1860,33 @@ public class ContactsFragment extends Fragment implements View.OnClickListener, 
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.add:
-                dlgAddEditBuddy(null);
+                try {
+                    dlgAddEditBuddy(null);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    Appreference.printLog("ContactFragment", "onClick add Exception : " + e.getMessage(), "WARN", null);
+                }
                 break;
 
             case R.id.template:
-                Intent intent = new Intent(classContext, TemplateList.class);
-                intent.putExtra("task", "template");
-                startActivity(intent);
+                try {
+                    Intent intent = new Intent(classContext, TemplateList.class);
+                    intent.putExtra("task", "template");
+                    startActivity(intent);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    Appreference.printLog("ContactFragment", "onClick template Exception : " + e.getMessage(), "WARN", null);
+                }
                 break;
             case R.id.notes:
-                Intent intent_notes = new Intent(classContext, TaskHistory.class);
-                intent_notes.putExtra("note_type", "note");
-                startActivity(intent_notes);
+                try {
+                    Intent intent_notes = new Intent(classContext, TaskHistory.class);
+                    intent_notes.putExtra("note_type", "note");
+                    startActivity(intent_notes);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    Appreference.printLog("ContactFragment", "onClick notes Exception : " + e.getMessage(), "WARN", null);
+                }
                 break;
             case R.id.performance_report:
 //                Intent performance = new Intent(classContext, performanceReportForMeActivity.class);
@@ -1704,470 +1894,528 @@ public class ContactsFragment extends Fragment implements View.OnClickListener, 
 //                startActivity(performance);
                 break;
             case R.id.new_task:
-                Intent tent = new Intent(classContext, AllTaskList.class);
-                tent.putExtra("AllTaskList", "true");
-                startActivity(tent);
-                break;
-            case R.id.chat_button:
-                ArrayList<String> chatUsers = new ArrayList<String>();
-                for (int position = 0; position < buddyList.size(); position++) {
-                    ContactBean item = buddyList.get(position);
-                    if (item.getIscheck()) {
-                        String buddy_uri = item.getUsername();
-                        chatUsers.add(buddy_uri);
-                        Log.i("chat", "chat Selected user-->" + buddy_uri);
-//                    }
-                    }
-                }
-                if (chatUsers.size() > 0) {
-                    Log.i("chat", "chat user size-->" + chatUsers.size());
-
-                    TreeSet<String> names = new TreeSet<>();
-                    names.addAll(chatUsers);
-                    names.add(Appreference.loginuserdetails.getUsername());
-                    String chatuser = null;
-                    for (String nm : names) {
-                        if (chatuser == null) {
-                            chatuser = nm;
-                        } else {
-                            chatuser = chatuser + "," + nm;
-                        }
-                    }
-                    Log.i("chat", "chtuser-->" + chatuser);
-                    String[] chatDetails = VideoCallDataBase.getDB(getContext()).getChatHistoryAvailabeUser(chatuser);
-                    Intent i = new Intent(getContext(), ChatActivity.class);
-                    if (chatDetails != null && chatDetails.length > 0) {
-                        Log.i("chat", "db datetime-->" + chatDetails[0]);
-                        Log.i("chat", "db cahtid--->" + chatDetails[1]);
-                        i.putExtra("users", chatUsers);
-                        i.putExtra("datetime", chatDetails[0]);
-                        i.putExtra("chatid", chatDetails[1]);
-                    } else {
-                        SimpleDateFormat dateformat = new SimpleDateFormat(
-                                "yyyy-MM-dd hh:mm:ss");
-                        String dateforrow = dateformat.format(new Date()
-                                .getTime());
-                        String cid = Utility.getSessionID();
-                        i.putExtra("users", chatUsers);
-                        i.putExtra("datetime", dateforrow);
-                        i.putExtra("chatid", cid);
-
-                    }
-                    i.putExtra("chattype", "SecureChat");
-                    startActivity(i);
-
-                }
                 try {
-                    buddyArrayAdapter.notifyDataSetChanged();
+                    Intent tent = new Intent(classContext, AllTaskList.class);
+                    tent.putExtra("AllTaskList", "true");
+                    startActivity(tent);
                 } catch (Exception e) {
                     e.printStackTrace();
+                    Appreference.printLog("ContactFragment", "onClick new_task Exception : " + e.getMessage(), "WARN", null);
+                }
+                break;
+            case R.id.chat_button:
+                try {
+                    ArrayList<String> chatUsers = new ArrayList<String>();
+                    for (int position = 0; position < buddyList.size(); position++) {
+                        ContactBean item = buddyList.get(position);
+                        if (item.getIscheck()) {
+                            String buddy_uri = item.getUsername();
+                            chatUsers.add(buddy_uri);
+                            Log.i("chat", "chat Selected user-->" + buddy_uri);
+                            //                    }
+                        }
+                    }
+                    if (chatUsers.size() > 0) {
+                        Log.i("chat", "chat user size-->" + chatUsers.size());
+
+                        TreeSet<String> names = new TreeSet<>();
+                        names.addAll(chatUsers);
+                        names.add(Appreference.loginuserdetails.getUsername());
+                        String chatuser = null;
+                        for (String nm : names) {
+                            if (chatuser == null) {
+                                chatuser = nm;
+                            } else {
+                                chatuser = chatuser + "," + nm;
+                            }
+                        }
+                        try {
+                            Log.i("chat", "chtuser-->" + chatuser);
+                            String[] chatDetails = VideoCallDataBase.getDB(getContext()).getChatHistoryAvailabeUser(chatuser);
+                            Intent i = new Intent(getContext(), ChatActivity.class);
+                            if (chatDetails != null && chatDetails.length > 0) {
+                                Log.i("chat", "db datetime-->" + chatDetails[0]);
+                                Log.i("chat", "db cahtid--->" + chatDetails[1]);
+                                i.putExtra("users", chatUsers);
+                                i.putExtra("datetime", chatDetails[0]);
+                                i.putExtra("chatid", chatDetails[1]);
+                            } else {
+                                SimpleDateFormat dateformat = new SimpleDateFormat(
+                                        "yyyy-MM-dd hh:mm:ss");
+                                String dateforrow = dateformat.format(new Date()
+                                        .getTime());
+                                String cid = Utility.getSessionID();
+                                i.putExtra("users", chatUsers);
+                                i.putExtra("datetime", dateforrow);
+                                i.putExtra("chatid", cid);
+
+                            }
+                            i.putExtra("chattype", "SecureChat");
+                            startActivity(i);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                            Appreference.printLog("ContactFragment", "onClick chat_button ChatActivity Exception : " + e.getMessage(), "WARN", null);
+                        }
+
+                    }
+                    try {
+                        buddyArrayAdapter.notifyDataSetChanged();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        Appreference.printLog("ContactFragment", "onClick chat_button Exception : " + e.getMessage(), "WARN", null);
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    Appreference.printLog("ContactFragment", "onClick chat_button Exception : " + e.getMessage(), "WARN", null);
                 }
                 break;
 
             case R.id.call:
 
-                if (MainActivity.gsmCallState == TelephonyManager.CALL_STATE_IDLE) {
-                    boolean groupIsSelect = false;
-                    Log.i("audiocall", "call button click");
-                    if (!contactTab) {
-                        /*for (ContactBean contactBean : buddyList) {
-                            if (contactBean.getIscheck()) {
-                            }
-                        }
-                    } else {*/
-                        for (Group group : ExpListItems) {
-                            if (group.getIscheck()) {
-                                groupIsSelect = true;
-                            }
-                        }
-                    }
-/*                    if (select) {
-                        final Dialog dialog1 = new Dialog(classContext);
-                        dialog1.requestWindowFeature(Window.FEATURE_NO_TITLE);
-                        dialog1.setContentView(R.layout.dialogforcall);
-                        WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
-                        lp.copyFrom(dialog1.getWindow().getAttributes());
-                        lp.width = WindowManager.LayoutParams.MATCH_PARENT;
-                        lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
-                        lp.horizontalMargin = 15;
-                        Window window = dialog1.getWindow();
-                        window.setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
-                        window.setAttributes(lp);
-                        window.setGravity(Gravity.CENTER);
-                        LinearLayout audio_call_ll = (LinearLayout) dialog1.findViewById(R.id.audio_call_ll);
-                        final LinearLayout audio_broadcast_call_ll = (LinearLayout) dialog1.findViewById(R.id.audio_broadcast_call_ll);
-                        LinearLayout video_call_ll = (LinearLayout) dialog1.findViewById(R.id.video_call_ll);
-                        LinearLayout cancel_ll = (LinearLayout) dialog1.findViewById(R.id.cancel_ll);
-
-                        TextView audiocall = (TextView) dialog1.findViewById(R.id.audio_call);
-                        TextView audioBroadcastcall = (TextView) dialog1.findViewById(R.id.audio_broadcast_call);
-                        TextView videocall = (TextView) dialog1.findViewById(R.id.video);
-                        TextView cancel = (TextView) dialog1.findViewById(R.id.cancel);
-                        audioBroadcastcall.setVisibility(View.GONE);
-                        cancel_ll.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                dialog1.dismiss();
-                            }
-                        });
-                        audio_call_ll.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                dialog1.dismiss();
-                                if (buddyList.size() > 0) {
-                                    check = false;
-                                    dialog = new ProgressDialog(classContext);
-                                    dialog.setMessage("Call Connecting...");
-                                    dialog.setCancelable(false);
-                                    dialog.show();
-                                    for (ContactBean contactBean : buddyList) {
-                                        if (contactBean.getIscheck()) {
-                                            MainActivity.isAudioCall = true;
-                                            callNotification(contactBean.userid, Appreference.loginuserdetails.getId());
-                                            Appreference.broadcast_call = false;
-
-                                        }
-                                    }
-
+                try {
+                    if (MainActivity.gsmCallState == TelephonyManager.CALL_STATE_IDLE) {
+                        boolean groupIsSelect = false;
+                        Log.i("audiocall", "call button click");
+                        if (!contactTab) {
+                            /*for (ContactBean contactBean : buddyList) {
+                                if (contactBean.getIscheck()) {
                                 }
                             }
-                        });
-
-                        audio_broadcast_call_ll.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                dialog1.dismiss();
-                                if (buddyList.size() > 0) {
-                                    check = false;
-                                    dialog = new ProgressDialog(classContext);
-                                    dialog.setMessage("Call Connecting...");
-                                    dialog.setCancelable(false);
-                                    dialog.show();
-                                    for (ContactBean contactBean : buddyList) {
-                                        if (contactBean.getIscheck()) {
-                                            MainActivity.isAudioCall = true;
-                                            callNotification(contactBean.userid, Appreference.loginuserdetails.getId());
-                                            Appreference.broadcast_call = true;
-
-                                        }
-                                    }
-
+                        } else {*/
+                            for (Group group : ExpListItems) {
+                                if (group.getIscheck()) {
+                                    groupIsSelect = true;
                                 }
                             }
-                        });
-                        video_call_ll.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-//                            video_call.performClick();
-                                dialog1.dismiss();
-                                if (buddyList.size() > 0) {
-                                    check = false;
-                                    dialog = new ProgressDialog(classContext);
-                                    dialog.setMessage("Call Connecting...");
-                                    dialog.setCancelable(false);
-                                    dialog.show();
-                                    for (ContactBean contactBean : buddyList) {
-                                        if (contactBean.getIscheck()) {
-                                            MainActivity.isAudioCall = false;
-                                            callNotification(contactBean.userid, Appreference.loginuserdetails.getId());
-                                            Appreference.broadcast_call = false;
-                                        }
-                                    }
-                                }
-//                        Appreference.broadcast_call = !contactTab;
-                            }
-                        });
-
-                        try {
-                            //show dialog
-//                        if(!((Activity) classContext).isFinishing())
-//                        {
-                            //show dialog
-                            dialog1.show();
-//                        }
-
-                        } catch (Exception e) {
-                            e.printStackTrace();
                         }
+    /*                    if (select) {
+                            final Dialog dialog1 = new Dialog(classContext);
+                            dialog1.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                            dialog1.setContentView(R.layout.dialogforcall);
+                            WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
+                            lp.copyFrom(dialog1.getWindow().getAttributes());
+                            lp.width = WindowManager.LayoutParams.MATCH_PARENT;
+                            lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
+                            lp.horizontalMargin = 15;
+                            Window window = dialog1.getWindow();
+                            window.setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+                            window.setAttributes(lp);
+                            window.setGravity(Gravity.CENTER);
+                            LinearLayout audio_call_ll = (LinearLayout) dialog1.findViewById(R.id.audio_call_ll);
+                            final LinearLayout audio_broadcast_call_ll = (LinearLayout) dialog1.findViewById(R.id.audio_broadcast_call_ll);
+                            LinearLayout video_call_ll = (LinearLayout) dialog1.findViewById(R.id.video_call_ll);
+                            LinearLayout cancel_ll = (LinearLayout) dialog1.findViewById(R.id.cancel_ll);
 
-
-                    } else*/
-                    if (groupIsSelect) {
-                        final Dialog dialog1 = new Dialog(classContext);
-                        dialog1.requestWindowFeature(Window.FEATURE_NO_TITLE);
-                        dialog1.setContentView(R.layout.dialogforcall);
-                        WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
-                        lp.copyFrom(dialog1.getWindow().getAttributes());
-                        lp.width = WindowManager.LayoutParams.MATCH_PARENT;
-                        lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
-                        lp.horizontalMargin = 15;
-                        Window window = dialog1.getWindow();
-                        window.setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
-                        window.setAttributes(lp);
-                        window.setGravity(Gravity.CENTER);
-                        LinearLayout audio_call_ll = (LinearLayout) dialog1.findViewById(R.id.audio_call_ll);
-                        LinearLayout audio_broadcast_call_ll = (LinearLayout) dialog1.findViewById(R.id.audio_broadcast_call_ll);
-                        LinearLayout video_call_ll = (LinearLayout) dialog1.findViewById(R.id.video_call_ll);
-                        LinearLayout cancel_ll = (LinearLayout) dialog1.findViewById(R.id.cancel_ll);
-
-                        TextView audiocall = (TextView) dialog1.findViewById(R.id.audio_call);
-                        TextView videocall = (TextView) dialog1.findViewById(R.id.video);
-                        TextView audioBroadcastcall = (TextView) dialog1.findViewById(R.id.audio_broadcast_call);
-                        audiocall.setText("Conference Call");
-                        videocall.setText("BroadCast Video Call");
-                        audioBroadcastcall.setText("BroadCast Audio Call");
-                        audio_broadcast_call_ll.setVisibility(View.VISIBLE);
-//                        TextView cancel = (TextView) dialog1.findViewById(R.id.cancel);
-                        cancel_ll.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                dialog1.dismiss();
-                            }
-                        });
-                        audio_call_ll.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                dialog1.dismiss();
-                                if (ExpListItems.size() > 0) {
-                                    check = false;
-                                    dialog = new ProgressDialog(classContext);
-                                    dialog.setMessage("Call Connecting...");
-                                    dialog.setCancelable(false);
-                                    dialog.show();
-                                    ArrayList<String> grouplist = new ArrayList<String>();
-                                    for (Group group : ExpListItems) {
-                                        if (group.getIscheck()) {
-                                            MainActivity.isAudioCall = true;
-                                            grouplist = VideoCallDataBase.getDB(context).selectGroupmembers("select * from groupmember where groupid= '" + group.getId() + "'", "userid");
-                                            /*for (String groupId : grouplist) {
-                                                callNotification(Integer.parseInt(groupId), Appreference.loginuserdetails.getId());
+                            TextView audiocall = (TextView) dialog1.findViewById(R.id.audio_call);
+                            TextView audioBroadcastcall = (TextView) dialog1.findViewById(R.id.audio_broadcast_call);
+                            TextView videocall = (TextView) dialog1.findViewById(R.id.video);
+                            TextView cancel = (TextView) dialog1.findViewById(R.id.cancel);
+                            audioBroadcastcall.setVisibility(View.GONE);
+                            cancel_ll.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    dialog1.dismiss();
+                                }
+                            });
+                            audio_call_ll.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    dialog1.dismiss();
+                                    if (buddyList.size() > 0) {
+                                        check = false;
+                                        dialog = new ProgressDialog(classContext);
+                                        dialog.setMessage("Call Connecting...");
+                                        dialog.setCancelable(false);
+                                        dialog.show();
+                                        for (ContactBean contactBean : buddyList) {
+                                            if (contactBean.getIscheck()) {
+                                                MainActivity.isAudioCall = true;
+                                                callNotification(contactBean.userid, Appreference.loginuserdetails.getId());
                                                 Appreference.broadcast_call = false;
-                                            }*/
+
+                                            }
                                         }
-                                    }
-                                    ArrayList<Integer> group_list_id = new ArrayList<Integer>();
-                                    for (String groupId : grouplist) {
-                                        group_list_id.add(Integer.parseInt(groupId));
-                                    }
-                                    if(group_list_id.size() > 0) {
-                                        callNotification(group_list_id, Appreference.loginuserdetails.getId());
-                                        Appreference.broadcast_call = false;
-                                    }
 
+                                    }
                                 }
-                            }
-                        });
+                            });
 
-                        audio_broadcast_call_ll.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                dialog1.dismiss();
-                                if (ExpListItems.size() > 0) {
-                                    check = false;
-                                    dialog = new ProgressDialog(classContext);
-                                    dialog.setMessage("Call Connecting...");
-                                    dialog.setCancelable(false);
-                                    dialog.show();
-                                    ArrayList<String> grouplist = new ArrayList<String>();
-                                    for (Group group : ExpListItems) {
-                                        if (group.getIscheck()) {
-                                            MainActivity.isAudioCall = true;
-                                            grouplist = VideoCallDataBase.getDB(context).selectGroupmembers("select * from groupmember where groupid= '" + group.getId() + "'", "userid");
-                                            /*for (String groupId : grouplist) {
-                                                callNotification(Integer.parseInt(groupId), Appreference.loginuserdetails.getId());
+                            audio_broadcast_call_ll.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    dialog1.dismiss();
+                                    if (buddyList.size() > 0) {
+                                        check = false;
+                                        dialog = new ProgressDialog(classContext);
+                                        dialog.setMessage("Call Connecting...");
+                                        dialog.setCancelable(false);
+                                        dialog.show();
+                                        for (ContactBean contactBean : buddyList) {
+                                            if (contactBean.getIscheck()) {
+                                                MainActivity.isAudioCall = true;
+                                                callNotification(contactBean.userid, Appreference.loginuserdetails.getId());
                                                 Appreference.broadcast_call = true;
-                                            }*/
+
+                                            }
                                         }
-                                    }
-                                    ArrayList<Integer> group_list_id = new ArrayList<Integer>();
-                                    for (String groupId : grouplist) {
-                                        group_list_id.add(Integer.parseInt(groupId));
-                                    }
-                                    if(group_list_id.size() > 0) {
-                                        callNotification(group_list_id, Appreference.loginuserdetails.getId());
-                                        Appreference.broadcast_call = true;
+
                                     }
                                 }
-                            }
-                        });
-                        video_call_ll.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
+                            });
+                            video_call_ll.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+    //                            video_call.performClick();
+                                    dialog1.dismiss();
+                                    if (buddyList.size() > 0) {
+                                        check = false;
+                                        dialog = new ProgressDialog(classContext);
+                                        dialog.setMessage("Call Connecting...");
+                                        dialog.setCancelable(false);
+                                        dialog.show();
+                                        for (ContactBean contactBean : buddyList) {
+                                            if (contactBean.getIscheck()) {
+                                                MainActivity.isAudioCall = false;
+                                                callNotification(contactBean.userid, Appreference.loginuserdetails.getId());
+                                                Appreference.broadcast_call = false;
+                                            }
+                                        }
+                                    }
+    //                        Appreference.broadcast_call = !contactTab;
+                                }
+                            });
 
-//                            video_call.performClick();
-                                dialog1.dismiss();
-                                if (ExpListItems.size() > 0) {
-                                    check = false;
-                                    dialog = new ProgressDialog(classContext);
-                                    dialog.setMessage("Call Connecting...");
-                                    dialog.setCancelable(false);
-                                    dialog.show();
-                                    ArrayList<String> grouplist = new ArrayList<String>();
-                                    for (Group group : ExpListItems) {
-                                        if (group.getIscheck()) {
-                                            MainActivity.isAudioCall = false;
-                                            grouplist = VideoCallDataBase.getDB(context).selectGroupmembers("select * from groupmember where groupid= '" + group.getId() + "'", "userid");
-                                            /*for (String groupId : grouplist) {
-                                                callNotification(Integer.parseInt(groupId), Appreference.loginuserdetails.getId());
+                            try {
+                                //show dialog
+    //                        if(!((Activity) classContext).isFinishing())
+    //                        {
+                                //show dialog
+                                dialog1.show();
+    //                        }
+
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+
+
+                        } else*/
+                        if (groupIsSelect) {
+                            final Dialog dialog1 = new Dialog(classContext);
+                            dialog1.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                            dialog1.setContentView(R.layout.dialogforcall);
+                            WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
+                            lp.copyFrom(dialog1.getWindow().getAttributes());
+                            lp.width = WindowManager.LayoutParams.MATCH_PARENT;
+                            lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
+                            lp.horizontalMargin = 15;
+                            Window window = dialog1.getWindow();
+                            window.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                            window.setAttributes(lp);
+                            window.setGravity(Gravity.CENTER);
+                            LinearLayout audio_call_ll = (LinearLayout) dialog1.findViewById(R.id.audio_call_ll);
+                            LinearLayout audio_broadcast_call_ll = (LinearLayout) dialog1.findViewById(R.id.audio_broadcast_call_ll);
+                            LinearLayout video_call_ll = (LinearLayout) dialog1.findViewById(R.id.video_call_ll);
+                            LinearLayout cancel_ll = (LinearLayout) dialog1.findViewById(R.id.cancel_ll);
+
+                            TextView audiocall = (TextView) dialog1.findViewById(R.id.audio_call);
+                            TextView videocall = (TextView) dialog1.findViewById(R.id.video);
+                            TextView audioBroadcastcall = (TextView) dialog1.findViewById(R.id.audio_broadcast_call);
+                            audiocall.setText("Conference Call");
+                            videocall.setText("BroadCast Video Call");
+                            audioBroadcastcall.setText("BroadCast Audio Call");
+                            audio_broadcast_call_ll.setVisibility(View.VISIBLE);
+                            //                        TextView cancel = (TextView) dialog1.findViewById(R.id.cancel);
+                            cancel_ll.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    dialog1.dismiss();
+                                }
+                            });
+                            audio_call_ll.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    dialog1.dismiss();
+                                    try {
+                                        if (ExpListItems.size() > 0) {
+                                            check = false;
+                                            dialog = new ProgressDialog(classContext);
+                                            dialog.setMessage("Call Connecting...");
+                                            dialog.setCancelable(false);
+                                            dialog.show();
+                                            ArrayList<String> grouplist = new ArrayList<String>();
+                                            for (Group group : ExpListItems) {
+                                                if (group.getIscheck()) {
+                                                    MainActivity.isAudioCall = true;
+                                                    grouplist = VideoCallDataBase.getDB(context).selectGroupmembers("select * from groupmember where groupid= '" + group.getId() + "'", "userid");
+                                                    /*for (String groupId : grouplist) {
+                                                        callNotification(Integer.parseInt(groupId), Appreference.loginuserdetails.getId());
+                                                        Appreference.broadcast_call = false;
+                                                    }*/
+                                                }
+                                            }
+                                            ArrayList<Integer> group_list_id = new ArrayList<Integer>();
+                                            for (String groupId : grouplist) {
+                                                group_list_id.add(Integer.parseInt(groupId));
+                                            }
+                                            if (group_list_id.size() > 0) {
+                                                callNotification(group_list_id, Appreference.loginuserdetails.getId());
+                                                Appreference.broadcast_call = false;
+                                            }
+
+                                        }
+                                    } catch (NumberFormatException e) {
+                                        e.printStackTrace();
+                                        Appreference.printLog("ContactFragment", "onClick audio_call_ll Exception : " + e.getMessage(), "WARN", null);
+                                    } catch (Exception e) {
+                                        e.printStackTrace();
+                                        Appreference.printLog("ContactFragment", "onClick audio_call_ll Exception : " + e.getMessage(), "WARN", null);
+                                    }
+                                }
+                            });
+
+                            audio_broadcast_call_ll.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    dialog1.dismiss();
+                                    try {
+                                        if (ExpListItems.size() > 0) {
+                                            check = false;
+                                            dialog = new ProgressDialog(classContext);
+                                            dialog.setMessage("Call Connecting...");
+                                            dialog.setCancelable(false);
+                                            dialog.show();
+                                            ArrayList<String> grouplist = new ArrayList<String>();
+                                            for (Group group : ExpListItems) {
+                                                if (group.getIscheck()) {
+                                                    MainActivity.isAudioCall = true;
+                                                    grouplist = VideoCallDataBase.getDB(context).selectGroupmembers("select * from groupmember where groupid= '" + group.getId() + "'", "userid");
+                                                    /*for (String groupId : grouplist) {
+                                                        callNotification(Integer.parseInt(groupId), Appreference.loginuserdetails.getId());
+                                                        Appreference.broadcast_call = true;
+                                                    }*/
+                                                }
+                                            }
+                                            ArrayList<Integer> group_list_id = new ArrayList<Integer>();
+                                            for (String groupId : grouplist) {
+                                                group_list_id.add(Integer.parseInt(groupId));
+                                            }
+                                            if (group_list_id.size() > 0) {
+                                                callNotification(group_list_id, Appreference.loginuserdetails.getId());
                                                 Appreference.broadcast_call = true;
-                                            }*/
+                                            }
                                         }
-                                    }
-
-                                    ArrayList<Integer> group_list_id = new ArrayList<Integer>();
-                                    for (String groupId : grouplist) {
-                                        group_list_id.add(Integer.parseInt(groupId));
-                                    }
-                                    if(group_list_id.size() > 0) {
-                                        callNotification(group_list_id, Appreference.loginuserdetails.getId());
-                                        Appreference.broadcast_call = true;
+                                    } catch (NumberFormatException e) {
+                                        e.printStackTrace();
+                                    } catch (Exception e) {
+                                        e.printStackTrace();
+                                        Appreference.printLog("ContactFragment", "onClick audio_broadcast_call_ll Exception : " + e.getMessage(), "WARN", null);
                                     }
                                 }
+                            });
+                            video_call_ll.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+
+                                    //                            video_call.performClick();
+                                    dialog1.dismiss();
+                                    try {
+                                        if (ExpListItems.size() > 0) {
+                                            check = false;
+                                            dialog = new ProgressDialog(classContext);
+                                            dialog.setMessage("Call Connecting...");
+                                            dialog.setCancelable(false);
+                                            dialog.show();
+                                            ArrayList<String> grouplist = new ArrayList<String>();
+                                            for (Group group : ExpListItems) {
+                                                if (group.getIscheck()) {
+                                                    MainActivity.isAudioCall = false;
+                                                    grouplist = VideoCallDataBase.getDB(context).selectGroupmembers("select * from groupmember where groupid= '" + group.getId() + "'", "userid");
+                                                    /*for (String groupId : grouplist) {
+                                                        callNotification(Integer.parseInt(groupId), Appreference.loginuserdetails.getId());
+                                                        Appreference.broadcast_call = true;
+                                                    }*/
+                                                }
+                                            }
+
+                                            ArrayList<Integer> group_list_id = new ArrayList<Integer>();
+                                            for (String groupId : grouplist) {
+                                                group_list_id.add(Integer.parseInt(groupId));
+                                            }
+                                            if (group_list_id.size() > 0) {
+                                                callNotification(group_list_id, Appreference.loginuserdetails.getId());
+                                                Appreference.broadcast_call = true;
+                                            }
+                                        }
+                                    } catch (NumberFormatException e) {
+                                        e.printStackTrace();
+                                        Appreference.printLog("ContactFragment", "onClick video_call_ll Exception : " + e.getMessage(), "WARN", null);
+                                    } catch (Exception e) {
+                                        e.printStackTrace();
+                                        Appreference.printLog("ContactFragment", "onClick video_call_ll Exception : " + e.getMessage(), "WARN", null);
+                                    }
 
 
-//                            Appreference.broadcast_call = true;
+                                    //                            Appreference.broadcast_call = true;
+                                }
+                            });
+                            try {
+                                dialog1.show();
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                                Appreference.printLog("ContactFragment", "onClick dialog1 Exception : " + e.getMessage(), "WARN", null);
                             }
-                        });
-                        try {
-                            dialog1.show();
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
 
-                    } else
-                        Toast.makeText(getContext(), "Select user to make a call", Toast.LENGTH_LONG).show();
+                        } else
+                            Toast.makeText(getContext(), "Select user to make a call", Toast.LENGTH_LONG).show();
 
 
-//                Intent intent = new Intent();
-//                startActivity(intent);
+                        //                Intent intent = new Intent();
+                        //                startActivity(intent);
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    Appreference.printLog("ContactFragment", "onClick call Exception : " + e.getMessage(), "WARN", null);
                 }
                 break;
             case R.id.video_call:
 //                Intent intent1 = new Intent();
 //                startActivity(intent1);
-                makeCall(null, false);
+                try {
+                    makeCall(null, false);
 //                    makeCall(null, false);
-                Context wrapper1 = new ContextThemeWrapper(getContext(), R.style.myPopupMenuStyle);
-                PopupMenu popup1 = new PopupMenu(wrapper1, ll_statusChange);
-                //Inflating the Popup using xml file
-                popup1.getMenuInflater().inflate(R.menu.videocall_types, popup1.getMenu());
+                    Context wrapper1 = new ContextThemeWrapper(getContext(), R.style.myPopupMenuStyle);
+                    PopupMenu popup1 = new PopupMenu(wrapper1, ll_statusChange);
+                    //Inflating the Popup using xml file
+                    popup1.getMenuInflater().inflate(R.menu.videocall_types, popup1.getMenu());
 
-                //registering popup with OnMenuItemClickListener
-                popup1.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-                    public boolean onMenuItemClick(MenuItem item) {
-                        if (item.getTitle().equals("Video Call")) {
-                            makeCall(null, false);
-                        } else if (item.getTitle().equals("Video Broadcast Call")) {
-                            Appreference.broadcast_call = true;
-                            makeCall(null, false);
+                    //registering popup with OnMenuItemClickListener
+                    popup1.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                        public boolean onMenuItemClick(MenuItem item) {
+                            if (item.getTitle().equals("Video Call")) {
+                                makeCall(null, false);
+                            } else if (item.getTitle().equals("Video Broadcast Call")) {
+                                Appreference.broadcast_call = true;
+                                makeCall(null, false);
+                            }
+                            return true;
                         }
-                        return true;
-                    }
-                });
-                popup1.show();
-
+                    });
+                    popup1.show();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    Appreference.printLog("ContactFragment", "onClick video_call Exception : " + e.getMessage(), "WARN", null);
+                }
                 break;
         }
     }
 
     private void dlgAddEditBuddy(BuddyConfig initial) {
-        final BuddyConfig cfg = new BuddyConfig();
-        final BuddyConfig old_cfg = initial;
-        final boolean is_add = initial == null;
+        try {
+            final BuddyConfig cfg = new BuddyConfig();
+            final BuddyConfig old_cfg = initial;
+            final boolean is_add = initial == null;
 
-        LayoutInflater li = LayoutInflater.from(getActivity());
-        View view = li.inflate(R.layout.dlg_add_buddy, null);
+            LayoutInflater li = LayoutInflater.from(getActivity());
+            View view = li.inflate(R.layout.dlg_add_buddy, null);
 
-        AlertDialog.Builder adb = new AlertDialog.Builder(getActivity());
-        adb.setView(view);
+            AlertDialog.Builder adb = new AlertDialog.Builder(getActivity());
+            adb.setView(view);
 
-        final EditText etUri = (EditText) view.findViewById(R.id.editTextUri);
-        final CheckBox cbSubs = (CheckBox) view
-                .findViewById(R.id.checkBoxSubscribe);
+            final EditText etUri = (EditText) view.findViewById(R.id.editTextUri);
+            final CheckBox cbSubs = (CheckBox) view
+                    .findViewById(R.id.checkBoxSubscribe);
 
-        if (is_add) {
-            adb.setTitle("Add Buddy");
-        } else {
-            String edituserURI = initial.getUri();
-            edituserURI = edituserURI.substring(4);
-            edituserURI = edituserURI.split("@")[0];
-            adb.setTitle("Edit Buddy");
-            etUri.setText(edituserURI);
-            cbSubs.setChecked(initial.getSubscribe());
-        }
+            if (is_add) {
+                adb.setTitle("Add Buddy");
+            } else {
+                String edituserURI = initial.getUri();
+                edituserURI = edituserURI.substring(4);
+                edituserURI = edituserURI.split("@")[0];
+                adb.setTitle("Edit Buddy");
+                etUri.setText(edituserURI);
+                cbSubs.setChecked(initial.getSubscribe());
+            }
 
-        adb.setCancelable(false);
-        adb.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) {
-                // cfg.setUri(etUri.getText().toString());
-                String b_uri = "sip:" + etUri.getText().toString()
-                        + "@" + getResources().getString(R.string.server_ip);
-                cfg.setUri(b_uri);
-                cfg.setSubscribe(cbSubs.isChecked());
-                Log.i("buddyadd", "add button click");
-                if (is_add) {
-                    try {
-                        MainActivity.account.addBuddy(cfg);
-                        total_buddyList.add(putData(cfg.getUri(), "", "unselected"));
-                        Log.i("contact", "add is_add");
-                        filterbuddy = (ArrayList<ContactBean>) totalbuddy.clone();
-                        filter_buddyList = (ArrayList<Map<String, String>>) total_buddyList.clone();
-                        buddyArrayAdapter.clear();
-                        for (int i = 0, l = filter_buddyList.size(); i < l; i++)
-                            buddyArrayAdapter.add(filterbuddy.get(i));
-                        buddyArrayAdapter.notifyDataSetChanged();
-
-                        buddyListSelectedIdx = -1;
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                } else {
-                    if (!old_cfg.getUri().equals(cfg.getUri())) {
+            adb.setCancelable(false);
+            adb.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int id) {
+                    // cfg.setUri(etUri.getText().toString());
+                    String b_uri = "sip:" + etUri.getText().toString()
+                            + "@" + getResources().getString(R.string.server_ip);
+                    cfg.setUri(b_uri);
+                    cfg.setSubscribe(cbSubs.isChecked());
+                    Log.i("buddyadd", "add button click");
+                    if (is_add) {
                         try {
-                            MainActivity.account.delBuddy(buddyListSelectedIdx);
                             MainActivity.account.addBuddy(cfg);
-                            total_buddyList.remove(buddyListSelectedIdx);
                             total_buddyList.add(putData(cfg.getUri(), "", "unselected"));
-                            // buddyListAdapter.notifyDataSetChanged();
-                            Log.i("contact", "add is_add else");
+                            Log.i("contact", "add is_add");
                             filterbuddy = (ArrayList<ContactBean>) totalbuddy.clone();
                             filter_buddyList = (ArrayList<Map<String, String>>) total_buddyList.clone();
                             buddyArrayAdapter.clear();
                             for (int i = 0, l = filter_buddyList.size(); i < l; i++)
                                 buddyArrayAdapter.add(filterbuddy.get(i));
                             buddyArrayAdapter.notifyDataSetChanged();
-//                        buddyArrayAdapter.notifyDataSetChanged();
+
                             buddyListSelectedIdx = -1;
                         } catch (Exception e) {
                             e.printStackTrace();
+                            Appreference.printLog("ContactFragment", "dlgAddEditBuddy adb Exception : " + e.getMessage(), "WARN", null);
                         }
-                    } else if (old_cfg.getSubscribe() != cfg.getSubscribe()) {
-                        Log.i("contact", "add is_add else if");
-                        MyBuddy bud = MainActivity.account.buddyList
-                                .get(buddyListSelectedIdx);
-                        try {
-                            bud.subscribePresence(cfg.getSubscribe());
-                        } catch (Exception e) {
-                            e.printStackTrace();
+                    } else {
+                        if (!old_cfg.getUri().equals(cfg.getUri())) {
+                            try {
+                                MainActivity.account.delBuddy(buddyListSelectedIdx);
+                                MainActivity.account.addBuddy(cfg);
+                                total_buddyList.remove(buddyListSelectedIdx);
+                                total_buddyList.add(putData(cfg.getUri(), "", "unselected"));
+                                // buddyListAdapter.notifyDataSetChanged();
+                                Log.i("contact", "add is_add else");
+                                filterbuddy = (ArrayList<ContactBean>) totalbuddy.clone();
+                                filter_buddyList = (ArrayList<Map<String, String>>) total_buddyList.clone();
+                                buddyArrayAdapter.clear();
+                                for (int i = 0, l = filter_buddyList.size(); i < l; i++)
+                                    buddyArrayAdapter.add(filterbuddy.get(i));
+                                buddyArrayAdapter.notifyDataSetChanged();
+                                //                        buddyArrayAdapter.notifyDataSetChanged();
+                                buddyListSelectedIdx = -1;
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                                Appreference.printLog("ContactFragment", "dlgAddEditBuddy getUri Exception : " + e.getMessage(), "WARN", null);
+                            }
+                        } else if (old_cfg.getSubscribe() != cfg.getSubscribe()) {
+                            Log.i("contact", "add is_add else if");
+                            MyBuddy bud = MainActivity.account.buddyList
+                                    .get(buddyListSelectedIdx);
+                            try {
+                                bud.subscribePresence(cfg.getSubscribe());
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                                Appreference.printLog("ContactFragment", "dlgAddEditBuddy getSubscribe Exception : " + e.getMessage(), "WARN", null);
+                            }
                         }
                     }
+                    try {
+                        Message m = Message.obtain(handler, 10);
+                        m.sendToTarget();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        Appreference.printLog("ContactFragment", "dlgAddEditBuddy Message Exception : " + e.getMessage(), "WARN", null);
+                    }
                 }
-                try {
-                    Message m = Message.obtain(handler, 10);
-                    m.sendToTarget();
-                } catch (Exception e) {
-                    e.printStackTrace();
+            });
+            adb.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int id) {
+                    dialog.cancel();
                 }
-            }
-        });
-        adb.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) {
-                dialog.cancel();
-            }
-        });
+            });
 
-        AlertDialog ad = adb.create();
-        ad.show();
+            AlertDialog ad = adb.create();
+            ad.show();
+        } catch (Exception e) {
+            e.printStackTrace();
+            Appreference.printLog("ContactFragment", "dlgAddEditBuddy Exception : " + e.getMessage(), "WARN", null);
+        }
     }
 
     public void delBuddy() {
@@ -2197,6 +2445,7 @@ public class ContactsFragment extends Fragment implements View.OnClickListener, 
                             buddyListSelectedIdx = -1;
                         } catch (Exception e) {
                             e.printStackTrace();
+                            Appreference.printLog("ContactFragment", "delBuddy Exception : " + e.getMessage(), "WARN", null);
                         }
                         break;
                     case DialogInterface.BUTTON_NEGATIVE:
@@ -2269,6 +2518,7 @@ public class ContactsFragment extends Fragment implements View.OnClickListener, 
                     notifyCallState(MainActivity.currentCall);
                 } catch (Exception e) {
                     e.printStackTrace();
+                    Appreference.printLog("ContactFragment", "handleMessage Exception : " + e.getMessage(), "WARN", null);
                 }
             }
 
@@ -2301,6 +2551,7 @@ public class ContactsFragment extends Fragment implements View.OnClickListener, 
                 call.answer(prm);
             } catch (Exception e) {
                 e.printStackTrace();
+                Appreference.printLog("ContactFragment", "handleMessage answer Exception : " + e.getMessage(), "WARN", null);
             }
             MainActivity.currentCallArrayList.add(call);
 //            currentCall = call;
@@ -2329,6 +2580,8 @@ public class ContactsFragment extends Fragment implements View.OnClickListener, 
         try {
             ci = call.getInfo();
         } catch (Exception e) {
+            e.printStackTrace();
+            Appreference.printLog("ContactFragment", "notifyCallState Exception : " + e.getMessage(), "WARN", null);
             ci = null;
         }
         Message m = Message.obtain(handler, MSG_TYPE.CALL_STATE, ci);
@@ -2361,12 +2614,17 @@ public class ContactsFragment extends Fragment implements View.OnClickListener, 
     }
 
     private void showCallActivity() {
-        Log.i("SipVideo", "showCallActivity method");
-        Intent intent = new Intent(getActivity(), CallActivity.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        String par_name = Appreference.loginuserdetails.getFirstName() + " " + Appreference.loginuserdetails.getLastName();
-        intent.putExtra("host", par_name);
-        startActivity(intent);
+        try {
+            Log.i("SipVideo", "showCallActivity method");
+            Intent intent = new Intent(getActivity(), CallActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            String par_name = Appreference.loginuserdetails.getFirstName() + " " + Appreference.loginuserdetails.getLastName();
+            intent.putExtra("host", par_name);
+            startActivity(intent);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Appreference.printLog("ContactFragment", "showCallActivity Exception : " + e.getMessage(), "WARN", null);
+        }
     }
 
 
@@ -2420,6 +2678,7 @@ public class ContactsFragment extends Fragment implements View.OnClickListener, 
                                 }
                             } catch (Exception e) {
                                 e.printStackTrace();
+                                Appreference.printLog("ContactFragment", "ResponceMethod callNotification Exception : " + e.getMessage(), "WARN", null);
                             }
                         }
                     });
@@ -2432,6 +2691,7 @@ public class ContactsFragment extends Fragment implements View.OnClickListener, 
 
         } catch (Exception e) {
             e.printStackTrace();
+            Appreference.printLog("ContactFragment", "ResponceMethod Exception : " + e.getMessage(), "WARN", null);
         }
 
 
@@ -2444,43 +2704,49 @@ public class ContactsFragment extends Fragment implements View.OnClickListener, 
             showToast("Please try again....");
         } catch (Exception e) {
             e.printStackTrace();
+            Appreference.printLog("ContactFragment", "ErrorMethod Exception : " + e.getMessage(), "WARN", null);
         }
 
     }
 
     private void HidingIcons(String audio_access, String chat_access, String video_access, String admin_access) {
-        final String audio, Chat, video;
-        audio = audio_access;
-        Chat = chat_access;
-        video = video_access;
-        handler.post(new Runnable() {
-            @Override
-            public void run() {
-                if (audio.equalsIgnoreCase("0")) {
-                    Log.i("expand", "audio if  " + audio);
-                    audio_call.setVisibility(View.INVISIBLE);
-                } else {
-                    Log.i("expand", "audio else  " + audio);
-                    if (!isgroupicon)
-                        audio_call.setVisibility(View.VISIBLE);
+        try {
+            final String audio, Chat, video;
+            audio = audio_access;
+            Chat = chat_access;
+            video = video_access;
+            handler.post(new Runnable() {
+                @Override
+                public void run() {
+                    if (audio.equalsIgnoreCase("0")) {
+                        Log.i("expand", "audio if  " + audio);
+                        audio_call.setVisibility(View.INVISIBLE);
+                    } else {
+                        Log.i("expand", "audio else  " + audio);
+                        if (!isgroupicon)
+                            audio_call.setVisibility(View.VISIBLE);
+                    }
+                    if (Chat.equalsIgnoreCase("0")) {
+                        Log.i("expand", "chat if  " + Chat);
+                        chat.setVisibility(View.INVISIBLE);
+                    } else {
+                        Log.i("expand", "chat else  " + Chat);
+                        if (!isgroupicon)
+                            chat.setVisibility(View.VISIBLE);
+                    }
+                    if (video.equalsIgnoreCase("0")) {
+                        Log.i("expand", "video if  " + video);
+                        //                    video_call.setVisibility(View.INVISIBLE);
+                    } else {
+                        Log.i("expand", "video else  " + video);
+                        //                    video_call.setVisibility(View.VISIBLE);
+                    }
                 }
-                if (Chat.equalsIgnoreCase("0")) {
-                    Log.i("expand", "chat if  " + Chat);
-                    chat.setVisibility(View.INVISIBLE);
-                } else {
-                    Log.i("expand", "chat else  " + Chat);
-                    if (!isgroupicon)
-                        chat.setVisibility(View.VISIBLE);
-                }
-                if (video.equalsIgnoreCase("0")) {
-                    Log.i("expand", "video if  " + video);
-//                    video_call.setVisibility(View.INVISIBLE);
-                } else {
-                    Log.i("expand", "video else  " + video);
-//                    video_call.setVisibility(View.VISIBLE);
-                }
-            }
-        });
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+            Appreference.printLog("ContactFragment", "HidingIcons Exception : " + e.getMessage(), "WARN", null);
+        }
     }
 
 
@@ -2493,12 +2759,17 @@ public class ContactsFragment extends Fragment implements View.OnClickListener, 
     }
 
     public void activateCall() {
-        Log.d("Remove", "inside active call dialog ");
-        Log.i("Call Response", "activecall ");
-        if (MainActivity.isAudioCall) {
-            makeCall(null, true);
-        } else {
-            makeCall(null, false);
+        try {
+            Log.d("Remove", "inside active call dialog ");
+            Log.i("Call Response", "activecall ");
+            if (MainActivity.isAudioCall) {
+                makeCall(null, true);
+            } else {
+                makeCall(null, false);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            Appreference.printLog("ContactFragment", "activateCall Exception : " + e.getMessage(), "WARN", null);
         }
     }
 
@@ -2587,6 +2858,7 @@ public class ContactsFragment extends Fragment implements View.OnClickListener, 
 //                    call.onCallSdpCreated(param);
                             } catch (Exception e) {
                                 e.printStackTrace();
+                                Appreference.printLog("ContactFragment", "makeCall buddyList Exception : " + e.getMessage(), "WARN", null);
                                 Log.i("SipVideo", " delete: b2");
                                 call.delete();
                                 return;
@@ -2632,6 +2904,7 @@ public class ContactsFragment extends Fragment implements View.OnClickListener, 
 //                    call.onCallSdpCreated(param);
                                     } catch (Exception e) {
                                         e.printStackTrace();
+                                        Appreference.printLog("ContactFragment", "makeCall ExpListItems Exception : " + e.getMessage(), "WARN", null);
                                         Log.i("SipVideo", " delete: b21");
                                         call.delete();
                                         return;
@@ -2651,6 +2924,7 @@ public class ContactsFragment extends Fragment implements View.OnClickListener, 
             buddyArrayAdapter.notifyDataSetChanged();
         } catch (Exception e) {
             e.printStackTrace();
+            Appreference.printLog("ContactFragment", "makeCall Exception : " + e.getMessage(), "WARN", null);
         }
         Log.i("SipVideo", "MainActivity.currentCallArrayList.size()--->" + MainActivity.currentCallArrayList.size());
         if (MainActivity.currentCallArrayList.size() > 0) {
@@ -2678,10 +2952,11 @@ public class ContactsFragment extends Fragment implements View.OnClickListener, 
                 jsonArray.put(i, jsonObject1);
                 Log.i("ContactFragment", "inside group if  groupId === >> position " + i + "  toId  " + toId);
             }
-            jsonObject.put("to",jsonArray);
+            jsonObject.put("to", jsonArray);
             Appreference.jsonRequestSender.callNotification(EnumJsonWebservicename.callNotification, jsonObject, ContactsFragment.this);
         } catch (Exception e) {
             e.printStackTrace();
+            Appreference.printLog("ContactFragment", "callNotification webservice Exception : " + e.getMessage(), "WARN", null);
         }
     }
 
@@ -2698,6 +2973,7 @@ public class ContactsFragment extends Fragment implements View.OnClickListener, 
                         buddyArrayAdapter.notifyDataSetChanged();
                     } catch (Exception e) {
                         e.printStackTrace();
+                        Appreference.printLog("ContactFragment", "notifybuddystatus buddyArrayAdapter Exception : " + e.getMessage(), "WARN", null);
                     }
                 }
             });
@@ -2759,6 +3035,7 @@ public class ContactsFragment extends Fragment implements View.OnClickListener, 
                             buddyArrayAdapter.notifyDataSetChanged();
                         } catch (Exception e) {
                             e.printStackTrace();
+                            Appreference.printLog("ContactFragment", "notifybuddystatus notify Exception : " + e.getMessage(), "WARN", null);
                         }
                     }
                 });
@@ -2767,16 +3044,22 @@ public class ContactsFragment extends Fragment implements View.OnClickListener, 
 
         } catch (Exception e) {
             e.printStackTrace();
+            Appreference.printLog("ContactFragment", "notifybuddystatus  Exception : " + e.getMessage(), "WARN", null);
         }
     }
 
     public void showToast(final String content) {
-        handler.post(new Runnable() {
-            @Override
-            public void run() {
-                Toast.makeText(classContext, content, Toast.LENGTH_LONG).show();
-            }
-        });
+        try {
+            handler.post(new Runnable() {
+                @Override
+                public void run() {
+                    Toast.makeText(classContext, content, Toast.LENGTH_LONG).show();
+                }
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+            Appreference.printLog("ContactFragment", "showToast Exception : " + e.getMessage(), "WARN", null);
+        }
     }
 
     public class BuddyArrayAdapter extends ArrayAdapter<ContactBean> {
@@ -2903,21 +3186,31 @@ public class ContactsFragment extends Fragment implements View.OnClickListener, 
                     @Override
                     public void onClick(View v) {
 //                        contactBean = buddyList.get(position);
-                        Log.i("ContactsFragment", "statusIcon.setOnClickListener ");
-                        Intent intent = new Intent(getContext().getApplicationContext(), ViewProfile.class);
-                        intent.putExtra("value", contactBean.getEmail());
-                        startActivity(intent);
+                        try {
+                            Log.i("ContactsFragment", "statusIcon.setOnClickListener ");
+                            Intent intent = new Intent(getContext().getApplicationContext(), ViewProfile.class);
+                            intent.putExtra("value", contactBean.getEmail());
+                            startActivity(intent);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                            Appreference.printLog("ContactFragment", "statusIcon click Exception : " + e.getMessage(), "WARN", null);
+                        }
                     }
                 });
 
                 count.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Log.i("ContactsFragment", "count.setOnClickListener ");
-                        Intent intent = new Intent(getContext(), TaskHistory.class);
-                        intent.putExtra("userId", contactBean.getUsername());
-                        intent.putExtra("taskType", "Individual");
-                        startActivity(intent);
+                        try {
+                            Log.i("ContactsFragment", "count.setOnClickListener ");
+                            Intent intent = new Intent(getContext(), TaskHistory.class);
+                            intent.putExtra("userId", contactBean.getUsername());
+                            intent.putExtra("taskType", "Individual");
+                            startActivity(intent);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                            Appreference.printLog("ContactFragment", "count click Exception : " + e.getMessage(), "WARN", null);
+                        }
                     }
                 });
 
@@ -3041,6 +3334,7 @@ public class ContactsFragment extends Fragment implements View.OnClickListener, 
 
             } catch (Exception e) {
                 e.printStackTrace();
+                Appreference.printLog("ContactFragment", "BuddyArrayAdapter Exception : " + e.getMessage(), "WARN", null);
             }
 
             return conView;
@@ -3136,6 +3430,7 @@ public class ContactsFragment extends Fragment implements View.OnClickListener, 
                         buddyArrayAdapter.notifyDataSetChanged();
                     } catch (Exception e) {
                         e.printStackTrace();
+                        Appreference.printLog("ContactFragment", "ContactsFilter Exception : " + e.getMessage(), "WARN", null);
                     }
                 }
             });
@@ -3179,51 +3474,57 @@ public class ContactsFragment extends Fragment implements View.OnClickListener, 
     }*/
 
     public ArrayList<Group> expand() {
-        ArrayList<Group> list = new ArrayList<Group>();
-        group_count = 0;
-        ArrayList<Child> ch_list;
-        grp = new ArrayList<Integer>();
-        grp = VideoCallDataBase.getDB(classContext).getGroups(Appreference.loginuserdetails.getUsername());
-        for (int j = 0; j < grp.size(); j++) {
-            Group gru = new Group();
-            String id = String.valueOf(grp.get(j));
-            gru.setId(id);
-            String group_name = VideoCallDataBase.getDB(classContext).getGroupName(id);
-            gru.setName(group_name);
-//            gru.setImage(grp.get(j));
-            Log.i("Picasso", "image" + grp.get(j));
-            String url = VideoCallDataBase.getDB(classContext).getGroupImage(id);
-            Log.i("Picasso", "image" + url);
-            gru.setImage(url);
-            int msgCount = VideoCallDataBase.getDB(classContext).getContactsUnReadMsgCount(id, "Group");
-            gru.setMsg_count(msgCount);
-            Log.i("Picasso", "msgCount" + msgCount);
-            if (msgCount > 0) {
-                group_count = group_count + 1;
-            }
-            Log.i("Picasso", "group_count" + group_count);
-//            int groupId = VideoCallDataBase.getDB(classContext).getGroupId(group_name);
-//            Log.i("Picasso", "groupId is == " + groupId);
-//            gru.setId(String.valueOf(groupId));
-            child = new ArrayList<String>();
-            child = VideoCallDataBase.getDB(classContext).getGroupMember(id);
-            images = new ArrayList<String>();
-            images = VideoCallDataBase.getDB(classContext).getMemberImage(id);
-            String app_fst_lst = Appreference.loginuserdetails.getFirstName() + " " + Appreference.loginuserdetails.getLastName();
-            Log.i("loginuser", "app_fst_lst " + app_fst_lst);
-            ch_list = new ArrayList<Child>();
-            for (int i = 0; i < child.size(); i++) {
-                Child ch = new Child();
-                Log.i("loginuser", "current user " + child.get(i));
-                if (app_fst_lst != null && !app_fst_lst.equalsIgnoreCase(child.get(i))) {
-                    ch.setName(child.get(i));
-                    ch.setImage(images.get(i));
-                    ch_list.add(ch);
+        ArrayList<Group> list = null;
+        try {
+            list = new ArrayList<Group>();
+            group_count = 0;
+            ArrayList<Child> ch_list;
+            grp = new ArrayList<Integer>();
+            grp = VideoCallDataBase.getDB(classContext).getGroups(Appreference.loginuserdetails.getUsername());
+            for (int j = 0; j < grp.size(); j++) {
+                Group gru = new Group();
+                String id = String.valueOf(grp.get(j));
+                gru.setId(id);
+                String group_name = VideoCallDataBase.getDB(classContext).getGroupName(id);
+                gru.setName(group_name);
+                //            gru.setImage(grp.get(j));
+                Log.i("Picasso", "image" + grp.get(j));
+                String url = VideoCallDataBase.getDB(classContext).getGroupImage(id);
+                Log.i("Picasso", "image" + url);
+                gru.setImage(url);
+                int msgCount = VideoCallDataBase.getDB(classContext).getContactsUnReadMsgCount(id, "Group");
+                gru.setMsg_count(msgCount);
+                Log.i("Picasso", "msgCount" + msgCount);
+                if (msgCount > 0) {
+                    group_count = group_count + 1;
                 }
+                Log.i("Picasso", "group_count" + group_count);
+                //            int groupId = VideoCallDataBase.getDB(classContext).getGroupId(group_name);
+                //            Log.i("Picasso", "groupId is == " + groupId);
+                //            gru.setId(String.valueOf(groupId));
+                child = new ArrayList<String>();
+                child = VideoCallDataBase.getDB(classContext).getGroupMember(id);
+                images = new ArrayList<String>();
+                images = VideoCallDataBase.getDB(classContext).getMemberImage(id);
+                String app_fst_lst = Appreference.loginuserdetails.getFirstName() + " " + Appreference.loginuserdetails.getLastName();
+                Log.i("loginuser", "app_fst_lst " + app_fst_lst);
+                ch_list = new ArrayList<Child>();
+                for (int i = 0; i < child.size(); i++) {
+                    Child ch = new Child();
+                    Log.i("loginuser", "current user " + child.get(i));
+                    if (app_fst_lst != null && !app_fst_lst.equalsIgnoreCase(child.get(i))) {
+                        ch.setName(child.get(i));
+                        ch.setImage(images.get(i));
+                        ch_list.add(ch);
+                    }
+                }
+                Collections.sort(ch_list, new CustomComparatorgroupContacts());
+                gru.setItems(ch_list);
+                list.add(gru);
             }
-            Collections.sort(ch_list, new CustomComparatorgroupContacts());
-            gru.setItems(ch_list);
-            list.add(gru);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Appreference.printLog("ContactFragment", "ArrayList Exception : " + e.getMessage(), "WARN", null);
         }
         return list;
     }
@@ -3231,8 +3532,13 @@ public class ContactsFragment extends Fragment implements View.OnClickListener, 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        Log.d("LifeCycle", "Fragment ==  onDestory");
-        Appreference.context_table.remove("contactsfragment");
+        try {
+            Log.d("LifeCycle", "Fragment ==  onDestory");
+            Appreference.context_table.remove("contactsfragment");
+        } catch (Exception e) {
+            e.printStackTrace();
+            Appreference.printLog("ContactFragment", "onDestroy Exception : " + e.getMessage(), "WARN", null);
+        }
     }
 
     public void referesh() {
@@ -3255,13 +3561,14 @@ public class ContactsFragment extends Fragment implements View.OnClickListener, 
                                 buddyArrayAdapter.notifyDataSetChanged();
                             } catch (Exception e) {
                                 e.printStackTrace();
+                                Appreference.printLog("ContactFragment", "referesh() notify Exception : " + e.getMessage(), "WARN", null);
                             }
                         }
                     });
                 } catch (Exception e) {
                     e.printStackTrace();
+                    Appreference.printLog("ContactFragment", "referesh() Exception : " + e.getMessage(), "WARN", null);
                 }
-
             }
         }
         try {
@@ -3274,6 +3581,7 @@ public class ContactsFragment extends Fragment implements View.OnClickListener, 
 
         } catch (Exception e) {
             e.printStackTrace();
+            Appreference.printLog("ContactFragment", "referesh() exclation_counter Exception : " + e.getMessage(), "WARN", null);
         }
 
     }
@@ -3444,6 +3752,7 @@ public class ContactsFragment extends Fragment implements View.OnClickListener, 
                                             myBuddy.sendInstantMessage(prm);
                                         } catch (Exception e) {
                                             e.printStackTrace();
+                                            Appreference.printLog("ContactFragment", "sendConferencecallInfomessage buddyList Exception : " + e.getMessage(), "WARN", null);
                                         }
                                     }
                                 }
@@ -3480,6 +3789,7 @@ public class ContactsFragment extends Fragment implements View.OnClickListener, 
                                                 myBuddy.sendInstantMessage(prm);
                                             } catch (Exception e) {
                                                 e.printStackTrace();
+                                                Appreference.printLog("ContactFragment", "sendConferencecallInfomessage ExpListItems Exception : " + e.getMessage(), "WARN", null);
                                             }
                                         }
 
@@ -3494,6 +3804,7 @@ public class ContactsFragment extends Fragment implements View.OnClickListener, 
             }
         } catch (Exception e) {
             e.printStackTrace();
+            Appreference.printLog("ContactFragment", "sendConferencecallInfomessage Exception : " + e.getMessage(), "WARN", null);
         }
     }
 
@@ -3505,6 +3816,7 @@ public class ContactsFragment extends Fragment implements View.OnClickListener, 
                     buddyArrayAdapter.notifyDataSetChanged();
                 } catch (Exception e) {
                     e.printStackTrace();
+                    Appreference.printLog("ContactFragment", "callrefresh Exception : " + e.getMessage(), "WARN", null);
                 }
             }
         });
@@ -3540,6 +3852,7 @@ public class ContactsFragment extends Fragment implements View.OnClickListener, 
                     MainActivity.account.setOnlineStatus(presenceStatus);
                 } catch (Exception e) {
                     e.printStackTrace();
+                    Appreference.printLog("ContactFragment", "ChangeLoginUserStatus Exception : " + e.getMessage(), "WARN", null);
                 }
             }
     }
@@ -3574,52 +3887,59 @@ public class ContactsFragment extends Fragment implements View.OnClickListener, 
             });
         } catch (Exception e) {
             e.printStackTrace();
+            Appreference.printLog("ContactFragment", "refresh() exclation_counter Exception : " + e.getMessage(), "WARN", null);
         }
-        if (buddyList != null && buddyList.size() > 0)
-            buddyList.clear();
+        try {
+            if (buddyList != null && buddyList.size() > 0)
+                buddyList.clear();
 
-        if (buddyList1.size() == 0) {
-            buddyList1 = VideoCallDataBase.getDB(classContext).getContact(Appreference.loginuserdetails.getUsername());
-        }
-
-        if (buddyList1.size() > 0) {
-            for (ContactBean contactBean : buddyList1) {
-
-         /*   if(contactBean.getUsername().equalsIgnoreCase(taskDetailsBean.getToUserId())){
-
-            }*/
-                int msgCount = VideoCallDataBase.getDB(classContext).getContactsUnReadMsgCount(String.valueOf(contactBean.getUserid()), "Individual");
-
-                if (msgCount > 0) {
-                    contact_count = contact_count + 1;
-                }
-                contactBean.setMsg_count(msgCount);
-
-                Log.d("WhiteScreen", " name is == " + contactBean.getUsername() + " count is  == " + contactBean.getMsg_count());
-                buddyList.add(contactBean);
-
+            if (buddyList1.size() == 0) {
+                buddyList1 = VideoCallDataBase.getDB(classContext).getContact(Appreference.loginuserdetails.getUsername());
             }
 
-        }
-        Log.d("WhiteScreen", " list size  is == " + buddyList.size());
-        if (buddyList != null && buddyList.size() > 0)
-            Collections.sort(buddyList, new CustomComparator());
+            if (buddyList1.size() > 0) {
+                for (ContactBean contactBean : buddyList1) {
 
-        handler.post(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    buddyArrayAdapter.notifyDataSetChanged();
-                } catch (Exception e) {
-                    e.printStackTrace();
+             /*   if(contactBean.getUsername().equalsIgnoreCase(taskDetailsBean.getToUserId())){
+
+                }*/
+                    int msgCount = VideoCallDataBase.getDB(classContext).getContactsUnReadMsgCount(String.valueOf(contactBean.getUserid()), "Individual");
+
+                    if (msgCount > 0) {
+                        contact_count = contact_count + 1;
+                    }
+                    contactBean.setMsg_count(msgCount);
+
+                    Log.d("WhiteScreen", " name is == " + contactBean.getUsername() + " count is  == " + contactBean.getMsg_count());
+                    buddyList.add(contactBean);
+
                 }
-                Log.d("WhiteScreen", " list notifydata set changed  is == " + buddyList.size());
-            }
-        });
 
-        MainActivity mainActivity = (MainActivity) Appreference.context_table.get("mainactivity");
-        mainActivity.BadgeReferece();
-        groupListRefresh();
+            }
+            Log.d("WhiteScreen", " list size  is == " + buddyList.size());
+            if (buddyList != null && buddyList.size() > 0)
+                Collections.sort(buddyList, new CustomComparator());
+
+            handler.post(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        buddyArrayAdapter.notifyDataSetChanged();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        Appreference.printLog("ContactFragment", "refresh() notify Exception : " + e.getMessage(), "WARN", null);
+                    }
+                    Log.d("WhiteScreen", " list notifydata set changed  is == " + buddyList.size());
+                }
+            });
+
+            MainActivity mainActivity = (MainActivity) Appreference.context_table.get("mainactivity");
+            mainActivity.BadgeReferece();
+            groupListRefresh();
+        } catch (Exception e) {
+            e.printStackTrace();
+            Appreference.printLog("ContactFragment", "refresh() Exception : " + e.getMessage(), "WARN", null);
+        }
 
     }
 
@@ -3689,6 +4009,7 @@ public class ContactsFragment extends Fragment implements View.OnClickListener, 
                     buddyArrayAdapter.notifyDataSetChanged();
                 } catch (Exception e) {
                     e.printStackTrace();
+                    Appreference.printLog("ContactFragment", "refresh_gcm Exception : " + e.getMessage(), "WARN", null);
                 }
                 Log.i("gcm", "****** 10");
                 Log.d("WhiteScreen", " list notifydata set changed  is == " + buddyList.size());
@@ -3708,6 +4029,7 @@ public class ContactsFragment extends Fragment implements View.OnClickListener, 
                     buddyArrayAdapter.notifyDataSetChanged();
                 } catch (Exception e) {
                     e.printStackTrace();
+                    Appreference.printLog("ContactFragment", "refresh_contact_new Exception : " + e.getMessage(), "WARN", null);
                 }
                 Log.d("WhiteScreen", " list notifydata set changed  is == " + buddyList.size());
             }
@@ -3751,10 +4073,12 @@ public class ContactsFragment extends Fragment implements View.OnClickListener, 
                             buddyArrayAdapter.notifyDataSetChanged();
                         } catch (Exception e) {
                             e.printStackTrace();
+                            Appreference.printLog("ContactFragment", "refresh_contact notify Exception : " + e.getMessage(), "WARN", null);
                         }
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
+                    Appreference.printLog("ContactFragment", "refresh_contact Exception : " + e.getMessage(), "WARN", null);
                 }
             }
         });
@@ -3763,134 +4087,169 @@ public class ContactsFragment extends Fragment implements View.OnClickListener, 
 
     public void groupListRefresh() {
 
-        handler.post(new Runnable() {
-            @Override
-            public void run() {
-                ExpListItems = expand();
-                Log.i("contact", "contactTab_1 " + contactTab_1);
-                if (contactTab_1) {
-                    Log.i("contact", "group_count after " + group_count);
-                    if (group_count != 0 && group_count > 0) {
-                        group_batch.setVisibility(View.VISIBLE);
-                        group_batch.setText(String.valueOf(group_count));
-                    } else {
-                        group_batch.setVisibility(View.GONE);
+        try {
+            handler.post(new Runnable() {
+                @Override
+                public void run() {
+                    ExpListItems = expand();
+                    Log.i("contact", "contactTab_1 " + contactTab_1);
+                    if (contactTab_1) {
+                        Log.i("contact", "group_count after " + group_count);
+                        if (group_count != 0 && group_count > 0) {
+                            group_batch.setVisibility(View.VISIBLE);
+                            group_batch.setText(String.valueOf(group_count));
+                        } else {
+                            group_batch.setVisibility(View.GONE);
+                        }
+                        Log.i("contact", "group_count before " + group_count);
                     }
-                    Log.i("contact", "group_count before " + group_count);
+                    try {
+                        Collections.sort(ExpListItems, new CustomComparatorgroup());
+                        ExpAdapter = new ExpandableAdapter(getActivity(), ExpListItems);
+                        expandableListView.setAdapter(ExpAdapter);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        Appreference.printLog("ContactFragment", "groupListRefresh expandableListView Exception : " + e.getMessage(), "WARN", null);
+                    }
                 }
-                try {
-                    Collections.sort(ExpListItems, new CustomComparatorgroup());
-                    ExpAdapter = new ExpandableAdapter(getActivity(), ExpListItems);
-                    expandableListView.setAdapter(ExpAdapter);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        });
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+            Appreference.printLog("ContactFragment", "groupListRefresh Exception : " + e.getMessage(), "WARN", null);
+        }
 
     }
 
     public void showNetworkStateUI() {
-        if (ll_networkUI != null && tv_networkstate != null) {
-            if (Appreference.networkState) {
-                if (Appreference.sipRegistrationState) {
-                } else if (!Appreference.sipRegistrationState) {
+        try {
+            if (ll_networkUI != null && tv_networkstate != null) {
+                if (Appreference.networkState) {
+                    if (Appreference.sipRegistrationState) {
+                    } else if (!Appreference.sipRegistrationState) {
+                        ll_networkUI.setVisibility(View.VISIBLE);
+                        ll_networkUI.setBackgroundColor(getResources().getColor(R.color.orange));
+                        tv_networkstate.setText("Connecting...");
+                        iv_txtstatus.setBackground(getResources().getDrawable(R.drawable.away));
+                    }
+                } else if (!Appreference.networkState) {
                     ll_networkUI.setVisibility(View.VISIBLE);
-                    ll_networkUI.setBackgroundColor(getResources().getColor(R.color.orange));
-                    tv_networkstate.setText("Connecting...");
+                    ll_networkUI.setBackgroundColor(getResources().getColor(R.color.red_color));
+                    tv_networkstate.setText("No Internet Connection");
                     iv_txtstatus.setBackground(getResources().getDrawable(R.drawable.away));
                 }
-            } else if (!Appreference.networkState) {
-                ll_networkUI.setVisibility(View.VISIBLE);
-                ll_networkUI.setBackgroundColor(getResources().getColor(R.color.red_color));
-                tv_networkstate.setText("No Internet Connection");
-                iv_txtstatus.setBackground(getResources().getDrawable(R.drawable.away));
             }
+        } catch (Resources.NotFoundException e) {
+            e.printStackTrace();
+            Appreference.printLog("ContactFragment", "showNetworkStateUI Exception : " + e.getMessage(), "WARN", null);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Appreference.printLog("ContactFragment", "showNetworkStateUI Exception : " + e.getMessage(), "WARN", null);
         }
     }
 
     public boolean getTaskObservers(String userName) {
-        String query1 = "select * from taskDetailsInfo where loginuser ='" + Appreference.loginuserdetails.getEmail() + "' and sendStatus = '3' order by id DESC LIMIT 1";
-
-        Log.d("TaskObserver", "get Observer query  " + query1);
-
-        ArrayList<TaskDetailsBean> arrayList;
         boolean observerCheck = false;
-        arrayList = VideoCallDataBase.getDB(context).getTaskHistory(query1);
+        try {
+            String query1 = "select * from taskDetailsInfo where loginuser ='" + Appreference.loginuserdetails.getEmail() + "' and sendStatus = '3' order by id DESC LIMIT 1";
 
-        Log.d("TaskObserver", "Task Observer list size is == " + arrayList.size());
-        if (arrayList.size() > 0) {
-            TaskDetailsBean taskDetailsBean = arrayList.get(0);
+            Log.d("TaskObserver", "get Observer query  " + query1);
 
-            String taskObservers = taskDetailsBean.getTaskObservers();
-            Log.d("TaskObserver", "Task Observer  == " + taskObservers);
+            ArrayList<TaskDetailsBean> arrayList;
+            observerCheck = false;
+            arrayList = VideoCallDataBase.getDB(context).getTaskHistory(query1);
 
-            int counter = 0;
-            for (int i = 0; i < taskObservers.length(); i++) {
-                if (taskObservers.charAt(i) == ',') {
-                    counter++;
+            Log.d("TaskObserver", "Task Observer list size is == " + arrayList.size());
+            if (arrayList.size() > 0) {
+                TaskDetailsBean taskDetailsBean = arrayList.get(0);
+
+                String taskObservers = taskDetailsBean.getTaskObservers();
+                Log.d("TaskObserver", "Task Observer  == " + taskObservers);
+
+                int counter = 0;
+                for (int i = 0; i < taskObservers.length(); i++) {
+                    if (taskObservers.charAt(i) == ',') {
+                        counter++;
+                    }
                 }
-            }
-            Log.d("TaskObserver", "Task Observer counter size is == " + counter);
+                Log.d("TaskObserver", "Task Observer counter size is == " + counter);
 
-            for (int j = 0; j < counter + 1; j++) {
-                if (Appreference.loginuserdetails.getUsername().equalsIgnoreCase(taskObservers.split(",")[j])) {
-                    observerCheck = !taskDetailsBean.getOwnerOfTask().equalsIgnoreCase(userName);
-                    Log.d("TaskObserver", "Task Observer name not in same user== " + taskObservers.split(",")[j]);
+                for (int j = 0; j < counter + 1; j++) {
+                    if (Appreference.loginuserdetails.getUsername().equalsIgnoreCase(taskObservers.split(",")[j])) {
+                        observerCheck = !taskDetailsBean.getOwnerOfTask().equalsIgnoreCase(userName);
+                        Log.d("TaskObserver", "Task Observer name not in same user== " + taskObservers.split(",")[j]);
+                    }
                 }
+
+
             }
-
-
+        } catch (Exception e) {
+            e.printStackTrace();
+            Appreference.printLog("ContactFragment", "getTaskObservers Exception : " + e.getMessage(), "WARN", null);
         }
         return observerCheck;
     }
 
     public void showOnlineState() {
-        handler.post(new Runnable() {
-            @Override
-            public void run() {
-                iv_txtstatus.setBackground(getResources().getDrawable(R.drawable.online1));
-                Appreference.loginuser_status = "Online";
-                Log.d("Presence", "after connected state");
-            }
-        });
+        try {
+            handler.post(new Runnable() {
+                @Override
+                public void run() {
+                    iv_txtstatus.setBackground(getResources().getDrawable(R.drawable.online1));
+                    Appreference.loginuser_status = "Online";
+                    Log.d("Presence", "after connected state");
+                }
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+            Appreference.printLog("ContactFragment", "showOnlineState Exception : " + e.getMessage(), "WARN", null);
+        }
     }
 
     public void showBusyState() {
-        handler.post(new Runnable() {
-            @Override
-            public void run() {
-                iv_txtstatus.setBackground(getResources().getDrawable(R.drawable.away));
-                Log.d("Presence", "before connected state");
-            }
-        });
+        try {
+            handler.post(new Runnable() {
+                @Override
+                public void run() {
+                    iv_txtstatus.setBackground(getResources().getDrawable(R.drawable.away));
+                    Log.d("Presence", "before connected state");
+                }
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+            Appreference.printLog("ContactFragment", "showBusyState Exception : " + e.getMessage(), "WARN", null);
+        }
     }
 
     public void showNetWorkConnectedState() {
-        handler.post(new Runnable() {
-            @Override
-            public void run() {
-                if (ll_networkUI != null && tv_networkstate != null) {
-                    Log.i("network", "ll_networkUI!=null");
-                    if (Appreference.networkState) {
-                        Log.i("network", "Appreference.networkState");
-                        if (Appreference.sipRegistrationState) {
-                            Log.i("network", "Appreference.sipRegistrationState");
-                            ll_networkUI.setVisibility(View.VISIBLE);
-                            ll_networkUI.setBackgroundColor(getResources().getColor(R.color.connected));
-                            tv_networkstate.setText("Connected");
-                            iv_txtstatus.setBackground(getResources().getDrawable(R.drawable.online1));
-                            handler.postDelayed(new Runnable() {
-                                @Override
-                                public void run() {
-                                    ll_networkUI.setVisibility(View.GONE);
-                                }
-                            }, 2000);
+        try {
+            handler.post(new Runnable() {
+                @Override
+                public void run() {
+                    if (ll_networkUI != null && tv_networkstate != null) {
+                        Log.i("network", "ll_networkUI!=null");
+                        if (Appreference.networkState) {
+                            Log.i("network", "Appreference.networkState");
+                            if (Appreference.sipRegistrationState) {
+                                Log.i("network", "Appreference.sipRegistrationState");
+                                ll_networkUI.setVisibility(View.VISIBLE);
+                                ll_networkUI.setBackgroundColor(getResources().getColor(R.color.connected));
+                                tv_networkstate.setText("Connected");
+                                iv_txtstatus.setBackground(getResources().getDrawable(R.drawable.online1));
+                                handler.postDelayed(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        ll_networkUI.setVisibility(View.GONE);
+                                    }
+                                }, 2000);
+                            }
                         }
                     }
                 }
-            }
-        });
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+            Appreference.printLog("ContactFragment", "showNetWorkConnectedState Exception : " + e.getMessage(), "WARN", null);
+        }
 
     }
 
@@ -3926,37 +4285,45 @@ public class ContactsFragment extends Fragment implements View.OnClickListener, 
 
             Child child = (Child) getChild(groupPosition,
                     childPosition);
-            if (convertView == null) {
-                LayoutInflater infalInflater = (LayoutInflater) context
-                        .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-                convertView = infalInflater.inflate(R.layout.child_item, null);
-            }
-            TextView tv = (TextView) convertView.findViewById(R.id.country_name);
-            ImageView iv = (ImageView) convertView.findViewById(R.id.flag);
-            Log.i("Picasso", "Child" + child.getImage());
+            try {
+                if (convertView == null) {
+                    LayoutInflater infalInflater = (LayoutInflater) context
+                            .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                    convertView = infalInflater.inflate(R.layout.child_item, null);
+                }
+                TextView tv = (TextView) convertView.findViewById(R.id.country_name);
+                ImageView iv = (ImageView) convertView.findViewById(R.id.flag);
+                Log.i("Picasso", "Child" + child.getImage());
 
-            File myFile = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/High Message/profilePic/" + child.getImage());
-            if (child.getImage() != null) {
+                File myFile = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/High Message/profilePic/" + child.getImage());
+                if (child.getImage() != null) {
+                    if (myFile.exists()) {
+                        imageLoader.DisplayImage(myFile.toString(), iv, R.drawable.personimage);
+                        //Picasso.with(context).load("http://122.165.92.171:8080/uploads/highmessaging/user/" + child.getImage()).into(iv);
+                    } else {
+                        MainActivity mainActivity = (MainActivity) Appreference.context_table.get("mainactivity");
+                        mainActivity.callDownloadProfile(getResources().getString(R.string.user_upload) + child.getImage());
+                        imageLoader.DisplayImage(myFile.toString(), iv, R.drawable.personimage);
+                    }
+                } else {
+                    iv.setBackgroundResource(R.drawable.personimage);
+                }
+
+                tv.setText(child.getName().toString());
                 if (myFile.exists()) {
                     imageLoader.DisplayImage(myFile.toString(), iv, R.drawable.personimage);
-                    //Picasso.with(context).load("http://122.165.92.171:8080/uploads/highmessaging/user/" + child.getImage()).into(iv);
+                    //                Picasso.with(context).load("http://122.165.92.171:8080/uploads/highmessaging/user/" + child.getImage()).into(iv);
                 } else {
                     MainActivity mainActivity = (MainActivity) Appreference.context_table.get("mainactivity");
                     mainActivity.callDownloadProfile(getResources().getString(R.string.user_upload) + child.getImage());
                     imageLoader.DisplayImage(myFile.toString(), iv, R.drawable.personimage);
                 }
-            } else {
-                iv.setBackgroundResource(R.drawable.personimage);
-            }
-
-            tv.setText(child.getName().toString());
-            if (myFile.exists()) {
-                imageLoader.DisplayImage(myFile.toString(), iv, R.drawable.personimage);
-//                Picasso.with(context).load("http://122.165.92.171:8080/uploads/highmessaging/user/" + child.getImage()).into(iv);
-            } else {
-                MainActivity mainActivity = (MainActivity) Appreference.context_table.get("mainactivity");
-                mainActivity.callDownloadProfile(getResources().getString(R.string.user_upload) + child.getImage());
-                imageLoader.DisplayImage(myFile.toString(), iv, R.drawable.personimage);
+            } catch (Resources.NotFoundException e) {
+                e.printStackTrace();
+                Appreference.printLog("ContactFragment", "ExpandableAdapter Exception : " + e.getMessage(), "WARN", null);
+            } catch (Exception e) {
+                e.printStackTrace();
+                Appreference.printLog("ContactFragment", "ExpandableAdapter Exception : " + e.getMessage(), "WARN", null);
             }
             //Picasso.with(context).load("http://122.165.92.171:8080/uploads/highmessaging/user/" + child.getImage()).into(iv);
 //            imageLoader.DisplayImage(Environment.getExternalStorageDirectory().getAbsolutePath() + "/High Message/profilePic/"+child.getImage(),iv,R.drawable.default_person_circle);
@@ -4020,108 +4387,128 @@ public class ContactsFragment extends Fragment implements View.OnClickListener, 
             call_state.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    buddyListSelectedIdx = groupPosition;
-                    if (group.getIscheck()) {
-                        Log.i("ContactFragment", "group call_state 1 if click");
-                        group.setIscheck(false);
-                    } else {
-                        Log.i("ContactFragment", "group call_state  1 else click");
-                        group.setIscheck(true);
-                    }
-                    final String AudioAccess = VideoCallDataBase.getDB(context).getGroupMemberAccess("select audioAccess from listUserGroupMemberAccess where groupid ='" + group.getId() + "'");
-                    final String VideoAccess = VideoCallDataBase.getDB(context).getGroupMemberAccess("select videoAccess from listUserGroupMemberAccess where groupid ='" + group.getId() + "'");
-                    final String conferenceAccess = VideoCallDataBase.getDB(context).getGroupMemberAccess("select respondConfCall from listUserGroupMemberAccess where groupid ='" + group.getId() + "'");
-                    final String chatAccess = VideoCallDataBase.getDB(context).getGroupMemberAccess("select chatAccess from listUserGroupMemberAccess where groupid ='" + group.getId() + "'");
-                    final String assingNew = VideoCallDataBase.getDB(context).getGroupMemberAccess("select GroupTask from listUserGroupMemberAccess where groupid ='" + group.getId() + "'");
+                    try {
+                        buddyListSelectedIdx = groupPosition;
+                        if (group.getIscheck()) {
+                            Log.i("ContactFragment", "group call_state 1 if click");
+                            group.setIscheck(false);
+                        } else {
+                            Log.i("ContactFragment", "group call_state  1 else click");
+                            group.setIscheck(true);
+                        }
+                        final String AudioAccess = VideoCallDataBase.getDB(context).getGroupMemberAccess("select audioAccess from listUserGroupMemberAccess where groupid ='" + group.getId() + "'");
+                        final String VideoAccess = VideoCallDataBase.getDB(context).getGroupMemberAccess("select videoAccess from listUserGroupMemberAccess where groupid ='" + group.getId() + "'");
+                        final String conferenceAccess = VideoCallDataBase.getDB(context).getGroupMemberAccess("select respondConfCall from listUserGroupMemberAccess where groupid ='" + group.getId() + "'");
+                        final String chatAccess = VideoCallDataBase.getDB(context).getGroupMemberAccess("select chatAccess from listUserGroupMemberAccess where groupid ='" + group.getId() + "'");
+                        final String assingNew = VideoCallDataBase.getDB(context).getGroupMemberAccess("select GroupTask from listUserGroupMemberAccess where groupid ='" + group.getId() + "'");
 //                    final String ExistingTasks = VideoCallDataBase.getDB(context).getGroupMemberAccess("select chatAccess from listUserGroupMemberAccess where groupid ='" + group.getId() + "'");
 //                    final String viewProfile = VideoCallDataBase.getDB(context).getGroupMemberAccess("select chatAccess from listUserGroupMemberAccess where groupid ='" + group.getId() + "'");
 
-                    Log.i("GroupAccess", " Access Value !!! " + AudioAccess + VideoAccess + conferenceAccess + chatAccess);
-                    Context wrapper = new ContextThemeWrapper(getContext(), R.style.myPopupMenuStyle);
-                    group_popup = call_state;
-                    final PopupMenu popup = new PopupMenu(wrapper, group_popup);
-                    //Inflating the Popup using xml file
+                        Log.i("GroupAccess", " Access Value !!! " + AudioAccess + VideoAccess + conferenceAccess + chatAccess);
+                        Context wrapper = new ContextThemeWrapper(getContext(), R.style.myPopupMenuStyle);
+                        group_popup = call_state;
+                        final PopupMenu popup = new PopupMenu(wrapper, group_popup);
+                        //Inflating the Popup using xml file
 //               popup.getMenu().getItem(1).setChecked(true);
-                    popup.getMenuInflater().inflate(R.menu.group_call_menu_items, popup.getMenu());
-                    Menu m = popup.getMenu();
-                    MenuItem item_assingNew = m.findItem(R.id.item_assingNew);
+                        popup.getMenuInflater().inflate(R.menu.group_call_menu_items, popup.getMenu());
+                        Menu m = popup.getMenu();
+                        MenuItem item_assingNew = m.findItem(R.id.item_assingNew);
 //                    MenuItem View_ExistingTasks = m.findItem(R.id.View_ExistingTasks);
-                    MenuItem item_video = m.findItem(R.id.item_broadcast_video_call);
-                    MenuItem item_audio = m.findItem(R.id.item_broadcast_audio_call);
-                    MenuItem item_conf = m.findItem(R.id.item_conference_call);
-                    MenuItem item_chat = m.findItem(R.id.item_Chat);
+                        MenuItem item_video = m.findItem(R.id.item_broadcast_video_call);
+                        MenuItem item_audio = m.findItem(R.id.item_broadcast_audio_call);
+                        MenuItem item_conf = m.findItem(R.id.item_conference_call);
+                        MenuItem item_chat = m.findItem(R.id.item_Chat);
 
-                    if (assingNew != null && assingNew.contains("0")) {
-                        item_assingNew.setVisible(false);
-                        Log.i("groupMemberAccess", "assingNew !!! ");
-                    }
-                    if (AudioAccess != null && AudioAccess.contains("0")) {
-                        item_audio.setVisible(false);
-                        Log.i("groupMemberAccess", "AudioAccess !!! ");
-                    }
-                    if (VideoAccess != null && VideoAccess.contains("0")) {
-                        item_video.setVisible(false);
-                        Log.i("groupMemberAccess", "VideoAccess !!! ");
-                    }
-                    if (conferenceAccess != null && conferenceAccess.contains("0")) {
-                        item_conf.setVisible(false);
-                        Log.i("groupMemberAccess", "conferenceAccess !!! ");
-                    }
-                    if (chatAccess != null && chatAccess.contains("0")) {
-                        item_chat.setVisible(false);
-                        Log.i("groupMemberAccess", "chatAccess !!! ");
-                    }
-                    //registering popup with OnMenuItemClickListener
-                    popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-                        public boolean onMenuItemClick(MenuItem item) {
-
-                            if (item.getTitle().equals("Assign New Task")) {
-                                Log.i("ContactsFragment", "Assign New Task ");
-                                Intent intent = new Intent(context, NewTaskConversation.class);
-                                TaskDetailsBean taskDetailsBean = new TaskDetailsBean();
-                                taskDetailsBean.setToUserId(group.getId());
-                                taskDetailsBean.setToUserName(group.getName());
-                                taskDetailsBean.setTaskType("Group");
-                                intent.putExtra("task", "Newtask");
-                                intent.putExtra("newTaskBean", taskDetailsBean);
-                                startActivity(intent);
-                            } else if (item.getTitle().equals("View Existing Tasks")) {
-                                Log.i("ContactsFragment", "View Existing Tasks " + group.getId());
-                                Intent i = new Intent(context, TaskHistory.class);
-                                i.putExtra("userId", group.getId());
-                                i.putExtra("taskType", "Group");
-                                startActivity(i);
-                            } else if (item.getTitle().equals("Conference Call")) {
-                                conferencecall();
-                            } else if (item.getTitle().equals("Broadcast Audio Call")) {
-                                broadcastaudiocall();
-                            } else if (item.getTitle().equals("Broadcast Video Call")) {
-                                broadcastvideocall();
-                            } else if (item.getTitle().equals("Chat")) {
-                                Intent i = new Intent(context, NewTaskConversation.class);
-                                ArrayList<TaskDetailsBean> taskDetailsBean = VideoCallDataBase.getDB(classContext).getChatnames(group.getName(),"group");
-                                if (taskDetailsBean != null && taskDetailsBean.size() > 0 && taskDetailsBean.get(0) != null) {
-                                    Log.i("chat", "Chatetails size--->" + taskDetailsBean.get(0).getToUserId());
-                                    Log.i("chat", "db datetime-->" + taskDetailsBean.get(0).getToUserName());
-                                    Log.i("chat", "db cahtid--->" + taskDetailsBean.get(0));
-                                    i.putExtra("chatid", taskDetailsBean.get(0).getTaskId());
-                                    i.putExtra("task", "chathistory");
-                                    i.putExtra("chatHistoryBean", taskDetailsBean.get(0));
-                                    i.putExtra("catagory", taskDetailsBean.get(0).getCatagory());
-                                } else {
-                                    i.putExtra("task", "chat");
-                                    i.putExtra("type", "group");
-                                    i.putExtra("touser", group.getName());
-                                    i.putExtra("touserid", group.getId());
-                                }
-                                startActivity(i);
-                            } else if (item.getTitle().equals("Cancel")) {
-                                popup.dismiss();
-                            }
-                            return true;
+                        if (assingNew != null && assingNew.contains("0")) {
+                            item_assingNew.setVisible(false);
+                            Log.i("groupMemberAccess", "assingNew !!! ");
                         }
-                    });
-                    popup.show();
+                        if (AudioAccess != null && AudioAccess.contains("0")) {
+                            item_audio.setVisible(false);
+                            Log.i("groupMemberAccess", "AudioAccess !!! ");
+                        }
+                        if (VideoAccess != null && VideoAccess.contains("0")) {
+                            item_video.setVisible(false);
+                            Log.i("groupMemberAccess", "VideoAccess !!! ");
+                        }
+                        if (conferenceAccess != null && conferenceAccess.contains("0")) {
+                            item_conf.setVisible(false);
+                            Log.i("groupMemberAccess", "conferenceAccess !!! ");
+                        }
+                        if (chatAccess != null && chatAccess.contains("0")) {
+                            item_chat.setVisible(false);
+                            Log.i("groupMemberAccess", "chatAccess !!! ");
+                        }
+                        //registering popup with OnMenuItemClickListener
+                        popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                            public boolean onMenuItemClick(MenuItem item) {
+
+                                if (item.getTitle().equals("Assign New Task")) {
+                                    try {
+                                        Log.i("ContactsFragment", "Assign New Task ");
+                                        Intent intent = new Intent(context, NewTaskConversation.class);
+                                        TaskDetailsBean taskDetailsBean = new TaskDetailsBean();
+                                        taskDetailsBean.setToUserId(group.getId());
+                                        taskDetailsBean.setToUserName(group.getName());
+                                        taskDetailsBean.setTaskType("Group");
+                                        intent.putExtra("task", "Newtask");
+                                        intent.putExtra("newTaskBean", taskDetailsBean);
+                                        startActivity(intent);
+                                    } catch (Exception e) {
+                                        e.printStackTrace();
+                                        Appreference.printLog("ContactFragment", "popupMenuItemClick AssignNewTask Exception : " + e.getMessage(), "WARN", null);
+                                    }
+                                } else if (item.getTitle().equals("View Existing Tasks")) {
+                                    try {
+                                        Log.i("ContactsFragment", "View Existing Tasks " + group.getId());
+                                        Intent i = new Intent(context, TaskHistory.class);
+                                        i.putExtra("userId", group.getId());
+                                        i.putExtra("taskType", "Group");
+                                        startActivity(i);
+                                    } catch (Exception e) {
+                                        e.printStackTrace();
+                                        Appreference.printLog("ContactFragment", "popupMenuItemClick ExistingTasks Exception : " + e.getMessage(), "WARN", null);
+                                    }
+                                } else if (item.getTitle().equals("Conference Call")) {
+                                    conferencecall();
+                                } else if (item.getTitle().equals("Broadcast Audio Call")) {
+                                    broadcastaudiocall();
+                                } else if (item.getTitle().equals("Broadcast Video Call")) {
+                                    broadcastvideocall();
+                                } else if (item.getTitle().equals("Chat")) {
+                                    try {
+                                        Intent i = new Intent(context, NewTaskConversation.class);
+                                        ArrayList<TaskDetailsBean> taskDetailsBean = VideoCallDataBase.getDB(classContext).getChatnames(group.getName(), "group");
+                                        if (taskDetailsBean != null && taskDetailsBean.size() > 0 && taskDetailsBean.get(0) != null) {
+                                            Log.i("chat", "Chatetails size--->" + taskDetailsBean.get(0).getToUserId());
+                                            Log.i("chat", "db datetime-->" + taskDetailsBean.get(0).getToUserName());
+                                            Log.i("chat", "db cahtid--->" + taskDetailsBean.get(0));
+                                            i.putExtra("chatid", taskDetailsBean.get(0).getTaskId());
+                                            i.putExtra("task", "chathistory");
+                                            i.putExtra("chatHistoryBean", taskDetailsBean.get(0));
+                                            i.putExtra("catagory", taskDetailsBean.get(0).getCatagory());
+                                        } else {
+                                            i.putExtra("task", "chat");
+                                            i.putExtra("type", "group");
+                                            i.putExtra("touser", group.getName());
+                                            i.putExtra("touserid", group.getId());
+                                        }
+                                        startActivity(i);
+                                    } catch (Exception e) {
+                                        e.printStackTrace();
+                                        Appreference.printLog("ContactFragment", "popupMenuItemClick chat Exception : " + e.getMessage(), "WARN", null);
+                                    }
+                                } else if (item.getTitle().equals("Cancel")) {
+                                    popup.dismiss();
+                                }
+                                return true;
+                            }
+                        });
+                        popup.show();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        Appreference.printLog("ContactFragment", "getGroupView Exception : " + e.getMessage(), "WARN", null);
+                    }
                 }
             });
 
@@ -4132,16 +4519,20 @@ public class ContactsFragment extends Fragment implements View.OnClickListener, 
                 } else {
                     tv.setTextColor(Color.BLACK);
                 }*/
+            try {
+                if (group.getMsg_count() == 0) {
+                    count_icon.setVisibility(View.GONE);
+                } else {
+                    count_icon.setVisibility(View.VISIBLE);
+                    count_icon.setText(String.valueOf(group.getMsg_count()));
+                }
 
-            if (group.getMsg_count() == 0) {
-                count_icon.setVisibility(View.GONE);
-            } else {
-                count_icon.setVisibility(View.VISIBLE);
-                count_icon.setText(String.valueOf(group.getMsg_count()));
+
+                ContactBean cb = null;
+            } catch (Exception e) {
+                e.printStackTrace();
+                Appreference.printLog("ContactFragment", "getGroupView count_iconException : " + e.getMessage(), "WARN", null);
             }
-
-
-            ContactBean cb = null;
             //            group_history.setOnClickListener(new View.OnClickListener() {
 //                @Override
 //                public void onClick(View v) {
@@ -4170,44 +4561,59 @@ public class ContactsFragment extends Fragment implements View.OnClickListener, 
             tv.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View v) {
-                    Log.i("contactfragment", "groupMemberAccess 1 " + group.getId());
-                    GroupMemberAccess groupMemberAccess;
-                    groupMemberAccess = VideoCallDataBase.getDB(context).getMemberAccessList(String.valueOf(group.getId()));
-                    Log.i("contactfragment", "groupMemberAccess ---> 1 " + groupMemberAccess.getGroup_Task());
-                    final String assign_New = VideoCallDataBase.getDB(context).getGroupMemberAccess("select GroupTask from listUserGroupMemberAccess where groupid ='" + group.getId() + "'");
-                    if (assign_New != null && assign_New.contains("0")) {
-                        Toast.makeText(context, "You are not rights to GroupTaskAccess ", Toast.LENGTH_SHORT).show();
-                        Log.i("contactfragment", "groupMemberAccess getGroup_Task 2  " + groupMemberAccess.getGroup_Task());
-                    } else {
-                        Log.i("contactfragment", "groupMemberAccess getGroup_Task 3  " + groupMemberAccess.getGroup_Task());
-                        assignnewtask();
+                    try {
+                        Log.i("contactfragment", "groupMemberAccess 1 " + group.getId());
+                        GroupMemberAccess groupMemberAccess;
+                        groupMemberAccess = VideoCallDataBase.getDB(context).getMemberAccessList(String.valueOf(group.getId()));
+                        Log.i("contactfragment", "groupMemberAccess ---> 1 " + groupMemberAccess.getGroup_Task());
+                        final String assign_New = VideoCallDataBase.getDB(context).getGroupMemberAccess("select GroupTask from listUserGroupMemberAccess where groupid ='" + group.getId() + "'");
+                        if (assign_New != null && assign_New.contains("0")) {
+                            Toast.makeText(context, "You are not rights to GroupTaskAccess ", Toast.LENGTH_SHORT).show();
+                            Log.i("contactfragment", "groupMemberAccess getGroup_Task 2  " + groupMemberAccess.getGroup_Task());
+                        } else {
+                            Log.i("contactfragment", "groupMemberAccess getGroup_Task 3  " + groupMemberAccess.getGroup_Task());
+                            assignnewtask();
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        Appreference.printLog("ContactFragment", "getGroupView tv.OnLongClick Exception : " + e.getMessage(), "WARN", null);
                     }
                     return true;
                 }
 
                 public void assignnewtask() {
-                    Log.d("Group", "ItemLongClicked child true  == " + ExpandableListView.PACKED_POSITION_TYPE_CHILD);
-                    Group group = ExpListItems.get(groupPosition);
-                    Intent intent = new Intent(classContext, NewTaskConversation.class);
-                    Log.d("task", "toUserId" + group.getId());
-                    TaskDetailsBean taskDetailsBean = new TaskDetailsBean();
-                    taskDetailsBean.setToUserId(group.getId());
-                    taskDetailsBean.setToUserName(group.getName());
-                    taskDetailsBean.setTaskType("Group");
-                    intent.putExtra("task", "Newtask");
-                    intent.putExtra("newTaskBean", taskDetailsBean);
-                    startActivity(intent);
-                    Log.d("Group", "ItemLongClicked group true ==  " + ExpandableListView.PACKED_POSITION_TYPE_GROUP);
+                    try {
+                        Log.d("Group", "ItemLongClicked child true  == " + ExpandableListView.PACKED_POSITION_TYPE_CHILD);
+                        Group group = ExpListItems.get(groupPosition);
+                        Intent intent = new Intent(classContext, NewTaskConversation.class);
+                        Log.d("task", "toUserId" + group.getId());
+                        TaskDetailsBean taskDetailsBean = new TaskDetailsBean();
+                        taskDetailsBean.setToUserId(group.getId());
+                        taskDetailsBean.setToUserName(group.getName());
+                        taskDetailsBean.setTaskType("Group");
+                        intent.putExtra("task", "Newtask");
+                        intent.putExtra("newTaskBean", taskDetailsBean);
+                        startActivity(intent);
+                        Log.d("Group", "ItemLongClicked group true ==  " + ExpandableListView.PACKED_POSITION_TYPE_GROUP);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        Appreference.printLog("ContactFragment", "getGroupView assignnewtask Exception : " + e.getMessage(), "WARN", null);
+                    }
                 }
             });
 
             count_icon.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent i = new Intent(context, TaskHistory.class);
-                    i.putExtra("userId", group.getId());
-                    i.putExtra("taskType", "Group");
-                    startActivity(i);
+                    try {
+                        Intent i = new Intent(context, TaskHistory.class);
+                        i.putExtra("userId", group.getId());
+                        i.putExtra("taskType", "Group");
+                        startActivity(i);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        Appreference.printLog("ContactFragment", "getGroupView count_icon Exception : " + e.getMessage(), "WARN", null);
+                    }
                 }
             });
             /*if (group.getIscheck()){
@@ -4216,29 +4622,34 @@ public class ContactsFragment extends Fragment implements View.OnClickListener, 
             {
                 tv.setTextColor(Color.BLACK);
             }*/
-            Log.i("Picasso", "Group " + group.getImage());
-            File myFile = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/High Message/groupPic/" + group.getImage());
-            if (group.getImage() != null) {
+            try {
+                Log.i("Picasso", "Group " + group.getImage());
+                File myFile = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/High Message/groupPic/" + group.getImage());
+                if (group.getImage() != null) {
+                    if (myFile.exists()) {
+                        Log.i("setting", "setting");
+                        //Picasso.with(context).load("http://122.165.92.171:8080/uploads/highmessaging/group/" + group.getImage()).into(iv);
+                        imageLoader.DisplayImage(myFile.toString(), iv, R.drawable.default_person_circle);
+                    } else {
+                        MainActivity mainActivity = (MainActivity) Appreference.context_table.get("mainactivity");
+                        mainActivity.callDownloadProfile("http://122.165.92.171:8080/uploads/highmessaging/group/" + group.getImage());
+                        imageLoader.DisplayImage(myFile.toString(), iv, R.drawable.default_person_circle);
+                    }
+                }
+                tv.setText(group.getName());
+//            imageLoader.DisplayImage(Environment.getExternalStorageDirectory().getAbsolutePath() + "/High Message/groupPic/"+group.getImage(),iv,R.drawable.default_person_circle);
                 if (myFile.exists()) {
                     Log.i("setting", "setting");
                     //Picasso.with(context).load("http://122.165.92.171:8080/uploads/highmessaging/group/" + group.getImage()).into(iv);
                     imageLoader.DisplayImage(myFile.toString(), iv, R.drawable.default_person_circle);
                 } else {
                     MainActivity mainActivity = (MainActivity) Appreference.context_table.get("mainactivity");
-                    mainActivity.callDownloadProfile("http://122.165.92.171:8080/uploads/highmessaging/group/" + group.getImage());
+                    mainActivity.callDownloadgroupProfile("http://122.165.92.171:8080/uploads/highmessaging/group/" + group.getImage());
                     imageLoader.DisplayImage(myFile.toString(), iv, R.drawable.default_person_circle);
                 }
-            }
-            tv.setText(group.getName());
-//            imageLoader.DisplayImage(Environment.getExternalStorageDirectory().getAbsolutePath() + "/High Message/groupPic/"+group.getImage(),iv,R.drawable.default_person_circle);
-            if (myFile.exists()) {
-                Log.i("setting", "setting");
-                //Picasso.with(context).load("http://122.165.92.171:8080/uploads/highmessaging/group/" + group.getImage()).into(iv);
-                imageLoader.DisplayImage(myFile.toString(), iv, R.drawable.default_person_circle);
-            } else {
-                MainActivity mainActivity = (MainActivity) Appreference.context_table.get("mainactivity");
-                mainActivity.callDownloadgroupProfile("http://122.165.92.171:8080/uploads/highmessaging/group/" + group.getImage());
-                imageLoader.DisplayImage(myFile.toString(), iv, R.drawable.default_person_circle);
+            } catch (Exception e) {
+                e.printStackTrace();
+                Appreference.printLog("ContactFragment", "getGroupView imageLoader Exception : " + e.getMessage(), "WARN", null);
             }
 
             //Picasso.with(context).load("http://122.165.92.171:8080/uploads/highmessaging/group/" + group.getImage()).into(iv);
@@ -4280,6 +4691,54 @@ public class ContactsFragment extends Fragment implements View.OnClickListener, 
 //                                        }
 //                                    }
             if (groupIsSelect) {
+                try {
+                    if (ExpListItems.size() > 0) {
+                        check = false;
+                        dialog = new ProgressDialog(classContext);
+                        dialog.setMessage("Call Connecting...");
+                        dialog.setCancelable(false);
+                        dialog.show();
+                        for (Group group : ExpListItems) {
+                            if (group.getIscheck()) {
+                                MainActivity.isAudioCall = false;
+                                ArrayList<String> grouplist = VideoCallDataBase.getDB(context).selectGroupmembers("select * from groupmember where groupid= '" + group.getId() + "'", "userid");
+                                //                            for (String groupId : grouplist) {
+                                //                                callNotification(Integer.parseInt(groupId), Appreference.loginuserdetails.getId());
+                                //                                Appreference.broadcast_call = true;
+                                //                            }
+                                ArrayList<Integer> group_list_id = new ArrayList<Integer>();
+                                for (String groupId : grouplist) {
+                                    group_list_id.add(Integer.parseInt(groupId));
+                                }
+                                if (group_list_id.size() > 0) {
+                                    callNotification(group_list_id, Appreference.loginuserdetails.getId());
+                                    Appreference.broadcast_call = true;
+                                }
+                            }
+                        }
+                    } else {
+                        Toast.makeText(getContext(), "Select user to make a call", Toast.LENGTH_LONG).show();
+                    }
+                } catch (NumberFormatException e) {
+                    e.printStackTrace();
+                    Appreference.printLog("ContactFragment", "broadcastvideocall Exception : " + e.getMessage(), "WARN", null);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    Appreference.printLog("ContactFragment", "broadcastvideocall Exception : " + e.getMessage(), "WARN", null);
+                }
+            }
+        }
+    }
+
+    public void broadcastaudiocall() {
+        try {
+            Log.i("ContactFragment", "Broadcast Audio Call 1 if click");
+            if (MainActivity.gsmCallState == TelephonyManager.CALL_STATE_IDLE) {
+                boolean groupIsSelect;
+                Log.i("audiocall", "call button click");
+                groupIsSelect = true;
+                Log.i("ContactFragment", "group broadcast_audio_call click groupIsSelect " + true);
+                Log.i("ContactFragment", "Inside if");
                 if (ExpListItems.size() > 0) {
                     check = false;
                     dialog = new ProgressDialog(classContext);
@@ -4287,89 +4746,57 @@ public class ContactsFragment extends Fragment implements View.OnClickListener, 
                     dialog.setCancelable(false);
                     dialog.show();
                     for (Group group : ExpListItems) {
+                        Log.i("ContactFragment", "inside for");
+                        Log.i("ContactFragment", String.valueOf(group.getIscheck()));
                         if (group.getIscheck()) {
-                            MainActivity.isAudioCall = false;
+                            Log.i("ContactFragment", "inside group if");
+                            MainActivity.isAudioCall = true;
                             ArrayList<String> grouplist = VideoCallDataBase.getDB(context).selectGroupmembers("select * from groupmember where groupid= '" + group.getId() + "'", "userid");
-//                            for (String groupId : grouplist) {
-//                                callNotification(Integer.parseInt(groupId), Appreference.loginuserdetails.getId());
-//                                Appreference.broadcast_call = true;
-//                            }
+                            /*for (String groupId : grouplist) {
+                                Log.i("ContactFragment", groupId);
+                                Log.i("ContactFragment", String.valueOf(Appreference.loginuserdetails.getId()));
+                                callNotification(Integer.parseInt(groupId), Appreference.loginuserdetails.getId());
+                                Appreference.broadcast_call = true;
+                            }*/
                             ArrayList<Integer> group_list_id = new ArrayList<Integer>();
                             for (String groupId : grouplist) {
+                                Log.i("ContactFragment", "inside group if  groupId === >> " + groupId);
+                                //                                group_list_id = new ArrayList<Integer>();
                                 group_list_id.add(Integer.parseInt(groupId));
                             }
-                            if(group_list_id.size() > 0) {
+                            if (group_list_id.size() > 0) {
                                 callNotification(group_list_id, Appreference.loginuserdetails.getId());
-                                Appreference.broadcast_call = true;
+                                Appreference.broadcast_call = false;
                             }
                         }
                     }
                 } else {
                     Toast.makeText(getContext(), "Select user to make a call", Toast.LENGTH_LONG).show();
                 }
-            }
-        }
-    }
 
-    public void broadcastaudiocall() {
-        Log.i("ContactFragment", "Broadcast Audio Call 1 if click");
-        if (MainActivity.gsmCallState == TelephonyManager.CALL_STATE_IDLE) {
-            boolean groupIsSelect;
-            Log.i("audiocall", "call button click");
-            groupIsSelect = true;
-            Log.i("ContactFragment", "group broadcast_audio_call click groupIsSelect " + true);
-            Log.i("ContactFragment", "Inside if");
-            if (ExpListItems.size() > 0) {
-                check = false;
-                dialog = new ProgressDialog(classContext);
-                dialog.setMessage("Call Connecting...");
-                dialog.setCancelable(false);
-                dialog.show();
-                for (Group group : ExpListItems) {
-                    Log.i("ContactFragment", "inside for");
-                    Log.i("ContactFragment", String.valueOf(group.getIscheck()));
-                    if (group.getIscheck()) {
-                        Log.i("ContactFragment", "inside group if");
-                        MainActivity.isAudioCall = true;
-                        ArrayList<String> grouplist = VideoCallDataBase.getDB(context).selectGroupmembers("select * from groupmember where groupid= '" + group.getId() + "'", "userid");
-                        /*for (String groupId : grouplist) {
-                            Log.i("ContactFragment", groupId);
-                            Log.i("ContactFragment", String.valueOf(Appreference.loginuserdetails.getId()));
-                            callNotification(Integer.parseInt(groupId), Appreference.loginuserdetails.getId());
-                            Appreference.broadcast_call = true;
-                        }*/
-                        ArrayList<Integer> group_list_id = new ArrayList<Integer>();
-                        for (String groupId : grouplist) {
-                            Log.i("ContactFragment", "inside group if  groupId === >> " + groupId);
-//                                group_list_id = new ArrayList<Integer>();
-                            group_list_id.add(Integer.parseInt(groupId));
-                        }
-                        if (group_list_id.size() > 0) {
-                            callNotification(group_list_id, Appreference.loginuserdetails.getId());
-                            Appreference.broadcast_call = false;
-                        }
-                    }
-                }
-            } else {
-                Toast.makeText(getContext(), "Select user to make a call", Toast.LENGTH_LONG).show();
             }
-
+        } catch (NumberFormatException e) {
+            e.printStackTrace();
+            Appreference.printLog("ContactFragment", "broadcastaudiocall Exception : " + e.getMessage(), "WARN", null);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Appreference.printLog("ContactFragment", "broadcastaudiocall Exception : " + e.getMessage(), "WARN", null);
         }
     }
 
     public void conferencecall() {
-        {
+        try {
             Log.i("ContactFragment", "Conference Call 1 if click");
             if (MainActivity.gsmCallState == TelephonyManager.CALL_STATE_IDLE) {
-//                        boolean select = false;
+                //                        boolean select = false;
                 boolean groupIsSelect;
                 Log.i("audiocall", "call button click");
-//                            for (Group group : ExpListItems) {
-//                                if (group.getIscheck()) {
+                //                            for (Group group : ExpListItems) {
+                //                                if (group.getIscheck()) {
                 groupIsSelect = true;
-//                                    Log.i("ContactFragment","group conference_call click groupIsSelect " +groupIsSelect);
-//                                }
-//                            }
+                //                                    Log.i("ContactFragment","group conference_call click groupIsSelect " +groupIsSelect);
+                //                                }
+                //                            }
                 Log.i("ContactFragment", "Conference Call 2 if click");
                 if (ExpListItems.size() > 0) {
                     Log.i("ContactFragment", "Conference Call 3 if click");
@@ -4383,12 +4810,12 @@ public class ContactsFragment extends Fragment implements View.OnClickListener, 
                             Log.i("ContactFragment", "Conference Call 4 if click");
                             MainActivity.isAudioCall = true;
                             ArrayList<String> grouplist = VideoCallDataBase.getDB(context).selectGroupmembers("select * from groupmember where groupid= '" + group.getId() + "'", "userid");
-//                                for (String groupId : grouplist) {
-//                                    Log.i("ContactFragment", "Conference Call 5 if click");
-//                                    callNotification(Integer.parseInt(groupId), Appreference.loginuserdetails.getId());
-//                                    Appreference.broadcast_call = false;
+                            //                                for (String groupId : grouplist) {
+                            //                                    Log.i("ContactFragment", "Conference Call 5 if click");
+                            //                                    callNotification(Integer.parseInt(groupId), Appreference.loginuserdetails.getId());
+                            //                                    Appreference.broadcast_call = false;
 
-//                                }
+                            //                                }
                             ArrayList<Integer> group_list_id = new ArrayList<Integer>();
                             for (String groupId : grouplist) {
                                 group_list_id.add(Integer.parseInt(groupId));
@@ -4403,6 +4830,12 @@ public class ContactsFragment extends Fragment implements View.OnClickListener, 
                     Toast.makeText(getContext(), "Select user to make a call", Toast.LENGTH_LONG).show();
                 }
             }
+        } catch (NumberFormatException e) {
+            e.printStackTrace();
+            Appreference.printLog("ContactFragment", "conferencecall Exception : " + e.getMessage(), "WARN", null);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Appreference.printLog("ContactFragment", "conferencecall Exception : " + e.getMessage(), "WARN", null);
         }
     }
 
@@ -4420,6 +4853,7 @@ public class ContactsFragment extends Fragment implements View.OnClickListener, 
             }
         } catch (Exception e) {
             e.printStackTrace();
+            Appreference.printLog("ContactFragment", "showprogress() Exception : " + e.getMessage(), "WARN", null);
         }
     }
 
@@ -4437,6 +4871,7 @@ public class ContactsFragment extends Fragment implements View.OnClickListener, 
                             buddyArrayAdapter.notifyDataSetChanged();
                         } catch (Exception e) {
                             e.printStackTrace();
+                            Appreference.printLog("ContactFragment", "ContactsArrangement ASC Exception : " + e.getMessage(), "WARN", null);
                         }
                     } else if (Appreference.contact_arrange.get("Alfha").equalsIgnoreCase("DESC")) {
                         Log.i("ContactsFragment", "inside  1 Alfha ------>  if DESC --- " + Appreference.contact_arrange.get("Alfha"));
@@ -4446,6 +4881,7 @@ public class ContactsFragment extends Fragment implements View.OnClickListener, 
                             buddyArrayAdapter.notifyDataSetChanged();
                         } catch (Exception e) {
                             e.printStackTrace();
+                            Appreference.printLog("ContactFragment", "ContactsArrangement DESC Exception : " + e.getMessage(), "WARN", null);
                         }
                     } else {
                         Log.i("ContactsFragment", "inside  1 Alfha ------> else " + Appreference.contact_arrange.get("Alfha"));
@@ -4455,6 +4891,7 @@ public class ContactsFragment extends Fragment implements View.OnClickListener, 
                             buddyArrayAdapter.notifyDataSetChanged();
                         } catch (Exception e) {
                             e.printStackTrace();
+                            Appreference.printLog("ContactFragment", "ContactsArrangement Alfha  Exception : " + e.getMessage(), "WARN", null);
                         }
                     }
                 } else if (Appreference.isAlfhaOrOnline.equalsIgnoreCase("Online")) {
@@ -4499,6 +4936,7 @@ public class ContactsFragment extends Fragment implements View.OnClickListener, 
                             buddyArrayAdapter.notifyDataSetChanged();
                         } catch (Exception e) {
                             e.printStackTrace();
+                            Appreference.printLog("ContactFragment", "ContactsArrangement Online Exception : " + e.getMessage(), "WARN", null);
                         }
 //                onlineSelectionEnable();
 //                buddyList.get(0).getStatus().equalsIgnoreCase("Online");
@@ -4510,6 +4948,7 @@ public class ContactsFragment extends Fragment implements View.OnClickListener, 
                             buddyArrayAdapter.notifyDataSetChanged();
                         } catch (Exception e) {
                             e.printStackTrace();
+                            Appreference.printLog("ContactFragment", "ContactsArrangement Online_DESC Exception : " + e.getMessage(), "WARN", null);
                         }
                     } else {
                         Log.i("ContactsFragment", "inside  1 Online ------>  if else --- " + Appreference.contact_arrange.get("Online"));
@@ -4518,6 +4957,7 @@ public class ContactsFragment extends Fragment implements View.OnClickListener, 
                             buddyArrayAdapter.notifyDataSetChanged();
                         } catch (Exception e) {
                             e.printStackTrace();
+                            Appreference.printLog("ContactFragment", "ContactsArrangement online_else_DESC Exception : " + e.getMessage(), "WARN", null);
                         }
                     }
 
@@ -4529,6 +4969,7 @@ public class ContactsFragment extends Fragment implements View.OnClickListener, 
                         buddyArrayAdapter.notifyDataSetChanged();
                     } catch (Exception e) {
                         e.printStackTrace();
+                        Appreference.printLog("ContactFragment", "ContactsArrangement online_else Exception : " + e.getMessage(), "WARN", null);
                     }
                 }
             }
@@ -4536,15 +4977,20 @@ public class ContactsFragment extends Fragment implements View.OnClickListener, 
     }
 
     public void hideCallIcon() {
-        audio_call.setVisibility(View.INVISIBLE);
+        try {
+            audio_call.setVisibility(View.INVISIBLE);
 
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                Log.d("CallUI", "MainActivity hideCallIcon contacts ");
-                audio_call.setVisibility(View.VISIBLE);
-            }
-        }, 3000);
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    Log.d("CallUI", "MainActivity hideCallIcon contacts ");
+                    audio_call.setVisibility(View.VISIBLE);
+                }
+            }, 3000);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Appreference.printLog("ContactFragment", "hideCallIcon Exception : " + e.getMessage(), "WARN", null);
+        }
     }
 
     public String getNegativeOrPositiveValue(int number) {

@@ -320,26 +320,31 @@ public class JsonRequestResponce extends Thread {
 
                     } catch (UnknownHostException e) {
                         e.printStackTrace();
+                        Appreference.printLog("JsonRequestResponce", " Exception : " + e.getMessage(), "WARN", null);
 //                        errorResponse(serviceName,e.getMessage());
                         errorResponse(obj.getEnumJsonWebservicename(), e.getMessage());
                         Log.e("Error", e.toString());
                     } catch (ConnectTimeoutException e) {
                         e.printStackTrace();
+                        Appreference.printLog("JsonRequestResponce", " Exception : " + e.getMessage(), "WARN", null);
 //                        errorResponse(serviceName,e.getMessage());
                         errorResponse(obj.getEnumJsonWebservicename(), e.getMessage());
                         Log.e("Error", e.toString());
                     } catch (ClientProtocolException e) {
                         // TODO Handle problems..
                         e.printStackTrace();
+                        Appreference.printLog("JsonRequestResponce", " Exception : " + e.getMessage(), "WARN", null);
                         errorResponse(obj.getEnumJsonWebservicename(), e.getMessage());
                         //errorResponse(serviceName, e.getMessage());
                     } catch (IOException e) {
                         // TODO Handle problems..
                         e.printStackTrace();
                         errorResponse(obj.getEnumJsonWebservicename(), e.getMessage());
+                        Appreference.printLog("JsonRequestResponce", " Exception : " + e.getMessage(), "WARN", null);
                         //errorResponse(serviceName, e.getMessage());
                     } catch (Exception e) {
                         e.printStackTrace();
+                        Appreference.printLog("JsonRequestResponce", " Exception : " + e.getMessage(), "WARN", null);
                         errorResponse(obj.getEnumJsonWebservicename(), e.getMessage());
                         //errorResponse(serviceName,e.getMessage());
                     }
@@ -363,6 +368,11 @@ public class JsonRequestResponce extends Thread {
             } catch (InterruptedException e) {
                 Log.i("jsonwebservice", "InterruptedException");
                 e.printStackTrace();
+                Appreference.printLog("JsonRequestResponce", " Exception : " + e.getMessage(), "WARN", null);
+            }catch (Exception e) {
+                Log.i("jsonwebservice", "Exception");
+                e.printStackTrace();
+                Appreference.printLog("JsonRequestResponce", " Exception : " + e.getMessage(), "WARN", null);
             }
         }
     }
@@ -627,6 +637,7 @@ public class JsonRequestResponce extends Thread {
                             }
                         } catch (Exception e) {
                             e.printStackTrace();
+                            Appreference.printLog("JsonRequestResponce", "webserviceResponse taskConversationEntry Exception : " + e.getMessage(), "WARN", null);
                         }
                         break;
                     case taskObserverEntry:
@@ -808,6 +819,7 @@ public class JsonRequestResponce extends Thread {
             }
         } catch (Exception e) {
             e.printStackTrace();
+            Appreference.printLog("JsonRequestResponce", "webserviceResponse Exception : " + e.getMessage(), "WARN", null);
         }
     }
 
@@ -851,6 +863,7 @@ public class JsonRequestResponce extends Thread {
             schemeRegistry.register(new Scheme("https", sslSocketFactory, 443));
             return new DefaultHttpClient(clientConnectionManager, client.getParams());
         } catch (Exception ex) {
+            Appreference.printLog("JsonRequestResponce", "getHttpsClient Exception : " + ex.getMessage(), "WARN", null);
             return null;
         }
     }
