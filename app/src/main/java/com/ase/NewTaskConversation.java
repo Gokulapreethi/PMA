@@ -1187,6 +1187,9 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                                     } catch (Resources.NotFoundException e) {
                                         e.printStackTrace();
                                         Appreference.printLog("NewTaskConversation gridview Private click ", "Exception " + e.getMessage(), "WARN", null);
+                                    } catch (Exception e) {
+                                        e.printStackTrace();
+                                        Appreference.printLog("NewTaskConversation gridview Private click ", "Exception " + e.getMessage(), "WARN", null);
                                     }
                                     break;
 
@@ -1417,6 +1420,9 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                                     } catch (NumberFormatException e) {
                                         e.printStackTrace();
                                         Appreference.printLog("NewTaskConversation", "GridView Percentage Exception : " + e.getMessage(), "WARN", null);
+                                    } catch (Exception e) {
+                                        e.printStackTrace();
+                                        Appreference.printLog("NewTaskConversation", "GridView Percentage Exception : " + e.getMessage(), "WARN", null);
                                     }
                                     break;
 
@@ -1484,6 +1490,9 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                                     } catch (Resources.NotFoundException e) {
                                         e.printStackTrace();
                                         Appreference.printLog("NewTaskConversation", "GridView chat Exception : " + e.getMessage(), "WARN", null);
+                                    } catch (Exception e) {
+                                        e.printStackTrace();
+                                        Appreference.printLog("NewTaskConversation", "GridView chat Exception : " + e.getMessage(), "WARN", null);
                                     }
                                     break;
 
@@ -1512,6 +1521,9 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                                         icons.setVisibility(View.VISIBLE);
                                         arrow = false;
                                     } catch (Resources.NotFoundException e) {
+                                        e.printStackTrace();
+                                        Appreference.printLog("NewTaskConversation", "GridView TaskDescription Exception : " + e.getMessage(), "WARN", null);
+                                    } catch (Exception e) {
                                         e.printStackTrace();
                                         Appreference.printLog("NewTaskConversation", "GridView TaskDescription Exception : " + e.getMessage(), "WARN", null);
                                     }
@@ -1794,6 +1806,9 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                                     } catch (Resources.NotFoundException e) {
                                         e.printStackTrace();
                                         Appreference.printLog("NewTaskConversation", "Gridview_taker Private Exception : " + e.getMessage(), "WARN", null);
+                                    } catch (Exception e) {
+                                        e.printStackTrace();
+                                        Appreference.printLog("NewTaskConversation", "Gridview_taker Private Exception : " + e.getMessage(), "WARN", null);
                                     }
                                     break;
 
@@ -1822,6 +1837,9 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                                         icons.setVisibility(View.VISIBLE);
                                         arrow = false;
                                     } catch (Resources.NotFoundException e) {
+                                        e.printStackTrace();
+                                        Appreference.printLog("NewTaskConversation", "Gridview_taker chat Exception : " + e.getMessage(), "WARN", null);
+                                    } catch (Exception e) {
                                         e.printStackTrace();
                                         Appreference.printLog("NewTaskConversation", "Gridview_taker chat Exception : " + e.getMessage(), "WARN", null);
                                     }
@@ -1997,6 +2015,9 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                                     } catch (NumberFormatException e) {
                                         e.printStackTrace();
                                         Appreference.printLog("NewTaskConversation", "Gridview_taker percentage Exception : " + e.getMessage(), "WARN", null);
+                                    } catch (Exception e) {
+                                        e.printStackTrace();
+                                        Appreference.printLog("NewTaskConversation", "Gridview_taker percentage Exception : " + e.getMessage(), "WARN", null);
                                     }
 
                                 case "Call":
@@ -2167,6 +2188,9 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                         } catch (NumberFormatException e) {
                             e.printStackTrace();
                             Appreference.printLog("NewTaskConversation Griddview_taker click", "Exception " + e.getMessage(), "WARN", null);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                            Appreference.printLog("NewTaskConversation Griddview_taker click", "Exception " + e.getMessage(), "WARN", null);
                         }
                     }
                 }
@@ -2275,6 +2299,9 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                                     icons.setVisibility(View.VISIBLE);
                                     arrow = false;
                                 } catch (Resources.NotFoundException e) {
+                                    e.printStackTrace();
+                                    Appreference.printLog("NewTaskConversation", "Griddview_observer chat Exception : " + e.getMessage(), "WARN", null);
+                                } catch (Exception e) {
                                     e.printStackTrace();
                                     Appreference.printLog("NewTaskConversation", "Griddview_observer chat Exception : " + e.getMessage(), "WARN", null);
                                 }
@@ -3228,6 +3255,9 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                 } catch (NumberFormatException e) {
                     e.printStackTrace();
                     Appreference.printLog("NewTaskConversation", "update clickListener  Exception : " + e.getMessage(), "WARN", null);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    Appreference.printLog("NewTaskConversation", "update clickListener  Exception : " + e.getMessage(), "WARN", null);
                 }
             }
         });
@@ -3469,6 +3499,9 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                                     Log.i("textfile", "Sucess" + fpath);
 
                                 } catch (IOException e) {
+                                    e.printStackTrace();
+                                    Appreference.printLog("NewTaskConversation", "senbutton clicklistener Exception " + e.getMessage(), "WARN", null);
+                                } catch (Exception e) {
                                     e.printStackTrace();
                                     Appreference.printLog("NewTaskConversation", "senbutton clicklistener Exception " + e.getMessage(), "WARN", null);
                                 }
@@ -4135,6 +4168,9 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                 }
             }
         } catch (Resources.NotFoundException e) {
+            e.printStackTrace();
+            Appreference.printLog("NewTaskConversation", "downLoadcustom1 Exception : " + e.getMessage(), "WARN", null);
+        } catch (Exception e) {
             e.printStackTrace();
             Appreference.printLog("NewTaskConversation", "downLoadcustom1 Exception : " + e.getMessage(), "WARN", null);
         }
@@ -5007,44 +5043,114 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                                         Appreference.isremarksEntered = false;
 
                                     if (Appreference.isremarksEntered) {
-                                        final Calendar mcurrentTime = Calendar.getInstance();
-                                        int hour = mcurrentTime.get(Calendar.HOUR_OF_DAY);
-                                        int minute = mcurrentTime.get(Calendar.MINUTE);
-                                        TimePickerDialog mTimePicker;
-                                        mTimePicker = new TimePickerDialog(NewTaskConversation.this, new TimePickerDialog.OnTimeSetListener() {
-                                            @Override
-                                            public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
-                                                final java.sql.Date todayDate = new java.sql.Date(System.currentTimeMillis());
-                                                int hour = mcurrentTime.get(Calendar.HOUR_OF_DAY);
-                                                int minute = mcurrentTime.get(Calendar.MINUTE);
-                                                final SimpleDateFormat sdf=new SimpleDateFormat("HH:mm");
-                                                final String HourMinuteNow= hour+":"+minute;
-                                                Date date1=null;
-                                                Date date2=null;
-                                                try {
-                                                    date1=sdf.parse(HourMinuteNow);
-                                                } catch (ParseException e) {
-                                                    e.printStackTrace();
+                                        try {
+                                            //New Code Start
+                                            final Dialog mDateTimeDialog = new Dialog(context);
+                                            // Inflate the root layout
+                                            final RelativeLayout mDateTimeDialogView = (RelativeLayout) getLayoutInflater().inflate(R.layout.new_date_picker, null);
+
+                                            // Grab widget instance
+                                            final DateTimePicker mDateTimePicker = (DateTimePicker) mDateTimeDialogView.findViewById(R.id.DateTimePicker);
+                                            mDateTimePicker.setDateChangedListener(NewTaskConversation.this);
+
+                                            // Update demo TextViews when the "OK" button is clicked
+                                            ((Button) mDateTimePicker.findViewById(R.id.month_plus)).setVisibility(View.VISIBLE);
+                                            ((Button) mDateTimePicker.findViewById(R.id.month_minus)).setVisibility(View.VISIBLE);
+                                            ((Button) mDateTimePicker.findViewById(R.id.date_plus)).setVisibility(View.VISIBLE);
+                                            ((Button) mDateTimePicker.findViewById(R.id.date_minus)).setVisibility(View.VISIBLE);
+                                            ((Button) mDateTimePicker.findViewById(R.id.year_plus)).setVisibility(View.VISIBLE);
+                                            ((Button) mDateTimePicker.findViewById(R.id.year_minus)).setVisibility(View.VISIBLE);
+                                            ((Button) mDateTimePicker.findViewById(R.id.hour_plus)).setVisibility(View.VISIBLE);
+                                            ((Button) mDateTimePicker.findViewById(R.id.hour_minus)).setVisibility(View.VISIBLE);
+                                            ((Button) mDateTimePicker.findViewById(R.id.min_plus)).setVisibility(View.VISIBLE);
+                                            ((Button) mDateTimePicker.findViewById(R.id.min_minus)).setVisibility(View.VISIBLE);
+                                            ((Button) mDateTimeDialogView.findViewById(R.id.SetDateTime)).setOnClickListener(new View.OnClickListener() {
+
+                                                public void onClick(View v) {
+                                                    mDateTimePicker.clearFocus();
+                                                    // TODO Auto-generated method stub
+                                                    String result_string = mDateTimePicker.getMonth() + "-" + String.valueOf(mDateTimePicker.getDay()) + "-" + String.valueOf(mDateTimePicker.getYear())
+                                                            + "  " + String.valueOf(mDateTimePicker.getHour()) + ":" + String.valueOf(mDateTimePicker.getMinute());
+                                                    Date date_from = null;
+                                                    final Calendar c_date1 = Calendar.getInstance();
+
+                                                    try {
+                                                        date_from = new SimpleDateFormat("MMM-d-yyyy HH:mm").parse(result_string);
+                                                    } catch (ParseException e) {
+                                                        e.printStackTrace();
+                                                        Appreference.printLog("NewTaskConversation", "showStatusPopupWindow Hold date Exception : " + e.getMessage(), "WARN", null);
+                                                    }
+                                                    String date3 = null,showholdTimerDate = null;
+                                                    Date date_to = null, date_initial = null,dt_temp = null;
+                                                    final SimpleDateFormat sdf = new SimpleDateFormat("dd-MMM-yyyy HH:mm");
+                                                    if (date3 == null) {
+                                                        try {
+                                                            date3 = sdf.format(c_date1.getTime());
+                                                            date_from = new SimpleDateFormat("MMM-d-yyyy HH:mm").parse(result_string);
+                                                        } catch (Exception e) {
+                                                            e.printStackTrace();
+                                                            Appreference.printLog("NewTaskConversation", "showStatusPopupWindow Hold date Exception : " + e.getMessage(), "WARN", null);
+                                                        }
+                                                    }
+                                                    try {
+                                                        date_to = sdf.parse(date3);
+                                                    } catch (Exception e) {
+                                                        e.printStackTrace();
+                                                        Appreference.printLog("NewTaskConversation", "showStatusPopupWindow Hold date Exception : " + e.getMessage(), "WARN", null);
+                                                    }
+                                                    SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MMM-yyyy HH:mm");
+                                                    SimpleDateFormat originalFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                                                    Log.i("Date123", "Date arrange===> ## " + result_string);
+                                                    Log.i("Date123", "Date From===> ## " + date_from);
+                                                    Log.i("Date123", "Date to===> ## " + date_to);
+                                                    Log.i("Date123", "date3 ===> ## " + date3);
+                                                    Log.i("Date123", "compareTo ===> ## " + date_from.compareTo(date_to));
+
+                                                    String actual_timerdate = sdf.format(date_from);
+                                                    Log.i("Date123", "actual_timerdate ===> ## " + actual_timerdate);
+                                                    if (date_from.compareTo(date_to) > 0) {
+                                                        try {
+                                                            dt_temp = dateFormat.parse(actual_timerdate);
+                                                            showholdTimerDate = originalFormat.format(dt_temp);
+                                                            Log.i("Date123", "result_string ===> ## " + result_string);
+                                                            Log.i("Date123", "dt_temp ===> &  ## " + dt_temp);
+                                                            Log.i("Date123", "showholdTimerDate ===> & ## " + showholdTimerDate);
+                                                        } catch (ParseException e) {
+                                                            e.printStackTrace();
+                                                            Appreference.printLog("NewTaskConversation", "showStatusPopupWindow Hold date Exception : " + e.getMessage(), "WARN", null);
+                                                        }
+                                                        Log.i("Date123", "compareTo ===> if " + date_from.compareTo(date_to));
+                                                        Appreference.isremarksEntered = false;
+                                                        Appreference.isTimeUpshown = false;
+                                                        sendStatus_webservice("1", showholdTimerDate, "Hold Remarks :" + name.getText().toString(), "hold", "Hold");
+                                                        mDateTimeDialog.dismiss();
+                                                        dialog1.dismiss();
+                                                    } else {
+                                                        showToast("Please set Correct Timer...");
+                                                    }
                                                 }
-                                                String selectedTimer=selectedHour +":"+selectedMinute;
-                                                try {
-                                                    date2=sdf.parse(selectedTimer);
-                                                } catch (ParseException e) {
-                                                    e.printStackTrace();
+                                            });
+                                            // Cancel the dialog when the "Cancel" button is clicked
+                                            ((Button) mDateTimeDialogView.findViewById(R.id.CancelDialog)).setOnClickListener(new View.OnClickListener() {
+
+                                                public void onClick(View v) {
+                                                    // TODO Auto-generated method stub
+                                                    mDateTimeDialog.cancel();
+//                                                    dialog1.dismiss();
                                                 }
-                                                if (!date2.before(date1) && !(date2.compareTo(date1) ==0) && selectedHour != 0 && selectedMinute != 0) {
-                                                    String showTimerDate=todayDate+ " " +selectedHour +":"+selectedMinute;
-                                                    Log.i("timer123","hold Remarks=====================>"+name.getText().toString());
-                                                    Appreference.isremarksEntered=false;
-                                                    Appreference.isTimeUpshown=false;
-                                                    sendStatus_webservice("1", showTimerDate, "Hold Remarks :" + name.getText().toString(), "hold", "Hold");                                                    dialog1.dismiss();
-                                                } else {
-                                                    showToast("Please set correct Timer...");
-                                                }
-                                            }
-                                        }, hour, minute, true);//Yes 24 hour time
-                                        mTimePicker.setTitle("Set Timer...");
-                                        mTimePicker.show();
+                                            });
+                                            // Setup TimePicker
+                                            // No title on the dialog window
+                                            mDateTimeDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                                            // Set the dialog content view
+                                            mDateTimeDialog.setContentView(mDateTimeDialogView);
+                                            // Display the dialog
+                                            mDateTimeDialog.show();
+                                            //New Code End
+                                        } catch (Exception e) {
+                                            e.printStackTrace();
+                                            Appreference.printLog("NewTaskConversation", "showStatusPopupWindow Hold date Exception : " + e.getMessage(), "WARN", null);
+                                        }
                                     } else {
                                         showToast("Please enter any Remarks");
                                     }
@@ -5099,45 +5205,114 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                                         Appreference.isremarksEntered = false;
 
                                     if (Appreference.isremarksEntered) {
-                                        final Calendar mcurrentTime = Calendar.getInstance();
-                                        int hour = mcurrentTime.get(Calendar.HOUR_OF_DAY);
-                                        int minute = mcurrentTime.get(Calendar.MINUTE);
-                                        TimePickerDialog mTimePicker;
-                                        mTimePicker = new TimePickerDialog(NewTaskConversation.this, new TimePickerDialog.OnTimeSetListener() {
-                                            @Override
-                                            public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
-                                                final java.sql.Date todayDate = new java.sql.Date(System.currentTimeMillis());
-                                                int hour = mcurrentTime.get(Calendar.HOUR_OF_DAY);
-                                                int minute = mcurrentTime.get(Calendar.MINUTE);
-                                                final SimpleDateFormat sdf=new SimpleDateFormat("HH:mm");
-                                                final String HourMinuteNow= hour+":"+minute;
-                                                Date date1=null;
-                                                Date date2=null;
-                                                try {
-                                                    date1=sdf.parse(HourMinuteNow);
-                                                } catch (ParseException e) {
-                                                    e.printStackTrace();
+                                        try {
+                                            //New Code Start
+                                            final Dialog mDateTimeDialog = new Dialog(context);
+                                            // Inflate the root layout
+                                            final RelativeLayout mDateTimeDialogView = (RelativeLayout) getLayoutInflater().inflate(R.layout.new_date_picker, null);
+
+                                            // Grab widget instance
+                                            final DateTimePicker mDateTimePicker = (DateTimePicker) mDateTimeDialogView.findViewById(R.id.DateTimePicker);
+                                            mDateTimePicker.setDateChangedListener(NewTaskConversation.this);
+
+                                            // Update demo TextViews when the "OK" button is clicked
+                                            ((Button) mDateTimePicker.findViewById(R.id.month_plus)).setVisibility(View.VISIBLE);
+                                            ((Button) mDateTimePicker.findViewById(R.id.month_minus)).setVisibility(View.VISIBLE);
+                                            ((Button) mDateTimePicker.findViewById(R.id.date_plus)).setVisibility(View.VISIBLE);
+                                            ((Button) mDateTimePicker.findViewById(R.id.date_minus)).setVisibility(View.VISIBLE);
+                                            ((Button) mDateTimePicker.findViewById(R.id.year_plus)).setVisibility(View.VISIBLE);
+                                            ((Button) mDateTimePicker.findViewById(R.id.year_minus)).setVisibility(View.VISIBLE);
+                                            ((Button) mDateTimePicker.findViewById(R.id.hour_plus)).setVisibility(View.VISIBLE);
+                                            ((Button) mDateTimePicker.findViewById(R.id.hour_minus)).setVisibility(View.VISIBLE);
+                                            ((Button) mDateTimePicker.findViewById(R.id.min_plus)).setVisibility(View.VISIBLE);
+                                            ((Button) mDateTimePicker.findViewById(R.id.min_minus)).setVisibility(View.VISIBLE);
+                                            ((Button) mDateTimeDialogView.findViewById(R.id.SetDateTime)).setOnClickListener(new View.OnClickListener() {
+
+                                                public void onClick(View v) {
+                                                    mDateTimePicker.clearFocus();
+                                                    // TODO Auto-generated method stub
+                                                    String result_string = mDateTimePicker.getMonth() + "-" + String.valueOf(mDateTimePicker.getDay()) + "-" + String.valueOf(mDateTimePicker.getYear())
+                                                            + "  " + String.valueOf(mDateTimePicker.getHour()) + ":" + String.valueOf(mDateTimePicker.getMinute());
+                                                    Date date_from = null;
+                                                    final Calendar c_date1 = Calendar.getInstance();
+
+                                                    try {
+                                                        date_from = new SimpleDateFormat("MMM-d-yyyy HH:mm").parse(result_string);
+                                                    } catch (ParseException e) {
+                                                        e.printStackTrace();
+                                                        Appreference.printLog("NewTaskConversation", "showStatusPopupWindow Pause date Exception : " + e.getMessage(), "WARN", null);
+                                                    }
+                                                    String date3 = null,showpauseTimerDate = null;
+                                                    Date date_to = null, date_initial = null,dt_temp = null;
+                                                    final SimpleDateFormat sdf = new SimpleDateFormat("dd-MMM-yyyy HH:mm");
+                                                    if (date3 == null) {
+                                                        try {
+                                                            date3 = sdf.format(c_date1.getTime());
+                                                            date_from = new SimpleDateFormat("MMM-d-yyyy HH:mm").parse(result_string);
+                                                        } catch (Exception e) {
+                                                            e.printStackTrace();
+                                                            Appreference.printLog("NewTaskConversation", "showStatusPopupWindow Pause date Exception : " + e.getMessage(), "WARN", null);
+                                                        }
+                                                    }
+                                                    try {
+                                                        date_to = sdf.parse(date3);
+                                                    } catch (Exception e) {
+                                                        e.printStackTrace();
+                                                        Appreference.printLog("NewTaskConversation", "showStatusPopupWindow Pause date Exception : " + e.getMessage(), "WARN", null);
+                                                    }
+                                                    SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MMM-yyyy HH:mm");
+                                                    SimpleDateFormat originalFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                                                    Log.i("Date123", "Date arrange===> " + result_string);
+                                                    Log.i("Date123", "Date From===> " + date_from);
+                                                    Log.i("Date123", "Date to===> " + date_to);
+                                                    Log.i("Date123", "date3 ===> " + date3);
+                                                    Log.i("Date123", "compareTo ===> " + date_from.compareTo(date_to));
+
+                                                    String actual_timerdate = sdf.format(date_from);
+                                                    Log.i("Date123", "actual_timerdate ===> " + actual_timerdate);
+                                                    if (date_from.compareTo(date_to) > 0) {
+                                                        try {
+                                                            dt_temp = dateFormat.parse(actual_timerdate);
+                                                            showpauseTimerDate = originalFormat.format(dt_temp);
+                                                            Log.i("Date123", "result_string ===> " + result_string);
+                                                            Log.i("Date123", "dt_temp ===> &  " + dt_temp);
+                                                            Log.i("Date123", "showpauseTimerDate ===> & " + showpauseTimerDate);
+                                                        } catch (ParseException e) {
+                                                            e.printStackTrace();
+                                                            Appreference.printLog("NewTaskConversation", "showStatusPopupWindow Pause date Exception : " + e.getMessage(), "WARN", null);
+                                                        }
+                                                        Log.i("Date123", "compareTo ===> if " + date_from.compareTo(date_to));
+                                                        Appreference.isremarksEntered = false;
+                                                        Appreference.isTimeUpshown = false;
+                                                        sendStatus_webservice("3", showpauseTimerDate, "Pause Remarks :" + name.getText().toString(), "Paused", "Paused");
+                                                        mDateTimeDialog.dismiss();
+                                                        dialog1.dismiss();
+                                                    } else {
+                                                        showToast("Please set Correct Timer...");
+                                                    }
                                                 }
-                                                String selectedTimer=selectedHour +":"+selectedMinute;
-                                                try {
-                                                    date2=sdf.parse(selectedTimer);
-                                                } catch (ParseException e) {
-                                                    e.printStackTrace();
+                                            });
+                                            // Cancel the dialog when the "Cancel" button is clicked
+                                            ((Button) mDateTimeDialogView.findViewById(R.id.CancelDialog)).setOnClickListener(new View.OnClickListener() {
+
+                                                public void onClick(View v) {
+                                                    // TODO Auto-generated method stub
+                                                    mDateTimeDialog.cancel();
+//                                                    dialog1.dismiss();
                                                 }
-                                                if (!date2.before(date1) && !(date2.compareTo(date1) ==0) && selectedHour != 0 && selectedMinute != 0) {
-                                                    String showTimerDate=todayDate+ " " +selectedHour +":"+selectedMinute;
-                                                    Log.i("timer123","Pause Remarks=====================>"+name.getText().toString());
-                                                    Appreference.isremarksEntered=false;
-                                                    Appreference.isTimeUpshown=false;
-                                                    sendStatus_webservice("3", showTimerDate, "Pause Remarks :" + name.getText().toString(), "Paused", "Paused");
-                                                    dialog1.dismiss();
-                                                } else {
-                                                    showToast("Please set Correct Timer...");
-                                                }
-                                            }
-                                        }, hour, minute, true);//Yes 24 hour time
-                                        mTimePicker.setTitle("Set Timer...");
-                                        mTimePicker.show();
+                                            });
+                                            // Setup TimePicker
+                                            // No title on the dialog window
+                                            mDateTimeDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                                            // Set the dialog content view
+                                            mDateTimeDialog.setContentView(mDateTimeDialogView);
+                                            // Display the dialog
+                                            mDateTimeDialog.show();
+                                            //New Code End
+                                        } catch (Exception e) {
+                                            e.printStackTrace();
+                                            Appreference.printLog("NewTaskConversation", "showStatusPopupWindow Pause Exception : " + e.getMessage(), "WARN", null);
+                                        }
                                     } else {
                                         showToast("Please enter any Remarks");
                                     }
@@ -6381,6 +6556,9 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                                     } catch (Resources.NotFoundException e) {
                                         e.printStackTrace();
                                         Appreference.printLog("NewTaskConversation", "EOD send_completion clicklistener Exception : " + e.getMessage(), "WARN", null);
+                                    } catch (Exception e) {
+                                        e.printStackTrace();
+                                        Appreference.printLog("NewTaskConversation", "EOD send_completion clicklistener Exception : " + e.getMessage(), "WARN", null);
                                     }
                                 }
                             });
@@ -7123,7 +7301,7 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                     }
                 }
                 if(status.equalsIgnoreCase("1") || status.equalsIgnoreCase("3")) {
-                    startHoldOrPauseAlarmManager(timer,taskDetailsBean.getTaskId());
+                    startHoldOrPauseAlarmManager(timer,getOracleTaskIdForProjectId(),projectCurrentStatus,taskDetailsBean.getProjectId());
                     ShowHoldOrPauseTimerDisplay();
 
                 }
@@ -7137,6 +7315,11 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
         }
     }
 
+    private String getOracleTaskIdForProjectId(){
+        String quryActivity1 = "select oracleTaskId from projectHistory where projectId='" + projectId + "' and taskId= '" + webtaskId + "'";
+        String oracleTaskId = VideoCallDataBase.getDB(getApplication()).getProjectParentTaskId(quryActivity1);
+        return oracleTaskId;
+    }
 
     private void insertCell(PdfPTable table, String text, int align, int colspan, Font font) {
 
@@ -9327,6 +9510,9 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                     } catch (NumberFormatException e) {
                         e.printStackTrace();
                         Appreference.printLog("NewTaskConversation", "onActivityResult 212 Exception " + e.getMessage(), "WARN", null);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        Appreference.printLog("NewTaskConversation", "onActivityResult 212 Exception " + e.getMessage(), "WARN", null);
                     }
 
 
@@ -9715,6 +9901,9 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                     } catch (NumberFormatException e) {
                         e.printStackTrace();
                         Appreference.printLog("NewTaskConversation", "onActivityResult 210  percentage Exception " + e.getMessage(), "WARN", null);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        Appreference.printLog("NewTaskConversation", "onActivityResult 210  percentage Exception " + e.getMessage(), "WARN", null);
                     }
                 } else if (requestCode == 336) {
                     try {
@@ -10046,6 +10235,9 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                         calender = false;
                         Log.i("task", "Reminder time set");
                     } catch (Resources.NotFoundException e) {
+                        e.printStackTrace();
+                        Appreference.printLog("NewTaskConversation", "onActivityResult date337 Exception : " + e.getMessage(), "WARN", null);
+                    } catch (Exception e) {
                         e.printStackTrace();
                         Appreference.printLog("NewTaskConversation", "onActivityResult date337 Exception : " + e.getMessage(), "WARN", null);
                     }
@@ -10985,6 +11177,9 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                     } catch (Resources.NotFoundException e) {
                         e.printStackTrace();
                         Appreference.printLog("NewTaskConversation", "onActivityResult 999 chatusers Exception " + e.getMessage(), "WARN", null);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        Appreference.printLog("NewTaskConversation", "onActivityResult 999 chatusers Exception " + e.getMessage(), "WARN", null);
                     }
                 } else if (requestCode == 456) {
                     try {
@@ -11510,6 +11705,9 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                             }
                         }
                     } catch (NumberFormatException e) {
+                        e.printStackTrace();
+                        Appreference.printLog("NewTaskConversation", "onActivityResult 787 customattribute787 Exception " + e.getMessage(), "WARN", null);
+                    } catch (Exception e) {
                         e.printStackTrace();
                         Appreference.printLog("NewTaskConversation", "onActivityResult 787 customattribute787 Exception " + e.getMessage(), "WARN", null);
                     }
@@ -12340,12 +12538,17 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                                         StatusTask="Pause";
                                     }
                                     Appreference.isTimeUpshown=true;
+                                    MainActivity.startAlarmRingTone();
                                     AlertDialog.Builder alertadd = new AlertDialog.Builder(NewTaskConversation.this);
+                                    alertadd.setCancelable(false);
                                     LayoutInflater factory = LayoutInflater.from(NewTaskConversation.this);
                                     final View view = factory.inflate(R.layout.showtimeup, null);
                                     alertadd.setView(view);
-                                    alertadd.setTitle("Task is "+StatusTask);
-
+//                                    alertadd.setTitle(StatusTask);
+                                    TextView tv_relevant_id=(TextView) view.findViewById(R.id.relevant_id);
+                                     String get_OracleprojectId_query = "select oracleProjectId from projectDetails where loginuser = '" + Appreference.loginuserdetails.getEmail() + "'and projectId='" + projectId + "'";
+                                    String OracleIdForProjectId = VideoCallDataBase.getDB(context).getprojectIdForOracleID(get_OracleprojectId_query);
+                                    tv_relevant_id.setText("Job Card No :"+OracleIdForProjectId+"\n" +"Activity Code : " +getOracleTaskIdForProjectId()  + "  is "+StatusTask );
                                     alertadd.setNeutralButton("OK", new DialogInterface.OnClickListener() {
                                         public void onClick(DialogInterface dialog1, int sumthin) {
                                             dialog1.dismiss();
@@ -12741,7 +12944,7 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
 
                                                  }
                                                  if(detailsBean.getProjectStatus().equalsIgnoreCase("1") || detailsBean.getProjectStatus().equalsIgnoreCase("3")) {
-                                                     startHoldOrPauseAlarmManager(Appreference.HoldOrPauseTimervalue,detailsBean.getTaskId());
+                                                     startHoldOrPauseAlarmManager(Appreference.HoldOrPauseTimervalue,getOracleTaskIdForProjectId(),detailsBean.getTaskStatus(),detailsBean.getProjectId());
                                                      ShowHoldOrPauseTimerDisplay();
                                                  }
                                                  if (travel_date_details != null && travel_date_details.size() > 0) {
@@ -13695,6 +13898,9 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                                          } catch (NumberFormatException e) {
                                              e.printStackTrace();
                                              Appreference.printLog("NewTaskConversation", "ResponceMethod  getCustomHeaderValue Exception : " + e.getMessage(), "WARN", null);
+                                         } catch (Exception e) {
+                                             e.printStackTrace();
+                                             Appreference.printLog("NewTaskConversation", "ResponceMethod  getCustomHeaderValue Exception : " + e.getMessage(), "WARN", null);
                                          }
                                      } else if (server_Response_string != null && server_Response_string.contains("isInputRequired")) {
                                          try {
@@ -13983,7 +14189,7 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
         }
     }
 
-    private void startHoldOrPauseAlarmManager(String timer, String status_taskId) {
+    private void startHoldOrPauseAlarmManager(String timer, String status_taskId,String currentTaskStatus,String jobCodeNo) {
         SimpleDateFormat datefor = new SimpleDateFormat("yyyy-MM-dd HH:mm");
         Date enddate = null, dateFor = null, endDate = null;
         String endTime = null;
@@ -13991,6 +14197,7 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
         Log.i("alarm123", "startHoldOrPauseAlarmManager started");
         Log.i("alarm123", "startHoldOrPauseAlarmManager timer===>"+timer);
         Log.i("alarm123", "startHoldOrPauseAlarmManager status_taskId===>"+status_taskId);
+        Log.i("alarm123", "startHoldOrPauseAlarmManager currentTaskStatus===>"+currentTaskStatus);
         try {
             enddate = datefor.parse(timer);
             Log.i("task", "End.Date " + enddate);
@@ -14016,6 +14223,8 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
             unicid = Integer.parseInt(status_taskId);
             intent.putExtra("id", unicid);
             intent.putExtra("endTime", endTime);
+            intent.putExtra("currentProjectId", jobCodeNo);
+            intent.putExtra("currentStatus", currentTaskStatus);
             PendingIntent pendingIntent = PendingIntent.getBroadcast(context, unicid, intent, 0);
             Calendar cal = Calendar.getInstance();
             cal.setTime(endDate);
@@ -14244,6 +14453,9 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                             toUserId = Integer.parseInt(projectBean.getToUserId());
                         }
                     } catch (NumberFormatException e) {
+                        e.printStackTrace();
+                        Appreference.printLog("NewTaskConversation", "setProjectHistory_StaticVariable  touserId Exception : " + e.getMessage(), "WARN", null);
+                    } catch (Exception e) {
                         e.printStackTrace();
                         Appreference.printLog("NewTaskConversation", "setProjectHistory_StaticVariable  touserId Exception : " + e.getMessage(), "WARN", null);
                     }
@@ -15379,6 +15591,9 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
         } catch (IOException e) {
             e.printStackTrace();
             Appreference.printLog("NewTaskConversation", "encodeFileToBase64Binary Exception : " + e.getMessage(), "WARN", null);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Appreference.printLog("NewTaskConversation", "encodeFileToBase64Binary Exception : " + e.getMessage(), "WARN", null);
         }
         return encodedString;
     }
@@ -15403,15 +15618,11 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
         try {
             strFile = null;
             File file = new File(path);
-            try {
-                FileInputStream file1 = new FileInputStream(file);
-                byte[] Bytearray = new byte[(int) file.length()];
-                file1.read(Bytearray);
-                strFile = Base64.encodeToString(Bytearray, Base64.DEFAULT);//Convert byte array into string
-            } catch (IOException e) {
-                e.printStackTrace();
-                Appreference.printLog("NewTaskConversation", "encodeAudioVideoToBase64 Exception : " + e.getMessage(), "WARN", null);
-            }
+            FileInputStream file1 = new FileInputStream(file);
+            byte[] Bytearray = new byte[(int) file.length()];
+            file1.read(Bytearray);
+            strFile = Base64.encodeToString(Bytearray, Base64.DEFAULT);//Convert byte array into string
+
         } catch (Exception e) {
             e.printStackTrace();
             Appreference.printLog("NewTaskConversation", "encodeAudioVideoToBase64 Exception : " + e.getMessage(), "WARN", null);
@@ -15436,6 +15647,9 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
             o2.inSampleSize = scale;
             return BitmapFactory.decodeStream(new FileInputStream(f), null, o2);
         } catch (FileNotFoundException e) {
+            e.printStackTrace();
+            Appreference.printLog("NewTaskConversation", "reduceFileSize Exception : " + e.getMessage(), "WARN", null);
+        } catch (Exception e) {
             e.printStackTrace();
             Appreference.printLog("NewTaskConversation", "reduceFileSize Exception : " + e.getMessage(), "WARN", null);
         }
@@ -15488,10 +15702,16 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
             } catch (OutOfMemoryError e) {
                 e.printStackTrace();
                 Appreference.printLog("NewTaskConversation", "compressImage Exception : " + e.getMessage(), "WARN", null);
+            } catch (Error e) {
+                e.printStackTrace();
+                Appreference.printLog("NewTaskConversation", "compressImage Exception : " + e.getMessage(), "WARN", null);
             }
             try {
                 scaledBitmap = Bitmap.createBitmap(actualWidth, actualHeight, Bitmap.Config.ARGB_8888);
             } catch (OutOfMemoryError e) {
+                e.printStackTrace();
+                Appreference.printLog("NewTaskConversation", "compressImage Exception : " + e.getMessage(), "WARN", null);
+            } catch (Error e) {
                 e.printStackTrace();
                 Appreference.printLog("NewTaskConversation", "compressImage Exception : " + e.getMessage(), "WARN", null);
             }
@@ -15527,6 +15747,9 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
             } catch (IOException e) {
                 e.printStackTrace();
                 Appreference.printLog("NewTaskConversation", "compressImage Exception : " + e.getMessage(), "WARN", null);
+            } catch (Exception e) {
+                e.printStackTrace();
+                Appreference.printLog("NewTaskConversation", "compressImage Exception : " + e.getMessage(), "WARN", null);
             }
 
             FileOutputStream out = null;
@@ -15536,6 +15759,9 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                 //          write the compressed bitmap at the destination specified by filename.
                 scaledBitmap.compress(Bitmap.CompressFormat.JPEG, 80, out);
             } catch (FileNotFoundException e) {
+                e.printStackTrace();
+                Appreference.printLog("NewTaskConversation", "compressImage Exception : " + e.getMessage(), "WARN", null);
+            }catch (Exception e) {
                 e.printStackTrace();
                 Appreference.printLog("NewTaskConversation", "compressImage Exception : " + e.getMessage(), "WARN", null);
             }
@@ -16221,6 +16447,7 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
             }
         } catch (Exception e) {
             e.printStackTrace();
+            Appreference.printLog("NewTaskConversation", "sendMessage Exception : " + e.getMessage(), "WARN", null);
         }
     }
 
@@ -16672,6 +16899,9 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                 jsonObject.put("requestType", "percentageCompleted");
                 jsonObject.put("taskStatus", "abandoned");
             } catch (JSONException e) {
+                e.printStackTrace();
+                Appreference.printLog("NewTaskConversation", "AbandTask Exception : " + e.getMessage(), "WARN", null);
+            } catch (Exception e) {
                 e.printStackTrace();
                 Appreference.printLog("NewTaskConversation", "AbandTask Exception : " + e.getMessage(), "WARN", null);
             }
@@ -17268,6 +17498,9 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
             e.printStackTrace();
             Appreference.printLog("NewTaskConversation", "TimeFrequencyCalculation Exception : " + e.getMessage(), "WARN", null);
         } catch (NumberFormatException e) {
+            e.printStackTrace();
+            Appreference.printLog("NewTaskConversation", "TimeFrequencyCalculation Exception : " + e.getMessage(), "WARN", null);
+        }catch (Exception e) {
             e.printStackTrace();
             Appreference.printLog("NewTaskConversation", "TimeFrequencyCalculation Exception : " + e.getMessage(), "WARN", null);
         }
@@ -22207,6 +22440,9 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
         } catch (Resources.NotFoundException e) {
             e.printStackTrace();
             Appreference.printLog("NewTaskConversation", "taskReassign Exception : " + e.getMessage(), "WARN", null);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Appreference.printLog("NewTaskConversation", "taskReassign Exception : " + e.getMessage(), "WARN", null);
         }
     }
 
@@ -23418,12 +23654,17 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                          StatusTask="Pause";
                     }
                     Appreference.isTimeUpshown=true;
+                    MainActivity.startAlarmRingTone();
                     AlertDialog.Builder alertadd = new AlertDialog.Builder(NewTaskConversation.this);
+                    alertadd.setCancelable(false);
                     LayoutInflater factory = LayoutInflater.from(NewTaskConversation.this);
                     final View view = factory.inflate(R.layout.showtimeup, null);
                     alertadd.setView(view);
-                    alertadd.setTitle("Task is "+StatusTask);
-
+//                    alertadd.setTitle(StatusTask);
+                    TextView tv_relevant_id=(TextView) view.findViewById(R.id.relevant_id);
+                    String get_OracleprojectId_query = "select oracleProjectId from projectDetails where loginuser = '" + Appreference.loginuserdetails.getEmail() + "'and projectId='" + projectId + "'";
+                    String OracleIdForProjectId = VideoCallDataBase.getDB(context).getprojectIdForOracleID(get_OracleprojectId_query);
+                    tv_relevant_id.setText("Job Card No :"+OracleIdForProjectId+"\n" +"Activity Code : " +getOracleTaskIdForProjectId() + "  is "+StatusTask);
                     alertadd.setNeutralButton("OK", new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog1, int sumthin) {
                             dialog1.dismiss();
@@ -23682,6 +23923,9 @@ class ImageTakerAdapter extends BaseAdapter {
             textView.setText(gridtaker_texts[position]);
             imageView.setImageResource(gridtaker_mThumbIds[position]);
         } catch (ArrayIndexOutOfBoundsException e) {
+            e.printStackTrace();
+            Appreference.printLog("NewTaskConversation", "ImageTakerAdapter Exception : " + e.getMessage(), "WARN", null);
+        }catch (Exception e) {
             e.printStackTrace();
             Appreference.printLog("NewTaskConversation", "ImageTakerAdapter Exception : " + e.getMessage(), "WARN", null);
         }

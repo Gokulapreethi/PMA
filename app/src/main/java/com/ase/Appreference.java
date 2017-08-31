@@ -1,13 +1,17 @@
 package com.ase;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.graphics.Typeface;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Build;
 import android.os.Environment;
 import android.telephony.TelephonyManager;
+import android.text.SpannableString;
+import android.text.SpannableStringBuilder;
 import android.text.format.DateFormat;
+import android.text.style.ForegroundColorSpan;
 import android.util.Log;
 
 import com.google.gson.Gson;
@@ -141,6 +145,10 @@ public class Appreference {
                                 Throwable e) {
         try {
             message = tag+" : "+message;
+            SpannableStringBuilder builder = new SpannableStringBuilder();
+            SpannableString redSpannable= new SpannableString(message);
+            redSpannable.setSpan(new ForegroundColorSpan(Color.RED), 0, message.length(), 0);
+            builder.append(redSpannable);
             if (Appreference.isWriteInFile) {
                 if (e == null) {
                     getLogger().info(message);

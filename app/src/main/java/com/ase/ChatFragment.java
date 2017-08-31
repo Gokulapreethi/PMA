@@ -13,6 +13,7 @@ import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
@@ -39,7 +40,7 @@ import java.util.ArrayList;
  */
 public class ChatFragment extends Fragment {
 
-
+    View rootView;
     public SwipeMenuListView listView, listView_call;
     public Handler history_handler;
 //    public Vector<ChatBean> chat_list = null;
@@ -110,13 +111,21 @@ public class ChatFragment extends Fragment {
             Log.i("chat", "chatFragment " + Appreference.loginuserdetails.getUsername());
             Log.i("chat", "chatFragment " + Appreference.is_chat);
         }
+        try {
+            if (getView() != null) {
+                InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(getActivity().INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(getView().getWindowToken(), 0);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 //        return super.onCreateView(inflater, container, savedInstanceState);
-        View rootView = inflater.inflate(R.layout.chat_fragment_layout, container, false);
+        rootView = inflater.inflate(R.layout.chat_fragment_layout, container, false);
         Appreference.context_table.put("chatfragment", this);
         listView = (SwipeMenuListView) rootView.findViewById(R.id.history_view);
         ll_networkUI = (LinearLayout) rootView.findViewById(R.id.ll_networkstate);

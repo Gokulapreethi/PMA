@@ -24,6 +24,7 @@ import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.PopupMenu;
 import android.text.Editable;
+import android.text.InputType;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.util.TypedValue;
@@ -166,6 +167,9 @@ public class ProjectsFragment extends Fragment implements View.OnClickListener, 
             isCurrentlyActivie = isVisibleToUser;
             if (isVisibleToUser) {
                 try {
+                    if (getView() !=null) {
+                        hideKeyboard();
+                    }
                     if (getNetworkState()) {
                         try {
                             showprogress_1();
@@ -368,11 +372,15 @@ public class ProjectsFragment extends Fragment implements View.OnClickListener, 
                             @Override
                             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                                 try {
+                                    InputMethodManager in = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                                    in.hideSoftInputFromWindow(view.getApplicationWindowToken(), 0);
                                     String selectedItemText = (String) parent.getItemAtPosition(position);
                                     Log.i("FSR", "ac_machine_no_spinner selectedItemText ==> " + selectedItemText);
                                     Log.i("FSR", "String.valueOf(ac_machine_no_spinner.getAdapter().getItem(position)) ==> " + String.valueOf(ac_machine_no_spinner.getAdapter().getItem(position)));
                                     selected_mcSrNo = String.valueOf(ac_machine_no_spinner.getAdapter().getItem(position));/*selected jobcard from spinner*/
                                     User_selected_mcsrNo = selected_mcSrNo;
+
+
                                 } catch (Exception e) {
                                     e.printStackTrace();
                                     Appreference.printLog("ProjectFragment", "fsrDetails ac_machine_no_spinner Exception : " + e.getMessage(), "WARN", null);
@@ -398,6 +406,7 @@ public class ProjectsFragment extends Fragment implements View.OnClickListener, 
                         @Override
                         public void onClick(View v) {
                             try {
+                                hideKeyboard();
                                 DatePickerDialog dpd = new DatePickerDialog(getActivity(),
                                         new DatePickerDialog.OnDateSetListener() {
                                             @Override
@@ -579,6 +588,7 @@ public class ProjectsFragment extends Fragment implements View.OnClickListener, 
                                 public void onClick(View view) {
                                     // TODO Do something
                                     dialog.dismiss();
+
                                 }
                             });
                         }
@@ -1467,8 +1477,10 @@ public class ProjectsFragment extends Fragment implements View.OnClickListener, 
 //    }
     private void hideKeyboard() {
         try {
-            InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(getActivity().INPUT_METHOD_SERVICE);
-            imm.hideSoftInputFromWindow(ProjectSearch.getWindowToken(), 0);
+            if (view != null) {
+                InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(getActivity().INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+            }
         } catch (Exception e) {
             e.printStackTrace();
             Appreference.printLog("ProjectFragment", "hideKeyboard Exception : " + e.getMessage(), "WARN", null);

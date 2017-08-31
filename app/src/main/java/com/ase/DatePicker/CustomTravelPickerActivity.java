@@ -32,7 +32,7 @@ import java.util.Date;
 
 public class CustomTravelPickerActivity extends Activity implements DateTimePicker.DateWatcher {
 
-    private Context context;
+    public Context context;
     String taskNameshow, projectIDshow, taskIDshow,jobcodeno,activitycode;
     String StartDate, EndDate,StartDateFilled;
     boolean isTravel = false;
@@ -50,6 +50,7 @@ public class CustomTravelPickerActivity extends Activity implements DateTimePick
         super.onCreate(savedInstanceState);
         setContentView(R.layout.start_end_time_show);
         context = this;
+        Appreference.context_table.put("customtravelpickeractivity", this);
         taskNameshow = getIntent().getStringExtra("taskName");
         projectIDshow = getIntent().getStringExtra("projectID");
         taskIDshow = getIntent().getStringExtra("taskID");

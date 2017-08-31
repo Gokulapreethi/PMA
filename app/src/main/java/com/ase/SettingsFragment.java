@@ -120,7 +120,7 @@ public class SettingsFragment extends Fragment implements WebServiceInterface {
             e.printStackTrace();
         }
         try {
-            if (rootView != null) {
+            if (getView() != null) {
                 InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(getActivity().INPUT_METHOD_SERVICE);
                 imm.hideSoftInputFromWindow(getView().getWindowToken(), 0);
             }

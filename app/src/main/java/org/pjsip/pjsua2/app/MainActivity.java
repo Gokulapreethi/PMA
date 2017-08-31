@@ -79,6 +79,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.ase.DatePicker.CustomTravelPickerActivity;
 import com.ase.offlineSendService;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
@@ -740,6 +741,7 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback,
         Log.i("item", "count" + tabLayout.getTabCount());
         tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
         tabLayout.setupWithViewPager(mViewPager);
+        mViewPager.setOffscreenPageLimit(4);
         for (int i = 0; i < tabLayout.getTabCount(); i++) {
          /*   tabLayout.getTabAt(i).setIcon(tab_icon[i]);
             tabLayout.getTabAt(i).setText(tab_name[i]);*/
@@ -2558,7 +2560,60 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback,
         });
 
     }
+    public static void showAlarmAlert(final String status, final int taskId,final String jobcodeNo) {
+        handler1.post(new Runnable() {
+            @Override
+            public void run() {
+                Context context = null;
+                if (Appreference.context_table.containsKey("projecthistory")) {
+                    ProjectHistory projectHistory = (ProjectHistory) Appreference.context_table.get("projecthistory");
+                    context = projectHistory.context;
+                } else if (Appreference.context_table.containsKey("taskcoversation")) {
+                    NewTaskConversation newTaskConversation = (NewTaskConversation) Appreference.context_table.get("taskcoversation");
+                    context = newTaskConversation.context;
+                } else if (Appreference.context_table.containsKey("settingsfragment")) {
+                    SettingsFragment settingsfragment = (SettingsFragment) Appreference.context_table.get("settingsfragment");
+                    context = settingsfragment.getContext();
+                } else if (Appreference.context_table.containsKey("traveljobdetails")) {
+                    TravelJobDetails traveljobdetails = (TravelJobDetails) Appreference.context_table.get("traveljobdetails");
+                    context = traveljobdetails.context;
+                } else if (Appreference.context_table.containsKey("customtravelpickeractivity")) {
+                    CustomTravelPickerActivity customtravelpickeractivity = (CustomTravelPickerActivity) Appreference.context_table.get("customtravelpickeractivity");
+                    context = customtravelpickeractivity.context;
+                } else {
+                    context = mainContext;
+                }
 
+                if (context != null) {
+                    if (!Appreference.context_table.containsKey("taskcoversation")) {
+//                        Toast.makeText(context, "TIME UP", Toast.LENGTH_LONG).show();
+                        Appreference.isTimeUpshown=true;
+                        MainActivity.startAlarmRingTone();
+                        AlertDialog.Builder alertadd = new AlertDialog.Builder(context);
+                        alertadd.setCancelable(false);
+                        LayoutInflater factory = LayoutInflater.from(context);
+                        final View view = factory.inflate(R.layout.showtimeup, null);
+                        alertadd.setView(view);
+//                        alertadd.setTitle(status);
+                        TextView tv_relevant_id=(TextView) view.findViewById(R.id.relevant_id);
+                        String get_OracleprojectId_query = "select oracleProjectId from projectDetails where loginuser = '" + Appreference.loginuserdetails.getEmail() + "'and projectId='" + jobcodeNo + "'";
+                        String OracleIdForProjectId = VideoCallDataBase.getDB(context).getprojectIdForOracleID(get_OracleprojectId_query);
+                        tv_relevant_id.setText("Job Card No :"+OracleIdForProjectId+"\n" +" Activity Code : " +taskId  + "  is "+status);
+                        alertadd.setNeutralButton("OK", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog1, int sumthin) {
+                                dialog1.dismiss();
+
+                            }
+                        });
+
+                        alertadd.show();
+                    }
+                }
+            }
+
+        });
+
+    }
     public void templateImageDownload(TaskDetailsBean fileName) {
         Log.i("profiledownload", "fileName--1 " + fileName);
         new DownloadImage(fileName).execute();

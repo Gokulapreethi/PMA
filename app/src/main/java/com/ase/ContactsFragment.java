@@ -28,6 +28,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.BaseExpandableListAdapter;
@@ -233,6 +234,14 @@ public class ContactsFragment extends Fragment implements View.OnClickListener, 
         } catch (Exception e) {
             e.printStackTrace();
             Appreference.printLog("ContactFragment", "setUserVisibleHint Exception : " + e.getMessage(), "WARN", null);
+        }
+        try {
+            if (getView() != null) {
+                InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(getActivity().INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(getView().getWindowToken(), 0);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
