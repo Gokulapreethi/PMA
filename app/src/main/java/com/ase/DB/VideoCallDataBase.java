@@ -3833,6 +3833,59 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
         return 0;
     }
 
+    public ArrayList<TaskDetailsBean> getTimerDateForHoldOrPause(String query) {
+        ArrayList<TaskDetailsBean> arrayList = new ArrayList<>();
+        Cursor cur;
+        try {
+            if (db == null)
+                db = getReadableDatabase();
+
+            try {
+                if (db != null) {
+                    if (!db.isOpen())
+                        openDatabase();
+                    cur = db.rawQuery(query, null);
+                    cur.moveToFirst();
+
+                    while (!cur.isAfterLast()) {
+                        TaskDetailsBean taskDetailsBean = new TaskDetailsBean();
+                        if (cur.getString(cur.getColumnIndex("fromUserId")) != null)
+                            taskDetailsBean.setFromUserId(cur.getString(cur.getColumnIndex("fromUserId")));
+                        if (cur.getString(cur.getColumnIndex("toUserId")) != null)
+                            taskDetailsBean.setToUserId(cur.getString(cur.getColumnIndex("toUserId")));
+                        if (cur.getString(cur.getColumnIndex("taskNo")) != null)
+                            taskDetailsBean.setTaskNo(cur.getString(cur.getColumnIndex("taskNo")));
+                        if (cur.getString(cur.getColumnIndex("plannedStartDateTime")) != null && !cur.getString(cur.getColumnIndex("plannedStartDateTime")).equalsIgnoreCase("(null)")) {
+                            taskDetailsBean.setPlannedStartDateTime(cur.getString(cur.getColumnIndex("plannedStartDateTime")));
+                        }
+                        if (cur.getString(cur.getColumnIndex("plannedEndDateTime")) != null && !cur.getString(cur.getColumnIndex("plannedEndDateTime")).equalsIgnoreCase("(null)")) {
+                            taskDetailsBean.setPlannedEndDateTime(cur.getString(cur.getColumnIndex("plannedEndDateTime")));
+                        }
+                        if (cur.getString(cur.getColumnIndex("signalid")) != null)
+                            taskDetailsBean.setSignalid(cur.getString(cur.getColumnIndex("signalid")));
+                        if (cur.getString(cur.getColumnIndex("taskId")) != null)
+                            taskDetailsBean.setTaskId(cur.getString(cur.getColumnIndex("taskId")));
+                        if (taskDetailsBean.getSignalid() != null)
+                            arrayList.add(taskDetailsBean);
+                        cur.moveToNext();
+                    }
+                    cur.close();
+                }
+            } catch (NumberFormatException e) {
+                e.printStackTrace();
+                Appreference.printLog("getTimerDateForHoldOrPause","Exception "+e.getMessage(),"WARN",null);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            Appreference.printLog("getTimerDateForHoldOrPause","Exception "+e.getMessage(),"WARN",null);
+
+        } finally {
+            return arrayList;
+        }
+    }
+
+
+
 
     public ArrayList<TaskDetailsBean> getTaskHistory(String query) {
         ArrayList<TaskDetailsBean> arrayList = new ArrayList<>();
@@ -9605,7 +9658,6 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
 
     public ArrayList<String> getOracleProjectIdlist(String query,String fieldNameTogetResult) {
         ArrayList<String> arrayList = new ArrayList<>();
-        arrayList.add("Pick anyone ");
         Cursor cur;
         try {
             if (db == null)
