@@ -418,8 +418,8 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback,
 //        String proxy = "sip:" + getResources().getString(R.string.server_ip);
 
 
-            String proxy = "sip:" + getResources().getString(R.string.server_ip) + ";transport=tls;hide";
-//            String proxy = "sip:" + getResources().getString(R.string.server_ip) +":8444"+ ";transport=tls;hide";
+//            String proxy = "sip:" + getResources().getString(R.string.server_ip) + ";transport=tls;hide";
+            String proxy = "sip:" + getResources().getString(R.string.server_ip) +":8444"+ ";transport=tls;hide";
 
 
             Appreference.printLog("SipRegister", "Sip Registeration", "DEBUG", null);
