@@ -1014,6 +1014,8 @@ public class GCMPushReceiverService extends FirebaseMessagingService {
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
+                }catch (Exception e){
+                    e.printStackTrace();
                 }
 
             } else if (collapse_key != null && collapse_key.equalsIgnoreCase("Dependency Reminder")) {

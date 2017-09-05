@@ -10,8 +10,8 @@ import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.ImageView;
 import android.widget.MediaController;
+import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.VideoView;
 
@@ -26,7 +26,7 @@ import javax.crypto.spec.SecretKeySpec;
 
 public class VideoPlayer extends Activity {
 	VideoView mVideoView;
-	ImageView mBack;
+	TextView mBack;
 	private Context context;
 
 	@Override
@@ -41,7 +41,7 @@ public class VideoPlayer extends Activity {
 		context = this;
 //		WebServiceReferences.contextTable.put("customvideoplayer", context);
 		mVideoView = (VideoView) findViewById(R.id.video_view);
-		mBack=(ImageView)findViewById(R.id.back);
+		mBack=(TextView)findViewById(R.id.back);
 
 		mBack.setOnClickListener(new View.OnClickListener() {
 			@Override

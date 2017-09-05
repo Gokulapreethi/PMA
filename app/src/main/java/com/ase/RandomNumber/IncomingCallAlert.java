@@ -5,17 +5,20 @@ import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.ase.Appreference;
 import com.ase.DB.VideoCallDataBase;
+import com.ase.ImageLoader;
 import com.ase.R;
 import com.ase.call_list.Call_ListBean;
 
@@ -24,6 +27,7 @@ import org.pjsip.pjsua2.app.CallActivity;
 import org.pjsip.pjsua2.app.MainActivity;
 import org.pjsip.pjsua2.pjsip_status_code;
 
+import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -38,6 +42,8 @@ public class IncomingCallAlert extends Activity {
     private Handler handler;
     String callType;
     TextView tv_title;
+    ImageView buddy_icon;
+    ImageLoader imageLoader;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,6 +63,7 @@ public class IncomingCallAlert extends Activity {
         part = hostname;
         part = VideoCallDataBase.getDB(context).getName(hostname);
         Log.i("MainCall", "host Name " + part);
+        buddy_icon =(ImageView) findViewById(R.id.buddy_icon);
         tv_buddyname = (TextView) findViewById(R.id.buddy_name);
         tv_title = (TextView) findViewById(R.id.tv_title);
         if (hostname != null) {
@@ -78,6 +85,16 @@ public class IncomingCallAlert extends Activity {
             call_strtime = sdf.format(strt_dt);
         } catch (Exception e) {
 
+        }
+        String profile_image = VideoCallDataBase.getDB(context).getProjectParentTaskId("select profileImage from contact where username='" + hostname + "'");
+        Log.i("MainCall", "profile_image ## " + profile_image);
+        File myFile = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/High Message/profilePic/" + profile_image);
+        if (profile_image != null) {
+            if (myFile.exists()) {
+                imageLoader = new ImageLoader(context);
+                Log.i("MainCall", "getprofileimage-------->" + profile_image);
+                imageLoader.DisplayImage(Environment.getExternalStorageDirectory().getAbsolutePath() + "/High Message/profilePic/" + profile_image, buddy_icon, R.drawable.default_person_circle);
+            }
         }
 
         btn_reject.setOnClickListener(new View.OnClickListener() {

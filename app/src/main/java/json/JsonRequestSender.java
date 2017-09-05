@@ -639,6 +639,15 @@ public class JsonRequestSender {
         communicationBean.setAccess(access);
         queue.addMsg(communicationBean);
     }
+    public void taskConversactionCaption(EnumJsonWebservicename webservicename, List<NameValuePair> valuePair, WebServiceInterface access,TaskDetailsBean taskDetailsBean) {
+
+        CommunicationBean communicationBean = new CommunicationBean();
+        communicationBean.setEnumJsonWebservicename(webservicename);
+        communicationBean.setNameValuePairs(valuePair);
+        communicationBean.setTaskDetailsBean(taskDetailsBean);
+        communicationBean.setAccess(access);
+        queue.addMsg(communicationBean);
+    }
     /*public void listMembersInGroup(EnumJsonWebservicename webservicename, List<NameValuePair> valuePair, WebServiceInterface access){
 
         CommunicationBean communicationBean=new CommunicationBean();

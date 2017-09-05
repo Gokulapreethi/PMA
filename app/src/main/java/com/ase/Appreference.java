@@ -145,10 +145,10 @@ public class Appreference {
                                 Throwable e) {
         try {
             message = tag+" : "+message;
-            SpannableStringBuilder builder = new SpannableStringBuilder();
+           /* SpannableStringBuilder builder = new SpannableStringBuilder();
             SpannableString redSpannable= new SpannableString(message);
             redSpannable.setSpan(new ForegroundColorSpan(Color.RED), 0, message.length(), 0);
-            builder.append(redSpannable);
+            builder.append(redSpannable);*/
             if (Appreference.isWriteInFile) {
                 if (e == null) {
                     getLogger().info(message);

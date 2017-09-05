@@ -5,6 +5,7 @@ import android.util.Log;
 import com.ase.AddObserver;
 import com.ase.Appreference;
 import com.ase.AudioRecorder;
+import com.ase.CaptionMedia;
 import com.ase.ChangePassword;
 import com.ase.ContactsFragment;
 import com.ase.Forms.FormEntryViewActivity;
@@ -309,6 +310,8 @@ public class JsonRequestResponce extends Thread {
                                 obj.setFirstname("reactivateStatus");
                             }else if (obj.getEnumJsonWebservicename().toString().equals("projectCompleted")) {
                                 obj.setFirstname("projectCompleted");
+                            }else if (obj.getEnumJsonWebservicename().toString().equals("taskConversactionCaption")) {
+                                obj.setFirstname("taskConversactionCaption");
                             }
 
                             obj.setEmail(responseString);
@@ -357,7 +360,8 @@ public class JsonRequestResponce extends Thread {
                             && !obj.getEnumJsonWebservicename().toString().equals("getCustomHeaderValue")
                             && !obj.getEnumJsonWebservicename().toString().equals("getTask")
                             && !obj.getEnumJsonWebservicename().toString().equals("projectCompleted")
-                            && !obj.getEnumJsonWebservicename().toString().equals("searchMedia")) {
+                            && !obj.getEnumJsonWebservicename().toString().equals("searchMedia")
+                            && !obj.getEnumJsonWebservicename().toString().equals("taskConversactionCaption")) {
                         Log.i("jsonwebservice", "enum       " + obj.getEnumJsonWebservicename().toString());
                         Log.i("getTask 3", "enum for check ");
                         Log.i("jsonwebservice", "enum    responseString   " + responseString);
@@ -553,6 +557,11 @@ public class JsonRequestResponce extends Thread {
             case projectCompleted:
                 ProjectsFragment.getInstance().cancelDialog();
                 ProjectsFragment.getInstance().showToast(result);
+                inter.ErrorMethod(obj);
+                break;
+            case taskConversactionCaption:
+                CaptionMedia.getInstance().cancelDialog();
+                CaptionMedia.getInstance().showToast(result);
                 inter.ErrorMethod(obj);
                 break;
         }

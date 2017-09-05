@@ -32,9 +32,12 @@ public class StatusAlarmManager extends BroadcastReceiver {
         jobcodeNo = intent.getExtras().getString("currentProjectId");
         String alrmtask = String.valueOf(id);
 
-        MainActivity.showAlarmAlert(currentStatus,id,jobcodeNo);
+        MainActivity mainActivity = (MainActivity) Appreference.context_table.get("mainactivity");
+        if(mainActivity!=null)
+        mainActivity.showAlarmAlert(currentStatus,id,jobcodeNo);
 
 
     }
+
 
 }

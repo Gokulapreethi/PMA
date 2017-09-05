@@ -17,6 +17,7 @@ public class ListTaskConversationFiles {
     String  description;
     String  descType;
     String  file;
+    private String caption;
 
 
 
@@ -126,4 +127,11 @@ public class ListTaskConversationFiles {
         this.id = id;
     }
 
+    public String getCaption() {
+        return caption;
+    }
+
+    public void setCaption(String caption) {
+        this.caption = caption;
+    }
 }

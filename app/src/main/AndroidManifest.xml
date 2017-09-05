@@ -211,7 +211,6 @@
         <activity
             android:name=".VideoPlayer"
             android:configChanges="orientation|screenSize|keyboardHidden"
-            android:theme="@style/Theme.UserDialog"
             android:windowSoftInputMode="stateHidden" />
         <activity android:name=".MultipleFileUploadActivity" />
         <activity android:name=".FilePicker" />
@@ -307,6 +306,11 @@
 
         <receiver android:name=".ScheduleManager" />
         <receiver android:name=".StatusAlarmManager" />
+        <receiver android:name=".NetworkChangeReceiver">
+            <intent-filter>
+                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
+            </intent-filter>
+        </receiver>
         <receiver android:name="receiver.ScheduleCallReceiver" />
         <receiver android:name="receiver.ScheduleChatReceiver" />
         <receiver android:name=".NetWorkChange">
@@ -431,6 +435,17 @@
             android:screenOrientation="portrait"
             android:excludeFromRecents="true"
             android:theme="@style/Theme.AppCompat.Light.Dialog"/>
+        <activity
+            android:name=".CaptionMedia"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden|adjustResize"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar"
+            />
+        <activity
+            android:name=".ShowTimeupAlert"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden|adjustResize"
+            android:theme="@style/Theme.AppCompat.Light.Dialog" />
     </application>
 
 </manifest>

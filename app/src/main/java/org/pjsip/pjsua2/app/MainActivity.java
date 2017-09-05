@@ -80,6 +80,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.ase.DatePicker.CustomTravelPickerActivity;
+import com.ase.ShowTimeupAlert;
 import com.ase.offlineSendService;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
@@ -246,7 +247,7 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback,
     ArrayList<Map<String, String>> buddyList;
     public static String lastRegStatus = "";
     public static MediaPlayer player = null;
-    private final Handler handler = new Handler(this);
+    private Handler handler;
     AppSharedpreferences appSharedpreferences;
     ArrayList<ContactBean> contactList;
     ArrayList<TaskDetailsBean> taskList, taskList_12;
@@ -481,6 +482,7 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback,
         mainContext = this;
         Appreference.main_Activity_context = this;
         Appreference.mainContect = this;
+        handler= new Handler(this);
         dataBase = VideoCallDataBase.getDB(mainContext);
         Appreference.context_table.put("mainactivity", mainContext);
         appSharedpreferences = AppSharedpreferences.getInstance(mainContext);
@@ -918,8 +920,12 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback,
                     break;
 
                 case R.id.action_quit:
-                    Message m = Message.obtain(handler, 0);
-                    m.sendToTarget();
+                    try {
+                        Message m = Message.obtain(handler, 0);
+                        m.sendToTarget();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                     break;
 
                 default:
@@ -1137,10 +1143,14 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback,
                 Log.d("VideoCall", "Inside the m.what == MSG_TYPE.CALL_STATE method ==  " + CallActivity.handler_);
 
                 /* Forward the message to CallActivity */
-                if (CallActivity.handler_ != null) {
-                    Message m2 = Message.obtain(CallActivity.handler_,
-                            MSG_TYPE.CALL_STATE, objects);
-                    m2.sendToTarget();
+                try {
+                    if (CallActivity.handler_ != null) {
+                        Message m2 = Message.obtain(CallActivity.handler_,
+                                MSG_TYPE.CALL_STATE, objects);
+                        m2.sendToTarget();
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
 
                 if (ci != null && ci.getState() ==
@@ -1158,10 +1168,14 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback,
             } else if (m.what == MSG_TYPE.CALL_MEDIA_STATE) {
                 Log.d("VideoCall", "Inside the m.what == MSG_TYPE.CALL_MEDIA_STATE method ==  " + CallActivity.handler_);
                 /* Forward the message to CallActivity */
-                if (CallActivity.handler_ != null) {
-                    Message m2 = Message.obtain(CallActivity.handler_,
-                            MSG_TYPE.CALL_MEDIA_STATE, null);
-                    m2.sendToTarget();
+                try {
+                    if (CallActivity.handler_ != null) {
+                        Message m2 = Message.obtain(CallActivity.handler_,
+                                MSG_TYPE.CALL_MEDIA_STATE, null);
+                        m2.sendToTarget();
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
 
             } else if (m.what == MSG_TYPE.BUDDY_STATE) {
@@ -2125,8 +2139,12 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback,
                     ArrayList<Object> objects = new ArrayList<Object>();
                     objects.add(call);
                     objects.add(ci);
-                    Message m = Message.obtain(handler, MSG_TYPE.CALL_STATE, objects);
-                    m.sendToTarget();
+                    try {
+                        Message m = Message.obtain(handler, MSG_TYPE.CALL_STATE, objects);
+                        m.sendToTarget();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 }
             }
             if (ci != null && dont_have_id) {
@@ -2268,6 +2286,7 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback,
     }
 
     public static void startAlarmRingTone() {
+        Log.i("tone123", "startAlarmRingTone===>");
         try {
             if (player != null)
                 player = null;
@@ -2344,7 +2363,7 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback,
             Appreference.sipRegistrationState = false;
             nwstate = false;
             Log.i("service123", "Receieved notification about offlineSendActivity MainActivity onDestroy");
-            stopService(new Intent(getBaseContext(), offlineSendService.class));
+//            stopService(new Intent(getBaseContext(), offlineSendService.class));
         } catch (Exception e) {
             e.printStackTrace();
             Appreference.printLog("MainActivity", "onDestroy Exception: " + e.getMessage(), "WARN", null);
@@ -2560,60 +2579,89 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback,
         });
 
     }
-    public static void showAlarmAlert(final String status, final int taskId,final String jobcodeNo) {
-        handler1.post(new Runnable() {
-            @Override
-            public void run() {
-                Context context = null;
-                if (Appreference.context_table.containsKey("projecthistory")) {
-                    ProjectHistory projectHistory = (ProjectHistory) Appreference.context_table.get("projecthistory");
-                    context = projectHistory.context;
-                } else if (Appreference.context_table.containsKey("taskcoversation")) {
-                    NewTaskConversation newTaskConversation = (NewTaskConversation) Appreference.context_table.get("taskcoversation");
-                    context = newTaskConversation.context;
-                } else if (Appreference.context_table.containsKey("settingsfragment")) {
-                    SettingsFragment settingsfragment = (SettingsFragment) Appreference.context_table.get("settingsfragment");
-                    context = settingsfragment.getContext();
-                } else if (Appreference.context_table.containsKey("traveljobdetails")) {
-                    TravelJobDetails traveljobdetails = (TravelJobDetails) Appreference.context_table.get("traveljobdetails");
-                    context = traveljobdetails.context;
-                } else if (Appreference.context_table.containsKey("customtravelpickeractivity")) {
-                    CustomTravelPickerActivity customtravelpickeractivity = (CustomTravelPickerActivity) Appreference.context_table.get("customtravelpickeractivity");
-                    context = customtravelpickeractivity.context;
-                } else {
-                    context = mainContext;
-                }
+    public void showAlarmAlert(final String status, final int taskId, final String jobcodeNo) {
+        try {
+            handler1.post(new Runnable() {
+                @Override
+                public void run() {
+                    Context context = null;
+                    if (Appreference.context_table.containsKey("projecthistory")) {
+                        ProjectHistory projectHistory = (ProjectHistory) Appreference.context_table.get("projecthistory");
+                        if (projectHistory!=null) {
+                            Log.i("tone123", "projectHistory context get if***********");
+                            context = projectHistory.context;
+                        }
+                    }else if (Appreference.context_table.containsKey("taskcoversation")) {
+                        NewTaskConversation newTaskConversation = (NewTaskConversation) Appreference.context_table.get("taskcoversation");
+                        Log.i("tone123", "newTaskConversation.webtaskId***********"+newTaskConversation.webtaskId);
+                        Log.i("tone123", "receivedTaskId***********"+taskId);
+//                        if(newTaskConversation!=null && !newTaskConversation.webtaskId.equalsIgnoreCase(String.valueOf(taskId))) {
+                            context = newTaskConversation.context;
+//                        }
+                    }else if (Appreference.context_table.containsKey("settingsfragment")) {
+                        SettingsFragment settingsfragment = (SettingsFragment) Appreference.context_table.get("settingsfragment");
+                        if (settingsfragment!=null) {
+                            Log.i("tone123", "settingsfragment context get if***********");
+                            context = settingsfragment.getContext();
+                        }
+                    }else if (Appreference.context_table.containsKey("traveljobdetails")) {
+                        TravelJobDetails traveljobdetails = (TravelJobDetails) Appreference.context_table.get("traveljobdetails");
+                        if (traveljobdetails!=null) {
+                            Log.i("tone123", "traveljobdetails context get if***********");
+                            context = traveljobdetails.context;
+                        }
+                    }else if (Appreference.context_table.containsKey("customtravelpickeractivity")) {
+                        CustomTravelPickerActivity customtravelpickeractivity = (CustomTravelPickerActivity) Appreference.context_table.get("customtravelpickeractivity");
+                        if (customtravelpickeractivity!=null) {
+                            Log.i("tone123", "customtravelpickeractivity context get if***********");
+                            context = customtravelpickeractivity.context;
+                        }
+                    }else {
+                        Log.i("tone123", "mainActivity context get if***********");
+                        context = mainContext;
+                    }
+                    String query = "select status from projectStatus where projectId='" + jobcodeNo + "' and userId='" + Appreference.loginuserdetails.getId() + "' and taskId= '" + taskId + "'";
+                    int timer_Alert_by_current_status = VideoCallDataBase.getDB(context).getCurrentStatus(query);
+                    Log.i("alarm123", "timer_Alert_by_current_status Mainactivity=====>*****"+timer_Alert_by_current_status);
 
-                if (context != null) {
-                    if (!Appreference.context_table.containsKey("taskcoversation")) {
-//                        Toast.makeText(context, "TIME UP", Toast.LENGTH_LONG).show();
-                        Appreference.isTimeUpshown=true;
-                        MainActivity.startAlarmRingTone();
-                        AlertDialog.Builder alertadd = new AlertDialog.Builder(context);
-                        alertadd.setCancelable(false);
-                        LayoutInflater factory = LayoutInflater.from(context);
-                        final View view = factory.inflate(R.layout.showtimeup, null);
-                        alertadd.setView(view);
-//                        alertadd.setTitle(status);
-                        TextView tv_relevant_id=(TextView) view.findViewById(R.id.relevant_id);
-                        String get_OracleprojectId_query = "select oracleProjectId from projectDetails where loginuser = '" + Appreference.loginuserdetails.getEmail() + "'and projectId='" + jobcodeNo + "'";
-                        String OracleIdForProjectId = VideoCallDataBase.getDB(context).getprojectIdForOracleID(get_OracleprojectId_query);
-                        tv_relevant_id.setText("Job Card No :"+OracleIdForProjectId+"\n" +" Activity Code : " +taskId  + "  is "+status);
-                        alertadd.setNeutralButton("OK", new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog1, int sumthin) {
-                                dialog1.dismiss();
+                    String alertQuery = "select taskPlannedLatestEndDate from taskDetailsInfo where projectId='" + jobcodeNo + "'and taskId= '" + taskId + "'";
+                    String isAlertShown = VideoCallDataBase.getDB(context).getAlertShownstatus(alertQuery);
 
-                            }
-                        });
+                    if (context != null) {
+                        if (isAlertShown.equalsIgnoreCase("1") && (timer_Alert_by_current_status == 1 || timer_Alert_by_current_status == 3)) {
+    //                        Appreference.isTimeUpshown=true;
+                            String AlarmRingedUpdateQuery = "update taskDetailsInfo set taskPlannedLatestEndDate='0' where projectId='" + jobcodeNo + "'and taskId= '" + taskId + "'";
+                            Log.i("tone123", "updateSnoozeTime_query***********"+AlarmRingedUpdateQuery);
+                            VideoCallDataBase.getDB(context).updateaccept(AlarmRingedUpdateQuery);
+                            Log.i("tone123", "MAinActivity From===>");
+                            MainActivity.startAlarmRingTone();
 
-                        alertadd.show();
+                            String get_OracleprojectId_query = "select oracleProjectId from projectDetails where loginuser = '" + Appreference.loginuserdetails.getEmail() + "'and projectId='" + jobcodeNo + "'";
+                            String OracleIdForProjectId = VideoCallDataBase.getDB(context).getprojectIdForOracleID(get_OracleprojectId_query);
+                            String quryActivity1 = "select oracleTaskId from projectHistory where projectId='" + jobcodeNo + "' and taskId= '" + taskId + "'";
+                            String oracleTaskId = VideoCallDataBase.getDB(getApplication()).getProjectParentTaskId(quryActivity1);
+                            Log.i("alarm123", "startHoldOrPauseAlarmManager started");
+
+                             Intent intent=new Intent(mainContext,ShowTimeupAlert.class);
+                            intent.putExtra("projectId",jobcodeNo);
+                            intent.putExtra("taskId",String.valueOf(taskId));
+                            intent.putExtra("status",status);
+                            intent.putExtra("OracleprojectId",OracleIdForProjectId);
+                            intent.putExtra("OracletaskId",oracleTaskId);
+                            startActivity(intent);
+                        }
                     }
                 }
-            }
 
-        });
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+            Appreference.printLog("MainActivity", "showAlarmAlert Exception: " + e.getMessage(), "WARN", null);
+        }
 
     }
+
+
     public void templateImageDownload(TaskDetailsBean fileName) {
         Log.i("profiledownload", "fileName--1 " + fileName);
         new DownloadImage(fileName).execute();
@@ -7118,7 +7166,7 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback,
             alertDialog.setTitle("Call Alert");
 
             // Setting Dialog Message
-            alertDialog.setMessage("user is busy");
+            alertDialog.setMessage("User is busy");
 
             // Setting Icon to Dialog
 //        alertDialog.setIcon(R.drawable.tick);

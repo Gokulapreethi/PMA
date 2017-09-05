@@ -618,6 +618,9 @@ public class TravelJobDetails extends Activity implements View.OnClickListener, 
                         Appreference.printLog("TravelJobDetails", "notifyTaskReceived complete Exception : " + e.getMessage(), "WARN", null);
                     }
                 }
+                if (taskDetailsBean.getTaskStatus() != null && !taskDetailsBean.getTaskStatus().equalsIgnoreCase("") && !taskDetailsBean.getTaskStatus().equalsIgnoreCase("null")&& !taskDetailsBean.getTaskStatus().equalsIgnoreCase(null)) {
+                    taskStatus = taskDetailsBean.getTaskStatus();
+                }
                 Log.i("status", "status*** 1 " + taskDetailsBean.getTaskStatus());
                 VideoCallDataBase.getDB(context).update_Project_history(taskDetailsBean);
                 VideoCallDataBase.getDB(context).insertORupdate_Task_history(taskDetailsBean);
@@ -2538,6 +2541,12 @@ public class TravelJobDetails extends Activity implements View.OnClickListener, 
                     sortTaskMessage();
                 }
                 refresh();
+                handler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        list_all.setSelection(list_all.getAdapter().getCount() - 1);
+                    }
+                });
             }
 
             if (listOfObservers != null && listOfObservers.size() > 0) {

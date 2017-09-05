@@ -4575,10 +4575,12 @@ public class MediaListAdapter extends ArrayAdapter<TaskDetailsBean> {
         window.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         window.setAttributes(lp);
         window.setGravity(Gravity.CENTER);
+        LinearLayout comment_tag_ll = (LinearLayout) dialog1.findViewById(R.id.comment_tag_ll);
         LinearLayout resend_ll = (LinearLayout) dialog1.findViewById(R.id.resend_ll);
         final LinearLayout withdraw_ll = (LinearLayout) dialog1.findViewById(R.id.withdraw_ll);
         final LinearLayout delete_ll = (LinearLayout) dialog1.findViewById(R.id.delete_ll);
         LinearLayout cancel_ll = (LinearLayout) dialog1.findViewById(R.id.cancel_ll);
+        TextView comment_tag = (TextView) dialog1.findViewById(R.id.comment_tag);
         TextView resend_tv = (TextView) dialog1.findViewById(R.id.resend_tv);
         TextView withdraw_tv = (TextView) dialog1.findViewById(R.id.withdraw_tv);
         TextView delete_tv = (TextView) dialog1.findViewById(R.id.delete_tv);
@@ -4590,6 +4592,7 @@ public class MediaListAdapter extends ArrayAdapter<TaskDetailsBean> {
 
 
         if (isreceiver) {
+//            comment_tag_ll.setVisibility(View.GONE);
             resend_ll.setVisibility(View.GONE);
             withdraw_ll.setVisibility(View.GONE);
             cancel_ll.setVisibility(View.GONE);
@@ -4611,6 +4614,7 @@ public class MediaListAdapter extends ArrayAdapter<TaskDetailsBean> {
             copy_ll.setVisibility(View.GONE);
             edit_ll.setVisibility(View.GONE);
             reply_ll.setVisibility(View.VISIBLE);
+            comment_tag_ll.setVisibility(View.VISIBLE);
         }
         if (mediaListBean.getMsg_status() == 1 || (mediaListBean.getTaskStatus() != null && mediaListBean.getMsg_status() == 6 && mediaListBean.getTaskStatus().equalsIgnoreCase("reminder"))) {
             resend_ll.setVisibility(View.GONE);
@@ -4625,6 +4629,15 @@ public class MediaListAdapter extends ArrayAdapter<TaskDetailsBean> {
         cancel_ll.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                dialog1.dismiss();
+            }
+        });
+        comment_tag_ll.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(context, CaptionMedia.class);
+                intent.putExtra("taskbean", mediaListBean);
+                ((Activity) context).startActivityForResult(intent, 3847);
                 dialog1.dismiss();
             }
         });

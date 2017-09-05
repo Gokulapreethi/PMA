@@ -145,6 +145,7 @@ public class TaskDetailsBean implements Serializable,Cloneable {
     private String end_dateStatus;
     private String synopsis;
     private String isActiveStatus;
+    private String caption;
 
 
 
@@ -1165,6 +1166,14 @@ private String sender_reply;
 
     public void setIsActiveStatus(String isActiveStatus) {
         this.isActiveStatus = isActiveStatus;
+    }
+
+    public String getCaption() {
+        return caption;
+    }
+
+    public void setCaption(String caption) {
+        this.caption = caption;
     }
 }
 

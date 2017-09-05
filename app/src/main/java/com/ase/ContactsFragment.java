@@ -10,6 +10,7 @@ import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.os.DeadObjectException;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
@@ -2476,19 +2477,27 @@ public class ContactsFragment extends Fragment implements View.OnClickListener, 
             CallInfo ci = (CallInfo) m.obj;
 
 			/* Forward the message to CallActivity */
-            if (CallActivity.handler_ != null) {
-                Message m2 = Message.obtain(CallActivity.handler_,
-                        MSG_TYPE.CALL_STATE, ci);
-                m2.sendToTarget();
+            try {
+                if (CallActivity.handler_ != null) {
+                    Message m2 = Message.obtain(CallActivity.handler_,
+                            MSG_TYPE.CALL_STATE, ci);
+                    m2.sendToTarget();
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
             }
 
         } else if (m.what == MSG_TYPE.CALL_MEDIA_STATE) {
 
 			/* Forward the message to CallActivity */
-            if (CallActivity.handler_ != null) {
-                Message m2 = Message.obtain(CallActivity.handler_,
-                        MSG_TYPE.CALL_MEDIA_STATE, null);
-                m2.sendToTarget();
+            try {
+                if (CallActivity.handler_ != null) {
+                    Message m2 = Message.obtain(CallActivity.handler_,
+                            MSG_TYPE.CALL_MEDIA_STATE, null);
+                    m2.sendToTarget();
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
             }
 
         } else if (m.what == MSG_TYPE.BUDDY_STATE) {
@@ -2584,8 +2593,12 @@ public class ContactsFragment extends Fragment implements View.OnClickListener, 
             Appreference.printLog("ContactFragment", "notifyCallState Exception : " + e.getMessage(), "WARN", null);
             ci = null;
         }
-        Message m = Message.obtain(handler, MSG_TYPE.CALL_STATE, ci);
-        m.sendToTarget();
+        try {
+            Message m = Message.obtain(handler, MSG_TYPE.CALL_STATE, ci);
+            m.sendToTarget();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
 
         if (ci != null
