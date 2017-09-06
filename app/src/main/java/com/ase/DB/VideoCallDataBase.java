@@ -5347,7 +5347,7 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
                 if (db != null) {
                     if (!db.isOpen())
                         openDatabase();
-                    cur = db.rawQuery("select * from call where loginuser='" + string + "' ", null);
+                    cur = db.rawQuery("select * from call where loginuser='" + string + "' order by callid desc", null);
                     cur.moveToFirst();
                     while (!cur.isAfterLast()) {
                         Call_ListBean bean = new Call_ListBean();

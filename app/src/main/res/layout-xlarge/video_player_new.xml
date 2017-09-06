@@ -2,11 +2,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent">
+
     <LinearLayout
         android:id="@+id/backword"
-        android:layout_width="match_parent"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:gravity="center">
 
         <TextView
             android:id="@+id/back"
@@ -24,21 +25,16 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:text="Video"
+            android:text="Video View"
             android:textColor="@color/appcolor"
             android:textSize="18sp"
             android:textStyle="bold" />
     </LinearLayout>
-    <View
-        android:layout_width="wrap_content"
-        android:layout_height="1dp"
-        android:layout_below="@+id/backword"
-        android:layout_marginTop="2dp"
-        android:background="@color/appcolor" />
+
     <VideoView
-        android:layout_below="@+id/backword"
         android:id="@+id/video_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_below="@+id/backword"
         android:layout_centerInParent="true" />
 </RelativeLayout>
