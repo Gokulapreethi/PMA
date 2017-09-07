@@ -42,16 +42,18 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:drawableLeft="@drawable/back_32"
-            android:drawablePadding="-10dp"
+            android:drawablePadding="-6dp"
             android:gravity="center|start"
             android:text="Back"
+            android:textSize="22dp"
             android:textColor="@color/appcolor" />
 
         <ImageView
-            android:layout_width="40dp"
-            android:layout_height="40dp"
+            android:layout_width="45dp"
+            android:layout_height="45dp"
             android:layout_marginTop="3dp"
             android:layout_marginLeft="10dp"
+            android:layout_marginRight="5dp"
             android:layout_toRightOf="@+id/finish_page"
             android:background="@drawable/filterdisabled"
             android:id="@+id/fill"
@@ -59,19 +61,18 @@
 
         <TextView
             android:id="@+id/txtView01"
-            android:paddingLeft="10dp"
+            android:paddingLeft="40dp"
             android:paddingRight="10dp"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:layout_centerVertical="true"
-            android:layout_centerHorizontal="true"
-            android:layout_centerInParent="true"
             android:gravity="center"
             android:text="Active Task List"
             android:maxLength="26"
             android:ellipsize="marquee"
             android:textColor="@color/appcolor"
-            android:textSize="14sp" />
+            android:textSize="14sp"
+            android:layout_alignTop="@+id/submit_icon"
+            android:layout_centerHorizontal="true" />
 
         <ImageView
             android:id="@+id/new_note"

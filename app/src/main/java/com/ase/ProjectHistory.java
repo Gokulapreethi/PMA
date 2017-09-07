@@ -255,7 +255,7 @@ public class ProjectHistory extends Activity implements WebServiceInterface, Swi
             InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
             inputMethodManager.hideSoftInputFromWindow(Search_EditText.getWindowToken(), 0);
             videoCallDataBase = VideoCallDataBase.getDB(context);
-            active_task.setOnClickListener(new View.OnClickListener() {
+            /*active_task.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     if (options.getVisibility() == View.GONE) {
@@ -276,7 +276,7 @@ public class ProjectHistory extends Activity implements WebServiceInterface, Swi
                         options.setVisibility(View.GONE);
                     }
                 }
-            });
+            });*/
             setActiveAdapter();
             try {
                 handler.post(new Runnable() {
@@ -1340,11 +1340,11 @@ public class ProjectHistory extends Activity implements WebServiceInterface, Swi
                                 intent.putExtra("subtype", "normal");
                                 if (isFromOracle) {
                                     intent.putExtra("isProject", "yes");
+                                    intent.putExtra("isFromOracle", true);
+                                    intent.putExtra("isreceiver", projectDetailsBean.getParentTaskId());
                                 } else {
                                     intent.putExtra("isProject", "no");
                                 }
-                                if (isFromOracle)
-                                    intent.putExtra("isFromOracle", true);
                                 startActivity(intent);
                             } else
                                 status_oracle.setVisibility(View.GONE);
@@ -1393,7 +1393,13 @@ public class ProjectHistory extends Activity implements WebServiceInterface, Swi
                         Log.i("attention", "resolved else " + projectDetailsBean.getRequestStatus());
                         dependency_icon.setVisibility(View.GONE);
                     }*/
-                    int project_unReadMsg_count = VideoCallDataBase.getDB(context).getTaskUnReadMsgCount(projectDetailsBean.getTaskId());
+                    Log.i("projectHistory", "project_unReadMsg_count==> " + projectDetailsBean.getTaskId());
+                    int project_unReadMsg_count = 0;
+                    try {
+                        project_unReadMsg_count = VideoCallDataBase.getDB(context).getTaskUnReadMsgCount(projectDetailsBean.getTaskId());
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                     if (project_unReadMsg_count == 0) {
                         Log.d("ProjectHistory", "unRead_project_count is 0");
                         msg_count.setVisibility(View.GONE);

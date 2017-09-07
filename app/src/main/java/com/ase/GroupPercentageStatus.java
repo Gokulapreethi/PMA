@@ -37,7 +37,7 @@ import json.ListMember;
 import json.WebServiceInterface;
 
 public class GroupPercentageStatus extends AppCompatActivity implements View.OnClickListener, WebServiceInterface {
-    String taskid, group_Id, sub_type, isProject;
+    String taskid, group_Id, sub_type, isProject,isreceiver,owneroftask;
     boolean isFromOracle;
     ArrayList<ListMember> arrayList, arrayList_1;
     ListView listView;
@@ -169,6 +169,8 @@ static GroupPercentageStatus groupPercentageStatus;
                 group_Id = getIntent().getStringExtra("groupId");
                 sub_type = getIntent().getStringExtra("subtype");
                 isProject = getIntent().getStringExtra("isProject");
+                isreceiver = getIntent().getStringExtra("isreceiver");
+                owneroftask=getIntent().getStringExtra("ownerOfTask");
                 isFromOracle = getIntent().getBooleanExtra("isFromOracle",false);
             }
            /* if (sub_type != null && sub_type.equalsIgnoreCase("private")) {
@@ -195,7 +197,7 @@ static GroupPercentageStatus groupPercentageStatus;
             }
             if (isProject.equalsIgnoreCase("yes")) {
 //                private_heading.setText("Private Members List");
-                String ListofMem = VideoCallDataBase.getDB(context).getProjectListMembers(taskid);
+                String ListofMem = VideoCallDataBase.getDB(context).getProjectListMembers(isreceiver);
                 String ListofObser = VideoCallDataBase.getDB(context).getProjectParentTaskId("select taskObservers from taskHistoryInfo where taskId='" + taskid + "'");
                 /*while (ListofMem.contains(",")) {
                     ListofMem = ListofMem.substring(",".length());

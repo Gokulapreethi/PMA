@@ -1144,6 +1144,7 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                                                     intent.putExtra("ownerOfTask", ownerOfTask);
                                                     if (project) {
                                                         intent.putExtra("isProject", "yes");
+                                                        intent.putExtra("isreceiver", parentTaskId);
                                                     } else {
                                                         intent.putExtra("isProject", "no");
                                                     }
@@ -1162,6 +1163,7 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                                                     intent.putExtra("ownerOfTask", ownerOfTask);
                                                     if (project) {
                                                         intent.putExtra("isProject", "yes");
+                                                        intent.putExtra("isreceiver", parentTaskId);
                                                     } else {
                                                         intent.putExtra("isProject", "no");
                                                     }
@@ -1775,6 +1777,8 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                                                     intent.putExtra("ownerOfTask", ownerOfTask);
                                                     if (project) {
                                                         intent.putExtra("isProject", "yes");
+                                                        intent.putExtra("isreceiver", parentTaskId);
+                                                        Log.i("gridview", "parenttaskid  " + parentTaskId);
                                                     } else {
                                                         intent.putExtra("isProject", "no");
                                                     }
@@ -1788,6 +1792,7 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                                                     intent.putExtra("ownerOfTask", ownerOfTask);
                                                     if (project) {
                                                         intent.putExtra("isProject", "yes");
+                                                        intent.putExtra("isreceiver", parentTaskId);
                                                     } else {
                                                         intent.putExtra("isProject", "no");
                                                     }
@@ -2237,6 +2242,7 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                                                 intent.putExtra("ownerOfTask", ownerOfTask);
                                                 if (project) {
                                                     intent.putExtra("isProject", "yes");
+                                                    intent.putExtra("isreceiver", parentTaskId);
                                                 } else {
                                                     intent.putExtra("isProject", "no");
                                                 }
@@ -2250,6 +2256,7 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                                                 intent.putExtra("ownerOfTask", ownerOfTask);
                                                 if (project) {
                                                     intent.putExtra("isProject", "yes");
+                                                    intent.putExtra("isreceiver", parentTaskId);
                                                 } else {
                                                     intent.putExtra("isProject", "no");
                                                 }
@@ -2980,6 +2987,7 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                             intent.putExtra("subtype", "normal");
                             if (project) {
                                 intent.putExtra("isProject", "yes");
+                                intent.putExtra("isreceiver", parentTaskId);
                             } else {
                                 intent.putExtra("isProject", "no");
                             }
@@ -5019,7 +5027,7 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                 }
                 if (item.getTitle().toString().equalsIgnoreCase("Hold")) {
                     AlertDialog.Builder saveDialog = new AlertDialog.Builder(context);
-                    saveDialog.setTitle("Hold Work");
+                    saveDialog.setTitle("Hold Task");
                     saveDialog.setCancelable(false);
                     saveDialog.setMessage("Are you sure want to hold this task " + taskName);
                     saveDialog.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
@@ -5179,7 +5187,7 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                 }
                 if (item.getTitle().toString().equalsIgnoreCase("Pause")) {
                     AlertDialog.Builder saveDialog = new AlertDialog.Builder(context);
-                    saveDialog.setTitle("Pause Work");
+                    saveDialog.setTitle("Pause Task");
                     saveDialog.setCancelable(false);
                     saveDialog.setMessage("Are you sure want to pause this task " + taskName);
                     saveDialog.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
@@ -5366,43 +5374,38 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                             final int count_forEod = VideoCallDataBase.getDB(context).getCountForTravelEntry(query_forEod);
                             Log.i("Givercomplete", "query_forEod==> " + query_forEod);
                             Log.i("Givercomplete", "count_forEod==> " + count_forEod);
-
-                            AlertDialog.Builder saveDialog = new AlertDialog.Builder(context);
-                            saveDialog.setTitle("Complete Task");
-                            saveDialog.setCancelable(false);
-                            saveDialog.setMessage("Are You sure want to complete this job " + taskName);
-                            saveDialog.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int which) {
-                                    if (check_status != 1 && check_status != 3) {
-                                        if (count_fortravel != 0) {
-                                            if (travelentry == 0) {
-                                                if (count_forEod != 0) {
+                            if (check_status != 1 && check_status != 3) {
+                                if (count_fortravel != 0) {
+                                    if (travelentry == 0) {
+                                        if (count_forEod != 0) {
+                                            AlertDialog.Builder saveDialog = new AlertDialog.Builder(context);
+                                            saveDialog.setTitle("Complete Task");
+                                            saveDialog.setCancelable(false);
+                                            saveDialog.setMessage("Are You sure want to complete this job " + taskName);
+                                            saveDialog.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                                                public void onClick(DialogInterface dialog, int which) {
                                                     sendStatus_webservice("5", "", "", "Completed", "Completed");
-                                                } else {
-                                                    Toast.makeText(NewTaskConversation.this, "This task has no Eod ", Toast.LENGTH_SHORT).show();
-                                                    dialog.cancel();
                                                 }
-                                            } else {
-                                                Toast.makeText(NewTaskConversation.this, "Enter end date and time and then proceed to complete the task.", Toast.LENGTH_SHORT).show();
-                                                dialog.cancel();
-                                            }
+                                            });
+                                            saveDialog.setNegativeButton("No",
+                                                    new DialogInterface.OnClickListener() {
+                                                        public void onClick(DialogInterface dialog, int which) {
+                                                            dialog.cancel();
+                                                        }
+                                                    });
+                                            saveDialog.show();
                                         } else {
-                                            Toast.makeText(NewTaskConversation.this, "No StartEndTime Found", Toast.LENGTH_SHORT).show();
-                                            dialog.cancel();
+                                            Toast.makeText(NewTaskConversation.this, "This task has no Eod ", Toast.LENGTH_SHORT).show();
                                         }
                                     } else {
-                                        Toast.makeText(NewTaskConversation.this, "Task is in Hold state", Toast.LENGTH_SHORT).show();
-                                        dialog.cancel();
+                                        Toast.makeText(NewTaskConversation.this, "Enter end date and time and then proceed to complete the task.", Toast.LENGTH_SHORT).show();
                                     }
+                                } else {
+                                    Toast.makeText(NewTaskConversation.this, "No StartEndTime Found", Toast.LENGTH_SHORT).show();
                                 }
-                            });
-                            saveDialog.setNegativeButton("No",
-                                    new DialogInterface.OnClickListener() {
-                                        public void onClick(DialogInterface dialog, int which) {
-                                            dialog.cancel();
-                                        }
-                                    });
-                            saveDialog.show();
+                            } else {
+                                Toast.makeText(NewTaskConversation.this, "Task is in Hold state", Toast.LENGTH_SHORT).show();
+                            }
                         } else {
                             Toast.makeText(NewTaskConversation.this, "Task is not yet to Started", Toast.LENGTH_SHORT).show();
 
@@ -5486,7 +5489,7 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                                 public void onClick(View v) {
                                     observation_tv.setTextColor(getResources().getColor(R.color.black));
                                     AlertDialog.Builder saveDialog = new AlertDialog.Builder(context);
-                                    saveDialog.setTitle("Observation Type");
+                                    saveDialog.setTitle("Observation");
                                     saveDialog.setCancelable(false);
                                     saveDialog.setMessage("You want to type or draw  sketch in " + taskName);
                                     saveDialog.setPositiveButton("Text", new DialogInterface.OnClickListener() {
@@ -5565,7 +5568,7 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                                 public void onClick(View v) {
                                     action_taken_tv.setTextColor(getResources().getColor(R.color.black));
                                     AlertDialog.Builder saveDialog = new AlertDialog.Builder(context);
-                                    saveDialog.setTitle("Action Taken Type");
+                                    saveDialog.setTitle("Action Taken");
                                     saveDialog.setCancelable(false);
                                     saveDialog.setMessage("You want to type or draw via sketch " + taskName);
                                     saveDialog.setPositiveButton("Text", new DialogInterface.OnClickListener() {
@@ -5644,7 +5647,7 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                                 public void onClick(View v) {
                                     remarks_complete_tv.setTextColor(getResources().getColor(R.color.black));
                                     AlertDialog.Builder saveDialog = new AlertDialog.Builder(context);
-                                    saveDialog.setTitle("Customer Remarks Type");
+                                    saveDialog.setTitle("Customer Remarks");
                                     saveDialog.setCancelable(false);
                                     saveDialog.setMessage("You want to type or draw via sketch " + taskName);
                                     saveDialog.setPositiveButton("Text", new DialogInterface.OnClickListener() {
@@ -5721,7 +5724,7 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                                 public void onClick(View v) {
                                     synopsis_tv.setTextColor(getResources().getColor(R.color.black));
                                     AlertDialog.Builder saveDialog = new AlertDialog.Builder(context);
-                                    saveDialog.setTitle("Synopsis Type");
+                                    saveDialog.setTitle("Synopsis");
                                     saveDialog.setCancelable(false);
                                     saveDialog.setMessage("You want to type or draw  sketch in " + taskName);
                                     saveDialog.setPositiveButton("Text", new DialogInterface.OnClickListener() {
@@ -6650,40 +6653,37 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                 Log.i("conv123", "TravelEntry==>" + travelentry);
                 String query = "select * from projectStatus where projectId='" + projectId + "'  and taskId= '" + webtaskId + "' and status = '7'";
                 final int count = VideoCallDataBase.getDB(context).getCountForTravelEntry(query);
-                AlertDialog.Builder saveDialog = new AlertDialog.Builder(context);
-                saveDialog.setTitle("Complete Task");
-                saveDialog.setCancelable(false);
-                saveDialog.setMessage("Are You sure want to complete this job " + taskName);
-                saveDialog.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        if (count != 0) {
-                            if (travelentry == 0) {
-                                String query_forEod = "select * from projectStatus where projectId='" + projectId + "'  and taskId= '" + webtaskId + "' and status = '10'";
-                                final int count_forEod = VideoCallDataBase.getDB(context).getCountForTravelEntry(query_forEod);
-                                Log.i("conv123", "count_forEod==> $$ " + count_forEod);
-                                if (count_forEod != 0) {
+                if (count != 0) {
+                    if (travelentry == 0) {
+                        String query_forEod = "select * from projectStatus where projectId='" + projectId + "'  and taskId= '" + webtaskId + "' and status = '10'";
+                        final int count_forEod = VideoCallDataBase.getDB(context).getCountForTravelEntry(query_forEod);
+                        Log.i("conv123", "count_forEod==> $$ " + count_forEod);
+                        if (count_forEod != 0) {
+                            AlertDialog.Builder saveDialog = new AlertDialog.Builder(context);
+                            saveDialog.setTitle("Complete Task");
+                            saveDialog.setCancelable(false);
+                            saveDialog.setMessage("Are You sure want to complete this job " + taskName);
+                            saveDialog.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
                                     sendStatus_webservice("5", "", "", "Completed", "Completed");
-                                } else {
-                                    Toast.makeText(NewTaskConversation.this, "This task has no Eod ", Toast.LENGTH_SHORT).show();
-                                    dialog.cancel();
                                 }
-                            } else {
-                                Toast.makeText(NewTaskConversation.this, "Enter end date and time and then proceed to complete the task.", Toast.LENGTH_SHORT).show();
-                                dialog.cancel();
-                            }
+                            });
+                            saveDialog.setNegativeButton("No",
+                                    new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            dialog.cancel();
+                                        }
+                                    });
+                            saveDialog.show();
                         } else {
-                            Toast.makeText(NewTaskConversation.this, "No StartEndTime Found", Toast.LENGTH_SHORT).show();
-                            dialog.cancel();
+                            Toast.makeText(NewTaskConversation.this, "This task has no Eod ", Toast.LENGTH_SHORT).show();
                         }
+                    } else {
+                        Toast.makeText(NewTaskConversation.this, "Enter end date and time and then proceed to complete the task.", Toast.LENGTH_SHORT).show();
                     }
-                });
-                saveDialog.setNegativeButton("No",
-                        new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int which) {
-                                dialog.cancel();
-                            }
-                        });
-                saveDialog.show();
+                } else {
+                    Toast.makeText(NewTaskConversation.this, "No StartEndTime Found", Toast.LENGTH_SHORT).show();
+                }
             } else {
                 Toast.makeText(NewTaskConversation.this, "can't able to complete this task", Toast.LENGTH_SHORT).show();
 
@@ -8665,8 +8665,8 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
             TextView gallery = (TextView) dialog.findViewById(R.id.delete_acc);
             TextView camera = (TextView) dialog.findViewById(R.id.log_out);
             if (type1.equalsIgnoreCase("call")) {
-                gallery.setText("audio call");
-                camera.setText("video call");
+                gallery.setText("Audio Call");
+                camera.setText("Video Call");
                 if (taskType != null && taskType.equalsIgnoreCase("Group")) {
                     camera.setVisibility(View.GONE);
                     ArrayList<String> users = VideoCallDataBase.getDB(context).getGroupMembers(String.valueOf(toUserId));

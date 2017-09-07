@@ -26,8 +26,9 @@
                 android:drawablePadding="-10dp"
                 android:gravity="center|start"
                 android:text="Back"
+                android:textStyle="bold"
                 android:textColor="@color/appcolor"
-                android:textSize="15sp" />
+                android:textSize="22sp" />
 
             <TextView
                 android:id="@+id/head"
