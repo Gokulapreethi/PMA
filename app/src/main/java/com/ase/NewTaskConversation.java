@@ -5413,7 +5413,38 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                     }
                     Log.i("ws123", "OracleStatusList $$--> " + OracleStatusList.size());
                 }
-
+                if (item.getTitle().toString().equalsIgnoreCase("End of Day")) {
+                    final Calendar calendar = Calendar.getInstance();
+                    final SimpleDateFormat mdformat = new SimpleDateFormat("yyyy-MM-dd");
+                    String taskcomplete_date = mdformat.format(calendar.getTime());
+                    Log.i("ws123", "taskcomplete_ddate $$--> " + taskcomplete_date);
+                    String query = "select * from projectStatus where projectId='" + projectId + "' and userId='" + Appreference.loginuserdetails.getId() + "' and taskId= '" + webtaskId + "' and status = '7'";
+                    int count = VideoCallDataBase.getDB(context).getCountForTravelEntry(query);
+                    Log.i("conv123", "count ==> " + count);
+                    int complete_travel = VideoCallDataBase.getDB(context).CheckTravelEntryDetails("select * from projectStatus where projectId ='" + projectId + "' and taskId = '" + webtaskId + "' and status = '10' and taskcompleteddate like '" + taskcomplete_date + "%" + "'");
+                    Log.i("ws123", "complete_travel $$--> " + complete_travel);
+                    int travelentry = VideoCallDataBase.getDB(context).CheckTravelEntryDetails("select * from projectStatus where projectId ='" + projectId + "' and taskId = '" + webtaskId + "' and travelStartTime IS NOT NULL and travelEndTime IS NULL");
+                    if (count != 0) {
+                        if (travelentry == 0) {
+                            if (complete_travel == 0) {
+                                Intent i = new Intent(context, EodScreen.class);
+                                i.putExtra("projectId", projectId);
+                                i.putExtra("webtaskId", webtaskId);
+                                i.putExtra("taskName", taskName);
+                                i.putExtra("JobCodeNo", JobCodeNo);
+                                i.putExtra("ActivityCode", ActivityCode);
+                                startActivityForResult(i, 9999);
+                            } else {
+                                Toast.makeText(NewTaskConversation.this, "Already EOD sent", Toast.LENGTH_SHORT).show();
+                            }
+                        } else {
+                            Toast.makeText(NewTaskConversation.this, "Enter end date and time and then proceed to complete the task.", Toast.LENGTH_SHORT).show();
+                        }
+                    } else {
+                        Toast.makeText(NewTaskConversation.this, "No StartEndTime Found", Toast.LENGTH_SHORT).show();
+                    }
+                }
+/*
                 if (item.getTitle().toString().equalsIgnoreCase("End of Day")) {
                     final Calendar calendar = Calendar.getInstance();
                     final SimpleDateFormat mdformat = new SimpleDateFormat("yyyy-MM-dd");
@@ -6572,6 +6603,7 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                     }
 
                 }
+*/
                 if (item.getTitle().toString().equalsIgnoreCase("DeAssign")) {
                     try {
                         if (isNetworkAvailable()) {
@@ -6874,45 +6906,45 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                 jsonObject.put("remarks", "");
             jsonObject.put("status", status);
 
-            if (synopsis_status != null && !synopsis_status.equalsIgnoreCase("")) {
+            if (synopsis_status != null && !synopsis_status.equalsIgnoreCase("") && !synopsis_status.equalsIgnoreCase(null)) {
                 jsonObject.put("synopsis", synopsis_status);
                 taskDetailsBean.setSynopsis(synopsis_status);
             } else
                 jsonObject.put("synopsis", "");
 
-            if (observationStatus != null && !observationStatus.equalsIgnoreCase("")) {
+            if (observationStatus != null && !observationStatus.equalsIgnoreCase("") && !observationStatus.equalsIgnoreCase(null)) {
                 jsonObject.put("observation", observationStatus);
                 taskDetailsBean.setObservation(observationStatus);
             } else
                 jsonObject.put("observation", "");
 
 
-            if (actiontakenStatus != null && !actiontakenStatus.equalsIgnoreCase("")) {
+            if (actiontakenStatus != null && !actiontakenStatus.equalsIgnoreCase("") && !actiontakenStatus.equalsIgnoreCase(null)) {
                 taskDetailsBean.setActionTaken(actiontakenStatus);
                 jsonObject.put("actionTaken", actiontakenStatus);
             } else
                 jsonObject.put("actionTaken", "");
 
 
-            if (custsignnameStatus != null && !custsignnameStatus.equalsIgnoreCase("")) {
+            if (custsignnameStatus != null && !custsignnameStatus.equalsIgnoreCase("") && !custsignnameStatus.equalsIgnoreCase(null)) {
                 jsonObject.put("customerSignatureName", custsignnameStatus);
                 taskDetailsBean.setCustomerSignatureName(custsignnameStatus);
             } else
                 jsonObject.put("customerSignatureName", "");
             Log.i("desc123", "HourMeterReading ========>" + HMReadingStatus);
-            if (HMReadingStatus != null && !HMReadingStatus.equalsIgnoreCase("")) {
+            if (HMReadingStatus != null && !HMReadingStatus.equalsIgnoreCase("") && !HMReadingStatus.equalsIgnoreCase(null)) {
                 jsonObject.put("hourMeterReading", HMReadingStatus);
                 taskDetailsBean.setHMReading(HMReadingStatus);
             } else
                 jsonObject.put("hourMeterReading", "");
             Log.i("desc123", "machine_model ========>" + machine_model);
-            if (machine_model != null && !machine_model.equalsIgnoreCase("")) {
+            if (machine_model != null && !machine_model.equalsIgnoreCase("") && !machine_model.equalsIgnoreCase(null)) {
                 jsonObject.put("mcModel", machine_model);
                 taskDetailsBean.setMcModel(machine_model);
             } else
                 jsonObject.put("mcModel", "");
             Log.i("desc123", "machine_serialno ========>" + machine_serialno);
-            if (machine_serialno != null && !machine_serialno.equalsIgnoreCase("")) {
+            if (machine_serialno != null && !machine_serialno.equalsIgnoreCase("") && !machine_serialno.equalsIgnoreCase(null)) {
                 jsonObject.put("mcSrNo", machine_serialno);
                 taskDetailsBean.setMcSrNo(machine_serialno);
                 String updateMachineSerialNo = "update projectDetails set mcSrNo='" + machine_serialno + "' where projectId='" + projectId + "' and userId='" + Appreference.loginuserdetails.getId() + "'";
@@ -6920,13 +6952,13 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
             } else
                 jsonObject.put("mcSrNo", "");
             Log.i("desc123", "machine_description ========>" + machine_description);
-            if (machine_description != null && !machine_description.equalsIgnoreCase("")) {
+            if (machine_description != null && !machine_description.equalsIgnoreCase("") && !machine_description.equalsIgnoreCase(null)) {
                 jsonObject.put("mcDescription", machine_description);
                 taskDetailsBean.setMcDescription(machine_description);
             } else
                 jsonObject.put("mcDescription", "");
             Log.i("desc123", "machine_model ========>" + machion_make_edit);
-            if (machion_make_edit != null && !machion_make_edit.equalsIgnoreCase("")) {
+            if (machion_make_edit != null && !machion_make_edit.equalsIgnoreCase("") && !machion_make_edit.equalsIgnoreCase(null)) {
                 jsonObject.put("machineMake", machion_make_edit);
                 taskDetailsBean.setMachineMake(machion_make_edit);
             } else
@@ -6934,7 +6966,8 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
             Log.i("oracle123", "taskCompletedDate w/s===>" + taskCompletedDate);
 
 
-            if (status != null && status.equalsIgnoreCase("10") && taskCompletedDate != null && !taskCompletedDate.equalsIgnoreCase("")) {
+            if (status != null && status.equalsIgnoreCase("10") && taskCompletedDate != null
+                    && !taskCompletedDate.equalsIgnoreCase("") && !taskCompletedDate.equalsIgnoreCase(null)) {
                 try {
                     date2 = taskDateParse.parse(taskCompletedDate);
                     taskCompletedDateUTC = taskDateFormat.format(date2);
@@ -6946,7 +6979,8 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
             }
             Log.i("oracle123", "taskCompletedDateUTC===>" + taskCompletedDateUTC);
 
-            if (status != null && status.equalsIgnoreCase("10") && taskCompletedDateUTC != null && !taskCompletedDateUTC.equalsIgnoreCase("")) {
+            if (status != null && status.equalsIgnoreCase("10") && taskCompletedDateUTC != null
+                    && !taskCompletedDateUTC.equalsIgnoreCase("") && !taskCompletedDateUTC.equalsIgnoreCase(null)) {
                 taskDetailsBean.setTaskCompletedDate(taskCompletedDate);
                 jsonObject.put("taskcompletedDate", taskCompletedDateUTC);
             } else
@@ -11777,6 +11811,70 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                         e.printStackTrace();
                         Appreference.printLog("NewTaskConversation", "onActivityResult 120 Exception " + e.getMessage(), "WARN", null);
                     }
+                } else if (requestCode == 9999) {
+                    TaskDetailsBean beanfortEod = (TaskDetailsBean) data.getExtras().getSerializable("eodBean");
+                    Log.i("EodScreen", "onavtivity 9999 " + beanfortEod);
+                    Log.i("NewTaskConversation", "machinemake " + beanfortEod.getMachineMake());
+                    Log.i("NewTaskConversation", "observation " + beanfortEod.getObservation());
+                    Log.i("NewTaskConversation", "McDescription " + beanfortEod.getMcDescription());
+                    Log.i("NewTaskConversation", "techsign " + beanfortEod.getTechnicianSignature());
+                    Log.i("NewTaskConversation", "photopath " + beanfortEod.getPhotoPath());
+                    Log.i("NewTaskConversation", "synopsis " + beanfortEod.getSynopsis());
+                    Log.i("NewTaskConversation", "customerremark " + beanfortEod.getCustomerRemarks());
+
+                    String customer_remarksEntry = beanfortEod.getCustomerRemarks();
+                    if (beanfortEod.getCustomerRemarks() != null && !beanfortEod.getCustomerRemarks().equalsIgnoreCase("")
+                            && beanfortEod.getCustomerRemarks().contains(".jpg")) {
+                        customerRemarks_path = beanfortEod.getCustomerRemarks();
+                    }
+                    taskCompletedDate = beanfortEod.getTaskCompletedDate();
+                    machion_make_edit = beanfortEod.getMachineMake();
+                    machine_model = beanfortEod.getMcModel();
+                    machine_serialno = beanfortEod.getMcSrNo();
+                    machine_description = beanfortEod.getMcDescription();
+                    if (beanfortEod.getObservation() != null && !beanfortEod.getObservation().equalsIgnoreCase("")
+                            && beanfortEod.getObservation().contains(".jpg")) {
+                        observation_path = beanfortEod.getObservation();
+                    } else {
+                        observationStatus = beanfortEod.getObservation();
+                    }
+                    if (beanfortEod.getActionTaken() != null && !beanfortEod.getActionTaken().equalsIgnoreCase("")
+                            && beanfortEod.getActionTaken().contains(".jpg")) {
+                        Action_Taken_path = beanfortEod.getActionTaken();
+                    } else {
+                        actiontakenStatus = beanfortEod.getActionTaken();
+                    }
+                    if (beanfortEod.getSynopsis() != null && !beanfortEod.getSynopsis().equalsIgnoreCase("")
+                            && beanfortEod.getSynopsis().contains(".jpg")) {
+                        synopsis_path = beanfortEod.getSynopsis();
+                    } else if (beanfortEod.getSynopsis() != null && !beanfortEod.getSynopsis().equalsIgnoreCase("")
+                            && !beanfortEod.getSynopsis().equalsIgnoreCase(null)) {
+                        synopsis_status = beanfortEod.getSynopsis();
+                    }
+
+                    HMReadingStatus = beanfortEod.getHMReading();
+                    custsignnameStatus = beanfortEod.getCustomerSignatureName();
+                    status_signature = beanfortEod.getCustomerSignature();
+                    tech_signature = beanfortEod.getTechnicianSignature();
+                    photo_signature = beanfortEod.getPhotoPath();
+                    Log.i("EodScreen", "custsignnameStatus  " + custsignnameStatus);
+                    Log.i("EodScreen", "tech_signature  " + tech_signature);
+                    Log.i("EodScreen", "photo_signature  " + photo_signature);
+                    Log.i("EodScreen", "synopsis_status  " + synopsis_status);
+                    Log.i("EodScreen", "synopsis_path  " + synopsis_path);
+                    Log.i("EodScreen", "machine_description  " + machine_description);
+                    Log.i("EodScreen", "machion_make_edit  " + machion_make_edit);
+                    Log.i("EodScreen", "machine_description  " + machine_description);
+                    Log.i("EodScreen", "observation_path  " + observation_path);
+                    Log.i("EodScreen", "observationStatus  " + observationStatus);
+                    Log.i("EodScreen", "customerRemarks_path  " + customerRemarks_path);
+                    Log.i("EodScreen", "customer_remarksEntry  " + customer_remarksEntry);
+                    Log.i("EodScreen", "machine_serialno  " + machine_serialno);
+                    Log.i("EodScreen", "taskCompletedDate  " + taskCompletedDate);
+                    String selectedDate[] = taskCompletedDate.split(" ");
+                    String date_s = selectedDate[0];
+                    Log.i("EodScreen", "date_s  " + date_s);
+                    sendStatus_webservice("10", "", customer_remarksEntry, "EOD Sent date is " + date_s, "");
                 }
                 handler.post(new Runnable() {
                     @Override
@@ -12941,7 +13039,8 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
 
                                                  Log.i("responce", "travel_endDate " + travel_endDate + " Remarks==> " + detailsBean.getCustomerRemarks());
                                                  if (detailsBean.getCustomerRemarks() != null && !detailsBean.getCustomerRemarks().equalsIgnoreCase("") && !detailsBean.getCustomerRemarks().equalsIgnoreCase("null")) {
-                                                     if (projectCurrentStatus != null && !projectCurrentStatus.equalsIgnoreCase("Completed") && !isremarksSketchselected && !isRemarkstextselected)
+                                                     if ((projectCurrentStatus != null && !projectCurrentStatus.equalsIgnoreCase("Completed"))
+                                                             && (detailsBean.getProjectStatus() != null && !detailsBean.getProjectStatus().equalsIgnoreCase("10")))
                                                          PercentageWebService("text", detailsBean.getCustomerRemarks(), "", Utility.getSessionID(), 0);
 
                                                  }
@@ -22272,6 +22371,7 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
     @Override
     public void onBackPressed() {
         super.onBackPressed();
+        Log.i("Newtaskconversation", "onBackPressed ");
         try {
             finish();
             overridePendingTransition(R.anim.left_to_right, R.anim.right_to_left);
@@ -22284,9 +22384,9 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         try {
-            Log.i("onKeyDown", "onKeyDown ");
+            Log.i("Newtaskconversation", "onKeyDown ");
             if (keyCode == KeyEvent.KEYCODE_BACK) {
-                Log.i("onKeyDown", "onKeyDown");
+                Log.i("Newtaskconversation", "onKeyDown");
 
                 Intent intent = new Intent();
                 setResult(RESULT_OK, intent);
