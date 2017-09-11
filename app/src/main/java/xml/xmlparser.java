@@ -480,6 +480,7 @@ public class xmlparser {
                     taskDetailsBean.setSubType(taskDetailsBean.getTaskRequestType());
             }
 
+/*
             if (nodeMap.getNamedItem("taskPriority") != null) {
                 String project_status = nodeMap.getNamedItem("taskStatus").getNodeValue();
                 if (project_status != null && (project_status.equalsIgnoreCase("Started") || project_status.equalsIgnoreCase("Start"))) {
@@ -500,6 +501,7 @@ public class xmlparser {
                     taskDetailsBean.setTaskStatus(nodeMap.getNamedItem("taskStatus").getNodeValue());
                 }
             }
+*/
 
             if (nodeMap.getNamedItem("taskStatus") != null)
                 taskDetailsBean.setTaskStatus(nodeMap.getNamedItem("taskStatus").getNodeValue());
@@ -571,6 +573,18 @@ public class xmlparser {
                     Log.i("conversation", "schedulecall ** 7 " + taskDetailsBean.isCustomTagVisible());
                 }
             }
+            if (nodeMap.getNamedItem("projectStatus") != null && !nodeMap.getNamedItem("projectStatus").getNodeValue().equalsIgnoreCase("(null)") && !nodeMap.getNamedItem("projectStatus").getNodeValue().equalsIgnoreCase("")) {
+                taskDetailsBean.setProjectStatus((nodeMap.getNamedItem("projectStatus").getNodeValue()));
+                Log.i("Parser", "projectStatus  == >> " + nodeMap.getNamedItem("projectStatus").getNodeValue());
+            }
+            if (nodeMap.getNamedItem("travelStartTime") != null && !nodeMap.getNamedItem("travelStartTime").getNodeValue().equalsIgnoreCase("(null)") && !nodeMap.getNamedItem("travelStartTime").getNodeValue().equalsIgnoreCase("")) {
+                taskDetailsBean.setTravelStartTime((nodeMap.getNamedItem("travelStartTime").getNodeValue()));
+                Log.i("Parser", "parentTaskId  == >> " + nodeMap.getNamedItem("travelStartTime").getNodeValue());
+            }
+            if (nodeMap.getNamedItem("travelEndTime") != null && !nodeMap.getNamedItem("travelEndTime").getNodeValue().equalsIgnoreCase("(null)") && !nodeMap.getNamedItem("travelEndTime").getNodeValue().equalsIgnoreCase("")) {
+                taskDetailsBean.setTravelEndTime((nodeMap.getNamedItem("travelEndTime").getNodeValue()));
+                Log.i("Parser", "parentTaskId  == >> " + nodeMap.getNamedItem("travelEndTime").getNodeValue());
+            }
 /*            if (nodeMap.getNamedItem("taskStatus") != null)
                 taskDetailsBean.(nodeMap.getNamedItem("taskStatus").getNodeValue());*/
 
@@ -612,14 +626,13 @@ public class xmlparser {
 //                            cmbean.setMessage(text);
 
                             taskDetailsBean.setTaskDescription(text);
-                            String description =taskDetailsBean.getTaskDescription();
-                            if(description != null && (description.equalsIgnoreCase("Gathering Details...")
+                           /* String description = taskDetailsBean.getTaskDescription();
+                            if (description != null && (description.equalsIgnoreCase("Gathering Details...")
                                     || description.contains("StartTime :") || description.contains("EndTime :"))) {
                                 taskDetailsBean.setProjectStatus("7");
                             }
-                            Log.i("profiledownload", "description-->4" + taskDetailsBean.getTaskDescription());
+                            Log.i("profiledownload", "description-->4" + taskDetailsBean.getTaskDescription());*/
                         }
-
                 } else {
                     if (text != null) {
                         if (text.contains("chat/")) {

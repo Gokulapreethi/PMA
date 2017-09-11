@@ -980,7 +980,7 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                 sendBtn.setEnabled(false);
             }
         }
-        if (taskStatus != null && (taskStatus.equalsIgnoreCase("completed") || taskStatus.equalsIgnoreCase("complete"))) {
+        if (taskStatus != null && (taskStatus.equalsIgnoreCase("Completed") || taskStatus.equalsIgnoreCase("Complete"))) {
             handler.post(new Runnable() {
                 @Override
                 public void run() {
@@ -1144,7 +1144,7 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                                                     intent.putExtra("ownerOfTask", ownerOfTask);
                                                     if (project) {
                                                         intent.putExtra("isProject", "yes");
-                                                        intent.putExtra("isreceiver", parentTaskId);
+                                                        intent.putExtra("isreceiver", false);
                                                     } else {
                                                         intent.putExtra("isProject", "no");
                                                     }
@@ -1163,7 +1163,7 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                                                     intent.putExtra("ownerOfTask", ownerOfTask);
                                                     if (project) {
                                                         intent.putExtra("isProject", "yes");
-                                                        intent.putExtra("isreceiver", parentTaskId);
+                                                        intent.putExtra("isreceiver", false);
                                                     } else {
                                                         intent.putExtra("isProject", "no");
                                                     }
@@ -1777,8 +1777,7 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                                                     intent.putExtra("ownerOfTask", ownerOfTask);
                                                     if (project) {
                                                         intent.putExtra("isProject", "yes");
-                                                        intent.putExtra("isreceiver", parentTaskId);
-                                                        Log.i("gridview", "parenttaskid  " + parentTaskId);
+                                                        intent.putExtra("isreceiver", true);
                                                     } else {
                                                         intent.putExtra("isProject", "no");
                                                     }
@@ -1792,7 +1791,7 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                                                     intent.putExtra("ownerOfTask", ownerOfTask);
                                                     if (project) {
                                                         intent.putExtra("isProject", "yes");
-                                                        intent.putExtra("isreceiver", parentTaskId);
+                                                        intent.putExtra("isreceiver", true);
                                                     } else {
                                                         intent.putExtra("isProject", "no");
                                                     }
@@ -1988,7 +1987,7 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                                                 } else if (isProjectFromOracle && current_status == 3) {
                                                     showToast("When task is in pause % should not been send ");
                                                 } else if (isProjectFromOracle && current_status == 5) {
-                                                    showToast("Task is already completed ");
+                                                    showToast("Task is already Completed ");
                                                 } else {
                                                     Intent intent = new Intent(NewTaskConversation.this, UpdateTaskActivity.class);
                                                     intent.putExtra("username", toUserName);
@@ -2242,7 +2241,7 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                                                 intent.putExtra("ownerOfTask", ownerOfTask);
                                                 if (project) {
                                                     intent.putExtra("isProject", "yes");
-                                                    intent.putExtra("isreceiver", parentTaskId);
+                                                    intent.putExtra("isreceiver", true);
                                                 } else {
                                                     intent.putExtra("isProject", "no");
                                                 }
@@ -2256,7 +2255,7 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                                                 intent.putExtra("ownerOfTask", ownerOfTask);
                                                 if (project) {
                                                     intent.putExtra("isProject", "yes");
-                                                    intent.putExtra("isreceiver", parentTaskId);
+                                                    intent.putExtra("isreceiver", true);
                                                 } else {
                                                     intent.putExtra("isProject", "no");
                                                 }
@@ -2987,7 +2986,7 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                             intent.putExtra("subtype", "normal");
                             if (project) {
                                 intent.putExtra("isProject", "yes");
-                                intent.putExtra("isreceiver", parentTaskId);
+                                intent.putExtra("isreceiver", false);
                             } else {
                                 intent.putExtra("isProject", "no");
                             }
@@ -3233,7 +3232,7 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                             } else if (isProjectFromOracle && current_status == 3) {
                                 showToast("When task is in pause % should not been send ");
                             } else if (isProjectFromOracle && current_status == 5) {
-                                showToast("Task is already completed ");
+                                showToast("Task is already Completed ");
                             } else if ((!isTaskName && !takerCheck) || isProjectFromOracle) {
                                 Intent intent = new Intent(NewTaskConversation.this, UpdateTaskActivity.class);
                                 intent.putExtra("username", toUserName);
@@ -3467,7 +3466,7 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                     String query = "select status from projectStatus where projectId='" + projectId + "' and userId='" + Appreference.loginuserdetails.getId() + "' and taskId= '" + webtaskId + "'";
                     int disable_by_current_status = VideoCallDataBase.getDB(context).getCurrentStatus(query);
                     if (disable_by_current_status == 5)
-                        Toast.makeText(context, "You cannot send text for completed Task", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(context, "You cannot send text for Completed Task", Toast.LENGTH_SHORT).show();
                 }
                 TaskDetailsBean task = new TaskDetailsBean();
                 Log.i("task", "isTaskName 2 " + isTaskName);
@@ -5385,6 +5384,7 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                                             saveDialog.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                                                 public void onClick(DialogInterface dialog, int which) {
                                                     sendStatus_webservice("5", "", "", "Completed", "Completed");
+                                                    dialog.cancel();
                                                 }
                                             });
                                             saveDialog.setNegativeButton("No",
@@ -5419,7 +5419,7 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                     final SimpleDateFormat mdformat = new SimpleDateFormat("yyyy-MM-dd");
                     String taskcomplete_date = mdformat.format(calendar.getTime());
                     Log.i("ws123", "taskcomplete_ddate $$--> " + taskcomplete_date);
-                    int complete_travel = VideoCallDataBase.getDB(context).CheckTravelEntryDetails("select * from projectStatus where projectId ='" + projectId + "' and status = '10' and taskcompleteddate like '" + taskcomplete_date + "%" + "'");
+                    int complete_travel = VideoCallDataBase.getDB(context).CheckTravelEntryDetails("select * from projectStatus where projectId ='" + projectId + "' and taskId = '" + webtaskId + "' and status = '10' and taskcompleteddate like '" + taskcomplete_date + "%" + "'");
                     Log.i("ws123", "complete_travel $$--> " + complete_travel);
                     String TraveltimeQuery = "Select * from projectHistory where projectId ='" + projectId + "'";
                     final boolean isTravelTaskAvailable = VideoCallDataBase.getDB(context).getTraveltaskExistsOrNot(TraveltimeQuery);
@@ -6666,6 +6666,7 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                             saveDialog.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int which) {
                                     sendStatus_webservice("5", "", "", "Completed", "Completed");
+                                    dialog.cancel();
                                 }
                             });
                             saveDialog.setNegativeButton("No",
@@ -9618,7 +9619,7 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                                 if (ownerOfTask.equalsIgnoreCase(Appreference.loginuserdetails.getUsername()))
                                     taskStatus = "closed";
                                 else
-                                    taskStatus = "completed";
+                                    taskStatus = "Completed";
                             } else {
                                 Log.i("Accept", "value_taskStatus 210 ** " + taskStatus);
                                 if (ownerOfTask.equalsIgnoreCase(Appreference.loginuserdetails.getUsername()) && (percentage.equalsIgnoreCase("100%") || percentage.equalsIgnoreCase("100"))) {
@@ -9632,7 +9633,7 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                                     isGrp_Percent = true;
                                     VideoCallDataBase.getDB(context).updatetaskstatus(chatBean.getTaskId());
                                 } else if (!ownerOfTask.equalsIgnoreCase(Appreference.loginuserdetails.getUsername()) && (percentage.equalsIgnoreCase("100%") || percentage.equalsIgnoreCase("100"))) {
-                                    taskStatus = "completed";
+                                    taskStatus = "Completed";
                                     timerstop();
                                     VideoCallDataBase.getDB(context).updatetaskstatus(chatBean.getTaskId());
                                 } else {
@@ -9793,7 +9794,7 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                             if (percentage.equalsIgnoreCase("100") && ownerOfTask.equalsIgnoreCase(Appreference.loginuserdetails.getUsername())) {
                                 jsonObject.put("taskStatus", "closed");
                             } else if (percentage.equalsIgnoreCase("100") && !ownerOfTask.equalsIgnoreCase(Appreference.loginuserdetails.getUsername())) {
-                                jsonObject.put("taskStatus", "completed");
+                                jsonObject.put("taskStatus", "Completed");
                             } else {
                                 if (isProjectFromOracle) {
                                     jsonObject.put("taskStatus", taskStatus);
@@ -12935,7 +12936,7 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                                                 /* if(detailsBean.getProjectStatus().equalsIgnoreCase("1") || detailsBean.getProjectStatus().equalsIgnoreCase("3")) {
                                                      PercentageWebService("taskBreak", detailsBean.getTaskDescription(), "", detailsBean.getSignalid(), 0);
                                                  }else*/
-                                                 PercentageWebService("text", detailsBean.getTaskDescription(), "", detailsBean.getSignalid(), 0);
+                                                 PercentageWebService_status("text", detailsBean.getTaskDescription(), "", detailsBean.getSignalid(), 0, detailsBean);
 
 
                                                  Log.i("responce", "travel_endDate " + travel_endDate + " Remarks==> " + detailsBean.getCustomerRemarks());
@@ -14687,7 +14688,7 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                                             Log.i("ApproveTask", "percent UI group 30 " + taskStatus);
 //                                        }
                                         }
-                                        if (taskStatus.equalsIgnoreCase("completed") || taskStatus.equalsIgnoreCase("Reopen")) {
+                                        if (taskStatus.equalsIgnoreCase("Completed") || taskStatus.equalsIgnoreCase("Reopen")) {
                                             if (!AppSharedpreferences.getInstance(context).getBoolean("Prompt" + webtaskId)) {
                                                 handler.post(new Runnable() {
                                                     @Override
@@ -14757,7 +14758,7 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                                         Log.i("ApproveTask", "percent UI 30 " + taskStatus);
 //                                        }
                                     }
-                                    if (taskStatus.equalsIgnoreCase("completed") || taskStatus.equalsIgnoreCase("Reopen")) {
+                                    if (taskStatus.equalsIgnoreCase("Completed") || taskStatus.equalsIgnoreCase("Reopen")) {
                                         if (!AppSharedpreferences.getInstance(context).getBoolean("Prompt" + webtaskId)) {
                                             handler.post(new Runnable() {
                                                 @Override
@@ -17349,7 +17350,7 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                     Log.i("newtaskconversation", " compose taskStatus 2 " + cmbean.getTaskStatus());
                     if (cmbean.getOwnerOfTask().equalsIgnoreCase(Appreference.loginuserdetails.getUsername())) {
                         if (isProjectFromOracle)
-                            buffer.append(" taskStatus=" + quotes + "completed" + quotes);
+                            buffer.append(" taskStatus=" + quotes + "Completed" + quotes);
                         else
                             buffer.append(" taskStatus=" + quotes + "Closed" + quotes);
                     } else {
@@ -17410,6 +17411,15 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
             buffer.append(" parentTaskId=" + quotes + cmbean.getIssueId() + quotes);
             if (cmbean.getDaysOfTheWeek() != null && !cmbean.getDaysOfTheWeek().equalsIgnoreCase("") && !cmbean.getDaysOfTheWeek().equalsIgnoreCase(null)) {
                 buffer.append(" isRepeatTask=" + quotes + "Y" + quotes);
+            }
+            if (cmbean.getProjectStatus() != null && !cmbean.getProjectStatus().equalsIgnoreCase("") && !cmbean.getProjectStatus().equalsIgnoreCase(null)) {
+                buffer.append(" projectStatus=" + quotes + cmbean.getProjectStatus() + quotes);
+            }
+            if (cmbean.getTravelStartTime() != null && !cmbean.getTravelStartTime().equalsIgnoreCase("") && !cmbean.getTravelStartTime().equalsIgnoreCase(null)) {
+                buffer.append(" travelStartTime=" + quotes + cmbean.getTravelStartTime() + quotes);
+            }
+            if (cmbean.getTravelEndTime() != null && !cmbean.getTravelEndTime().equalsIgnoreCase("") && !cmbean.getTravelEndTime().equalsIgnoreCase(null)) {
+                buffer.append(" travelEndTime=" + quotes + cmbean.getTravelEndTime() + quotes);
             }
             buffer.append(" />");
             buffer.append("</TaskDetailsinfo>");
@@ -17906,7 +17916,7 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                     sendTemplate.setVisibility(View.VISIBLE);
             }
 
-            if (taskStatus != null && (taskStatus.equalsIgnoreCase("completed") || taskStatus.equalsIgnoreCase("closed") || taskStatus.equalsIgnoreCase("Reopen"))) {
+            if (taskStatus != null && (taskStatus.equalsIgnoreCase("Completed") || taskStatus.equalsIgnoreCase("closed") || taskStatus.equalsIgnoreCase("Reopen"))) {
                 if (project) {
                     if (isParentTask != null && isParentTask.equalsIgnoreCase("Y")) {
                         task_approve.setVisibility(View.GONE);
@@ -19119,7 +19129,7 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                 AlertDialog alertDialog = new AlertDialog.Builder(NewTaskConversation.this).create();
                 alertDialog.setTitle("Would you like to close this issue");
                 alertDialog.setCancelable(false);
-                alertDialog.setMessage("This issue is set as 100% completed and can be closed. Upon closure you will be unable to add new dates to the issue");
+                alertDialog.setMessage("This issue is set as 100% Completed and can be closed. Upon closure you will be unable to add new dates to the issue");
                 alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "Ignore",
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
@@ -19146,7 +19156,7 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                 AlertDialog alertDialog = new AlertDialog.Builder(NewTaskConversation.this).create();
                 alertDialog.setTitle("Would you like to close this task");
                 alertDialog.setCancelable(false);
-                alertDialog.setMessage("This task is set as 100% completed and can be closed. Upon closure you will be unable to add new dates to the task.You may raise issues in this task using the Add Issue option");
+                alertDialog.setMessage("This task is set as 100% Completed and can be closed. Upon closure you will be unable to add new dates to the task.You may raise issues in this task using the Add Issue option");
                 alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "Ignore",
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
@@ -20050,6 +20060,359 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
             Appreference.printLog("NewTaskConversation", "PercentageWebService Exception : " + e.getMessage(), "WARN", null);
         }
     }
+    public void PercentageWebService_status(String getMediaType, String getMediaPath, String getExt, String sig_id, int isDateorUpdateorNormal,TaskDetailsBean status_bean) {
+        try {
+            if (!getMediaPath.equals(null)) {
+                Log.i("conv123", "PercentageWebService taskStatus --------> 4 " + taskStatus);
+                Log.i("conv123", "isDeassign is -------->  " + isDeassign);
+
+                SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                String dateTime = dateFormat.format(new Date());
+                dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
+                String dateforrow = dateFormat.format(new Date());
+                tasktime = dateTime;
+                tasktime = tasktime.split(" ")[1];
+                taskUTCtime = dateforrow;
+                final TaskDetailsBean chatBean = new TaskDetailsBean();
+
+                chatBean.setFromUserId(String.valueOf(Appreference.loginuserdetails.getId()));
+                chatBean.setFromUserName(Appreference.loginuserdetails.getUsername());
+                chatBean.setSelect(false);
+                chatBean.setTaskDescription(getMediaPath);
+                chatBean.setSignalid(sig_id);
+                chatBean.setTaskNo(task_No);
+                chatBean.setIssueId(issueId);
+                chatBean.setParentId(getFileName());
+                chatBean.setTaskType(taskType);
+                chatBean.setTaskPriority("Medium");
+                chatBean.setIsRemainderRequired("");
+
+                chatBean.setProjectStatus(status_bean.getProjectStatus());
+                chatBean.setTravelStartTime(status_bean.getTravelStartTime());
+                chatBean.setTravelEndTime(status_bean.getTravelEndTime());
+
+                if (isProjectFromOracle && getMediaPath.equalsIgnoreCase("Completed Percentage 100 %")) {
+                    chatBean.setCompletedPercentage("100");
+                } else {
+                    chatBean.setCompletedPercentage("0");
+                }
+                chatBean.setPlannedStartDateTime("");
+                chatBean.setPlannedEndDateTime("");
+                Log.i("timer123", "Appreference.HoldOrPauseTimervalue percentageWEbservice===>" + Appreference.HoldOrPauseTimervalue);
+                chatBean.setUtcplannedEndDateTime(Appreference.HoldOrPauseTimervalue);
+                chatBean.setTaskPlannedLatestEndDate("1");
+                chatBean.setRemainderFrequency("");
+                chatBean.setTaskUTCDateTime(dateforrow);
+                chatBean.setDateTime(dateTime);
+                String project_deassignMems = "";
+                Log.i("selfassign", "Self_assign==> " + Self_assign + " oracleProjectOwner --> " + oracleProjectOwner);
+                if (Self_assign && oracleProjectOwner != null && !oracleProjectOwner.equalsIgnoreCase("")) {
+                    chatBean.setOwnerOfTask(oracleProjectOwner);
+                    chatBean.setTaskStatus("Assigned");
+                    taskStatus = "Assigned";
+                    ownerOfTask = oracleProjectOwner;
+                } else {
+                    chatBean.setOwnerOfTask(ownerOfTask);
+                    chatBean.setTaskStatus(taskStatus);
+                }
+                if (isDeassign) {
+                    chatBean.setTaskStatus("Unassigned");
+                    taskStatus = "Unassigned";
+                    chatBean.setTaskReceiver("");
+                    chatBean.setToUserName("");
+                    chatBean.setToUserId("");
+                    chatBean.setCompletedPercentage("0");
+                    if (projectGroup_Mems != null) {
+                        int counter = 0;
+                        for (int i = 0; i < projectGroup_Mems.length(); i++) {
+                            if (projectGroup_Mems.charAt(i) == ',') {
+                                counter++;
+                            }
+                        }
+                        for (int j = 0; j < counter + 1; j++) {
+                            if (counter == 0) {
+                                if (!projectGroup_Mems.equalsIgnoreCase(Appreference.loginuserdetails.getUsername())) {
+                                    project_deassignMems = projectGroup_Mems;
+                                }
+                            } else {
+                                if (projectGroup_Mems.split(",")[j].equalsIgnoreCase(Appreference.loginuserdetails.getUsername())) {
+                                } else {
+                                    project_deassignMems = project_deassignMems.concat(projectGroup_Mems.split(",")[j] + ",");
+                                }
+                            }
+                        }
+                        if (project_deassignMems != null && project_deassignMems.contains(",")) {
+                            project_deassignMems = project_deassignMems.substring(0, project_deassignMems.length() - 1);
+                        }
+                    }
+                    Log.i("taskConversation", "project_deassignMems " + project_deassignMems);
+                } else {
+                    chatBean.setTaskReceiver(taskReceiver);
+                    chatBean.setToUserName(toUserName);
+                    chatBean.setToUserId(String.valueOf(toUserId));
+                }
+                chatBean.setTasktime(tasktime);
+                chatBean.setTaskUTCTime(taskUTCtime);
+                chatBean.setMimeType(getMediaType);
+                chatBean.setTaskId(webtaskId);
+
+
+                // send status 0 is send 1 is unsend
+                chatBean.setSendStatus("0");
+                chatBean.setMsg_status(0);
+                chatBean.setWs_send("0");
+                chatBean.setCustomTagVisible(true);
+//            if ((template && note) || chat) {
+                chatBean.setCatagory(category);
+//            }
+                if (getMediaType != null && getMediaType.equalsIgnoreCase("textfile")) {
+                    chatBean.setLongmessage("0");
+                }
+                if (!getMediaType.equalsIgnoreCase("text")) {
+                    chatBean.setShow_progress(0);
+                }
+                if (project) {
+                    chatBean.setProjectId(projectId);
+                    if (isDeassign) {
+                        Log.i("taskConversation", "project_deassignMems success");
+                        chatBean.setGroupTaskMembers(project_deassignMems);
+                    } else if (projectGroup_Mems != null) {
+                        chatBean.setGroupTaskMembers(projectGroup_Mems);
+                    }
+                }
+                if ((subType != null && subType.equalsIgnoreCase("taskDescription")) && !chatBean.getTaskDescription().contains("Completed Percentage ")) {
+                    chatBean.setSubType(subType);
+                    chatBean.setTaskRequestType(subType);
+                } else {
+                    if (!isTaskName) {
+                        if (isDateorUpdateorNormal == 1) {
+                            chatBean.setSubType("percentageCompleted");
+                            chatBean.setTaskRequestType("percentageCompleted");
+                        }
+                        if (isDateorUpdateorNormal == 2) {
+                            chatBean.setSubType("taskDateChangedRequest");
+                            chatBean.setTaskRequestType("taskDateChangedRequest");
+                        }
+                        if (isDateorUpdateorNormal == 3) {
+                            chatBean.setSubType("SchedulingAlert");
+                            chatBean.setTaskRequestType("SchedulingAlert");
+                            chatBean.setRequestStatus("Resolved");
+                        } else {
+                            chatBean.setTaskRequestType("taskConversation");
+                        }
+                    }
+                }
+                Log.i("conv123", "taskList will add ==>  " + isNetworkAvailable());
+                if (!isNetworkAvailable()) {
+                    Log.i("conv123", "isNetworkAvailable-------->  " + isNetworkAvailable());
+                    chatBean.setWs_send("000");
+                    chatBean.setShow_progress(1);
+                }
+                if (!getExt.equalsIgnoreCase("message")) {
+                    if (!isTaskName) {
+                        if (project) {
+                            VideoCallDataBase.getDB(context).update_Project_history(chatBean);
+                        }
+                        if (VideoCallDataBase.getDB(context).insertORupdate_Task_history(chatBean)) {
+                            if (chatBean.isCustomTagVisible()) {
+                                taskList.add(chatBean);
+                                cancelDialog();
+                                Log.i("conv123", "" + getMediaPath + "added DB successfully=====>" + taskList.size());
+                                Log.i("conv123", "taskList  added successfully-------->  ");
+                                Log.i("conv123", "taskList  Description added is-------->  " + getMediaPath);
+                            }
+                            Log.i("task", "msg Status " + chatBean.getMsg_status());
+                            refresh();
+                        }
+                    }
+                }
+                if (isTaskName) {
+                    Log.i("taskconversation", "istaskName percentagewebservice **  ");
+                    if (!template && !note) {
+                        chatBean.setTaskName("New Task");
+                        Log.i("taskconversation", "headername  9 ");
+                    } else if (note) {
+                        chatBean.setTaskName("New Note");
+                        Log.i("taskconversation", "headername  10 ");
+                    } else if (chat) {
+                        chatBean.setTaskName("New chat");
+                    } else {
+                        chatBean.setTaskName("New Template");
+                        Log.i("taskconversation", "headername  11 ");
+                    }
+                    chatBean.setSubType("taskDescription");
+                    chatBean.setTaskRequestType("taskDescription");
+                    Log.i("task", "setting task name ");
+                    ownerOfTask = Appreference.loginuserdetails.getUsername();
+                    taskReceiver = toUserName;
+                    taskIdWebservice(chatBean);
+                    Log.i("task", "isTask Name is false ");
+                } else {
+                    chatBean.setSubType(subType);
+                    if (isDateorUpdateorNormal == 1) {
+                        chatBean.setSubType("percentageCompleted");
+                        chatBean.setTaskRequestType("percentageCompleted");
+                    }
+                    if (isDateorUpdateorNormal == 2) {
+                        chatBean.setSubType("taskDateChangedRequest");
+                        chatBean.setTaskRequestType("taskDateChangedRequest");
+                    }
+                    if (isDateorUpdateorNormal == 3) {
+                        chatBean.setSubType("SchedulingAlert");
+                        chatBean.setTaskRequestType("SchedulingAlert");
+                        chatBean.setRequestStatus("Resolved");
+                    } else {
+                        chatBean.setTaskRequestType(subType);
+                    }
+                    chatBean.setTaskName(taskName);
+                    if (isProjectFromOracle) {
+                        chatBean.setTaskRequestType("normal");
+                        chatBean.setRequestStatus("normal");
+                        chatBean.setSubType("normal");
+                        if (isDeassign)
+                            chatBean.setSubType("deassign");
+                    }
+
+                    Log.i("deassign123", "Deassgn flow=getSubType===>" + chatBean.getSubType());
+                    Log.i("deassign123", "Deassgn flow==getTaskStatus==>" + chatBean.getTaskStatus());
+                    Log.i("deassign123", "Deassgn flow===getTaskReceiver=>" + chatBean.getTaskReceiver());
+                    Log.i("deassign123", "Deassgn flow==getToUserName==>" + chatBean.getToUserName());
+                    Log.i("deassign123", "Deassgn flow==project_deassignMems==>" + project_deassignMems);
+
+                    try {
+                        JSONObject jsonObject = new JSONObject();
+                        JSONObject jsonObject1 = new JSONObject();
+                        if (webtaskId != null)
+                            jsonObject1.put("id", Integer.parseInt(webtaskId));
+                        jsonObject.put("task", jsonObject1);
+                        JSONObject jsonObject2 = new JSONObject();
+                        jsonObject2.put("id", Appreference.loginuserdetails.getId());
+                        jsonObject.put("from", jsonObject2);
+                        if ((!template && !project) || chat || note) {
+                            Log.i("taskconversation", "toUserId " + toUserId);
+                            JSONObject jsonObject3 = new JSONObject();
+                            jsonObject3.put("id", toUserId);
+                            if (taskType.equalsIgnoreCase("group")) {
+                                jsonObject.put("group", jsonObject3);
+                            } else {
+                                jsonObject.put("to", jsonObject3);
+                            }
+                        }
+                        jsonObject.put("signalId", sig_id);
+                        jsonObject.put("parentId", getFileName());
+                        jsonObject.put("createdDate", dateforrow);
+                        if (subType != null && subType.equalsIgnoreCase("taskDescription") && !chatBean.getTaskDescription().contains("Completed Percentage ")) {
+                            jsonObject.put("requestType", "taskDescription");
+                        } else if (getMediaPath != null && (getMediaPath.equalsIgnoreCase("This Task is closed") || getMediaPath.equalsIgnoreCase("This issue is closed"))) {
+                            jsonObject.put("requestType", "percentageCompleted");
+                            jsonObject.put("taskStatus", "closed");
+                            jsonObject.put("percentageCompleted", "100");
+                        } else if (isProjectFromOracle && (getMediaPath != null && getMediaPath.equalsIgnoreCase("Completed Percentage 100%"))) {
+                            jsonObject.put("requestType", "percentageCompleted");
+                            jsonObject.put("taskStatus", "Completed");
+                            jsonObject.put("percentageCompleted", "100");
+                        } /*else if (isDeassign) {
+                        jsonObject.put("requestType", "percentageCompleted");
+                        Log.i("deassign123", "isDeassign $ ==> ");
+                        jsonObject.put("percentageCompleted", "0");
+                    }*/ else if (isDateorUpdateorNormal == 1) {
+                            jsonObject.put("requestType", "percentageCompleted");
+                        } else if (isDateorUpdateorNormal == 2) {
+                            jsonObject.put("requestType", "taskDateChangeRequest");
+                        } else if (isDateorUpdateorNormal == 3) {
+                            jsonObject.put("requestType", "SchedulingAlert");
+                        } else {
+                            jsonObject.put("requestType", "taskConversation");
+                        }
+                        if (getMediaPath != null && (getMediaPath.equalsIgnoreCase("This Task is closed") || getMediaPath.equalsIgnoreCase("This issue is closed"))) {
+                            jsonObject.put("requestStatus", "");
+                        } else {
+                            jsonObject.put("requestStatus", "approved");
+                        }
+                        jsonObject.put("taskEndDateTime", enddate);
+                        jsonObject.put("taskStartDateTime", startdate);
+                        jsonObject.put("remainderDateTime", reminderdate);
+                        jsonObject.put("dateFrequency", "");
+                        jsonObject.put("timeFrequency", reminderfreq);
+                        jsonObject.put("remark", "");
+                        JSONObject jsonObject5 = new JSONObject();
+                        jsonObject5.put("id", Appreference.loginuserdetails.getId());
+                        JSONObject jsonObject4 = new JSONObject();
+                        jsonObject4.put("user", jsonObject5);
+                        switch (getMediaType.toLowerCase().trim()) {
+                            case "image":
+                                Log.i("taskconversation", "mediaListBean.getMimeType() --------> 13 " + getMediaType);
+                                jsonObject4.put("fileType", "image");
+                                jsonObject4.put("fileContent", encodeTobase64(BitmapFactory.decodeFile(getMediaPath)));
+                                jsonObject4.put("taskFileExt", "jpg");
+                                break;
+                            case "video":
+                                Log.i("taskconversation", "mediaListBean.getMimeType() --------> 14 " + getMediaType);
+                                jsonObject4.put("fileType", "video");
+                                Log.i("task", "Video uploaded" + getMediaPath);
+                                jsonObject4.put("fileContent", encodeAudioVideoToBase64(getMediaPath));
+                                jsonObject4.put("taskFileExt", "mp4");
+                                break;
+                            case "audio":
+                                Log.i("taskconversation", "mediaListBean.getMimeType() --------> 15 " + getMediaType);
+                                jsonObject4.put("fileType", "audio");
+                                jsonObject4.put("fileContent", encodeAudioVideoToBase64(getMediaPath));
+                                jsonObject4.put("taskFileExt", "mp3");
+                                break;
+                            case "document":
+                                Log.i("taskconversation", "mediaListBean.getMimeType() --------> 16 " + getMediaType);
+                                jsonObject4.put("fileType", getMediaType);
+                                jsonObject4.put("fileContent", encodeFileToBase64Binary(getMediaPath));
+                                jsonObject4.put("taskFileExt", getExt);
+                                break;
+                            case "text":
+                                Log.i("taskconversation", "mediaListBean.getMimeType() --------> 17 " + getMediaType);
+                                jsonObject4.put("fileType", "text");
+                                jsonObject4.put("description", getMediaPath);
+                                break;
+                            case "assigntask":
+                                Log.i("taskconversation", "mediaListBean.getMimeType() --------> 17 " + getMediaType);
+                                jsonObject4.put("fileType", "assigntask");
+                                jsonObject4.put("description", getMediaPath);
+                                break;
+                            case "map":
+                                Log.i("taskconversation", "mediaListBean.getMimeType() --------> 19 " + getMediaType);
+                                jsonObject4.put("fileType", "map");
+                                jsonObject4.put("description", getMediaPath);
+                                break;
+                            case "textfile":
+                                Log.i("taskconversation", "mediaListBean.getMimeType() --------> 20 " + getMediaType);
+                                Log.i("textfile", "getExt ==  " + getExt + "   getMediaType  == " + getMediaType);
+                                jsonObject4.put("fileType", getMediaType);
+                                jsonObject4.put("taskFileExt", "txt");
+                                jsonObject4.put("fileContent", encodeFileToBase64Binary(getMediaPath));
+                                break;
+                        }
+                        JSONArray jsonArray = new JSONArray();
+                        jsonArray.put(0, jsonObject4);
+                        jsonObject.put("listTaskConversationFiles", jsonArray);
+                        Log.i("taskconversation", "mediaListBean.getMimeType() --------> 20 " + jsonArray);
+                        if (jsonObject != null) {
+                            Appreference.printLog("Completed percentage", jsonObject.toString(), "Completed percentage", null);
+                            listLastposition();
+                            Log.i("taskconversation", "mediaListBean.getMimeType() --------> 21 " + getMediaType);
+                            if (isNetworkAvailable()) {
+                                Appreference.jsonRequestSender.taskConversationEntry(EnumJsonWebservicename.taskConversationEntry, jsonObject, this, null, chatBean);
+                            } else {
+                                Toast.makeText(NewTaskConversation.this, "Check your internet connection", Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        Appreference.printLog("NewTaskConversation", "PercentageWebService taskConversationEntry Exception : " + e.getMessage(), "WARN", null);
+                    }
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            Appreference.printLog("NewTaskConversation", "PercentageWebService Exception : " + e.getMessage(), "WARN", null);
+        }
+    }
 
     public void oracle_percentage(String getMediaType, String getMediaPath, String getExt, String sig_id, int isDateorUpdateorNormal) {
         try {
@@ -20081,8 +20444,8 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
             String project_deassignMems = "";
             Log.i("selfassign", "Self_assign==> " + Self_assign + " oracleProjectOwner --> " + oracleProjectOwner);
             chatBean.setOwnerOfTask(ownerOfTask);
-            chatBean.setTaskStatus("completed");
-            taskStatus = "completed";
+            chatBean.setTaskStatus("Completed");
+            taskStatus = "Completed";
             chatBean.setTaskReceiver(taskReceiver);
             chatBean.setToUserName(toUserName);
             chatBean.setToUserId(String.valueOf(toUserId));
@@ -20134,7 +20497,7 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
             jsonObject.put("percentageCompleted", "100");
             jsonObject.put("taskNo", task_No);
             jsonObject.put("requestType", "percentageCompleted");
-            jsonObject.put("taskStatus", "completed");
+            jsonObject.put("taskStatus", "Completed");
             Appreference.jsonRequestSender.taskConversationEntry(EnumJsonWebservicename.taskConversationEntry, jsonObject, NewTaskConversation.this, null, chatBean);
         } catch (JSONException e) {
             e.printStackTrace();
@@ -21146,7 +21509,19 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                                 if (taskDetailsBean.getTaskStatus() != null) {
 //                                    VideoCallDataBase.getDB(context).update_Project_history(taskDetailsBean);
                                     VideoCallDataBase.getDB(context).insertORupdate_Task_history(taskDetailsBean);
-                                    VideoCallDataBase.getDB(context).insertORupdateStatus(taskDetailsBean);
+                                    if ((taskDetailsBean.getProjectStatus() != null && !taskDetailsBean.getProjectStatus().equalsIgnoreCase("")
+                                            && !taskDetailsBean.getProjectStatus().equalsIgnoreCase("null") && !taskDetailsBean.getProjectStatus().equalsIgnoreCase(null)
+                                            && taskDetailsBean.getProjectStatus().equalsIgnoreCase("9"))
+                                            && taskDetailsBean.getTravelEndTime()!=null && !taskDetailsBean.getTravelEndTime().equalsIgnoreCase("")
+                                            && !taskDetailsBean.getTravelEndTime().equalsIgnoreCase(null)) {
+                                        Log.i("Newtaskconversation", "projectUpdate query if # " );
+                                        String queryUpdate = "update projectStatus set travelEndTime='" + taskDetailsBean.getTravelEndTime() + "' where projectId='" + projectId + "' and taskId= '" + webtaskId + "' and travelStartTime IS NOT NULL and travelEndTime IS NULL";
+                                        Log.i("Newtaskconversation", "projectUpdate query " + queryUpdate);
+                                        VideoCallDataBase.getDB(context).updateaccept(queryUpdate);
+                                    }else{
+                                        Log.i("Newtaskconversation", "projectUpdate query else # " );
+                                        VideoCallDataBase.getDB(context).insertORupdateStatus(taskDetailsBean);
+                                    }
                                 } else if (taskDetailsBean.getMimeType().equalsIgnoreCase("assignTask")) {
                                     VideoCallDataBase.getDB(context).insertORupdate_Task_history(taskDetailsBean);
                                     VideoCallDataBase.getDB(context).insertORupdateStatus(taskDetailsBean);
@@ -21210,7 +21585,7 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                                     travel_job.setVisibility(View.GONE);
                                 }
                             });
-                        } else if (taskDetailsBean.getTaskStatus() != null && (taskDetailsBean.getTaskStatus().equalsIgnoreCase("completed") || taskDetailsBean.getTaskStatus().equalsIgnoreCase("complete"))) {
+                        } else if (taskDetailsBean.getTaskStatus() != null && (taskDetailsBean.getTaskStatus().equalsIgnoreCase("Completed") || taskDetailsBean.getTaskStatus().equalsIgnoreCase("complete"))) {
                             handler.post(new Runnable() {
                                 @Override
                                 public void run() {
@@ -21242,7 +21617,7 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                                 if (taskList_12.size() > 0) {
                                     String completed_value = taskList_12.get(0).getCompletedPercentage();
                                     if (completed_value.equalsIgnoreCase("100") || completed_value.equalsIgnoreCase("100%")) {
-                                        taskStatus = "completed";
+                                        taskStatus = "Completed";
                                         Log.i(">----->", "status 2 " + taskStatus);
                                         Log.i("Accept", "value notify 12 " + taskStatus);
                                     } else {
@@ -21323,7 +21698,7 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                                                         AppSharedpreferences.getInstance(context).clearBoolean("closed" + taskDetailsBean.getTaskId(), false);
                                                         AppSharedpreferences.getInstance(context).clearBoolean("Prompt" + taskDetailsBean.getTaskId(), false);
                                                     }
-                                                    taskStatus = "completed";
+                                                    taskStatus = "Completed";
                                                     if (!taskDetailsBean.getTaskStatus().equalsIgnoreCase("closed")) {
                                                         if (!AppSharedpreferences.getInstance(context).getBoolean("Prompt" + taskDetailsBean.getTaskId())) {
                                                             Log.i("ApproveTask", "percent UI 1 " + taskStatus);
@@ -21658,7 +22033,19 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                         if (taskDetailsBean.getTaskStatus() != null) {
 //                            VideoCallDataBase.getDB(context).update_Project_history(taskDetailsBean);
                             VideoCallDataBase.getDB(context).insertORupdate_Task_history(taskDetailsBean);
-                            VideoCallDataBase.getDB(context).insertORupdateStatus(taskDetailsBean);
+                            if ((taskDetailsBean.getProjectStatus() != null && !taskDetailsBean.getProjectStatus().equalsIgnoreCase("")
+                                    && !taskDetailsBean.getProjectStatus().equalsIgnoreCase("null") && !taskDetailsBean.getProjectStatus().equalsIgnoreCase(null)
+                                    && taskDetailsBean.getProjectStatus().equalsIgnoreCase("9"))
+                                    && taskDetailsBean.getTravelEndTime()!=null && !taskDetailsBean.getTravelEndTime().equalsIgnoreCase("")
+                                    && !taskDetailsBean.getTravelEndTime().equalsIgnoreCase(null)) {
+                                String queryUpdate = "update projectStatus set travelEndTime='" + taskDetailsBean.getTravelEndTime() + "' where projectId='" + projectId + "' and taskId= '" + webtaskId + "' and travelStartTime IS NOT NULL and travelEndTime IS NULL";
+                                Log.i("newtaskconversation", "projectUpdate query else " + queryUpdate);
+                                Log.i("newtaskconversation", "projectUpdate query if * " );
+                                VideoCallDataBase.getDB(context).updateaccept(queryUpdate);
+                            }else{
+                                Log.i("newtaskconversation", "projectUpdate query else * " );
+                                VideoCallDataBase.getDB(context).insertORupdateStatus(taskDetailsBean);
+                            }
                         } else if (taskDetailsBean.getMimeType().equalsIgnoreCase("Reassign")) {
                             VideoCallDataBase.getDB(context).insertORupdate_Task_history(taskDetailsBean);
                             VideoCallDataBase.getDB(context).insertORupdateStatus(taskDetailsBean);
@@ -23797,6 +24184,7 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                             intent.putExtra("subtype", "normal");
                             if (project) {
                                 intent.putExtra("isProject", "yes");
+                                intent.putExtra("isreceiver", false);
                             } else {
                                 intent.putExtra("isProject", "no");
                             }

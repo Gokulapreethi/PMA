@@ -670,13 +670,13 @@ public class CallActivity extends Activity
                             Log.i("CallActivity", "oncreate 1 PJSIP_INV_STATE_CONFIRMED-->" + callInfo.getStateText());
                             Log.i("CallActivity", "oncreate 1 PJSIP_INV_STATE_CONFIRMED getId-->" + callInfo.getId() + " CallID-->" + callInfo.getCallIdString());
                             if (call_state.equalsIgnoreCase("NULL")) {
-                                call_state = "connecting";
+                                call_state = "Connecting";
                             } else if (call_state.equalsIgnoreCase("CALLING")) {
-                                call_state = "connecting";
+                                call_state = "Connecting";
                             } else if (call_state.equalsIgnoreCase("EARLY")) {
-                                call_state = "ringing";
+                                call_state = "Ringing";
                             } else if (call_state.equalsIgnoreCase("CONNECTING")) {
-                                call_state = "connected";
+                                call_state = "Connected";
                             }
                         }
                     } else if (callInfo.getState().swigValue() >=
@@ -686,12 +686,12 @@ public class CallActivity extends Activity
                             Log.i("CallActivity", "oncreate 2 PJSIP_INV_STATE_CONFIRMED-->" + callInfo.getStateText());
                             Log.i("CallActivity", "oncreate 1 PJSIP_INV_STATE_CONFIRMED getId-->" + callInfo.getId() + " CallID-->" + callInfo.getCallIdString());
                             if (call_state.equalsIgnoreCase("CONFIRMED")) {
-                                call_state = "connected";
+                                call_state = "Connected";
                             }
                         } else if (callInfo.getState() ==
                                 pjsip_inv_state.PJSIP_INV_STATE_DISCONNECTED) {
                             //                            call_state = "Call disconnected: " + callInfo.getLastReason();
-                            call_state = "disconnected";
+                            call_state = "Disconnected";
                             Log.i("SipVideo", "Call disconnected: " + callInfo.getLastReason());
                             //                            Log.i("callstatus","oncreate 1 PJSIP_INV_STATE_DISCONNECTED-->"+callInfo.getStateText());
                         }
@@ -1718,9 +1718,9 @@ public class CallActivity extends Activity
                     Log.i("CallActivity", "updateCallState 1 PJSIP_INV_STATE_CONFIRMED-->" + ci.getStateText());
                     Log.i("CallActivity", "updateCallState 1 PJSIP_INV_STATE_CONFIRMED getId-->" + ci.getId() + " CallID-->" + ci.getCallIdString());
                     if (call_state.equalsIgnoreCase("NULL")) {
-                        call_state = "connecting";
+                        call_state = "Connecting";
                     } else if (call_state.equalsIgnoreCase("CALLING")) {
-                        call_state = "connecting";
+                        call_state = "Connecting";
                         //                        beforeAcceptVideoCallUI();
                         Log.i("CallActivity", "updateCallState : "+Appreference.changehost_request_received);
                         if(Appreference.changehost_request_received) {
@@ -1732,14 +1732,14 @@ public class CallActivity extends Activity
                     } else if (call_state.equalsIgnoreCase("EARLY")) {
 //                        startCallDialingTone();
                         MainActivity.earpieceRingTone();
-                        call_state = "ringing";
+                        call_state = "Ringing";
                         //                        beforeAcceptVideoCallUI();
                     } else if (call_state.equalsIgnoreCase("CONNECTING")) {
                         if(Appreference.play_call_dial_tone) {
                             MainActivity.stopRingTone();
                             Appreference.play_call_dial_tone = false;
                         }
-                        call_state = "connected";
+                        call_state = "Connected";
                         if(MainActivity.isAudioCall) {
                             //                            afterAcceptAudioCallUI();
                         }else{
@@ -1776,7 +1776,7 @@ public class CallActivity extends Activity
                     Log.i("CallActivity", "updateCallState 2 PJSIP_INV_STATE_CONFIRMED-->" + ci.getStateText()+" user :"+ci.getRemoteUri());
                     Log.i("CallActivity", "updateCallState 2 PJSIP_INV_STATE_CONFIRMED getId-->" + ci.getId() + " CallID-->" + ci.getCallIdString());
                     if (call_state.equalsIgnoreCase("CONFIRMED")) {
-                        call_state = "connected";
+                        call_state = "Connected";
 
                         if(MainActivity.isAudioCall) {
                             //                            afterAcceptAudioCallUI();
@@ -1809,7 +1809,7 @@ public class CallActivity extends Activity
                         pjsip_inv_state.PJSIP_INV_STATE_DISCONNECTED) {
                     //                    buttonHangup.setText("OK");
                     //                    call_state = "Call disconnected: " + ci.getLastReason();
-                    call_state = "disconnected";
+                    call_state = "Disconnected";
                     //                    Log.i("callstatus","updateCallState  PJSIP_INV_STATE_DISCONNECTED-->"+ci.getStateText());
                     Log.i("CallActivity", "Call disconnected: " + ci.getLastReason()+" user :"+ci.getRemoteUri());
                     if(!Appreference.call_pause_received) {
@@ -1865,7 +1865,7 @@ public class CallActivity extends Activity
                             previous_call_state = user_details.get(i).getStatus();
                         }
                         Log.i("SipVideo", "Call state is ==>> pjsip_status_code.PJSIP_SC_NOT_FOUND   1  == "+ ci.getState() + "cccccccc  " +ci.getStateText());
-                        if(call_state.equals("disconnected") && (user_details.get(i).getStatus() == null || !user_details.get(i).getStatus().equalsIgnoreCase("connected"))) {
+                        if(call_state.equals("Disconnected") && (user_details.get(i).getStatus() == null || !user_details.get(i).getStatus().equalsIgnoreCase("Connected"))) {
                             Log.i("SipVideo", "Call state is ==>> pjsip_status_code.PJSIP_SC_NOT_FOUND   2");
                             if(user_details.get(i).getRetryCallCount() < 6){
                                 Log.i("SipVideo", "Call state is ==>> pjsip_status_code.PJSIP_SC_NOT_FOUND   3");
@@ -1913,7 +1913,7 @@ public class CallActivity extends Activity
 
                         user_details.get(i).setCall_id(ci.getId());
                         user_details.get(i).setPresence(ci.getCallIdString());
-                        if (user_details.get(i).isAuto_redial() && call_state.equals("disconnected") && user_details.get(i).getRetryCallCount() < 6) {
+                        if (user_details.get(i).isAuto_redial() && call_state.equals("Disconnected") && user_details.get(i).getRetryCallCount() < 6) {
                             // working fn temporary commended 1st time redial fn(check)
                             //                            have_autoredial = true;
                         }
@@ -1940,7 +1940,7 @@ public class CallActivity extends Activity
 
                 for (int i = 0; i < user_details.size(); i++) {
                     if (ci.getRemoteUri().equals(user_details.get(i).getRemote_uri())) {
-                        if(call_state.equals("disconnected") && (user_details.get(i).getStatus() == null || !user_details.get(i).getStatus().equalsIgnoreCase("connected"))) {
+                        if(call_state.equals("Disconnected") && (user_details.get(i).getStatus() == null || !user_details.get(i).getStatus().equalsIgnoreCase("Connected"))) {
 
                             if(user_details.get(i).getRetryCallCount() < 6){
                                 user_details.get(i).setRetryCallCount(user_details.get(i).getRetryCallCount() + 1);
@@ -1973,7 +1973,7 @@ public class CallActivity extends Activity
                         }
                         user_details.get(i).setCall_id(ci.getId());
                         user_details.get(i).setPresence(ci.getCallIdString());
-                        if (user_details.get(i).isAuto_redial() && call_state.equals("disconnected")) {
+                        if (user_details.get(i).isAuto_redial() && call_state.equals("Disconnected")) {
                             // working fn temporary comented
                             //                            have_autoredial = true;
                         }
@@ -1993,7 +1993,7 @@ public class CallActivity extends Activity
 					linearLayout.setVisibility(View.VISIBLE);*/
             }
 
-            if(!isHost && call_state.equalsIgnoreCase("disconnected")) {
+            if(!isHost && call_state.equalsIgnoreCase("Disconnected")) {
                 if(ci.getState() != null && ci.getState().swigValue() >=
                         pjsip_inv_state.PJSIP_INV_STATE_CONFIRMED.swigValue()) {
                     Log.i("SipVideo", " delete: b114 \n previous_call_state : "+previous_call_state);
@@ -2007,7 +2007,7 @@ public class CallActivity extends Activity
             } else {
                 int connected_users = 0;
                 for (int i = 0; i < user_details.size(); i++) {
-                    if (user_details.get(i).getStatus().startsWith("disconnected")) {
+                    if (user_details.get(i).getStatus().startsWith("Disconnected")) {
 
                     } else if (user_details.get(i).getStatus().equalsIgnoreCase("Coordinator")) {
 
@@ -2253,7 +2253,7 @@ public class CallActivity extends Activity
                 redial.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        if (callerDetailsBean.getStatus().equalsIgnoreCase("disconnected")) {
+                        if (callerDetailsBean.getStatus().equalsIgnoreCase("Disconnected")) {
                             MyCall call = new MyCall(MainActivity.account, -1);
                             CallOpParam prm = new CallOpParam(true);
                             CallSetting opt = prm.getOpt();
@@ -3147,7 +3147,7 @@ public class CallActivity extends Activity
                         for (CallerDetailsBean detailsBean : user_details) {
                             if (detailsBean.getRemote_uri().equalsIgnoreCase(name)) {
                                 Log.i("dashboard", "both users are same");
-                                if (detailsBean.getStatus().equalsIgnoreCase("connected")) {
+                                if (detailsBean.getStatus().equalsIgnoreCase("Connected")) {
                                     MyBuddy myBuddy = MainActivity.account.buddyList.get(i);
                                     SendInstantMessageParam prm = new SendInstantMessageParam();
                                     prm.setContent(composedMessage);
@@ -3164,7 +3164,7 @@ public class CallActivity extends Activity
                     }
                     //                            for (CallerDetailsBean cl_bean : user_details) {
                     //
-                    //                                if (cl_bean.getStatus().equals("connected")) {
+                    //                                if (cl_bean.getStatus().equals("Connected")) {
                     //                                    if (cl_bean.getCall_id() != -1 && cl_bean.getToNnumber() != null && cl_bean.getToNnumber().contains("ccglobal")) {
                     //                                        CommunicationBean bean = new CommunicationBean();
                     //                                        bean.setCall_id(cl_bean.getCall_id());

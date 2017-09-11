@@ -37,8 +37,8 @@ import json.ListMember;
 import json.WebServiceInterface;
 
 public class GroupPercentageStatus extends AppCompatActivity implements View.OnClickListener, WebServiceInterface {
-    String taskid, group_Id, sub_type, isProject,isreceiver,owneroftask;
-    boolean isFromOracle;
+    String taskid, group_Id, sub_type, isProject, owneroftask;
+    boolean isFromOracle, isreceiver;
     ArrayList<ListMember> arrayList, arrayList_1;
     ListView listView;
     TextView back, private_heading;
@@ -169,9 +169,9 @@ static GroupPercentageStatus groupPercentageStatus;
                 group_Id = getIntent().getStringExtra("groupId");
                 sub_type = getIntent().getStringExtra("subtype");
                 isProject = getIntent().getStringExtra("isProject");
-                isreceiver = getIntent().getStringExtra("isreceiver");
-                owneroftask=getIntent().getStringExtra("ownerOfTask");
-                isFromOracle = getIntent().getBooleanExtra("isFromOracle",false);
+                isreceiver = getIntent().getBooleanExtra("isreceiver", false);
+                owneroftask = getIntent().getStringExtra("ownerOfTask");
+                isFromOracle = getIntent().getBooleanExtra("isFromOracle", false);
             }
            /* if (sub_type != null && sub_type.equalsIgnoreCase("private")) {
                 submit.setVisibility(View.VISIBLE);
@@ -197,7 +197,7 @@ static GroupPercentageStatus groupPercentageStatus;
             }
             if (isProject.equalsIgnoreCase("yes")) {
 //                private_heading.setText("Private Members List");
-                String ListofMem = VideoCallDataBase.getDB(context).getProjectListMembers(isreceiver);
+                String ListofMem = VideoCallDataBase.getDB(context).getProjectListMembers(taskid);
                 String ListofObser = VideoCallDataBase.getDB(context).getProjectParentTaskId("select taskObservers from taskHistoryInfo where taskId='" + taskid + "'");
                 /*while (ListofMem.contains(",")) {
                     ListofMem = ListofMem.substring(",".length());
@@ -205,6 +205,11 @@ static GroupPercentageStatus groupPercentageStatus;
                 if (ListofMem.contains(",")) {
                     Log.i("ListMembers", "length is " + ListofMem.split(",").length);
                 }*/
+                Log.i("private", "parenttaskId " + ListofMem);
+                if (isreceiver && (owneroftask != null && !ListofMem.contains(owneroftask))) {
+                    ListofMem = ListofMem.concat("," + owneroftask);
+                }
+                Log.i("private", "parenttaskId ## " + ListofMem);
                 if (ListofObser != null && ListofObser.contains("_")) {
                     ListofMem = ListofMem.concat(",");
                     ListofMem = ListofMem.concat(ListofObser);

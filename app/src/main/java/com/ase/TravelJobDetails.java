@@ -350,7 +350,7 @@ public class TravelJobDetails extends Activity implements View.OnClickListener, 
                     status_job.setVisibility(View.GONE);
                 }
             }
-            if (taskStatus != null && (taskStatus.equalsIgnoreCase("completed") || taskStatus.equalsIgnoreCase("complete"))) {
+            if (taskStatus != null && (taskStatus.equalsIgnoreCase("Completed") || taskStatus.equalsIgnoreCase("complete"))) {
                 handler.post(new Runnable() {
                     @Override
                     public void run() {
@@ -602,7 +602,7 @@ public class TravelJobDetails extends Activity implements View.OnClickListener, 
                         e.printStackTrace();
                         Appreference.printLog("TravelJobDetails", "notifyTaskReceived deassign Exception : " + e.getMessage(), "WARN", null);
                     }
-                } else if (taskDetailsBean.getTaskStatus() != null && (taskDetailsBean.getTaskStatus().equalsIgnoreCase("completed") || taskDetailsBean.getTaskStatus().equalsIgnoreCase("complete"))) {
+                } else if (taskDetailsBean.getTaskStatus() != null && (taskDetailsBean.getTaskStatus().equalsIgnoreCase("Completed") || taskDetailsBean.getTaskStatus().equalsIgnoreCase("Complete"))) {
                     try {
                         handler.post(new Runnable() {
                             @Override
@@ -623,7 +623,19 @@ public class TravelJobDetails extends Activity implements View.OnClickListener, 
                 Log.i("status", "status*** 1 " + taskDetailsBean.getTaskStatus());
                 VideoCallDataBase.getDB(context).update_Project_history(taskDetailsBean);
                 VideoCallDataBase.getDB(context).insertORupdate_Task_history(taskDetailsBean);
-                VideoCallDataBase.getDB(context).insertORupdateStatus(taskDetailsBean);
+                if ((taskDetailsBean.getProjectStatus() != null && !taskDetailsBean.getProjectStatus().equalsIgnoreCase("")
+                        && !taskDetailsBean.getProjectStatus().equalsIgnoreCase("null") && !taskDetailsBean.getProjectStatus().equalsIgnoreCase(null)
+                        && taskDetailsBean.getProjectStatus().equalsIgnoreCase("9"))
+                        && taskDetailsBean.getTravelEndTime()!=null && !taskDetailsBean.getTravelEndTime().equalsIgnoreCase("")
+                        && !taskDetailsBean.getTravelEndTime().equalsIgnoreCase(null)) {
+                    Log.i(tab, "projectUpdate query if # " );
+                    String queryUpdate = "update projectStatus set travelEndTime='" + taskDetailsBean.getTravelEndTime() + "' where projectId='" + projectId + "' and taskId= '" + webtaskId + "' and travelStartTime IS NOT NULL and travelEndTime IS NULL";
+                    Log.i(tab, "projectUpdate query " + queryUpdate);
+                    VideoCallDataBase.getDB(context).updateaccept(queryUpdate);
+                }else{
+                    Log.i(tab, "projectUpdate query else # " );
+                    VideoCallDataBase.getDB(context).insertORupdateStatus(taskDetailsBean);
+                }
                 taskList.add(taskDetailsBean);
                 sortTaskMessage();
                 refresh();
@@ -633,7 +645,19 @@ public class TravelJobDetails extends Activity implements View.OnClickListener, 
                     try {
                         VideoCallDataBase.getDB(context).update_Project_history(taskDetailsBean);
                         VideoCallDataBase.getDB(context).insertORupdate_Task_history(taskDetailsBean);
-                        VideoCallDataBase.getDB(context).insertORupdateStatus(taskDetailsBean);
+                        if ((taskDetailsBean.getProjectStatus() != null && !taskDetailsBean.getProjectStatus().equalsIgnoreCase("")
+                                && !taskDetailsBean.getProjectStatus().equalsIgnoreCase("null") && !taskDetailsBean.getProjectStatus().equalsIgnoreCase(null)
+                                && taskDetailsBean.getProjectStatus().equalsIgnoreCase("9"))
+                                && taskDetailsBean.getTravelEndTime()!=null && !taskDetailsBean.getTravelEndTime().equalsIgnoreCase("")
+                                && !taskDetailsBean.getTravelEndTime().equalsIgnoreCase(null)) {
+                            String queryUpdate = "update projectStatus set travelEndTime='" + taskDetailsBean.getTravelEndTime() + "' where projectId='" + projectId + "' and taskId= '" + webtaskId + "' and travelStartTime IS NOT NULL and travelEndTime IS NULL";
+                            Log.i(tab, "projectUpdate query else " + queryUpdate);
+                            Log.i(tab, "projectUpdate query if * " );
+                            VideoCallDataBase.getDB(context).updateaccept(queryUpdate);
+                        }else{
+                            Log.i(tab, "projectUpdate query else * " );
+                            VideoCallDataBase.getDB(context).insertORupdateStatus(taskDetailsBean);
+                        }
                         Log.i(tab, "notifyTaskReceived 3 " + taskDetailsBean.getTaskStatus());
                         Log.i("status", "status*** 1 else " + taskDetailsBean.getTaskStatus());
                     } catch (Exception e) {
@@ -818,42 +842,41 @@ public class TravelJobDetails extends Activity implements View.OnClickListener, 
                                     Log.i("conv123", "TravelEntry==>" + travelentry);
                                     String query = "select * from projectStatus where projectId='" + projectId + "'  and taskId= '" + webtaskId + "' and status = '7'";
                                     final int count = VideoCallDataBase.getDB(context).getCountForTravelEntry(query);
-                                    AlertDialog.Builder saveDialog = new AlertDialog.Builder(context);
-                                    saveDialog.setTitle("Complete Task");
-                                    saveDialog.setCancelable(false);
-                                    saveDialog.setMessage("Are You sure want to complete this job " + taskName);
-                                    saveDialog.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                                        public void onClick(DialogInterface dialog, int which) {
-                                            try {
-                                                if (count != 0) {
-                                                    if (travelentry == 0) {
-                                                        sendStatus_webservice("5", "", "", "Completed", "Completed");
-                                                    } else {
-                                                        Toast.makeText(TravelJobDetails.this, "Enter end date and time and then proceed to complete the task.", Toast.LENGTH_SHORT).show();
-                                                        dialog.cancel();
-                                                    }
-                                                } else {
-                                                    Toast.makeText(TravelJobDetails.this, "No StartEndTime Found", Toast.LENGTH_SHORT).show();
-                                                    dialog.cancel();
-                                                }
-                                            } catch (Exception e) {
-                                                e.printStackTrace();
-                                                Appreference.printLog("TravelJobDetails", "showStatusPopupWindow complete submit  Exception : " + e.getMessage(), "WARN", null);
-                                            }
-                                        }
-                                    });
-                                    saveDialog.setNegativeButton("No",
-                                            new DialogInterface.OnClickListener() {
+                                    if (count != 0) {
+                                        if (travelentry == 0) {
+                                            AlertDialog.Builder saveDialog = new AlertDialog.Builder(context);
+                                            saveDialog.setTitle("Complete Task");
+                                            saveDialog.setCancelable(false);
+                                            saveDialog.setMessage("Are You sure want to complete this job " + taskName);
+                                            saveDialog.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                                                 public void onClick(DialogInterface dialog, int which) {
                                                     try {
+                                                        sendStatus_webservice("5", "", "", "Completed", "Completed");
                                                         dialog.cancel();
                                                     } catch (Exception e) {
                                                         e.printStackTrace();
-                                                        Appreference.printLog("TravelJobDetails", "showStatusPopupWindow complete dismiss Exception : " + e.getMessage(), "WARN", null);
+                                                        Appreference.printLog("TravelJobDetails", "showStatusPopupWindow complete submit  Exception : " + e.getMessage(), "WARN", null);
                                                     }
                                                 }
                                             });
-                                    saveDialog.show();
+                                            saveDialog.setNegativeButton("No",
+                                                    new DialogInterface.OnClickListener() {
+                                                        public void onClick(DialogInterface dialog, int which) {
+                                                            try {
+                                                                dialog.cancel();
+                                                            } catch (Exception e) {
+                                                                e.printStackTrace();
+                                                                Appreference.printLog("TravelJobDetails", "showStatusPopupWindow complete dismiss Exception : " + e.getMessage(), "WARN", null);
+                                                            }
+                                                        }
+                                                    });
+                                            saveDialog.show();
+                                        } else {
+                                            Toast.makeText(TravelJobDetails.this, "Enter end date and time and then proceed to complete the task.", Toast.LENGTH_SHORT).show();
+                                        }
+                                    } else {
+                                        Toast.makeText(TravelJobDetails.this, "No StartEndTime Found", Toast.LENGTH_SHORT).show();
+                                    }
                                 } else {
                                     Toast.makeText(TravelJobDetails.this, "can't able to complete this task", Toast.LENGTH_SHORT).show();
                                 }
@@ -1007,17 +1030,19 @@ public class TravelJobDetails extends Activity implements View.OnClickListener, 
                         } else
                             jsonObject.put("travelStartTime", "");
                     jsonObject.put("travelEndTime", EndDateUTC);
-                    taskDetailsBean.setTravelStartTime(ActivityStartdate);
-                    taskDetailsBean.setTravelEndTime(ActivityEnddate);
+
+
                     if (!isNetworkAvailable()) {
                         taskDetailsBean.setEnd_dateStatus("7");
                     }
                     travel_date_details = new ArrayList<>();
                     if (ActivityStartdate != null && !ActivityStartdate.equalsIgnoreCase("") && !status.equalsIgnoreCase("9")) {
                         travel_date_details.add("StartTime : " + ActivityStartdate);
+                        taskDetailsBean.setTravelStartTime(ActivityStartdate);
                     }
                     if (ActivityEnddate != null && !ActivityEnddate.equalsIgnoreCase("")) {
                         travel_date_details.add("EndTime : " + ActivityEnddate);
+                        taskDetailsBean.setTravelEndTime(ActivityEnddate);
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -1352,7 +1377,7 @@ public class TravelJobDetails extends Activity implements View.OnClickListener, 
         }
     }
 
-    public void PercentageWebService(String getMediaType, String getMediaPath, String getExt, String sig_id, int isDateorUpdateorNormal) {
+    public void PercentageWebService(String getMediaType, String getMediaPath, String getExt, String sig_id, int isDateorUpdateorNormal, TaskDetailsBean bean) {
         try {
             if (!getMediaPath.equals(null)) {
                 String subType = "normal";
@@ -1397,7 +1422,15 @@ public class TravelJobDetails extends Activity implements View.OnClickListener, 
 
                 chatBean.setTaskName(taskName);
                 String project_deassignMems = "";
-
+                if (bean != null && bean.getProjectStatus() != null && !bean.getProjectStatus().equalsIgnoreCase("") && !bean.getProjectStatus().equalsIgnoreCase(null)) {
+                    chatBean.setProjectStatus(bean.getProjectStatus());
+                }
+                if (bean != null && bean.getTravelStartTime() != null && !bean.getTravelStartTime().equalsIgnoreCase("") && !bean.getTravelStartTime().equalsIgnoreCase(null)) {
+                    chatBean.setTravelStartTime(bean.getTravelStartTime());
+                }
+                if (bean != null && bean.getTravelEndTime() != null && !bean.getTravelEndTime().equalsIgnoreCase("") && !bean.getTravelEndTime().equalsIgnoreCase(null)) {
+                    chatBean.setTravelEndTime(bean.getTravelEndTime());
+                }
                 if (Self_assign && oracleProjectOwner != null && !oracleProjectOwner.equalsIgnoreCase("")) {
                     chatBean.setOwnerOfTask(oracleProjectOwner);
                     chatBean.setTaskStatus("Assigned");
@@ -1714,6 +1747,15 @@ public class TravelJobDetails extends Activity implements View.OnClickListener, 
             buffer.append(" parentTaskId=" + quotes + cmbean.getIssueId() + quotes);
             if (cmbean.getDaysOfTheWeek() != null && !cmbean.getDaysOfTheWeek().equalsIgnoreCase("") && !cmbean.getDaysOfTheWeek().equalsIgnoreCase(null)) {
                 buffer.append(" isRepeatTask=" + quotes + "Y" + quotes);
+            }
+            if (cmbean.getProjectStatus() != null && !cmbean.getProjectStatus().equalsIgnoreCase("") && !cmbean.getProjectStatus().equalsIgnoreCase(null)) {
+                buffer.append(" projectStatus=" + quotes + cmbean.getProjectStatus() + quotes);
+            }
+            if (cmbean.getTravelStartTime() != null && !cmbean.getTravelStartTime().equalsIgnoreCase("") && !cmbean.getTravelStartTime().equalsIgnoreCase(null)) {
+                buffer.append(" travelStartTime=" + quotes + cmbean.getTravelStartTime() + quotes);
+            }
+            if (cmbean.getTravelEndTime() != null && !cmbean.getTravelEndTime().equalsIgnoreCase("") && !cmbean.getTravelEndTime().equalsIgnoreCase(null)) {
+                buffer.append(" travelEndTime=" + quotes + cmbean.getTravelEndTime() + quotes);
             }
             buffer.append(" />");
             buffer.append("</TaskDetailsinfo>");
@@ -2710,42 +2752,41 @@ public class TravelJobDetails extends Activity implements View.OnClickListener, 
                 Log.i("conv123", "TravelEntry==>" + travelentry);
                 String query = "select * from projectStatus where projectId='" + projectId + "'  and taskId= '" + webtaskId + "' and status = '7'";
                 final int count = VideoCallDataBase.getDB(context).getCountForTravelEntry(query);
-                AlertDialog.Builder saveDialog = new AlertDialog.Builder(context);
-                saveDialog.setTitle("Complete Task");
-                saveDialog.setCancelable(false);
-                saveDialog.setMessage("Are You sure want to complete this job " + taskName);
-                saveDialog.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        try {
-                            if (count != 0) {
-                                if (travelentry == 0) {
-                                    sendStatus_webservice("5", "", "", "Completed", "Completed");
-                                } else {
-                                    Toast.makeText(TravelJobDetails.this, "Enter end date and time and then proceed to complete the task.", Toast.LENGTH_SHORT).show();
-                                    dialog.cancel();
-                                }
-                            } else {
-                                Toast.makeText(TravelJobDetails.this, "No StartEndTime Found", Toast.LENGTH_SHORT).show();
-                                dialog.cancel();
-                            }
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                            Appreference.printLog("TravelJobDetails", "complete_task_check onclick Exception : " + e.getMessage(), "WARN", null);
-                        }
-                    }
-                });
-                saveDialog.setNegativeButton("No",
-                        new DialogInterface.OnClickListener() {
+                if (count != 0) {
+                    if (travelentry == 0) {
+                        AlertDialog.Builder saveDialog = new AlertDialog.Builder(context);
+                        saveDialog.setTitle("Complete Task");
+                        saveDialog.setCancelable(false);
+                        saveDialog.setMessage("Are You sure want to complete this job " + taskName);
+                        saveDialog.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
                                 try {
+                                    sendStatus_webservice("5", "", "", "Completed", "Completed");
                                     dialog.cancel();
                                 } catch (Exception e) {
                                     e.printStackTrace();
-                                    Appreference.printLog("TravelJobDetails", "complete_task_check calcel Exception : " + e.getMessage(), "WARN", null);
+                                    Appreference.printLog("TravelJobDetails", "complete_task_check onclick Exception : " + e.getMessage(), "WARN", null);
                                 }
                             }
                         });
-                saveDialog.show();
+                        saveDialog.setNegativeButton("No",
+                                new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        try {
+                                            dialog.cancel();
+                                        } catch (Exception e) {
+                                            e.printStackTrace();
+                                            Appreference.printLog("TravelJobDetails", "complete_task_check calcel Exception : " + e.getMessage(), "WARN", null);
+                                        }
+                                    }
+                                });
+                        saveDialog.show();
+                    } else {
+                        Toast.makeText(TravelJobDetails.this, "Enter end date and time and then proceed to complete the task.", Toast.LENGTH_SHORT).show();
+                    }
+                } else {
+                    Toast.makeText(TravelJobDetails.this, "No StartEndTime Found", Toast.LENGTH_SHORT).show();
+                }
             } else {
                 Toast.makeText(TravelJobDetails.this, "can't able to complete this task", Toast.LENGTH_SHORT).show();
 
@@ -3001,7 +3042,7 @@ public class TravelJobDetails extends Activity implements View.OnClickListener, 
                 if (((String) jsonObject.get("result_text")).equalsIgnoreCase("task started")) {
                     projectCurrentStatus = "start";
                 } else if (((String) jsonObject.get("result_text")).equalsIgnoreCase("task completed")) {
-                    projectCurrentStatus = "completed";
+                    projectCurrentStatus = "Completed";
                 } else if (((String) jsonObject.get("result_text")).equalsIgnoreCase("task draft")) {
                     projectCurrentStatus = "DeAssign";
                 }
@@ -3010,13 +3051,12 @@ public class TravelJobDetails extends Activity implements View.OnClickListener, 
 
                 detailsBean.setMimeType("text");
                 detailsBean.setCustomTagVisible(true);
-
-                PercentageWebService("text", detailsBean.getTaskDescription(), "", detailsBean.getSignalid(), 0);
+                PercentageWebService("text", detailsBean.getTaskDescription(), "", detailsBean.getSignalid(), 0, detailsBean);
 
                 try {
                     if (detailsBean.getCustomerRemarks() != null && !detailsBean.getCustomerRemarks().equalsIgnoreCase("") && !detailsBean.getCustomerRemarks().equalsIgnoreCase("null")) {
                         if (projectCurrentStatus != null && !projectCurrentStatus.equalsIgnoreCase("Completed"))
-                            PercentageWebService("text", detailsBean.getCustomerRemarks(), "", Utility.getSessionID(), 0);
+                            PercentageWebService("text", detailsBean.getCustomerRemarks(), "", Utility.getSessionID(), 0, null);
 
                     }
                 } catch (Exception e) {
@@ -3031,7 +3071,7 @@ public class TravelJobDetails extends Activity implements View.OnClickListener, 
                             handler.postDelayed(new Runnable() {
                                 @Override
                                 public void run() {
-                                    PercentageWebService("text", travel, "", Utility.getSessionID(), 0);
+                                    PercentageWebService("text", travel, "", Utility.getSessionID(), 0, null);
                                 }
                             }, sec);
                         }
@@ -3045,7 +3085,7 @@ public class TravelJobDetails extends Activity implements View.OnClickListener, 
                     runOnUiThread(new Runnable() {
                         public void run() {
                             travel_job.setEnabled(true);
-                            if (projectCurrentStatus != null && projectCurrentStatus.equalsIgnoreCase("completed")) {
+                            if (projectCurrentStatus != null && projectCurrentStatus.equalsIgnoreCase("Completed")) {
                                 status_job.setVisibility(View.GONE);
                                 travel_job.setVisibility(View.GONE);
                             }
@@ -3118,7 +3158,7 @@ public class TravelJobDetails extends Activity implements View.OnClickListener, 
                     }
                 }
                 try {
-                    PercentageWebService("assigntask", "Task Assigned to " + Appreference.loginuserdetails.getUsername(), "", Utility.getSessionID(), 0);
+                    PercentageWebService("assigntask", "Task Assigned to " + Appreference.loginuserdetails.getUsername(), "", Utility.getSessionID(), 0, null);
                     Self_assign = false;
                     refresh();
                     cancelDialog();

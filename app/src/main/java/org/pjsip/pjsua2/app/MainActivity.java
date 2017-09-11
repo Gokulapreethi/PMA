@@ -4140,7 +4140,19 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback,
                                     Log.i("status", "new task $$$$  "+taskDetailsBean.getTaskStatus());
 
                                     if (taskDetailsBean.getProjectStatus() != null) {
-                                        VideoCallDataBase.getDB(context).insertORupdateStatus(taskDetailsBean);
+                                        if ((taskDetailsBean.getProjectStatus() != null && !taskDetailsBean.getProjectStatus().equalsIgnoreCase("")
+                                                && !taskDetailsBean.getProjectStatus().equalsIgnoreCase("null") && !taskDetailsBean.getProjectStatus().equalsIgnoreCase(null)
+                                                && taskDetailsBean.getProjectStatus().equalsIgnoreCase("9"))
+                                                && taskDetailsBean.getTravelEndTime()!=null && !taskDetailsBean.getTravelEndTime().equalsIgnoreCase("")
+                                                && !taskDetailsBean.getTravelEndTime().equalsIgnoreCase(null)) {
+                                            Log.i("mainActivity", "projectUpdate query if # " );
+                                            String queryUpdate = "update projectStatus set travelEndTime='" + taskDetailsBean.getTravelEndTime() + "' where projectId='" + taskDetailsBean.getProjectId() + "' and taskId= '" + taskDetailsBean.getTaskId() + "' and travelStartTime IS NOT NULL and travelEndTime IS NULL";
+                                            Log.i("mainActivity", "projectUpdate query " + queryUpdate);
+                                            VideoCallDataBase.getDB(context).updateaccept(queryUpdate);
+                                        }else{
+                                            Log.i("mainActivity", "projectUpdate query else # " );
+                                            VideoCallDataBase.getDB(context).insertORupdateStatus(taskDetailsBean);
+                                        }
                                     } else if (taskDetailsBean.getMimeType().equalsIgnoreCase("assigntask")) {
                                         VideoCallDataBase.getDB(context).insertORupdateStatus(taskDetailsBean);
                                     }

@@ -1341,7 +1341,7 @@ public class ProjectHistory extends Activity implements WebServiceInterface, Swi
                                 if (isFromOracle) {
                                     intent.putExtra("isProject", "yes");
                                     intent.putExtra("isFromOracle", true);
-                                    intent.putExtra("isreceiver", projectDetailsBean.getParentTaskId());
+                                    intent.putExtra("isreceiver", false);
                                 } else {
                                     intent.putExtra("isProject", "no");
                                 }
@@ -1555,76 +1555,80 @@ public class ProjectHistory extends Activity implements WebServiceInterface, Swi
                         task_taker.setVisibility(View.VISIBLE);
                         task_taker.setText("Me");
                     }
-                    Log.i("project_details", "projectDetailsBean getTaskReceiver() " + projectDetailsBean.getTaskReceiver());
-                    if (projectDetailsBean.getTaskType() != null && projectDetailsBean.getTaskType().equalsIgnoreCase("individual")) {
-                        if (projectDetailsBean.getTaskStatus() != null && projectDetailsBean.getTaskStatus().equalsIgnoreCase("note")) {
-                            if (projectDetailsBean.getTaskReceiver() != null) {
-                                if (projectDetailsBean.getTaskReceiver().equalsIgnoreCase(Appreference.loginuserdetails.getUsername())) {
-                                    task_taker.setText("Me Taker : Me");
-                                } else {
-                                    if (VideoCallDataBase.getDB(context).getname(projectDetailsBean.getTaskReceiver()) != null) {
-                                        task_taker.setText("Me Taker : " + VideoCallDataBase.getDB(context).getname(projectDetailsBean.getTaskReceiver()));
+                    try {
+                        Log.i("project_details", "projectDetailsBean getTaskReceiver() " + projectDetailsBean.getTaskReceiver());
+                        if (projectDetailsBean.getTaskType() != null && projectDetailsBean.getTaskType().equalsIgnoreCase("individual")) {
+                            if (projectDetailsBean.getTaskStatus() != null && projectDetailsBean.getTaskStatus().equalsIgnoreCase("note")) {
+                                if (projectDetailsBean.getTaskReceiver() != null) {
+                                    if (projectDetailsBean.getTaskReceiver().equalsIgnoreCase(Appreference.loginuserdetails.getUsername())) {
+                                        task_taker.setText("Me Taker : Me");
                                     } else {
-                                        task_taker.setText("Me Taker : " + projectDetailsBean.getTaskReceiver());
+                                        if (VideoCallDataBase.getDB(context).getname(projectDetailsBean.getTaskReceiver()) != null) {
+                                            task_taker.setText("Me Taker : " + VideoCallDataBase.getDB(context).getname(projectDetailsBean.getTaskReceiver()));
+                                        } else {
+                                            task_taker.setText("Me Taker : " + projectDetailsBean.getTaskReceiver());
+                                        }
                                     }
+                                } else {
+                                    task_taker.setText("Me Taker : NA");
                                 }
                             } else {
-                                task_taker.setText("Me Taker : NA");
+                                Log.i("receiver123", "TaskReceiver List1111=====>" + projectDetailsBean.getTaskReceiver());
+                                if (projectDetailsBean.getTaskReceiver() != null && !projectDetailsBean.getTaskReceiver().equalsIgnoreCase(null) && !projectDetailsBean.getTaskReceiver().equalsIgnoreCase("") && !projectDetailsBean.getTaskReceiver().equalsIgnoreCase("null") && !projectDetailsBean.getTaskReceiver().equalsIgnoreCase("(null)")) {
+                                    if (projectDetailsBean.getTaskReceiver().equalsIgnoreCase(Appreference.loginuserdetails.getUsername())) {
+                                        task_taker.setText("Task Taker : Me");
+                                    } else {
+                                        if (VideoCallDataBase.getDB(context).getname(projectDetailsBean.getTaskReceiver()) != null) {
+                                            task_taker.setText("Task Taker : " + VideoCallDataBase.getDB(context).getname(projectDetailsBean.getTaskReceiver()));
+                                        } else if (projectDetailsBean.getTaskReceiver() != null && !projectDetailsBean.getTaskReceiver().equalsIgnoreCase(null) && !projectDetailsBean.getTaskReceiver().equalsIgnoreCase("") && !projectDetailsBean.getTaskReceiver().equalsIgnoreCase("null") && !projectDetailsBean.getTaskReceiver().equalsIgnoreCase("(null)")) {
+                                            task_taker.setText("Task Taker : " + projectDetailsBean.getTaskReceiver());
+                                        } else {
+                                            task_taker.setText("Task Taker : NA");
+                                        }
+                                    }
+                                } else {
+                                    task_taker.setText("Task Taker : NA");
+                                }
                             }
                         } else {
-                            Log.i("receiver123","TaskReceiver List1111=====>"+projectDetailsBean.getTaskReceiver());
-                            if (projectDetailsBean.getTaskReceiver() != null && !projectDetailsBean.getTaskReceiver().equalsIgnoreCase(null) && !projectDetailsBean.getTaskReceiver().equalsIgnoreCase("") && !projectDetailsBean.getTaskReceiver().equalsIgnoreCase("null") && !projectDetailsBean.getTaskReceiver().equalsIgnoreCase("(null)")) {
-                                if (projectDetailsBean.getTaskReceiver().equalsIgnoreCase(Appreference.loginuserdetails.getUsername())) {
-                                    task_taker.setText("Task Taker : Me");
-                                } else {
-                                    if (VideoCallDataBase.getDB(context).getname(projectDetailsBean.getTaskReceiver()) != null) {
-                                        task_taker.setText("Task Taker : " + VideoCallDataBase.getDB(context).getname(projectDetailsBean.getTaskReceiver()));
-                                    } else if (projectDetailsBean.getTaskReceiver() != null && !projectDetailsBean.getTaskReceiver().equalsIgnoreCase(null) && !projectDetailsBean.getTaskReceiver().equalsIgnoreCase("") && !projectDetailsBean.getTaskReceiver().equalsIgnoreCase("null") && !projectDetailsBean.getTaskReceiver().equalsIgnoreCase("(null)")) {
-                                        task_taker.setText("Task Taker : " + projectDetailsBean.getTaskReceiver());
-                                    } else {
-                                        task_taker.setText("Task Taker : NA");
-                                    }
+                            int counter = 0;
+                            String Pjt_mem = "", pjt_memName = "";
+                            for (int i = 0; i < projectDetailsBean.getTaskMemberList().length(); i++) {
+                                if (projectDetailsBean.getTaskMemberList().charAt(i) == ',') {
+                                    counter++;
                                 }
-                            } else {
+                                Log.d("project_details", "Task Mem's counter size is == " + counter);
+                            }
+                            for (int j = 0; j < counter + 1; j++) {
+                                //                                    if (!Appreference.loginuserdetails.getUsername().equalsIgnoreCase(projectDetailsBean.getTaskMemberList().split(",")[j])) {
+                                //                                        listOfObservers.add(projectDetailsBean.getTaskMemberList().split(",")[j]);
+                                Log.i("project_details", "Task Mem's and position == " + projectDetailsBean.getTaskMemberList().split(",")[j] + " " + j);
+                                //                                    }
+                                pjt_memName = VideoCallDataBase.getDB(context).getName(projectDetailsBean.getTaskMemberList().split(",")[j]);
+                                if (pjt_memName != null) {
+                                    Pjt_mem = Pjt_mem + pjt_memName + ",";
+                                } else {
+                                    Pjt_mem = Pjt_mem + "Me,";
+                                }
+                            }
+                            Pjt_mem = Pjt_mem.substring(0, Pjt_mem.length() - 1);
+                            if (projectDetailsBean.getTaskStatus() != null && projectDetailsBean.getTaskStatus().equalsIgnoreCase("note")) {
+                                task_taker.setText("Me Taker : " + Pjt_mem);
+                            } /*else  if (projectDetailsBean.getTaskStatus() != null && projectDetailsBean.getTaskStatus().equalsIgnoreCase("DeAssign")) {
                                 task_taker.setText("Task Taker : NA");
-                            }
-                        }
-                    } else {
-                        int counter = 0;
-                        String Pjt_mem = "", pjt_memName = "";
-                        for (int i = 0; i < projectDetailsBean.getTaskMemberList().length(); i++) {
-                            if (projectDetailsBean.getTaskMemberList().charAt(i) == ',') {
-                                counter++;
-                            }
-                            Log.d("project_details", "Task Mem's counter size is == " + counter);
-                        }
-                        for (int j = 0; j < counter + 1; j++) {
-//                                    if (!Appreference.loginuserdetails.getUsername().equalsIgnoreCase(projectDetailsBean.getTaskMemberList().split(",")[j])) {
-//                                        listOfObservers.add(projectDetailsBean.getTaskMemberList().split(",")[j]);
-                            Log.i("project_details", "Task Mem's and position == " + projectDetailsBean.getTaskMemberList().split(",")[j] + " " + j);
-//                                    }
-                            pjt_memName = VideoCallDataBase.getDB(context).getName(projectDetailsBean.getTaskMemberList().split(",")[j]);
-                            if (pjt_memName != null) {
-                                Pjt_mem = Pjt_mem + pjt_memName + ",";
-                            } else {
-                                Pjt_mem = Pjt_mem + "Me,";
-                            }
-                        }
-                        Pjt_mem = Pjt_mem.substring(0, Pjt_mem.length() - 1);
-                        if (projectDetailsBean.getTaskStatus() != null && projectDetailsBean.getTaskStatus().equalsIgnoreCase("note")) {
-                            task_taker.setText("Me Taker : " + Pjt_mem);
-                        } /*else  if (projectDetailsBean.getTaskStatus() != null && projectDetailsBean.getTaskStatus().equalsIgnoreCase("DeAssign")) {
-                            task_taker.setText("Task Taker : NA");
-                        }*/else {
-                            Log.i("receiver123","TaskReceiver List2222=====>"+Pjt_mem);
+                            }*/ else {
+                                Log.i("receiver123", "TaskReceiver List2222=====>" + Pjt_mem);
 
                             task_taker.setText("Task Taker : " + Pjt_mem);
 
-                            Log.i("project_details", "projectDetailsBean getTaskMem's() " + Pjt_mem);
+                                Log.i("project_details", "projectDetailsBean getTaskMem's() " + Pjt_mem);
+                            }
+                            /*if (projectDetailsBean.getTaskStatus() != null && projectDetailsBean.getTaskStatus().equalsIgnoreCase("draft")) {
+                                task_taker.setText("Task Taker : NA");
+                            }*/
                         }
-                        /*if (projectDetailsBean.getTaskStatus() != null && projectDetailsBean.getTaskStatus().equalsIgnoreCase("draft")) {
-                            task_taker.setText("Task Taker : NA");
-                        }*/
+                    } catch (Exception e) {
+                        e.printStackTrace();
                     }
                     Log.i("project_details", "projectDetailsBean getTaskObservers() " + projectDetailsBean.getTaskObservers());
                     if (projectDetailsBean.getTaskStatus() != null && projectDetailsBean.getTaskStatus().equalsIgnoreCase("note")) {
