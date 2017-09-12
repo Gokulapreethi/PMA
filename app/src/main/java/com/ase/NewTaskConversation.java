@@ -5006,7 +5006,7 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                 popup.getMenu().getItem(4).setVisible(false);
                 popup.getMenu().getItem(5).setVisible(false);
                 popup.getMenu().getItem(6).setVisible(true);
-                Toast.makeText(getApplicationContext(), "Task has been DeAssigned", Toast.LENGTH_SHORT).show();
+//                Toast.makeText(getApplicationContext(), "Task has been DeAssigned", Toast.LENGTH_SHORT).show();
             }
         } else {
             popup.getMenu().getItem(0).setVisible(false);
@@ -13039,10 +13039,11 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
 
                                                  Log.i("responce", "travel_endDate " + travel_endDate + " Remarks==> " + detailsBean.getCustomerRemarks());
                                                  if (detailsBean.getCustomerRemarks() != null && !detailsBean.getCustomerRemarks().equalsIgnoreCase("") && !detailsBean.getCustomerRemarks().equalsIgnoreCase("null")) {
-                                                     if ((projectCurrentStatus != null && !projectCurrentStatus.equalsIgnoreCase("Completed"))
-                                                             && (detailsBean.getProjectStatus() != null && !detailsBean.getProjectStatus().equalsIgnoreCase("10")))
+                                                     if ((detailsBean.getProjectStatus() != null && !detailsBean.getProjectStatus().equalsIgnoreCase("5"))
+                                                             && (detailsBean.getProjectStatus() != null && !detailsBean.getProjectStatus().equalsIgnoreCase("10"))) {
+                                                         Log.i("NewTaskConversation ", "projectCurrentStatus ==> $$ " + projectCurrentStatus);
                                                          PercentageWebService("text", detailsBean.getCustomerRemarks(), "", Utility.getSessionID(), 0);
-
+                                                     }
                                                  }
                                                  if (detailsBean.getProjectStatus().equalsIgnoreCase("1") || detailsBean.getProjectStatus().equalsIgnoreCase("3")) {
                                                      startHoldOrPauseAlarmManager(Appreference.HoldOrPauseTimervalue,webtaskId, detailsBean.getTaskStatus(), detailsBean.getProjectId());
@@ -13098,7 +13099,7 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                                                              }
                                                              NewTaskConversation.this.finish();
                                                          }
-                                                     }, 500);
+                                                     }, 800);
                                                  }
 
                                              } catch (Exception e) {
@@ -14560,42 +14561,46 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                         e.printStackTrace();
                         Appreference.printLog("NewTaskConversation", "setProjectHistory_StaticVariable  touserId Exception : " + e.getMessage(), "WARN", null);
                     }
-                    Log.i("observer", "list clear 9");
-                    listOfObservers.clear();
-                    projectGroup_Mems = projectBean.getTaskMemberList();
-                    if (projectBean.getTaskMemberList() != null) {
-                        int counter = 0;
-                        for (int i = 0; i < projectGroup_Mems.length(); i++) {
-                            if (projectGroup_Mems.charAt(i) == ',') {
-                                counter++;
-                            }
-                            Log.i("taskConversation", "project_details Task Mem's counter size is == " + counter);
-                        }
-                        Log.i("taskConversation", "projectBean.getFromUserName() " + projectBean.getFromUserName());
-                        for (int j = 0; j < counter + 1; j++) {
-                            Log.i("taskConversation", "project_details Task Mem's and position == " + projectGroup_Mems.split(",")[j] + " " + j);
-                            if (counter == 0) {
-                                if (!listOfObservers.contains(projectGroup_Mems)) {
-                                    listOfObservers.add(projectGroup_Mems);
-                                    listObservers.add(projectGroup_Mems);
+                    try {
+                        Log.i("observer", "list clear 9");
+                        listOfObservers.clear();
+                        projectGroup_Mems = projectBean.getTaskMemberList();
+                        if (projectBean.getTaskMemberList() != null) {
+                            int counter = 0;
+                            for (int i = 0; i < projectGroup_Mems.length(); i++) {
+                                if (projectGroup_Mems.charAt(i) == ',') {
+                                    counter++;
                                 }
-                            } else {
-                                if (projectGroup_Mems.split(",")[j].equalsIgnoreCase(Appreference.loginuserdetails.getUsername())) {
+                                Log.i("taskConversation", "project_details Task Mem's counter size is == " + counter);
+                            }
+                            Log.i("taskConversation", "projectBean.getFromUserName() " + projectBean.getFromUserName());
+                            for (int j = 0; j < counter + 1; j++) {
+                                Log.i("taskConversation", "project_details Task Mem's and position == " + projectGroup_Mems.split(",")[j] + " " + j);
+                                if (counter == 0) {
+                                    if (!listOfObservers.contains(projectGroup_Mems)) {
+                                        listOfObservers.add(projectGroup_Mems);
+                                        listObservers.add(projectGroup_Mems);
+                                    }
                                 } else {
-                                    if (!listOfObservers.contains(projectGroup_Mems.split(",")[j])) {
-                                        listOfObservers.add(projectGroup_Mems.split(",")[j]);
-                                        listObservers.add(projectGroup_Mems.split(",")[j]);
+                                    if (projectGroup_Mems.split(",")[j].equalsIgnoreCase(Appreference.loginuserdetails.getUsername())) {
+                                    } else {
+                                        if (!listOfObservers.contains(projectGroup_Mems.split(",")[j])) {
+                                            listOfObservers.add(projectGroup_Mems.split(",")[j]);
+                                            listObservers.add(projectGroup_Mems.split(",")[j]);
+                                        }
+                                    }
+                                }
+                                if (!Appreference.loginuserdetails.getUsername().equalsIgnoreCase(ownerOfTask)) {
+                                    if (!listOfObservers.contains(ownerOfTask)) {
+                                        listOfObservers.add(ownerOfTask);
                                     }
                                 }
                             }
-                            if (!Appreference.loginuserdetails.getUsername().equalsIgnoreCase(ownerOfTask)) {
-                                if (!listOfObservers.contains(ownerOfTask)) {
-                                    listOfObservers.add(ownerOfTask);
-                                }
-                            }
                         }
+                        Log.i("taskConversation", "project_details listOfObservers Group " + listOfObservers);
+                    } catch (Exception e) {
+                        e.printStackTrace();
                     }
-                    Log.i("taskConversation", "project_details listOfObservers Group " + listOfObservers);
                 } else {
                     toUserId = Integer.parseInt(projectBean.getFromUserId());
                     if (Appreference.loginuserdetails.getId() == toUserId) {
@@ -14615,39 +14620,67 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                     }
                     Log.i("projects", "listOfMembers in project " + listOfObservers);
                 }
-                if (listOfObservers != null && listOfObservers.size() > 0) {
-                    for (int i = 0; i < listOfObservers.size(); i++) {
-                        project_toUsers = project_toUsers.concat(listOfObservers.get(i)) + ",";
-                    }
-                }
-                if (project_toUsers != null && project_toUsers.contains(",")) {
-                    project_toUsers = project_toUsers.substring(0, project_toUsers.length() - 1);
-                }
-                project_SipUser = new ArrayList<>();
-                if (MainActivity.account.buddyList != null && MainActivity.account.buddyList.size() > 0) {
-                    Log.i("sipTest", "Buddy list size()--->" + MainActivity.account.buddyList.size());
-                    Log.i("register", " MainActivity.account.buddyList.size()>0 && Buddy Add after register successfully");
-                    for (int i = 0; i < MainActivity.account.buddyList.size(); i++) {
-                        String name = MainActivity.account.buddyList.get(i).cfg.getUri();
-                        tempvalue.put(name, MainActivity.account.buddyList.get(i));
-                        Log.i("sipTest", "tempvalue name and values " + name + " " + tempvalue.get(name));
-                    }
-                    for (String Mem_Name : listOfObservers) {
-                        if (tempvalue != null && Mem_Name != null) {
-                            String name = "sip:" + Mem_Name + "@" + getResources().getString(R.string.server_ip);
-                            if (!tempvalue.containsKey(name)) {
-                                BuddyConfig cfg = new BuddyConfig();
-                                String b_uri = "sip:" + Mem_Name + "@" + getResources().getString(R.string.server_ip);
-                                Log.i("sipTest", "buddy name not in hashmap b_uri     " + b_uri);
-                                cfg.setUri(b_uri);
-                                cfg.setSubscribe(true);
-                                MainActivity.account.addBuddy(cfg);
-                                project_SipUser.add(b_uri);
-                                Log.i("sipTest", "project_SipUser " + project_SipUser.size());
-                                Appreference.printLog("sipregister", "buddy add in my accout-->" + b_uri, "DEBUG", null);
-                            }
+                try {
+                    if (listOfObservers != null && listOfObservers.size() > 0) {
+                        for (int i = 0; i < listOfObservers.size(); i++) {
+                            project_toUsers = project_toUsers.concat(listOfObservers.get(i)) + ",";
                         }
                     }
+                    if (project_toUsers != null && project_toUsers.contains(",")) {
+                        project_toUsers = project_toUsers.substring(0, project_toUsers.length() - 1);
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                try {
+                    project_SipUser = new ArrayList<>();
+                    if (MainActivity.account.buddyList != null && MainActivity.account.buddyList.size() > 0) {
+                        Log.i("sipTest", "Buddy list size()--->" + MainActivity.account.buddyList.size());
+                        Log.i("register", " MainActivity.account.buddyList.size()>0 && Buddy Add after register successfully");
+                        for (int i = 0; i < MainActivity.account.buddyList.size(); i++) {
+                            String name = MainActivity.account.buddyList.get(i).cfg.getUri();
+                            tempvalue.put(name, MainActivity.account.buddyList.get(i));
+                            Log.i("sipTest", "tempvalue name and values " + name + " " + tempvalue.get(name));
+                        }
+                        try {
+                            for (String Mem_Name : listOfObservers) {
+                                if (tempvalue != null && Mem_Name != null) {
+                                    String name = "sip:" + Mem_Name + "@" + getResources().getString(R.string.server_ip);
+                                    if (!tempvalue.containsKey(name)) {
+                                        String b_uri = null;
+                                        try {
+                                            BuddyConfig cfg = new BuddyConfig();
+                                            b_uri = "sip:" + Mem_Name + "@" + getResources().getString(R.string.server_ip);
+                                            Log.i("sipTest", "buddy name not in hashmap b_uri     " + b_uri);
+                                            cfg.setUri(b_uri);
+                                            cfg.setSubscribe(true);
+                                            MainActivity.account.addBuddy(cfg);
+                                            project_SipUser.add(b_uri);
+                                            Log.i("sipTest", "project_SipUser " + project_SipUser.size());
+                                            Appreference.printLog("sipregister", "buddy add in my accout-->" + b_uri, "DEBUG", null);
+                                        } catch (Resources.NotFoundException e) {
+                                            e.printStackTrace();
+                                            Log.i("sipTest", "project_SipUser " + project_SipUser.size());
+                                            Appreference.printLog("sipregister", "buddy add in my accout-->" + b_uri, "DEBUG", null);
+                                        } catch (Exception e) {
+                                            e.printStackTrace();
+                                            Log.i("sipTest", "project_SipUser " + project_SipUser.size());
+                                            Appreference.printLog("sipregister", "buddy add in my accout-->" + b_uri, "DEBUG", null);
+                                        }
+
+                                    }
+                                }
+                            }
+                        } catch (Resources.NotFoundException e) {
+                            e.printStackTrace();
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                } catch (Resources.NotFoundException e) {
+                    e.printStackTrace();
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
            /* if (VideoCallDataBase.getDB(context).getname(toUserName) != null) {
                 String first_lastname = VideoCallDataBase.getDB(context).getname(toUserName);

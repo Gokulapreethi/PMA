@@ -2861,11 +2861,11 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback,
                     taskDetailsBean.setSubType("normal");
                     newTaskConversation.notifyTaskReceived(taskDetailsBean);
                     newTaskConversation.refresh();
-                } else if (Appreference.context_table.containsKey("traveljobdetails")) {
+                } /*else if (Appreference.context_table.containsKey("traveljobdetails")) {
                     TravelJobDetails travelJobDetails = (TravelJobDetails) Appreference.context_table.get("traveljobdetails");
                     travelJobDetails.notifyTaskReceived(taskDetailsBean);
                     travelJobDetails.refresh();
-                } else if (Appreference.context_table.containsKey("taskhistory")) {
+                }*/ else if (Appreference.context_table.containsKey("taskhistory")) {
                     Log.i("taskobserver", "was obs1 ---> ");
                     if (taskDetailsBean.getRejectedObserver() != null && !taskDetailsBean.getRejectedObserver().equalsIgnoreCase(" ") && !taskDetailsBean.getRejectedObserver().equalsIgnoreCase(null) && !taskDetailsBean.getRejectedObserver().equalsIgnoreCase("null") && !taskDetailsBean.getRejectedObserver().equalsIgnoreCase("(null)") && !taskDetailsBean.getRejectedObserver().equalsIgnoreCase(null) && taskDetailsBean.getRejectedObserver().length() > 4) {
                         Log.i("task observer", "rejected" + taskDetailsBean.getRejectedObserver());
@@ -3999,11 +3999,11 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback,
                             NewTaskConversation newTaskConversation = (NewTaskConversation) Appreference.context_table.get("taskcoversation");
                             Log.i("Mainactivity", "fileName--2 " + taskDetailsBean.getTaskDescription());
                             newTaskConversation.notifyTaskReceived(taskDetailsBean);
-                        } else if (Appreference.context_table.containsKey("traveljobdetails")) {
+                        } /*else if (Appreference.context_table.containsKey("traveljobdetails")) {
                             TravelJobDetails travelJobDetails = (TravelJobDetails) Appreference.context_table.get("traveljobdetails");
                             travelJobDetails.notifyTaskReceived(taskDetailsBean);
                             travelJobDetails.refresh();
-                        } else if (Appreference.context_table.containsKey("chatfragment")) {
+                        }*/ else if (Appreference.context_table.containsKey("chatfragment")) {
                             ChatFragment contactsFragment = (ChatFragment) Appreference.context_table.get("chatfragment");
                             dataBase.insertORupdate_Task_history(taskDetailsBean);
                             dataBase.insertORupdate_TaskHistoryInfo(taskDetailsBean);
