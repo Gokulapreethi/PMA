@@ -2624,11 +2624,12 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback,
                     int timer_Alert_by_current_status = VideoCallDataBase.getDB(context).getCurrentStatus(query);
                     Log.i("alarm123", "timer_Alert_by_current_status Mainactivity=====>*****"+timer_Alert_by_current_status);
 
-                    String alertQuery = "select taskPlannedLatestEndDate from taskDetailsInfo where projectId='" + jobcodeNo + "'and taskId= '" + taskId + "'";
+                    String alertQuery = "select taskPlannedLatestEndDate from taskDetailsInfo where (taskStatus='Hold' or taskStatus='Paused') and projectId='" + jobcodeNo + "'and taskId= '" + taskId + "'";
                     String isAlertShown = VideoCallDataBase.getDB(context).getAlertShownstatus(alertQuery);
 
                     if (context != null) {
-                        if (isAlertShown.equalsIgnoreCase("1") && (timer_Alert_by_current_status == 1 || timer_Alert_by_current_status == 3)) {
+                        if ((isAlertShown != null && !isAlertShown.equalsIgnoreCase("") && !isAlertShown.equalsIgnoreCase(null) && isAlertShown.equalsIgnoreCase("1"))
+                                && (timer_Alert_by_current_status == 1 || timer_Alert_by_current_status == 3)) {
     //                        Appreference.isTimeUpshown=true;
                             String AlarmRingedUpdateQuery = "update taskDetailsInfo set taskPlannedLatestEndDate='0' where projectId='" + jobcodeNo + "'and taskId= '" + taskId + "'";
                             Log.i("tone123", "updateSnoozeTime_query***********"+AlarmRingedUpdateQuery);

@@ -122,8 +122,10 @@ public class TravelJobDetails extends Activity implements View.OnClickListener, 
     String JobCodeNo, ActivityCode;
     int clickPosition;
     ArrayList<String> OracleStatusList;
-    boolean isOracleStatusList,isgettask;
+    boolean isOracleStatusList, isgettask;
     private String proxy_user = "proxyua_highmessaging.com";
+    static AlertDialog.Builder alertbox;
+    static AlertDialog alertDialog;
 
     public static TravelJobDetails getInstance() {
         /*try {
@@ -612,8 +614,8 @@ public class TravelJobDetails extends Activity implements View.OnClickListener, 
                                 } else {
                                     ll_2.setVisibility(View.VISIBLE);
                                     tv_reassign.setVisibility(View.VISIBLE);
+                                    tv_reassign.setText("Assign Task");
                                 }
-                                tv_reassign.setText("Assign Task");
                                 status_job.setVisibility(View.GONE);
                                 travel_job.setVisibility(View.GONE);
                             }
@@ -865,33 +867,7 @@ public class TravelJobDetails extends Activity implements View.OnClickListener, 
                                     final int count = VideoCallDataBase.getDB(context).getCountForTravelEntry(query);
                                     if (count != 0) {
                                         if (travelentry == 0) {
-                                            AlertDialog.Builder saveDialog = new AlertDialog.Builder(context);
-                                            saveDialog.setTitle("Complete Task");
-                                            saveDialog.setCancelable(false);
-                                            saveDialog.setMessage("Are You sure want to complete this job " + taskName);
-                                            saveDialog.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                                                public void onClick(DialogInterface dialog, int which) {
-                                                    try {
-                                                        sendStatus_webservice("5", "", "", "Completed", "Completed");
-                                                        dialog.cancel();
-                                                    } catch (Exception e) {
-                                                        e.printStackTrace();
-                                                        Appreference.printLog("TravelJobDetails", "showStatusPopupWindow complete submit  Exception : " + e.getMessage(), "WARN", null);
-                                                    }
-                                                }
-                                            });
-                                            saveDialog.setNegativeButton("No",
-                                                    new DialogInterface.OnClickListener() {
-                                                        public void onClick(DialogInterface dialog, int which) {
-                                                            try {
-                                                                dialog.cancel();
-                                                            } catch (Exception e) {
-                                                                e.printStackTrace();
-                                                                Appreference.printLog("TravelJobDetails", "showStatusPopupWindow complete dismiss Exception : " + e.getMessage(), "WARN", null);
-                                                            }
-                                                        }
-                                                    });
-                                            saveDialog.show();
+                                            showAlertDialog("Complete Task", "Are You sure want to complete this job " + taskName, context);
                                         } else {
                                             Toast.makeText(TravelJobDetails.this, "Enter end date and time and then proceed to complete the task.", Toast.LENGTH_SHORT).show();
                                         }
@@ -969,7 +945,7 @@ public class TravelJobDetails extends Activity implements View.OnClickListener, 
         }
     }
 
-    private void sendStatus_webservice(String status, String path, String remarks, String projectCurrentStatus, String statusUI) {
+    public void sendStatus_webservice(String status, String path, String remarks, String projectCurrentStatus, String statusUI) {
         try {
             showStatusprogress("Sending status...");
             ProjectHistory projectHistory = (ProjectHistory) Appreference.context_table.get("projecthistory");
@@ -2782,33 +2758,7 @@ public class TravelJobDetails extends Activity implements View.OnClickListener, 
                 final int count = VideoCallDataBase.getDB(context).getCountForTravelEntry(query);
                 if (count != 0) {
                     if (travelentry == 0) {
-                        AlertDialog.Builder saveDialog = new AlertDialog.Builder(context);
-                        saveDialog.setTitle("Complete Task");
-                        saveDialog.setCancelable(false);
-                        saveDialog.setMessage("Are You sure want to complete this job " + taskName);
-                        saveDialog.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int which) {
-                                try {
-                                    sendStatus_webservice("5", "", "", "Completed", "Completed");
-                                    dialog.cancel();
-                                } catch (Exception e) {
-                                    e.printStackTrace();
-                                    Appreference.printLog("TravelJobDetails", "complete_task_check onclick Exception : " + e.getMessage(), "WARN", null);
-                                }
-                            }
-                        });
-                        saveDialog.setNegativeButton("No",
-                                new DialogInterface.OnClickListener() {
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        try {
-                                            dialog.cancel();
-                                        } catch (Exception e) {
-                                            e.printStackTrace();
-                                            Appreference.printLog("TravelJobDetails", "complete_task_check calcel Exception : " + e.getMessage(), "WARN", null);
-                                        }
-                                    }
-                                });
-                        saveDialog.show();
+                        showAlertDialog("Complete Task", "Are You sure want to complete this job " + taskName, context);
                     } else {
                         Toast.makeText(TravelJobDetails.this, "Enter end date and time and then proceed to complete the task.", Toast.LENGTH_SHORT).show();
                     }
@@ -3053,6 +3003,38 @@ public class TravelJobDetails extends Activity implements View.OnClickListener, 
         } catch (Exception e) {
             e.printStackTrace();
             Appreference.printLog("TravelJobDetails", "onActivityResult Exception : " + e.getMessage(), "WARN", null);
+        }
+    }
+
+    public void showAlertDialog(final String title, String message,
+                                final Context context) {
+        if (alertDialog != null && alertDialog.isShowing()) {
+            // A dialog is already open, wait for it to be dismissed, do nothing
+        } else {
+            alertbox = new AlertDialog.Builder(context);
+            alertbox.setMessage(message);
+            alertbox.setTitle(title);
+           /* alertbox.setNeutralButton("Ok", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface arg0, int arg1) {
+                    alertDialog.dismiss();
+                }
+            });*/
+            alertbox.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int which) {
+                    sendStatus_webservice("5", "", "", "Completed", "Completed");
+                    dialog.dismiss();
+                }
+            });
+            alertbox.setNegativeButton("No",
+                    new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+                    });
+
+
+            alertDialog = alertbox.create();
+            alertDialog.show();
         }
     }
 

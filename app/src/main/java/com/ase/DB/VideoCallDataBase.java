@@ -3927,16 +3927,14 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
                         if (cur.getString(cur.getColumnIndex("taskNo")) != null)
                             taskDetailsBean.setTaskNo(cur.getString(cur.getColumnIndex("taskNo")));
                         //                    taskDetailsBean.setTaskName(cur.getString(cur.getColumnIndex("taskName")));
-                        if (cur.getString(cur.getColumnIndex("plannedStartDateTime")) != null && !cur.getString(cur.getColumnIndex("plannedStartDateTime")).equalsIgnoreCase("(null)")) {
-                            Log.i("VideoCallDB", "getTaskHistory plannedStartDateTime * " + cur.getString(cur.getColumnIndex("plannedStartDateTime")));
-                            Log.i("VideoCallDB", "getTaskHistory plannedStartDateTime * * " + Appreference.utcToLocalTime(cur.getString(cur.getColumnIndex("plannedStartDateTime"))));
+                        if (cur.getString(cur.getColumnIndex("plannedStartDateTime")) != null && !cur.getString(cur.getColumnIndex("plannedStartDateTime")).equalsIgnoreCase("(null)")
+                                && !cur.getString(cur.getColumnIndex("plannedStartDateTime")).equalsIgnoreCase("") && !cur.getString(cur.getColumnIndex("plannedStartDateTime")).equalsIgnoreCase(null) && !cur.getString(cur.getColumnIndex("plannedStartDateTime")).equalsIgnoreCase("null")) {
                             taskDetailsBean.setPlannedStartDateTime(Appreference.utcToLocalTime(cur.getString(cur.getColumnIndex("plannedStartDateTime"))));
                             //                        taskDetailsBean.setUtcPlannedStartDateTime(cur.getString(cur.getColumnIndex("plannedStartDateTime")));
                         }
                         Log.i("xmlparser", "taskDetailsBean getPlannedStartDateTime " + taskDetailsBean.getPlannedStartDateTime());
-                        if (cur.getString(cur.getColumnIndex("plannedEndDateTime")) != null && !cur.getString(cur.getColumnIndex("plannedEndDateTime")).equalsIgnoreCase("(null)")) {
-                            Log.i("VideoCallDB", "getTaskHistory plannedEndDateTime * " + cur.getString(cur.getColumnIndex("plannedEndDateTime")));
-                            Log.i("VideoCallDB", "getTaskHistory plannedEndDateTime * * " + Appreference.utcToLocalTime(cur.getString(cur.getColumnIndex("plannedEndDateTime"))));
+                        if (cur.getString(cur.getColumnIndex("plannedEndDateTime")) != null && !cur.getString(cur.getColumnIndex("plannedEndDateTime")).equalsIgnoreCase("(null)")
+                                && !cur.getString(cur.getColumnIndex("plannedEndDateTime")).equalsIgnoreCase("") && !cur.getString(cur.getColumnIndex("plannedEndDateTime")).equalsIgnoreCase(null) && !cur.getString(cur.getColumnIndex("plannedEndDateTime")).equalsIgnoreCase("null")) {
                             taskDetailsBean.setPlannedEndDateTime(Appreference.utcToLocalTime(cur.getString(cur.getColumnIndex("plannedEndDateTime"))));
                             //                        taskDetailsBean.setUtcplannedEndDateTime(cur.getString(cur.getColumnIndex("plannedEndDateTime")));
                         }

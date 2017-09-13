@@ -184,21 +184,7 @@ public  class ShowTimeupAlert extends Activity implements DateTimePicker.DateWat
                                 }
                             });
                         } else {
-                            String query = "select status from projectStatus where projectId='" + my_projectId + "' and userId='" + Appreference.loginuserdetails.getId() + "' and taskId= '" + my_taskId + "'";
-                            int timer_Alert_by_current_status = VideoCallDataBase.getDB(context).getCurrentStatus(query);
-                            String StatusTask;
-                            if (timer_Alert_by_current_status == 1 || timer_Alert_by_current_status == 3) {
-                                String alertQuery = "select taskPlannedLatestEndDate from taskDetailsInfo where projectId='" + my_projectId + "'and taskId= '" + my_taskId + "'";
-                                String isAlertShown = VideoCallDataBase.getDB(context).getAlertShownstatus(alertQuery);
-                                if (isAlertShown.equalsIgnoreCase("1")) {
-                                    String AlarmRingedUpdateQuery = "update taskDetailsInfo set taskPlannedLatestEndDate='0' where projectId='" + my_projectId + "'and taskId= '" + my_taskId + "'";
-                                    Log.i("tone123", "updateSnoozeTime_query***********"+AlarmRingedUpdateQuery);
-                                    VideoCallDataBase.getDB(context).updateaccept(AlarmRingedUpdateQuery);
-                                    Log.i("tone123", "ShowHoldOrPauseTimerDisplay else===>");
-                                    MainActivity.startAlarmRingTone();
-                                    showTimerAlertUI();
-                                }
-                            }
+                            TimeupAlert_Show();
                         }
                         Log.d("timer123", "counter started");
                     }
@@ -410,7 +396,23 @@ public  class ShowTimeupAlert extends Activity implements DateTimePicker.DateWat
             e.printStackTrace();
         }
     }
-
+    public void TimeupAlert_Show(){
+        String query = "select status from projectStatus where projectId='" + my_projectId + "' and userId='" + Appreference.loginuserdetails.getId() + "' and taskId= '" + my_taskId + "'";
+        int timer_Alert_by_current_status = VideoCallDataBase.getDB(context).getCurrentStatus(query);
+        String StatusTask;
+        if (timer_Alert_by_current_status == 1 || timer_Alert_by_current_status == 3) {
+            String alertQuery = "select taskPlannedLatestEndDate from taskDetailsInfo where (taskStatus='Hold' or taskStatus='Paused') and projectId='" + my_projectId + "'and taskId= '" + my_taskId + "'";
+            String isAlertShown = VideoCallDataBase.getDB(context).getAlertShownstatus(alertQuery);
+            if ((isAlertShown != null && !isAlertShown.equalsIgnoreCase("") && !isAlertShown.equalsIgnoreCase(null) && isAlertShown.equalsIgnoreCase("1"))) {
+                Log.i("tone123", "onFinish ===>");
+                String AlarmRingedUpdateQuery = "update taskDetailsInfo set taskPlannedLatestEndDate='0' where projectId='" + my_projectId + "'and taskId= '" + my_taskId + "'";
+                Log.i("tone123", "updateSnoozeTime_query***********"+AlarmRingedUpdateQuery);
+                VideoCallDataBase.getDB(context).updateaccept(AlarmRingedUpdateQuery);
+                MainActivity.startAlarmRingTone();
+                showTimerAlertUI();
+            }
+        }
+    }
     @Override
     public void onDateChanged(Calendar c) {
 
@@ -437,21 +439,7 @@ public  class ShowTimeupAlert extends Activity implements DateTimePicker.DateWat
             if(newTaskConversation!=null) {
                 newTaskConversation.reminingtime.setVisibility(View.GONE);
             }
-            String query = "select status from projectStatus where projectId='" + my_projectId + "' and userId='" + Appreference.loginuserdetails.getId() + "' and taskId= '" + my_taskId + "'";
-            int timer_Alert_by_current_status = VideoCallDataBase.getDB(context).getCurrentStatus(query);
-            String StatusTask;
-            if (timer_Alert_by_current_status == 1 || timer_Alert_by_current_status == 3) {
-                String alertQuery = "select taskPlannedLatestEndDate from taskDetailsInfo where projectId='" + my_projectId + "'and taskId= '" + my_taskId + "'";
-                String isAlertShown = VideoCallDataBase.getDB(context).getAlertShownstatus(alertQuery);
-                if (isAlertShown.equalsIgnoreCase("1")) {
-                    Log.i("tone123", "onFinish ===>");
-                    String AlarmRingedUpdateQuery = "update taskDetailsInfo set taskPlannedLatestEndDate='0' where projectId='" + my_projectId + "'and taskId= '" + my_taskId + "'";
-                    Log.i("tone123", "updateSnoozeTime_query***********"+AlarmRingedUpdateQuery);
-                    VideoCallDataBase.getDB(context).updateaccept(AlarmRingedUpdateQuery);
-                    MainActivity.startAlarmRingTone();
-                    showTimerAlertUI();
-                }
-            }
+            TimeupAlert_Show();
         }
 
         @Override
