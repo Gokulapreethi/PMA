@@ -399,7 +399,7 @@ public class ProjectHistory extends Activity implements WebServiceInterface, Swi
                     alert.setNeutralButton("Clear", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-                            String clear_query = "select * from projectHistory where projectId='" + project_id + "'";
+                            String clear_query = "select * from projectHistory where projectId ='" + project_id + "' and parentTaskId != taskId order by taskId ASC";
                             Log.i("filter123", "Query===============>" + clear_query);
                             ArrayList<ProjectDetailsBean> search_result = VideoCallDataBase.getDB(context).getProjectHistory(clear_query);
                             Log.i("filter123", "Query result===============>" + search_result.size());

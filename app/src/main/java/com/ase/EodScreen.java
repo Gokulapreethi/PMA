@@ -682,19 +682,41 @@ public class EodScreen extends Activity {
         project_name.setText("Job Card No :" + JobCodeNo + "\nActivity Code :" + ActivityCode);
         task_id.setText(ActivityCode);
         Log.i("ws123", "username or employee name===>" + Appreference.loginuserdetails.getEmail());
-        mcModel.append(detailsBean.getMcModel());
-        mcSrNo.append(detailsBean.getMcSrNo());
-        machine_make.append(detailsBean.getMachineMake());
-        description.append(detailsBean.getMcDescription());
-        est_travel.setText(detailsBean.getEstimatedTravel());
-        est_activity.setText(detailsBean.getEstimatedTravel());
-        service_date.setText(detailsBean.getDateTime());
-        proj_activity.setText(detailsBean.getActivity());
-        address.setText(detailsBean.getAddress());
+        try {
+            if (detailsBean.getMcModel()!=null && !detailsBean.getMcModel().equalsIgnoreCase("") && !detailsBean.getMcModel().equalsIgnoreCase(null)) {
+                mcModel.append(detailsBean.getMcModel());
+            }
+            if (detailsBean.getMcModel()!=null && !detailsBean.getMcModel().equalsIgnoreCase("") && !detailsBean.getMcModel().equalsIgnoreCase(null)) {
+                mcSrNo.append(detailsBean.getMcSrNo());
+            }
+            if (detailsBean.getMcModel()!=null && !detailsBean.getMcModel().equalsIgnoreCase("") && !detailsBean.getMcModel().equalsIgnoreCase(null)) {
+                machine_make.append(detailsBean.getMachineMake());
+            }
+            if (detailsBean.getMcModel()!=null && !detailsBean.getMcModel().equalsIgnoreCase("") && !detailsBean.getMcModel().equalsIgnoreCase(null)) {
+                description.append(detailsBean.getMcDescription());
+            }
+            if (detailsBean.getMcModel()!=null && !detailsBean.getMcModel().equalsIgnoreCase("") && !detailsBean.getMcModel().equalsIgnoreCase(null)) {
+                est_travel.setText(detailsBean.getEstimatedTravel());
+            }
+            if (detailsBean.getMcModel()!=null && !detailsBean.getMcModel().equalsIgnoreCase("") && !detailsBean.getMcModel().equalsIgnoreCase(null)) {
+                est_activity.setText(detailsBean.getEstimatedTravel());
+            }
+            if (detailsBean.getMcModel()!=null && !detailsBean.getMcModel().equalsIgnoreCase("") && !detailsBean.getMcModel().equalsIgnoreCase(null)) {
+                service_date.setText(detailsBean.getDateTime());
+            }
+            if (detailsBean.getMcModel()!=null && !detailsBean.getMcModel().equalsIgnoreCase("") && !detailsBean.getMcModel().equalsIgnoreCase(null)) {
+                proj_activity.setText(detailsBean.getActivity());
+            }
+            if (detailsBean.getMcModel()!=null && !detailsBean.getMcModel().equalsIgnoreCase("") && !detailsBean.getMcModel().equalsIgnoreCase(null)) {
+                address.setText(detailsBean.getAddress());
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            Appreference.printLog("EodScreen", "settext Exception : " + e.getMessage(), "WARN", null);
+        }
         signature_path.setVisibility(View.GONE);
         photo_path.setVisibility(View.GONE);
         tech_signature_path.setVisibility(View.GONE);
-
 
         skech_receiver.setOnClickListener(new View.OnClickListener() {
             @Override

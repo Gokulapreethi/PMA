@@ -9280,7 +9280,6 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
                         taskDetailsBean.setObservation(cur.getString(cur.getColumnIndex("observation")));
                         taskDetailsBean.setActivity(cur.getString(cur.getColumnIndex("activity")));
                         /*added for offline sendMessages*/
-                        taskDetailsBean.setTaskMemberList(cur.getString(cur.getColumnIndex("taskMemberList")));
                         taskDetailsBean.setOwnerOfTask(cur.getString(cur.getColumnIndex("ownerOfTask")));
                         taskDetailsBean.setTaskReceiver(cur.getString(cur.getColumnIndex("taskReceiver")));
                         taskDetailsBean.setTaskName(cur.getString(cur.getColumnIndex("taskName")));

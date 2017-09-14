@@ -72,7 +72,7 @@ public class Appreference {
     public static HashMap<String,String> old_status=new HashMap<>();
     public static boolean isremarksEntered=false;
     public static boolean isTimeUpshown=false;
-    public static String HoldOrPauseTimervalue=" ";
+    public static String HoldOrPauseTimervalue="";
 
     public static boolean isImageSelected=false;
     public static boolean isLocation = false;
