@@ -368,16 +368,20 @@ public class TravelJobDetails extends Activity implements View.OnClickListener, 
             ll_2.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    try {
-                        Log.i(tab, "tv_reassign " + Self_assign);
-                        if (!Self_assign)
-                            addTaskReassignClickEvent();
-                        else {
-                            sendAssignTask_webservice();
+                    if (isNetworkAvailable()) {
+                        try {
+                            Log.i(tab, "tv_reassign " + Self_assign);
+                            if (!Self_assign)
+                                addTaskReassignClickEvent();
+                            else {
+                                sendAssignTask_webservice();
+                            }
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                            Appreference.printLog("TravelJobDetails", "ll_2.setOnClick Exception : " + e.getMessage(), "WARN", null);
                         }
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                        Appreference.printLog("TravelJobDetails", "ll_2.setOnClick Exception : " + e.getMessage(), "WARN", null);
+                    }else{
+                        Toast.makeText(TravelJobDetails.this, "Check your internet connection", Toast.LENGTH_SHORT).show();
                     }
                 }
             });
@@ -595,6 +599,8 @@ public class TravelJobDetails extends Activity implements View.OnClickListener, 
                                     status_job.setVisibility(View.VISIBLE);
                                     travel_job.setVisibility(View.GONE);
                                 }
+                                taskType = taskDetailsBean.getTaskType();
+                                Log.i("observer", "taskType ==> " + taskDetailsBean.getTaskType());
                             }
                         });
                     } catch (Exception e) {
@@ -612,12 +618,35 @@ public class TravelJobDetails extends Activity implements View.OnClickListener, 
                                     ll_2.setVisibility(View.GONE);
                                     tv_reassign.setVisibility(View.GONE);
                                 } else {
+                                    String taskMemberList_qry = "select taskMemberList from projectHistory where projectId='" + projectId + "' and taskId='" + webtaskId + "'";
+                                    String taskMemberList_1 = VideoCallDataBase.getDB(context).getValuesForQuery(taskMemberList_qry);
+                                    Log.i("assignTask", "taskMemberList_1==> " + taskMemberList_1);
+
+                                    if (taskMemberList_1 != null && !taskMemberList_1.equalsIgnoreCase("") && !taskMemberList_1.equalsIgnoreCase(null)) {
+                                        tv_reassign.setVisibility(View.GONE);
+                                        ll_2.setVisibility(View.GONE);
+                                    } else {
+                                        ll_2.setVisibility(View.VISIBLE);
+                                        tv_reassign.setVisibility(View.VISIBLE);
+                                        tv_reassign.setText("Assign Task");
+                                    }
+
                                     ll_2.setVisibility(View.VISIBLE);
                                     tv_reassign.setVisibility(View.VISIBLE);
                                     tv_reassign.setText("Assign Task");
                                 }
                                 status_job.setVisibility(View.GONE);
                                 travel_job.setVisibility(View.GONE);
+                                listOfObservers.clear();
+                                String project_deassignMems = remove_TaskMembers(taskDetailsBean.getFromUserName());
+                                Log.i("userlist", "project_deassignMems " + project_deassignMems);
+                                if (project_deassignMems != null && !project_deassignMems.equalsIgnoreCase("") && !project_deassignMems.equalsIgnoreCase(null)) {
+                                    if (!listOfObservers.contains(project_deassignMems)) {
+                                        listOfObservers.add(project_deassignMems);
+                                    }
+                                }
+                                Log.i("userlist", "------listOfObservers $$$ ==> " + listOfObservers);
+                                VideoCallDataBase.getDB(context).updateaccept("update projectHistory set taskMemberList='" + project_deassignMems + "' where projectId='" + taskDetailsBean.getProjectId() + "' and taskId='" + taskDetailsBean.getTaskId() + "'");
                             }
                         });
                     } catch (Exception e) {
@@ -903,7 +932,7 @@ public class TravelJobDetails extends Activity implements View.OnClickListener, 
                                             Log.i(tab, "remarks for DeAssign====>" + name.getText().toString());
                                             if (name.getText().toString() != null && !name.getText().toString().equalsIgnoreCase("")) {
                                                 dialog1.dismiss();
-                                                sendStatus_webservice("8", "", name.getText().toString(), "DeAssign", "");
+                                                sendStatus_webservice("8", "","DeAssign Remarks : "+ name.getText().toString(), "DeAssign", "");
                                             } else
                                                 Toast.makeText(TravelJobDetails.this, "Please enter any Remarks", Toast.LENGTH_SHORT).show();
                                         } catch (Exception e) {
@@ -1098,9 +1127,9 @@ public class TravelJobDetails extends Activity implements View.OnClickListener, 
             taskDetailsBean.setCatagory(category);
             taskDetailsBean.setProjectId(projectId);
             taskDetailsBean.setParentTaskId(parentTaskId);
-            if (projectGroup_Mems != null) {
-                taskDetailsBean.setGroupTaskMembers(projectGroup_Mems);
-            }
+//            if (projectGroup_Mems != null) {
+//                taskDetailsBean.setGroupTaskMembers(projectGroup_Mems);
+//            }
             taskDetailsBean.setSubType("normal");
             taskDetailsBean.setTaskRequestType("normal");
             taskDetailsBean.setTaskStatus(projectCurrentStatus);
@@ -1128,9 +1157,27 @@ public class TravelJobDetails extends Activity implements View.OnClickListener, 
             Log.i(tab, "taskMemberList==> " + taskMemberList);
             if (ownerOfTask != null && !ownerOfTask.equalsIgnoreCase(Appreference.loginuserdetails.getUsername())) {
                 listOfObservers.add(ownerOfTask);
-                project_toUsers = taskMemberList;
+//                project_toUsers = taskMemberList;
+                if (status != null && status.equalsIgnoreCase("8")) {
+                    project_toUsers = "";
+                    project_toUsers = listTaskMembers();
+                    taskDetailsBean.setGroupTaskMembers(project_toUsers);
+                    Log.i("userlist", "project_toUsers 1 " + project_toUsers);
+//                    listOfObservers.add(project_toUsers);
+                    if (taskMemberList!=null && taskMemberList.contains(",")) {
+                        VideoCallDataBase.getDB(context).updateaccept("update projectHistory set issueParentId='deassign' where projectId='" + projectId + "' and taskId='" + webtaskId + "'");
+                    }
+                    if (taskMemberList != null) {
+                        VideoCallDataBase.getDB(context).updateaccept("update projectHistory set taskMemberList='" + project_toUsers + "' where projectId='" + projectId + "' and taskId='" + webtaskId + "'");
+                    }
+
+                } else {
+                    project_toUsers = taskMemberList;
+                    taskDetailsBean.setGroupTaskMembers(taskMemberList);
+                }
             } else {
                 listOfObservers.add(project_toUsers);
+                taskDetailsBean.setGroupTaskMembers(taskMemberList);
             }
 
             if (status.equalsIgnoreCase("9")) {
@@ -1243,6 +1290,79 @@ public class TravelJobDetails extends Activity implements View.OnClickListener, 
             e.printStackTrace();
             Appreference.printLog("TravelJobDetails", "sendStatus_webservice Exception : " + e.getMessage(), "WARN", null);
         }
+    }
+
+    public String remove_TaskMembers(String from_UserName) {
+        String project_deassignMems = "";
+        String taskMemberList_qry = "select taskMemberList from projectHistory where projectId='" + projectId + "' and taskId='" + webtaskId + "'";
+        String taskMemberList_1 = VideoCallDataBase.getDB(context).getValuesForQuery(taskMemberList_qry);
+        Log.i("deassign123", "taskMemberList_1 ==> " + taskMemberList_1);
+        if (taskMemberList_1 != null) {
+            int counter = 0;
+            for (int i = 0; i < taskMemberList_1.length(); i++) {
+                if (taskMemberList_1.charAt(i) == ',') {
+                    counter++;
+                }
+            }
+            for (int j = 0; j < counter + 1; j++) {
+                if (counter == 0) {
+                    if (!taskMemberList_1.equalsIgnoreCase(Appreference.loginuserdetails.getUsername())) {
+                        project_deassignMems = taskMemberList_1;
+                    }
+                } else {
+                    if (taskMemberList_1.split(",")[j].equalsIgnoreCase(Appreference.loginuserdetails.getUsername())) {
+                    } else if(taskMemberList_1.split(",")[j].equalsIgnoreCase(from_UserName)){
+                    }else {
+                        project_deassignMems = project_deassignMems.concat(taskMemberList_1.split(",")[j] + ",");
+                    }
+                }
+            }
+            if (project_deassignMems != null && project_deassignMems.contains(",")) {
+                project_deassignMems = project_deassignMems.substring(0, project_deassignMems.length() - 1);
+            }
+        }
+        return project_deassignMems;
+    }
+
+
+    public String grouptaskmember() {
+        String taskMemberList = "";
+        String taskMemberList_qry = null;
+        if (projectId != null) {
+            taskMemberList_qry = "select taskMemberList from projectHistory where projectId='" + projectId + "'  and taskId= '" + webtaskId + "'";
+        }
+        taskMemberList = VideoCallDataBase.getDB(context).getProjectParentTaskId(taskMemberList_qry);
+        return taskMemberList;
+    }
+    public String listTaskMembers() {
+        String project_deassignMems = "";
+        String taskMemberList_qry = "select taskMemberList from projectHistory where projectId='" + projectId + "' and taskId='" + webtaskId + "'";
+        String taskMemberList_1 = VideoCallDataBase.getDB(context).getValuesForQuery(taskMemberList_qry);
+        Log.i("deassign123", "taskMemberList_1 ==> " + taskMemberList_1);
+        if (taskMemberList_1 != null) {
+            int counter = 0;
+            for (int i = 0; i < taskMemberList_1.length(); i++) {
+                if (taskMemberList_1.charAt(i) == ',') {
+                    counter++;
+                }
+            }
+            for (int j = 0; j < counter + 1; j++) {
+                if (counter == 0) {
+                    if (!taskMemberList_1.equalsIgnoreCase(Appreference.loginuserdetails.getUsername())) {
+                        project_deassignMems = taskMemberList_1;
+                    }
+                } else {
+                    if (taskMemberList_1.split(",")[j].equalsIgnoreCase(Appreference.loginuserdetails.getUsername())) {
+                    } else {
+                        project_deassignMems = project_deassignMems.concat(taskMemberList_1.split(",")[j] + ",");
+                    }
+                }
+            }
+            if (project_deassignMems != null && project_deassignMems.contains(",")) {
+                project_deassignMems = project_deassignMems.substring(0, project_deassignMems.length() - 1);
+            }
+        }
+        return project_deassignMems;
     }
 
     public void NOInternet_InsertConversaion(String getMediaType, String getMediaPath, String getExt, String sig_id, int isDateorUpdateorNormal) {
@@ -1446,29 +1566,7 @@ public class TravelJobDetails extends Activity implements View.OnClickListener, 
                     chatBean.setTaskReceiver("");
                     chatBean.setToUserName("");
                     chatBean.setToUserId("");
-                    if (projectGroup_Mems != null) {
-                        int counter = 0;
-                        for (int i = 0; i < projectGroup_Mems.length(); i++) {
-                            if (projectGroup_Mems.charAt(i) == ',') {
-                                counter++;
-                            }
-                        }
-                        for (int j = 0; j < counter + 1; j++) {
-                            if (counter == 0) {
-                                if (!projectGroup_Mems.equalsIgnoreCase(Appreference.loginuserdetails.getUsername())) {
-                                    project_deassignMems = projectGroup_Mems;
-                                }
-                            } else {
-                                if (projectGroup_Mems.split(",")[j].equalsIgnoreCase(Appreference.loginuserdetails.getUsername())) {
-                                } else {
-                                    project_deassignMems = project_deassignMems.concat(projectGroup_Mems.split(",")[j] + ",");
-                                }
-                            }
-                        }
-                        if (project_deassignMems != null && project_deassignMems.contains(",")) {
-                            project_deassignMems = project_deassignMems.substring(0, project_deassignMems.length() - 1);
-                        }
-                    }
+                    project_deassignMems = listTaskMembers();
                 } else {
                     chatBean.setSubType(subType);
                     chatBean.setTaskRequestType(subType);
@@ -1485,8 +1583,8 @@ public class TravelJobDetails extends Activity implements View.OnClickListener, 
                     chatBean.setProjectId(projectId);
                     if (isDeassign) {
                         chatBean.setGroupTaskMembers(project_deassignMems);
-                    } else if (projectGroup_Mems != null) {
-                        chatBean.setGroupTaskMembers(projectGroup_Mems);
+                    } else if (grouptaskmember() != null) {
+                        chatBean.setGroupTaskMembers(grouptaskmember());
                     }
                 }
                 try {
@@ -2479,7 +2577,7 @@ public class TravelJobDetails extends Activity implements View.OnClickListener, 
             chatBean.setTaskDescription(message);
             Log.i("template", "message2 " + chatBean.getTaskDescription());
             chatBean.setTaskPriority("Medium");
-            chatBean.setTaskMemberList(project_toUsers);
+
 
             if (chatBean.getTaskDescription() != null && (chatBean.getTaskDescription().contains("www.") || chatBean.getTaskDescription().contains("https:") || chatBean.getTaskDescription().contains("http:"))) {
                 chatBean.setMimeType("url");
@@ -2499,6 +2597,7 @@ public class TravelJobDetails extends Activity implements View.OnClickListener, 
                 chatBean.setOwnerOfTask(ownerOfTask);
                 chatBean.setTaskStatus(taskStatus);
             }
+            chatBean.setTaskMemberList(grouptaskmember());
             if (chatBean.getSubType() != null && chatBean.getSubType().equalsIgnoreCase("deassign")) {
                 Log.i("taskConversation", "isDeassign 1 ===> " + isDeassign);
                 Log.i("taskConversation", "taskReceiver  1 ==> " + taskReceiver);
@@ -2513,29 +2612,17 @@ public class TravelJobDetails extends Activity implements View.OnClickListener, 
                 chatBean.setTaskStatus("Unassigned");
                 chatBean.setCatagory("Template");
                 taskStatus = "Unassigned";
-                if (projectGroup_Mems != null) {
-                    int counter = 0;
-                    for (int i = 0; i < projectGroup_Mems.length(); i++) {
-                        if (projectGroup_Mems.charAt(i) == ',') {
-                            counter++;
-                        }
-                    }
-                    for (int j = 0; j < counter + 1; j++) {
-                        if (counter == 0) {
-                            if (!projectGroup_Mems.equalsIgnoreCase(Appreference.loginuserdetails.getUsername())) {
-                                project_deassignMems = projectGroup_Mems;
-                            }
-                        } else {
-                            if (projectGroup_Mems.split(",")[j].equalsIgnoreCase(Appreference.loginuserdetails.getUsername())) {
-                            } else {
-                                project_deassignMems = project_deassignMems.concat(projectGroup_Mems.split(",")[j] + ",");
-                            }
-                        }
-                    }
-                    if (project_deassignMems != null && project_deassignMems.contains(",")) {
-                        project_deassignMems = project_deassignMems.substring(0, project_deassignMems.length() - 1);
-                    }
+
+                project_deassignMems = listTaskMembers();
+                Log.i("deassign123", "project_deassignMems **  " + project_deassignMems);
+                Log.i("deassign123", "------listOfObservers ==> " + listOfObservers);
+                Log.i("deassign123", "------ownerOfTask ==> " + ownerOfTask);
+                if (project_deassignMems != null && !project_deassignMems.equalsIgnoreCase("") && !project_deassignMems.equalsIgnoreCase(null)) {
+                    chatBean.setGroupTaskMembers(project_deassignMems);
+                    listOfObservers.clear();
+                    listOfObservers.add(ownerOfTask);
                 }
+
             } else {
 
                 chatBean.setTaskReceiver(taskReceiver);
@@ -2543,6 +2630,9 @@ public class TravelJobDetails extends Activity implements View.OnClickListener, 
                 chatBean.setToUserId(String.valueOf(toUserId));
                 chatBean.setCatagory("task");
                 chatBean.setSubType("normal");
+                if (grouptaskmember() != null) {
+                    chatBean.setGroupTaskMembers(grouptaskmember());
+                }
             }
             if (project) {
                 chatBean.setProjectId(projectId);
@@ -2550,12 +2640,6 @@ public class TravelJobDetails extends Activity implements View.OnClickListener, 
                     chatBean.setParentTaskId(issueId);
                 } else {
                     chatBean.setParentTaskId(parentTaskId);
-                }
-                if (chatBean.getSubType() != null && chatBean.getSubType().equalsIgnoreCase("deassign")) {
-                    Log.i("taskConversation", "project_deassignMems success");
-                    chatBean.setGroupTaskMembers(project_deassignMems);
-                } else if (projectGroup_Mems != null) {
-                    chatBean.setGroupTaskMembers(projectGroup_Mems);
                 }
             }
 

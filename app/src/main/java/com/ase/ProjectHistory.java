@@ -559,6 +559,11 @@ public class ProjectHistory extends Activity implements WebServiceInterface, Swi
                                 || (taskDetailsBean.getTaskStatus() != null && taskDetailsBean.getTaskStatus().equalsIgnoreCase("draft"))
                                 || (taskDetailsBean.getTaskStatus() != null && taskDetailsBean.getTaskStatus().equalsIgnoreCase("Unassigned"))) {
                             Log.i("task", String.valueOf(position));
+                            Log.i("projecthistory","getview 1");
+                            if( taskDetailsBean.getIssueParentId() == null || taskDetailsBean.getIssueParentId().equalsIgnoreCase("")
+                                    || taskDetailsBean.getIssueParentId().equalsIgnoreCase(null)
+                                    || !taskDetailsBean.getIssueParentId().equalsIgnoreCase("deassign")){
+                                Log.i("projecthistory","getview 2");
                             if (taskDetailsBean.getTaskName() != null && taskDetailsBean.getTaskName().equalsIgnoreCase("Travel Time")) {
 //                                if(Appreference.loginuserdetails!=null && Appreference.loginuserdetails.getRoleId()!=null
 //                                        && !Appreference.loginuserdetails.getRoleId().equalsIgnoreCase("2")){
@@ -606,11 +611,10 @@ public class ProjectHistory extends Activity implements WebServiceInterface, Swi
 //                                }
 
                             }
-//                            } else {
-//                                Toast.makeText(getApplicationContext(), "You are not allowed for this Template", Toast.LENGTH_SHORT).show();
-//                            }
-                        }
-                        else if (taskDetailsBean.getTaskType().equalsIgnoreCase("individual")) {
+                            } else {
+                                Toast.makeText(getApplicationContext(), "You are not allowed for this Unassigned Task", Toast.LENGTH_SHORT).show();
+                            }
+                        } else if (taskDetailsBean.getTaskType().equalsIgnoreCase("individual")) {
                             if (taskDetailsBean != null &&
                                     (taskDetailsBean.getTaskReceiver() != null && taskDetailsBean.getTaskReceiver().equalsIgnoreCase(Appreference.loginuserdetails.getUsername())) ||
                                     (taskDetailsBean.getOwnerOfTask()!=null && taskDetailsBean.getOwnerOfTask().equalsIgnoreCase(Appreference.loginuserdetails.getUsername())) ||

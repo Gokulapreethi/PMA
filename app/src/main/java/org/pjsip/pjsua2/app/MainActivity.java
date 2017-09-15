@@ -2622,7 +2622,7 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback,
                     }
                     String query = "select status from projectStatus where projectId='" + jobcodeNo + "' and userId='" + Appreference.loginuserdetails.getId() + "' and taskId= '" + taskId + "'";
                     int timer_Alert_by_current_status = VideoCallDataBase.getDB(context).getCurrentStatus(query);
-                    Log.i("alarm123", "timer_Alert_by_current_status Mainactivity=====>*****"+timer_Alert_by_current_status);
+                    Log.i("alarm123", "timer_Alert_by_current_status Mainactivity ===>***** "+timer_Alert_by_current_status);
 
                     String alertQuery = "select taskPlannedLatestEndDate from taskDetailsInfo where (taskStatus='Hold' or taskStatus='Paused') and projectId='" + jobcodeNo + "'and taskId= '" + taskId + "'";
                     String isAlertShown = VideoCallDataBase.getDB(context).getAlertShownstatus(alertQuery);
@@ -3364,7 +3364,7 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback,
                     TaskDetailsBean taskDetailsBean = xmlParser
                             .parseTaskDetailsSIPMessage(message);
 
-
+                    taskDetailsBean.setTaskPlannedLatestEndDate("1");
                     if (taskDetailsBean.getProjectId() != null && taskDetailsBean.getTaskId() != null) {
                         Log.i("notifyreceived", "status ==> $ " + Appreference.context_table.containsKey("projecthistory"));
                         Log.i("notifyreceived", "status ==> $ " + Appreference.context_table.containsKey("taskcoversation"));
