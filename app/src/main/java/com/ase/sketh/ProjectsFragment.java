@@ -1074,6 +1074,7 @@ public class ProjectsFragment extends Fragment implements View.OnClickListener, 
                 TextView project_id = (TextView) finalConView.findViewById(R.id.project_id);
                 TextView task_giver = (TextView) finalConView.findViewById(R.id.task_giver);
                 TextView msg_count = (TextView) finalConView.findViewById(R.id.item_counter);
+                TextView job_date = (TextView) finalConView.findViewById(R.id.job_date);
                 LinearLayout layoutcard = (LinearLayout) finalConView.findViewById(R.id.layoutcardview);
                 View viewforparent = (View) finalConView.findViewById(R.id.viewforparent);
                 final ImageView completed_status = (ImageView) finalConView.findViewById(R.id.completed_status);
@@ -1086,16 +1087,19 @@ public class ProjectsFragment extends Fragment implements View.OnClickListener, 
                         project_id.setTextColor(getResources().getColor(android.R.color.white));
                         project_name.setTextColor(getResources().getColor(android.R.color.white));
                         task_giver.setTextColor(getResources().getColor(android.R.color.white));
+                        job_date.setTextColor(getResources().getColor(android.R.color.white));
                     } else {
                         layoutcard.setBackgroundResource(R.color.white);
                         project_id.setTextColor(getResources().getColor(android.R.color.black));
                         project_name.setTextColor(getResources().getColor(android.R.color.black));
                         task_giver.setTextColor(getResources().getColor(android.R.color.black));
+                        job_date.setTextColor(getResources().getColor(android.R.color.black));
                     }
 
                     project_id.setText("Job Card Number : " + projectDetailsBean.getOracleProjectId());
                     project_name.setText("Customer Name   : " + projectDetailsBean.getCustomerName());
                     task_giver.setText("Description     : " + projectDetailsBean.getJobDescription());
+                    job_date.setText("Date        : N/A ");
                     String pjt_owner = null;
                     Log.i("Fragment", "projectDetailsBean getProject_ownerName() " + projectDetailsBean.getProject_ownerName());
                     if (projectDetailsBean.getProject_ownerName() != null && projectDetailsBean.getProject_ownerName().contains("@")) {

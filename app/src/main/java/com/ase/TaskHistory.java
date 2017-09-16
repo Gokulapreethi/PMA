@@ -654,26 +654,41 @@ public class TaskHistory extends Activity implements WebServiceInterface {
                     listView.setClickable(true);
                 }
                 List<String> categories = new ArrayList<String>();
-                categories.add("Task");
-                categories.add("issue");
-                categories.add("note");
-                categories.add("Template");
-                categories.add("All");
+                if (taskType != null && taskType.equalsIgnoreCase("Group")) {
+                    categories.add("Task");
+                    categories.add("issue");
+                    categories.add("All");
+                }else {
+                    categories.add("Task");
+                    categories.add("issue");
+                    categories.add("note");
+                    categories.add("Template");
+                    categories.add("All");
+                }
                 catestring1 = categories.toArray(new String[categories.size()]);
                 spin1.setAdapter(new MyAdapter1(getApplicationContext(), R.layout.customspin, catestring1));
                 spin1.setSelection(spin1.getCount() - 1);
                 spin1.setPopupBackgroundResource(R.drawable.borderfordialog);
                 List<String> status = new ArrayList<String>();
-                status.add("inprogress");
-                status.add("assigned");
-                status.add("closed");
-                status.add("completed");
-                status.add("abandoned");
-                status.add("pause");
-                status.add("rejected");
-                status.add("overdue");
-                status.add("rejected");
-                status.add("All");
+                if (taskType != null && taskType.equalsIgnoreCase("Group")) {
+                    status.add("inprogress");
+                    status.add("closed");
+                    status.add("completed");
+                    status.add("abandoned");
+                    status.add("pause");
+                    status.add("overdue");
+                    status.add("All");
+                }else{
+                    status.add("inprogress");
+                    status.add("assigned");
+                    status.add("closed");
+                    status.add("completed");
+                    status.add("abandoned");
+                    status.add("pause");
+                    status.add("rejected");
+                    status.add("overdue");
+                    status.add("All");
+                }
                 catestring2 = status.toArray(new String[status.size()]);
                 spin2.setAdapter(new MyAdapter2(getApplicationContext(), R.layout.customspin, catestring2));
                 spin2.setSelection(spin2.getCount() - 1);
@@ -689,7 +704,7 @@ public class TaskHistory extends Activity implements WebServiceInterface {
                     String username=buddyList.get(i).getUsername();
                 categories3.add(dataBase.getname(username));
                 }*/
-                categories3.add(dataBase.getname(userName));
+//                categories3.add(dataBase.getname(userName));
                 categories3.add("Me");
                 categories3.add("All");
                 catestring3 = categories3.toArray(new String[categories3.size()]);

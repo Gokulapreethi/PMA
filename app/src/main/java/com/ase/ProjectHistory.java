@@ -560,11 +560,19 @@ public class ProjectHistory extends Activity implements WebServiceInterface, Swi
                                 || (taskDetailsBean.getTaskStatus() != null && taskDetailsBean.getTaskStatus().equalsIgnoreCase("Unassigned"))) {
                             Log.i("task", String.valueOf(position));
                             Log.i("projecthistory","getview 1");
-                            if( taskDetailsBean.getIssueParentId() == null || taskDetailsBean.getIssueParentId().equalsIgnoreCase("")
+                            /*if( taskDetailsBean.getIssueParentId() == null || taskDetailsBean.getIssueParentId().equalsIgnoreCase("")
                                     || taskDetailsBean.getIssueParentId().equalsIgnoreCase(null)
-                                    || !taskDetailsBean.getIssueParentId().equalsIgnoreCase("deassign")){
-                                Log.i("projecthistory","getview 2");
-                            if (taskDetailsBean.getTaskName() != null && taskDetailsBean.getTaskName().equalsIgnoreCase("Travel Time")) {
+                                    || !taskDetailsBean.getIssueParentId().equalsIgnoreCase("deassign")){*/
+                            if( taskDetailsBean.getTaskMemberList() != null && !taskDetailsBean.getTaskMemberList().equalsIgnoreCase("")
+                                    && !taskDetailsBean.getTaskMemberList().equalsIgnoreCase(null) && !taskDetailsBean.getTaskMemberList().equalsIgnoreCase("null")
+                                    && !taskDetailsBean.getTaskMemberList().equalsIgnoreCase(Appreference.loginuserdetails.getUsername())
+                                    && !taskDetailsBean.getTaskMemberList().equalsIgnoreCase(taskDetailsBean.getOwnerOfTask())){
+                                Log.i("projecthistory","getview 2 ");
+                                Toast.makeText(getApplicationContext(), "You are not allowed for this Unassigned Task", Toast.LENGTH_SHORT).show();
+
+                            } else {
+                                Log.i("projecthistory","getview 2** ");
+                                if (taskDetailsBean.getTaskName() != null && taskDetailsBean.getTaskName().equalsIgnoreCase("Travel Time")) {
 //                                if(Appreference.loginuserdetails!=null && Appreference.loginuserdetails.getRoleId()!=null
 //                                        && !Appreference.loginuserdetails.getRoleId().equalsIgnoreCase("2")){
                                     showDialog();
@@ -610,9 +618,7 @@ public class ProjectHistory extends Activity implements WebServiceInterface, Swi
 //                                    Toast.makeText(getApplicationContext(), "Group admin user not authorized to view the task details..", Toast.LENGTH_SHORT).show();
 //                                }
 
-                            }
-                            } else {
-                                Toast.makeText(getApplicationContext(), "You are not allowed for this Unassigned Task", Toast.LENGTH_SHORT).show();
+                                }
                             }
                         } else if (taskDetailsBean.getTaskType().equalsIgnoreCase("individual")) {
                             if (taskDetailsBean != null &&
@@ -706,13 +712,19 @@ public class ProjectHistory extends Activity implements WebServiceInterface, Swi
                                                 ||(Appreference.loginuserdetails!=null && Appreference.loginuserdetails.getRoleId()!=null
                                                 && Appreference.loginuserdetails.getRoleId().equalsIgnoreCase("3"))){
                                             showDialog();
-                                            Intent intent = new Intent(context, NewTaskConversation.class);
-                                            intent.putExtra("task", "projectHistory");
-                                            intent.putExtra("projectHistoryBean", taskDetailsBean);
-                                            intent.putExtra("position",position);
-                                            if (taskDetailsBean.getOracleProjectId() != null) {
-                                                intent.putExtra("oracleProjectOwner", taskDetailsBean.getOwnerOfTask());
-                                                intent.putExtra("ProjectFromOracle", true);
+                                            Log.d("projecthistory", "listView getRoleId ** " + Appreference.loginuserdetails.getRoleId());
+                                            Intent intent = null;
+                                            try {
+                                                intent = new Intent(context, NewTaskConversation.class);
+                                                intent.putExtra("task", "projectHistory");
+                                                intent.putExtra("projectHistoryBean", taskDetailsBean);
+                                                intent.putExtra("position", position);
+                                                if (taskDetailsBean.getOracleProjectId() != null) {
+                                                    intent.putExtra("oracleProjectOwner", taskDetailsBean.getOwnerOfTask());
+                                                    intent.putExtra("ProjectFromOracle", true);
+                                                }
+                                            } catch (Exception e) {
+                                                e.printStackTrace();
                                             }
                                             check = true;
                                             startActivity(intent);

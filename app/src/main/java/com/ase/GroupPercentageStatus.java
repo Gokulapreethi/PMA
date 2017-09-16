@@ -37,7 +37,7 @@ import json.ListMember;
 import json.WebServiceInterface;
 
 public class GroupPercentageStatus extends AppCompatActivity implements View.OnClickListener, WebServiceInterface {
-    String taskid, group_Id, sub_type, isProject, owneroftask;
+    String taskid, group_Id, sub_type, isProject, owneroftask,taskType;
     boolean isFromOracle, isreceiver;
     ArrayList<ListMember> arrayList, arrayList_1;
     ListView listView;
@@ -171,6 +171,7 @@ static GroupPercentageStatus groupPercentageStatus;
                 isProject = getIntent().getStringExtra("isProject");
                 isreceiver = getIntent().getBooleanExtra("isreceiver", false);
                 owneroftask = getIntent().getStringExtra("ownerOfTask");
+                taskType = getIntent().getStringExtra("taskType");
                 isFromOracle = getIntent().getBooleanExtra("isFromOracle", false);
             }
            /* if (sub_type != null && sub_type.equalsIgnoreCase("private")) {
@@ -195,10 +196,11 @@ static GroupPercentageStatus groupPercentageStatus;
             if (sub_type != null && sub_type.equalsIgnoreCase("normal")) {
                 LoadBackGroundWebService();
             }
-            if (isProject.equalsIgnoreCase("yes")) {
+            if (isProject != null && isProject.equalsIgnoreCase("yes")) {
+                Log.i("task_details", "Task individual ==> * " + isProject);
 //                private_heading.setText("Private Members List");
                 String ListofMem = VideoCallDataBase.getDB(context).getProjectListMembers(taskid);
-                String ListofObser = VideoCallDataBase.getDB(context).getProjectParentTaskId("select taskObservers from taskHistoryInfo where taskId='" + taskid + "'");
+                String ListofObser = VideoCallDataBase.getDB(context).getProjectParentTaskId("select taskObservers from projectHistory where taskId='" + taskid + "'");
                 /*while (ListofMem.contains(",")) {
                     ListofMem = ListofMem.substring(",".length());
                 }
@@ -231,16 +233,52 @@ static GroupPercentageStatus groupPercentageStatus;
                         arrayList.add(listMemberr_1);
                     }
                 }
+            } else if (taskType != null && (taskType.equalsIgnoreCase("individual") || taskType.equalsIgnoreCase("Individual"))) {
+                Log.i("task_details", "Task individual == " + taskType);
+                String task_Observers = VideoCallDataBase.getDB(context).getProjectParentTaskId("select taskObservers from taskHistoryInfo where taskId='" + taskid + "'");
+                String task_Receiver = VideoCallDataBase.getDB(context).getProjectParentTaskId("select taskReceiver from taskHistoryInfo where taskId='" + taskid + "'");
+
+                if (task_Observers != null && task_Observers.contains("_")) {
+                    task_Receiver = task_Receiver.concat(",");
+                    task_Receiver = task_Receiver.concat(task_Observers);
+                    Log.i("task_details", "task_Receiver and ListofObser are " + task_Receiver);
+                }
+                if (owneroftask != null && !owneroftask.equalsIgnoreCase(Appreference.loginuserdetails.getUsername())) {
+                    task_Receiver = task_Receiver.concat(",");
+                    task_Receiver = task_Receiver.concat(owneroftask);
+                }
+                int counter = 0;
+                for (int i = 0; i < task_Receiver.length(); i++) {
+                    if (task_Receiver.charAt(i) == ',') {
+                        counter++;
+                    }
+                }
+                Log.d("task_details", "Task Mem's counter size is == " + counter);
+                for (int j = 0; j < counter + 1; j++) {
+                    ListMember listMemberr_1 = new ListMember();
+                    String Mem_name = task_Receiver.split(",")[j];
+                    Log.i("task_details", "Task Mem's and position == " + Mem_name + " " + j);
+                    listMemberr_1.setUsername(Mem_name);
+                    if (!listMemberr_1.getUsername().equalsIgnoreCase(Appreference.loginuserdetails.getUsername())) {
+                        arrayList.add(listMemberr_1);
+                    }
+                }
+                Log.d("task_details", "arrayList ==> " + arrayList.size());
             } else {
                 arrayList = VideoCallDataBase.getDB(context).getGroupmemberHistory("select * from groupmember where groupId='" + group_Id + "'");
             }
 
             if (arrayList.size() > 0) {
+                for (int k = 0; k < arrayList.size(); k++)
+                    Log.i("project_details", "listmember frst_last_name_s " + arrayList.get(k).getUsername());
+            }
+            if (arrayList.size() > 0) {
                 for (ListMember listMember : arrayList) {
                     if (!Appreference.loginuserdetails.getUsername().equalsIgnoreCase(listMember.getUsername())) {
                         int percent_1 = VideoCallDataBase.getDB(context).groupPercentageStatus(listMember.getUsername(), taskid);
                         listMember.setCode(String.valueOf(percent_1));
-                        if (isProject.equalsIgnoreCase("yes")) {
+                        if ((isProject!=null && isProject.equalsIgnoreCase("yes")) || (taskType!=null && taskType.equalsIgnoreCase("individual"))) {
+                            Log.i("project_details", "frst_lst_name 1 " + listMember.getUsername());
                             if (listMember.getUsername().equalsIgnoreCase(Appreference.loginuserdetails.getUsername())) {
                                 listMember.setFirstName(Appreference.loginuserdetails.getFirstName());
                                 listMember.setLastName(Appreference.loginuserdetails.getLastName());
@@ -268,7 +306,6 @@ static GroupPercentageStatus groupPercentageStatus;
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                         try {
                             ListMember item = arrayList.get(position);
-                            String buddy_uri = item.getUsername();
                             Log.i("sipTest 1", "size :" + arrayList.size());
                             for (ListMember listMember : arrayList) {
                                 Log.i("sipTest 1", "List Values " + listMember.getUsername());

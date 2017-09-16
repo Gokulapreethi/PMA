@@ -237,7 +237,7 @@ public class TravelJobDetails extends Activity implements View.OnClickListener, 
                 Log.i(tab, "templatehistory sync ==> " + appSharedpreferences.getBoolean("syncTask" + webtaskId));
                 if (!appSharedpreferences.getBoolean("syncTask" + webtaskId)) {
                     gettaskwebservice();
-                    isgettask =true;
+                    isgettask = true;
                     Log.i(tab, "templatehistory - Gettaskwebservice called for taskId is " + webtaskId);
                 }
                 Log.i(tab, "taskStatus==> 1 " + taskStatus);
@@ -380,7 +380,7 @@ public class TravelJobDetails extends Activity implements View.OnClickListener, 
                             e.printStackTrace();
                             Appreference.printLog("TravelJobDetails", "ll_2.setOnClick Exception : " + e.getMessage(), "WARN", null);
                         }
-                    }else{
+                    } else {
                         Toast.makeText(TravelJobDetails.this, "Check your internet connection", Toast.LENGTH_SHORT).show();
                     }
                 }
@@ -628,15 +628,16 @@ public class TravelJobDetails extends Activity implements View.OnClickListener, 
                                     } else {
                                         ll_2.setVisibility(View.VISIBLE);
                                         tv_reassign.setVisibility(View.VISIBLE);
-                                        tv_reassign.setText("Assign Task");
+                                        if (taskDetailsBean.getOwnerOfTask() != null && taskDetailsBean.getOwnerOfTask().equalsIgnoreCase(Appreference.loginuserdetails.getUsername())) {
+                                            tv_reassign.setText("Assign Task");
+                                        } else {
+                                            tv_reassign.setText("Assign to me");
+                                            status_job.setVisibility(View.GONE);
+                                            travel_job.setVisibility(View.GONE);
+                                        }
                                     }
-
-                                    ll_2.setVisibility(View.VISIBLE);
-                                    tv_reassign.setVisibility(View.VISIBLE);
-                                    tv_reassign.setText("Assign Task");
                                 }
-                                status_job.setVisibility(View.GONE);
-                                travel_job.setVisibility(View.GONE);
+
                                 listOfObservers.clear();
                                 String project_deassignMems = remove_TaskMembers(taskDetailsBean.getFromUserName());
                                 Log.i("userlist", "project_deassignMems " + project_deassignMems);
@@ -677,14 +678,14 @@ public class TravelJobDetails extends Activity implements View.OnClickListener, 
                 if ((taskDetailsBean.getProjectStatus() != null && !taskDetailsBean.getProjectStatus().equalsIgnoreCase("")
                         && !taskDetailsBean.getProjectStatus().equalsIgnoreCase("null") && !taskDetailsBean.getProjectStatus().equalsIgnoreCase(null)
                         && taskDetailsBean.getProjectStatus().equalsIgnoreCase("9"))
-                        && taskDetailsBean.getTravelEndTime()!=null && !taskDetailsBean.getTravelEndTime().equalsIgnoreCase("")
+                        && taskDetailsBean.getTravelEndTime() != null && !taskDetailsBean.getTravelEndTime().equalsIgnoreCase("")
                         && !taskDetailsBean.getTravelEndTime().equalsIgnoreCase(null)) {
-                    Log.i(tab, "projectUpdate query if # " );
+                    Log.i(tab, "projectUpdate query if # ");
                     String queryUpdate = "update projectStatus set travelEndTime='" + taskDetailsBean.getTravelEndTime() + "' where projectId='" + projectId + "' and taskId= '" + webtaskId + "' and travelStartTime IS NOT NULL and travelEndTime IS NULL";
                     Log.i(tab, "projectUpdate query " + queryUpdate);
                     VideoCallDataBase.getDB(context).updateaccept(queryUpdate);
-                }else{
-                    Log.i(tab, "projectUpdate query else # " );
+                } else {
+                    Log.i(tab, "projectUpdate query else # ");
                     VideoCallDataBase.getDB(context).insertORupdateStatus(taskDetailsBean);
                 }
                 taskList.add(taskDetailsBean);
@@ -700,14 +701,14 @@ public class TravelJobDetails extends Activity implements View.OnClickListener, 
                         if ((taskDetailsBean.getProjectStatus() != null && !taskDetailsBean.getProjectStatus().equalsIgnoreCase("")
                                 && !taskDetailsBean.getProjectStatus().equalsIgnoreCase("null") && !taskDetailsBean.getProjectStatus().equalsIgnoreCase(null)
                                 && taskDetailsBean.getProjectStatus().equalsIgnoreCase("9"))
-                                && taskDetailsBean.getTravelEndTime()!=null && !taskDetailsBean.getTravelEndTime().equalsIgnoreCase("")
+                                && taskDetailsBean.getTravelEndTime() != null && !taskDetailsBean.getTravelEndTime().equalsIgnoreCase("")
                                 && !taskDetailsBean.getTravelEndTime().equalsIgnoreCase(null)) {
                             String queryUpdate = "update projectStatus set travelEndTime='" + taskDetailsBean.getTravelEndTime() + "' where projectId='" + projectId + "' and taskId= '" + webtaskId + "' and travelStartTime IS NOT NULL and travelEndTime IS NULL";
                             Log.i(tab, "projectUpdate query else " + queryUpdate);
-                            Log.i(tab, "projectUpdate query if * " );
+                            Log.i(tab, "projectUpdate query if * ");
                             VideoCallDataBase.getDB(context).updateaccept(queryUpdate);
-                        }else{
-                            Log.i(tab, "projectUpdate query else * " );
+                        } else {
+                            Log.i(tab, "projectUpdate query else * ");
                             VideoCallDataBase.getDB(context).insertORupdateStatus(taskDetailsBean);
                         }
                         Log.i(tab, "notifyTaskReceived 3 " + taskDetailsBean.getTaskStatus());
@@ -932,7 +933,7 @@ public class TravelJobDetails extends Activity implements View.OnClickListener, 
                                             Log.i(tab, "remarks for DeAssign====>" + name.getText().toString());
                                             if (name.getText().toString() != null && !name.getText().toString().equalsIgnoreCase("")) {
                                                 dialog1.dismiss();
-                                                sendStatus_webservice("8", "","DeAssign Remarks : "+ name.getText().toString(), "DeAssign", "");
+                                                sendStatus_webservice("8", "", "DeAssign Remarks : " + name.getText().toString(), "DeAssign", "");
                                             } else
                                                 Toast.makeText(TravelJobDetails.this, "Please enter any Remarks", Toast.LENGTH_SHORT).show();
                                         } catch (Exception e) {
@@ -1163,14 +1164,9 @@ public class TravelJobDetails extends Activity implements View.OnClickListener, 
                     project_toUsers = listTaskMembers();
                     taskDetailsBean.setGroupTaskMembers(project_toUsers);
                     Log.i("userlist", "project_toUsers 1 " + project_toUsers);
-//                    listOfObservers.add(project_toUsers);
-                    if (taskMemberList!=null && taskMemberList.contains(",")) {
-                        VideoCallDataBase.getDB(context).updateaccept("update projectHistory set issueParentId='deassign' where projectId='" + projectId + "' and taskId='" + webtaskId + "'");
-                    }
                     if (taskMemberList != null) {
                         VideoCallDataBase.getDB(context).updateaccept("update projectHistory set taskMemberList='" + project_toUsers + "' where projectId='" + projectId + "' and taskId='" + webtaskId + "'");
                     }
-
                 } else {
                     project_toUsers = taskMemberList;
                     taskDetailsBean.setGroupTaskMembers(taskMemberList);
@@ -1306,13 +1302,12 @@ public class TravelJobDetails extends Activity implements View.OnClickListener, 
             }
             for (int j = 0; j < counter + 1; j++) {
                 if (counter == 0) {
-                    if (!taskMemberList_1.equalsIgnoreCase(Appreference.loginuserdetails.getUsername())) {
+                    if (!taskMemberList_1.equalsIgnoreCase(from_UserName)) {
                         project_deassignMems = taskMemberList_1;
                     }
                 } else {
-                    if (taskMemberList_1.split(",")[j].equalsIgnoreCase(Appreference.loginuserdetails.getUsername())) {
-                    } else if(taskMemberList_1.split(",")[j].equalsIgnoreCase(from_UserName)){
-                    }else {
+                    if (taskMemberList_1.split(",")[j].equalsIgnoreCase(from_UserName)) {
+                    } else {
                         project_deassignMems = project_deassignMems.concat(taskMemberList_1.split(",")[j] + ",");
                     }
                 }
@@ -1334,6 +1329,7 @@ public class TravelJobDetails extends Activity implements View.OnClickListener, 
         taskMemberList = VideoCallDataBase.getDB(context).getProjectParentTaskId(taskMemberList_qry);
         return taskMemberList;
     }
+
     public String listTaskMembers() {
         String project_deassignMems = "";
         String taskMemberList_qry = "select taskMemberList from projectHistory where projectId='" + projectId + "' and taskId='" + webtaskId + "'";
@@ -2722,6 +2718,7 @@ public class TravelJobDetails extends Activity implements View.OnClickListener, 
             Appreference.printLog("TravelJobDetails", "getgroupStatus Exception : " + e.getMessage(), "WARN", null);
         }
     }
+
     public void listLastposition() {
         try {
             handler.post(new Runnable() {
@@ -2802,17 +2799,17 @@ public class TravelJobDetails extends Activity implements View.OnClickListener, 
 //        handler.post(new Runnable() {
 //            @Override
 //            public void run() {
-                try {
-                    if (progress != null && progress.isShowing()) {
-                        Log.i(tab, "--progress bar end-----");
-                        progress.dismiss();
-                        progress = null;
-                    }
-                } catch (Exception e) {
-                    // TODO Auto-generated catch block
-                    e.printStackTrace();
-                    Appreference.printLog("TravelJobDetails", "cancelDialog() Exception : " + e.getMessage(), "WARN", null);
-                }
+        try {
+            if (progress != null && progress.isShowing()) {
+                Log.i(tab, "--progress bar end-----");
+                progress.dismiss();
+                progress = null;
+            }
+        } catch (Exception e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+            Appreference.printLog("TravelJobDetails", "cancelDialog() Exception : " + e.getMessage(), "WARN", null);
+        }
 //            }
 //        });
     }
@@ -3149,9 +3146,10 @@ public class TravelJobDetails extends Activity implements View.OnClickListener, 
 
                 try {
                     if (detailsBean.getCustomerRemarks() != null && !detailsBean.getCustomerRemarks().equalsIgnoreCase("") && !detailsBean.getCustomerRemarks().equalsIgnoreCase("null")) {
-                        if (projectCurrentStatus != null && !projectCurrentStatus.equalsIgnoreCase("Completed"))
+                        if ((detailsBean.getProjectStatus() != null && !detailsBean.getProjectStatus().equalsIgnoreCase("5"))
+                                && (detailsBean.getProjectStatus() != null && !detailsBean.getProjectStatus().equalsIgnoreCase("10"))) {
                             PercentageWebService("text", detailsBean.getCustomerRemarks(), "", Utility.getSessionID(), 0, null);
-
+                        }
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
