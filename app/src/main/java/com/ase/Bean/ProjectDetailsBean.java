@@ -41,6 +41,7 @@ public class ProjectDetailsBean implements Serializable {
     private String oracleTaskId;
     private String estimatedTravelHours;
     private String estimatedActivityHrs;
+    private String openDate;
 
 
     private String parentTaskId;
@@ -545,5 +546,13 @@ public class ProjectDetailsBean implements Serializable {
 
     public void setJobDescription(String jobDescription) {
         this.jobDescription = jobDescription;
+    }
+
+    public String getOpenDate() {
+        return openDate;
+    }
+
+    public void setOpenDate(String openDate) {
+        this.openDate = openDate;
     }
 }

@@ -1099,7 +1099,7 @@ public class ProjectsFragment extends Fragment implements View.OnClickListener, 
                     project_id.setText("Job Card Number : " + projectDetailsBean.getOracleProjectId());
                     project_name.setText("Customer Name   : " + projectDetailsBean.getCustomerName());
                     task_giver.setText("Description     : " + projectDetailsBean.getJobDescription());
-                    job_date.setText("Date        : N/A ");
+                    job_date.setText("Date        :"+projectDetailsBean.getOpenDate());
                     String pjt_owner = null;
                     Log.i("Fragment", "projectDetailsBean getProject_ownerName() " + projectDetailsBean.getProject_ownerName());
                     if (projectDetailsBean.getProject_ownerName() != null && projectDetailsBean.getProject_ownerName().contains("@")) {

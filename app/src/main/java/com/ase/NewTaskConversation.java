@@ -13004,16 +13004,16 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                                                  if (((String) jsonObject.get("result_text")).equalsIgnoreCase("task started")) {
                                                      projectCurrentStatus = "start";
                                                      travel_job.setEnabled(true);
-                                                 } else if (((String) jsonObject.get("result_text")).equalsIgnoreCase("task hold")) {
+                                                 } else if (((String) jsonObject.get("result_text")).equalsIgnoreCase("task Hold")) {
                                                      projectCurrentStatus = "hold";
-                                                 } else if (((String) jsonObject.get("result_text")).equalsIgnoreCase("task resume")) {
+                                                 } else if (((String) jsonObject.get("result_text")).equalsIgnoreCase("task Resumed")) {
                                                      projectCurrentStatus = "resume";
-                                                 } else if (((String) jsonObject.get("result_text")).equalsIgnoreCase("task pause")) {
+                                                 } else if (((String) jsonObject.get("result_text")).equalsIgnoreCase("task Paused")) {
                                                      projectCurrentStatus = "pause";
                                                      isDivertedON = true;
-                                                 } else if (((String) jsonObject.get("result_text")).equalsIgnoreCase("task restart")) {
+                                                 } else if (((String) jsonObject.get("result_text")).equalsIgnoreCase("task Restarted")) {
                                                      projectCurrentStatus = "restart";
-                                                 } else if (((String) jsonObject.get("result_text")).equalsIgnoreCase("task completed")) {
+                                                 } else if (((String) jsonObject.get("result_text")).equalsIgnoreCase("task Completed")) {
                                                      projectCurrentStatus = "Completed";
                                                      status_job.setVisibility(View.GONE);
                                                      travel_job.setVisibility(View.GONE);
@@ -13065,11 +13065,15 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                                                      }
                                                  }
                                                  refresh();
+                                                 Log.i("ddd123","Diverted task isDivertedON======>"+isDivertedON);
+                                                 Log.i("ddd123","Diverted task isFromPauseClick======>"+isFromPauseClick);
                                                  if (isDivertedON && isFromPauseClick) {
                                                      isDivertedON = false;
                                                      isFromPauseClick = false;
                                                      String query = "select projectId from projectDetails where isActiveStatus = '1' ";
                                                      String diverted_project_id = VideoCallDataBase.getDB(context).getDivertedProjId(query);
+                                                     Log.i("ddd123","Diverted task diverted_project_id======>"+diverted_project_id);
+
                                                      if (diverted_project_id != null) {
                                                          try {
                                                              Appreference.isPauseStartFrom = true;
