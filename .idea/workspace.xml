@@ -32,6 +32,7 @@
     </layouts>
   </component>
   <component name="AndroidLogFilters">
+    <option name="TOOL_WINDOW_CUSTOM_FILTER" value="json" />
     <option name="TOOL_WINDOW_LOG_LEVEL" value="verbose" />
     <option name="TOOL_WINDOW_CONFIGURED_FILTER" value="No Filters" />
   </component>
@@ -40,6 +41,23 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="cecaefcc-dd79-49c9-a72f-6b4913cb4421" name="Default" comment="Commited for alerm and multiassign issues.">
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/android_android_23.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/cardview_v7_23_4_0.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/appcompat_v7_23_3_0.xml" afterPath="$PROJECT_DIR$/.idea/libraries/appcompat_v7_23_3_0.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/design_23_2_0.xml" afterPath="$PROJECT_DIR$/.idea/libraries/design_23_2_0.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/firebase_analytics_impl_9_0_0.xml" afterPath="$PROJECT_DIR$/.idea/libraries/firebase_analytics_impl_9_0_0.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/firebase_common_9_0_0.xml" afterPath="$PROJECT_DIR$/.idea/libraries/firebase_common_9_0_0.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/firebase_core_9_0_0.xml" afterPath="$PROJECT_DIR$/.idea/libraries/firebase_core_9_0_0.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/firebase_iid_9_0_0.xml" afterPath="$PROJECT_DIR$/.idea/libraries/firebase_iid_9_0_0.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/firebase_messaging_9_0_0.xml" afterPath="$PROJECT_DIR$/.idea/libraries/firebase_messaging_9_0_0.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/library_1_3_0.xml" afterPath="$PROJECT_DIR$/.idea/libraries/library_1_3_0.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/multidex_instrumentation_1_0_1.xml" afterPath="$PROJECT_DIR$/.idea/libraries/multidex_instrumentation_1_0_1.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/play_services_basement_9_0_0.xml" afterPath="$PROJECT_DIR$/.idea/libraries/play_services_basement_9_0_0.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/play_services_tasks_9_0_0.xml" afterPath="$PROJECT_DIR$/.idea/libraries/play_services_tasks_9_0_0.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/recyclerview_v7_23_2_0.xml" afterPath="$PROJECT_DIR$/.idea/libraries/recyclerview_v7_23_2_0.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/rotate_layout_2_0_0.xml" afterPath="$PROJECT_DIR$/.idea/libraries/rotate_layout_2_0_0.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/support_v4_23_3_0.xml" afterPath="$PROJECT_DIR$/.idea/libraries/support_v4_23_3_0.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/support_vector_drawable_23_3_0.xml" afterPath="$PROJECT_DIR$/.idea/libraries/support_vector_drawable_23_3_0.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="hm-android-ASE.iws" />
@@ -72,22 +90,59 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="OfflineSendMessage.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/app/src/main/java/com/ase/OfflineSendMessage.java">
+      <file leaf-file-name="NewTaskConversation.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/app/src/main/java/com/ase/NewTaskConversation.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="20893">
-              <caret line="1271" column="21" selection-start-line="1271" selection-start-column="21" selection-end-line="1271" selection-end-column="21" />
+            <state relative-caret-position="68">
+              <caret line="13015" column="125" selection-start-line="13015" selection-start-column="125" selection-end-line="13015" selection-end-column="125" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="NewTaskConversation.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/app/src/main/java/com/ase/NewTaskConversation.java">
+      <file leaf-file-name="workspace.xml" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/projectFilesBackup/.idea/workspace.xml">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="354994">
-              <caret line="21089" column="69" selection-start-line="21089" selection-start-column="20" selection-end-line="21089" selection-end-column="69" />
+            <state relative-caret-position="85">
+              <caret line="5" column="35" selection-start-line="5" selection-start-column="35" selection-end-line="5" selection-end-column="35" />
               <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="VideoCallDataBase.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/app/src/main/java/com/ase/DB/VideoCallDataBase.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="186">
+              <caret line="9440" column="18" selection-start-line="9440" selection-start-column="18" selection-end-line="9440" selection-end-column="18" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="ListallProjectBean.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/app/src/main/java/com/ase/Bean/ListallProjectBean.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="118">
+              <caret line="19" column="35" selection-start-line="19" selection-start-column="35" selection-end-line="19" selection-end-column="35" />
+              <folding>
+                <element signature="e#2474#2475#0" expanded="true" />
+                <element signature="e#2511#2512#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="ProjectDetailsBean.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/app/src/main/java/com/ase/Bean/ProjectDetailsBean.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="5797">
+              <caret line="550" column="33" selection-start-line="550" selection-start-column="33" selection-end-line="550" selection-end-column="33" />
+              <folding>
+                <element signature="e#13191#13192#0" expanded="true" />
+                <element signature="e#13239#13240#0" expanded="true" />
+                <element signature="e#13279#13280#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -95,124 +150,59 @@
       <file leaf-file-name="TravelJobDetails.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/app/src/main/java/com/ase/TravelJobDetails.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="32249">
-              <caret line="1965" column="25" selection-start-line="1965" selection-start-column="25" selection-end-line="1965" selection-end-column="25" />
-              <folding />
+            <state relative-caret-position="18717">
+              <caret line="1169" column="0" selection-start-line="1169" selection-start-column="0" selection-end-line="1169" selection-end-column="0" />
+              <folding>
+                <element signature="imports" expanded="false" />
+                <element signature="e#22276#22277#0" expanded="false" />
+                <element signature="e#22348#22349#0" expanded="false" />
+                <element signature="e#126079#126080#0" expanded="false" />
+                <element signature="e#126196#126197#0" expanded="false" />
+                <element signature="e#173149#173150#0" expanded="false" />
+                <element signature="e#173250#173251#0" expanded="false" />
+                <element signature="e#175189#175190#0" expanded="false" />
+                <element signature="e#175261#175262#0" expanded="false" />
+                <element signature="e#186115#186116#0" expanded="false" />
+                <element signature="e#186189#186190#0" expanded="false" />
+              </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="MainActivity.java" pinned="false" current-in-tab="true">
+      <file leaf-file-name="MainActivity.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/app/src/main/java/org/pjsip/pjsua2/app/MainActivity.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="51">
-              <caret line="3358" column="0" selection-start-line="3358" selection-start-column="0" selection-end-line="3358" selection-end-column="0" />
+            <state relative-caret-position="53397">
+              <caret line="3360" column="58" selection-start-line="3360" selection-start-column="58" selection-end-line="3360" selection-end-column="58" />
               <folding>
-                <element signature="e#8279#8296#0" expanded="true" />
-                <element signature="e#12205#12221#0" expanded="true" />
-                <element signature="e#16042#16128#0" expanded="true" />
-                <element signature="e#16127#16128#0" expanded="true" />
-                <element signature="e#16290#16334#0" expanded="true" />
-                <element signature="e#16376#16420#0" expanded="true" />
-                <element signature="e#16540#16584#0" expanded="true" />
-                <element signature="e#23255#24779#0" expanded="true" />
-                <element signature="e#24778#24779#0" expanded="true" />
-                <element signature="e#28339#28383#0" expanded="true" />
-                <element signature="e#30514#30825#0" expanded="true" />
-                <element signature="e#30824#30825#0" expanded="true" />
-                <element signature="e#59771#60546#0" expanded="true" />
-                <element signature="e#60545#60546#0" expanded="true" />
-                <element signature="e#72704#72719#0" expanded="true" />
-                <element signature="e#73762#73777#0" expanded="true" />
-                <element signature="e#78477#81049#0" expanded="true" />
-                <element signature="e#79040#79084#0" expanded="true" />
-                <element signature="e#79138#79182#0" expanded="true" />
-                <element signature="e#79232#79276#0" expanded="true" />
-                <element signature="e#81048#81049#0" expanded="true" />
-                <element signature="e#83466#85807#0" expanded="true" />
-                <element signature="e#83746#83790#0" expanded="true" />
-                <element signature="e#85806#85807#0" expanded="true" />
-                <element signature="e#87176#87916#0" expanded="true" />
-                <element signature="e#87915#87916#0" expanded="true" />
-                <element signature="e#89919#90193#0" expanded="true" />
-                <element signature="e#90192#90193#0" expanded="true" />
-                <element signature="e#90635#90819#0" expanded="true" />
-                <element signature="e#90818#90819#0" expanded="true" />
-                <element signature="e#92648#92876#0" expanded="true" />
-                <element signature="e#92875#92876#0" expanded="true" />
-                <element signature="e#103511#103519#0" expanded="true" />
-                <element signature="e#120894#121945#0" expanded="true" />
-                <element signature="e#121944#121945#0" expanded="true" />
-                <element signature="e#122091#127927#0" expanded="true" />
-                <element signature="e#127926#127927#0" expanded="true" />
-                <element signature="e#128391#128439#0" expanded="true" />
-                <element signature="e#131657#131703#0" expanded="true" />
-                <element signature="e#134026#134072#0" expanded="true" />
-                <element signature="e#144568#144876#0" expanded="true" />
-                <element signature="e#144875#144876#0" expanded="true" />
-                <element signature="e#146600#146908#0" expanded="true" />
-                <element signature="e#146907#146908#0" expanded="true" />
-                <element signature="e#148551#148892#0" expanded="true" />
-                <element signature="e#148891#148892#0" expanded="true" />
-                <element signature="e#158925#158940#0" expanded="true" />
-                <element signature="e#169805#169813#0" expanded="true" />
-                <element signature="e#169892#169900#0" expanded="true" />
-                <element signature="e#174733#174741#0" expanded="true" />
-                <element signature="e#186075#186482#0" expanded="true" />
-                <element signature="e#186481#186482#0" expanded="true" />
-                <element signature="e#191307#191714#0" expanded="true" />
-                <element signature="e#191713#191714#0" expanded="true" />
-                <element signature="e#199695#199741#0" expanded="true" />
-                <element signature="e#200003#200051#0" expanded="true" />
-                <element signature="e#200657#200703#0" expanded="true" />
-                <element signature="e#200965#201013#0" expanded="true" />
-                <element signature="e#202739#202785#0" expanded="true" />
-                <element signature="e#203047#203095#0" expanded="true" />
-                <element signature="e#203852#203900#0" expanded="true" />
-                <element signature="e#204633#204681#0" expanded="true" />
-                <element signature="e#263980#264043#0" expanded="true" />
-                <element signature="e#264169#264232#0" expanded="true" />
-                <element signature="e#265409#265472#0" expanded="true" />
-                <element signature="e#265606#265669#0" expanded="true" />
-                <element signature="e#267002#267065#0" expanded="true" />
-                <element signature="e#267199#267262#0" expanded="true" />
-                <element signature="e#268281#268344#0" expanded="true" />
-                <element signature="e#268478#268541#0" expanded="true" />
-                <element signature="e#269485#269548#0" expanded="true" />
-                <element signature="e#269678#269741#0" expanded="true" />
-                <element signature="e#271926#271989#0" expanded="true" />
-                <element signature="e#272123#272186#0" expanded="true" />
-                <element signature="e#272715#273108#0" expanded="true" />
-                <element signature="e#273107#273108#0" expanded="true" />
-                <element signature="e#289049#289112#0" expanded="true" />
-                <element signature="e#289238#289301#0" expanded="true" />
-                <element signature="e#325853#325897#0" expanded="true" />
-                <element signature="e#327544#328851#0" expanded="true" />
-                <element signature="e#328850#328851#0" expanded="true" />
-                <element signature="e#330651#330666#0" expanded="true" />
-                <element signature="e#331917#331932#0" expanded="true" />
-                <element signature="e#332949#332964#0" expanded="true" />
-                <element signature="e#334522#334537#0" expanded="true" />
-                <element signature="e#335280#366433#0" expanded="true" />
-                <element signature="e#366432#366433#0" expanded="true" />
-                <element signature="e#367471#367517#0" expanded="true" />
-                <element signature="e#374718#374766#0" expanded="true" />
-                <element signature="e#387784#387832#0" expanded="true" />
-                <element signature="e#397645#397691#0" expanded="true" />
-                <element signature="e#415078#415473#0" expanded="true" />
-                <element signature="e#415472#415473#0" expanded="true" />
-                <element signature="e#417730#417747#0" expanded="true" />
-                <element signature="e#418378#418422#0" expanded="true" />
-                <element signature="e#418688#418732#0" expanded="true" />
-                <element signature="e#421284#421328#0" expanded="true" />
-                <element signature="e#431431#432184#0" expanded="true" />
-                <element signature="e#432183#432184#0" expanded="true" />
-                <element signature="e#432701#432963#0" expanded="true" />
-                <element signature="e#432962#432963#0" expanded="true" />
-                <element signature="e#433835#434563#0" expanded="true" />
-                <element signature="e#434562#434563#0" expanded="true" />
-                <element signature="e#434630#435108#0" expanded="true" />
-                <element signature="e#435107#435108#0" expanded="true" />
+                <element signature="e#0#442719#0" expanded="false" />
+                <element signature="imports" expanded="false" />
+                <element signature="e#11016#11017#0" expanded="false" />
+                <element signature="e#11051#11052#0" expanded="false" />
+                <element signature="e#11759#11760#0" expanded="false" />
+                <element signature="e#11795#11796#0" expanded="false" />
+                <element signature="e#81204#81205#0" expanded="false" />
+                <element signature="e#81259#81260#0" expanded="false" />
+                <element signature="e#85962#85963#0" expanded="false" />
+                <element signature="e#86017#86018#0" expanded="false" />
+                <element signature="e#86333#86334#0" expanded="false" />
+                <element signature="e#86370#86371#0" expanded="false" />
+                <element signature="e#90728#90729#0" expanded="false" />
+                <element signature="e#90796#90797#0" expanded="false" />
+                <element signature="e#381999#382000#0" expanded="false" />
+                <element signature="e#382043#382044#0" expanded="false" />
+                <element signature="e#382721#382722#0" expanded="false" />
+                <element signature="e#382772#382773#0" expanded="false" />
+                <element signature="e#430579#430580#0" expanded="false" />
+                <element signature="e#430631#430632#0" expanded="false" />
+                <element signature="e#430686#430687#0" expanded="false" />
+                <element signature="e#430733#430734#0" expanded="false" />
+                <element signature="e#430780#430781#0" expanded="false" />
+                <element signature="e#430819#430820#0" expanded="false" />
+                <element signature="e#442329#442330#0" expanded="false" />
+                <element signature="e#442368#442369#0" expanded="false" />
+                <element signature="e#442419#442420#0" expanded="false" />
+                <element signature="e#442451#442452#0" expanded="false" />
               </folding>
             </state>
           </provider>
@@ -2218,7 +2208,6 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/app/src/main/res/layout/task_conversation.xml" />
         <option value="$PROJECT_DIR$/app/src/main/res/layout/project_details_row.xml" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/ase/Bean/TaskDetailsBean.java" />
         <option value="$PROJECT_DIR$/app/build.gradle" />
@@ -2255,7 +2244,6 @@
         <option value="$PROJECT_DIR$/app/src/main/res/layout/new_date_picker.xml" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/ase/StatusAlarmManager.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/ase/ShowTimeupAlert.java" />
-        <option value="$PROJECT_DIR$/app/src/main/java/com/ase/sketh/ProjectsFragment.java" />
         <option value="$PROJECT_DIR$/app/src/main/res/layout/caption_media.xml" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/ase/MediaListAdapter.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/org/pjsip/pjsua2/app/MyApp.java" />
@@ -2264,18 +2252,21 @@
         <option value="$PROJECT_DIR$/app/src/main/res/layout/incomingcallalert.xml" />
         <option value="$PROJECT_DIR$/app/src/main/res/layout-land/video_player_new.xml" />
         <option value="$PROJECT_DIR$/app/src/main/res/layout-xlarge/video_player_new.xml" />
-        <option value="$PROJECT_DIR$/app/src/main/java/com/ase/TravelJobDetails.java" />
-        <option value="$PROJECT_DIR$/app/src/main/java/com/ase/DB/VideoCallDataBase.java" />
         <option value="$PROJECT_DIR$/app/src/main/res/values/strings.xml" />
-        <option value="$PROJECT_DIR$/app/src/main/java/com/ase/NewTaskConversation.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/org/pjsip/pjsua2/app/MainActivity.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/ase/TravelJobDetails.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/ase/Bean/ProjectDetailsBean.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/ase/DB/VideoCallDataBase.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/ase/sketh/ProjectsFragment.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/ase/NewTaskConversation.java" />
       </list>
     </option>
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="-7" />
-    <option name="width" value="1370" />
-    <option name="height" value="735" />
+    <option name="x" value="-8" />
+    <option name="y" value="-8" />
+    <option name="width" value="1382" />
+    <option name="height" value="744" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="true">
     <OptionsSetting value="true" id="Add" />
@@ -2303,19 +2294,12 @@
     </navigator>
     <panes>
       <pane id="Scratches" />
-      <pane id="AndroidView">
-        <subPane>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="ASE-Base-android" />
-              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidViewProjectNode" />
-            </PATH_ELEMENT>
-          </PATH>
-        </subPane>
-      </pane>
-      <pane id="Scope" />
       <pane id="PackagesPane" />
+      <pane id="Scope" />
       <pane id="ProjectPane">
+        <subPane />
+      </pane>
+      <pane id="AndroidView">
         <subPane />
       </pane>
     </panes>
@@ -2326,9 +2310,9 @@
     <property name="settings.editor.splitter.proportion" value="0.2" />
     <property name="android.project.structure.last.selected" value="SDK Location" />
     <property name="android.project.structure.proportion" value="0.15" />
-    <property name="device.picker.selection" value="4df7f5dd1c2a212b" />
+    <property name="device.picker.selection" value="4df71a21635ccf05" />
     <property name="UI_DESIGNER_EDITOR_MODE.PaletteToolWindowManager.SHOW" value="false" />
-    <property name="last_opened_file_path" value="E:/justified-master" />
+    <property name="last_opened_file_path" value="E:/backup/aug/18/ASE-Base-android" />
     <property name="ExportApk.ApkPath" value="E:\AppKey\apk" />
     <property name="ExportApk.Flavors" value="" />
     <property name="ExportApk.BuildType" value="release" />
@@ -3011,7 +2995,28 @@
       <option name="project" value="LOCAL" />
       <updated>1505493814863</updated>
     </task>
-    <option name="localTasksCounter" value="36" />
+    <task id="LOCAL-00036" summary="Commited for alerm and multiassign issues.">
+      <created>1505559312250</created>
+      <option name="number" value="00036" />
+      <option name="presentableId" value="LOCAL-00036" />
+      <option name="project" value="LOCAL" />
+      <updated>1505559312250</updated>
+    </task>
+    <task id="LOCAL-00037" summary="Commited for multiassign and holdPause changes .">
+      <created>1505574954422</created>
+      <option name="number" value="00037" />
+      <option name="presentableId" value="LOCAL-00037" />
+      <option name="project" value="LOCAL" />
+      <updated>1505574954422</updated>
+    </task>
+    <task id="LOCAL-00038" summary="Commited for Jobcard opendate ,FSR report issue ,and divertedJobcard issue fixed">
+      <created>1505823374897</created>
+      <option name="number" value="00038" />
+      <option name="presentableId" value="LOCAL-00038" />
+      <option name="project" value="LOCAL" />
+      <updated>1505823374897</updated>
+    </task>
+    <option name="localTasksCounter" value="39" />
     <servers />
   </component>
   <component name="TodoView">
@@ -3024,23 +3029,24 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="-7" y="0" width="1370" height="735" extended-state="0" />
-    <editor active="false" />
+    <frame x="-8" y="-8" width="1382" height="744" extended-state="6" />
+    <editor active="true" />
     <layout>
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32928944" sideWeight="0.5" order="11" side_tool="false" content_ui="tabs" />
-      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.40554592" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.40443686" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Build Variants" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.24580152" sideWeight="0.5105105" order="1" side_tool="true" content_ui="tabs" />
       <window_info id="Image Layers" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Capture Analysis" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.26169845" sideWeight="0.5137405" order="0" side_tool="true" content_ui="tabs" />
-      <window_info id="Android Monitor" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.42287695" sideWeight="0.48625955" order="12" side_tool="false" content_ui="tabs" />
+      <window_info id="Android Monitor" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.50341296" sideWeight="0.48625955" order="12" side_tool="false" content_ui="tabs" />
+      <window_info id="Preview" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.18456884" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.6996587" sideWeight="0.4969743" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32935154" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
-      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4488735" sideWeight="0.4969743" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32928944" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Captures" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Capture Tool" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Gradle Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="1" side_tool="true" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.24580152" sideWeight="0.4894895" order="4" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.24508321" sideWeight="0.4894895" order="4" side_tool="false" content_ui="combo" />
       <window_info id="Gradle" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Android Model" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="true" content_ui="tabs" />
@@ -3056,7 +3062,6 @@
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Palette&#9;" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
-      <window_info id="Preview" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.18456884" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.39078498" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Fabric" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
     </layout>
@@ -3091,8 +3096,6 @@
     <option name="myLimit" value="2678400000" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Commited for FSR search screen-- Input serial no….. By from to date=====&gt;Inprogress&#10;Synopsis yes/no option added in EOD&#10;Eod screen validation -when &quot;Travel Time&quot; job not having under project" />
-    <MESSAGE value="Commited for FSR search screen Done" />
     <MESSAGE value="Commited for FSR_changes," />
     <MESSAGE value="Commited for phase_part2 changes in FSR and MonthlyJobcard" />
     <MESSAGE value="Commited for timer in pause hold" />
@@ -3116,171 +3119,137 @@
     <MESSAGE value="Commited for multiuser changes done" />
     <MESSAGE value="Commited for multiassign issues." />
     <MESSAGE value="Commited for alerm and multiassign issues." />
-    <option name="LAST_COMMIT_MESSAGE" value="Commited for alerm and multiassign issues." />
+    <MESSAGE value="Commited for multiassign and holdPause changes ." />
+    <MESSAGE value="Commited for Jobcard opendate ,FSR report issue ,and divertedJobcard issue fixed" />
+    <option name="LAST_COMMIT_MESSAGE" value="Commited for Jobcard opendate ,FSR report issue ,and divertedJobcard issue fixed" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
       <breakpoints>
-        <line-breakpoint enabled="true" type="java-line">
+        <line-breakpoint type="java-line">
           <url>file://$PROJECT_DIR$/app/src/main/java/com/myapplication3/AddTaskReassign.java</url>
           <line>831</line>
           <properties />
         </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
+        <line-breakpoint type="java-line">
           <url>file://$PROJECT_DIR$/app/src/main/java/com/myapplication3/AddTaskReassign.java</url>
           <line>1023</line>
           <properties />
           <option name="timeStamp" value="4" />
         </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
+        <line-breakpoint type="java-line">
           <url>file://$PROJECT_DIR$/app/src/main/java/com/myapplication3/AddTaskReassign.java</url>
           <line>1019</line>
           <properties />
           <option name="timeStamp" value="5" />
         </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
+        <line-breakpoint type="java-line">
           <url>file://$PROJECT_DIR$/app/src/main/java/com/myapplication3/AddTaskReassign.java</url>
           <line>1008</line>
           <properties />
           <option name="timeStamp" value="6" />
         </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
+        <line-breakpoint type="java-line">
           <url>file://$PROJECT_DIR$/app/src/main/java/com/myapplication3/NewTaskConversation.java</url>
           <line>17652</line>
           <properties />
           <option name="timeStamp" value="14" />
         </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
+        <line-breakpoint type="java-line">
           <url>file://$PROJECT_DIR$/app/src/main/java/com/myapplication3/AddTaskReassign.java</url>
           <line>104</line>
           <properties />
           <option name="timeStamp" value="15" />
         </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
+        <line-breakpoint type="java-line">
           <url>file://$PROJECT_DIR$/app/src/main/java/com/myapplication3/NewTaskConversation.java</url>
           <line>854</line>
           <properties />
           <option name="timeStamp" value="16" />
         </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
+        <line-breakpoint type="java-line">
           <url>file://$PROJECT_DIR$/app/src/main/java/com/ase/OfflineSendMessage.java</url>
           <line>479</line>
           <properties />
           <option name="timeStamp" value="21" />
         </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
+        <line-breakpoint type="java-line">
           <url>file://$PROJECT_DIR$/app/src/main/java/com/ase/OfflineSendMessage.java</url>
           <line>455</line>
           <properties />
           <option name="timeStamp" value="22" />
         </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
+        <line-breakpoint type="java-line">
           <url>file://$PROJECT_DIR$/app/src/main/java/com/ase/OfflineSendMessage.java</url>
           <line>1367</line>
           <properties />
           <option name="timeStamp" value="26" />
         </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
+        <line-breakpoint type="java-line">
           <url>file://$PROJECT_DIR$/app/src/main/java/com/ase/SettingsFragment.java</url>
           <line>285</line>
           <properties />
           <option name="timeStamp" value="29" />
         </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
+        <line-breakpoint type="java-line">
           <url>file://$PROJECT_DIR$/app/src/main/java/com/ase/NewTaskConversation.java</url>
-          <line>7194</line>
+          <line>7219</line>
           <properties />
           <option name="timeStamp" value="33" />
         </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
+        <line-breakpoint type="java-line">
           <url>file://$PROJECT_DIR$/app/src/main/java/com/ase/NewTaskConversation.java</url>
           <line>5338</line>
           <properties />
           <option name="timeStamp" value="37" />
         </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
+        <line-breakpoint type="java-line">
           <url>file://$PROJECT_DIR$/app/src/main/java/com/ase/NewTaskConversation.java</url>
           <line>1020</line>
           <properties />
           <option name="timeStamp" value="40" />
         </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
+        <line-breakpoint type="java-line">
           <url>file://$PROJECT_DIR$/app/src/main/java/com/ase/NewTaskConversation.java</url>
-          <line>20122</line>
-          <properties />
-          <option name="timeStamp" value="42" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/app/src/main/java/com/ase/NewTaskConversation.java</url>
-          <line>20196</line>
+          <line>20221</line>
           <properties />
           <option name="timeStamp" value="43" />
         </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
+        <line-breakpoint type="java-line">
           <url>file://$PROJECT_DIR$/app/src/main/java/com/ase/NewTaskConversation.java</url>
-          <line>12492</line>
+          <line>12517</line>
           <properties />
           <option name="timeStamp" value="44" />
         </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/app/src/main/java/com/ase/NewTaskConversation.java</url>
+          <line>13072</line>
+          <properties />
+          <option name="timeStamp" value="51" />
+        </line-breakpoint>
+        <line-breakpoint type="java-field">
+          <url>file://$PROJECT_DIR$/app/src/main/java/com/ase/DB/VideoCallDataBase.java</url>
+          <line>81</line>
+          <properties field="CREATE_TABLE_PROJECT" class="com.ase.DB.VideoCallDataBase" />
+          <option name="timeStamp" value="50" />
+        </line-breakpoint>
       </breakpoints>
-      <option name="time" value="50" />
+      <breakpoints-dialog>
+        <breakpoints-dialog />
+      </breakpoints-dialog>
+      <option name="time" value="52" />
     </breakpoint-manager>
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/ase/chat/ChatActivity.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="101">
-          <caret line="1556" column="26" selection-start-line="1556" selection-start-column="26" selection-end-line="1556" selection-end-column="26" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/ase/BlogsFragment.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="109">
-          <caret line="168" column="79" selection-start-line="168" selection-start-column="79" selection-end-line="168" selection-end-column="79" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/ase/NetWorkChange.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="58">
-          <caret line="14" column="21" selection-start-line="14" selection-start-column="21" selection-end-line="14" selection-end-column="21" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/res/values/styles.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="186">
-          <caret line="72" column="17" selection-start-line="72" selection-start-column="17" selection-end-line="72" selection-end-column="17" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/res/menu/group_call_menu_items.xml">
-      <provider editor-type-id="android-designer2">
-        <state />
-      </provider>
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$USER_HOME$/AppData/Local/Android/sdk/sources/android-23/android/view/View.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="177">
-          <caret line="705" column="13" selection-start-line="705" selection-start-column="13" selection-end-line="705" selection-end-column="13" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/res/layout/group_item.xml">
-      <provider editor-type-id="android-designer2">
-        <state />
-      </provider>
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="278">
           <caret line="49" column="8" selection-start-line="49" selection-start-column="8" selection-end-line="49" selection-end-column="8" />
         </state>
+      </provider>
+      <provider editor-type-id="android-designer2">
+        <state />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/java/com/ase/ContactsFragment.java">
@@ -3298,23 +3267,23 @@
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/res/layout/task_remarks.xml">
-      <provider editor-type-id="android-designer2">
-        <state />
-      </provider>
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="17">
           <caret line="1" column="0" selection-start-line="4" selection-start-column="0" selection-end-line="5" selection-end-column="0" />
         </state>
       </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/res/layout/showtimeup.xml">
       <provider editor-type-id="android-designer2">
         <state />
       </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/res/layout/showtimeup.xml">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="184">
           <caret line="75" column="35" selection-start-line="75" selection-start-column="29" selection-end-line="75" selection-end-column="35" />
         </state>
+      </provider>
+      <provider editor-type-id="android-designer2">
+        <state />
       </provider>
     </entry>
     <entry file="file://$USER_HOME$/AppData/Local/Android/sdk/sources/android-23/android/content/Intent.java">
@@ -3346,13 +3315,13 @@
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/res/menu/interval_menu.xml">
-      <provider editor-type-id="android-designer2">
-        <state />
-      </provider>
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="204">
           <caret line="12" column="35" selection-start-line="12" selection-start-column="35" selection-end-line="12" selection-end-column="35" />
         </state>
+      </provider>
+      <provider editor-type-id="android-designer2">
+        <state />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/java/com/ase/DatePicker/CustomTravelPickerActivity.java">
@@ -3363,13 +3332,13 @@
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/res/layout/new_date_picker.xml">
-      <provider editor-type-id="android-designer2">
-        <state />
-      </provider>
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="130">
           <caret line="14" column="24" selection-start-line="14" selection-start-column="24" selection-end-line="14" selection-end-column="24" />
         </state>
+      </provider>
+      <provider editor-type-id="android-designer2">
+        <state />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/java/com/ase/Bean/TaskDetailsBean.java">
@@ -3393,31 +3362,24 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/ase/sketh/ProjectsFragment.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1768">
-          <caret line="1019" column="5" selection-start-line="1019" selection-start-column="5" selection-end-line="1019" selection-end-column="5" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/res/layout/caption_media.xml">
-      <provider editor-type-id="android-designer2">
-        <state />
-      </provider>
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="306">
           <caret line="39" column="48" selection-start-line="39" selection-start-column="48" selection-end-line="39" selection-end-column="48" />
         </state>
       </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/res/layout/dialogforedit.xml">
       <provider editor-type-id="android-designer2">
         <state />
       </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/res/layout/dialogforedit.xml">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="119">
           <caret line="16" column="24" selection-start-line="16" selection-start-column="24" selection-end-line="16" selection-end-column="24" />
         </state>
+      </provider>
+      <provider editor-type-id="android-designer2">
+        <state />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/java/com/ase/MediaListAdapter.java">
@@ -3456,33 +3418,33 @@
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/res/layout/video_player_new.xml">
-      <provider editor-type-id="android-designer2">
-        <state />
-      </provider>
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="612">
           <caret line="36" column="35" selection-start-line="36" selection-start-column="35" selection-end-line="36" selection-end-column="35" />
         </state>
       </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/res/layout-land/video_player_new.xml">
       <provider editor-type-id="android-designer2">
         <state />
       </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/res/layout-land/video_player_new.xml">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="204">
           <caret line="12" column="34" selection-start-line="12" selection-start-column="34" selection-end-line="12" selection-end-column="34" />
         </state>
       </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/res/layout/incomingcallalert.xml">
       <provider editor-type-id="android-designer2">
         <state />
       </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/res/layout/incomingcallalert.xml">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="629">
           <caret line="37" column="40" selection-start-line="37" selection-start-column="40" selection-end-line="37" selection-end-column="40" />
         </state>
+      </provider>
+      <provider editor-type-id="android-designer2">
+        <state />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/java/com/ase/FullScreenImage.java">
@@ -3493,14 +3455,14 @@
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/AndroidManifest.xml">
-      <provider editor-type-id="android-manifest">
-        <state />
-      </provider>
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="935">
           <caret line="411" column="51" selection-start-line="411" selection-start-column="51" selection-end-line="411" selection-end-column="51" />
           <folding />
         </state>
+      </provider>
+      <provider editor-type-id="android-manifest">
+        <state />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/java/com/ase/VideoPlayer.java">
@@ -3511,23 +3473,23 @@
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/res/layout-xlarge/video_player_new.xml">
-      <provider editor-type-id="android-designer2">
-        <state />
-      </provider>
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="408">
           <caret line="24" column="46" selection-start-line="24" selection-start-column="46" selection-end-line="24" selection-end-column="46" />
         </state>
       </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/res/layout/media_view_file.xml">
       <provider editor-type-id="android-designer2">
         <state />
       </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/res/layout/media_view_file.xml">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
         </state>
+      </provider>
+      <provider editor-type-id="android-designer2">
+        <state />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/java/com/ase/MediaViewAdapter.java">
@@ -3538,34 +3500,19 @@
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/res/layout/chathistory_row.xml">
-      <provider editor-type-id="android-designer2">
-        <state />
-      </provider>
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-425">
           <caret line="11" column="40" selection-start-line="11" selection-start-column="29" selection-end-line="11" selection-end-column="40" />
         </state>
+      </provider>
+      <provider editor-type-id="android-designer2">
+        <state />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/java/com/ase/ChatFragment.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="6834">
           <caret line="435" column="72" selection-start-line="435" selection-start-column="72" selection-end-line="435" selection-end-column="72" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/res/values/strings.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="187">
-          <caret line="116" column="62" selection-start-line="116" selection-start-column="62" selection-end-line="116" selection-end-column="62" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/ase/DB/VideoCallDataBase.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="17">
-          <caret line="5380" column="22" selection-start-line="5380" selection-start-column="22" selection-end-line="5380" selection-end-column="22" />
           <folding />
         </state>
       </provider>
@@ -3589,6 +3536,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="34">
           <caret line="40" column="22" selection-start-line="40" selection-start-column="22" selection-end-line="40" selection-end-column="22" />
+          <folding />
         </state>
       </provider>
     </entry>
@@ -3596,6 +3544,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="119">
           <caret line="79" column="13" selection-start-line="79" selection-start-column="13" selection-end-line="79" selection-end-column="13" />
+          <folding />
         </state>
       </provider>
     </entry>
@@ -3626,137 +3575,156 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="20893">
           <caret line="1271" column="21" selection-start-line="1271" selection-start-column="21" selection-end-line="1271" selection-end-column="21" />
-          <folding />
+          <folding>
+            <element signature="imports" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/org/pjsip/pjsua2/app/MainActivity.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="53397">
+          <caret line="3360" column="58" selection-start-line="3360" selection-start-column="58" selection-end-line="3360" selection-end-column="58" />
+          <folding>
+            <element signature="e#0#442719#0" expanded="false" />
+            <element signature="imports" expanded="false" />
+            <element signature="e#11016#11017#0" expanded="false" />
+            <element signature="e#11051#11052#0" expanded="false" />
+            <element signature="e#11759#11760#0" expanded="false" />
+            <element signature="e#11795#11796#0" expanded="false" />
+            <element signature="e#81204#81205#0" expanded="false" />
+            <element signature="e#81259#81260#0" expanded="false" />
+            <element signature="e#85962#85963#0" expanded="false" />
+            <element signature="e#86017#86018#0" expanded="false" />
+            <element signature="e#86333#86334#0" expanded="false" />
+            <element signature="e#86370#86371#0" expanded="false" />
+            <element signature="e#90728#90729#0" expanded="false" />
+            <element signature="e#90796#90797#0" expanded="false" />
+            <element signature="e#381999#382000#0" expanded="false" />
+            <element signature="e#382043#382044#0" expanded="false" />
+            <element signature="e#382721#382722#0" expanded="false" />
+            <element signature="e#382772#382773#0" expanded="false" />
+            <element signature="e#430579#430580#0" expanded="false" />
+            <element signature="e#430631#430632#0" expanded="false" />
+            <element signature="e#430686#430687#0" expanded="false" />
+            <element signature="e#430733#430734#0" expanded="false" />
+            <element signature="e#430780#430781#0" expanded="false" />
+            <element signature="e#430819#430820#0" expanded="false" />
+            <element signature="e#442329#442330#0" expanded="false" />
+            <element signature="e#442368#442369#0" expanded="false" />
+            <element signature="e#442419#442420#0" expanded="false" />
+            <element signature="e#442451#442452#0" expanded="false" />
+          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/java/com/ase/TravelJobDetails.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="32249">
-          <caret line="1965" column="25" selection-start-line="1965" selection-start-column="25" selection-end-line="1965" selection-end-column="25" />
+        <state relative-caret-position="18717">
+          <caret line="1169" column="0" selection-start-line="1169" selection-start-column="0" selection-end-line="1169" selection-end-column="0" />
+          <folding>
+            <element signature="imports" expanded="false" />
+            <element signature="e#22276#22277#0" expanded="false" />
+            <element signature="e#22348#22349#0" expanded="false" />
+            <element signature="e#126079#126080#0" expanded="false" />
+            <element signature="e#126196#126197#0" expanded="false" />
+            <element signature="e#173149#173150#0" expanded="false" />
+            <element signature="e#173250#173251#0" expanded="false" />
+            <element signature="e#175189#175190#0" expanded="false" />
+            <element signature="e#175261#175262#0" expanded="false" />
+            <element signature="e#186115#186116#0" expanded="false" />
+            <element signature="e#186189#186190#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/res/values/strings.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="255">
+          <caret line="117" column="56" selection-start-line="117" selection-start-column="27" selection-end-line="117" selection-end-column="56" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/build.gradle">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/ase/Bean/ProjectDetailsBean.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="5797">
+          <caret line="550" column="33" selection-start-line="550" selection-start-column="33" selection-end-line="550" selection-end-column="33" />
+          <folding>
+            <element signature="e#13191#13192#0" expanded="true" />
+            <element signature="e#13239#13240#0" expanded="true" />
+            <element signature="e#13279#13280#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/ase/Bean/ListallProjectBean.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="118">
+          <caret line="19" column="35" selection-start-line="19" selection-start-column="35" selection-end-line="19" selection-end-column="35" />
+          <folding>
+            <element signature="e#2474#2475#0" expanded="true" />
+            <element signature="e#2511#2512#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/res/layout/project_details_row.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+      <provider editor-type-id="android-designer2">
+        <state />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/ase/AudioRecorder.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="61">
+          <caret line="722" column="0" selection-start-line="722" selection-start-column="0" selection-end-line="722" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/ase/sketh/ProjectsFragment.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="133">
+          <caret line="1440" column="87" selection-start-line="1440" selection-start-column="87" selection-end-line="1440" selection-end-column="87" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/ase/DB/VideoCallDataBase.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="186">
+          <caret line="9440" column="18" selection-start-line="9440" selection-start-column="18" selection-end-line="9440" selection-end-column="18" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/java/com/ase/NewTaskConversation.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="354994">
-          <caret line="21089" column="69" selection-start-line="21089" selection-start-column="20" selection-end-line="21089" selection-end-column="69" />
+        <state relative-caret-position="68">
+          <caret line="13015" column="125" selection-start-line="13015" selection-start-column="125" selection-end-line="13015" selection-end-column="125" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/org/pjsip/pjsua2/app/MainActivity.java">
+    <entry file="file://$PROJECT_DIR$/projectFilesBackup/.idea/workspace.xml">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="51">
-          <caret line="3358" column="0" selection-start-line="3358" selection-start-column="0" selection-end-line="3358" selection-end-column="0" />
-          <folding>
-            <element signature="e#8279#8296#0" expanded="true" />
-            <element signature="e#12205#12221#0" expanded="true" />
-            <element signature="e#16042#16128#0" expanded="true" />
-            <element signature="e#16127#16128#0" expanded="true" />
-            <element signature="e#16290#16334#0" expanded="true" />
-            <element signature="e#16376#16420#0" expanded="true" />
-            <element signature="e#16540#16584#0" expanded="true" />
-            <element signature="e#23255#24779#0" expanded="true" />
-            <element signature="e#24778#24779#0" expanded="true" />
-            <element signature="e#28339#28383#0" expanded="true" />
-            <element signature="e#30514#30825#0" expanded="true" />
-            <element signature="e#30824#30825#0" expanded="true" />
-            <element signature="e#59771#60546#0" expanded="true" />
-            <element signature="e#60545#60546#0" expanded="true" />
-            <element signature="e#72704#72719#0" expanded="true" />
-            <element signature="e#73762#73777#0" expanded="true" />
-            <element signature="e#78477#81049#0" expanded="true" />
-            <element signature="e#79040#79084#0" expanded="true" />
-            <element signature="e#79138#79182#0" expanded="true" />
-            <element signature="e#79232#79276#0" expanded="true" />
-            <element signature="e#81048#81049#0" expanded="true" />
-            <element signature="e#83466#85807#0" expanded="true" />
-            <element signature="e#83746#83790#0" expanded="true" />
-            <element signature="e#85806#85807#0" expanded="true" />
-            <element signature="e#87176#87916#0" expanded="true" />
-            <element signature="e#87915#87916#0" expanded="true" />
-            <element signature="e#89919#90193#0" expanded="true" />
-            <element signature="e#90192#90193#0" expanded="true" />
-            <element signature="e#90635#90819#0" expanded="true" />
-            <element signature="e#90818#90819#0" expanded="true" />
-            <element signature="e#92648#92876#0" expanded="true" />
-            <element signature="e#92875#92876#0" expanded="true" />
-            <element signature="e#103511#103519#0" expanded="true" />
-            <element signature="e#120894#121945#0" expanded="true" />
-            <element signature="e#121944#121945#0" expanded="true" />
-            <element signature="e#122091#127927#0" expanded="true" />
-            <element signature="e#127926#127927#0" expanded="true" />
-            <element signature="e#128391#128439#0" expanded="true" />
-            <element signature="e#131657#131703#0" expanded="true" />
-            <element signature="e#134026#134072#0" expanded="true" />
-            <element signature="e#144568#144876#0" expanded="true" />
-            <element signature="e#144875#144876#0" expanded="true" />
-            <element signature="e#146600#146908#0" expanded="true" />
-            <element signature="e#146907#146908#0" expanded="true" />
-            <element signature="e#148551#148892#0" expanded="true" />
-            <element signature="e#148891#148892#0" expanded="true" />
-            <element signature="e#158925#158940#0" expanded="true" />
-            <element signature="e#169805#169813#0" expanded="true" />
-            <element signature="e#169892#169900#0" expanded="true" />
-            <element signature="e#174733#174741#0" expanded="true" />
-            <element signature="e#186075#186482#0" expanded="true" />
-            <element signature="e#186481#186482#0" expanded="true" />
-            <element signature="e#191307#191714#0" expanded="true" />
-            <element signature="e#191713#191714#0" expanded="true" />
-            <element signature="e#199695#199741#0" expanded="true" />
-            <element signature="e#200003#200051#0" expanded="true" />
-            <element signature="e#200657#200703#0" expanded="true" />
-            <element signature="e#200965#201013#0" expanded="true" />
-            <element signature="e#202739#202785#0" expanded="true" />
-            <element signature="e#203047#203095#0" expanded="true" />
-            <element signature="e#203852#203900#0" expanded="true" />
-            <element signature="e#204633#204681#0" expanded="true" />
-            <element signature="e#263980#264043#0" expanded="true" />
-            <element signature="e#264169#264232#0" expanded="true" />
-            <element signature="e#265409#265472#0" expanded="true" />
-            <element signature="e#265606#265669#0" expanded="true" />
-            <element signature="e#267002#267065#0" expanded="true" />
-            <element signature="e#267199#267262#0" expanded="true" />
-            <element signature="e#268281#268344#0" expanded="true" />
-            <element signature="e#268478#268541#0" expanded="true" />
-            <element signature="e#269485#269548#0" expanded="true" />
-            <element signature="e#269678#269741#0" expanded="true" />
-            <element signature="e#271926#271989#0" expanded="true" />
-            <element signature="e#272123#272186#0" expanded="true" />
-            <element signature="e#272715#273108#0" expanded="true" />
-            <element signature="e#273107#273108#0" expanded="true" />
-            <element signature="e#289049#289112#0" expanded="true" />
-            <element signature="e#289238#289301#0" expanded="true" />
-            <element signature="e#325853#325897#0" expanded="true" />
-            <element signature="e#327544#328851#0" expanded="true" />
-            <element signature="e#328850#328851#0" expanded="true" />
-            <element signature="e#330651#330666#0" expanded="true" />
-            <element signature="e#331917#331932#0" expanded="true" />
-            <element signature="e#332949#332964#0" expanded="true" />
-            <element signature="e#334522#334537#0" expanded="true" />
-            <element signature="e#335280#366433#0" expanded="true" />
-            <element signature="e#366432#366433#0" expanded="true" />
-            <element signature="e#367471#367517#0" expanded="true" />
-            <element signature="e#374718#374766#0" expanded="true" />
-            <element signature="e#387784#387832#0" expanded="true" />
-            <element signature="e#397645#397691#0" expanded="true" />
-            <element signature="e#415078#415473#0" expanded="true" />
-            <element signature="e#415472#415473#0" expanded="true" />
-            <element signature="e#417730#417747#0" expanded="true" />
-            <element signature="e#418378#418422#0" expanded="true" />
-            <element signature="e#418688#418732#0" expanded="true" />
-            <element signature="e#421284#421328#0" expanded="true" />
-            <element signature="e#431431#432184#0" expanded="true" />
-            <element signature="e#432183#432184#0" expanded="true" />
-            <element signature="e#432701#432963#0" expanded="true" />
-            <element signature="e#432962#432963#0" expanded="true" />
-            <element signature="e#433835#434563#0" expanded="true" />
-            <element signature="e#434562#434563#0" expanded="true" />
-            <element signature="e#434630#435108#0" expanded="true" />
-            <element signature="e#435107#435108#0" expanded="true" />
-          </folding>
+        <state relative-caret-position="85">
+          <caret line="5" column="35" selection-start-line="5" selection-start-column="35" selection-end-line="5" selection-end-column="35" />
+          <folding />
         </state>
       </provider>
     </entry>
