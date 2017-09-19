@@ -5134,7 +5134,13 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                                                         }
                                                         Log.i("Date123", "compareTo ===> if " + date_from.compareTo(date_to));
                                                         Appreference.isremarksEntered = false;
-                                                        sendStatus_webservice("1", showholdTimerDate, "Hold Remarks :" + name.getText().toString(), "hold", "Hold");
+                                                        int get_startEntry_entered = VideoCallDataBase.getDB(context).CheckTravelEntryDetails("select * from projectStatus where projectId ='" + projectId + "' and taskId = '" + webtaskId + "' and travelStartTime IS NOT NULL and travelEndTime IS NULL");
+
+                                                        if (get_startEntry_entered!=0) {
+                                                            sendStatus_webservice("1", showholdTimerDate, "Hold Remarks :" + name.getText().toString(), "hold", "Hold");
+                                                        } else {
+                                                            showToast("Please Enter Start Time");
+                                                        }
                                                         mDateTimeDialog.dismiss();
                                                         dialog1.dismiss();
                                                     } else {
@@ -5295,7 +5301,13 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                                                         }
                                                         Log.i("Date123", "compareTo ===> if " + date_from.compareTo(date_to));
                                                         Appreference.isremarksEntered = false;
-                                                        sendStatus_webservice("3", showpauseTimerDate, "Pause Remarks :" + name.getText().toString(), "Paused", "Paused");
+                                                        int get_startEntry_entered = VideoCallDataBase.getDB(context).CheckTravelEntryDetails("select * from projectStatus where projectId ='" + projectId + "' and taskId = '" + webtaskId + "' and travelStartTime IS NOT NULL and travelEndTime IS NULL");
+
+                                                        if (get_startEntry_entered!=0) {
+                                                            sendStatus_webservice("3", showpauseTimerDate, "Pause Remarks :" + name.getText().toString(), "Paused", "Paused");
+                                                        } else {
+                                                            showToast("Please Enter Start Time");
+                                                        }
                                                         mDateTimeDialog.dismiss();
                                                         dialog1.dismiss();
                                                     } else {
@@ -6744,6 +6756,7 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
         try {
 
             Log.i("desc123", "inside 120  status ========>" + status);
+
             if (isNetworkAvailable()) {
                 showStatusprogress();
             } else {
@@ -6798,7 +6811,7 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
             }
             if (status.equalsIgnoreCase("1") || status.equalsIgnoreCase("3")) {
                 Log.i("status", "timer ==> " + timer);
-                ActivityEnddate = timer;
+                ActivityEnddate = dateTime;
             }
             if (status.equalsIgnoreCase("2") || status.equalsIgnoreCase("4")) {
                 Log.i("status", "timer ==> " + timer);
@@ -6872,7 +6885,7 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                 }
             } else if (status.equalsIgnoreCase("1") || status.equalsIgnoreCase("3")) {
                 jsonObject.put("travelEndTime", EndDateUTC);
-                taskDetailsBean.setTravelEndTime(ActivityEnddate);
+//                taskDetailsBean.setTravelEndTime(ActivityEnddate);
                 Log.i("status", "timer ==> " + EndDateUTC);
                 Log.i("status", "timer ==> " + ActivityEnddate);
                 travel_date_details = new ArrayList<>();
@@ -7315,9 +7328,13 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                         }
                     }
                 }
-            } else {
+            }  else {
                     /*DB Insert*/
                 VideoCallDataBase.getDB(context).insertORupdateStatus(taskDetailsBean);
+                if (status.equalsIgnoreCase("1") || status.equalsIgnoreCase("3")) {
+                    String queryUpdate = "update projectStatus set travelEndTime='" + ActivityEnddate + "' where projectId='" + projectId + "' and userId='" + Appreference.loginuserdetails.getId() + "' and taskId= '" + webtaskId + "' and travelStartTime IS NOT NULL and travelEndTime IS NULL";
+                    VideoCallDataBase.getDB(context).updateaccept(queryUpdate);
+                }
             }
             if (status.equalsIgnoreCase("10")) {
                 VideoCallDataBase.getDB(context).eod_Update(machine_model, machine_serialno, machine_description, projectId, webtaskId, machion_make_edit);
