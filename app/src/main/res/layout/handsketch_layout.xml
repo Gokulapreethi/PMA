@@ -138,6 +138,7 @@
 			android:id="@+id/brushSeek1"
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
+			android:paddingTop="6dp"
 			android:paddingLeft="15dp"
 			android:paddingRight="15dp"
 			tools:ignore="HardcodedText"
@@ -146,14 +147,21 @@
 	</LinearLayout>
 
 	<!-- Custom View -->
+	<LinearLayout
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:gravity="center"
+		android:layout_gravity="center"
+		android:layout_weight="5">
 
 	<com.ase.sketh.DrawingView
 	    android:id="@+id/drawing"
 	    android:layout_width="fill_parent"
-	    android:layout_height="0dp"
-	    android:layout_weight="1"
+	    android:layout_height="wrap_content"
+		android:layout_gravity="center"
 	    android:background="#FFFFFFFF"
-	    tools:ignore="InefficientWeight" />
+	    />
+	</LinearLayout>
 
 	<!-- Color Palette -->
 

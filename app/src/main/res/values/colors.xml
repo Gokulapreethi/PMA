@@ -16,6 +16,10 @@
     //Added for ASE
     <color name="light_black">#504f4f</color>
 
+    // crop
+    <color name="windowBackground">#1C1C1C</color>
+    <color name="overlay">#AA1C1C1C</color>
+
     <color name="white">#FFFFFF</color>
     <color name="replyback">#c1e1ff</color>
 

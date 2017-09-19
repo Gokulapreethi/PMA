@@ -163,6 +163,8 @@ public class EodScreen extends Activity {
                                     observation_1.setVisibility(View.VISIBLE);
                                     Intent i = new Intent(getApplicationContext(), HandSketchActivity2.class);
                                     //                                            i.putExtra("observation","observation");
+                                    i.putExtra("isFromEod", true);
+                                    i.putExtra("isFromEodsign", false);
                                     startActivityForResult(i, 423);
                                     dialog.cancel();
                                 } catch (Exception e) {
@@ -243,6 +245,8 @@ public class EodScreen extends Activity {
                                     action_taken.setVisibility(View.GONE);
                                     action_taken_1.setVisibility(View.VISIBLE);
                                     Intent i = new Intent(getApplicationContext(), HandSketchActivity2.class);
+                                    i.putExtra("isFromEod", true);
+                                    i.putExtra("isFromEodsign", false);
                                     startActivityForResult(i, 423);
                                     dialog.cancel();
                                 } catch (Exception e) {
@@ -320,6 +324,8 @@ public class EodScreen extends Activity {
                                     remarks_completion.setVisibility(View.GONE);
                                     remarks_complete_1.setVisibility(View.VISIBLE);
                                     Intent i = new Intent(getApplicationContext(), HandSketchActivity2.class);
+                                    i.putExtra("isFromEod", true);
+                                    i.putExtra("isFromEodsign", false);
                                     startActivityForResult(i, 423);
                                     dialog.cancel();
                                 } catch (Exception e) {
@@ -398,6 +404,8 @@ public class EodScreen extends Activity {
                                     synopsis_img.setVisibility(View.VISIBLE);
                                     Intent i = new Intent(getApplicationContext(), HandSketchActivity2.class);
                                     //                                            i.putExtra("observation","observation");
+                                    i.putExtra("isFromEod", true);
+                                    i.putExtra("isFromEodsign", false);
                                     startActivityForResult(i, 423);
                                     dialog.cancel();
                                 } catch (Exception e) {
@@ -730,6 +738,8 @@ public class EodScreen extends Activity {
                     isSynopsis = false;
                     isForOracleProject = true;
                     Intent i = new Intent(getApplicationContext(), HandSketchActivity2.class);
+                    i.putExtra("isFromEod", false);
+                    i.putExtra("isFromEodsign", true);
                     startActivityForResult(i, 423);
                 } catch (Resources.NotFoundException e) {
                     e.printStackTrace();
@@ -752,6 +762,8 @@ public class EodScreen extends Activity {
                     isSynopsis = false;
                     isForOracleProject = true;
                     Intent i = new Intent(getApplicationContext(), HandSketchActivity2.class);
+                    i.putExtra("isFromEod", false);
+                    i.putExtra("isFromEodsign", true);
                     startActivityForResult(i, 423);
                 } catch (Resources.NotFoundException e) {
                     e.printStackTrace();
