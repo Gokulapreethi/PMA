@@ -5030,333 +5030,336 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                     sendStatus_webservice("0", "", "", "Started", "Started");
                 }
                 if (item.getTitle().toString().equalsIgnoreCase("Hold")) {
-                    AlertDialog.Builder saveDialog = new AlertDialog.Builder(context);
-                    saveDialog.setTitle("Hold Task");
-                    saveDialog.setCancelable(false);
-                    saveDialog.setMessage("Are you sure want to hold this task " + taskName);
-                    saveDialog.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int which) {
-                            final Dialog dialog1 = new Dialog(context);
-                            dialog1.requestWindowFeature(Window.FEATURE_NO_TITLE);
-                            dialog1.setContentView(R.layout.task_remarks);
-                            dialog1.setCanceledOnTouchOutside(false);
-                            TextView header = (TextView) dialog1.findViewById(R.id.template_header);
-                            TextView yes = (TextView) dialog1.findViewById(R.id.save);
-                            TextView no = (TextView) dialog1.findViewById(R.id.no);
-                            final EditText name = (EditText) dialog1.findViewById(R.id.remarks);
-                            header.setText("Hold Remarks ");
-                            yes.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    Log.i("ws123", "remarks for Hold====>" + name.getText().toString());
+                    int get_startEntry_entered = VideoCallDataBase.getDB(context).CheckTravelEntryDetails("select * from projectStatus where projectId ='" + projectId + "' and taskId = '" + webtaskId + "' and travelStartTime IS NOT NULL and travelEndTime IS NULL");
 
-                                    if (name.getText().toString() != null && !name.getText().toString().equalsIgnoreCase("")) {
-                                        Appreference.isremarksEntered = true;
-                                    } else
-                                        Appreference.isremarksEntered = false;
+                    if (get_startEntry_entered != 0) {
+                        AlertDialog.Builder saveDialog = new AlertDialog.Builder(context);
+                        saveDialog.setTitle("Hold Task");
+                        saveDialog.setCancelable(false);
+                        saveDialog.setMessage("Are you sure want to hold this task " + taskName);
+                        saveDialog.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                final Dialog dialog1 = new Dialog(context);
+                                dialog1.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                                dialog1.setContentView(R.layout.task_remarks);
+                                dialog1.setCanceledOnTouchOutside(false);
+                                TextView header = (TextView) dialog1.findViewById(R.id.template_header);
+                                TextView yes = (TextView) dialog1.findViewById(R.id.save);
+                                TextView no = (TextView) dialog1.findViewById(R.id.no);
+                                final EditText name = (EditText) dialog1.findViewById(R.id.remarks);
+                                header.setText("Hold Remarks ");
+                                yes.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        Log.i("ws123", "remarks for Hold====>" + name.getText().toString());
 
-                                    if (Appreference.isremarksEntered) {
-                                        try {
-                                            //New Code Start
-                                            final Dialog mDateTimeDialog = new Dialog(context);
-                                            // Inflate the root layout
-                                            final RelativeLayout mDateTimeDialogView = (RelativeLayout) getLayoutInflater().inflate(R.layout.new_date_picker, null);
+                                        if (name.getText().toString() != null && !name.getText().toString().equalsIgnoreCase("")) {
+                                            Appreference.isremarksEntered = true;
+                                        } else
+                                            Appreference.isremarksEntered = false;
 
-                                            // Grab widget instance
-                                            final DateTimePicker mDateTimePicker = (DateTimePicker) mDateTimeDialogView.findViewById(R.id.DateTimePicker);
-                                            mDateTimePicker.setDateChangedListener(NewTaskConversation.this);
+                                        if (Appreference.isremarksEntered) {
+                                            try {
+                                                //New Code Start
+                                                final Dialog mDateTimeDialog = new Dialog(context);
+                                                // Inflate the root layout
+                                                final RelativeLayout mDateTimeDialogView = (RelativeLayout) getLayoutInflater().inflate(R.layout.new_date_picker, null);
 
-                                            // Update demo TextViews when the "OK" button is clicked
-                                            ((Button) mDateTimePicker.findViewById(R.id.month_plus)).setVisibility(View.VISIBLE);
-                                            ((Button) mDateTimePicker.findViewById(R.id.month_minus)).setVisibility(View.VISIBLE);
-                                            ((Button) mDateTimePicker.findViewById(R.id.date_plus)).setVisibility(View.VISIBLE);
-                                            ((Button) mDateTimePicker.findViewById(R.id.date_minus)).setVisibility(View.VISIBLE);
-                                            ((Button) mDateTimePicker.findViewById(R.id.year_plus)).setVisibility(View.VISIBLE);
-                                            ((Button) mDateTimePicker.findViewById(R.id.year_minus)).setVisibility(View.VISIBLE);
-                                            ((Button) mDateTimePicker.findViewById(R.id.hour_plus)).setVisibility(View.VISIBLE);
-                                            ((Button) mDateTimePicker.findViewById(R.id.hour_minus)).setVisibility(View.VISIBLE);
-                                            ((Button) mDateTimePicker.findViewById(R.id.min_plus)).setVisibility(View.VISIBLE);
-                                            ((Button) mDateTimePicker.findViewById(R.id.min_minus)).setVisibility(View.VISIBLE);
-                                            ((Button) mDateTimeDialogView.findViewById(R.id.SetDateTime)).setOnClickListener(new View.OnClickListener() {
+                                                // Grab widget instance
+                                                final DateTimePicker mDateTimePicker = (DateTimePicker) mDateTimeDialogView.findViewById(R.id.DateTimePicker);
+                                                mDateTimePicker.setDateChangedListener(NewTaskConversation.this);
 
-                                                public void onClick(View v) {
-                                                    mDateTimePicker.clearFocus();
-                                                    // TODO Auto-generated method stub
-                                                    String result_string = mDateTimePicker.getMonth() + "-" + String.valueOf(mDateTimePicker.getDay()) + "-" + String.valueOf(mDateTimePicker.getYear())
-                                                            + "  " + String.valueOf(mDateTimePicker.getHour()) + ":" + String.valueOf(mDateTimePicker.getMinute());
-                                                    Date date_from = null;
-                                                    final Calendar c_date1 = Calendar.getInstance();
+                                                // Update demo TextViews when the "OK" button is clicked
+                                                ((Button) mDateTimePicker.findViewById(R.id.month_plus)).setVisibility(View.VISIBLE);
+                                                ((Button) mDateTimePicker.findViewById(R.id.month_minus)).setVisibility(View.VISIBLE);
+                                                ((Button) mDateTimePicker.findViewById(R.id.date_plus)).setVisibility(View.VISIBLE);
+                                                ((Button) mDateTimePicker.findViewById(R.id.date_minus)).setVisibility(View.VISIBLE);
+                                                ((Button) mDateTimePicker.findViewById(R.id.year_plus)).setVisibility(View.VISIBLE);
+                                                ((Button) mDateTimePicker.findViewById(R.id.year_minus)).setVisibility(View.VISIBLE);
+                                                ((Button) mDateTimePicker.findViewById(R.id.hour_plus)).setVisibility(View.VISIBLE);
+                                                ((Button) mDateTimePicker.findViewById(R.id.hour_minus)).setVisibility(View.VISIBLE);
+                                                ((Button) mDateTimePicker.findViewById(R.id.min_plus)).setVisibility(View.VISIBLE);
+                                                ((Button) mDateTimePicker.findViewById(R.id.min_minus)).setVisibility(View.VISIBLE);
+                                                ((Button) mDateTimeDialogView.findViewById(R.id.SetDateTime)).setOnClickListener(new View.OnClickListener() {
 
-                                                    try {
-                                                        date_from = new SimpleDateFormat("MMM-d-yyyy HH:mm").parse(result_string);
-                                                    } catch (ParseException e) {
-                                                        e.printStackTrace();
-                                                        Appreference.printLog("NewTaskConversation", "showStatusPopupWindow Hold date Exception : " + e.getMessage(), "WARN", null);
-                                                    }
-                                                    String date3 = null, showholdTimerDate = null;
-                                                    Date date_to = null, date_initial = null, dt_temp = null;
-                                                    final SimpleDateFormat sdf = new SimpleDateFormat("dd-MMM-yyyy HH:mm");
-                                                    if (date3 == null) {
+                                                    public void onClick(View v) {
+                                                        mDateTimePicker.clearFocus();
+                                                        // TODO Auto-generated method stub
+                                                        String result_string = mDateTimePicker.getMonth() + "-" + String.valueOf(mDateTimePicker.getDay()) + "-" + String.valueOf(mDateTimePicker.getYear())
+                                                                + "  " + String.valueOf(mDateTimePicker.getHour()) + ":" + String.valueOf(mDateTimePicker.getMinute());
+                                                        Date date_from = null;
+                                                        final Calendar c_date1 = Calendar.getInstance();
+
                                                         try {
-                                                            date3 = sdf.format(c_date1.getTime());
                                                             date_from = new SimpleDateFormat("MMM-d-yyyy HH:mm").parse(result_string);
-                                                        } catch (Exception e) {
-                                                            e.printStackTrace();
-                                                            Appreference.printLog("NewTaskConversation", "showStatusPopupWindow Hold date Exception : " + e.getMessage(), "WARN", null);
-                                                        }
-                                                    }
-                                                    try {
-                                                        date_to = sdf.parse(date3);
-                                                    } catch (Exception e) {
-                                                        e.printStackTrace();
-                                                        Appreference.printLog("NewTaskConversation", "showStatusPopupWindow Hold date Exception : " + e.getMessage(), "WARN", null);
-                                                    }
-                                                    SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MMM-yyyy HH:mm");
-                                                    SimpleDateFormat originalFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-                                                    Log.i("Date123", "Date arrange===> ## " + result_string);
-                                                    Log.i("Date123", "Date From===> ## " + date_from);
-                                                    Log.i("Date123", "Date to===> ## " + date_to);
-                                                    Log.i("Date123", "date3 ===> ## " + date3);
-                                                    Log.i("Date123", "compareTo ===> ## " + date_from.compareTo(date_to));
-
-                                                    String actual_timerdate = sdf.format(date_from);
-                                                    Log.i("Date123", "actual_timerdate ===> ## " + actual_timerdate);
-                                                    if (date_from.compareTo(date_to) > 0) {
-                                                        try {
-                                                            dt_temp = dateFormat.parse(actual_timerdate);
-                                                            showholdTimerDate = originalFormat.format(dt_temp);
-                                                            Log.i("Date123", "result_string ===> ## " + result_string);
-                                                            Log.i("Date123", "dt_temp ===> &  ## " + dt_temp);
-                                                            Log.i("Date123", "showholdTimerDate ===> & ## " + showholdTimerDate);
                                                         } catch (ParseException e) {
                                                             e.printStackTrace();
                                                             Appreference.printLog("NewTaskConversation", "showStatusPopupWindow Hold date Exception : " + e.getMessage(), "WARN", null);
                                                         }
-                                                        Log.i("Date123", "compareTo ===> if " + date_from.compareTo(date_to));
-                                                        Appreference.isremarksEntered = false;
-                                                        int get_startEntry_entered = VideoCallDataBase.getDB(context).CheckTravelEntryDetails("select * from projectStatus where projectId ='" + projectId + "' and taskId = '" + webtaskId + "' and travelStartTime IS NOT NULL and travelEndTime IS NULL");
-
-                                                        if (get_startEntry_entered!=0) {
-                                                            sendStatus_webservice("1", showholdTimerDate, "Hold Remarks :" + name.getText().toString(), "hold", "Hold");
-                                                        } else {
-                                                            showToast("Please Enter Start Time");
+                                                        String date3 = null, showholdTimerDate = null;
+                                                        Date date_to = null, date_initial = null, dt_temp = null;
+                                                        final SimpleDateFormat sdf = new SimpleDateFormat("dd-MMM-yyyy HH:mm");
+                                                        if (date3 == null) {
+                                                            try {
+                                                                date3 = sdf.format(c_date1.getTime());
+                                                                date_from = new SimpleDateFormat("MMM-d-yyyy HH:mm").parse(result_string);
+                                                            } catch (Exception e) {
+                                                                e.printStackTrace();
+                                                                Appreference.printLog("NewTaskConversation", "showStatusPopupWindow Hold date Exception : " + e.getMessage(), "WARN", null);
+                                                            }
                                                         }
-                                                        mDateTimeDialog.dismiss();
-                                                        dialog1.dismiss();
-                                                    } else {
-                                                        showToast("Please set Correct Timer...");
-                                                    }
-                                                }
-                                            });
-                                            // Cancel the dialog when the "Cancel" button is clicked
-                                            ((Button) mDateTimeDialogView.findViewById(R.id.CancelDialog)).setOnClickListener(new View.OnClickListener() {
+                                                        try {
+                                                            date_to = sdf.parse(date3);
+                                                        } catch (Exception e) {
+                                                            e.printStackTrace();
+                                                            Appreference.printLog("NewTaskConversation", "showStatusPopupWindow Hold date Exception : " + e.getMessage(), "WARN", null);
+                                                        }
+                                                        SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MMM-yyyy HH:mm");
+                                                        SimpleDateFormat originalFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                                                        Log.i("Date123", "Date arrange===> ## " + result_string);
+                                                        Log.i("Date123", "Date From===> ## " + date_from);
+                                                        Log.i("Date123", "Date to===> ## " + date_to);
+                                                        Log.i("Date123", "date3 ===> ## " + date3);
+                                                        Log.i("Date123", "compareTo ===> ## " + date_from.compareTo(date_to));
 
-                                                public void onClick(View v) {
-                                                    // TODO Auto-generated method stub
-                                                    mDateTimeDialog.cancel();
-//                                                    dialog1.dismiss();
-                                                }
-                                            });
-                                            // Setup TimePicker
-                                            // No title on the dialog window
-                                            mDateTimeDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-                                            // Set the dialog content view
-                                            mDateTimeDialog.setContentView(mDateTimeDialogView);
-                                            // Display the dialog
-                                            mDateTimeDialog.show();
-                                            //New Code End
-                                        } catch (Exception e) {
-                                            e.printStackTrace();
-                                            Appreference.printLog("NewTaskConversation", "showStatusPopupWindow Hold date Exception : " + e.getMessage(), "WARN", null);
+                                                        String actual_timerdate = sdf.format(date_from);
+                                                        Log.i("Date123", "actual_timerdate ===> ## " + actual_timerdate);
+                                                        if (date_from.compareTo(date_to) > 0) {
+                                                            try {
+                                                                dt_temp = dateFormat.parse(actual_timerdate);
+                                                                showholdTimerDate = originalFormat.format(dt_temp);
+                                                                Log.i("Date123", "result_string ===> ## " + result_string);
+                                                                Log.i("Date123", "dt_temp ===> &  ## " + dt_temp);
+                                                                Log.i("Date123", "showholdTimerDate ===> & ## " + showholdTimerDate);
+                                                            } catch (ParseException e) {
+                                                                e.printStackTrace();
+                                                                Appreference.printLog("NewTaskConversation", "showStatusPopupWindow Hold date Exception : " + e.getMessage(), "WARN", null);
+                                                            }
+                                                            Log.i("Date123", "compareTo ===> if " + date_from.compareTo(date_to));
+                                                            Appreference.isremarksEntered = false;
+                                                            sendStatus_webservice("1", showholdTimerDate, "Hold Remarks :" + name.getText().toString(), "hold", "Hold");
+                                                            mDateTimeDialog.dismiss();
+                                                            dialog1.dismiss();
+                                                        } else {
+                                                            showToast("Please set Correct Timer...");
+                                                        }
+                                                    }
+                                                });
+                                                // Cancel the dialog when the "Cancel" button is clicked
+                                                ((Button) mDateTimeDialogView.findViewById(R.id.CancelDialog)).setOnClickListener(new View.OnClickListener() {
+
+                                                    public void onClick(View v) {
+                                                        // TODO Auto-generated method stub
+                                                        mDateTimeDialog.cancel();
+                                                        //                                                    dialog1.dismiss();
+                                                    }
+                                                });
+                                                // Setup TimePicker
+                                                // No title on the dialog window
+                                                mDateTimeDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                                                // Set the dialog content view
+                                                mDateTimeDialog.setContentView(mDateTimeDialogView);
+                                                // Display the dialog
+                                                mDateTimeDialog.show();
+                                                //New Code End
+                                            } catch (Exception e) {
+                                                e.printStackTrace();
+                                                Appreference.printLog("NewTaskConversation", "showStatusPopupWindow Hold date Exception : " + e.getMessage(), "WARN", null);
+                                            }
+                                        } else {
+                                            showToast("Please enter any Remarks");
                                         }
-                                    } else {
-                                        showToast("Please enter any Remarks");
+
                                     }
-                                }
-                            });
-                            no.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    dialog1.dismiss();
-                                }
-                            });
-                            dialog1.show();
-                        }
-                    });
-                    saveDialog.setNegativeButton("No",
-                            new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int which) {
-                                    dialog.cancel();
-                                }
-                            });
-                    saveDialog.show();
+                                });
+                                no.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        dialog1.dismiss();
+                                    }
+                                });
+                                dialog1.show();
+                            }
+                        });
+                        saveDialog.setNegativeButton("No",
+                                new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        dialog.cancel();
+                                    }
+                                });
+                        saveDialog.show();
+                    } else {
+                        showToast("Please Enter Start Time");
+                    }
                 }
                 if (item.getTitle().toString().equalsIgnoreCase("Resume")) {
                     timerstop();
                     sendStatus_webservice("2", "", "", "Resumed", "Resumed");
                 }
                 if (item.getTitle().toString().equalsIgnoreCase("Pause")) {
-                    AlertDialog.Builder saveDialog = new AlertDialog.Builder(context);
-                    saveDialog.setTitle("Pause Task");
-                    saveDialog.setCancelable(false);
-                    saveDialog.setMessage("Are you sure want to pause this task " + taskName);
-                    saveDialog.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int which) {
-                            final Dialog dialog1 = new Dialog(context);
-                            dialog1.requestWindowFeature(Window.FEATURE_NO_TITLE);
-                            dialog1.setContentView(R.layout.task_remarks);
-                            dialog1.setCanceledOnTouchOutside(false);
-                            TextView header = (TextView) dialog1.findViewById(R.id.template_header);
-                            final TextView yes = (TextView) dialog1.findViewById(R.id.save);
-                            final TextView no = (TextView) dialog1.findViewById(R.id.no);
-                            final EditText name = (EditText) dialog1.findViewById(R.id.remarks);
+                    int get_startEntry_entered = VideoCallDataBase.getDB(context).CheckTravelEntryDetails("select * from projectStatus where projectId ='" + projectId + "' and taskId = '" + webtaskId + "' and travelStartTime IS NOT NULL and travelEndTime IS NULL");
 
-                            header.setText("Pause Remarks ");
-                            yes.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    Log.i("ws123", "remarks for pause====>" + name.getText().toString());
-                                    isFromPauseClick = true;
-                                    if (name.getText().toString() != null && !name.getText().toString().equalsIgnoreCase("")) {
-                                        Appreference.isremarksEntered = true;
-                                    } else
-                                        Appreference.isremarksEntered = false;
+                    if (get_startEntry_entered != 0) {
+                        AlertDialog.Builder saveDialog = new AlertDialog.Builder(context);
+                        saveDialog.setTitle("Pause Task");
+                        saveDialog.setCancelable(false);
+                        saveDialog.setMessage("Are you sure want to pause this task " + taskName);
+                        saveDialog.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                final Dialog dialog1 = new Dialog(context);
+                                dialog1.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                                dialog1.setContentView(R.layout.task_remarks);
+                                dialog1.setCanceledOnTouchOutside(false);
+                                TextView header = (TextView) dialog1.findViewById(R.id.template_header);
+                                final TextView yes = (TextView) dialog1.findViewById(R.id.save);
+                                final TextView no = (TextView) dialog1.findViewById(R.id.no);
+                                final EditText name = (EditText) dialog1.findViewById(R.id.remarks);
 
-                                    if (Appreference.isremarksEntered) {
-                                        try {
-                                            //New Code Start
-                                            final Dialog mDateTimeDialog = new Dialog(context);
-                                            // Inflate the root layout
-                                            final RelativeLayout mDateTimeDialogView = (RelativeLayout) getLayoutInflater().inflate(R.layout.new_date_picker, null);
+                                header.setText("Pause Remarks ");
+                                yes.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        Log.i("ws123", "remarks for pause====>" + name.getText().toString());
 
-                                            // Grab widget instance
-                                            final DateTimePicker mDateTimePicker = (DateTimePicker) mDateTimeDialogView.findViewById(R.id.DateTimePicker);
-                                            mDateTimePicker.setDateChangedListener(NewTaskConversation.this);
+                                        isFromPauseClick = true;
+                                        if (name.getText().toString() != null && !name.getText().toString().equalsIgnoreCase("")) {
+                                            Appreference.isremarksEntered = true;
+                                        } else
+                                            Appreference.isremarksEntered = false;
 
-                                            // Update demo TextViews when the "OK" button is clicked
-                                            ((Button) mDateTimePicker.findViewById(R.id.month_plus)).setVisibility(View.VISIBLE);
-                                            ((Button) mDateTimePicker.findViewById(R.id.month_minus)).setVisibility(View.VISIBLE);
-                                            ((Button) mDateTimePicker.findViewById(R.id.date_plus)).setVisibility(View.VISIBLE);
-                                            ((Button) mDateTimePicker.findViewById(R.id.date_minus)).setVisibility(View.VISIBLE);
-                                            ((Button) mDateTimePicker.findViewById(R.id.year_plus)).setVisibility(View.VISIBLE);
-                                            ((Button) mDateTimePicker.findViewById(R.id.year_minus)).setVisibility(View.VISIBLE);
-                                            ((Button) mDateTimePicker.findViewById(R.id.hour_plus)).setVisibility(View.VISIBLE);
-                                            ((Button) mDateTimePicker.findViewById(R.id.hour_minus)).setVisibility(View.VISIBLE);
-                                            ((Button) mDateTimePicker.findViewById(R.id.min_plus)).setVisibility(View.VISIBLE);
-                                            ((Button) mDateTimePicker.findViewById(R.id.min_minus)).setVisibility(View.VISIBLE);
-                                            ((Button) mDateTimeDialogView.findViewById(R.id.SetDateTime)).setOnClickListener(new View.OnClickListener() {
+                                        if (Appreference.isremarksEntered) {
+                                            try {
+                                                //New Code Start
+                                                final Dialog mDateTimeDialog = new Dialog(context);
+                                                // Inflate the root layout
+                                                final RelativeLayout mDateTimeDialogView = (RelativeLayout) getLayoutInflater().inflate(R.layout.new_date_picker, null);
 
-                                                public void onClick(View v) {
-                                                    mDateTimePicker.clearFocus();
-                                                    // TODO Auto-generated method stub
-                                                    String result_string = mDateTimePicker.getMonth() + "-" + String.valueOf(mDateTimePicker.getDay()) + "-" + String.valueOf(mDateTimePicker.getYear())
-                                                            + "  " + String.valueOf(mDateTimePicker.getHour()) + ":" + String.valueOf(mDateTimePicker.getMinute());
-                                                    Date date_from = null;
-                                                    final Calendar c_date1 = Calendar.getInstance();
+                                                // Grab widget instance
+                                                final DateTimePicker mDateTimePicker = (DateTimePicker) mDateTimeDialogView.findViewById(R.id.DateTimePicker);
+                                                mDateTimePicker.setDateChangedListener(NewTaskConversation.this);
 
-                                                    try {
-                                                        date_from = new SimpleDateFormat("MMM-d-yyyy HH:mm").parse(result_string);
-                                                    } catch (ParseException e) {
-                                                        e.printStackTrace();
-                                                        Appreference.printLog("NewTaskConversation", "showStatusPopupWindow Pause date Exception : " + e.getMessage(), "WARN", null);
-                                                    }
-                                                    String date3 = null, showpauseTimerDate = null;
-                                                    Date date_to = null, date_initial = null, dt_temp = null;
-                                                    final SimpleDateFormat sdf = new SimpleDateFormat("dd-MMM-yyyy HH:mm");
-                                                    if (date3 == null) {
+                                                // Update demo TextViews when the "OK" button is clicked
+                                                ((Button) mDateTimePicker.findViewById(R.id.month_plus)).setVisibility(View.VISIBLE);
+                                                ((Button) mDateTimePicker.findViewById(R.id.month_minus)).setVisibility(View.VISIBLE);
+                                                ((Button) mDateTimePicker.findViewById(R.id.date_plus)).setVisibility(View.VISIBLE);
+                                                ((Button) mDateTimePicker.findViewById(R.id.date_minus)).setVisibility(View.VISIBLE);
+                                                ((Button) mDateTimePicker.findViewById(R.id.year_plus)).setVisibility(View.VISIBLE);
+                                                ((Button) mDateTimePicker.findViewById(R.id.year_minus)).setVisibility(View.VISIBLE);
+                                                ((Button) mDateTimePicker.findViewById(R.id.hour_plus)).setVisibility(View.VISIBLE);
+                                                ((Button) mDateTimePicker.findViewById(R.id.hour_minus)).setVisibility(View.VISIBLE);
+                                                ((Button) mDateTimePicker.findViewById(R.id.min_plus)).setVisibility(View.VISIBLE);
+                                                ((Button) mDateTimePicker.findViewById(R.id.min_minus)).setVisibility(View.VISIBLE);
+                                                ((Button) mDateTimeDialogView.findViewById(R.id.SetDateTime)).setOnClickListener(new View.OnClickListener() {
+
+                                                    public void onClick(View v) {
+                                                        mDateTimePicker.clearFocus();
+                                                        // TODO Auto-generated method stub
+                                                        String result_string = mDateTimePicker.getMonth() + "-" + String.valueOf(mDateTimePicker.getDay()) + "-" + String.valueOf(mDateTimePicker.getYear())
+                                                                + "  " + String.valueOf(mDateTimePicker.getHour()) + ":" + String.valueOf(mDateTimePicker.getMinute());
+                                                        Date date_from = null;
+                                                        final Calendar c_date1 = Calendar.getInstance();
+
                                                         try {
-                                                            date3 = sdf.format(c_date1.getTime());
                                                             date_from = new SimpleDateFormat("MMM-d-yyyy HH:mm").parse(result_string);
-                                                        } catch (Exception e) {
-                                                            e.printStackTrace();
-                                                            Appreference.printLog("NewTaskConversation", "showStatusPopupWindow Pause date Exception : " + e.getMessage(), "WARN", null);
-                                                        }
-                                                    }
-                                                    try {
-                                                        date_to = sdf.parse(date3);
-                                                    } catch (Exception e) {
-                                                        e.printStackTrace();
-                                                        Appreference.printLog("NewTaskConversation", "showStatusPopupWindow Pause date Exception : " + e.getMessage(), "WARN", null);
-                                                    }
-                                                    SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MMM-yyyy HH:mm");
-                                                    SimpleDateFormat originalFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-                                                    Log.i("Date123", "Date arrange===> " + result_string);
-                                                    Log.i("Date123", "Date From===> " + date_from);
-                                                    Log.i("Date123", "Date to===> " + date_to);
-                                                    Log.i("Date123", "date3 ===> " + date3);
-                                                    Log.i("Date123", "compareTo ===> " + date_from.compareTo(date_to));
-
-                                                    String actual_timerdate = sdf.format(date_from);
-                                                    Log.i("Date123", "actual_timerdate ===> " + actual_timerdate);
-                                                    if (date_from.compareTo(date_to) > 0) {
-                                                        try {
-                                                            dt_temp = dateFormat.parse(actual_timerdate);
-                                                            showpauseTimerDate = originalFormat.format(dt_temp);
-                                                            Log.i("Date123", "result_string ===> " + result_string);
-                                                            Log.i("Date123", "dt_temp ===> &  " + dt_temp);
-                                                            Log.i("Date123", "showpauseTimerDate ===> & " + showpauseTimerDate);
                                                         } catch (ParseException e) {
                                                             e.printStackTrace();
                                                             Appreference.printLog("NewTaskConversation", "showStatusPopupWindow Pause date Exception : " + e.getMessage(), "WARN", null);
                                                         }
-                                                        Log.i("Date123", "compareTo ===> if " + date_from.compareTo(date_to));
-                                                        Appreference.isremarksEntered = false;
-                                                        int get_startEntry_entered = VideoCallDataBase.getDB(context).CheckTravelEntryDetails("select * from projectStatus where projectId ='" + projectId + "' and taskId = '" + webtaskId + "' and travelStartTime IS NOT NULL and travelEndTime IS NULL");
-
-                                                        if (get_startEntry_entered!=0) {
-                                                            sendStatus_webservice("3", showpauseTimerDate, "Pause Remarks :" + name.getText().toString(), "Paused", "Paused");
-                                                        } else {
-                                                            showToast("Please Enter Start Time");
+                                                        String date3 = null, showpauseTimerDate = null;
+                                                        Date date_to = null, date_initial = null, dt_temp = null;
+                                                        final SimpleDateFormat sdf = new SimpleDateFormat("dd-MMM-yyyy HH:mm");
+                                                        if (date3 == null) {
+                                                            try {
+                                                                date3 = sdf.format(c_date1.getTime());
+                                                                date_from = new SimpleDateFormat("MMM-d-yyyy HH:mm").parse(result_string);
+                                                            } catch (Exception e) {
+                                                                e.printStackTrace();
+                                                                Appreference.printLog("NewTaskConversation", "showStatusPopupWindow Pause date Exception : " + e.getMessage(), "WARN", null);
+                                                            }
                                                         }
-                                                        mDateTimeDialog.dismiss();
-                                                        dialog1.dismiss();
-                                                    } else {
-                                                        showToast("Please set Correct Timer...");
-                                                    }
-                                                }
-                                            });
-                                            // Cancel the dialog when the "Cancel" button is clicked
-                                            ((Button) mDateTimeDialogView.findViewById(R.id.CancelDialog)).setOnClickListener(new View.OnClickListener() {
+                                                        try {
+                                                            date_to = sdf.parse(date3);
+                                                        } catch (Exception e) {
+                                                            e.printStackTrace();
+                                                            Appreference.printLog("NewTaskConversation", "showStatusPopupWindow Pause date Exception : " + e.getMessage(), "WARN", null);
+                                                        }
+                                                        SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MMM-yyyy HH:mm");
+                                                        SimpleDateFormat originalFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                                                        Log.i("Date123", "Date arrange===> " + result_string);
+                                                        Log.i("Date123", "Date From===> " + date_from);
+                                                        Log.i("Date123", "Date to===> " + date_to);
+                                                        Log.i("Date123", "date3 ===> " + date3);
+                                                        Log.i("Date123", "compareTo ===> " + date_from.compareTo(date_to));
 
-                                                public void onClick(View v) {
-                                                    // TODO Auto-generated method stub
-                                                    mDateTimeDialog.cancel();
-//                                                    dialog1.dismiss();
-                                                }
-                                            });
-                                            // Setup TimePicker
-                                            // No title on the dialog window
-                                            mDateTimeDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-                                            // Set the dialog content view
-                                            mDateTimeDialog.setContentView(mDateTimeDialogView);
-                                            // Display the dialog
-                                            mDateTimeDialog.show();
-                                            //New Code End
-                                        } catch (Exception e) {
-                                            e.printStackTrace();
-                                            Appreference.printLog("NewTaskConversation", "showStatusPopupWindow Pause Exception : " + e.getMessage(), "WARN", null);
+                                                        String actual_timerdate = sdf.format(date_from);
+                                                        Log.i("Date123", "actual_timerdate ===> " + actual_timerdate);
+                                                        if (date_from.compareTo(date_to) > 0) {
+                                                            try {
+                                                                dt_temp = dateFormat.parse(actual_timerdate);
+                                                                showpauseTimerDate = originalFormat.format(dt_temp);
+                                                                Log.i("Date123", "result_string ===> " + result_string);
+                                                                Log.i("Date123", "dt_temp ===> &  " + dt_temp);
+                                                                Log.i("Date123", "showpauseTimerDate ===> & " + showpauseTimerDate);
+                                                            } catch (ParseException e) {
+                                                                e.printStackTrace();
+                                                                Appreference.printLog("NewTaskConversation", "showStatusPopupWindow Pause date Exception : " + e.getMessage(), "WARN", null);
+                                                            }
+                                                            Log.i("Date123", "compareTo ===> if " + date_from.compareTo(date_to));
+                                                            Appreference.isremarksEntered = false;
+                                                            sendStatus_webservice("3", showpauseTimerDate, "Pause Remarks :" + name.getText().toString(), "Paused", "Paused");
+                                                            mDateTimeDialog.dismiss();
+                                                            dialog1.dismiss();
+                                                        } else {
+                                                            showToast("Please set Correct Timer...");
+                                                        }
+                                                    }
+                                                });
+                                                // Cancel the dialog when the "Cancel" button is clicked
+                                                ((Button) mDateTimeDialogView.findViewById(R.id.CancelDialog)).setOnClickListener(new View.OnClickListener() {
+
+                                                    public void onClick(View v) {
+                                                        // TODO Auto-generated method stub
+                                                        mDateTimeDialog.cancel();
+                                                        //                                                    dialog1.dismiss();
+                                                    }
+                                                });
+                                                // Setup TimePicker
+                                                // No title on the dialog window
+                                                mDateTimeDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                                                // Set the dialog content view
+                                                mDateTimeDialog.setContentView(mDateTimeDialogView);
+                                                // Display the dialog
+                                                mDateTimeDialog.show();
+                                                //New Code End
+                                            } catch (Exception e) {
+                                                e.printStackTrace();
+                                                Appreference.printLog("NewTaskConversation", "showStatusPopupWindow Pause Exception : " + e.getMessage(), "WARN", null);
+                                            }
+                                        } else {
+                                            showToast("Please enter any Remarks");
                                         }
-                                    } else {
-                                        showToast("Please enter any Remarks");
+
                                     }
-                                }
-                            });
-                            no.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    dialog1.dismiss();
-                                }
-                            });
-                            dialog1.show();
-                        }
-                    });
-                    saveDialog.setNegativeButton("No",
-                            new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int which) {
-                                    dialog.cancel();
-                                }
-                            });
-                    saveDialog.show();
+                                });
+                                no.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        dialog1.dismiss();
+                                    }
+                                });
+                                dialog1.show();
+                            }
+                        });
+                        saveDialog.setNegativeButton("No",
+                                new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        dialog.cancel();
+                                    }
+                                });
+                        saveDialog.show();
+                    } else {
+                        showToast("Please Enter Start Time");
+                    }
 
                 }
                 if (item.getTitle().toString().equalsIgnoreCase("Restart")) {
@@ -7328,12 +7331,33 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                         }
                     }
                 }
-            }  else {
+            } else {
                     /*DB Insert*/
                 VideoCallDataBase.getDB(context).insertORupdateStatus(taskDetailsBean);
                 if (status.equalsIgnoreCase("1") || status.equalsIgnoreCase("3")) {
-                    String queryUpdate = "update projectStatus set travelEndTime='" + ActivityEnddate + "' where projectId='" + projectId + "' and userId='" + Appreference.loginuserdetails.getId() + "' and taskId= '" + webtaskId + "' and travelStartTime IS NOT NULL and travelEndTime IS NULL";
-                    VideoCallDataBase.getDB(context).updateaccept(queryUpdate);
+                    if (!isNetworkAvailable()) {
+                        SimpleDateFormat simpleDateFormat_1 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                        String curr_date = simpleDateFormat_1.format(new Date());
+                        Log.i("travel123", "setWssendstatus set successfully===>" + isNetworkAvailable());
+                        String date_new = curr_date;
+                        String signal_Id = Utility.getSessionID();
+                        String task_description = "Gathering Details...";
+                        String queryUpdate_1 = "update projectStatus set travelEndTime='" + ActivityEnddate + "' , wssendstatus='000' where projectId='" + projectId + "' and userId='" + Appreference.loginuserdetails.getId() + "' and taskId= '" + webtaskId + "' and travelStartTime IS NOT NULL and travelEndTime IS NULL";
+                        String queryUpdate_2 = "update projectStatus set dateStatus='9' where projectId='" + projectId + "' and userId='" + Appreference.loginuserdetails.getId() + "' and taskId= '" + webtaskId + "' and travelStartTime IS NOT NULL and travelEndTime IS NULL";
+                        String queryUpdate_3 = "update projectStatus set datenow='" + date_new + "' where projectId='" + projectId + "' and userId='" + Appreference.loginuserdetails.getId() + "' and taskId= '" + webtaskId + "' and travelStartTime IS NOT NULL and travelEndTime IS NULL";
+                        String queryUpdate_4 = "update projectStatus set signalId='" + signal_Id + "' where projectId='" + projectId + "' and userId='" + Appreference.loginuserdetails.getId() + "' and taskId= '" + webtaskId + "' and travelStartTime IS NOT NULL and travelEndTime IS NULL";
+                        String queryUpdate_5 = "update projectStatus set taskDescription='" + task_description + "' where projectId='" + projectId + "' and userId='" + Appreference.loginuserdetails.getId() + "' and taskId= '" + webtaskId + "' and travelStartTime IS NOT NULL and travelEndTime IS NULL";
+                        Log.i("output123", "projectUpdate queryUpdate_1 " + queryUpdate_1);
+                        Log.i("output123", "projectUpdate queryUpdate_2 " + queryUpdate_2);
+                        VideoCallDataBase.getDB(context).updateaccept(queryUpdate_2);
+                        VideoCallDataBase.getDB(context).updateaccept(queryUpdate_3);
+                        VideoCallDataBase.getDB(context).updateaccept(queryUpdate_4);
+                        VideoCallDataBase.getDB(context).updateaccept(queryUpdate_5);
+                        VideoCallDataBase.getDB(context).updateaccept(queryUpdate_1);
+                    } else {
+                        String queryUpdate = "update projectStatus set travelEndTime='" + ActivityEnddate + "' where projectId='" + projectId + "' and userId='" + Appreference.loginuserdetails.getId() + "' and taskId= '" + webtaskId + "' and travelStartTime IS NOT NULL and travelEndTime IS NULL";
+                        VideoCallDataBase.getDB(context).updateaccept(queryUpdate);
+                    }
                 }
             }
             if (status.equalsIgnoreCase("10")) {
@@ -13082,14 +13106,14 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                                                      }
                                                  }
                                                  refresh();
-                                                 Log.i("ddd123","Diverted task isDivertedON======>"+isDivertedON);
-                                                 Log.i("ddd123","Diverted task isFromPauseClick======>"+isFromPauseClick);
+                                                 Log.i("ddd123", "Diverted task isDivertedON======>" + isDivertedON);
+                                                 Log.i("ddd123", "Diverted task isFromPauseClick======>" + isFromPauseClick);
                                                  if (isDivertedON && isFromPauseClick) {
                                                      isDivertedON = false;
                                                      isFromPauseClick = false;
                                                      String query = "select projectId from projectDetails where isActiveStatus = '1' ";
                                                      String diverted_project_id = VideoCallDataBase.getDB(context).getDivertedProjId(query);
-                                                     Log.i("ddd123","Diverted task diverted_project_id======>"+diverted_project_id);
+                                                     Log.i("ddd123", "Diverted task diverted_project_id======>" + diverted_project_id);
 
                                                      if (diverted_project_id != null) {
                                                          try {
@@ -24001,7 +24025,7 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                 } else {
                     StatusTask = "Pause";
                 }
-                Log.i("tone123", "NewTaskConversation onFinish===>");
+                Log.i("tone123", "NewTaskConversation onFinish StatusTask===>"+StatusTask);
                 String AlarmRingedUpdateQuery = "update taskDetailsInfo set taskPlannedLatestEndDate='0' where projectId='" + projectId + "'and taskId= '" + webtaskId + "'";
                 Log.i("tone123", "updateSnoozeTime_query***********" + AlarmRingedUpdateQuery);
                 VideoCallDataBase.getDB(context).updateaccept(AlarmRingedUpdateQuery);

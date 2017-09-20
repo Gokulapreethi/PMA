@@ -2642,11 +2642,16 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback,
                             String quryActivity1 = "select oracleTaskId from projectHistory where projectId='" + jobcodeNo + "' and taskId= '" + taskId + "'";
                             String oracleTaskId = VideoCallDataBase.getDB(getApplication()).getProjectParentTaskId(quryActivity1);
                             Log.i("alarm123", "startHoldOrPauseAlarmManager started");
+                            String my_status;
+                            if(timer_Alert_by_current_status==1){
+                                my_status="hold";
+                            }else
+                                my_status="pause";
 
                              Intent intent=new Intent(mainContext,ShowTimeupAlert.class);
                             intent.putExtra("projectId",jobcodeNo);
                             intent.putExtra("taskId",String.valueOf(taskId));
-                            intent.putExtra("status",status);
+                            intent.putExtra("status",my_status);
                             intent.putExtra("OracleprojectId",OracleIdForProjectId);
                             intent.putExtra("OracletaskId",oracleTaskId);
                             startActivity(intent);

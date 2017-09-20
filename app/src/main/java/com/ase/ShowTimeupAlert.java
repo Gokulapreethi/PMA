@@ -61,6 +61,7 @@ public  class ShowTimeupAlert extends Activity implements DateTimePicker.DateWat
         handler=new Handler();
         my_projectId=getIntent().getStringExtra("projectId");
         my_status=getIntent().getStringExtra("status");
+        Log.i("alarm123", "my_status ShowTimeupAlert===>" + my_status);
         my_taskId=getIntent().getStringExtra("taskId");
         OracleprojectId=getIntent().getStringExtra("OracleprojectId");
         OracletaskId=getIntent().getStringExtra("OracletaskId");
