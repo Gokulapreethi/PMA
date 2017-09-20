@@ -113,8 +113,8 @@
     //new ip for local 203
 
     <string name="app_version">3</string>
-    <string name="app_versionDate">Version No : 1.3.0</string>
-    <string name="app_releaseDate">Release No : 0012 </string>
+    <string name="app_versionDate">Version No : 1.4.0</string>
+    <string name="app_releaseDate">Release No : 0017 </string>
     <string name="app_url">http://172.16.1.203:8080/ASE/</string>
     <string name="server_ip">172.16.1.203</string>
     <string name="file_upload">http://172.16.1.203:8080/uploads/highmessaging/chat/</string>

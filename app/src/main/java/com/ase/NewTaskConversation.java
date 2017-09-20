@@ -7358,12 +7358,13 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                         String queryUpdate = "update projectStatus set travelEndTime='" + ActivityEnddate + "' where projectId='" + projectId + "' and userId='" + Appreference.loginuserdetails.getId() + "' and taskId= '" + webtaskId + "' and travelStartTime IS NOT NULL and travelEndTime IS NULL";
                         VideoCallDataBase.getDB(context).updateaccept(queryUpdate);
                     }
-                }else if (status.equalsIgnoreCase("2") || status.equalsIgnoreCase("4")) {
+                }/*else if (status.equalsIgnoreCase("2") || status.equalsIgnoreCase("4")) {
                     taskDetailsBean.setTravelStartTime(ActivityStartdate);
                     taskDetailsBean.setTaskDescription("Gathering Details...");
                     taskDetailsBean.setProjectStatus("7");
+                    taskDetailsBean.setSignalid(Utility.getSessionID());
                     VideoCallDataBase.getDB(context).insertORupdateStatus(taskDetailsBean);
-                }
+                }*/
             }
             if (status.equalsIgnoreCase("10")) {
                 VideoCallDataBase.getDB(context).eod_Update(machine_model, machine_serialno, machine_description, projectId, webtaskId, machion_make_edit);
@@ -7398,6 +7399,14 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                             }
                         }, sec);
                     }
+                }
+                if (status.equalsIgnoreCase("2") || status.equalsIgnoreCase("4")) {
+                    taskDetailsBean.setTravelStartTime(ActivityStartdate);
+                    taskDetailsBean.setTaskDescription("Gathering Details...");
+                    taskDetailsBean.setProjectStatus("7");
+                    taskDetailsBean.setSignalid(Utility.getSessionID());
+                    taskDetailsBean.setWssendstatus("000");
+                    VideoCallDataBase.getDB(context).insertORupdateStatus(taskDetailsBean);
                 }
                 if (status.equalsIgnoreCase("1") || status.equalsIgnoreCase("3")) {
                     startHoldOrPauseAlarmManager(timer, webtaskId, projectCurrentStatus, taskDetailsBean.getProjectId());
@@ -13109,6 +13118,13 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                                                              }
                                                          }, sec);
                                                      }
+                                                 }
+                                                 if (detailsBean.getProjectStatus().equalsIgnoreCase("2") || detailsBean.getProjectStatus().equalsIgnoreCase("4")) {
+                                                     detailsBean.setTravelStartTime(ActivityStartdate);
+                                                     detailsBean.setTaskDescription("Gathering Details...");
+                                                     detailsBean.setProjectStatus("7");
+                                                     detailsBean.setSignalid(Utility.getSessionID());
+                                                     VideoCallDataBase.getDB(context).insertORupdateStatus(detailsBean);
                                                  }
                                                  refresh();
                                                  Log.i("ddd123", "Diverted task isDivertedON======>" + isDivertedON);
