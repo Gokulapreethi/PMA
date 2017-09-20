@@ -133,7 +133,7 @@ public class HandSketchActivity2 extends Activity implements OnClickListener {
         if (isFromEodsign) {
             Log.i("Sketch", "isFromEodsign ==> ## " + isFromEodsign);
             final LinearLayout.LayoutParams params_draw = (LinearLayout.LayoutParams) drawView.getLayoutParams();
-            params_draw.height = 200;
+            params_draw.height = 250;
             drawView.setLayoutParams(params_draw);
             drawView.requestLayout();
         }
