@@ -6897,7 +6897,7 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                 }
             } else if (status.equalsIgnoreCase("2") || status.equalsIgnoreCase("4")) {
                 jsonObject.put("travelStartTime", StartDateUTC);
-                taskDetailsBean.setTravelStartTime(ActivityStartdate);
+//                taskDetailsBean.setTravelStartTime(ActivityStartdate);
                 Log.i("status", "timer ==> " + StartDateUTC);
                 Log.i("status", "timer ==> " + ActivityStartdate);
                 travel_date_details = new ArrayList<>();
@@ -7358,6 +7358,11 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                         String queryUpdate = "update projectStatus set travelEndTime='" + ActivityEnddate + "' where projectId='" + projectId + "' and userId='" + Appreference.loginuserdetails.getId() + "' and taskId= '" + webtaskId + "' and travelStartTime IS NOT NULL and travelEndTime IS NULL";
                         VideoCallDataBase.getDB(context).updateaccept(queryUpdate);
                     }
+                }else if (status.equalsIgnoreCase("2") || status.equalsIgnoreCase("4")) {
+                    taskDetailsBean.setTravelStartTime(ActivityStartdate);
+                    taskDetailsBean.setTaskDescription("Gathering Details...");
+                    taskDetailsBean.setProjectStatus("7");
+                    VideoCallDataBase.getDB(context).insertORupdateStatus(taskDetailsBean);
                 }
             }
             if (status.equalsIgnoreCase("10")) {
