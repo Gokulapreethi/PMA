@@ -84,7 +84,7 @@ public class CustomTravelPickerActivity extends Activity implements DateTimePick
         });
 //        project_name.setText(taskNameshow);
         project_name.setText("Job Card No : "+ jobcodeno +"\nActivity Code : "+activitycode);
-        String query = "select * from projectStatus where projectId='" + projectIDshow + "' and userId='" + Appreference.loginuserdetails.getId() + "' and taskId= '" + taskIDshow + "' and status = '7'";
+        String query = "select * from projectStatus where projectId='" + projectIDshow + "' and userId='" + Appreference.loginuserdetails.getId() + "' and taskId= '" + taskIDshow + "' and (status = '7' or status = '2' or status = '4')";
         TaskDetailsBean bean = VideoCallDataBase.getDB(context).getActivityTimeFromStatus(query);
         if (bean != null) {
             if (bean.getTravelStartTime() != null  && !bean.getTravelStartTime().equalsIgnoreCase("")

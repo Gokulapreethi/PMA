@@ -19,7 +19,7 @@ public class StatusAlarmManager extends BroadcastReceiver {
         super();
     }
     Context context;
-    String endTime,currentStatus,jobcodeNo;
+    String endTime,jobcodeNo;
     @Override
     public void onReceive(Context context, Intent intent) {
         Log.i("alarm123", "StatusAlarmManager=onReceive==========> " );
@@ -28,7 +28,8 @@ public class StatusAlarmManager extends BroadcastReceiver {
         Log.i("alarm123", "Now Time Is====>" + tm);
         int id = intent.getExtras().getInt("id");
         endTime = intent.getExtras().getString("endTime");
-        currentStatus = intent.getExtras().getString("currentStatus");
+        String currentStatus = intent.getStringExtra("currentStatus");
+        Log.i("alarm123", "StatusAlarmManager Now status Is====>" + currentStatus);
         jobcodeNo = intent.getExtras().getString("currentProjectId");
         String alrmtask = String.valueOf(id);
 
