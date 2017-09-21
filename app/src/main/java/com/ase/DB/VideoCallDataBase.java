@@ -37,6 +37,7 @@ import org.pjsip.pjsua2.app.GroupMemberAccess;
 import org.pjsip.pjsua2.app.MainActivity;
 
 import java.io.File;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -2102,7 +2103,22 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
             cv.put("jobCardType", projectDetailsBean.getJobCardType());
             cv.put("machineMake", projectDetailsBean.getMachineMake());
             cv.put("jobDescription", projectDetailsBean.getJobDescription());
-            cv.put("openDate", projectDetailsBean.getOpenDate());
+
+            /*changing openDate format yyyy-MM-dd to dd-MM-yyyy*/
+            String JobOpenDate = "";
+            if (projectDetailsBean.getOpenDate() != null) {
+                SimpleDateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd");
+                SimpleDateFormat outputFormat = new SimpleDateFormat("dd-MM-yyyy");
+                Date openDate;
+                try {
+                    openDate = inputFormat.parse(projectDetailsBean.getOpenDate());
+                    JobOpenDate = outputFormat.format(openDate);
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+                cv.put("openDate", JobOpenDate);
+            } else
+                cv.put("openDate", projectDetailsBean.getOpenDate());
 
             if (!DuplicateProjectIdChecker(projectDetailsBean.getId())) {
                 row_id = (int) db.insert("projectDetails", null, cv);

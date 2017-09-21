@@ -112,25 +112,25 @@
 -->
     //new ip for local 203
 
-    <string name="app_version">3</string>
-    <string name="app_versionDate">Version No : 1.4.0</string>
-    <string name="app_releaseDate">Release No : 0017 </string>
+   <!-- <string name="app_version">3</string>
+    <string name="app_versionDate">Version No : 1.5.0</string>
+    <string name="app_releaseDate">Release No : 0019 </string>
     <string name="app_url">http://172.16.1.203:8080/ASE/</string>
     <string name="server_ip">172.16.1.203</string>
     <string name="file_upload">http://172.16.1.203:8080/uploads/highmessaging/chat/</string>
     <string name="task_reminder">http://172.16.1.203:8080/uploads/highmessaging/task/</string>
     <string name="user_upload">http://172.16.1.203:8080/uploads/highmessaging/user/</string>
-    <string name="group_profile">http://172.16.1.203:8080/uploads/highmessaging/group/</string>
+    <string name="group_profile">http://172.16.1.203:8080/uploads/highmessaging/group/</string>-->
 
-   <!-- <string name="app_version">203</string>
-    <string name="app_versionDate">Version No : 1.3.0</string>
-    <string name="app_releaseDate">Release No : 0012 </string>
+    <string name="app_version">203</string>
+    <string name="app_versionDate">Version No : 1.5.0</string>
+    <string name="app_releaseDate">Release No : 0020 </string>
     <string name="app_url">http://151.253.12.203/ASE/</string>
     <string name="server_ip">151.253.12.203</string>
     <string name="file_upload">http://151.253.12.203/uploads/highmessaging/chat/</string>
     <string name="task_reminder">http://151.253.12.203/uploads/highmessaging/task/</string>
     <string name="user_upload">http://151.253.12.203/uploads/highmessaging/user/</string>
-    <string name="group_profile">http://151.253.12.203/uploads/highmessaging/group/</string>-->
+    <string name="group_profile">http://151.253.12.203/uploads/highmessaging/group/</string>
 
     <!--<string name="app_version">171</string>-->
     <!--<string name="app_url">https://122.165.92.171:8443/highMessage/</string>-->

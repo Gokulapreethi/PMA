@@ -13130,6 +13130,10 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                                                  Log.i("ddd123", "Diverted task isDivertedON======>" + isDivertedON);
                                                  Log.i("ddd123", "Diverted task isFromPauseClick======>" + isFromPauseClick);
                                                  if (isDivertedON && isFromPauseClick) {
+                                                      MainActivity mainActivity = (MainActivity) Appreference.context_table.get("mainactivity");
+                                                     if(mainActivity!=null){
+                                                         mainActivity.showprogress("please wait....");
+                                                     }
                                                      isDivertedON = false;
                                                      isFromPauseClick = false;
                                                      String query = "select projectId from projectDetails where isActiveStatus = '1' ";
@@ -13149,6 +13153,11 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                                                          }
                                                      } else {
                                                          showToast("No Monthly JobCards Found...");
+                                                     }
+                                                     NewTaskConversation.this.finish();
+                                                     final ProjectHistory projectHistory = (ProjectHistory) Appreference.context_table.get("projecthistory");
+                                                     if(projectHistory!=null){
+                                                         projectHistory.finish();
                                                      }
                                                  }
                                                  Log.i("desc123", "isDeassign==>" + isDeassign);

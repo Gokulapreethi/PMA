@@ -1657,6 +1657,10 @@ public class ProjectsFragment extends Fragment implements View.OnClickListener, 
                             }
                             cancelDialog();
                             if (Success) {
+                                MainActivity mainActivity = (MainActivity) Appreference.context_table.get("mainactivity");
+                                if(mainActivity!=null){
+                                    mainActivity.cancelDialog();
+                                }
                                 try {
                                     Intent intent = new Intent(getActivity(), ProjectHistory.class);
                                     intent.putExtra("projectId", project_id);

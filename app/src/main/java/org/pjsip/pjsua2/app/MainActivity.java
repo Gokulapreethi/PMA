@@ -419,8 +419,8 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback,
 //        String proxy = "sip:" + getResources().getString(R.string.server_ip);
 
 
-            String proxy = "sip:" + getResources().getString(R.string.server_ip) + ";transport=tls;hide";
-//            String proxy = "sip:" + getResources().getString(R.string.server_ip) +":8444"+ ";transport=tls;hide";
+//            String proxy = "sip:" + getResources().getString(R.string.server_ip) + ";transport=tls;hide";
+            String proxy = "sip:" + getResources().getString(R.string.server_ip) +":8444"+ ";transport=tls;hide";
 
 
             Appreference.printLog("SipRegister", "Sip Registeration", "DEBUG", null);
@@ -831,11 +831,9 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback,
         }
         received_intent_value = getIntent();
         if (received_intent_value != null) {
-
             if (received_intent_value.getExtras().getString("from") != null && received_intent_value.getExtras().getString("from").equalsIgnoreCase("scheduler")) {
 //                scheduleCallAlert(intent);
             }
-
         }
 
 //        String hai = "<?xml version=\"1.0\"?><NotificationAlertinfo><NotificationDetails datetime=\"null\" signalid=\"13\" alerttype=\"Group change Notification\"> <groupchange groupid=\"29\" subtype=\"Member Added\" users=\"gp3_gp.com\"/></NotificationDetails></NotificationAlertinfo>";
@@ -6850,12 +6848,12 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback,
 
     }
 
-    private void showprogress(String name) {
+    public void showprogress(String name) {
         Log.i("updateContacts123","showprogress==updating Contacts........");
 
         try {
             if (progress == null || !progress.isShowing()) {
-                progress = new ProgressDialog(context);
+                progress = new ProgressDialog(mainContext);
                 progress.setCancelable(false);
                 progress.setMessage(name);
                 progress.show();
