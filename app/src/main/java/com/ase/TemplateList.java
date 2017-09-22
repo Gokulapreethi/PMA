@@ -16,14 +16,15 @@ import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.TableLayout;
 import android.widget.TextView;
 
+import com.ase.Bean.TaskDetailsBean;
+import com.ase.DB.VideoCallDataBase;
 import com.baoyz.swipemenulistview.SwipeMenu;
 import com.baoyz.swipemenulistview.SwipeMenuCreator;
 import com.baoyz.swipemenulistview.SwipeMenuItem;
 import com.baoyz.swipemenulistview.SwipeMenuListView;
-import com.ase.Bean.TaskDetailsBean;
-import com.ase.DB.VideoCallDataBase;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -53,7 +54,7 @@ public class TemplateList extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.listoffiles);
-        String query = null;
+        String query;
         context = this;
         Log.i("TemplateList", "true *1 ");
         templateview = (SwipeMenuListView) findViewById(R.id.templatelist);
@@ -265,6 +266,9 @@ public class TemplateList extends Activity {
                 templatelist.addAll(templatelist1);
                 Collections.reverse(templatelist);
                 Log.i("template", String.valueOf(requestCode) + "  size" + templatelist.size());
+                Log.i("TemplateList", "Template OnActivity Result   ------- > template list size " + templatelist.size());
+                taskArrayAdapter = new TaskArrayAdapter(context, templatelist);
+                templateview.setAdapter(taskArrayAdapter);
                 refresh();
             }
         }
@@ -328,6 +332,12 @@ public class TemplateList extends Activity {
                 TextView percen = (TextView) conView.findViewById(R.id.percent_update);
                 TextView task_status = (TextView) conView.findViewById(R.id.task_status);
                 TextView category = (TextView) conView.findViewById(R.id.catagory);
+                TextView task_giver_text = (TextView) conView.findViewById(R.id.task_giver_text);
+                task_giver_text.setVisibility(View.GONE);
+                TableLayout takertable = (TableLayout) conView.findViewById(R.id.takertable);
+                takertable.setVisibility(View.GONE);
+                TableLayout observertable = (TableLayout) conView.findViewById(R.id.observertable);
+                observertable.setVisibility(View.GONE);
                 ImageView temp_image = (ImageView) conView.findViewById(R.id.selected);
 
                 category.setText("Template Id: " + contactBean.getTaskId());

@@ -304,6 +304,7 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
     // For Reply
     String sender_reply = null;
     ArrayList<String> OracleStatusList;
+    boolean ispercentageLocation;
 
     //Added For ASE
     boolean Start_work;
@@ -657,11 +658,12 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                     } else {
 //                        gettaskwebservicewithtimestamp();
                     }
-                    if (isProjectFromOracle) {
-                        headerName.setText("Job Card No :" + JobCodeNo + "\nActivity Code :" + ActivityCode);
-                    } else {
+//                    if (isProjectFromOracle) {
+//                        headerName.setText("Job Card No :" + JobCodeNo + "\nActivity Code :" + ActivityCode);
+//                    } else {
                         headerName.setText(bean.getTaskName());
-                    }
+//                    }
+                    assign_taskview.setVisibility(View.GONE);
                     Log.i("taskConversation", "sendTemplate.setVisibility 5 ");
                     options.setClickable(false);
                     taskName = bean.getTaskName();
@@ -935,19 +937,21 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
         if (disable_by_current_status == 1 || disable_by_current_status == 3) {
             ShowHoldOrPauseTimerDisplay();
         }
-
-        if (taskStatus != null && !taskStatus.equalsIgnoreCase("null") && (taskStatus.equalsIgnoreCase("draft") || taskStatus.equalsIgnoreCase("Unassigned"))) {
-            if (Appreference.loginuserdetails != null && Appreference.loginuserdetails.getRoleId() != null
-                    && Appreference.loginuserdetails.getRoleId().equalsIgnoreCase("2")
-                    && isProjectFromOracle && !oracleProjectOwner.equalsIgnoreCase(Appreference.loginuserdetails.getUsername())) {
-                assign_taskview.setVisibility(View.GONE);
+        Log.i("onCreate", "is project  $$ " + project);
+        if (project) {
+            if (taskStatus != null && !taskStatus.equalsIgnoreCase("null") && (taskStatus.equalsIgnoreCase("draft") || taskStatus.equalsIgnoreCase("Unassigned"))) {
+                if (Appreference.loginuserdetails != null && Appreference.loginuserdetails.getRoleId() != null
+                        && Appreference.loginuserdetails.getRoleId().equalsIgnoreCase("2")
+                        && isProjectFromOracle && !oracleProjectOwner.equalsIgnoreCase(Appreference.loginuserdetails.getUsername())) {
+                    assign_taskview.setVisibility(View.GONE);
+                } else {
+                    assign_taskview.setVisibility(View.VISIBLE);
+                }
+                status_job.setVisibility(View.GONE);
+                travel_job.setVisibility(View.GONE);
             } else {
-                assign_taskview.setVisibility(View.VISIBLE);
+                assign_taskview.setVisibility(View.GONE);
             }
-            status_job.setVisibility(View.GONE);
-            travel_job.setVisibility(View.GONE);
-        } else {
-            assign_taskview.setVisibility(View.GONE);
         }
         if (taskStatus != null && (!taskStatus.equalsIgnoreCase("draft") && !taskStatus.equalsIgnoreCase("template") && !taskStatus.equalsIgnoreCase("Unassigned"))) {
             assign_taskview.setVisibility(View.GONE);
@@ -3088,7 +3092,7 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                                     name.setError("Enter valid name");
                                 } else {
                                     Log.i("template", "task name setting " + name.getText().toString());
-                                    headerName.setText(name.getText().toString());
+                                head.setText(name.getText().toString());
                                     VideoCallDataBase.getDB(context).templateNameUpdate(name.getText().toString(), webtaskId);
                                     taskName = name.getText().toString();
                                     if (!template && !note) {
@@ -9527,7 +9531,7 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                         if (added_user_names != null) {
                             content = content + " added " + added_user_names + " as observer";
                             if (removed_users != null) {
-                                content = content + " and Removed " + removed_users + " from observer";
+                                content = content + " and Removed " + removed_user_names + " from observer";
                             }
                         } else if (removed_user_names != null) {
                             content = content + " Removed " + removed_user_names + " from observer";
@@ -9993,9 +9997,11 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                                     PercentageWebService(mediaListBean.getMimeType(), mediaListBean.getTaskDescription(), mediaListBean.getTaskDescription().split("\\.")[1], sig_id, 1);
                                 }
                                 if (mediaListBean.getMimeType() != null && !mediaListBean.getMimeType().equalsIgnoreCase("") && mediaListBean.getMimeType().equalsIgnoreCase("map")) {
+                                    ispercentageLocation=true;
+                                    Log.i("percent", "map ==> " + ispercentageLocation);
                                     Log.i("taskconversation", "mediaListBean.getMimeType() --------> 3 " + mediaListBean.getMimeType());
                                     PercentageWebService("map", mediaListBean.getTaskDescription(), "", sig_id, 1);
-                                    sendMessage(mediaListBean.getTaskDescription(), null, "map", null, "map", sig_id, null);
+//                                    sendMessage(mediaListBean.getTaskDescription(), null, "map", null, "map", sig_id, null);
                                 }
                             }
 
@@ -16451,7 +16457,11 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                                 } else if (subType != null && subType.equalsIgnoreCase("taskDescription")) {
                                     chatBean.setSubType(subType);
                                     chatBean.setTaskRequestType(subType);
-                                } else {
+                                } else if(ispercentageLocation){
+                                    chatBean.setSubType("percentageCompleted");
+                                    chatBean.setTaskRequestType("percentageCompleted");
+                                    ispercentageLocation=false;
+                                }else{
                                     chatBean.setSubType(subType);
                                 }
 

@@ -79,42 +79,93 @@ public class ChatFragment extends Fragment {
         super.setUserVisibleHint(isVisibleToUser);
         Log.i("LifeCycle", " projectFragment isVisibleToUser : " + isVisibleToUser);
         isCurrentlyActivie = isVisibleToUser;
-        if(Appreference.is_chat == true){
-            chat_list = VideoCallDataBase.getDB(getContext()).getChatnames();
-            contact_count = 0;
-            for (TaskDetailsBean chatBean : chat_list) {
-                int msgCount = VideoCallDataBase.getDB(getContext()).getchatUnReadMsgCount(chatBean.getTaskId());
-                Log.i("chat", "msgcount " + msgCount);
-                if (msgCount > 0) {
-                    contact_count = contact_count + 1;
-                }
-                chatlist5.add(chatBean);
-                Log.i("chat", "CF count ** " + contact_count);
-            }
-            Log.i("chat", "CF Database size ** " + contact_count);
-            Log.i("chat", "CF Database size ** " + chatlist5.size());
-            if (contact_count != 0 && contact_count > 0) {
-                Log.i("chat", "CF count Visible " + contact_count);
-                chat_count.setVisibility(View.VISIBLE);
-                chat_count.setText(String.valueOf(contact_count));
-                contact_count=0;
-            } else {
-                Log.i("chat", "CF count GONE " + contact_count);
-                chat_count.setVisibility(View.GONE);
-            }
-
-            listView.setVisibility(View.VISIBLE);
-            listView_call.setVisibility(View.GONE);
-            adapter = new ChatAdapter(getContext(), chat_list);
-            listView.setAdapter(adapter);
-            Log.i("chat", "chatFragment " + MainActivity.username);
-            Log.i("chat", "chatFragment " + Appreference.loginuserdetails.getUsername());
-            Log.i("chat", "chatFragment " + Appreference.is_chat);
-        }
         try {
-            if (getView() != null) {
-                InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(getActivity().INPUT_METHOD_SERVICE);
-                imm.hideSoftInputFromWindow(getView().getWindowToken(), 0);
+            if (rootView != null) {
+                try {
+                    String s = "select * from taskDetailsInfo where msgstatus='12' and loginuser='" + Appreference.loginuserdetails.getEmail() + "'";
+                    ArrayList<ProjectDetailsBean> projectDetailsBeen = VideoCallDataBase.getDB(getContext()).getExclationdetails(s);
+                    if (projectDetailsBeen.size() > 0)
+                        exclation_counter.setVisibility(View.VISIBLE);
+                    else
+                        exclation_counter.setVisibility(View.GONE);
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                try {
+                    if (getView() != null) {
+                        InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(getActivity().INPUT_METHOD_SERVICE);
+                        imm.hideSoftInputFromWindow(getView().getWindowToken(), 0);
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                try {
+                    chat_list = VideoCallDataBase.getDB(getContext()).getChatnames();
+                    contact_count = 0;
+                    for (TaskDetailsBean chatBean : chat_list) {
+                        int msgCount = VideoCallDataBase.getDB(getContext()).getchatUnReadMsgCount(chatBean.getTaskId());
+                        Log.i("chat", "msgcount " + msgCount);
+                        if (msgCount > 0) {
+                            contact_count = contact_count + 1;
+                        }
+                        chatlist5.add(chatBean);
+                        Log.i("chat", "CF count ** " + contact_count);
+                    }
+                    Log.i("chat", "CF Database size ** " + contact_count);
+                    Log.i("chat", "CF Database size ** " + chatlist5.size());
+                    if (contact_count != 0 && contact_count > 0) {
+                        Log.i("chat", "CF count Visible " + contact_count);
+                        chat_count.setVisibility(View.VISIBLE);
+                        chat_count.setText(String.valueOf(contact_count));
+                        contact_count = 0;
+                    } else {
+                        Log.i("chat", "CF count GONE " + contact_count);
+                        chat_count.setVisibility(View.GONE);
+                    }
+
+
+                    if (Appreference.is_chat == true) {
+                        chat_list = VideoCallDataBase.getDB(getContext()).getChatnames();
+                        contact_count = 0;
+                        for (TaskDetailsBean chatBean : chat_list) {
+                            int msgCount = VideoCallDataBase.getDB(getContext()).getchatUnReadMsgCount(chatBean.getTaskId());
+                            Log.i("chat", "msgcount " + msgCount);
+                            if (msgCount > 0) {
+                                contact_count = contact_count + 1;
+                            }
+                            chatlist5.add(chatBean);
+                            Log.i("chat", "CF count ** " + contact_count);
+                        }
+                        Log.i("chat", "CF Database size ** " + contact_count);
+                        Log.i("chat", "CF Database size ** " + chatlist5.size());
+                        if (contact_count != 0 && contact_count > 0) {
+                            Log.i("chat", "CF count Visible " + contact_count);
+                            chat_count.setVisibility(View.VISIBLE);
+                            chat_count.setText(String.valueOf(contact_count));
+                            contact_count = 0;
+                        } else {
+                            Log.i("chat", "CF count GONE " + contact_count);
+                            chat_count.setVisibility(View.GONE);
+                        }
+
+                        listView.setVisibility(View.VISIBLE);
+                        listView_call.setVisibility(View.GONE);
+                        adapter = new ChatAdapter(getContext(), chat_list);
+                        listView.setAdapter(adapter);
+                        Log.i("chat", "chatFragment " + MainActivity.username);
+                        Log.i("chat", "chatFragment " + Appreference.loginuserdetails.getUsername());
+                        Log.i("chat", "chatFragment " + Appreference.is_chat);
+                    } else {
+                        listView.setVisibility(View.GONE);
+                        listView_call.setVisibility(View.VISIBLE);
+                        call_list = VideoCallDataBase.getDB(getContext()).getCallHistoty(Appreference.loginuserdetails.getUsername());
+                        adapter1 = new CallAdapter(getContext(), call_list);
+                        listView_call.setAdapter(adapter1);
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -170,8 +221,8 @@ public class ChatFragment extends Fragment {
             chat_count.setVisibility(View.GONE);
         }
 
-        try{
-            String s = "select * from taskDetailsInfo where readStatus='1'";
+        try {
+            String s = "select * from taskDetailsInfo where msgstatus='12' and loginuser='" + Appreference.loginuserdetails.getEmail() + "'";
             ArrayList<ProjectDetailsBean> projectDetailsBeen = VideoCallDataBase.getDB(getContext()).getExclationdetails(s);
             if(projectDetailsBeen.size() > 0)
                 exclation_counter.setVisibility(View.VISIBLE);
@@ -257,7 +308,13 @@ public class ChatFragment extends Fragment {
                 String Query = "delete from taskDetailsInfo where chatid='" + chatBean.getTaskId() + "';";
                 VideoCallDataBase.getDB(getContext()).getTaskHistory(Query);
                 chat_list.remove(position);
-                adapter.notifyDataSetChanged();
+                handler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        adapter.notifyDataSetChanged();
+                    }
+                });
+
                 return true;
             }
         });
@@ -267,10 +324,15 @@ public class ChatFragment extends Fragment {
                 Log.i("chat", "ChatFragment listViewmenuitem for call ");
                 try {
                     Call_ListBean chatBean = call_list.get(position);
-                    String Query = "delete from call where start_time= '" + chatBean.getStart_time() + "';";
+                    String Query = "delete from call where start_time='" + chatBean.getStart_time() + "';";
                     VideoCallDataBase.getDB(getContext()).getTaskHistory(Query);
                     call_list.remove(position);
-                    adapter1.notifyDataSetChanged();
+                    handler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            adapter1.notifyDataSetChanged();
+                        }
+                    });
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -288,6 +350,12 @@ public class ChatFragment extends Fragment {
             Log.i("chat", "chatFragment " + Appreference.is_chat);
             adapter1.notifyDataSetChanged();
         } else {
+            listView.setVisibility(View.GONE);
+            listView_call.setVisibility(View.VISIBLE);
+            call_list = VideoCallDataBase.getDB(getContext()).getCallHistoty(Appreference.loginuserdetails.getUsername());
+            adapter1 = new CallAdapter(getContext(), call_list);
+            listView_call.setAdapter(adapter1);
+
             Log.i("chat", "chatFragment " + Appreference.is_chat);
         }
 
@@ -378,6 +446,17 @@ public class ChatFragment extends Fragment {
                     adapter.notifyDataSetChanged();
                 }
             });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        try {
+            String s = "select * from taskDetailsInfo where msgstatus='12' and loginuser='" + Appreference.loginuserdetails.getEmail() + "'";
+            ArrayList<ProjectDetailsBean> projectDetailsBeen = VideoCallDataBase.getDB(context).getExclationdetails(s);
+            if (projectDetailsBeen.size() > 0)
+                exclation_counter.setVisibility(View.VISIBLE);
+            else
+                exclation_counter.setVisibility(View.GONE);
+
         } catch (Exception e) {
             e.printStackTrace();
         }

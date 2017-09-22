@@ -419,8 +419,8 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback,
 //        String proxy = "sip:" + getResources().getString(R.string.server_ip);
 
 
-//            String proxy = "sip:" + getResources().getString(R.string.server_ip) + ";transport=tls;hide";
-            String proxy = "sip:" + getResources().getString(R.string.server_ip) +":8444"+ ";transport=tls;hide";
+            String proxy = "sip:" + getResources().getString(R.string.server_ip) + ";transport=tls;hide";
+//            String proxy = "sip:" + getResources().getString(R.string.server_ip) +":8444"+ ";transport=tls;hide";
 
 
             Appreference.printLog("SipRegister", "Sip Registeration", "DEBUG", null);
@@ -830,11 +830,11 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback,
             }
         }
         received_intent_value = getIntent();
-        if (received_intent_value != null) {
+       /* if (received_intent_value != null) {
             if (received_intent_value.getExtras().getString("from") != null && received_intent_value.getExtras().getString("from").equalsIgnoreCase("scheduler")) {
 //                scheduleCallAlert(intent);
             }
-        }
+        }*/
 
 //        String hai = "<?xml version=\"1.0\"?><NotificationAlertinfo><NotificationDetails datetime=\"null\" signalid=\"13\" alerttype=\"Group change Notification\"> <groupchange groupid=\"29\" subtype=\"Member Added\" users=\"gp3_gp.com\"/></NotificationDetails></NotificationAlertinfo>";
 //        notifyChatReceived("amuthan_hm.com", "s1_g.com", "text", hai);
@@ -1944,10 +1944,14 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback,
                 //            } else {
                 ActiveScreens();
                 //            }
-                if (received_intent_value != null) {
-                    if (received_intent_value.getExtras().getString("from") != null && received_intent_value.getExtras().getString("from").equalsIgnoreCase("scheduler")) {
-                        scheduleCallAlert(received_intent_value);
+                try {
+                    if (received_intent_value != null && received_intent_value.getExtras() != null) {
+                        if (received_intent_value.getExtras().getString("from") != null && received_intent_value.getExtras().getString("from").equalsIgnoreCase("scheduler")) {
+                            scheduleCallAlert(received_intent_value);
+                        }
                     }
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
 
             }
@@ -2286,7 +2290,7 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback,
     public static void startAlarmRingTone() {
         Log.i("tone123", "startAlarmRingTone===>");
         try {
-            if (player != null)
+            if (player != null && !player.isPlaying())
                 player = null;
             if (player == null) {
                 player = new MediaPlayer();
@@ -3065,7 +3069,7 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback,
                         }
                     } else if (notification.getAlert_type() != null && notification.getAlert_type().equalsIgnoreCase("Project Notification")) {
 
-                        if (notification.getAlert_sub_type().equalsIgnoreCase("New Project")) {
+                        if (notification.getAlert_sub_type() != null && notification.getAlert_sub_type().equalsIgnoreCase("New Project")) {
                             //                ProjectDetailsBean projectDetailsBean=new ProjectDetailsBean();
                             ProjectDetailsBean projectDetailsBean = notification.getProjectDetailsBean();
                             //                VideoCallDataBase.getDB(context).insertProject_history(projectDetailsBean);
@@ -3082,8 +3086,7 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback,
                             }else
                                 Toast.makeText(MainActivity.this, "Check your internet connection", Toast.LENGTH_SHORT).show();
 
-
-                        } else if (notification.getAlert_sub_type().equalsIgnoreCase("Member Added")) {
+                        } else if (notification.getAlert_sub_type() != null && notification.getAlert_sub_type().equalsIgnoreCase("Member Added")) {
                             ProjectDetailsBean taskDetailsBean = notification.getProjectDetailsBean();
                             VideoCallDataBase.getDB(context).updateProjectMemberList(taskDetailsBean);
                             if (Appreference.context_table.containsKey("projecthistory")) {
@@ -3092,7 +3095,7 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback,
                                     projectHistory.refresh();
                                 }
                             }
-                        } else if (notification.getAlert_sub_type().equalsIgnoreCase("Percentage update")) {
+                        } else if (notification.getAlert_sub_type() != null && notification.getAlert_sub_type().equalsIgnoreCase("Percentage update")) {
                             //                ProjectDetailsBean projectDetailsBean=notification.getProjectDetailsBean();
                             TaskDetailsBean taskDetailsBean = notification.getTaskDetailsBean();
                             VideoCallDataBase.getDB(context).update_Project_history(taskDetailsBean);
@@ -3102,7 +3105,7 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback,
                                     projectHistory.refresh();
                                 }
                             }
-                        } else if (notification.getAlert_sub_type().equalsIgnoreCase("Date Change")) {
+                        } else if (notification.getAlert_sub_type() != null && notification.getAlert_sub_type().equalsIgnoreCase("Date Change")) {
                             TaskDetailsBean taskDetailsBean = notification.getTaskDetailsBean();
                             VideoCallDataBase.getDB(context).update_Project_history(taskDetailsBean);
                             if (Appreference.context_table.containsKey("projecthistory")) {
@@ -3111,7 +3114,7 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback,
                                     projectHistory.refresh();
                                 }
                             }
-                        } else if (notification.getAlert_sub_type().equalsIgnoreCase("New Task") ||
+                        } else if (notification.getAlert_sub_type() != null && notification.getAlert_sub_type().equalsIgnoreCase("New Task") ||
                                 notification.getAlert_sub_type().equalsIgnoreCase("Template") ||
                                 notification.getAlert_sub_type().equalsIgnoreCase("taskDateChangedApproval")) {
                             TaskDetailsBean taskDetailsBean = notification.getTaskDetailsBean();
@@ -3148,7 +3151,7 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback,
                                 }
 //                                }
                             }
-                        } else if (notification.getAlert_sub_type().equalsIgnoreCase("Project Deleted")) {
+                        } else if (notification.getAlert_sub_type() != null && notification.getAlert_sub_type().equalsIgnoreCase("Project Deleted")) {
                             TaskDetailsBean taskDetailsBean = notification.getTaskDetailsBean();
                             VideoCallDataBase.getDB(context).deleteProject(taskDetailsBean);
                             if (Appreference.context_table.containsKey("projecthistory")) {
@@ -3163,7 +3166,7 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback,
                                     projectfragment.notifyNewProjectReceived();
                                 }
                             }
-                        } else if (notification.getAlert_sub_type().equalsIgnoreCase("Draft delete")) {
+                        } else if (notification.getAlert_sub_type() != null && notification.getAlert_sub_type().equalsIgnoreCase("Draft delete")) {
                             TaskDetailsBean taskDetailsBean = notification.getTaskDetailsBean();
                             VideoCallDataBase.getDB(context).deleteProjectDraft(taskDetailsBean);
                             if (Appreference.context_table.containsKey("projecthistory")) {
@@ -3178,7 +3181,7 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback,
                                     projectfragment.notifyNewProjectReceived();
                                 }
                             }
-                        } else if (notification.getAlert_sub_type().equalsIgnoreCase("Observer Added")) {
+                        } else if (notification.getAlert_sub_type() != null && notification.getAlert_sub_type().equalsIgnoreCase("Observer Added")) {
                             TaskDetailsBean taskDetailsBean = notification.getTaskDetailsBean();
                             String query = "select taskObservers from projectHistory where projectId='" + taskDetailsBean.getProjectId() + "' and taskId='" + taskDetailsBean.getTaskId() + "'";
                             String old_observers = VideoCallDataBase.getDB(context).getValuesForQuery(query);
@@ -3197,7 +3200,7 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback,
                                     projectHistory.refresh();
                                 }
                             }
-                        } else if (notification.getAlert_sub_type().equalsIgnoreCase("Observer Removed")) {
+                        } else if (notification.getAlert_sub_type() != null && notification.getAlert_sub_type().equalsIgnoreCase("Observer Removed")) {
                             TaskDetailsBean taskDetailsBean = notification.getTaskDetailsBean();
                             String query = "select taskObservers from projectHistory where projectId='" + taskDetailsBean.getProjectId() + "' and taskId='" + taskDetailsBean.getTaskId() + "'";
                             String old_observers = VideoCallDataBase.getDB(context).getValuesForQuery(query);
@@ -3251,9 +3254,9 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback,
 //                                old_observers = taskDetailsBean.getTaskAddObservers();
                             }
 
-                        } else if (notification.getAlert_sub_type().equalsIgnoreCase("Issue")) {
+                        } else if (notification.getAlert_sub_type() != null && notification.getAlert_sub_type().equalsIgnoreCase("Issue")) {
                             TaskDetailsBean taskDetailsBean = notification.getTaskDetailsBean();
-                            if (taskDetailsBean.getFromUserName().equalsIgnoreCase(Appreference.loginuserdetails.getUsername())) {
+                            if (taskDetailsBean.getFromUserName() != null && taskDetailsBean.getFromUserName().equalsIgnoreCase(Appreference.loginuserdetails.getUsername())) {
                                 taskDetailsBean.setSendStatus("0");
                                 taskDetailsBean.setMsg_status(1);
                             } else {
@@ -3268,7 +3271,7 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback,
                                     projectHistory.refresh();
                                 }
                             }
-                        } else if (notification.getAlert_sub_type().equalsIgnoreCase("Reassign Task")) {
+                        } else if (notification.getAlert_sub_type() != null && notification.getAlert_sub_type().equalsIgnoreCase("Reassign Task")) {
                             TaskDetailsBean taskDetailsBean = notification.getTaskDetailsBean();
                             String query = "select taskObservers from projectHistory where projectId='" + taskDetailsBean.getProjectId() + "' and taskId='" + taskDetailsBean.getTaskId() + "'";
                             String old_observers = VideoCallDataBase.getDB(context).getValuesForQuery(query);
@@ -3560,6 +3563,11 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback,
 
                     }*/
 
+                    if (taskDetailsBean.getTaskReceiver() != null && taskDetailsBean.getTaskReceiver().equalsIgnoreCase(Appreference.loginuserdetails.getUsername()) && taskDetailsBean.getTaskRequestType().equalsIgnoreCase("reassignTask")) {
+                        Log.i("ChatMessage", "syncTask@@ ");
+                        appSharedpreferences.saveBoolean("syncTask" + taskDetailsBean.getTaskId(), false);
+                    }
+
                     Log.i("chat", "received " + taskDetailsBean.getMimeType());
                     if (taskDetailsBean.getMimeType().equalsIgnoreCase("image")) {
                         Appreference.taskMultimediaDownload.put(taskDetailsBean.getTaskDescription(), taskDetailsBean);
@@ -3806,11 +3814,16 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback,
                                     taskDetailsBean.setTaskObservers("");
                                 }
                             } else {
+                                if (taskDetailsBean.getToUserName().equalsIgnoreCase(Appreference.loginuserdetails.getUsername())) {
+                                    taskDetailsBean.setTaskReceiver(taskDetailsBean.getToUserName());
+                                }
                                 Log.i("Mainactivity", "Added observers else " + taskDetailsBean.getTaskObservers());
                             }
                         }
                     }
-
+                    if (taskDetailsBean.getTaskStatus() != null && taskDetailsBean.getTaskStatus().equalsIgnoreCase("template")) {
+                        taskDetailsBean.setCustomTagVisible(false);
+                    }
                     //            }
                     Log.i("Mainactivity", "syncTask" + appSharedpreferences.getBoolean("syncTask" + taskDetailsBean.getTaskId()));
                     if (Appreference.context_table.containsKey("taskcoversation") && taskDetailsBean.getCatagory() != null && !taskDetailsBean.getCatagory().equalsIgnoreCase("chat")) {
@@ -3831,6 +3844,9 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback,
                         NewTaskConversation newTaskConversation = (NewTaskConversation) Appreference.context_table.get("taskcoversation");
                         Log.i("Mainactivity", "fileName--2 " + taskDetailsBean.getTaskDescription());
                         if (newTaskConversation != null) {
+                            String taskMemberList = "select taskMemberList from projectHistory where projectId='" + taskDetailsBean.getProjectId() + "' and taskId='" + taskDetailsBean.getTaskId() + "'";
+                            String taskMemberList_1 = VideoCallDataBase.getDB(context).getValuesForQuery(taskMemberList);
+                            Log.i("MainActivity", "notifytaskReceived taskMemberList_2 ----------> " + taskMemberList_1);
                             newTaskConversation.notifyTaskReceived(taskDetailsBean);
                         }
                         /*if (detailsBeanForRemind != null) {
@@ -3920,14 +3936,16 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback,
                                             //                                        Log.i("conversation", "taskDetailsBean.getTaskStatus() else if ----> " + percentage);
                                         } else {
                                             if (taskDetailsBean.getTaskStatus().equalsIgnoreCase("Completed")) {
-                                                groupOwnerPercentCalculation(taskDetailsBean);
-                                                Log.i("Mainactivity", "taskDetailsBean.getTaskStatus() isGrp_Percent " + isGrp_Percent);
-                                                if (isGrp_Percent) {
-                                                    taskDetailsBean.setTaskStatus("Completed");
-                                                    Log.i("Mainactivity", "taskDetailsBean.getTaskStatus() final " + taskDetailsBean.getTaskStatus());
-                                                } else if (!isGrp_Percent) {
-                                                    taskDetailsBean.setTaskStatus("inprogress");
-                                                    Log.i("Mainactivity", "taskDetailsBean.getTaskStatus() not final " + taskDetailsBean.getTaskStatus());
+                                                if (Appreference.loginuserdetails.getUsername().equalsIgnoreCase(taskDetailsBean.getOwnerOfTask())) {
+                                                    groupOwnerPercentCalculation(taskDetailsBean);
+                                                    Log.i("Mainactivity", "taskDetailsBean.getTaskStatus() isGrp_Percent " + isGrp_Percent);
+                                                    if (isGrp_Percent) {
+                                                        taskDetailsBean.setTaskStatus("Completed");
+                                                        Log.i("Mainactivity", "taskDetailsBean.getTaskStatus() final " + taskDetailsBean.getTaskStatus());
+                                                    } else {
+                                                        taskDetailsBean.setTaskStatus("inprogress");
+                                                        Log.i("Mainactivity", "taskDetailsBean.getTaskStatus() not final " + taskDetailsBean.getTaskStatus());
+                                                    }
                                                 }
                                             }
                                         }
@@ -3989,6 +4007,15 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback,
                                 Log.d("Mainactivity", "Value true refreshed-2");
                                 taskHistory.refresh();
                             }
+                        } else {
+                            Log.i("Mainactivity", " taskhistory reference  else -------- > > > ");
+                            if (taskDetailsBean.getProjectId() != null && !taskDetailsBean.getProjectId().equalsIgnoreCase("")) {
+                                VideoCallDataBase.getDB(context).insert_new_Project_history(taskDetailsBean);
+                            } else {
+                                VideoCallDataBase.getDB(context).insertORupdate_TaskHistoryInfo(taskDetailsBean);
+                                VideoCallDataBase.getDB(context).insertORupdate_Task_history(taskDetailsBean);
+                            }
+
                         }
                     } else if (taskDetailsBean.getCatagory() != null && taskDetailsBean.getCatagory().equalsIgnoreCase("chat")) {
 
@@ -4089,9 +4116,17 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback,
                                                 }
                                             } else {
                                                 if (!taskDetailsBean.getOwnerOfTask().equalsIgnoreCase(Appreference.loginuserdetails.getUsername())) {
-                                                    percentage = VideoCallDataBase.getDB(context).getlastCompletedParcentage(taskDetailsBean.getTaskId());
-                                                    if (percentage != null && !percentage.equalsIgnoreCase(null) && !percentage.equalsIgnoreCase("") && !percentage.equalsIgnoreCase("null")) {
-                                                        taskDetailsBean.setCompletedPercentage(percentage);
+                                                    if (taskDetailsBean.getProjectId() != null && !taskDetailsBean.getProjectId().equalsIgnoreCase("null") && !taskDetailsBean.getProjectId().equalsIgnoreCase("") && !taskDetailsBean.getProjectId().equalsIgnoreCase(null) && !taskDetailsBean.getProjectId().equalsIgnoreCase("(null)")) {
+                                                        percentage = VideoCallDataBase.getDB(context).getlastProjectCompletedPercentage(taskDetailsBean.getTaskId());
+                                                        if (percentage != null && !percentage.equalsIgnoreCase(null) && !percentage.equalsIgnoreCase("") && !percentage.equalsIgnoreCase("null")) {
+                                                            Log.i("conversation", "taskDetailsBean.getTaskStatus()  if  check ---> " + percentage);
+                                                            taskDetailsBean.setCompletedPercentage(percentage);
+                                                        }
+                                                    } else {
+                                                        percentage = VideoCallDataBase.getDB(context).getlastCompletedParcentage(taskDetailsBean.getTaskId());
+                                                        if (percentage != null && !percentage.equalsIgnoreCase(null) && !percentage.equalsIgnoreCase("") && !percentage.equalsIgnoreCase("null")) {
+                                                            taskDetailsBean.setCompletedPercentage(percentage);
+                                                        }
                                                     }
                                                     Log.i("Mainactivity", "taskDetailsBean.getTaskStatus() else if ---> " + percentage);
                                                     if (taskDetailsBean.getTaskStatus().equalsIgnoreCase("Completed")) {
@@ -4173,6 +4208,34 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback,
                                 Log.i("Mainactivity ", "taskstatus " + taskDetailsBean.getTaskStatus());
                                 Log.i("Mainactivity ", "issues id " + taskDetailsBean.getIssueId());
                                 if (taskDetailsBean.getProjectId() != null && !taskDetailsBean.getProjectId().equalsIgnoreCase("null") && !taskDetailsBean.getProjectId().equalsIgnoreCase("") && !taskDetailsBean.getProjectId().equalsIgnoreCase("(null)")) {
+                                    if (Appreference.loginuserdetails.getUsername().equalsIgnoreCase(taskDetailsBean.getOwnerOfTask())) {
+                                        if ((taskDetailsBean.getTaskType() != null && taskDetailsBean.getTaskType().equalsIgnoreCase("Group"))) {
+                                            String project_memList = VideoCallDataBase.getDB(context).getProjectParentTaskId("select taskMemberList from projectHistory where taskId='" + taskDetailsBean.getTaskId() + "'");
+                                            int counter = 0;
+                                            for (int i = 0; i < project_memList.length(); i++) {
+                                                if (project_memList.charAt(i) == ',') {
+                                                    counter++;
+                                                }
+                                                Log.d("project_details", "Task Mem's counter size is == " + counter);
+                                            }
+                                            Log.i("observer", "list clear 1");
+                                            ArrayList<String> listOfObs = new ArrayList<>();
+                                            listOfObs.clear();
+                                            for (int j = 0; j < counter + 1; j++) {
+                                                Log.i("project_details", "Task Mem's and position == " + project_memList.split(",")[j] + " " + j);
+                                                if (counter == 0) {
+                                                    listOfObs.add(project_memList);
+                                                } else {
+                                                    listOfObs.add(project_memList.split(",")[j]);
+                                                }
+                                            }
+                                            int a = VideoCallDataBase.getDB(context).ProjectGroupPercentageChecker(listOfObs, taskDetailsBean.getTaskId(), taskDetailsBean.getOwnerOfTask());
+                                            taskDetailsBean.setCompletedPercentage(String.valueOf(a));
+                                            Log.i("conversation", "Inside project after DB update group percentage " + a);
+                                        }
+
+                                        VideoCallDataBase.getDB(context).updateaccept("update projectHistory set completedPercentage='" + taskDetailsBean.getCompletedPercentage() + "' where taskId='" + taskDetailsBean.getTaskId() + "'");
+                                    }
                                 } else {
                                     if (Appreference.loginuserdetails.getUsername().equalsIgnoreCase(taskDetailsBean.getOwnerOfTask())) {
                                         if ((taskDetailsBean.getTaskType() != null && taskDetailsBean.getTaskType().equalsIgnoreCase("Group"))) {
@@ -4202,15 +4265,15 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback,
                                     }
                                 }
                             }
-                            TaskHistory taskHistory = (TaskHistory) Appreference.context_table.get("taskhistory");
+                            final TaskHistory taskHistory = (TaskHistory) Appreference.context_table.get("taskhistory");
                             if (taskHistory != null) {
                                 Log.d("Mainactivity", "Value true refreshed-3");
-                                taskHistory.refresh();
-                            }
-                            ProjectHistory projectHistory = (ProjectHistory) Appreference.context_table.get("projecthistory");
-                            if (projectHistory != null) {
-                                Log.d("Mainactivity", "Value true refreshed-4 ** ");
-                                projectHistory.refresh();
+                                handler.postDelayed(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        taskHistory.refresh();
+                                    }
+                                }, 3000);
                             }
                     /*
                         Insert DB function finished Before Code Line
@@ -4219,13 +4282,29 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback,
                             taskDetailsBean.setTaskDescription("TaskDate");
                         }*/
                             ContactsFragment contactsFragment = (ContactsFragment) Appreference.context_table.get("contactsfragment");
-                            contactsFragment.refresh();
+                            if (contactsFragment != null) {
+                                Log.d("Mainactivity", "Value true refreshed-5");
+                                contactsFragment.refresh();
+                            }
+                        } else {
+                            Log.i("Mainactivity", " else reference else  -------- > > > ");
+                            if (taskDetailsBean.getProjectId() != null && !taskDetailsBean.getProjectId().equalsIgnoreCase("")) {
+                                VideoCallDataBase.getDB(context).insert_new_Project_history(taskDetailsBean);
+                            } else {
+                                VideoCallDataBase.getDB(context).insertORupdate_TaskHistoryInfo(taskDetailsBean);
+                                VideoCallDataBase.getDB(context).insertORupdate_Task_history(taskDetailsBean);
+                            }
                         }
-                    }
-                    if (taskDetailsBean.getTaskDescription() != null && taskDetailsBean.getTaskDescription().contains("Escalation added")) {
-                        Log.i("Buzz", "Buzz escalation added" + taskDetailsBean.getRemainderFrequency());
-                        if (taskDetailsBean.getRemainderFrequency() != null && !taskDetailsBean.getRemainderFrequency().equalsIgnoreCase("") && !taskDetailsBean.getRemainderFrequency().equalsIgnoreCase(null) && !taskDetailsBean.getRemainderFrequency().equalsIgnoreCase("null") && !taskDetailsBean.getRemainderFrequency().equalsIgnoreCase("(null)")) {
-                            startSelfAlarmManager(taskDetailsBean, Integer.parseInt(taskDetailsBean.getTaskId()));
+
+                        final AllTaskList allTaskList = (AllTaskList) Appreference.context_table.get("alltasklist");
+                        if (allTaskList != null) {
+                            Log.i("popupmenu", "alltasklist @@1 ");
+                            handler.postDelayed(new Runnable() {
+                                @Override
+                                public void run() {
+                                    allTaskList.refresh();
+                                }
+                            }, 3000);
                         }
                     }
 
@@ -4235,11 +4314,20 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback,
                         String query_3 = "update taskDetailsInfo set taskStatus = 'abandoned' where taskId='" + taskDetailsBean.getTaskId() + "' and taskStatus <> 'reminder'";
                         VideoCallDataBase.getDB(context).getTaskHistory(query_3);
                         Log.i("Mainactivity ", "Value true inside update abandoned");
+                    } else if (taskDetailsBean.getTaskStatus() != null && taskDetailsBean.getTaskStatus().equalsIgnoreCase("pause")) {
+                        String query_5 = "update taskDetailsInfo set taskStatus = 'pause' where taskId='" + taskDetailsBean.getTaskId() + "' and taskStatus <> 'reminder'";
+                        VideoCallDataBase.getDB(context).getTaskHistory(query_5);
+                        Log.i("Mainactivity ", "Value true inside update pause");
                     } else if (taskDetailsBean.getTaskDescription() != null && taskDetailsBean.getTaskDescription().equalsIgnoreCase("This task is activated")) {
-                        String query_4 = "update taskDetailsInfo  set taskStatus ='inprogress' where taskId='" + taskDetailsBean.getTaskId() + "' and taskStatus = 'abandoned'";
+                        String query_4 = "update taskDetailsInfo  set taskStatus ='" + taskDetailsBean.getTaskStatus() + "' where taskId='" + taskDetailsBean.getTaskId() + "' and taskStatus = 'abandoned'";
                         Log.i("Mainactivity", "query_4 " + query_4);
                         VideoCallDataBase.getDB(context).getTaskHistory(query_4);
                         Log.i("Mainactivity ", "Value true inside update activated");
+                    } else if (taskDetailsBean.getTaskDescription() != null && taskDetailsBean.getTaskDescription().equalsIgnoreCase("This task is resumed")) {
+                        String query_6 = "update taskDetailsInfo  set taskStatus ='" + taskDetailsBean.getTaskStatus() + "' where taskId='" + taskDetailsBean.getTaskId() + "' and taskStatus = 'abandoned'";
+                        Log.i("Mainactivity", "query_4 " + query_6);
+                        VideoCallDataBase.getDB(context).getTaskHistory(query_6);
+                        Log.i("Mainactivity ", "Value true inside update resumed");
                     }
 
                     /*if (taskDetailsBean.getTaskDescription() != null && taskDetailsBean.getTaskDescription().contains("Escalation added")) {
@@ -4465,14 +4553,12 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback,
 
     public void groupOwnerPercentCalculation(TaskDetailsBean taskDetailsBean) {
         try {
-            boolean check = false;
             listMembers_1 = new ArrayList<>();
             listMembers_2 = new ArrayList<>();
             listofProjectMembers = new ArrayList<>();
             if (taskDetailsBean.getProjectId() != null && !taskDetailsBean.getProjectId().equalsIgnoreCase("") && !taskDetailsBean.getProjectId().equalsIgnoreCase(null) && !taskDetailsBean.getProjectId().equalsIgnoreCase("null") && !taskDetailsBean.getProjectId().equalsIgnoreCase("(null)")) {
                 String pjt_ListMems = VideoCallDataBase.getDB(context).getProjectListMembers(taskDetailsBean.getTaskId());
                 int counter = 0;
-                ListMember list_Mems = new ListMember();
                 for (int i = 0; i < pjt_ListMems.length(); i++) {
                     if (pjt_ListMems.charAt(i) == ',') {
                         counter++;
@@ -4480,6 +4566,7 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback,
                     Log.d("project_details", "Task Mem's counter size is == " + counter);
                 }
                 for (int j = 0; j < counter + 1; j++) {
+                    ListMember list_Mems = new ListMember();
                     Log.i("project_details", "Task Mem's and position == " + pjt_ListMems.split(",")[j] + " " + j);
                     if (counter == 0) {
                         list_Mems.setUsername(pjt_ListMems);
@@ -4501,13 +4588,13 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback,
             }
             Log.i("popup", "arrayList size is " + listMembers_1);
             if (listMembers_1.size() > 0) {
-                Log.i("popup", "if inside -->" + listMembers_1 + " " + taskDetailsBean.getToUserName());
+                Log.i("popup", "if inside --> " + listMembers_1 + " " + taskDetailsBean.getToUserName());
                 for (ListMember listMember : listMembers_1) {
-                    Log.i("popup", "if inside -->" + listMembers_1.size() + " " + taskDetailsBean.getToUserName());
+                    Log.i("popup", "if inside --> " + listMembers_1.size() + " " + listMember.getUsername());
                     if (!Appreference.loginuserdetails.getUsername().equalsIgnoreCase(listMember.getUsername())) {
                         Log.i("popup", "before db line--> " + listMembers_1);
                         int percent_1 = VideoCallDataBase.getDB(context).groupPercentageStatus(listMember.getUsername(), taskDetailsBean.getTaskId());
-                        Log.i("popup", "after db line--> " + listMembers_1);
+                        Log.i("popup", "after db line--> " + percent_1 + " " + listMember.getUsername());
                         listMembers_2.add(String.valueOf(percent_1));
                     }
                 }

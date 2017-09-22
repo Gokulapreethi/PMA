@@ -232,7 +232,12 @@ public class TaskHistory extends Activity implements WebServiceInterface {
 
                     buddyArrayAdapter = new TaskArrayAdapter(context, taskDetailsBeen);
                     listView.setAdapter(buddyArrayAdapter);
-                    buddyArrayAdapter.notifyDataSetChanged();
+                    handler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            buddyArrayAdapter.notifyDataSetChanged();
+                        }
+                    });
                 }
             });
         } catch (Exception e) {
@@ -333,6 +338,8 @@ public class TaskHistory extends Activity implements WebServiceInterface {
                 newNotes.setVisibility(View.VISIBLE);
                 userName = Appreference.loginuserdetails.getUsername();
                 taskType = "Individual";
+            } else {
+                me_task = "";
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -612,7 +619,12 @@ public class TaskHistory extends Activity implements WebServiceInterface {
                     Noresult.setVisibility(View.VISIBLE);
                     Noresult.setText("No TaskHistories Available");
                 } else {
-                    buddyArrayAdapter.notifyDataSetChanged();
+                    handler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            buddyArrayAdapter.notifyDataSetChanged();
+                        }
+                    });
                 }
                 listView.setAdapter(buddyArrayAdapter);
                 handler.post(new Runnable() {
@@ -624,7 +636,12 @@ public class TaskHistory extends Activity implements WebServiceInterface {
                         } else {
                             Noresult.setVisibility(View.GONE);
 //                            taskDetailsBeanArraylist.addAll(taskDetailsBeen1);
-                            buddyArrayAdapter.notifyDataSetChanged();
+                            handler.post(new Runnable() {
+                                @Override
+                                public void run() {
+                                    buddyArrayAdapter.notifyDataSetChanged();
+                                }
+                            });
                             listView.setAdapter(buddyArrayAdapter);
                         }
                     }
@@ -938,7 +955,12 @@ public class TaskHistory extends Activity implements WebServiceInterface {
                             taskDetailsBeanArraylist.addAll(taskDetailsBeen1);
                             Log.i(TAG," taskDetailsBeanArraylist size in View Issues adapter ------ > "+taskDetailsBeanArraylist.size());
                             Log.i(TAG," taskDetailsBeen size in View Issues adapter ------ > "+taskDetailsBeen.size());
-                            buddyArrayAdapter.notifyDataSetChanged();
+                            handler.post(new Runnable() {
+                                @Override
+                                public void run() {
+                                    buddyArrayAdapter.notifyDataSetChanged();
+                                }
+                            });
                         } else if (menu.getMenuItem(index).getTitle().equalsIgnoreCase("View task")) {
                             isscrool = false;
                             Log.d("swipe", "issue owner ***  ");
@@ -958,12 +980,22 @@ public class TaskHistory extends Activity implements WebServiceInterface {
                             taskDetailsBeanArraylist.addAll(taskDetailsBeen1);
                             Log.i(TAG," taskDetailsBeanArraylist size in View Task adapter ------ > "+taskDetailsBeanArraylist.size());
                             Log.i(TAG," taskDetailsBeen size in View Task adapter ------ > "+taskDetailsBeen.size());
-                            buddyArrayAdapter.notifyDataSetChanged();
+                            handler.post(new Runnable() {
+                                @Override
+                                public void run() {
+                                    buddyArrayAdapter.notifyDataSetChanged();
+                                }
+                            });
                         } else {
                             Log.i("task", "cance1");
                             taskDetailsBeen.remove(position);
                             taskDetailsBeanArraylist.remove(position);
-                            buddyArrayAdapter.notifyDataSetChanged();
+                            handler.post(new Runnable() {
+                                @Override
+                                public void run() {
+                                    buddyArrayAdapter.notifyDataSetChanged();
+                                }
+                            });
                             String query1 = "delete from taskDetailsInfo where('" + taskDetailsBean.getTaskId() + "'= taskId ) and (category <> 'chat') and loginuser='" + Appreference.loginuserdetails.getEmail() + "';";
                             dataBase.getTaskHistory(query1);
                             String taskHistoryquery = "delete from taskHistoryInfo where('" + taskDetailsBean.getTaskId() + "'= taskId ) and (category <> 'chat') and loginuser='" + Appreference.loginuserdetails.getEmail() + "';";
@@ -990,7 +1022,12 @@ public class TaskHistory extends Activity implements WebServiceInterface {
                             taskDetailsBeanArraylist.addAll(taskDetailsBeen1);
                             Log.i(TAG," taskDetailsBeanArraylist size in View Issues taker adapter ------ > "+taskDetailsBeanArraylist.size());
                             Log.i(TAG," taskDetailsBeen size in View Issues taker adapter ------ > "+taskDetailsBeen.size());
-                            buddyArrayAdapter.notifyDataSetChanged();
+                            handler.post(new Runnable() {
+                                @Override
+                                public void run() {
+                                    buddyArrayAdapter.notifyDataSetChanged();
+                                }
+                            });
                         } else if (menu.getMenuItem(index).getTitle().equalsIgnoreCase("View task")) {
                             isscrool = false;
                             Log.d("swipe", "issue owner ***  ");
@@ -1011,11 +1048,21 @@ public class TaskHistory extends Activity implements WebServiceInterface {
                             taskDetailsBeanArraylist.addAll(taskDetailsBeen1);
                             Log.i(TAG," taskDetailsBeanArraylist size in View Task taker adapter ------ > "+taskDetailsBeanArraylist.size());
                             Log.i(TAG," taskDetailsBeen size in View Task taker adapter ------ > "+taskDetailsBeen.size());
-                            buddyArrayAdapter.notifyDataSetChanged();
+                            handler.post(new Runnable() {
+                                @Override
+                                public void run() {
+                                    buddyArrayAdapter.notifyDataSetChanged();
+                                }
+                            });
                         } else {
                             taskDetailsBeen.remove(position);
                             taskDetailsBeanArraylist.remove(position);
-                            buddyArrayAdapter.notifyDataSetChanged();
+                            handler.post(new Runnable() {
+                                @Override
+                                public void run() {
+                                    buddyArrayAdapter.notifyDataSetChanged();
+                                }
+                            });
                         }
                     }
                 }
@@ -1749,7 +1796,13 @@ public class TaskHistory extends Activity implements WebServiceInterface {
                         Log.i(TAG," taskDetailsBeen size in Refresh  adapter ------ > "+taskDetailsBeen.size());
                         buddyArrayAdapter = new TaskArrayAdapter(context, taskDetailsBeen);
                         listView.setAdapter(buddyArrayAdapter);
-                        buddyArrayAdapter.notifyDataSetChanged();
+                        handler.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                buddyArrayAdapter.notifyDataSetChanged();
+                            }
+                        });
+
                         listView.setSelectionFromTop(index, top);
                     }
                 });
@@ -1774,7 +1827,8 @@ public class TaskHistory extends Activity implements WebServiceInterface {
         Log.i("TaskHistory", "onResume is == 0 ");
         Log.i("DBQuery", "check " + check);
         Log.i("DBQuery", "check1111 " + check);
-        Noresult.setVisibility(View.GONE);
+        try {
+            Noresult.setVisibility(View.GONE);
 //        if (check) {
             String query1 = "";
             qury = active_task.getText().toString();
@@ -2070,6 +2124,11 @@ public class TaskHistory extends Activity implements WebServiceInterface {
                 }
             });
             check = false;
+        } catch (NumberFormatException e) {
+            e.printStackTrace();
+        } catch (Exception e){
+
+        }
 
     }
 

@@ -191,6 +191,7 @@ public class GCMPushReceiverService extends FirebaseMessagingService {
 
 
                     }
+                    String remTask_Receiver = null, remTask_Mems = null;
                     if (getResources().getString(R.string.TASKNOTIFICATION_FROM_SERVER).equalsIgnoreCase("1")) {
                         Log.i("gcmMessage2", "Push Notification from server - value is " + getResources().getString(R.string.TASKNOTIFICATION_FROM_SERVER));
                         Log.i("gcmMessage10", "message.getCollapseKey() 012 " + message.getCollapseKey());
@@ -198,21 +199,61 @@ public class GCMPushReceiverService extends FirebaseMessagingService {
                             Log.i("gcmMessage3", "message.getCollapseKey() " + message.getCollapseKey());
 //                            parseObject(message.getCollapseKey(), data.get("message").toString());
                             Log.d("gcmMessage3", "parsed sucessfully");
-                            if (remTask_Id != null && !VideoCallDataBase.getDB(context).getOverdueMsg(remTask_Id)) {
+                            if (rem_projectId != null) {
+                                remTask_Receiver = VideoCallDataBase.getDB(context).getProjectParentTaskId("select taskReceiver from projectHistory where taskId='" + remTask_Id + "'");
+                                remTask_Mems = VideoCallDataBase.getDB(context).getProjectParentTaskId("select taskMemberList from ProjectHistory where taskId='" + remTask_Id + "'");
+                            } else {
+                                remTask_Receiver = VideoCallDataBase.getDB(context).getProjectParentTaskId("select taskReceiver from taskhistoryInfo where taskId='" + remTask_Id + "'");
+                                remTask_Mems = VideoCallDataBase.getDB(context).getProjectParentTaskId("select taskMemberList from taskhistoryInfo where taskId='" + remTask_Id + "'");
+                            }
+                            Log.i("Gcm", " From User Name ------- >  . " + fromUser_Name);
+                            Log.i("Gcm", " To User Name ------- >  . " + toUser_Name);
+                            Log.i("Gcm", " remTask_Receiver ------- >  . " + remTask_Receiver);
+                            Log.i("Gcm", " remTask_Mems ------- >  . " + remTask_Mems);
+                            if ((remTask_Id != null && !VideoCallDataBase.getDB(context).getOverdueMsg(remTask_Id)
+                                    && ((toUser_Name!=null && toUser_Name.equalsIgnoreCase(Appreference.loginuserdetails.getUsername())) || (remTask_Receiver!=null && remTask_Receiver.equalsIgnoreCase(toUser_Name)) || (remTask_Mems!=null && remTask_Mems.contains(toUser_Name))))
+                                    ||(task_overdue != null && task_overdue.equalsIgnoreCase("Y"))) {
                                 if (Appreference.context_table.get("mainactivity") != null) {
                                     try {
                                         NewTaskConversation newTaskConversation = (NewTaskConversation) Appreference.context_table.get("taskcoversation");
                                         taskList_1 = new ArrayList<>();
-                                        String queryy = "select * from taskDetailsInfo where (fromUserName='" + fromUser_Name + "' or toUserName='" + toUser_Name + "') and loginuser='" + Appreference.loginuserdetails.getEmail() + "'and taskId='" + remTask_Id + "' and mimeType='date' and requestStatus='assigned' and (taskDescription like '" + "%.mp3" + "' or taskDescription like '" + "%.wav" + "') order by id desc";
+                                        String queryy;
+                                        if ((fromUser_Name != null && fromUser_Name.equalsIgnoreCase(Appreference.loginuserdetails.getUsername())) && (toUser_Name != null && toUser_Name.equalsIgnoreCase(Appreference.loginuserdetails.getUsername()))) {
+                                            queryy = "select * from taskDetailsInfo where (fromUserName='" + fromUser_Name + "' or toUserName='" + toUser_Name + "') and loginuser='" + Appreference.loginuserdetails.getEmail() + "'and taskId='" + remTask_Id + "' and mimeType='note' and (requestStatus='assigned' or requestStatus='approved') and (taskDescription like '" + "%.mp3" + "' or taskDescription like '" + "%.wav" + "') order by id desc";
+                                        } else {
+                                            queryy = "select * from taskDetailsInfo where (fromUserName='" + fromUser_Name + "' or toUserName='" + toUser_Name + "') and loginuser='" + Appreference.loginuserdetails.getEmail() + "'and taskId='" + remTask_Id + "' and mimeType='date' and requestStatus='assigned' and (taskDescription like '" + "%.mp3" + "' or taskDescription like '" + "%.wav" + "') order by id desc";
+                                        }
+                                        //                                        String queryy = "select * from taskDetailsInfo where (fromUserName='" + fromUser_Name + "' or toUserName='" + toUser_Name + "') and loginuser='" + Appreference.loginuserdetails.getEmail() + "'and taskId='" + remTask_Id + "' and mimeType='date' and requestStatus='assigned' order by id desc";
                                         taskList_1 = VideoCallDataBase.getDB(context).getTaskHistory(queryy);
                                         if (taskList_1.size() > 0) {
                                             TaskDetailsBean taskbean = taskList_1.get(0);
-                                            reminder_tone = taskbean.getServerFileName();
-                                            Log.i("gcmMessage5", "reminder_tone" + reminder_tone);
+                                            if ((fromUser_Name != null && fromUser_Name.equalsIgnoreCase(Appreference.loginuserdetails.getUsername())) && (toUser_Name != null && toUser_Name.equalsIgnoreCase(Appreference.loginuserdetails.getUsername()))) {
+                                                reminder_tone = taskbean.getTaskDescription().split("/")[5];
+                                                Log.i("gcmMessage5", "reminder_tone same " + reminder_tone);
+                                            } else if (fromUser_Name != null && fromUser_Name.equalsIgnoreCase(Appreference.loginuserdetails.getUsername())) {
+                                                reminder_tone = taskbean.getServerFileName();
+                                                Log.i("gcmMessage5", "reminder_tone fromUser " + reminder_tone);
+                                            } else if (toUser_Name != null && toUser_Name.equalsIgnoreCase(Appreference.loginuserdetails.getUsername())) {
+                                                reminder_tone = taskbean.getTaskDescription();
+                                                Log.i("gcmMessage5", "reminder_tone toUser " + reminder_tone);
+                                            }
+                                            //                                            reminder_tone = taskbean.getServerFileName();
+                                            Log.i("gcmMessage5", "reminder_tone " + reminder_tone);
                                         }
-                                        String RootDir = Environment.getExternalStorageDirectory()
-                                                .getAbsolutePath()
-                                                + "/High Message/downloads/" + reminder_tone;
+                                        String RootDir = "";
+                                        if ((fromUser_Name != null && fromUser_Name.equalsIgnoreCase(Appreference.loginuserdetails.getUsername())) && (toUser_Name != null && toUser_Name.equalsIgnoreCase(Appreference.loginuserdetails.getUsername()))) {
+                                            if (reminder_tone != null && (reminder_tone.contains(".mp3") || reminder_tone.contains(".wav"))) {
+                                                RootDir = Environment.getExternalStorageDirectory()
+                                                        .getAbsolutePath()
+                                                        + "/High Message/" + reminder_tone;
+                                            }
+                                        } else {
+                                            if (reminder_tone != null && (reminder_tone.contains(".mp3") || reminder_tone.contains(".wav"))) {
+                                                RootDir = Environment.getExternalStorageDirectory()
+                                                        .getAbsolutePath()
+                                                        + "/High Message/downloads/" + reminder_tone;
+                                            }
+                                        }
 
                                         File file = new File(RootDir);
 
@@ -290,7 +331,7 @@ public class GCMPushReceiverService extends FirebaseMessagingService {
 //                                                    taskDetailsBean.setOverdue_Msg("1");
                                                     taskDetailsBean.setMsg_status(10);
                                                 } else {
-                                                    taskDetailsBean.setMimeType("reminder");
+                                                    taskDetailsBean.setMimeType("text");
                                                     taskDetailsBean.setTaskStatus("reminder");
                                                     Appreference.printLog("Remainder", "Reminder TimeDetails App Active State   Server Time is == " + rem_firingTime + "   ServerFiringTime is == " + serverTime + "   client FiringTime is == " + taskDetailsBean.getDateTime() + "\n  taskId is ==  " + taskDetailsBean.getTaskId() + "   signal Id is == " + signalId, "DEBUG", null);
                                                     Log.i("gcmMessage", "reminderText " + reminder_quote);
