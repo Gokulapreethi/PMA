@@ -676,8 +676,7 @@ public class ProjectHistory extends Activity implements WebServiceInterface, Swi
                                 Toast.makeText(getApplicationContext(), "This task is not assigned to You", Toast.LENGTH_SHORT).show();
                             }
 
-                        }
-                        else if (taskDetailsBean.getTaskType().equalsIgnoreCase("Group")) {
+                        } else if (taskDetailsBean.getTaskType().equalsIgnoreCase("Group")) {
                             Log.i("ListMembers", "projectDetailsBean.getTaskMemberList() " + taskDetailsBean.getTaskMemberList());
                             if ((taskDetailsBean.getTaskMemberList() != null && taskDetailsBean.getTaskMemberList().contains(Appreference.loginuserdetails.getUsername()))
                                     || (taskDetailsBean.getOwnerOfTask() != null && taskDetailsBean.getOwnerOfTask().equalsIgnoreCase(Appreference.loginuserdetails.getUsername()))
@@ -708,14 +707,15 @@ public class ProjectHistory extends Activity implements WebServiceInterface, Swi
                                     }else {
                                         if((Appreference.loginuserdetails!=null && Appreference.loginuserdetails.getRoleId()!=null
                                                 && Appreference.loginuserdetails.getRoleId().equalsIgnoreCase("2")
-                                                && taskDetailsBean.getOwnerOfTask().equalsIgnoreCase(Appreference.loginuserdetails.getUsername()))
+                                                && taskDetailsBean.getOwnerOfTask()!=null && taskDetailsBean.getOwnerOfTask().equalsIgnoreCase(Appreference.loginuserdetails.getUsername()))
                                                 ||(Appreference.loginuserdetails!=null && Appreference.loginuserdetails.getRoleId()!=null
                                                 && Appreference.loginuserdetails.getRoleId().equalsIgnoreCase("3"))){
                                             showDialog();
                                             Log.d("projecthistory", "listView getRoleId ** " + Appreference.loginuserdetails.getRoleId());
                                             Intent intent = null;
+
                                             try {
-                                                intent = new Intent(context, NewTaskConversation.class);
+                                                intent = new Intent(ProjectHistory.this, NewTaskConversation.class);
                                                 intent.putExtra("task", "projectHistory");
                                                 intent.putExtra("projectHistoryBean", taskDetailsBean);
                                                 intent.putExtra("position", position);

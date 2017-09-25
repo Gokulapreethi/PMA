@@ -395,6 +395,7 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.task_conversation);
+        Log.d("projecthistory", "*************************14 ONcreate");
         ft = new SimpleDateFormat("E yyyy.MM.dd 'at' hh:mm:ss.SSS a zzz");
         Date dn = new Date();
         Log.i("Performance", "onCreate Start NewTaskConversation " + ft.format(dn));
@@ -531,6 +532,7 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
 
         try {
             switch (conversation_In) {
+
                 case "Newtask":
                     Log.i("taskConversation", "New task");
                     setNewTask_StaticVariables();
@@ -589,13 +591,6 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                     Log.i("taskConversation", "project_temp " + project_temp);
                     projectId = projectBean.getId();
 
-
-                    /*if (!appSharedpreferences.getBoolean("syncTask" + webtaskId)) {
-                        gettaskwebservice();
-                        Log.i("taskConversation", "templatehistory - Gettaskwebservice called for taskId is " + webtaskId);
-                    } else {
-//                        gettaskwebservicewithtimestamp();
-                    }*/
                     String quryJob1 = "select oracleProjectId from projectHistory where projectId='" + projectId + "' and taskId= '" + webtaskId + "'";
                     String quryActivity1 = "select oracleTaskId from projectHistory where projectId='" + projectId + "' and taskId= '" + webtaskId + "'";
                     JobCodeNo = VideoCallDataBase.getDB(getApplication()).getProjectParentTaskId(quryJob1);
@@ -747,6 +742,7 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                     clickPosition = getIntent().getIntExtra("position", 0);
                     Log.i("task280317", "after project notify press getTaskObservers " + projectDetailsBean.getTaskObservers());
                     setProjectHistory_StaticVariable(projectDetailsBean);
+                    Log.d("projecthistory", "*************************15 after setProjectHistory_StaticVariable");
                     ShowApproveIcon();
                     addObserverForProject(projectDetailsBean);
                     String quryJob = "select oracleProjectId from projectHistory where projectId='" + projectId + "' and taskId= '" + webtaskId + "'";
