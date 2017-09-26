@@ -17,7 +17,7 @@ public class ListOfFiles extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.reminder_frequency_selection);
-
+        setFinishOnTouchOutside(false);
         everyminute = (TextView) findViewById(R.id.everyminute);
         everyminute.setText("Chat File List");
         daily = (TextView) findViewById(R.id.daily);

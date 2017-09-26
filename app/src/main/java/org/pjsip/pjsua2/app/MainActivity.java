@@ -342,11 +342,11 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback,
             if (audioRecorder != null)
                 audioRecorder.stopRecordingWhileCall();
         }
-        if (Appreference.context_table.containsKey("customvideocallscreen")) {
+       /* if (Appreference.context_table.containsKey("customvideocallscreen")) {
             CustomVideoCamera customVideoCamera = (CustomVideoCamera) Appreference.context_table.get("customvideocallscreen");
             if (customVideoCamera != null)
                 customVideoCamera.stopRecording();
-        }
+        }*/
         try {
             startCallRingTone();
 
@@ -4464,14 +4464,23 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback,
                                                         detailsBean.getTaskId().equalsIgnoreCase(taskDetailsBean.getTaskId())) {
                                                     Log.i("notifyreceived", "for getTaskStatus==> 4  " + taskDetailsBean.getTaskStatus());
                                                     detailsBean.setTaskStatus(taskDetailsBean.getTaskStatus());
+                                                    detailsBean.setTaskReceiver(taskDetailsBean.getTaskReceiver());
+                                                    detailsBean.setTaskMemberList(taskDetailsBean.getTaskMemberList());
                                                     Log.i("draft123", "Mainactivity before If" + taskDetailsBean.getTaskStatus());
                                                     Appreference.old_status.put(detailsBean.getTaskId(), taskDetailsBean.getTaskStatus());
                                                     Log.i("draft123", "Mainactivity Appreference added status " + taskDetailsBean.getTaskStatus());
+                                                    Log.i("draft123", "Mainactivity Appreference added getTaskReceiver @@ " + taskDetailsBean.getTaskReceiver());
                                                     Log.i("draft123", "Mainactivity Appreference added ID" + detailsBean.getTaskId());
                                                     break;
                                                 }
                                             }
                                         }
+                                        handler1.post(new Runnable() {
+                                            @Override
+                                            public void run() {
+                                                projectHistory.buddyArrayAdapter.notifyDataSetChanged();
+                                            }
+                                        });
                                     }
                                 }
                             }

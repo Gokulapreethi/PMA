@@ -1116,6 +1116,8 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                                                 private_member = null;
                                                 subType = "normal";
                                                 des.setHint("");
+                                                getTaskObservers();
+                                                getGroupTaskMembers();
                                                 icons.setBackgroundColor(getResources().getColor(R.color.white));
                                                 linear1.setBackgroundColor(getResources().getColor(R.color.white));
                                                 Toast.makeText(NewTaskConversation.this, "Private message disabled", Toast.LENGTH_SHORT).show();
@@ -1755,6 +1757,8 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                                                 private_member = null;
                                                 subType = "normal";
                                                 des.setHint("");
+                                                getTaskObservers();
+                                                getGroupTaskMembers();
                                                 icons.setBackgroundColor(getResources().getColor(R.color.white));
                                                 linear1.setBackgroundColor(getResources().getColor(R.color.white));
                                                 Toast.makeText(NewTaskConversation.this, "Private message disabled", Toast.LENGTH_SHORT).show();
@@ -2219,6 +2223,8 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                                             private_member = null;
                                             subType = "normal";
                                             des.setHint("");
+                                            getTaskObservers();
+                                            getGroupTaskMembers();
                                             icons.setBackgroundColor(getResources().getColor(R.color.white));
                                             linear1.setBackgroundColor(getResources().getColor(R.color.white));
                                             Toast.makeText(NewTaskConversation.this, "Private message disabled", Toast.LENGTH_SHORT).show();
@@ -15314,6 +15320,7 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
             groupname = tasksBean.getToUserId();
             Log.i("taskConversation", "group name" + groupname);
             category = tasksBean.getCatagory();
+            task_catagory = category;
             issueId = tasksBean.getIssueId();
             if (tasksBean.getTaskType() != null && tasksBean.getTaskType().equalsIgnoreCase("Group")) {
                 tasksBean.setToUserName(VideoCallDataBase.getDB(context).getGroupName(groupname));
@@ -15389,7 +15396,7 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                 } else {
                     toUserId = contactBean.getUserid();
                 }
-                headerName.setText(tasksBean.getTaskName());
+                head.setText(tasksBean.getTaskName());
                 if (Appreference.loginuserdetails.getUsername().equalsIgnoreCase(ownerOfTask)) {
                     taskgiver.setText("Me");
                 } else {
@@ -15406,9 +15413,13 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                         taskgiver.setText(task_giver);
                     }
                 }
+                if (toUserId > 0) {
+                    toUserName = VideoCallDataBase.getDB(context).getTemplateTouserName(String.valueOf(toUserId));
+                }
+                isTaskName = false;
                 groupMemberAccess = VideoCallDataBase.getDB(context).getMemberAccessList(String.valueOf(toUserId));
                 gridAccess();
-                isTaskName = false;
+
 //            if (!template) {
                 if (ownerOfTask != null && ownerOfTask.equalsIgnoreCase(Appreference.loginuserdetails.getUsername()))
                     ownerofTasks();
@@ -16469,6 +16480,9 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                                         chatBean.setRequestStatus("");
                                         chatBean.setTaskRequestType("percentageCompleted");
                                     }
+                                } else if (chatBean.getTaskDescription() != null && (chatBean.getTaskDescription().contains("Completed Percentage") || chatBean.getTaskDescription().equalsIgnoreCase("This Task is closed") || chatBean.getTaskDescription().equalsIgnoreCase("This issue is closed"))) {
+                                    chatBean.setRequestStatus("");
+                                    chatBean.setTaskRequestType("percentageCompleted");
                                 }
                             }
                         } else {
@@ -16477,22 +16491,28 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                                 chatBean.setToUserName("");
                                 chatBean.setToUserId("");
                                 chatBean.setSubType("deassign");
-                                chatBean.setTaskRequestType("nornal");
+                                chatBean.setTaskRequestType("normal");
                                 chatBean.setTaskStatus("Unassigned");
                                 chatBean.setCatagory("Template");
                                 taskStatus = "Unassigned";
                                 chatBean.setCompletedPercentage("0");
 
-//                                String project_deassignMems=getAllProjectMembersList();
-                                String project_deassignMems = listTaskMembers();
+                                String project_deassignMems=getAllProjectMembersList();
+//                                String project_deassignMems = listTaskMembers();
                                 Log.i("deassign123", "project_deassignMems **  " + project_deassignMems);
                                 Log.i("deassign123", "------listOfObservers ==> " + listOfObservers);
                                 Log.i("deassign123", "------ownerOfTask ==> " + ownerOfTask);
                                 if (project_deassignMems != null && !project_deassignMems.equalsIgnoreCase("") && !project_deassignMems.equalsIgnoreCase(null)) {
-                                    chatBean.setGroupTaskMembers(project_deassignMems);
+                                    chatBean.setGroupTaskMembers(listTaskMembers());
                                     listOfObservers.clear();
-                                    listOfObservers.add(ownerOfTask);
-                                    listOfObservers.add(listTaskMembers());
+                                    if(project_deassignMems!=null){
+                                        String members_deassign[]=project_deassignMems.split(",");
+                                        for(int i=0;i<members_deassign.length;i++){
+                                            listOfObservers.add(members_deassign[i]);
+                                        }
+                                    }
+//                                    listOfObservers.add(ownerOfTask);
+//                                    listOfObservers.add(getAllProjectMembersList());
                                 }
                             } else if (isProjectFromOracle &&
                                     chatBean.getTaskDescription() != null &&
@@ -21987,7 +22007,7 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                             }
                             if (percentage1 >= 0 && percentage1 != 100) {
                                 Log.e("Task1", "percentage(if)" + percentage1);
-                                if (taskDetailsBean.getRequestStatus() != null && (taskDetailsBean.getRequestStatus().equalsIgnoreCase("approved") || taskDetailsBean.getRequestStatus().equalsIgnoreCase("assigned"))) {
+                                if (taskDetailsBean.getRequestStatus() != null && (taskDetailsBean.getRequestStatus().equalsIgnoreCase("approved") || taskDetailsBean.getRequestStatus().equalsIgnoreCase("assigned")) || taskDetailsBean.getTaskRequestType().equalsIgnoreCase("percentageCompleted")) {
                                     Log.e("task", "DateAssigned");
                                     if (taskDetailsBean.getTaskStatus() != null && !taskDetailsBean.getTaskStatus().equalsIgnoreCase("closed")) {
                                         reminderTimerDisplay();

@@ -265,6 +265,7 @@ public class ContactsFragment extends Fragment implements View.OnClickListener, 
 //        reportdetails.setOnClickListener(this);
         alpha_sort.setBackgroundResource(R.drawable.z_to_a);
         online_sort = (ImageView) rootView.findViewById(R.id.online_sort);
+        online_sort.setBackgroundResource(R.drawable.user_asc);
         sortlayout = (LinearLayout) rootView.findViewById(R.id.sort);
         sortlayout.setVisibility(View.VISIBLE);
         iv_txtstatus = (ImageView) rootView.findViewById(R.id.iv_txtstatus);
@@ -4910,6 +4911,8 @@ public class ContactsFragment extends Fragment implements View.OnClickListener, 
                 } else if (Appreference.isAlfhaOrOnline.equalsIgnoreCase("Online")) {
                     Log.i("ContactsFragment", "inside  1 Online ------> " + Appreference.contact_arrange.get("Online"));
                     if (Appreference.contact_arrange.get("Online").equalsIgnoreCase("ASC")) {
+                        alpha_sort.setBackgroundResource(R.drawable.a_to_z);
+                        online_sort.setBackgroundResource(R.drawable.user_asc);
                         Log.i("ContactsFragment", "inside  1 Online ------>  if ASC --- " + Appreference.contact_arrange.get("Online"));
                         selection = false;
                         ArrayList<ContactBean> onlinelist = new ArrayList<ContactBean>();
@@ -4957,6 +4960,8 @@ public class ContactsFragment extends Fragment implements View.OnClickListener, 
                         Log.i("ContactsFragment", "inside  1 Online ------>  if DESC --- " + Appreference.contact_arrange.get("Online"));
                         try {
 //                        selection = true;
+                            alpha_sort.setBackgroundResource(R.drawable.a_to_z);
+                            online_sort.setBackgroundResource(R.drawable.useronline);
                             Collections.sort(buddyList, new CustomComparator());
                             buddyArrayAdapter.notifyDataSetChanged();
                         } catch (Exception e) {
@@ -4966,6 +4971,8 @@ public class ContactsFragment extends Fragment implements View.OnClickListener, 
                     } else {
                         Log.i("ContactsFragment", "inside  1 Online ------>  if else --- " + Appreference.contact_arrange.get("Online"));
                         try {
+                            alpha_sort.setBackgroundResource(R.drawable.a_to_z);
+                            online_sort.setBackgroundResource(R.drawable.useronline);
                             Collections.sort(buddyList, new CustomComparator());
                             buddyArrayAdapter.notifyDataSetChanged();
                         } catch (Exception e) {

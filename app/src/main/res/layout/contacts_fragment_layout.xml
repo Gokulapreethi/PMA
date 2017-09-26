@@ -347,17 +347,16 @@
 
             <ImageView
                 android:id="@+id/alpha_sort"
-                android:layout_width="20dp"
-                android:layout_height="15dp"
+                android:layout_width="23dp"
+                android:layout_height="18dp"
                 android:gravity="center"
                 android:layout_gravity="center"
                 />
 
             <ImageView
                 android:id="@+id/online_sort"
-                android:layout_width="20dp"
-                android:layout_height="15dp"
-                android:src="@drawable/useronline"
+                android:layout_width="23dp"
+                android:layout_height="18dp"
                 android:gravity="center"
                 android:layout_gravity="center"
                 android:layout_marginTop="25dp" />

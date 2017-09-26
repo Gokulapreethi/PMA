@@ -886,7 +886,15 @@ public class CustomVideoCamera extends Activity {
         try {
             ispaused = true;
             super.onPause();
-            stopRecording();
+            if (isPhoto) {
+                photo_taken_orientatio = orientation;
+                myCamera.takePicture(null, null, jpegCallback);
+            } else {
+                stopRecording();
+            }
+//            releaseMediaRecorder();
+            releaseCamera();
+
 //            finish();
         } catch (Exception e) {
             // TODO Auto-generated catch block

@@ -58,6 +58,7 @@ public class Contactlistpage extends Activity implements WebServiceInterface {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.contactlistpage);
+        setFinishOnTouchOutside(false);
         xmlcomposer = new xmlcomposer();
         assingNew = (TextView) findViewById(R.id.assingNew);
         Profile = (TextView) findViewById(R.id.Profile);

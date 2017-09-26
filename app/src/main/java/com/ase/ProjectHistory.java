@@ -567,6 +567,9 @@ public class ProjectHistory extends Activity implements WebServiceInterface, Swi
                                     && !taskDetailsBean.getTaskMemberList().equalsIgnoreCase(null) && !taskDetailsBean.getTaskMemberList().equalsIgnoreCase("null")
                                     && !taskDetailsBean.getTaskMemberList().equalsIgnoreCase(Appreference.loginuserdetails.getUsername())
                                     && !taskDetailsBean.getTaskMemberList().equalsIgnoreCase(taskDetailsBean.getOwnerOfTask())){
+                                Log.i("check123","taskDetailsBean.getTaskMemberList()]======>"+taskDetailsBean.getTaskMemberList());
+                                Log.i("check123","Appreference.loginuserdetails.getUsername()======>"+Appreference.loginuserdetails.getUsername());
+                                Log.i("check123","taskDetailsBean.getOwnerOfTask()======>"+taskDetailsBean.getOwnerOfTask());
                                 Log.i("projecthistory","getview 2 ");
                                 Toast.makeText(getApplicationContext(), "You are not allowed for this Unassigned Task", Toast.LENGTH_SHORT).show();
 

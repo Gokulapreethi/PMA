@@ -35,6 +35,7 @@ import com.ase.DB.VideoCallDataBase;
 
 import java.io.File;
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -713,7 +714,20 @@ public class EodScreen extends Activity {
             }
             if (detailsBean.getMcModel()!=null && !detailsBean.getMcModel().equalsIgnoreCase("") && !detailsBean.getMcModel().equalsIgnoreCase(null)) {
 //                service_date.setText(detailsBean.getDateTime());
-                service_date.setText(My_open_date);
+                /*changing openDate format  dd-MM-yyyy to  yyyy-MM-dd */
+                String JobOpenDate = "";
+                if (My_open_date != null) {
+                    SimpleDateFormat inputFormat = new SimpleDateFormat("dd-MM-yyyy");
+                    SimpleDateFormat outputFormat = new SimpleDateFormat("yyyy-MM-dd");
+                    Date openDate;
+                    try {
+                        openDate = inputFormat.parse(My_open_date);
+                        JobOpenDate = outputFormat.format(openDate);
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    }
+                }
+                service_date.setText(JobOpenDate);
             }
             if (detailsBean.getMcModel()!=null && !detailsBean.getMcModel().equalsIgnoreCase("") && !detailsBean.getMcModel().equalsIgnoreCase(null)) {
                 proj_activity.setText(detailsBean.getActivity());

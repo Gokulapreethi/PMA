@@ -61,22 +61,25 @@ public class AssignedTemplates extends Activity implements WebServiceInterface {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 ListAssignedTemplate listAssignedTemplate = listAssignedTemplates.get(position);
-                tamplatetask tamplatetask = new tamplatetask();
+                tamplatetask tamplatetask ;
                 tamplatetask = listAssignedTemplate.getTask();
                 Log.i("AssignedTemplate", "tamplatetask.getId() " + tamplatetask.getId());
                 TaskDetailsBean taskDetailsBean = VideoCallDataBase.getDB(getApplicationContext()).getTaskContent("select * from taskDetailsInfo where taskId='" + tamplatetask.getId() + "'");
-                Log.i("AssignedTemplate", String.valueOf(position));
+
                 Intent intent = new Intent(getApplicationContext(), NewTaskConversation.class);
                 String name = VideoCallDataBase.getDB(getApplicationContext()).getTemplateTouserName(taskDetailsBean.getToUserId());
-                if(name.equalsIgnoreCase(Appreference.loginuserdetails.getUsername())) {
-                     taskDetailsBean.setFromUserName(name);
-                     name = VideoCallDataBase.getDB(getApplicationContext()).getTemplateTouserName(taskDetailsBean.getFromUserId());
+                Log.i("AssignedTemplate", "name " + name);
+                if (name != null && name.equalsIgnoreCase(Appreference.loginuserdetails.getUsername())) {
+                    taskDetailsBean.setFromUserName(name);
+                    name = VideoCallDataBase.getDB(getApplicationContext()).getTemplateTouserName(taskDetailsBean.getFromUserId());
                 }
                 taskDetailsBean.setOwnerOfTask(Appreference.loginuserdetails.getUsername());
                 taskDetailsBean.setTaskReceiver(name);
                 taskDetailsBean.setToUserName(name);
                 String task_name = VideoCallDataBase.getDB(getApplicationContext()).getProjectParentTaskId("select taskName from taskHistoryInfo where taskId='" + taskDetailsBean.getTaskId() + "'");
                 taskDetailsBean.setTaskName(task_name);
+
+                Log.i("AssignedTemplate", String.valueOf(position));
                 Log.i("AssignedTemplate", "Ownar " + taskDetailsBean.getOwnerOfTask());
                 Log.i("AssignedTemplate", "getFromUserName " + taskDetailsBean.getFromUserName());
                 Log.i("AssignedTemplate", "toUserName " + taskDetailsBean.getToUserName());
@@ -84,9 +87,9 @@ public class AssignedTemplates extends Activity implements WebServiceInterface {
                 Log.i("AssignedTemplate", "WebtaskNo " + taskDetailsBean.getTaskId());
                 Log.i("AssignedTemplate", "toUserId " + taskDetailsBean.getToUserId());
                 Log.i("AssignedTemplate", "taskname " + taskDetailsBean.getTaskName());
-                Log.i("AssignedTemplate", "TaskOwner " + taskDetailsBean.getOwnerOfTask());
                 Log.i("AssignedTemplate", "TaskType " + taskDetailsBean.getTaskType());
                 Log.i("AssignedTemplate", "Task Receiver " + taskDetailsBean.getTaskReceiver());
+
                 intent.putExtra("Ownar", taskDetailsBean.getOwnerOfTask());
                 intent.putExtra("userName", taskDetailsBean.getFromUserName());
                 intent.putExtra("toUserName", taskDetailsBean.getToUserName());
@@ -190,7 +193,7 @@ public class AssignedTemplates extends Activity implements WebServiceInterface {
         handler.post(new Runnable() {
             @Override
             public void run() {
-                Log.i("AssignedTemplate respon", "Assigned Templates  ResponceMethod");
+                Log.i("AssignedTemplate", "Assigned Templates  ResponceMethod");
                 CommunicationBean bean = (CommunicationBean) object;
                 try {
                     cancelDialog();
@@ -200,7 +203,7 @@ public class AssignedTemplates extends Activity implements WebServiceInterface {
                     Log.d("AssignedTemplate", "name   == " + s2);
                     Type collectionType = new TypeToken<List<ListAssignedTemplate>>() {
                     }.getType();
-                    List<ListAssignedTemplate> lcs = (List<ListAssignedTemplate>) new Gson().fromJson(str, collectionType);
+                    List<ListAssignedTemplate> lcs = new Gson().fromJson(str, collectionType);
                     Log.i("AssignedTemplate String", "Value--->1" + lcs.size());
                     for (int i = 0; i < lcs.size(); i++) {
                         Log.i("AssignedTemplate", "Value--->2" + lcs.get(i));
@@ -258,9 +261,9 @@ public class AssignedTemplates extends Activity implements WebServiceInterface {
                             false);
                 }
                 final ListAssignedTemplate listAssignedTemplates = arrayBuddyList.get(pos);
-                tamplatetask tamplatetask = new tamplatetask();
+                tamplatetask tamplatetask ;
                 tamplatetask = listAssignedTemplates.getTask();
-                ListFromDetails listFromDetails = new ListFromDetails();
+                ListFromDetails listFromDetails ;
                 listFromDetails = tamplatetask.getToUser();
                 TextView templatename = (TextView) conView.findViewById(R.id.templatename);
                 TextView task_giver = (TextView) conView.findViewById(R.id.task_giver);
