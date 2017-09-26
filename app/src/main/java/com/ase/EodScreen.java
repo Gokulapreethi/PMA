@@ -686,6 +686,8 @@ public class EodScreen extends Activity {
         });
         String Query = "Select * from projectHistory where projectId ='" + projectId + "' and taskId = '" + webtaskId + "'";
         detailsBean = VideoCallDataBase.getDB(context).getDetails_to_complete_project(Query);
+        String getOpen_date_query="select openDate from projectDetails where loginuser = '" + Appreference.loginuserdetails.getEmail() + "'and projectId='" + projectId + "'";
+        String My_open_date = VideoCallDataBase.getDB(context).getValuesForQuery(getOpen_date_query);
         project_id.setText(detailsBean.getProjectId());
         project_name.setText("Job Card No :" + JobCodeNo + "\nActivity Code :" + ActivityCode);
         task_id.setText(ActivityCode);
@@ -710,7 +712,8 @@ public class EodScreen extends Activity {
                 est_activity.setText(detailsBean.getEstimatedTravel());
             }
             if (detailsBean.getMcModel()!=null && !detailsBean.getMcModel().equalsIgnoreCase("") && !detailsBean.getMcModel().equalsIgnoreCase(null)) {
-                service_date.setText(detailsBean.getDateTime());
+//                service_date.setText(detailsBean.getDateTime());
+                service_date.setText(My_open_date);
             }
             if (detailsBean.getMcModel()!=null && !detailsBean.getMcModel().equalsIgnoreCase("") && !detailsBean.getMcModel().equalsIgnoreCase(null)) {
                 proj_activity.setText(detailsBean.getActivity());

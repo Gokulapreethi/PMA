@@ -941,7 +941,7 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
                     cv.put("completedPercentage", String.valueOf(VideoCallDataBase.getDB(context).GroupPercentageChecker(bean.getToUserName(), bean.getTaskId(), bean.getOwnerOfTask())));
                     Log.i("videocalldatabase", "group percentage check  2== " + bean.getCompletedPercentage());
                     Log.i("videocalldatabase", "group percentage check 2.1== " + String.valueOf(VideoCallDataBase.getDB(context).GroupPercentageChecker(bean.getToUserName(), bean.getTaskId(), bean.getOwnerOfTask())));
-                    if (String.valueOf(VideoCallDataBase.getDB(context).GroupPercentageChecker(bean.getToUserName(), bean.getTaskId(), bean.getOwnerOfTask())).equalsIgnoreCase("100")) {
+                    if (String.valueOf(VideoCallDataBase.getDB(context).GroupPercentageChecker(bean.getToUserId(), bean.getTaskId(), bean.getOwnerOfTask())).equalsIgnoreCase("100")) {
                         cv.put("taskStatus", "Completed");
                     }
                 }
@@ -3248,9 +3248,6 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
             cur = db.rawQuery(query, null);
             cur.moveToFirst();
             while (!cur.isAfterLast()) {
-                       /* ContactBean bean = new ContactBean();
-                        bean.setFirstName(cur.getString(7));
-                        bean.setLastName(cur.getString(8));*/
                 return_value = cur.getString(0);
                 cur.moveToNext();
             }

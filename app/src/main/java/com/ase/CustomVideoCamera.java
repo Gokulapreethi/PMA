@@ -644,7 +644,7 @@ public class CustomVideoCamera extends Activity {
         }
     }
 
-    public void stopRecording(String path) {
+    public void stopRecording() {
 
         try {
             if (recording) {
@@ -886,23 +886,7 @@ public class CustomVideoCamera extends Activity {
         try {
             ispaused = true;
             super.onPause();
-            if (recording) {
-                // stop recording and release camera
-                if (mediaRecorder != null)
-                    mediaRecorder.stop(); // stop the recording
-                chronometer.stop();
-                myButton.setBackgroundResource(R.drawable.start_recording);
-                /*Intent intent = new Intent();
-                int pos = getIntent().getExtras().getInt("others", 0);
-                String path = getIntent().getStringExtra("filePath");
-                intent.putExtra("others", pos);
-                intent.putExtra("filePath", path);
-                setResult(RESULT_OK, intent);*/
-                usevideo.setVisibility(View.VISIBLE);
-                retake.setVisibility(View.VISIBLE);
-            }
-            releaseMediaRecorder();
-            releaseCamera();
+            stopRecording();
 //            finish();
         } catch (Exception e) {
             // TODO Auto-generated catch block
@@ -1106,7 +1090,7 @@ public class CustomVideoCamera extends Activity {
                         photo_taken_orientatio = orientation;
                         myCamera.takePicture(null, null, jpegCallback);
                     } else {
-                        stopRecording(path);
+                        stopRecording();
                     }
                 } catch (Exception e) {
                     e.printStackTrace();

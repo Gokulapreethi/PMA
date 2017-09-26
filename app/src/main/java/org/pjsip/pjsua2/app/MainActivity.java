@@ -79,6 +79,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.ase.CustomVideoCamera;
 import com.ase.DatePicker.CustomTravelPickerActivity;
 import com.ase.ShowTimeupAlert;
 import com.ase.offlineSendService;
@@ -335,6 +336,17 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback,
 //        } catch (Exception e) {
 //            e.printStackTrace();
 //        }
+
+        if (Appreference.context_table.containsKey("audiorecorder")) {
+            AudioRecorder audioRecorder = (AudioRecorder) Appreference.context_table.get("audiorecorder");
+            if (audioRecorder != null)
+                audioRecorder.stopRecordingWhileCall();
+        }
+        if (Appreference.context_table.containsKey("customvideocallscreen")) {
+            CustomVideoCamera customVideoCamera = (CustomVideoCamera) Appreference.context_table.get("customvideocallscreen");
+            if (customVideoCamera != null)
+                customVideoCamera.stopRecording();
+        }
         try {
             startCallRingTone();
 
@@ -377,20 +389,20 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback,
                     "incomingcall");
 
             mWakeLock.acquire();
-             String callType = "Audio Call";
+            String callType = "Audio Call";
             try {
 
                 CallInfo callInfo = call.getInfo();
-                Log.i("SipVideo", "incomingcall differ is audio ---> callInfo.getRemAudioCount() ====  " + callInfo.getRemAudioCount()+"\n"+
-                        "incomingcall differ is video---> callInfo.getRemVideoCount() ====  " + callInfo.getRemVideoCount() );
+                Log.i("SipVideo", "incomingcall differ is audio ---> callInfo.getRemAudioCount() ====  " + callInfo.getRemAudioCount() + "\n" +
+                        "incomingcall differ is video---> callInfo.getRemVideoCount() ====  " + callInfo.getRemVideoCount());
 
-                if(callInfo.getRemAudioCount() == 1 && callInfo.getRemVideoCount() == 1 ){
+                if (callInfo.getRemAudioCount() == 1 && callInfo.getRemVideoCount() == 1) {
                     callType = "Video Call";
                 }
             } catch (Exception e) {
                 e.printStackTrace();
             }
-             Intent intent = new Intent(this, IncomingCallAlert.class);
+            Intent intent = new Intent(this, IncomingCallAlert.class);
             intent.putExtra("hostname", name);
             intent.putExtra("callType", callType);
             startActivity(intent);
@@ -482,7 +494,7 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback,
         mainContext = this;
         Appreference.main_Activity_context = this;
         Appreference.mainContect = this;
-        handler= new Handler(this);
+        handler = new Handler(this);
         dataBase = VideoCallDataBase.getDB(mainContext);
         Appreference.context_table.put("mainactivity", mainContext);
         appSharedpreferences = AppSharedpreferences.getInstance(mainContext);
@@ -2112,9 +2124,9 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback,
 
 //                                Log.i("SipVideo", " dump : ==  " + MainActivity.currentCallArrayList.get(i).dump(true, " "));
 //                                MainActivity.currentCallArrayList.get(j).dump(true, " ");
-                                String dump =  MainActivity.currentCallArrayList.get(i).dump(true," ");
+                                String dump = MainActivity.currentCallArrayList.get(i).dump(true, " ");
                                 Log.i("SipVideo", " dump: == " + dump);
-                                Appreference.printLog(" Mainactivity Dump : ", "\n"+dump, "DEBUG", null);
+                                Appreference.printLog(" Mainactivity Dump : ", "\n" + dump, "DEBUG", null);
                                 MainActivity.currentCallArrayList.remove(j);
 //                        break;
                                 if (MainActivity.audioMediaHashMap.containsKey(call.getId())) {
@@ -2563,24 +2575,25 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback,
         handler1.post(new Runnable() {
             @Override
             public void run() {
-                Context context=null;
-                if(Appreference.context_table.containsKey("projecthistory")) {
-                    ProjectHistory projectHistory=(ProjectHistory)Appreference.context_table.get("projecthistory");
-                    context=projectHistory.context;
-                } else if(Appreference.context_table.containsKey("taskcoversation")) {
-                    NewTaskConversation newTaskConversation=(NewTaskConversation)Appreference.context_table.get("taskcoversation");
-                    context=newTaskConversation.context;
-                }else if(Appreference.context_table.containsKey("settingsfragment")) {
-                    SettingsFragment settingsfragment=(SettingsFragment)Appreference.context_table.get("settingsfragment");
-                    context=settingsfragment.getContext();
+                Context context = null;
+                if (Appreference.context_table.containsKey("projecthistory")) {
+                    ProjectHistory projectHistory = (ProjectHistory) Appreference.context_table.get("projecthistory");
+                    context = projectHistory.context;
+                } else if (Appreference.context_table.containsKey("taskcoversation")) {
+                    NewTaskConversation newTaskConversation = (NewTaskConversation) Appreference.context_table.get("taskcoversation");
+                    context = newTaskConversation.context;
+                } else if (Appreference.context_table.containsKey("settingsfragment")) {
+                    SettingsFragment settingsfragment = (SettingsFragment) Appreference.context_table.get("settingsfragment");
+                    context = settingsfragment.getContext();
                 }
 
-                if(context!=null)
-                Toast.makeText(context,result,Toast.LENGTH_LONG).show();
+                if (context != null)
+                    Toast.makeText(context, result, Toast.LENGTH_LONG).show();
             }
         });
 
     }
+
     public void showAlarmAlert(final String status, final int taskId, final String jobcodeNo) {
         try {
             handler1.post(new Runnable() {
@@ -2589,42 +2602,42 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback,
                     Context context = null;
                     if (Appreference.context_table.containsKey("projecthistory")) {
                         ProjectHistory projectHistory = (ProjectHistory) Appreference.context_table.get("projecthistory");
-                        if (projectHistory!=null) {
+                        if (projectHistory != null) {
                             Log.i("tone123", "projectHistory context get if***********");
                             context = projectHistory.context;
                         }
-                    }else if (Appreference.context_table.containsKey("taskcoversation")) {
+                    } else if (Appreference.context_table.containsKey("taskcoversation")) {
                         NewTaskConversation newTaskConversation = (NewTaskConversation) Appreference.context_table.get("taskcoversation");
-                        Log.i("tone123", "newTaskConversation.webtaskId***********"+newTaskConversation.webtaskId);
-                        Log.i("tone123", "receivedTaskId***********"+taskId);
+                        Log.i("tone123", "newTaskConversation.webtaskId***********" + newTaskConversation.webtaskId);
+                        Log.i("tone123", "receivedTaskId***********" + taskId);
 //                        if(newTaskConversation!=null && !newTaskConversation.webtaskId.equalsIgnoreCase(String.valueOf(taskId))) {
-                            context = newTaskConversation.context;
+                        context = newTaskConversation.context;
 //                        }
-                    }else if (Appreference.context_table.containsKey("settingsfragment")) {
+                    } else if (Appreference.context_table.containsKey("settingsfragment")) {
                         SettingsFragment settingsfragment = (SettingsFragment) Appreference.context_table.get("settingsfragment");
-                        if (settingsfragment!=null) {
+                        if (settingsfragment != null) {
                             Log.i("tone123", "settingsfragment context get if***********");
                             context = settingsfragment.getContext();
                         }
-                    }else if (Appreference.context_table.containsKey("traveljobdetails")) {
+                    } else if (Appreference.context_table.containsKey("traveljobdetails")) {
                         TravelJobDetails traveljobdetails = (TravelJobDetails) Appreference.context_table.get("traveljobdetails");
-                        if (traveljobdetails!=null) {
+                        if (traveljobdetails != null) {
                             Log.i("tone123", "traveljobdetails context get if***********");
                             context = traveljobdetails.context;
                         }
-                    }else if (Appreference.context_table.containsKey("customtravelpickeractivity")) {
+                    } else if (Appreference.context_table.containsKey("customtravelpickeractivity")) {
                         CustomTravelPickerActivity customtravelpickeractivity = (CustomTravelPickerActivity) Appreference.context_table.get("customtravelpickeractivity");
-                        if (customtravelpickeractivity!=null) {
+                        if (customtravelpickeractivity != null) {
                             Log.i("tone123", "customtravelpickeractivity context get if***********");
                             context = customtravelpickeractivity.context;
                         }
-                    }else {
+                    } else {
                         Log.i("tone123", "mainActivity context get if***********");
                         context = mainContext;
                     }
                     String query = "select status from projectStatus where projectId='" + jobcodeNo + "' and userId='" + Appreference.loginuserdetails.getId() + "' and taskId= '" + taskId + "'";
                     int timer_Alert_by_current_status = VideoCallDataBase.getDB(context).getCurrentStatus(query);
-                    Log.i("alarm123", "timer_Alert_by_current_status Mainactivity ===>***** "+timer_Alert_by_current_status);
+                    Log.i("alarm123", "timer_Alert_by_current_status Mainactivity ===>***** " + timer_Alert_by_current_status);
 
                     String alertQuery = "select taskPlannedLatestEndDate from taskDetailsInfo where (taskStatus='Hold' or taskStatus='Paused') and projectId='" + jobcodeNo + "'and taskId= '" + taskId + "'";
                     String isAlertShown = VideoCallDataBase.getDB(context).getAlertShownstatus(alertQuery);
@@ -2632,9 +2645,9 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback,
                     if (context != null) {
                         if ((isAlertShown != null && !isAlertShown.equalsIgnoreCase("") && !isAlertShown.equalsIgnoreCase(null) && isAlertShown.equalsIgnoreCase("1"))
                                 && (timer_Alert_by_current_status == 1 || timer_Alert_by_current_status == 3)) {
-    //                        Appreference.isTimeUpshown=true;
+                            //                        Appreference.isTimeUpshown=true;
                             String AlarmRingedUpdateQuery = "update taskDetailsInfo set taskPlannedLatestEndDate='0' where projectId='" + jobcodeNo + "'and taskId= '" + taskId + "'";
-                            Log.i("tone123", "updateSnoozeTime_query***********"+AlarmRingedUpdateQuery);
+                            Log.i("tone123", "updateSnoozeTime_query***********" + AlarmRingedUpdateQuery);
                             VideoCallDataBase.getDB(context).updateaccept(AlarmRingedUpdateQuery);
                             Log.i("tone123", "MAinActivity From===>");
                             MainActivity.startAlarmRingTone();
@@ -2645,17 +2658,17 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback,
                             String oracleTaskId = VideoCallDataBase.getDB(getApplication()).getProjectParentTaskId(quryActivity1);
                             Log.i("alarm123", "startHoldOrPauseAlarmManager started");
                             String my_status;
-                            if(timer_Alert_by_current_status==1){
-                                my_status="hold";
-                            }else
-                                my_status="pause";
+                            if (timer_Alert_by_current_status == 1) {
+                                my_status = "hold";
+                            } else
+                                my_status = "pause";
 
-                             Intent intent=new Intent(mainContext,ShowTimeupAlert.class);
-                            intent.putExtra("projectId",jobcodeNo);
-                            intent.putExtra("taskId",String.valueOf(taskId));
-                            intent.putExtra("status",my_status);
-                            intent.putExtra("OracleprojectId",OracleIdForProjectId);
-                            intent.putExtra("OracletaskId",oracleTaskId);
+                            Intent intent = new Intent(mainContext, ShowTimeupAlert.class);
+                            intent.putExtra("projectId", jobcodeNo);
+                            intent.putExtra("taskId", String.valueOf(taskId));
+                            intent.putExtra("status", my_status);
+                            intent.putExtra("OracleprojectId", OracleIdForProjectId);
+                            intent.putExtra("OracletaskId", oracleTaskId);
                             startActivity(intent);
                         }
                     }
@@ -3083,7 +3096,7 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback,
                                 //                Appreference.jsonRequestSender.listAllProject(EnumJsonWebservicename.listAllProject, tagNameValuePairs, this);
 //                            Appreference.jsonRequestSender.listAllMyProject(EnumJsonWebservicename.listAllMyProject, tagNameValuePairs, this);
                                 Appreference.jsonRequestSender.getAllJobDetails(EnumJsonWebservicename.getAllJobDetails, tagNameValuePairs, this);
-                            }else
+                            } else
                                 Toast.makeText(MainActivity.this, "Check your internet connection", Toast.LENGTH_SHORT).show();
 
                         } else if (notification.getAlert_sub_type() != null && notification.getAlert_sub_type().equalsIgnoreCase("Member Added")) {
@@ -3456,7 +3469,7 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback,
                                                                 (taskDetailsBean.getTaskReceiver() != null && !taskDetailsBean.getTaskReceiver().equalsIgnoreCase(""))) {
                                                             projectDetailsBean.setTaskReceiver(taskDetailsBean.getTaskReceiver());
                                                             projectDetailsBean.setCatagory("Task");
-                                                        }else if(taskDetailsBean.getSubType()!=null && taskDetailsBean.getSubType().equalsIgnoreCase("deassign")){
+                                                        } else if (taskDetailsBean.getSubType() != null && taskDetailsBean.getSubType().equalsIgnoreCase("deassign")) {
                                                             projectDetailsBean.setCatagory("Template");
                                                         }
                                                         handler1.post(new Runnable() {
@@ -4176,20 +4189,20 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback,
                                     Log.i("Mainactivity", "projectid 3");
                                     VideoCallDataBase.getDB(context).insert_new_Project_history(taskDetailsBean);
                                     Log.i("status", "new task $$$ ==>  " + taskDetailsBean.getProjectStatus());
-                                    Log.i("status", "new task $$$$  "+taskDetailsBean.getTaskStatus());
+                                    Log.i("status", "new task $$$$  " + taskDetailsBean.getTaskStatus());
 
                                     if (taskDetailsBean.getProjectStatus() != null) {
                                         if ((taskDetailsBean.getProjectStatus() != null && !taskDetailsBean.getProjectStatus().equalsIgnoreCase("")
                                                 && !taskDetailsBean.getProjectStatus().equalsIgnoreCase("null") && !taskDetailsBean.getProjectStatus().equalsIgnoreCase(null)
                                                 && taskDetailsBean.getProjectStatus().equalsIgnoreCase("9"))
-                                                && taskDetailsBean.getTravelEndTime()!=null && !taskDetailsBean.getTravelEndTime().equalsIgnoreCase("")
+                                                && taskDetailsBean.getTravelEndTime() != null && !taskDetailsBean.getTravelEndTime().equalsIgnoreCase("")
                                                 && !taskDetailsBean.getTravelEndTime().equalsIgnoreCase(null)) {
-                                            Log.i("mainActivity", "projectUpdate query if # " );
+                                            Log.i("mainActivity", "projectUpdate query if # ");
                                             String queryUpdate = "update projectStatus set travelEndTime='" + taskDetailsBean.getTravelEndTime() + "' where projectId='" + taskDetailsBean.getProjectId() + "' and taskId= '" + taskDetailsBean.getTaskId() + "' and travelStartTime IS NOT NULL and travelEndTime IS NULL";
                                             Log.i("mainActivity", "projectUpdate query " + queryUpdate);
                                             VideoCallDataBase.getDB(context).updateaccept(queryUpdate);
-                                        }else{
-                                            Log.i("mainActivity", "projectUpdate query else # " );
+                                        } else {
+                                            Log.i("mainActivity", "projectUpdate query else # ");
                                             VideoCallDataBase.getDB(context).insertORupdateStatus(taskDetailsBean);
                                         }
                                     } else if (taskDetailsBean.getMimeType().equalsIgnoreCase("assigntask")) {
@@ -4454,7 +4467,7 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback,
                                                     Log.i("draft123", "Mainactivity before If" + taskDetailsBean.getTaskStatus());
                                                     Appreference.old_status.put(detailsBean.getTaskId(), taskDetailsBean.getTaskStatus());
                                                     Log.i("draft123", "Mainactivity Appreference added status " + taskDetailsBean.getTaskStatus());
-                                                    Log.i("draft123", "Mainactivity Appreference added ID" +detailsBean.getTaskId());
+                                                    Log.i("draft123", "Mainactivity Appreference added ID" + detailsBean.getTaskId());
                                                     break;
                                                 }
                                             }
@@ -4484,11 +4497,6 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback,
                     } else {
                         Log.i("broadcastcall", "Appreference.received_broadcastcall -->false");
                         Appreference.received_broadcastcall = false;
-                    }
-                    if (Appreference.context_table.containsKey("audiorecorder")) {
-                        AudioRecorder audioRecorder = (AudioRecorder) Appreference.context_table.get("audiorecorder");
-                        if (audioRecorder != null)
-                            audioRecorder.stopRecordingWhileCall();
                     }
 
                     /*if (Appreference.context_table.containsKey("callactivity")) {
@@ -5616,7 +5624,7 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback,
                                     Log.i("contacts", "Response Method");
                                     if (Appreference.context_table.containsKey("contactsfragment")) {
                                         Log.i("contacts", "Response Method 1");
-                                        Log.i("updateContacts123","show dialog......");
+                                        Log.i("updateContacts123", "show dialog......");
                                         ContactsFragment contactsFragment = (ContactsFragment) Appreference.context_table.get("contactsfragment");
 //                                        showprogress("Updating Contacts.....");
                                         contactsFragment.referesh();
@@ -6936,7 +6944,7 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback,
     }
 
     public void showprogress(String name) {
-        Log.i("updateContacts123","showprogress==updating Contacts........");
+        Log.i("updateContacts123", "showprogress==updating Contacts........");
 
         try {
             if (progress == null || !progress.isShowing()) {
@@ -6952,7 +6960,7 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback,
     }
 
     public void cancelDialog() {
-        Log.i("updateContacts123","==cancelDialog........");
+        Log.i("updateContacts123", "==cancelDialog........");
 
         try {
             if (progress != null && progress.isShowing()) {
