@@ -16518,7 +16518,7 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
 //                                    listOfObservers.add(ownerOfTask);
 //                                    listOfObservers.add(getAllProjectMembersList());
                                 }
-                               /* String status_info = "select status from projectStatus where projectId='" + projectId + "' and userId='" + Appreference.loginuserdetails.getId() + "' and taskId= '" + webtaskId + "' and status!='7' and status!= '9'and status!= '10' and status!= '8' order by id DESC";
+                                /*String status_info = "select status from projectStatus where projectId='" + projectId + "' and userId='" + Appreference.loginuserdetails.getId() + "' and taskId= '" + webtaskId + "' and status!='7' and status!= '9'and status!= '10' and status!= '8' order by id DESC";
                                 ArrayList<String> status_all = VideoCallDataBase.getDB(context).getAllCurrentStatus(status_info);
                                 Log.i("output123", "project CurrentStatus from DB====>" + status_all.size());
                                 String current_status_now="";
