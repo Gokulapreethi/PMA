@@ -4719,6 +4719,8 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
         }
     }
 
+
+
     public class DownloadImage extends AsyncTask<String, Void, String> {
         String downloadImageurl;
         TaskDetailsBean detailsBean = null;
@@ -16494,7 +16496,9 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                                 chatBean.setTaskRequestType("normal");
                                 chatBean.setTaskStatus("Unassigned");
                                 chatBean.setCatagory("Template");
+//                                chatBean.setTaskType(taskType);
                                 taskStatus = "Unassigned";
+
                                 chatBean.setCompletedPercentage("0");
 
                                 String project_deassignMems=getAllProjectMembersList();
@@ -16514,6 +16518,34 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
 //                                    listOfObservers.add(ownerOfTask);
 //                                    listOfObservers.add(getAllProjectMembersList());
                                 }
+                               /* String status_info = "select status from projectStatus where projectId='" + projectId + "' and userId='" + Appreference.loginuserdetails.getId() + "' and taskId= '" + webtaskId + "' and status!='7' and status!= '9'and status!= '10' and status!= '8' order by id DESC";
+                                ArrayList<String> status_all = VideoCallDataBase.getDB(context).getAllCurrentStatus(status_info);
+                                Log.i("output123", "project CurrentStatus from DB====>" + status_all.size());
+                                String current_status_now="";
+                                if (status_all.size() > 0) {
+                                    current_status_now = status_all.get(0);
+                                    Log.i("output123", "project CurrentStatus from current_status " + current_status_now);
+                                }
+                                String status_now=getStatusForNumber(current_status_now);
+                                if(listTaskMembers().length()>0){
+                                    if(listTaskMembers().length()==1){
+                                        chatBean.setTaskStatus(status_now);
+                                        chatBean.setCatagory("Task");
+                                        chatBean.setTaskType("individual");
+                                        taskStatus = status_now;
+                                    }else {
+                                        chatBean.setTaskStatus(status_now);
+                                        chatBean.setCatagory("Task");
+                                        chatBean.setTaskType("Group");
+                                        taskStatus = status_now;
+                                    }
+                                }else {
+                                    chatBean.setTaskStatus("Unassigned");
+                                    chatBean.setCatagory("Template");
+                                    chatBean.setTaskType(taskType);
+                                    taskStatus = "Unassigned";
+
+                                }*/
                             } else if (isProjectFromOracle &&
                                     chatBean.getTaskDescription() != null &&
                                     (chatBean.getTaskDescription().equalsIgnoreCase("Completed Percentage 100%") || chatBean.getTaskDescription().equalsIgnoreCase("Task is Completed"))) {
@@ -16671,6 +16703,24 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
             e.printStackTrace();
             Appreference.printLog("NewTaskConversation", "sendMessage Exception : " + e.getMessage(), "WARN", null);
         }
+    }
+
+    private String getStatusForNumber(String status) {
+        String currentStatus_now="";
+        if(status.equalsIgnoreCase("0")){
+            currentStatus_now="Started";
+        }else if(status.equalsIgnoreCase("1")){
+            currentStatus_now="Hold";
+        }else if(status.equalsIgnoreCase("2")){
+            currentStatus_now="Resumed";
+        }else if(status.equalsIgnoreCase("3")){
+            currentStatus_now="Paused";
+        }else if(status.equalsIgnoreCase("4")){
+            currentStatus_now="Restarted";
+        }else if(status.equalsIgnoreCase("Assigned")){
+            currentStatus_now="Assigned";
+        }
+        return currentStatus_now;
     }
 
     private String getAllProjectMembersList() {

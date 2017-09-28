@@ -1624,10 +1624,17 @@ public class ProjectHistory extends Activity implements WebServiceInterface, Swi
                                 Log.i("project_details", "Task Mem's and position == " + projectDetailsBean.getTaskMemberList().split(",")[j] + " " + j);
                                 //                                    }
                                 pjt_memName = VideoCallDataBase.getDB(context).getName(projectDetailsBean.getTaskMemberList().split(",")[j]);
-                                if (pjt_memName != null) {
-                                    Pjt_mem = Pjt_mem + pjt_memName + ",";
-                                } else {
-                                    Pjt_mem = Pjt_mem + "Me,";
+                                if(projectDetailsBean.getTaskMemberList().split(",")[j].equalsIgnoreCase(Appreference.loginuserdetails.getUsername())){
+                                    if(Pjt_mem!=null && !Pjt_mem.equalsIgnoreCase(""))
+                                    Pjt_mem ="Me," +Pjt_mem ;
+                                    else
+                                        Pjt_mem ="Me,";
+                                }else {
+                                    if (pjt_memName != null) {
+                                        Pjt_mem = Pjt_mem + pjt_memName + ",";
+                                    } else {
+                                        Pjt_mem = Pjt_mem + "Me,";
+                                    }
                                 }
                             }
                             Pjt_mem = Pjt_mem.substring(0, Pjt_mem.length() - 1);
