@@ -53,6 +53,7 @@ public class Appreference {
     public static String template_page = null;
     public static HashMap<String, Object> context_table = new HashMap<>();
     public static JsonRequestSender jsonRequestSender = null;
+    
     public static JsonOfflineRequestSender jsonOfflineRequestSender = null;
     public static JsonRequestResponce jsonRequestResponce = null;
     public static Loginuserdetails loginuserdetails = null;
