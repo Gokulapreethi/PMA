@@ -54,7 +54,7 @@ public class DisplayList extends Activity {
         completedate_display = getIntent().getStringExtra("completedate_display");
         Log.i("DisplayList", "completedate_display ==> " + completedate_display);
         if(!isFromcustom1) {
-            query = "Select * from projectStatus where (projectId ='" + projectId + "' and taskId = '" + webtaskId + "' and (status ='7' or status='9') and (travelStartTime like '" + completedate_display + "%" + "' and travelEndTime like '" + completedate_display + "%" + "'" + " or " + ("travelStartTime like '" + completedate_display + "%" + "' and travelEndTime IS NULL") + " or " + "travelStartTime IS NULL and travelEndTime like '" + completedate_display + "%" + "'))";
+            query = "Select * from projectStatus where (projectId ='" + projectId + "' and taskId = '" + webtaskId + "' and userId='" + Appreference.loginuserdetails.getId() + "'and (status ='7' or status='9') and (travelStartTime like '" + completedate_display + "%" + "' and travelEndTime like '" + completedate_display + "%" + "'" + " or " + ("travelStartTime like '" + completedate_display + "%" + "' and travelEndTime IS NULL") + " or " + "travelStartTime IS NULL and travelEndTime like '" + completedate_display + "%" + "'))";
         }else
              query = "Select * from projectStatus where projectId ='" + projectId + "' and taskId = '" + webtaskId + "' and (status ='7' or status='9')";
         list_date.clear();

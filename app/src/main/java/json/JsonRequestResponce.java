@@ -1,6 +1,7 @@
 package json;
 
 import android.util.Log;
+import android.view.View;
 
 import com.ase.AddObserver;
 import com.ase.Appreference;
@@ -19,6 +20,7 @@ import com.ase.NewTaskConversation;
 import com.ase.SettingsFragment;
 import com.ase.TaskDateUpdate;
 import com.ase.TemplateView;
+import com.ase.TravelJobDetails;
 import com.ase.UpdateProfileActivity;
 import com.ase.blog.BlogPostCommandActivity;
 import com.ase.sketh.ProjectsFragment;
@@ -63,8 +65,6 @@ import javax.net.ssl.X509TrustManager;
  * Created by vignesh on 6/1/2016.
  */
 public class JsonRequestResponce extends Thread {
-
-
     private Queue bean1;
     WebServiceInterface inter;
     boolean isRunning = false;
@@ -83,7 +83,6 @@ public class JsonRequestResponce extends Thread {
         super.run();
         while (isRunning) {
             try {
-
                 obj = (CommunicationBean) bean1.getMsg();
 //                inter = obj.getAccess();
 
@@ -112,24 +111,19 @@ public class JsonRequestResponce extends Thread {
                     try {
 
                         Log.i("JsonLeave", "Try catch 1 ");
-                        //https://122.165.92.171:8443/kamailioWeb/      https://66.109.17.204/kamailioWeb/
-                        //              https://www.snazevents.com/SNAZEvents/
-//                        Log.d("url",Resources.getSystem().getString(R.string.app_url));
 
-//                        HttpPost httppost = new HttpPost("https://122.165.92.171:8443/kamailioWeb/" + obj.getEnumJsonWebservicename());
+//                            HttpPost httppost = new HttpPost("https://66.109.17.204/ASE/" + obj.getEnumJsonWebservicename()); //ip US Server 204
 
-                        HttpPost httppost = new HttpPost("https://66.109.17.204/ASE/" + obj.getEnumJsonWebservicename());//
+                        HttpPost httppost = new HttpPost("https://172.16.1.203:8443/ASE/" + obj.getEnumJsonWebservicename());  //new ip for local 203
 
-//                          HttpPost httppost = new HttpPost("http://172.16.1.203:8080/ASE/" + obj.getEnumJsonWebservicename());  //new ip for local 203
+//                         HttpPost httppost = new HttpPost("http://151.253.12.203/ASE/" + obj.getEnumJsonWebservicename());
 
-//                          HttpPost httppost = new HttpPost("http://151.253.12.203/ASE/" + obj.getEnumJsonWebservicename());
 
-//                        HttpPost httppost = new HttpPost("https://66.109.17.204/highMessage/" + obj.getEnumJsonWebservicename());//
-//                        HttpPost httppost = new HttpPost("https://66.109.17.205/highMessage/" + obj.getEnumJsonWebservicename());//
-//                        HttpPost httppost = new HttpPost("https://122.165.92.171:8443/highMessage/" + obj.getEnumJsonWebservicename());
-//                        HttpPost httppost = new HttpPost("https://35.162.171.171/highMessage/" + obj.getEnumJsonWebservicename());
+//                          HttpPost httppost = new HttpPost("http://151.253.12.204/ASE/" + obj.getEnumJsonWebservicename()); //new dubai server 204
 
                         Log.i("json", obj.getEnumJsonWebservicename().toString());
+
+//                        Appreference.printLog("jsonwebservice", "REQUEST SENT TIME-- >"+Appreference.getCurrentDateTime()+" WS NAME" + obj.getEnumJsonWebservicename().toString(), "DEBUG", null);
                         Appreference.printLog("jsonwebservice", "webservice request name-- >" + obj.getEnumJsonWebservicename().toString(), "DEBUG", null);
 
                         String servname = obj.getEnumJsonWebservicename().toString();
@@ -142,11 +136,11 @@ public class JsonRequestResponce extends Thread {
                             httppost.setEntity(new UrlEncodedFormEntity(obj.getNameValuePairs()));
                             Log.i("JsonLeave", "Try catch 3 ");
                             Log.i("jsonwebservice", "list size for nameValuePair" + obj.getNameValuePairs().size());
-                            for (NameValuePair nameValuePair : obj.getNameValuePairs()) {
+                            Log.i("wsTime123","WS NAME ==>"+obj.getEnumJsonWebservicename().toString()+"  Request sent Time====>"+Appreference.getCurrentDateTime());
+                            Appreference.printLog("jsonwebservice", "WS NAME ==>"+obj.getEnumJsonWebservicename().toString()+"  Request sent Time====>"+Appreference.getCurrentDateTime(), "DEBUG", null);
 
+                            for (NameValuePair nameValuePair : obj.getNameValuePairs()) {
                                 Log.i("jsonwebservice", " nameValuePair   " + nameValuePair.getName() + " : " + nameValuePair.getValue());
-                                Appreference.printLog("jsonwebservice", "webservice request values-->" + nameValuePair.getName() + " : " + nameValuePair.getValue(), "DEBUG", null);
-//                            Log.i("jsonwebservice", " nameValuePair Values"+nameValuePair.getValue());
                             }
                         }
 
@@ -157,6 +151,8 @@ public class JsonRequestResponce extends Thread {
                             InputStream inputStream = null;
                             if (obj.getJsonObject() != null) {
                                 json = obj.getJsonObject().toString();
+                                Appreference.printLog("jsonwebservice", "WS NAME ==>"+obj.getEnumJsonWebservicename().toString()+"  Request sent Time====>"+Appreference.getCurrentDateTime(), "DEBUG", null);
+                                Log.i("wsTime123","WS NAME ==>"+obj.getEnumJsonWebservicename().toString()+"  Request sent Time====>"+Appreference.getCurrentDateTime());
                                 Log.i("jsonwebservice", "******Request*****"+obj.getEnumJsonWebservicename().toString() +"------>" + json);
                                 Log.i("JsonLeave", "Try catch 5 ");
                             }
@@ -180,6 +176,8 @@ public class JsonRequestResponce extends Thread {
 
                             // 9. receive response as inputStream
                             inputStream = httpResponse.getEntity().getContent();
+                            Appreference.printLog("jsonwebservice", "WS NAME ==>"+obj.getEnumJsonWebservicename().toString()+"  Response Received Time====>"+Appreference.getCurrentDateTime(), "DEBUG", null);
+                            Log.i("wsTime123","WS NAME ==>"+obj.getEnumJsonWebservicename().toString()+"  Response Received Time====>"+Appreference.getCurrentDateTime());
 
                             // 10. convert inputstream to string
                             if (inputStream != null) {
@@ -190,6 +188,9 @@ public class JsonRequestResponce extends Thread {
                                 Log.i("JsonLeave", "Try catch 8 ");
                                 Log.i("JsonLeave", "Try catch 9 ");
                             }
+                            Appreference.printLog("jsonwebservice", "WS NAME ==>"+obj.getEnumJsonWebservicename().toString()+"  Response Received Time====>"+Appreference.getCurrentDateTime(), "DEBUG", null);
+                            Log.i("wsTime123","WS NAME ***==>"+obj.getEnumJsonWebservicename().toString()+"  Response Received Time====>"+Appreference.getCurrentDateTime());
+
                             Log.i("jsonwebservice", "******Response*****"+obj.getEnumJsonWebservicename().toString() +"------>" + responseString);
 
                             Log.d("jsonwebservice", obj.getEnumJsonWebservicename().toString());
@@ -209,13 +210,7 @@ public class JsonRequestResponce extends Thread {
                                 Log.i("getTask 1", "enum for check ");
                                 inter.ResponceMethod(obj);
                                 Log.i("JsonLeave", "Try catch 9 ");
-                            } /*else if (obj.getEnumJsonWebservicename().toString().equalsIgnoreCase("multiFileUpload")) {
-                                Log.d("jsonwebservice", "Inside if " +
-                                        "" + obj.getEnumJsonWebservicename().toString() + " response received");
-                                obj.setEmail(responseString);
-                                obj.setFirstname("multiFileUpload");
-                                inter.ResponceMethod(obj);
-                            }*/
+                            }
                         } else {
                             Log.i("JsonLeave", "Try catch 10 ");
                             Log.i("jsonwebservice", "inside jsonobject else--->");
@@ -241,8 +236,10 @@ public class JsonRequestResponce extends Thread {
                                 is.close();
                                 responseString = sb.toString();
                                 Log.i("JsonLeave", "Try catch 11 ");
+                                Appreference.printLog("jsonwebservice", "WS NAME ==>"+obj.getEnumJsonWebservicename().toString()+"  Response Received Time====>"+Appreference.getCurrentDateTime(), "DEBUG", null);
+                                Log.i("wsTime123","WS NAME ==>"+obj.getEnumJsonWebservicename().toString()+"  Response Received Time====>"+Appreference.getCurrentDateTime());
                                 Log.i("jsonwebservice", "Result  OK   " + responseString);
-                                Appreference.printLog("jsonwebservice", "webservice Response-->" + responseString, "DEBUG", null);
+                                Appreference.printLog("jsonwebservice", "webservice Response-->" + obj.getEnumJsonWebservicename().toString(), "DEBUG", null);
 
                             } else {
 //                            errorResponse(obj.getEnumJsonWebservicename(), "Unsuccessfull Response");
@@ -324,7 +321,6 @@ public class JsonRequestResponce extends Thread {
                     } catch (UnknownHostException e) {
                         e.printStackTrace();
                         Appreference.printLog("JsonRequestResponce", " Exception : " + e.getMessage(), "WARN", null);
-//                        errorResponse(serviceName,e.getMessage());
                         errorResponse(obj.getEnumJsonWebservicename(), e.getMessage());
                         Log.e("Error", e.toString());
                     } catch (ConnectTimeoutException e) {
@@ -381,13 +377,22 @@ public class JsonRequestResponce extends Thread {
         }
     }
 
-    public void errorResponse(final EnumJsonWebservicename serviceName, String result) {
+    public void errorResponse(final EnumJsonWebservicename serviceName, final String result) {
         Log.i("jsonwebservice", "Json error Response " + result);
         Appreference.isPauseStartFrom=false;
         switch (serviceName) {
             case loginMobile:
-                LoginActivity.getInstance().cancelDialog();
-                LoginActivity.getInstance().showToast(result);
+                LoginActivity.getInstance().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Appreference.isLoginRequestSent=false;
+                        LoginActivity.getInstance().spinner_signin.setVisibility(View.GONE);
+                        LoginActivity.getInstance().mEmailSignInButton.setVisibility(View.VISIBLE);
+//                        LoginActivity.getInstance().cancelDialog();
+                        LoginActivity.getInstance().showToast(result);
+                    }
+                });
+
                 inter.ErrorMethod(obj);
                 break;
             case taskEntry:
@@ -403,6 +408,18 @@ public class JsonRequestResponce extends Thread {
                     NewTaskConversation.getInstance().cancelDialog();
                     NewTaskConversation.getInstance().showToast(" Try again later");
                 }
+
+                inter.ErrorMethod(obj);
+                break;
+            case listAllMyTask:
+                Log.i("wsTime123"," Ws listAllMyTask  Error Response====>"+Appreference.getCurrentDateTime());
+                MainActivity.getIntance().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        MainActivity.getIntance().cancelDialog();
+                        MainActivity.getIntance().showToast("Time out!!!, Try again later");
+                    }
+                });
 
                 inter.ErrorMethod(obj);
                 break;
@@ -449,7 +466,9 @@ public class JsonRequestResponce extends Thread {
             case getTask:
                 Log.i("getTask123","gettask jsonwebserviceResponse errorResponse*************"+result);
 
-//                NewTaskConversation.getInstance().cancelDialog();
+                NewTaskConversation.getInstance().cancelDialog();
+                NewTaskConversation.getInstance().showToast("Sync error . Try again later");
+
 //                TaskHistory.getInstance().showToast(result);
 //                TaskHistory.getInstance().cancelDialog();
                 inter.ErrorMethod(obj);
@@ -470,6 +489,10 @@ public class JsonRequestResponce extends Thread {
             case assignTask:
                 NewTaskConversation.getInstance().cancelDialog();
                 NewTaskConversation.getInstance().showToast("assignTask error . Try again later");
+                if(TravelJobDetails.getInstance()!=null){
+                    TravelJobDetails.getInstance().cancelDialog();
+                    TravelJobDetails.getInstance().showToast("assignTask error . Try again later");
+                }
                 inter.ErrorMethod(obj);
                 break;
             case searchMedia:

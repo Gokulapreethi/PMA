@@ -35,7 +35,7 @@ public class JsonRequestSender {
     }
 
     public void login(EnumJsonWebservicename webservicename, List<NameValuePair> valuePair, WebServiceInterface access) {
-
+        Appreference.isLoginRequestSent=true;
         CommunicationBean communicationBean = new CommunicationBean();
         communicationBean.setEnumJsonWebservicename(webservicename);
         communicationBean.setNameValuePairs(valuePair);

@@ -23,10 +23,13 @@ import android.widget.Toast;
 //import com.util.SingleInstance;
 
 import com.google.gson.Gson;
-
+import org.pjsip.AESCrypto;
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONObject;
+import org.pjsip.pjsua2.PresenceStatus;
+import org.pjsip.pjsua2.app.MainActivity;
+import org.pjsip.pjsua2.pjsua_buddy_status;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -46,6 +49,7 @@ public class ChangePassword extends Activity implements WebServiceInterface {
     private String blockCharacterSet = "/n";
     Handler handler1 = new Handler();
     static ChangePassword changePassword;
+    AppSharedpreferences appSharedpreferences;
 
     public static ChangePassword getInstance() {
         return changePassword;
@@ -62,6 +66,7 @@ public class ChangePassword extends Activity implements WebServiceInterface {
         et_oldpassword = (EditText) findViewById(R.id.et_oldpassword);
         et_newpassword = (EditText) findViewById(R.id.et_newpassword);
         et_repeatpassword = (EditText) findViewById(R.id.et_repeatpassword);
+        appSharedpreferences = AppSharedpreferences.getInstance(context);
         InputFilter filter = new InputFilter() {
 
             @Override
@@ -98,7 +103,9 @@ public class ChangePassword extends Activity implements WebServiceInterface {
                                     List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
                                     nameValuePairs.add(new BasicNameValuePair("userId",String.valueOf(Appreference.loginuserdetails.getId())));
                                     nameValuePairs.add(new BasicNameValuePair("oldPassword", et_oldpassword.getText().toString().trim()));
+//                                    nameValuePairs.add(new BasicNameValuePair("oldPassword", AESCrypto.encrypt(et_oldpassword.getText().toString().trim())));
                                     nameValuePairs.add(new BasicNameValuePair("newPassword", et_newpassword.getText().toString().trim()));
+//                                    nameValuePairs.add(new BasicNameValuePair("newPassword", AESCrypto.encrypt(et_newpassword.getText().toString().trim())));
                                     Appreference.jsonRequestSender.Changepassword(EnumJsonWebservicename.changePasswordEvent, nameValuePairs,ChangePassword.this);
 //                                }else{
 //                                    showToast("Network Not Available");
@@ -257,21 +264,39 @@ public class ChangePassword extends Activity implements WebServiceInterface {
         handler1.post(new Runnable() {
             @Override
             public void run() {
-                CommunicationBean opr = (CommunicationBean) object;
-                String s1 = ((CommunicationBean) object).getEmail();
-                Log.i("ChangePassword","ValueGroup-------------->"+s1);
-                Gson gson=new Gson();
-                String test1=s1.toString();
-                NegativeValue negativeValue= gson.fromJson(test1,NegativeValue.class);
-                test1=negativeValue.getText();
-                if(test1.equals("wrong Old Password")){
-                    Toast.makeText(getApplicationContext(),test1,Toast.LENGTH_SHORT).show();
+                try {
+                    CommunicationBean opr = (CommunicationBean) object;
+                    String s1 = ((CommunicationBean) object).getEmail();
+                    Log.i("ChangePassword","ValueGroup-------------->"+s1);
+                    Gson gson=new Gson();
+                    String test1=s1.toString();
+                    NegativeValue negativeValue= gson.fromJson(test1,NegativeValue.class);
+                    test1=negativeValue.getText();
+                    if(test1.equals("wrong Old Password")){
+                        Toast.makeText(getApplicationContext(),test1,Toast.LENGTH_SHORT).show();
+                    }
+                    else{
+                        Toast.makeText(getApplicationContext(),test1,Toast.LENGTH_SHORT).show();
+                        finish();
+                    }
+                    progressDialog.dismiss();
+                    appSharedpreferences.saveString("mPassword", et_newpassword.getText().toString().trim());
+                    Log.i("SipReg", "changed_Password response " + appSharedpreferences.getString("mPassword"));
+                    Appreference.sipRegistrationState = false;
+                    MainActivity.isPresenceReregister = false;
+//                        Appreference.currentPresenceStateIs = "Online";
+                    PresenceStatus presenceStatus = new PresenceStatus();
+                    presenceStatus.setStatus(pjsua_buddy_status.PJSUA_BUDDY_STATUS_OFFLINE);
+                    presenceStatus.setNote("Offline");
+                    MainActivity.account.setOnlineStatus(presenceStatus);
+
+                    AppSharedpreferences.getInstance(context).saveBoolean("login", false);
+                    Appreference.isPasswordChanged = true;
+                    MainActivity.unRegister();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    Appreference.printLog("ChangePassword", "Responce : " + e.getMessage(), "WARN", null);
                 }
-                else{
-                    Toast.makeText(getApplicationContext(),test1,Toast.LENGTH_SHORT).show();
-                    finish();
-                }
-                progressDialog.dismiss();
 
             }
         });

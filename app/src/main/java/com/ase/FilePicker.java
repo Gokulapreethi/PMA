@@ -18,6 +18,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListAdapter;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -104,6 +105,7 @@ public class FilePicker extends Activity {
                                 && !sel.isHidden();
                     }
                 };
+                Log.i("Doc", "filter ==> " + filter);
                 String[] fList = path.list(filter);
                 fileList = new Item[fList.length];
                 for (int i = 0; i < fList.length; i++) {
@@ -198,8 +200,10 @@ public class FilePicker extends Activity {
 
 
                                     chosenFile = fileList[which].file;
+                                    Log.i("Doc", "chosenFile ==> " + chosenFile);
                                     File sel = new File(path + "/" + chosenFile);
                                     if (sel.isDirectory()) {
+                                        Log.i("Doc", "sel ==> " + sel);
                                         firstLvl = false;
                                         str.add(chosenFile);
                                         fileList = null;
@@ -210,6 +214,7 @@ public class FilePicker extends Activity {
                                         Log.d(TAG, path.getAbsolutePath());
                                     } else if (chosenFile.equalsIgnoreCase("up")
                                             && !sel.exists()) {
+                                        Log.i("Doc", "up ==> " + sel);
                                         // present directory removed from list
                                         String s = str.remove(str.size() - 1);
                                         path = new File(path.toString().substring(
@@ -235,64 +240,86 @@ public class FilePicker extends Activity {
                                                 }
                                                 String destinationPath = copyFilePath
                                                         + chosenFile;
-
-                                                File destination = new File(
-                                                        destinationPath);
-                                                try {
-                                                    InputStream in = new FileInputStream(
-                                                            sel.getAbsolutePath());
-
-                                                    OutputStream out = new FileOutputStream(
-                                                            destinationPath);
-                                                    byte[] buf = new byte[1024];
-                                                    int len;
-                                                    while ((len = in.read(buf)) > 0) {
-                                                        out.write(buf, 0, len);
-                                                    }
-                                                    in.close();
-                                                    out.close();
-                                                } catch (IOException e) {
-                                                    e.printStackTrace();
-                                                }
-
-                                                int n = chosenFile.lastIndexOf(".");
+                                                Log.i("Doc", "destinationPath ==> %% " + destinationPath);
                                                 String name = chosenFile;
                                                 String fileName, fileExt;
+                                                int n = chosenFile.lastIndexOf(".");
+                                                fileName = name.substring(0, n);
+                                                fileExt = name.substring(n);
+                                                Log.i("Doc", "n ==> " + n);
+                                                Log.i("Doc", "fileName ==> $$ " + fileName);
+                                                Log.i("Doc", "fileExt ==> $$ " + fileExt);
+                                                if (fileExt != null && fileExt.equalsIgnoreCase(".xls") || fileExt.equalsIgnoreCase(".xlsx")
+                                                        || fileExt.equalsIgnoreCase(".doc") || fileExt.equalsIgnoreCase(".docx")
+                                                        || fileExt.equalsIgnoreCase(".pdf") || fileExt.equalsIgnoreCase(".odt")
+                                                        || fileExt.equalsIgnoreCase(".txt") || fileExt.equalsIgnoreCase(".tex")
+                                                        || fileExt.equalsIgnoreCase(".wks") || fileExt.equalsIgnoreCase(".wps")
+                                                        || fileExt.equalsIgnoreCase(".wpd") || fileExt.equalsIgnoreCase(".rtf")
+                                                        || fileExt.equalsIgnoreCase(".xlr") || fileExt.equalsIgnoreCase(".ods")) {
+                                                    File destination = new File(
+                                                            destinationPath);
+                                                    try {
+                                                        InputStream in = new FileInputStream(
+                                                                sel.getAbsolutePath());
 
-                                                if (n == -1)
-                                                    return;
+                                                        OutputStream out = new FileOutputStream(
+                                                                destinationPath);
+                                                        byte[] buf = new byte[1024];
+                                                        int len;
+                                                        while ((len = in.read(buf)) > 0) {
+                                                            out.write(buf, 0, len);
+                                                        }
+                                                        in.close();
+                                                        out.close();
+                                                    } catch (IOException e) {
+                                                        e.printStackTrace();
+                                                    }catch (Exception e) {
+                                                        e.printStackTrace();
+                                                    }
 
-                                                else {
-                                                    fileName = name.substring(0, n);
-                                                    fileExt = name.substring(n);
-//                                                    if
-//                                                            (!fileExt.equals(".docx")
-//                                                            &&
-//                                                            !fileExt.equals(".pdf")
-//                                                            && !fileExt.equals("doc")
-//                                                            && !fileExt.equals("xls")
-//                                                            &&
-//                                                            !fileExt.equals("xlsx")
-//                                                            &&
-//                                                            !fileExt.equals(".txt"))
-//                                                        return;
-//                                                    else {
-//                                                        Toast.makeText(getApplicationContext(), "please select only document file ", Toast.LENGTH_LONG);
-//                                                    }
+//                                                    int n = chosenFile.lastIndexOf(".");
+//                                                    String name = chosenFile;
+//                                                    String fileName, fileExt;
+
+                                                    if (n == -1)
+                                                        return;
+
+                                                    else {
+                                                        /*fileName = name.substring(0, n);
+                                                        fileExt = name.substring(n);
+                                                        Log.i("Doc", "fileName ==> $$ " + fileName);
+                                                        Log.i("Doc", "fileExt ==> $$ " + fileExt);*/
+                                                        //                                                    if
+                                                        //                                                            (!fileExt.equals(".docx")
+                                                        //                                                            &&
+                                                        //                                                            !fileExt.equals(".pdf")
+                                                        //                                                            && !fileExt.equals("doc")
+                                                        //                                                            && !fileExt.equals("xls")
+                                                        //                                                            &&
+                                                        //                                                            !fileExt.equals("xlsx")
+                                                        //                                                            &&
+                                                        //                                                            !fileExt.equals(".txt"))
+                                                        //                                                        return;
+                                                        //                                                    else {
+                                                        //                                                        Toast.makeText(getApplicationContext(), "please select only document file ", Toast.LENGTH_LONG);
+                                                        //                                                    }
+                                                    }
+                                                    Log.i("Doc", "destinationPath ==> " + destinationPath);
+                                                    if (fileExt.contains(".")) {
+                                                        fileExt = fileExt.substring(1);
+                                                        Log.i("Doc", "fileExt ==> " + fileExt);
+                                                    }
+                                                    Intent i = new Intent();
+                                                    i.putExtra("filePath", destinationPath);
+                                                    i.putExtra("fileName", fileName);
+                                                    i.putExtra("fileExt", fileExt);
+                                                    setResult(RESULT_OK, i);
+                                                    finish();
+
+                                                } else {
+                                                    Toast.makeText(context, "Please Pick Document fileType", Toast.LENGTH_SHORT).show();
+                                                    finish();
                                                 }
-                                                Log.i("path-->", "desti.." + destinationPath);
-                                                if (fileExt.contains(".")) {
-                                                    fileExt = fileExt.substring(1);
-                                                    Log.i("file", "ext" + fileExt);
-                                                }
-                                                Intent i = new Intent();
-                                                i.putExtra("filePath", destinationPath);
-                                                i.putExtra("fileName", fileName);
-                                                i.putExtra("fileExt", fileExt);
-                                                setResult(RESULT_OK, i);
-                                                finish();
-
-
                                             }
                                         } catch (Exception e) {
                                             Log.e("sharefile",

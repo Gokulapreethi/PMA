@@ -826,7 +826,12 @@ public class ContactsFragment extends Fragment implements View.OnClickListener, 
                         Log.i("list", "buddyList" + String.valueOf(buddyList));
                         buddyArrayAdapter = new BuddyArrayAdapter(getActivity(), buddyList);
                         buddyListView.setAdapter(buddyArrayAdapter);
-                        buddyArrayAdapter.notifyDataSetChanged();
+                        handler.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                buddyArrayAdapter.notifyDataSetChanged();
+                            }
+                        });
                         ContactsArrangement();
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -956,8 +961,13 @@ public class ContactsFragment extends Fragment implements View.OnClickListener, 
                         Log.e("sipTest", "Inside False");
                         group.setIscheck(false);
                     }
+                    handler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            ExpAdapter.notifyDataSetChanged();
+                        }
+                    });
 
-                    ExpAdapter.notifyDataSetChanged();
                     showprogress();
 //                int group1 = Integer.parseInt(ExpListItems.get(groupPosition).getId());
 //                String groupId = String.valueOf(group1);
@@ -1125,7 +1135,12 @@ public class ContactsFragment extends Fragment implements View.OnClickListener, 
                             //                           }
                         }
                         try {
-                            buddyArrayAdapter.notifyDataSetChanged();
+                            handler.post(new Runnable() {
+                                @Override
+                                public void run() {
+                                    buddyArrayAdapter.notifyDataSetChanged();
+                                }
+                            });
                         } catch (Exception e) {
                             e.printStackTrace();
                             Appreference.printLog("ContactFragment", "buddyListView MenuItemClick_videocall Exception : " + e.getMessage(), "WARN", null);
@@ -1166,7 +1181,12 @@ public class ContactsFragment extends Fragment implements View.OnClickListener, 
                                 }
                                 //                                }
                             }
-                            buddyArrayAdapter.notifyDataSetChanged();
+                            handler.post(new Runnable() {
+                                @Override
+                                public void run() {
+                                    buddyArrayAdapter.notifyDataSetChanged();
+                                }
+                            });
                             //                        }
                         }
                     } catch (Exception e) {
@@ -1184,11 +1204,12 @@ public class ContactsFragment extends Fragment implements View.OnClickListener, 
                         Intent i = new Intent(getContext(), NewTaskConversation.class);
 
                         Log.i("chat", "chat Selected user-->" + buddy_uri);
+                        Log.i("chat", "Individual ");
                         ArrayList<TaskDetailsBean> taskDetailsBean = VideoCallDataBase.getDB(classContext).getChatnames(buddy_uri, "individual");
                         if (taskDetailsBean != null && taskDetailsBean.size() > 0 && taskDetailsBean.get(0) != null) {
-                            Log.i("chat", "Chatetails size--->" + taskDetailsBean.get(0).getToUserId());
-                            Log.i("chat", "db datetime-->" + taskDetailsBean.get(0));
-                            Log.i("chat", "db cahtid--->" + taskDetailsBean.get(0));
+                            Log.i("chat", "Chatetails size---> " + taskDetailsBean.get(0).getToUserId());
+                            Log.i("chat", "db datetime--> " + taskDetailsBean.get(0));
+                            Log.i("chat", "db cahtid---> " + taskDetailsBean.get(0));
                             i.putExtra("chatid", taskDetailsBean.get(0).getTaskId());
                             i.putExtra("task", "chathistory");
                             i.putExtra("chatHistoryBean", taskDetailsBean.get(0));
@@ -1245,7 +1266,12 @@ public class ContactsFragment extends Fragment implements View.OnClickListener, 
 //                        startActivity(i);
 //                    }
                         try {
-                            buddyArrayAdapter.notifyDataSetChanged();
+                            handler.post(new Runnable() {
+                                @Override
+                                public void run() {
+                                    buddyArrayAdapter.notifyDataSetChanged();
+                                }
+                            });
                         } catch (Exception e) {
                             e.printStackTrace();
                             Appreference.printLog("ContactFragment", "buddyListView MenuItemClick_chat Exception : " + e.getMessage(), "WARN", null);
@@ -1514,7 +1540,12 @@ public class ContactsFragment extends Fragment implements View.OnClickListener, 
             buddyList.addAll(busylist);
             buddyList.addAll(offlinelist);
             buddyList.addAll(emptylist);
-            buddyArrayAdapter.notifyDataSetChanged();
+            handler.post(new Runnable() {
+                @Override
+                public void run() {
+                    buddyArrayAdapter.notifyDataSetChanged();
+                }
+            });
         } catch (Exception e) {
             e.printStackTrace();
             Appreference.printLog("ContactFragment", "onlineSelectionEnable Exception : " + e.getMessage(), "WARN", null);
@@ -1673,7 +1704,14 @@ public class ContactsFragment extends Fragment implements View.OnClickListener, 
                 }*/
                     buddyArrayAdapter = new BuddyArrayAdapter(getActivity(), buddyList);
                     buddyListView.setAdapter(buddyArrayAdapter);
-                    buddyArrayAdapter.notifyDataSetChanged();
+                    handler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            buddyArrayAdapter.notifyDataSetChanged();
+                        }
+                    });
+
+
                 } catch (Exception e) {
                     e.printStackTrace();
                     Appreference.printLog("ContactFragment", "onResume buddyArrayAdapter Exception : " + e.getMessage(), "WARN", null);
@@ -1961,7 +1999,12 @@ public class ContactsFragment extends Fragment implements View.OnClickListener, 
 
                     }
                     try {
-                        buddyArrayAdapter.notifyDataSetChanged();
+                        handler.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                buddyArrayAdapter.notifyDataSetChanged();
+                            }
+                        });
                     } catch (Exception e) {
                         e.printStackTrace();
                         Appreference.printLog("ContactFragment", "onClick chat_button Exception : " + e.getMessage(), "WARN", null);
@@ -2984,7 +3027,12 @@ public class ContactsFragment extends Fragment implements View.OnClickListener, 
                 @Override
                 public void run() {
                     try {
-                        buddyArrayAdapter.notifyDataSetChanged();
+                        handler.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                buddyArrayAdapter.notifyDataSetChanged();
+                            }
+                        });
                     } catch (Exception e) {
                         e.printStackTrace();
                         Appreference.printLog("ContactFragment", "notifybuddystatus buddyArrayAdapter Exception : " + e.getMessage(), "WARN", null);
@@ -3823,17 +3871,17 @@ public class ContactsFragment extends Fragment implements View.OnClickListener, 
     }
 
     public void callrefresh() {
-        handler.post(new Runnable() {
-            @Override
-            public void run() {
-                try {
+        try {
+            handler.post(new Runnable() {
+                @Override
+                public void run() {
                     buddyArrayAdapter.notifyDataSetChanged();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    Appreference.printLog("ContactFragment", "callrefresh Exception : " + e.getMessage(), "WARN", null);
                 }
-            }
-        });
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+            Appreference.printLog("ContactFragment", "callrefresh Exception : " + e.getMessage(), "WARN", null);
+        }
     }
 
     public void ChangeLoginUserStatus(String status, String state) {
@@ -4084,7 +4132,12 @@ public class ContactsFragment extends Fragment implements View.OnClickListener, 
 
                         try {
                             Collections.sort(buddyList, new CustomComparator());
-                            buddyArrayAdapter.notifyDataSetChanged();
+                            handler.post(new Runnable() {
+                                @Override
+                                public void run() {
+                                    buddyArrayAdapter.notifyDataSetChanged();
+                                }
+                            });
                         } catch (Exception e) {
                             e.printStackTrace();
                             Appreference.printLog("ContactFragment", "refresh_contact notify Exception : " + e.getMessage(), "WARN", null);
@@ -4488,15 +4541,17 @@ public class ContactsFragment extends Fragment implements View.OnClickListener, 
                                 } else if (item.getTitle().equals("Broadcast Audio Call")) {
                                     broadcastaudiocall();
                                 } else if (item.getTitle().equals("Broadcast Video Call")) {
-                                    broadcastvideocall();
+                                    ArrayList<String> grouplist = VideoCallDataBase.getDB(context).selectGroupmembers("select * from groupmember where groupid= '" + group.getId() + "'", "userid");
+                                    broadcastvideocall(grouplist);
                                 } else if (item.getTitle().equals("Chat")) {
+                                    Log.i("chat", "Group click " );
                                     try {
                                         Intent i = new Intent(context, NewTaskConversation.class);
                                         ArrayList<TaskDetailsBean> taskDetailsBean = VideoCallDataBase.getDB(classContext).getChatnames(group.getName(), "group");
                                         if (taskDetailsBean != null && taskDetailsBean.size() > 0 && taskDetailsBean.get(0) != null) {
-                                            Log.i("chat", "Chatetails size--->" + taskDetailsBean.get(0).getToUserId());
-                                            Log.i("chat", "db datetime-->" + taskDetailsBean.get(0).getToUserName());
-                                            Log.i("chat", "db cahtid--->" + taskDetailsBean.get(0));
+                                            Log.i("chat", "Chatetails size---> " + taskDetailsBean.get(0).getToUserId());
+                                            Log.i("chat", "db datetime--> " + taskDetailsBean.get(0).getToUserName());
+                                            Log.i("chat", "db cahtid---> " + taskDetailsBean.get(0));
                                             i.putExtra("chatid", taskDetailsBean.get(0).getTaskId());
                                             i.putExtra("task", "chathistory");
                                             i.putExtra("chatHistoryBean", taskDetailsBean.get(0));
@@ -4691,7 +4746,7 @@ public class ContactsFragment extends Fragment implements View.OnClickListener, 
         }
     }
 
-    public void broadcastvideocall() {
+    public void broadcastvideocall(ArrayList<String> grouplist) {
         Log.i("ContactFragment", "group broadcast_video_call click");
         if (MainActivity.gsmCallState == TelephonyManager.CALL_STATE_IDLE) {
 //            boolean select = false;
@@ -4706,29 +4761,37 @@ public class ContactsFragment extends Fragment implements View.OnClickListener, 
 //                                    }
             if (groupIsSelect) {
                 try {
-                    if (ExpListItems.size() > 0) {
+                    if (ExpListItems != null && ExpListItems.size() > 0) {
                         check = false;
                         dialog = new ProgressDialog(classContext);
                         dialog.setMessage("Call Connecting...");
                         dialog.setCancelable(false);
-                        dialog.show();
                         for (Group group : ExpListItems) {
-                            if (group.getIscheck()) {
+//                            if (group.getIscheck()) {
                                 MainActivity.isAudioCall = false;
-                                ArrayList<String> grouplist = VideoCallDataBase.getDB(context).selectGroupmembers("select * from groupmember where groupid= '" + group.getId() + "'", "userid");
+                                Log.i("ContactFragment", "group.getId() %%% " + group.getId());
+//                                ArrayList<String> grouplist = VideoCallDataBase.getDB(context).selectGroupmembers("select * from groupmember where groupid= '" + group.getId() + "'", "userid");
                                 //                            for (String groupId : grouplist) {
                                 //                                callNotification(Integer.parseInt(groupId), Appreference.loginuserdetails.getId());
                                 //                                Appreference.broadcast_call = true;
                                 //                            }
+                                Log.i("ContactFragment", "grouplist " + grouplist);
                                 ArrayList<Integer> group_list_id = new ArrayList<Integer>();
                                 for (String groupId : grouplist) {
                                     group_list_id.add(Integer.parseInt(groupId));
                                 }
-                                if (group_list_id.size() > 0) {
-                                    callNotification(group_list_id, Appreference.loginuserdetails.getId());
-                                    Appreference.broadcast_call = true;
+                                if (group_list_id != null && group_list_id.size() > 0) {
+                                    Log.i("ContactFragment", "Inside if ** video " + group_list_id.size());
+                                    if (group_list_id.size() <= 4) {
+                                        dialog.show();
+                                        callNotification(group_list_id, Appreference.loginuserdetails.getId());
+                                        Appreference.broadcast_call = true;
+                                        group_list_id.clear();
+                                    } else {
+                                        Toast.makeText(getContext(), "Video Call not Allow More than 4 Users", Toast.LENGTH_SHORT).show();
+                                    }
                                 }
-                            }
+//                            }
                         }
                     } else {
                         Toast.makeText(getContext(), "Select user to make a call", Toast.LENGTH_LONG).show();
@@ -4742,6 +4805,7 @@ public class ContactsFragment extends Fragment implements View.OnClickListener, 
                 }
             }
         }
+
     }
 
     public void broadcastaudiocall() {
@@ -4780,7 +4844,7 @@ public class ContactsFragment extends Fragment implements View.OnClickListener, 
                             }
                             if (group_list_id.size() > 0) {
                                 callNotification(group_list_id, Appreference.loginuserdetails.getId());
-                                Appreference.broadcast_call = false;
+                                Appreference.broadcast_call = true;
                             }
                         }
                     }
@@ -4882,7 +4946,12 @@ public class ContactsFragment extends Fragment implements View.OnClickListener, 
                         try {
                             alpha_sort.setBackgroundResource(R.drawable.a_to_z);
                             Collections.sort(buddyList, new CustomComparator());
-                            buddyArrayAdapter.notifyDataSetChanged();
+                            handler.post(new Runnable() {
+                                @Override
+                                public void run() {
+                                    buddyArrayAdapter.notifyDataSetChanged();
+                                }
+                            });
                         } catch (Exception e) {
                             e.printStackTrace();
                             Appreference.printLog("ContactFragment", "ContactsArrangement ASC Exception : " + e.getMessage(), "WARN", null);
@@ -4892,7 +4961,12 @@ public class ContactsFragment extends Fragment implements View.OnClickListener, 
                         try {
                             alpha_sort.setBackgroundResource(R.drawable.z_to_a);
                             Collections.reverse(buddyList);
-                            buddyArrayAdapter.notifyDataSetChanged();
+                            handler.post(new Runnable() {
+                                @Override
+                                public void run() {
+                                    buddyArrayAdapter.notifyDataSetChanged();
+                                }
+                            });
                         } catch (Exception e) {
                             e.printStackTrace();
                             Appreference.printLog("ContactFragment", "ContactsArrangement DESC Exception : " + e.getMessage(), "WARN", null);
@@ -4902,7 +4976,12 @@ public class ContactsFragment extends Fragment implements View.OnClickListener, 
                         try {
                             alpha_sort.setBackgroundResource(R.drawable.a_to_z);
                             Collections.sort(buddyList, new CustomComparator());
-                            buddyArrayAdapter.notifyDataSetChanged();
+                            handler.post(new Runnable() {
+                                @Override
+                                public void run() {
+                                    buddyArrayAdapter.notifyDataSetChanged();
+                                }
+                            });
                         } catch (Exception e) {
                             e.printStackTrace();
                             Appreference.printLog("ContactFragment", "ContactsArrangement Alfha  Exception : " + e.getMessage(), "WARN", null);
@@ -4949,7 +5028,12 @@ public class ContactsFragment extends Fragment implements View.OnClickListener, 
                             buddyList.addAll(busylist);
                             buddyList.addAll(offlinelist);
                             buddyList.addAll(emptylist);
-                            buddyArrayAdapter.notifyDataSetChanged();
+                            handler.post(new Runnable() {
+                                @Override
+                                public void run() {
+                                    buddyArrayAdapter.notifyDataSetChanged();
+                                }
+                            });
                         } catch (Exception e) {
                             e.printStackTrace();
                             Appreference.printLog("ContactFragment", "ContactsArrangement Online Exception : " + e.getMessage(), "WARN", null);
@@ -4963,7 +5047,12 @@ public class ContactsFragment extends Fragment implements View.OnClickListener, 
                             alpha_sort.setBackgroundResource(R.drawable.a_to_z);
                             online_sort.setBackgroundResource(R.drawable.useronline);
                             Collections.sort(buddyList, new CustomComparator());
-                            buddyArrayAdapter.notifyDataSetChanged();
+                            handler.post(new Runnable() {
+                                @Override
+                                public void run() {
+                                    buddyArrayAdapter.notifyDataSetChanged();
+                                }
+                            });
                         } catch (Exception e) {
                             e.printStackTrace();
                             Appreference.printLog("ContactFragment", "ContactsArrangement Online_DESC Exception : " + e.getMessage(), "WARN", null);
@@ -4974,7 +5063,12 @@ public class ContactsFragment extends Fragment implements View.OnClickListener, 
                             alpha_sort.setBackgroundResource(R.drawable.a_to_z);
                             online_sort.setBackgroundResource(R.drawable.useronline);
                             Collections.sort(buddyList, new CustomComparator());
-                            buddyArrayAdapter.notifyDataSetChanged();
+                            handler.post(new Runnable() {
+                                @Override
+                                public void run() {
+                                    buddyArrayAdapter.notifyDataSetChanged();
+                                }
+                            });
                         } catch (Exception e) {
                             e.printStackTrace();
                             Appreference.printLog("ContactFragment", "ContactsArrangement online_else_DESC Exception : " + e.getMessage(), "WARN", null);
@@ -4986,7 +5080,12 @@ public class ContactsFragment extends Fragment implements View.OnClickListener, 
                     try {
                         alpha_sort.setBackgroundResource(R.drawable.a_to_z);
                         Collections.sort(buddyList, new CustomComparator());
-                        buddyArrayAdapter.notifyDataSetChanged();
+                        handler.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                buddyArrayAdapter.notifyDataSetChanged();
+                            }
+                        });
                     } catch (Exception e) {
                         e.printStackTrace();
                         Appreference.printLog("ContactFragment", "ContactsArrangement online_else Exception : " + e.getMessage(), "WARN", null);

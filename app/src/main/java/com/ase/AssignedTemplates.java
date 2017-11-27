@@ -204,13 +204,13 @@ public class AssignedTemplates extends Activity implements WebServiceInterface {
                     Type collectionType = new TypeToken<List<ListAssignedTemplate>>() {
                     }.getType();
                     List<ListAssignedTemplate> lcs = new Gson().fromJson(str, collectionType);
-                    Log.i("AssignedTemplate String", "Value--->1" + lcs.size());
+                    Log.i("AssignedTemplate String", "Value--->1= " + lcs.size());
                     for (int i = 0; i < lcs.size(); i++) {
-                        Log.i("AssignedTemplate", "Value--->2" + lcs.get(i));
+                        Log.i("AssignedTemplate", "Value--->2 " + lcs.get(i));
                         ListAssignedTemplate listUserGroupObject = lcs.get(i);
-                        Log.i("AssignedTemplate", "Value--->3" + listUserGroupObject.getTask().getId());
+                        Log.i("AssignedTemplate", "Value--->3 " + listUserGroupObject.getTask().getId());
                         listAssignedTemplates.add(listUserGroupObject);
-                        Log.i("AssignedTemplate", "Value--->4" + listAssignedTemplates);
+                        Log.i("AssignedTemplate", "Value--->4 " + listAssignedTemplates);
                     }
                 } catch (Exception e) {
                     e.printStackTrace();

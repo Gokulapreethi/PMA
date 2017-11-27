@@ -224,10 +224,6 @@ public class CallActivity extends Activity
     // video call landscape mode
 
     RelativeLayout endcall_layout, headerc;
-//    LinearLayout endcall_visiblelayout_land,paticipant_endcalllayout_land;
-//    ImageView btn_hold_land,btn_record_land,btn_broadcast_land,btn_speaker_land,changehost_land,buttonHangup_land,participant_expand_iv_land,participant_buttonHangup_land,participant_speaker_land;
-//    Chronometer chronometer_land;
-
     //    RelativeLayout mm;
     //    ImageView sp;
     boolean isHost = false;
@@ -256,11 +252,6 @@ public class CallActivity extends Activity
 //            rxTimer.scheduleAtFixedRate(timerTaskObj,0,15000);
             rxTimer.schedule(callTimerTaskObj,0,10000);
 
-//            rxLevelTimerTask = new CheckRxLevelTimerTask();
-//            rx_level_timer = new Timer();
-//            rx_level_timer.schedule(rxLevelTimerTask,0,15000);
-//            handler.postDelayed(runnable, 15000);
-
             Log.d("CallActivity", "Inside the OnCreate method handler_ == " + handler_);
             Log.d("CallActivity", "Inside the OnCreate method");
             phoneStateChangeListener = new PhoneStateChangeListener();
@@ -276,11 +267,6 @@ public class CallActivity extends Activity
             rl_co_ordinate = (RelativeLayout) findViewById(R.id.coordinator_layout);
             host_speaker = (ImageView) findViewById(R.id.btn_speaker);
             chat = (Button) findViewById(R.id.btn_back);
-//            chat_land = (Button) findViewById(R.id.btn_back_land);
-
-			  /*  videoCallScreen = (RelativeLayout) findViewById(R.id.video_call_screen);
-				audioCallScreen = (RelativeLayout) findViewById(R.id.audio_call_screen);
-	*/
             chronometer = (Chronometer) findViewById(R.id.chronometer);
 //            chronometer_land = (Chronometer) findViewById(R.id.chronometer_land);
             Date strt_dt = new Date();
@@ -301,25 +287,9 @@ public class CallActivity extends Activity
 
             //,,,,,,,,
             linearLayout = (RelativeLayout) findViewById(R.id.video_total_layouts);
-//            endcall_layout_land = (RelativeLayout) findViewById(R.id.endcall_layout_land);
-//            participant_mic_mute_land = (RelativeLayout) findViewById(R.id.participant_mic_mute_land);
             endcall_layout = (RelativeLayout) findViewById(R.id.endcall_layout);
 //            headerc_land = (RelativeLayout) findViewById(R.id.headerc_land);
             headerc = (RelativeLayout) findViewById(R.id.headerc);
-
-//            endcall_visiblelayout_land = (LinearLayout) findViewById(R.id.endcall_visiblelayout_land);
-//            paticipant_endcalllayout_land = (LinearLayout) findViewById(R.id.paticipant_endcalllayout_land);
-
-//            btn_hold_land = (ImageView) findViewById(R.id.btn_hold_land);
-//            btn_record_land = (ImageView) findViewById(R.id.btn_record_land);
-//            btn_broadcast_land = (ImageView) findViewById(R.id.btn_broadcast_land);
-//            btn_speaker_land = (ImageView) findViewById(R.id.btn_speaker_land);
-//            changehost_land = (ImageView) findViewById(R.id.changehost_land);
-//            buttonHangup_land = (ImageView) findViewById(R.id.buttonHangup_land);
-//            participant_expand_iv_land = (ImageView) findViewById(R.id.participant_expand_iv_land);
-//            participant_buttonHangup_land = (ImageView) findViewById(R.id.participant_buttonHangup_land);
-//            participant_speaker_land = (ImageView) findViewById(R.id.participant_speaker_land);
-
 
             if (incomingcall) {
 
@@ -327,13 +297,7 @@ public class CallActivity extends Activity
                 participant_layout.setVisibility(View.VISIBLE);
                 host_layout.setVisibility(View.GONE);
                 endcall_layout.setVisibility(View.GONE);
-//                    endcall_layout_land.setVisibility(View.GONE);
                 headerc.setVisibility(View.VISIBLE);
-//                    headerc_land.setVisibility(View.GONE);
-
-//                chronometer.setBase(SystemClock.elapsedRealtime());
-//                chronometer.start();
-//                chronometer_started = true;
 
                 rl_co_ordinate.setVisibility(View.GONE);
 
@@ -352,21 +316,10 @@ public class CallActivity extends Activity
 
             } else {
                 rl_co_ordinate.setVisibility(View.GONE);
-
-
-//                MainActivity.earpieceRingTone();
-                //                audioCallScreen.setVisibility(View.VISIBLE);
-                //                videoCallScreen.setVisibility(View.GONE);
-
                 host_layout.setVisibility(View.VISIBLE);
                 participant_layout.setVisibility(View.GONE);
                 endcall_layout.setVisibility(View.VISIBLE);
                 headerc.setVisibility(View.VISIBLE);
-
-                //                Date strt_dt = new Date();
-                //                SimpleDateFormat sdf = new SimpleDateFormat(
-                //                        "yyyy-MM-dd hh:mm:ss");
-                //                call_strtime = sdf.format(strt_dt);
                 setHost(true);
                 Log.d("CallActivity", "This is a outgoingcall");
 
@@ -378,24 +331,10 @@ public class CallActivity extends Activity
             listView_relativelayout1 = (RelativeLayout) findViewById(R.id.listView_relativelayout1);
             users_list = (ListView) findViewById(R.id.user_listview);
 
-            //            final TextView reinvite=(TextView)findViewById(R.id.reinvite);
-            //            reinvite.setOnClickListener(new View.OnClickListener() {
-            //                @Override
-            //                public void onClick(View v) {
-            //                    reInvite();
-            //                }
-            //            });
-
             am = (AudioManager) context
                     .getSystemService(Context.AUDIO_SERVICE);
             SurfaceView surfaceInVideo = (SurfaceView)
                     findViewById(R.id.surfaceIncomingVideo);
-            //            SurfaceView surfaceInVideo2 = (SurfaceView)
-            //                    findViewById(R.id.surfaceview4);
-            //            SurfaceView surfaceInVideo3 = (SurfaceView)
-            //                    findViewById(R.id.surfaceview2);
-
-
             SurfaceView surfacePreview = (SurfaceView)
                     findViewById(R.id.surfacePreviewCapture);
 
@@ -450,7 +389,7 @@ public class CallActivity extends Activity
                 }
             });
 
-            host_speaker.setTag(1);
+            host_speaker.setTag(0);
 
             host_speaker.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -1628,6 +1567,16 @@ public class CallActivity extends Activity
 //
 //                        chronometer_land.setBase(SystemClock.elapsedRealtime());
 //                        chronometer_land.start();
+                        Log.d("Speaker", "incomingcall ** " + participant_speaker.getTag());
+                        if (participant_speaker.getTag().equals(0)) {
+                            if (am != null) {
+                                participant_speaker.setTag(1);
+                                participant_speaker.setImageResource(R.drawable.speaker);
+                                am.setSpeakerphoneOn(true);
+                                Log.d("Speaker", "receiver side speaker true");
+                            }
+                        }
+
                         if(!chronometer_started) {
                             chronometer.setBase(SystemClock.elapsedRealtime());
                             chronometer.start();

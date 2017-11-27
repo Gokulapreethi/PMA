@@ -56,6 +56,7 @@ public  class ShowTimeupAlert extends Activity implements DateTimePicker.DateWat
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.showtimeup);
+        setFinishOnTouchOutside(false);
         Appreference.context_table.put("showtimeralert", this);
         context=this;
         handler=new Handler();
@@ -239,6 +240,7 @@ public  class ShowTimeupAlert extends Activity implements DateTimePicker.DateWat
         try {
             //New Code Start
             final Dialog mDateTimeDialog = new Dialog(context);
+            mDateTimeDialog.setCanceledOnTouchOutside(false);
             // Inflate the root layout
             final RelativeLayout mDateTimeDialogView = (RelativeLayout) getLayoutInflater().inflate(R.layout.new_date_picker, null);
 
@@ -314,7 +316,7 @@ public  class ShowTimeupAlert extends Activity implements DateTimePicker.DateWat
 
                         NewTaskConversation newTaskConversation=(NewTaskConversation)Appreference.context_table.get("taskcoversation");
                         if(newTaskConversation!=null){
-                            newTaskConversation.startHoldOrPauseAlarmManager(showholdTimerDate, my_taskId, my_status,my_projectId);
+                            newTaskConversation.startHoldOrPauseAlarmManager(showholdTimerDate, my_taskId, my_status,my_projectId,"IntervalTimer");
                             newTaskConversation.ShowHoldOrPauseTimerDisplay();
                             Toast.makeText(ShowTimeupAlert.this,"Time Snoozed....",Toast.LENGTH_SHORT).show();
                             finish();
@@ -403,7 +405,7 @@ public  class ShowTimeupAlert extends Activity implements DateTimePicker.DateWat
         String StatusTask;
         if (timer_Alert_by_current_status == 1 || timer_Alert_by_current_status == 3) {
             String alertQuery = "select taskPlannedLatestEndDate from taskDetailsInfo where (taskStatus='Hold' or taskStatus='Paused') and projectId='" + my_projectId + "'and taskId= '" + my_taskId + "'";
-            String isAlertShown = VideoCallDataBase.getDB(context).getAlertShownstatus(alertQuery);
+            String isAlertShown = VideoCallDataBase.getDB(context).getAlertShownstatus(alertQuery,"taskPlannedLatestEndDate");
             if ((isAlertShown != null && !isAlertShown.equalsIgnoreCase("") && !isAlertShown.equalsIgnoreCase(null) && isAlertShown.equalsIgnoreCase("1"))) {
                 Log.i("tone123", "onFinish ===>");
                 String AlarmRingedUpdateQuery = "update taskDetailsInfo set taskPlannedLatestEndDate='0' where projectId='" + my_projectId + "'and taskId= '" + my_taskId + "'";

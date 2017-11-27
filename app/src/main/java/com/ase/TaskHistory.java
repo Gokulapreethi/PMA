@@ -1956,7 +1956,8 @@ public class TaskHistory extends Activity implements WebServiceInterface {
                      count_query = "select * from taskHistoryInfo where ( ownerOfTask='" + userName + "' ) or ( taskReceiver='" + userName + "' ) or ( taskObservers='" + userName + "' ) and ( loginuser='" + Appreference.loginuserdetails.getEmail() + "' ) and (category <> 'chat')";
                     }
                     int count = dataBase.getTaskHistoryRowCount(count_query);
-                    Log.i("lazyload", "onresume count--->" + count);
+                    Log.i("lazyload", "onresume count_query---> $$ " + count_query);
+                    Log.i("lazyload", "onresume count---> $$ " + count);
                     boolean countAboveten = false;
                     isscrool = true;
                     if (count != 0 && count >= 10) {
@@ -1971,7 +1972,7 @@ public class TaskHistory extends Activity implements WebServiceInterface {
                         taskList_count = 0;
                     }
                     Log.i("lazyload", "onresume db count---> onResume " + taskList_count);
-                    Log.i("lazyload", "onresume buddyOrgroup_count---> onResume " + taskList_count);
+                    Log.i("lazyload", "onresume countAboveten # " + countAboveten);
                     if (taskList_count == 0 && !countAboveten) {
                         if (me_task != null && me_task.equalsIgnoreCase("note"))
                             query1 = "select * from taskHistoryInfo where ( ownerOfTask='" + userName + "' ) and ( taskReceiver='" + userName + "' )  and (category <> 'chat') and ( loginuser='" + Appreference.loginuserdetails.getEmail() + "' )";
@@ -2045,11 +2046,12 @@ public class TaskHistory extends Activity implements WebServiceInterface {
                         }
                     } else {
                         try {
-                            percentage = dataBase.GroupPercentageChecker(contactBean.getToUserName(), contactBean.getTaskId(), contactBean.getOwnerOfTask());
+                            percentage = dataBase.GroupPercentageChecker(contactBean.getToUserId(), contactBean.getTaskId(), contactBean.getOwnerOfTask());
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
                         Log.i("TaskHistory", "unread count 41 onResume " + percentage);
+                        Log.i("TaskHistory", "taskId " + contactBean.getTaskId());
                     }
                 } else {
                     if (contactBean.getFromUserName() != null && contactBean.getFromUserName().equalsIgnoreCase(contactBean.getOwnerOfTask())) {
@@ -3252,7 +3254,9 @@ public class TaskHistory extends Activity implements WebServiceInterface {
                         String Owner = contactBean.getOwnerOfTask();
                         String name = dataBase.getname(str);
                         String str2 = contactBean.getTaskObservers();
-                        Log.i("TaskArrayAdapter", "str2 **** " + str2);
+                        Log.i("TaskArrayAdapter", "str2 $$ " + str2);
+                        Log.i("TaskArrayAdapter", "str2 %% " + str);
+                        Log.i("TaskArrayAdapter", "name %% " + name);
                         if (str2 != null && !str2.equalsIgnoreCase("") && !str2.equalsIgnoreCase("null") && !str2.equalsIgnoreCase("(null)")) {
                             int counter = 0;
                             String observernamelist = "", task_obsname;
@@ -3332,7 +3336,7 @@ public class TaskHistory extends Activity implements WebServiceInterface {
                             }
                         } else*/
                         if (!contactBean.getTaskType().equalsIgnoreCase("group")) {
-
+                            Log.i("TaskArrayAdapter", "Taker $$ " + contactBean.getTaskReceiver());
                             if (contactBean.getTaskReceiver() != null && !contactBean.getTaskReceiver().equalsIgnoreCase("") && contactBean.getTaskReceiver().equalsIgnoreCase(contactBean.getOwnerOfTask())) {
                                 task_taker.setVisibility(View.VISIBLE);
                             } else {
@@ -3342,11 +3346,14 @@ public class TaskHistory extends Activity implements WebServiceInterface {
 //                            Log.i("getView", "observer 26 ");
                             String receiver = contactBean.getTaskReceiver();
                             String name_receiver = dataBase.getname(str);
-                            if (name != null) {
-//                                Log.i("getView", "observer 27 ");
+                            Log.i("TaskArrayAdapter", "receiver 27 "+receiver);
+                            Log.i("TaskArrayAdapter", "name_receiver 27 "+name_receiver);
+                            Log.i("TaskArrayAdapter", "name 27 "+name);
+                            if (name != null && !name.equalsIgnoreCase("") && !name.equalsIgnoreCase(null)) {
+                                Log.i("TaskArrayAdapter", "observer 27 "+name_receiver);
                                 task_taker.setText(name_receiver);
                             } else {
-//                                Log.i("getView", "observer 28 ");
+                                Log.i("TaskArrayAdapter", "observer 28 "+receiver);
                                 if (receiver != null && receiver.contains("_")) {
                                     receiver = dataBase.getname(receiver);
                                     task_taker.setText(receiver);

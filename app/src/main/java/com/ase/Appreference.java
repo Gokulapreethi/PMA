@@ -22,6 +22,7 @@ import org.pjsip.pjsua2.Call;
 import org.pjsip.pjsua2.app.MainActivity;
 
 import java.io.File;
+import java.sql.Timestamp;
 import java.text.Format;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -73,6 +74,13 @@ public class Appreference {
     public static boolean isremarksEntered=false;
     public static boolean isTimeUpshown=false;
     public static String HoldOrPauseTimervalue="";
+    public static String EstimTimerValue="";
+    public static String Estim_travel_TimerValue="";
+    public static boolean isTNAReport=false;
+    public static boolean isLoginRequestSent=false;
+    public static boolean isEstimTimerStarted=false;
+    public static boolean isTravelRem_time=false;
+    public static boolean isEstimPositiveAlertShown=false;
 
     public static boolean isImageSelected=false;
     public static boolean isLocation = false;
@@ -140,6 +148,7 @@ public class Appreference {
     public static HashMap<String, String> contact_arrange = new HashMap(hashtable_online_alfha);
     public static Iterator<String> keySetIterator = contact_arrange.keySet().iterator();
     public static boolean isTemplateTaskProfile = false;
+    public static boolean isPasswordChanged = false;
 
     public static void printLog(String tag, String message, String type,
                                 Throwable e) {
@@ -210,6 +219,12 @@ public class Appreference {
     }
 
 
+    public static String getCurrentDateTime(){
+        Timestamp ts = new Timestamp(System.currentTimeMillis());
+        String str = "[" + ts.toString() + "]";
+        ts = null;
+        return str;
+    }
     public static String getEndOfDay(String date) {
         String enddate = "";
         try {

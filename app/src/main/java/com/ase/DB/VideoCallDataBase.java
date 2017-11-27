@@ -78,13 +78,13 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
     public static final String CREATE_TABLE_GROUPS = "create table if not exists group1(groupid integer,groupname varchar(100),groupowner varchar(100),departmentid varchar(100),description varchar(100),logo varchar(100),grouplogo varchar(100),departmentref varchar(100),loginuser varchar(100))";
     public static final String CREATE_TABLE_GROUPMEMBERS = "create table if not exists groupmember(userid integer,email varchar(100),username varchar(100),code varchar(100),departmentId varchar(100),userStatus varchar(100),loginStatus varchar(100),firstName varchar(100),lastName varchar(100),title varchar(100),organization varchar(100),gender varchar(100),profileImage varcahr(100),mobileNo varchar(100),loginuser varchar(100),groupid varchar(100),userType varchar(100),profession varchar(100),specialization varchar(100))";
     public static final String CREATE_TABLE_CALLS = "create table if not exists call(callid INTEGER PRIMARY KEY AUTOINCREMENT,calltype varchar(100),host varchar(100),participant varchar(100),start_time varchar(100),call_duration varchar(100),recording_path varchar(100),loginuser varchar(100))";
-    public static final String CREATE_TABLE_TASK = "create table if not exists taskDetailsInfo(id integer primary key autoincrement,loginuser varchar(100),fromUserId integer,toUserId integer,plannedStartDateTime varchar(100),plannedEndDateTime varchar(100),remainderFrequency varchar(100),duration varchar(100),durationunit varchar(100),taskDescription TEXT,isRemainderRequired varchar(100),taskStatus varchar(100),signalid varchar(100),fromUserName varchar(100),toUserName varchar(100),sendStatus varchar(100),completedPercentage varchar(100),taskType varchar(100),mimeType varchar(100),taskPriority varchar(100),dateFrequency varchar(100),timeFrequency varchar(100),taskNo varchar(100),taskId varchar(100),msgstatus varchar(5),showprogress varchar(5),readStatus varchar(5),reminderquotes varchar(100),remark varchar(100),tasktime varchar(100),serverFileName varchar(100),requestStatus varchar(100),dateTime varchar(100),subType varchar(20),daysOfTheWeek varchar(100),repeatFrequency varchar(5),taskTagName varchar(20),customTagId varchar(20),customTagVisible varchar(20),customSetId varchar(20),syncEnable varchar(100),wssendstatus varchar(20),projectId varchar(100),parentTaskId varchar(100),longmessage varchar(100),private_member varchar(200),replyMessage varchar(100),taskPlannedBeforeEndDate varchar(100),taskPlannedLatestEndDate varchar(100),fromTaskName varchar(100),toTaskName varchar(100),sender_reply varchar(100),reply_sendername varchar(100),caption varchar(100),wscaptionstatus varchar(20))";
+    public static final String CREATE_TABLE_TASK = "create table if not exists taskDetailsInfo(id integer primary key autoincrement,loginuser varchar(100),fromUserId integer,toUserId integer,plannedStartDateTime varchar(100),plannedEndDateTime varchar(100),remainderFrequency varchar(100),duration varchar(100),durationunit varchar(100),taskDescription TEXT,isRemainderRequired varchar(100),taskStatus varchar(100),signalid varchar(100),fromUserName varchar(100),toUserName varchar(100),sendStatus varchar(100),completedPercentage varchar(100),taskType varchar(100),mimeType varchar(100),taskPriority varchar(100),dateFrequency varchar(100),timeFrequency varchar(100),taskNo varchar(100),taskId varchar(100),msgstatus varchar(5),showprogress varchar(5),readStatus varchar(5),reminderquotes varchar(100),remark varchar(100),tasktime varchar(100),serverFileName varchar(100),requestStatus varchar(100),dateTime varchar(100),subType varchar(20),daysOfTheWeek varchar(100),repeatFrequency varchar(5),taskTagName varchar(20),customTagId varchar(20),customTagVisible varchar(20),customSetId varchar(20),syncEnable varchar(100),wssendstatus varchar(20),projectId varchar(100),parentTaskId varchar(100),longmessage varchar(100),private_member varchar(200),replyMessage varchar(100),taskPlannedBeforeEndDate varchar(100),taskPlannedLatestEndDate varchar(100),fromTaskName varchar(100),toTaskName varchar(100),sender_reply varchar(100),reply_sendername varchar(100),caption varchar(100),wscaptionstatus varchar(20),estimTime varchar(20),estimCompletion varchar(10),EstimAlarm varchar(10))";
     public static final String CREATE_TABLE_TASK_HISTORY = "create table if not exists taskHistoryInfo(id integer primary key autoincrement,loginuser varchar(100),taskNo varchar(100),taskName varchar(100),plannedStartDateTime varchar(100),plannedEndDateTime varchar(100),remainderFrequency varchar(100),taskDescription TEXT,taskObservers TEXT,taskStatus varchar(100),signalid varchar(100),completedPercentage varchar(100),taskType varchar(100),ownerOfTask varchar(100),mimeType varchar(100),parentTaskId varchar(100),taskId varchar(100),readStatus varchar(5),tasktime varchar(100),taskReceiver varchar(100),taskMemberList TEXT,dateTime varchar(100),badgeCount varchar(20),category vrchar(100),taskPlannedBeforeEndDate varchar(100),taskPlannedLatestEndDate varchar(100),fromTaskName varchar(100),toTaskName varchar(100),sender_reply varchar(100),reply_sendername varchar(100))";
     public static final String CREATE_TABLE_PROJECT = "create table if not exists projectDetails(id integer primary key autoincrement,loginuser varchar(100),projectId varchar(100),projectName varchar(100),projectDescription varchar(100),projectOrganisation varchar(100),projectOwner varchar(100),listOfMembers varchar(100),completedPercentage varchar(100),taskStatus varchar(100),readStatus varchar(5),requestStatus varchar(100),oracleProjectId varchar(100),customerName varchar(100),address varchar(100),mcModel varchar(100),mcSrNo varchar(100),serviceRequestDate varchar(100),chasisNo varchar(100),observation varchar(100),oracleCustomerId integer,activity varchar(100),processFlag varchar(100),projectcompletedstatus varchar(100),isActiveStatus varchar(100),jobCardType varchar(100),machineMake varchar(100),jobDescription varchar(100),openDate varchar(100))";
     public static final String CREATE_TABLE_PROJECT_HISTORY = "create table if not exists projectHistory(id integer primary key autoincrement,loginuser varchar(100),projectId varchar(100),parentTaskId varchar(100),projectOwner varchar(100),projectName TEXT,fromUserId varchar(100),toUserId varchar(100),fromUserName varchar(100),toUserName varchar(100),projectDescription varchar(100),projectOrganisation varchar(100),plannedStartDateTime varchar(100),plannedEndDateTime varchar(100),taskMemberList varchar(100),taskStatus varchar(100),ownerOfTask varchar(100),taskReceiver varchar(100),taskObservers TEXT,taskNo varchar(100),taskName varchar(100),taskDescription varchar(100),taskType varchar(100),mimeType varchar(100),taskId varchar(100),signalId varchar(100),completedPercentage varchar(100),readStatus varchar(5),category varchar(10),isParentTask varchar(5),issueParentId varchar(100),requestStatus varchar(100),oracleTaskId varchar(100),estimatedTravelHrs integer,estimatedActivityHrs integer,activity varchar(100),oracleProjectId varchar(100),customerName varchar(100),address varchar(100),mcModel varchar(100),mcSrNo varchar(100),serviceRequestDate varchar(100),chasisNo varchar(100),observation varchar(100),oracleCustomerId integer,processFlag varchar(100),projectcompletedstatus varchar(100),isActiveStatus varchar(100),jobCardType varchar(100),machineMake varchar(100),mcDescription varchar(100))";
     public static final String CREATE_TABLE_FORM_ACCESS = "create table if not exists FormAccess(id integer primary key autoincrement,taskId varchar(50),formId varchar(50),formAccessId varchar(50),taskGiver varchar(50),memberName varchar(50),accessMode varchar(50))";
     public static final String CREATE_TABLE_List_User_Group_Member_Access = "create table if not exists listUserGroupMemberAccess(userid integer,groupid integer,groupname varchar(100),loginuser varchar(100),respondVideo varchar(50),respondFiles varchar(50),accessForms varchar(50),respondAudio varchar(50),videoAccess varchar(50),adminAccess varchar(50),respondDateChange varchar(50),respondLocation varchar(50),respondConfCall varchar(50),audioAccess varchar(50),chatAccess varchar(50),respondText varchar(50),respondPrivate varchar(50),respondPhoto varchar(50),accessReminder varchar(50),respondSketch varchar(50),respondTask varchar(50),accessScheduledCNF varchar(50),GroupTask varchar(50),ReassignTask varchar(50),ChangeTaskName varchar(50),TaskDescriptions varchar(50),TemplateExistingTask varchar(50),ApproveLeave varchar(50),RemindMe varchar(50),AddObserver varchar(50),TaskPriority varchar(50),Escalations varchar(50))";
-    public static final String CREATE_TABLE_PROJECT_STATUS = "create table if not exists projectStatus(id integer primary key autoincrement,userId integer,projectId integer,taskId integer,taskDescription varchar(100),travelStartTime varchar(100),activityStartTime varchar(100),activityEndTime varchar(100),travelEndTime varchar(100),totravelstartdatetime varchar(100),totravelenddatetime varchar(100),remarks varchar(500),hourMeterReading varchar(100),status varchar(100),customersignaturename varchar(100),photo varchar(100),techniciansignature varchar(100),customersignature varchar(100),observation varchar(500),actionTaken varchar(500),taskcompleteddate varchar(100),datenow varchar(100),wssendstatus varchar(100),signalId varchar(100),dateStatus varchar(100),synopsis varchar(100))";
+    public static final String CREATE_TABLE_PROJECT_STATUS = "create table if not exists projectStatus(id integer primary key autoincrement,userId integer,projectId integer,taskId integer,taskDescription varchar(100),travelStartTime varchar(100),activityStartTime varchar(100),activityEndTime varchar(100),travelEndTime varchar(100),totravelstartdatetime varchar(100),totravelenddatetime varchar(100),remarks varchar(500),hourMeterReading varchar(100),status varchar(100),customersignaturename varchar(100),photo varchar(100),techniciansignature varchar(100),customersignature varchar(100),observation varchar(500),actionTaken varchar(500),taskcompleteddate varchar(100),datenow varchar(100),wssendstatus varchar(100),signalId varchar(100),dateStatus varchar(100),synopsis varchar(100),startDateLatitude varchar(100),startDateLongitude varchar(100),endDateLatitude varchar(100),endDateLongitude varchar(100))";
 
     public static final String EULATABLE = "eulaagree";
     public static final String EULACREATE = "create table if not exists '" + EULATABLE + "'(id integer (1),selection varchar(1))";
@@ -116,7 +116,7 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
                 db = dbHelper.getWritableDatabase();
             } catch (Exception e) {
                 e.printStackTrace();
-                Appreference.printLog("openDatabase ","Exception "+e.getMessage(),"WARN",null);
+                Appreference.printLog("openDatabase ", "Exception " + e.getMessage(), "WARN", null);
             }
         }
     }
@@ -132,7 +132,7 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
 
         } catch (Exception e) {
             e.printStackTrace();
-            Appreference.printLog("openReadableDatabase ","Exception "+e.getMessage(),"WARN",null);
+            Appreference.printLog("openReadableDatabase ", "Exception " + e.getMessage(), "WARN", null);
         }
 
     }
@@ -194,7 +194,7 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
         } catch (Exception e) {
             // TODO: handle exception
             e.printStackTrace();
-            Appreference.printLog("insertChat_history ","Exception "+e.getMessage(),"WARN",null);
+            Appreference.printLog("insertChat_history ", "Exception " + e.getMessage(), "WARN", null);
 
 
         }
@@ -235,12 +235,12 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
                 }
             } catch (Exception e) {
                 e.printStackTrace();
-                Appreference.printLog("getChatBean 1 ","Exception "+e.getMessage(),"WARN",null);
+                Appreference.printLog("getChatBean 1 ", "Exception " + e.getMessage(), "WARN", null);
 
             }
         } catch (Exception e) {
             e.printStackTrace();
-            Appreference.printLog("getChatBean 2 ","Exception "+e.getMessage(),"WARN",null);
+            Appreference.printLog("getChatBean 2 ", "Exception " + e.getMessage(), "WARN", null);
         } finally {
             return chatBean;
         }
@@ -259,7 +259,7 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
             Log.d("chatdb", "ScheduleMessage DB updated");
         } catch (Exception e) {
             e.printStackTrace();
-            Appreference.printLog("ChatMsg_StatusUpdate ","Exception "+e.getMessage(),"WARN",null);
+            Appreference.printLog("ChatMsg_StatusUpdate ", "Exception " + e.getMessage(), "WARN", null);
         }
     }
 
@@ -274,7 +274,7 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
             Log.d("chatdb", "ScheduleMessage DB deleted");
         } catch (Exception e) {
             e.printStackTrace();
-            Appreference.printLog("ChatMsgDelete ","Exception "+e.getMessage(),"WARN",null);
+            Appreference.printLog("ChatMsgDelete ", "Exception " + e.getMessage(), "WARN", null);
         }
     }
 
@@ -297,7 +297,7 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
         } catch (Exception e) {
             // TODO: handle exception
             e.printStackTrace();
-            Appreference.printLog("insertCall_history ","Exception "+e.getMessage(),"WARN",null);
+            Appreference.printLog("insertCall_history ", "Exception " + e.getMessage(), "WARN", null);
         }
     }
 
@@ -314,7 +314,7 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
         } catch (Exception e) {
             // TODO: handle exception
             e.printStackTrace();
-            Appreference.printLog("isAgendaRecordExists ","Exception "+e.getMessage(),"WARN",null);
+            Appreference.printLog("isAgendaRecordExists ", "Exception " + e.getMessage(), "WARN", null);
         } finally {
             if (cur != null)
                 cur.close();
@@ -364,7 +364,7 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
         } catch (Exception e) {
             // TODO: handle exception
             e.printStackTrace();
-            Appreference.printLog("insertContact_history ","Exception "+e.getMessage(),"WARN",null);
+            Appreference.printLog("insertContact_history ", "Exception " + e.getMessage(), "WARN", null);
         }
     }
 
@@ -457,7 +457,7 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
                         db.update("taskDetailsInfo", cv1, "customSetId=? and customTagId=?", new String[]{name, String.valueOf(beans.get(i).getId())});
                     } catch (Exception e) {
                         e.printStackTrace();
-                        Appreference.printLog("UpdateOrInsert 1","Exception "+e.getMessage(),"WARN",null);
+                        Appreference.printLog("UpdateOrInsert 1", "Exception " + e.getMessage(), "WARN", null);
 
                     }
                 } else {
@@ -467,7 +467,7 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
             }
         } catch (Exception e) {
             e.printStackTrace();
-            Appreference.printLog("UpdateOrInsert 2","Exception "+e.getMessage(),"WARN",null);
+            Appreference.printLog("UpdateOrInsert 2", "Exception " + e.getMessage(), "WARN", null);
         }
     }
 
@@ -561,7 +561,7 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
             }
         } catch (Exception e) {
             e.printStackTrace();
-            Appreference.printLog("UpdateOrInsert 3","Exception "+e.getMessage(),"WARN",null);
+            Appreference.printLog("UpdateOrInsert 3", "Exception " + e.getMessage(), "WARN", null);
         }
     }
 
@@ -604,7 +604,7 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
         } catch (Exception e) {
             // TODO: handle exception
             e.printStackTrace();
-            Appreference.printLog("insertNewContact_history","Exception "+e.getMessage(),"WARN",null);
+            Appreference.printLog("insertNewContact_history", "Exception " + e.getMessage(), "WARN", null);
             Log.i("chat123", "inside DB contact list exception==>" + e.getMessage());
 
         }
@@ -623,7 +623,7 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
             }
         } catch (Exception e) {
             e.printStackTrace();
-            Appreference.printLog("updateUserPresense","Exception "+e.getMessage(),"WARN",null);
+            Appreference.printLog("updateUserPresense", "Exception " + e.getMessage(), "WARN", null);
         }
     }
 
@@ -662,7 +662,7 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
         } catch (Exception e) {
             // TODO: handle exception
             e.printStackTrace();
-            Appreference.printLog("insertGroupMember_history","Exception "+e.getMessage(),"WARN",null);
+            Appreference.printLog("insertGroupMember_history", "Exception " + e.getMessage(), "WARN", null);
         }
     }
 
@@ -693,7 +693,7 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
         } catch (Exception e) {
             // TODO: handle exception
             e.printStackTrace();
-            Appreference.printLog("insertGroupMember_history","Exception "+e.getMessage(),"WARN",null);
+            Appreference.printLog("insertGroupMember_history", "Exception " + e.getMessage(), "WARN", null);
         }
     }
 
@@ -751,7 +751,7 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
         } catch (Exception e) {
             // TODO: handle exception
             e.printStackTrace();
-            Appreference.printLog("insertListMemberAccess_history","Exception "+e.getMessage(),"WARN",null);
+            Appreference.printLog("insertListMemberAccess_history", "Exception " + e.getMessage(), "WARN", null);
         }
     }
 
@@ -759,6 +759,8 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
     public boolean insertORupdate_Task_history(TaskDetailsBean bean) {
         int row_id = 0;
         boolean inserted = false;
+        Log.i("reminder123","insertORupdate_Task_history=====>");
+
         try {
             String logginuser = AppSharedpreferences.getInstance(context).getString("loginUserName");
             logginuser = logginuser.replace('_', '@');
@@ -776,6 +778,8 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
             cv.put("plannedStartDateTime", bean.getUtcPlannedStartDateTime());
             cv.put("taskPlannedLatestEndDate", bean.getTaskPlannedLatestEndDate());
             cv.put("plannedEndDateTime", bean.getUtcplannedEndDateTime());
+            cv.put("estimTime", bean.getEstimTimeForTimer());
+            cv.put("EstimAlarm",bean.getEstimAlarm());
             cv.put("remainderFrequency", bean.getUtcPemainderFrequency());
             cv.put("duration", bean.getDuration());
             cv.put("durationunit", bean.getDurationUnit());
@@ -860,7 +864,7 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
         } catch (Exception e) {
             // TODO: handle exception
             e.printStackTrace();
-            Appreference.printLog("insertORupdate_Task_history","Exception "+e.getMessage(),"WARN",null);
+            Appreference.printLog("insertORupdate_Task_history", "Exception " + e.getMessage(), "WARN", null);
         }
         return inserted;
     }
@@ -1028,7 +1032,7 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
         } catch (Exception e) {
             // TODO: handle exception
             e.printStackTrace();
-            Appreference.printLog("insertORupdate_TaskHistoryInfo","Exception "+e.getMessage(),"WARN",null);
+            Appreference.printLog("insertORupdate_TaskHistoryInfo", "Exception " + e.getMessage(), "WARN", null);
         }
         return inserted;
     }
@@ -1493,14 +1497,9 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
                                 cv.put("toUserName", listToDetails1.getUsername());
                             }
                         }
-//                        cv.put("taskReceiver", listToDetails1.getUsername());
                     }
-//                cv.put("toUserId", listToDetails1.getId());
-//                    cv.put("signalid", signal_id);
                     if (listTaskConversationFile.getFileType().equals("text") || listTaskConversationFile.getFileType().equals("map") || listTaskConversationFile.getFileType().equals("date") || listTaskConversationFile.getFileType().equals("Reassign") || listTaskConversationFile.getFileType().equals("assigntask")) {
                         if (bean.getProjectId() != null) {
-//                            signal_id = signal_id.concat(listTaskConversationFile.getDescription());
-//                            cv.put("signalid", signal_id);
                             if (listTaskConversation.getRequestType() != null && listTaskConversation.getRequestType().equalsIgnoreCase("percentageCompleted") && listTaskConversationFile.getFileType().equals("map")) {
                                 cv.put("taskDescription", listTaskConversationFile.getDescription());
                                 cv.put("subType", listTaskConversation.getRequestType());
@@ -1549,8 +1548,6 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
                                     } else {
                                         cv.put("taskDescription", path_1);
                                     }
-//                                    signal_id = signal_id.concat(listTaskConversationFile.getFileName());
-//                                    cv.put("signalid", signal_id);
                                 } else {
                                     if (listTaskConversation.getRequestType() != null && listTaskConversation.getRequestType().equalsIgnoreCase("percentageCompleted")) {
                                         cv.put("taskDescription", listTaskConversationFile.getFileName());
@@ -1564,8 +1561,6 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
                                     } else {
                                         cv.put("taskDescription", listTaskConversationFile.getFileName());
                                     }
-//                                    signal_id = signal_id.concat(listTaskConversationFile.getFileName());
-//                                    cv.put("signalid", signal_id);
                                 }
                             } else {
                                 if (listFromDetails1.getUsername() != null && listFromDetails1.getUsername().equalsIgnoreCase(Appreference.loginuserdetails.getUsername())) {
@@ -1664,7 +1659,7 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
                             cv.put("serverFileName", listTaskConversationFile.getFileName());
                         }
                         cv.put("caption", listTaskConversationFile.getCaption());
-                        Log.i("caption","name==> "+listTaskConversationFile.getCaption());
+                        Log.i("caption", "name==> " + listTaskConversationFile.getCaption());
                     }
 //                    cv.put("isRemainderRequired", bean.getIsRemainderRequired());
 //                    cv.put("taskStatus", listTaskConversation.getTaskStatus());
@@ -1727,7 +1722,7 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
         } catch (Exception e) {
             // TODO: handle exception
             e.printStackTrace();
-            Appreference.printLog("insertORupdate_ListAllgetTaskDetails","Exception "+e.getMessage(),"WARN",null);
+            Appreference.printLog("insertORupdate_ListAllgetTaskDetails", "Exception " + e.getMessage(), "WARN", null);
         }
         return row_id;
     }
@@ -1898,20 +1893,10 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
             cv1.put("taskTime", dateforrow);
             Log.i("listAllMyTask", "value dateTime " + dateforrow);
             cv.put("msgstatus", "1");
-//            cv.put("customTagVisible", "1");
-//
-//
-//            cv.put("syncEnable", "enable");
-//            cv.put("showprogress", "120");
             cv.put("customTagVisible", "1");
             cv.put("syncEnable", "enable");
-
-//            cv.put("fromUserName", from.getUsername());
-//            cv.put("toUserName", toUser.getUsername());
-//            cv.put("sendStatus", "0");
             cv1.put("completedPercentage", bean.getCompletedPercentage());
             cv2.put("completedPercentage", bean.getCompletedPercentage());
-//            cv.put("ownerOfTask", from.getUsername());
             if (String.valueOf(bean.getTaskPriority()).equals(2))
                 cv.put("taskPriority", "High");
             else if (String.valueOf(bean.getTaskPriority()).equals(0))
@@ -1968,20 +1953,10 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
                         cv2.put("taskDescription", bean.getName());
                     }
                     if (bean.getProjectId() != null) {
-                      /*  if (from.getUsername().equalsIgnoreCase(Appreference.loginuserdetails.getUsername())) {
-                            cv.put("taskDescription", listTaskFiles.getDescription());
-                            cv.put("signalid", bean.getSignalId().concat(listTaskFiles.getDescription()));
-                        } else {*/
-
-//                        cv.put("signalid", bean.getSignalId().concat(listTaskFiles.getDescription()));
                         cv.put("signalid", bean.getSignalId());
-//                        }
                     }
                 }
                 Log.d("listAllMyTask", "value4  " + user.getUsername());
-
-//                Log.i("TaskTable", "Insert first entry");
-//                row_id = (int) db.insert("taskDetailsInfo", null, cv);
 
                 if (bean.getProjectId() != null) {
                     if (!DuplicateProjectTaskIdChecker(String.valueOf(bean.getId()))) {
@@ -2003,8 +1978,6 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
 //                    inserted = true;
                     } else {
                         row_id = (int) db.update("taskHistoryInfo", cv1, "taskId ='" + bean.getId() + "'", null);
-//                row_id = (int) db.update("taskDetailsInfo", cv, "sendStatus ='1'", null);
-//                    inserted = false;
                         Log.e("TaskHistoryTable", "else method getTaskId" + bean.getId());
                     }
                 }
@@ -2027,7 +2000,7 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
         } catch (Exception e) {
             // TODO: handle exception
             e.printStackTrace();
-            Appreference.printLog("insertORupdate_ListAllTaskDetails","Exception "+e.getMessage(),"WARN",null);
+            Appreference.printLog("insertORupdate_ListAllTaskDetails", "Exception " + e.getMessage(), "WARN", null);
         }
         return row_id;
     }
@@ -2129,7 +2102,7 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
         } catch (Exception e) {
             // TODO: handle exception
             e.printStackTrace();
-            Appreference.printLog("insertProject_Details","Exception "+e.getMessage(),"WARN",null);
+            Appreference.printLog("insertProject_Details", "Exception " + e.getMessage(), "WARN", null);
         }
     }
 
@@ -2273,15 +2246,12 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
                         }
                     }
                 }
-//                cv.put("taskMemberList", pjt_members);
                 cv_1.put("taskMemberList", pjt_members);
                 cv.put("toUserId", parentlist.getId());
                 cv_1.put("toUserId", parentlist.getId());
                 cv.put("toUserName", parentlist.getName());
                 cv_1.put("toUserName", parentlist.getName());
-//                cv.put("taskReceiver", parentlist.getName());
                 cv_1.put("taskReceiver", parentlist.getName());
-//                cv.put("parentId", parentlist.getParentId());
                 cv.put("taskNo", parentlist.getTaskNo());
                 cv_1.put("taskNo", parentlist.getTaskNo());
                 cv_1.put("isParentTask", "Y");
@@ -2302,7 +2272,6 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
                 Log.i("Response", "projectDetailsBean listparentdetails.getSignalId() parent " + parentlist.getSignalId());
                 cv.put("signalId", parentlist.getSignalId());
                 cv_1.put("signalId", parentlist.getSignalId());
-//                cv.put("taskName", parentlist.getName());
                 cv_1.put("taskName", parentlist.getName());
                 cv.put("taskDescription", parentlist.getName());
                 cv_1.put("taskDescription", parentlist.getName());
@@ -2331,14 +2300,9 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
                     cv.put("taskType", "Group");
                     cv_1.put("taskType", "Group");
                 }
-//                cv.put("mimeType", listAllgetTaskDetailses1.getCompletedPercentage());
                 task_id = String.valueOf(parentlist.getId());
                 cv.put("taskId", parentlist.getId());
                 cv_1.put("taskId", parentlist.getId());
-//                cv.put("completedPercentage", listAllgetTaskDetailses1.getCompletedPercentage());
-//                cv.put("completedPercentage", listAllgetTaskDetailses1.getCompletedPercentage());
-//                cv.put("completedPercentage", listAllgetTaskDetailses1.getCompletedPercentage());
-//                cv.put("completedPercentage", listAllgetTaskDetailses1.getCompletedPercentage());
                 if (parentlist.getCompletedPercentage() != null && !parentlist.getCompletedPercentage().equalsIgnoreCase(null) && !parentlist.getCompletedPercentage().equalsIgnoreCase("")) {
                     VideoCallDataBase.getDB(context).updateProjectCompletionDetails(projectDetailsBean.getId(), parentlist.getCompletedPercentage());
                 }
@@ -2367,9 +2331,6 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
                     row_id = (int) db.update("taskDetailsInfo", cv, "signalid" + "='" + signal_id + "'", null);
                     Log.d("Response", "projectDetailsBean inside else TaskHistory parent");
                 }
-//                else {
-//                    Log.d("Response", "taskDetailsInfo inside else TaskHistory parent");
-//                }
 
             }
 
@@ -2477,7 +2438,6 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
                         String pjt_members_1 = "";
 
                         if (listMembers_1.size() > 0) {
-//                            ArrayList<String> grouplist2_1 = VideoCallDataBase.getDB(context).selectGroupmembers("select * from contact", "username");
                             for (int j = 0; j < listMembers_1.size(); j++) {
                                 ListMember listMember_3 = listMembers_1.get(j);
                                 Log.i("Response", "projectDetailsBean getListTaskToUser's " + listMember_3.getUsername());
@@ -2489,14 +2449,12 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
                             }
                             pjt_members_1 = pjt_members_1.substring(0, pjt_members_1.length() - 1);
                         }
-//                        cv.put("taskMemberList", pjt_members_1);
                         cv_1.put("taskMemberList", pjt_members_1);
                         cv.put("toUserId", listAllgetTaskDetailses1.getId());
                         taskDetailsBean.setTaskType("Group");
                         cv_1.put("toUserId", listAllgetTaskDetailses1.getId());
                         cv.put("toUserName", listAllgetTaskDetailses1.getName());
                         cv_1.put("toUserName", listAllgetTaskDetailses1.getName());
-//                        cv.put("taskReceiver", listAllgetTaskDetailses1.getName());
                         cv_1.put("taskReceiver", listAllgetTaskDetailses1.getName());
                     } else if (listAllgetTaskDetailses1.getStatus() != null && listAllgetTaskDetailses1.getStatus().equalsIgnoreCase("draft")) {
                         cv.put("taskType", "Individual");
@@ -2506,10 +2464,8 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
                         cv_1.put("toUserId", "");
                         cv.put("toUserName", "");
                         cv_1.put("toUserName", "");
-//                        cv.put("taskReceiver", listAllgetTaskDetailses1.getName());
                         cv_1.put("taskReceiver", "");
                     }
-//                    cv.put("parentId", listAllgetTaskDetailses1.getParentId());
                     cv.put("taskNo", listAllgetTaskDetailses1.getTaskNo());
                     taskDetailsBean.setTaskNo(listAllgetTaskDetailses1.getTaskNo());
                     cv_1.put("taskNo", listAllgetTaskDetailses1.getTaskNo());
@@ -2525,35 +2481,21 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
                     } else if (listAllgetTaskDetailses1.getTaskCategory() != null && listAllgetTaskDetailses1.getTaskCategory().equalsIgnoreCase("note")) {
                         cv_1.put("category", "note");
                     }
-//                    signal_id = listAllgetTaskDetailses1.getSignalId();
                     taskDetailsBean.setSignalid(listAllgetTaskDetailses1.getSignalId());
                     Log.i("Response", "projectDetailsBean listparentdetails.getSignalId() subtask " + listAllgetTaskDetailses1.getSignalId());
-//                    cv.put("signalId", listAllgetTaskDetailses1.getSignalId());
-//                    cv_1.put("signalId", listAllgetTaskDetailses1.getSignalId());
-//                    cv.put("taskName", listAllgetTaskDetailses1.getName());
                     cv_1.put("taskName", listAllgetTaskDetailses1.getName());
-//                    cv.put("taskDescription", listAllgetTaskDetailses1.getName());
-//                    cv_1.put("taskDescription", listAllgetTaskDetailses1.getName());
-//                    cv.put("parentTaskId", listAllgetTaskDetailses1.getParentTask());
-//                    cv_1.put("parentTaskId", listAllgetTaskDetailses1.getParentTask());
                     cv.put("parentTaskId", parentlist.getId());
                     Log.i("ws123", "DB values under ParentTask 2---------->" + parentlist.getId());
 
                     cv_1.put("parentTaskId", parentlist.getId());
-//                cv.put("mimeType", listAllgetTaskDetailses1.getCompletedPercentage());
                     task_id = String.valueOf(listAllgetTaskDetailses1.getId());
                     cv.put("taskId", listAllgetTaskDetailses1.getId());
                     taskDetailsBean.setTaskId(String.valueOf(listAllgetTaskDetailses1.getId()));
                     cv_1.put("taskId", listAllgetTaskDetailses1.getId());
                     cv.put("completedPercentage", listAllgetTaskDetailses1.getCompletedPercentage());
                     cv_1.put("completedPercentage", listAllgetTaskDetailses1.getCompletedPercentage());
-                    Log.i("Response", "projectDetailsBean subtask CompletedPercentage " + listAllgetTaskDetailses1.getCompletedPercentage());
-                    Log.i("oracle_status", "oracle values 1 ==> " + "task Id----->" + task_id + "===>" + oracle_status);
-                    Log.i("oracle_status", "normal values 1 ==> " + "task Id----->" + task_id + "===>" + listAllgetTaskDetailses1.getStatus());
-                    Log.i("oracle_status", "oracleProjectId values 1===>" + projectDetailsBean.getOracleProjectId());
 
                     if (projectDetailsBean.getOracleProjectId() != null && !projectDetailsBean.getOracleProjectId().equalsIgnoreCase("") && !projectDetailsBean.getOracleProjectId().equalsIgnoreCase("null")) {
-
                         if (oracle_status != null && !oracle_status.equalsIgnoreCase("")) {
                             cv.put("taskStatus", oracle_status);
                             cv_1.put("taskStatus", oracle_status);
@@ -2593,6 +2535,9 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
                     } else {
                         cv.put("taskPriority", "Medium");
                     }
+
+                    /*this code commented by preethi ,because of "ListTaskFiles" removed From Response*/
+
                     ArrayList<ListTaskFiles> listTaskFile;
                     listTaskFile = listAllgetTaskDetailses1.getListTaskFiles();
                     Log.i("Response", "projectDetailsBean listTaskFile.size() in subtask is " + listTaskFile.size());
@@ -2692,41 +2637,40 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
                             }
                         }
                     }
-
                     Log.i("videocalldatabase", "is_value  taskId and listTaskFile.size() before " + listTaskFile.size());
                     if (listTaskFile.size() == 0) {
 //                        if (listAllgetTaskDetailses1.getPlannedStartDateTime() == null && listAllgetTaskDetailses1.getPlannedEndDateTime() == null && listAllgetTaskDetailses1.getRemainderDateTime() == null) {
 //                            if (listAllgetTaskDetailses1.getDuration() == null || listAllgetTaskDetailses1.getDurationWords() == null || (listAllgetTaskDetailses1.getTimeFrequency() == null)) {
-                        signal_id = listAllgetTaskDetailses1.getSignalId();
-                        cv.put("signalId", signal_id);
-                        cv_1.put("signalId", signal_id);
-                        cv_1.put("isParentTask", "N");
-                        if (listAllgetTaskDetailses1.getDescription() != null && !listAllgetTaskDetailses1.getDescription().equalsIgnoreCase("")) {
-                            cv.put("taskDescription", listAllgetTaskDetailses1.getDescription());
-                            cv_1.put("taskDescription", listAllgetTaskDetailses1.getDescription());
-                            cv_1.put("mcDescription", listAllgetTaskDetailses1.getDescription());
-                        } else {
-                            cv.put("taskDescription", listAllgetTaskDetailses1.getName());
-                            cv_1.put("taskDescription", listAllgetTaskDetailses1.getName());
+                                signal_id = listAllgetTaskDetailses1.getSignalId();
+                                cv.put("signalId", signal_id);
+                                cv_1.put("signalId", signal_id);
+                                cv_1.put("isParentTask", "N");
+                                if (listAllgetTaskDetailses1.getDescription() != null && !listAllgetTaskDetailses1.getDescription().equalsIgnoreCase("")) {
+                                    cv.put("taskDescription", listAllgetTaskDetailses1.getDescription());
+                                    cv_1.put("taskDescription", listAllgetTaskDetailses1.getDescription());
+                                    cv_1.put("mcDescription", listAllgetTaskDetailses1.getDescription());
+                                } else {
+                                    cv.put("taskDescription", listAllgetTaskDetailses1.getName());
+                                    cv_1.put("taskDescription", listAllgetTaskDetailses1.getName());
 //                            cv_1.put("mcDescription", listAllgetTaskDetailses1.getName());
-                        }
+                                }
 
-                        cv.put("mimeType", "text");
-                        if (!DuplicateProjectTaskIdChecker(task_id)) {
-                            row_id = (int) db.insert("projectHistory", null, cv_1);
-                            Log.d("Response", "projectDetailsBean inside projectHistory empty task");
-                        } else {
-                            row_id = (int) db.update("projectHistory", cv_1, "taskId" + "='" + task_id + "'", null);
-                            Log.d("Response", "projectDetailsBean inside else projectHistory empty task");
+                                cv.put("mimeType", "text");
+                                if (!DuplicateProjectTaskIdChecker(task_id)) {
+                                    row_id = (int) db.insert("projectHistory", null, cv_1);
+                                    Log.d("Response", "projectDetailsBean inside projectHistory empty task");
+                                } else {
+                                    row_id = (int) db.update("projectHistory", cv_1, "taskId" + "='" + task_id + "'", null);
+                                    Log.d("Response", "projectDetailsBean inside else projectHistory empty task");
+                                }
+                                Log.i("Response", "projectDetailsBean signalId for empty task " + signal_id + " " + task_id);
+                            }
                         }
-                        Log.i("Response", "projectDetailsBean signalId for empty task " + signal_id + " " + task_id);
                     }
-                }
-            }
         } catch (Exception e) {
             // TODO: handle exception
             e.printStackTrace();
-            Appreference.printLog("insertProject_history","Exception "+e.getMessage(),"WARN",null);
+            Appreference.printLog("insertProject_history", "Exception " + e.getMessage(), "WARN", null);
             Log.i("ws123", "DB values Exception ---------->" + e.getMessage());
 
         }
@@ -2757,7 +2701,7 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
             }
         } catch (Exception e) {
             e.printStackTrace();
-            Appreference.printLog("downloads","Exception "+e.getMessage(),"WARN",null);
+            Appreference.printLog("downloads", "Exception " + e.getMessage(), "WARN", null);
 
         }
     }
@@ -2773,7 +2717,7 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
             db.update("taskDetailsInfo", cv, "signalid" + "='" + signalId + "'", null);
         } catch (Exception e) {
             e.printStackTrace();
-            Appreference.printLog("serverFileNameUpdate","Exception "+e.getMessage(),"WARN",null);
+            Appreference.printLog("serverFileNameUpdate", "Exception " + e.getMessage(), "WARN", null);
         }
     }
 
@@ -2787,7 +2731,7 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
             db.update("taskDetailsInfo", cv, "taskNo" + "= ?", new String[]{taskNo});
         } catch (Exception e) {
             e.printStackTrace();
-            Appreference.printLog("taskSendUpdate","Exception "+e.getMessage(),"WARN",null);
+            Appreference.printLog("taskSendUpdate", "Exception " + e.getMessage(), "WARN", null);
         }
     }
 
@@ -2802,7 +2746,7 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
             Log.d("task1234", "RequestStatus DB updated");
         } catch (Exception e) {
             e.printStackTrace();
-            Appreference.printLog("taskMsg_StatusUpdate","Exception "+e.getMessage(),"WARN",null);
+            Appreference.printLog("taskMsg_StatusUpdate", "Exception " + e.getMessage(), "WARN", null);
         }
     }
 
@@ -2817,7 +2761,7 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
             Log.d("task1234", "RequestStatus DB updated");
         } catch (Exception e) {
             e.printStackTrace();
-            Appreference.printLog("taskMsg_StatusOverdueUpdate","Exception "+e.getMessage(),"WARN",null);
+            Appreference.printLog("taskMsg_StatusOverdueUpdate", "Exception " + e.getMessage(), "WARN", null);
         }
     }
 
@@ -2832,7 +2776,7 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
             Log.d("task1234", "RequestStatus DB updated");
         } catch (Exception e) {
             e.printStackTrace();
-            Appreference.printLog("OverDueMsg_StatusUpdate","Exception "+e.getMessage(),"WARN",null);
+            Appreference.printLog("OverDueMsg_StatusUpdate", "Exception " + e.getMessage(), "WARN", null);
         }
     }
 
@@ -2845,7 +2789,7 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
             Log.d("projectDetails", "Completed Percentage DB updated");
         } catch (Exception e) {
             e.printStackTrace();
-            Appreference.printLog("updateProjectCompletionDetails","Exception "+e.getMessage(),"WARN",null);
+            Appreference.printLog("updateProjectCompletionDetails", "Exception " + e.getMessage(), "WARN", null);
         }
     }
 
@@ -2858,7 +2802,7 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
             Log.d("task1234", "RequestStatus DB updated");
         } catch (Exception e) {
             e.printStackTrace();
-            Appreference.printLog("task_LongmessageUpdate","Exception "+e.getMessage(),"WARN",null);
+            Appreference.printLog("task_LongmessageUpdate", "Exception " + e.getMessage(), "WARN", null);
         }
     }
 
@@ -2871,7 +2815,7 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
             Log.d("task1234", "RequestStatus DB updated");
         } catch (Exception e) {
             e.printStackTrace();
-            Appreference.printLog("task_OverdueMsgUpdate","Exception "+e.getMessage(),"WARN",null);
+            Appreference.printLog("task_OverdueMsgUpdate", "Exception " + e.getMessage(), "WARN", null);
         }
     }
 
@@ -2884,7 +2828,7 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
             Log.d("task1234", "RequestStatus DB updated");
         } catch (Exception e) {
             e.printStackTrace();
-            Appreference.printLog("task_LongmessageUpdateForReceiver","Exception "+e.getMessage(),"WARN",null);
+            Appreference.printLog("task_LongmessageUpdateForReceiver", "Exception " + e.getMessage(), "WARN", null);
         }
     }
 
@@ -2900,7 +2844,7 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
             Log.d("task1234", "RequestStatus DB updated");
         } catch (Exception e) {
             e.printStackTrace();
-            Appreference.printLog("withdrawMsg_StatusUpdate","Exception "+e.getMessage(),"WARN",null);
+            Appreference.printLog("withdrawMsg_StatusUpdate", "Exception " + e.getMessage(), "WARN", null);
         }
     }
 
@@ -2912,7 +2856,7 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
             Log.d("Groupchat", "DB ");
         } catch (Exception e) {
             e.printStackTrace();
-            Appreference.printLog("GroupNameOrMemberChanges","Exception "+e.getMessage(),"WARN",null);
+            Appreference.printLog("GroupNameOrMemberChanges", "Exception " + e.getMessage(), "WARN", null);
         }
     }
 
@@ -2927,7 +2871,7 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
             Log.d("task1234", "RequestStatus DB updated");
         } catch (Exception e) {
             e.printStackTrace();
-            Appreference.printLog("groupTask_StatusUpdate","Exception "+e.getMessage(),"WARN",null);
+            Appreference.printLog("groupTask_StatusUpdate", "Exception " + e.getMessage(), "WARN", null);
         }
     }
 
@@ -2942,7 +2886,7 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
             Log.d("task1234", "RequestStatus DB updated");
         } catch (Exception e) {
             e.printStackTrace();
-            Appreference.printLog("groupProject_StatusUpdate","Exception "+e.getMessage(),"WARN",null);
+            Appreference.printLog("groupProject_StatusUpdate", "Exception " + e.getMessage(), "WARN", null);
         }
     }
 
@@ -2957,7 +2901,7 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
             Log.d("task1234", "completedPercentage DB updated");
         } catch (Exception e) {
             e.printStackTrace();
-            Appreference.printLog("groupProject_PercentUpdate","Exception "+e.getMessage(),"WARN",null);
+            Appreference.printLog("groupProject_PercentUpdate", "Exception " + e.getMessage(), "WARN", null);
         }
     }
 
@@ -2972,7 +2916,7 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
             Log.d("task1234", "RequestStatus DB updated");
         } catch (Exception e) {
             e.printStackTrace();
-            Appreference.printLog("leaveMsg_Status","Exception "+e.getMessage(),"WARN",null);
+            Appreference.printLog("leaveMsg_Status", "Exception " + e.getMessage(), "WARN", null);
         }
     }
 
@@ -2987,7 +2931,7 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
             Log.d("task1234", "RequestStatus DB updated");
         } catch (Exception e) {
             e.printStackTrace();
-            Appreference.printLog("sync_status","Exception "+e.getMessage(),"WARN",null);
+            Appreference.printLog("sync_status", "Exception " + e.getMessage(), "WARN", null);
         }
     }
 
@@ -3003,7 +2947,7 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
             Log.d("task1234", "RequestStatus DB updated");
         } catch (Exception e) {
             e.printStackTrace();
-            Appreference.printLog("leaveMsg_Status_Send","Exception "+e.getMessage(),"WARN",null);
+            Appreference.printLog("leaveMsg_Status_Send", "Exception " + e.getMessage(), "WARN", null);
         }
     }
 
@@ -3073,7 +3017,7 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
 
         } catch (Exception e) {
             e.printStackTrace();
-            Appreference.printLog("Leaverequestorreject","Exception "+e.getMessage(),"WARN",null);
+            Appreference.printLog("Leaverequestorreject", "Exception " + e.getMessage(), "WARN", null);
         }
     }
 
@@ -3123,7 +3067,7 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
         } catch (Exception e) {
             // TODO: handle exception
             e.printStackTrace();
-            Appreference.printLog("update_Task_history","Exception "+e.getMessage(),"WARN",null);
+            Appreference.printLog("update_Task_history", "Exception " + e.getMessage(), "WARN", null);
         }
         return row_id;
     }
@@ -3146,7 +3090,7 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
             db.update("projectHistory", cv, "projectId='" + taskDetailsBean.getId() + "' and isParentTask='Y'", null);
         } catch (Exception e) {
             e.printStackTrace();
-            Appreference.printLog("updateProjectMemberList","Exception "+e.getMessage(),"WARN",null);
+            Appreference.printLog("updateProjectMemberList", "Exception " + e.getMessage(), "WARN", null);
         }
 
     }
@@ -3218,7 +3162,7 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
         } catch (Exception e) {
             // TODO: handle exception
             e.printStackTrace();
-            Appreference.printLog("update_Project_history","Exception "+e.getMessage(),"WARN",null);
+            Appreference.printLog("update_Project_history", "Exception " + e.getMessage(), "WARN", null);
         }
         return row_id;
     }
@@ -3232,7 +3176,7 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
             row_id = (int) db.delete("taskDetailsInfo", "projectId='" + taskDetailsBean.getProjectId() + "' and taskId='" + taskDetailsBean.getTaskId() + "'", null);
         } catch (Exception e) {
             e.printStackTrace();
-            Appreference.printLog("deleteProjectDraft","Exception "+e.getMessage(),"WARN",null);
+            Appreference.printLog("deleteProjectDraft", "Exception " + e.getMessage(), "WARN", null);
         }
         return row_id;
     }
@@ -3254,7 +3198,7 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
             cur.close();
         } catch (Exception e) {
             e.printStackTrace();
-            Appreference.printLog("getValuesForQuery","Exception "+e.getMessage(),"WARN",null);
+            Appreference.printLog("getValuesForQuery", "Exception " + e.getMessage(), "WARN", null);
         }
         return return_value;
     }
@@ -3267,7 +3211,7 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
             db.execSQL(query);
         } catch (Exception e) {
             e.printStackTrace();
-            Appreference.printLog("updateQuery","Exception "+e.getMessage(),"WARN",null);
+            Appreference.printLog("updateQuery", "Exception " + e.getMessage(), "WARN", null);
         }
     }
 
@@ -3278,22 +3222,25 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
             db.update("projectHistory", cv, query, null);
         } catch (Exception e) {
             e.printStackTrace();
-            Appreference.printLog("updateContentValues","Exception "+e.getMessage(),"WARN",null);
+            Appreference.printLog("updateContentValues", "Exception " + e.getMessage(), "WARN", null);
         }
     }
 
-    public int deleteProject(TaskDetailsBean taskDetailsBean) {
+    public int deleteProject(String Projectid) {
         int row_id = 0;
+        Log.i("deleteproject123", "deleteProject Projectid======>" + Projectid);
+
         try {
             if (!db.isOpen())
                 openDatabase();
 
-            row_id = (int) db.delete("projectHistory", "projectId='" + taskDetailsBean.getProjectId() + "'", null);
-            row_id = (int) db.delete("projectDetails", "projectId='" + taskDetailsBean.getProjectId() + "'", null);
-            row_id = (int) db.delete("taskDetailsInfo", "projectId='" + taskDetailsBean.getProjectId() + "'", null);
+            row_id = (int) db.delete("projectHistory", "projectId='" + Projectid + "'", null);
+            row_id = (int) db.delete("projectDetails", "projectId='" + Projectid + "'", null);
+            row_id = (int) db.delete("taskDetailsInfo", "projectId='" + Projectid + "'", null);
         } catch (Exception e) {
             e.printStackTrace();
-            Appreference.printLog("deleteProject","Exception "+e.getMessage(),"WARN",null);
+            Log.i("deleteproject123", "deleteProject Exception======>" + e.getMessage());
+            Appreference.printLog("deleteProject", "Exception " + e.getMessage(), "WARN", null);
         }
         return row_id;
     }
@@ -3389,7 +3336,7 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
         } catch (Exception e) {
             // TODO: handle exception
             e.printStackTrace();
-            Appreference.printLog("insert_new_Project_history","Exception "+e.getMessage(),"WARN",null);
+            Appreference.printLog("insert_new_Project_history", "Exception " + e.getMessage(), "WARN", null);
         }
         return row_id;
     }
@@ -3438,7 +3385,7 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
         } catch (Exception e) {
             // TODO: handle exception
             e.printStackTrace();
-            Appreference.printLog("update_single_Task_history","Exception "+e.getMessage(),"WARN",null);
+            Appreference.printLog("update_single_Task_history", "Exception " + e.getMessage(), "WARN", null);
         }
         return row_id;
     }
@@ -3455,7 +3402,7 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
             Log.i("task", "status updated");
         } catch (Exception e) {
             e.printStackTrace();
-            Appreference.printLog("taskStatusUpdate","Exception "+e.getMessage(),"WARN",null);
+            Appreference.printLog("taskStatusUpdate", "Exception " + e.getMessage(), "WARN", null);
         }
     }
 
@@ -3470,7 +3417,7 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
             Log.i("task", "status updated");
         } catch (Exception e) {
             e.printStackTrace();
-            Appreference.printLog("updateBadgeStatus","Exception "+e.getMessage(),"WARN",null);
+            Appreference.printLog("updateBadgeStatus", "Exception " + e.getMessage(), "WARN", null);
         }
     }
 
@@ -3485,7 +3432,7 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
             Log.i("task", "status updated");
         } catch (Exception e) {
             e.printStackTrace();
-            Appreference.printLog("updateEditText","Exception "+e.getMessage(),"WARN",null);
+            Appreference.printLog("updateEditText", "Exception " + e.getMessage(), "WARN", null);
         }
     }
 
@@ -3500,7 +3447,7 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
             Log.i("task", "status updated");
         } catch (Exception e) {
             e.printStackTrace();
-            Appreference.printLog("updateEscalationText","Exception "+e.getMessage(),"WARN",null);
+            Appreference.printLog("updateEscalationText", "Exception " + e.getMessage(), "WARN", null);
         }
     }
 
@@ -3516,7 +3463,7 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
             Log.i("task", "status updated");
         } catch (Exception e) {
             e.printStackTrace();
-            Appreference.printLog("updateDependency","Exception "+e.getMessage(),"WARN",null);
+            Appreference.printLog("updateDependency", "Exception " + e.getMessage(), "WARN", null);
         }
     }
 
@@ -3534,7 +3481,7 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
             Log.i("task", "status updated ");
         } catch (Exception e) {
             e.printStackTrace();
-            Appreference.printLog("update_enddate_status","Exception "+e.getMessage(),"WARN",null);
+            Appreference.printLog("update_enddate_status", "Exception " + e.getMessage(), "WARN", null);
         }
     }
 
@@ -3549,7 +3496,7 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
             Log.i("task", "status updated");
         } catch (Exception e) {
             e.printStackTrace();
-            Appreference.printLog("taskIdUpdate","Exception "+e.getMessage(),"WARN",null);
+            Appreference.printLog("taskIdUpdate", "Exception " + e.getMessage(), "WARN", null);
         }
     }
 
@@ -3564,7 +3511,7 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
             Log.i("privatemessage", "private serverFileName updated");
         } catch (Exception e) {
             e.printStackTrace();
-            Appreference.printLog("uploadPrivateMMFile","Exception "+e.getMessage(),"WARN",null);
+            Appreference.printLog("uploadPrivateMMFile", "Exception " + e.getMessage(), "WARN", null);
         }
     }
 
@@ -3579,7 +3526,7 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
             Log.i("task", "status updated");
         } catch (Exception e) {
             e.printStackTrace();
-            Appreference.printLog("templateNameUpdate","Exception "+e.getMessage(),"WARN",null);
+            Appreference.printLog("templateNameUpdate", "Exception " + e.getMessage(), "WARN", null);
         }
     }
 
@@ -3591,7 +3538,7 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
             db.delete("group1", "groupid" + "= ?", new String[]{groupId});
         } catch (Exception e) {
             e.printStackTrace();
-            Appreference.printLog("deleteGroup","Exception "+e.getMessage(),"WARN",null);
+            Appreference.printLog("deleteGroup", "Exception " + e.getMessage(), "WARN", null);
         }
     }
 
@@ -3603,7 +3550,7 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
             db.delete("groupmember", "loginuser" + "= ?", new String[]{groupName});
         } catch (Exception e) {
             e.printStackTrace();
-            Appreference.printLog("deleteGroupMembers","Exception "+e.getMessage(),"WARN",null);
+            Appreference.printLog("deleteGroupMembers", "Exception " + e.getMessage(), "WARN", null);
         }
     }
 
@@ -3615,7 +3562,7 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
             db.delete("contact", "username" + "= ?", new String[]{username});
         } catch (Exception e) {
             e.printStackTrace();
-            Appreference.printLog("deleteContact","Exception "+e.getMessage(),"WARN",null);
+            Appreference.printLog("deleteContact", "Exception " + e.getMessage(), "WARN", null);
         }
     }
 
@@ -3634,7 +3581,7 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
             Log.i("popupmenu", "value for db " + signal_id);
         } catch (Exception e) {
             e.printStackTrace();
-            Appreference.printLog("deletetask","Exception "+e.getMessage(),"WARN",null);
+            Appreference.printLog("deletetask", "Exception " + e.getMessage(), "WARN", null);
         }
     }
 
@@ -3646,7 +3593,7 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
             db.delete("groupmember", "username" + "= ? and " + "groupid" + "= ?", new String[]{del_username, group_id});
         } catch (Exception e) {
             e.printStackTrace();
-            Appreference.printLog("deleteSingleGroupMember","Exception "+e.getMessage(),"WARN",null);
+            Appreference.printLog("deleteSingleGroupMember", "Exception " + e.getMessage(), "WARN", null);
         }
     }
 
@@ -3658,7 +3605,7 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
             db.delete("taskDetailsInfo", "taskId" + "= ? and " + "customSetId" + "= ?", new String[]{del_username, groupName});
         } catch (Exception e) {
             e.printStackTrace();
-            Appreference.printLog("deleteCustomTagEntry","Exception "+e.getMessage(),"WARN",null);
+            Appreference.printLog("deleteCustomTagEntry", "Exception " + e.getMessage(), "WARN", null);
         }
     }
 
@@ -3672,7 +3619,7 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
             db.update("group1", cv, "groupid" + "= ?", new String[]{group_id});
         } catch (Exception e) {
             e.printStackTrace();
-            Appreference.printLog("updateGroupName","Exception "+e.getMessage(),"WARN",null);
+            Appreference.printLog("updateGroupName", "Exception " + e.getMessage(), "WARN", null);
         }
     }
 
@@ -3695,7 +3642,7 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
             db.update("groupmember", cv, "groupid" + "= ?", new String[]{group_id});
         } catch (Exception e) {
             e.printStackTrace();
-            Appreference.printLog("updateGroupNameInmembers","Exception "+e.getMessage(),"WARN",null);
+            Appreference.printLog("updateGroupNameInmembers", "Exception " + e.getMessage(), "WARN", null);
         }
     }
 
@@ -3709,7 +3656,7 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
             db.update("taskHistoryInfo", cv, "taskNo" + "= ?", new String[]{taskNo});
         } catch (Exception e) {
             e.printStackTrace();
-            Appreference.printLog("taskMembersUpdate","Exception "+e.getMessage(),"WARN",null);
+            Appreference.printLog("taskMembersUpdate", "Exception " + e.getMessage(), "WARN", null);
         }
     }
 
@@ -3727,7 +3674,7 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
             db.update("taskDetailsInfo", cv, "signalid" + "= ?", new String[]{signalId});
         } catch (Exception e) {
             e.printStackTrace();
-            Appreference.printLog("taskRemQuotesUpdate","Exception "+e.getMessage(),"WARN",null);
+            Appreference.printLog("taskRemQuotesUpdate", "Exception " + e.getMessage(), "WARN", null);
         }
     }
 
@@ -3740,9 +3687,10 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
             db.update("taskDetailsInfo", cv, "signalid" + "= ?", new String[]{signalId});
         } catch (Exception e) {
             e.printStackTrace();
-            Appreference.printLog("taskWSStatusUpdate","Exception "+e.getMessage(),"WARN",null);
+            Appreference.printLog("taskWSStatusUpdate", "Exception " + e.getMessage(), "WARN", null);
         }
     }
+
     public void WScaptionStatusUpdate(String signalId, String ws_send_status) {
         try {
             ContentValues cv = new ContentValues();
@@ -3751,9 +3699,10 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
             db.update("taskDetailsInfo", cv, "signalid" + "= ?", new String[]{signalId});
         } catch (Exception e) {
             e.printStackTrace();
-            Appreference.printLog("WScaptionStatusUpdate","Exception "+e.getMessage(),"WARN",null);
+            Appreference.printLog("WScaptionStatusUpdate", "Exception " + e.getMessage(), "WARN", null);
         }
     }
+
     public void taskWSStatusUpdateINStatus(String signalId, String ws_send_status) {
         try {
             ContentValues cv = new ContentValues();
@@ -3762,7 +3711,7 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
             db.update("projectStatus", cv, "signalid" + "= ?", new String[]{signalId});
         } catch (Exception e) {
             e.printStackTrace();
-            Appreference.printLog("taskWSStatusUpdateINStatus","Exception "+e.getMessage(),"WARN",null);
+            Appreference.printLog("taskWSStatusUpdateINStatus", "Exception " + e.getMessage(), "WARN", null);
         }
     }
 
@@ -3785,7 +3734,7 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
             }
         } catch (Exception e) {
             e.printStackTrace();
-            Appreference.printLog("deleteTemplate","Exception "+e.getMessage(),"WARN",null);
+            Appreference.printLog("deleteTemplate", "Exception " + e.getMessage(), "WARN", null);
         }
         return 0;
     }
@@ -3808,7 +3757,7 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
             }
         } catch (Exception e) {
             e.printStackTrace();
-            Appreference.printLog("deleteProjects","Exception "+e.getMessage(),"WARN",null);
+            Appreference.printLog("deleteProjects", "Exception " + e.getMessage(), "WARN", null);
         }
         return 0;
     }
@@ -3831,7 +3780,7 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
             }
         } catch (Exception e) {
             e.printStackTrace();
-            Appreference.printLog("deleteTemplateEntry","Exception "+e.getMessage(),"WARN",null);
+            Appreference.printLog("deleteTemplateEntry", "Exception " + e.getMessage(), "WARN", null);
         }
         return 0;
     }
@@ -3853,7 +3802,7 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
             }
         } catch (Exception e) {
             e.printStackTrace();
-            Appreference.printLog("deleteConversationEntry","Exception "+e.getMessage(),"WARN",null);
+            Appreference.printLog("deleteConversationEntry", "Exception " + e.getMessage(), "WARN", null);
         }
         return 0;
     }
@@ -3886,6 +3835,9 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
                         if (cur.getString(cur.getColumnIndex("plannedEndDateTime")) != null && !cur.getString(cur.getColumnIndex("plannedEndDateTime")).equalsIgnoreCase("(null)")) {
                             taskDetailsBean.setPlannedEndDateTime(cur.getString(cur.getColumnIndex("plannedEndDateTime")));
                         }
+                        if (cur.getString(cur.getColumnIndex("estimTime")) != null && !cur.getString(cur.getColumnIndex("estimTime")).equalsIgnoreCase("(null)")) {
+                            taskDetailsBean.setEstimTimeForTimer(cur.getString(cur.getColumnIndex("estimTime")));
+                        }
                         if (cur.getString(cur.getColumnIndex("signalid")) != null)
                             taskDetailsBean.setSignalid(cur.getString(cur.getColumnIndex("signalid")));
                         if (cur.getString(cur.getColumnIndex("taskId")) != null)
@@ -3898,18 +3850,16 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
                 }
             } catch (NumberFormatException e) {
                 e.printStackTrace();
-                Appreference.printLog("getTimerDateForHoldOrPause","Exception "+e.getMessage(),"WARN",null);
+                Appreference.printLog("getTimerDateForHoldOrPause", "Exception " + e.getMessage(), "WARN", null);
             }
         } catch (Exception e) {
             e.printStackTrace();
-            Appreference.printLog("getTimerDateForHoldOrPause","Exception "+e.getMessage(),"WARN",null);
+            Appreference.printLog("getTimerDateForHoldOrPause", "Exception " + e.getMessage(), "WARN", null);
 
         } finally {
             return arrayList;
         }
     }
-
-
 
 
     public ArrayList<TaskDetailsBean> getTaskHistory(String query) {
@@ -4086,11 +4036,11 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
                 }
             } catch (NumberFormatException e) {
                 e.printStackTrace();
-                Appreference.printLog("getTaskHistory 1","Exception "+e.getMessage(),"WARN",null);
+                Appreference.printLog("getTaskHistory 1", "Exception " + e.getMessage(), "WARN", null);
             }
         } catch (Exception e) {
             e.printStackTrace();
-            Appreference.printLog("getTaskHistory 2","Exception "+e.getMessage(),"WARN",null);
+            Appreference.printLog("getTaskHistory 2", "Exception " + e.getMessage(), "WARN", null);
 
         } finally {
             Log.i("file", "size" + arrayList.size());
@@ -4128,11 +4078,11 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
                 }
             } catch (Exception e) {
                 e.printStackTrace();
-                Appreference.printLog("getProjectHistoryInfo 1","Exception "+e.getMessage(),"WARN",null);
+                Appreference.printLog("getProjectHistoryInfo 1", "Exception " + e.getMessage(), "WARN", null);
             }
         } catch (Exception e) {
             e.printStackTrace();
-            Appreference.printLog("getProjectHistoryInfo 2","Exception "+e.getMessage(),"WARN",null);
+            Appreference.printLog("getProjectHistoryInfo 2", "Exception " + e.getMessage(), "WARN", null);
         } finally {
             Log.i("file", "size" + arrayList.size());
             return arrayList;
@@ -4223,11 +4173,11 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
                 }
             } catch (Exception e) {
                 e.printStackTrace();
-                Appreference.printLog("getTaskHistoryInfo 1","Exception "+e.getMessage(),"WARN",null);
+                Appreference.printLog("getTaskHistoryInfo 1", "Exception " + e.getMessage(), "WARN", null);
             }
         } catch (Exception e) {
             e.printStackTrace();
-            Appreference.printLog("getTaskHistoryInfo 2","Exception "+e.getMessage(),"WARN",null);
+            Appreference.printLog("getTaskHistoryInfo 2", "Exception " + e.getMessage(), "WARN", null);
 
         } finally {
             Log.i("file", "size" + arrayList.size());
@@ -4320,11 +4270,11 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
                 }
             } catch (Exception e) {
                 e.printStackTrace();
-                Appreference.printLog("getProjectHistory 1","Exception "+e.getMessage(),"WARN",null);
+                Appreference.printLog("getProjectHistory 1", "Exception " + e.getMessage(), "WARN", null);
             }
         } catch (Exception e) {
             e.printStackTrace();
-            Appreference.printLog("getProjectHistory 2","Exception "+e.getMessage(),"WARN",null);
+            Appreference.printLog("getProjectHistory 2", "Exception " + e.getMessage(), "WARN", null);
         } finally {
             Log.i("getProjectHistory", "size " + arrayList.size());
             return arrayList;
@@ -4400,12 +4350,12 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
                 }
             } catch (Exception e) {
                 e.printStackTrace();
-                Appreference.printLog("getProjectHistoryTasks 1","Exception "+e.getMessage(),"WARN",null);
+                Appreference.printLog("getProjectHistoryTasks 1", "Exception " + e.getMessage(), "WARN", null);
 
             }
         } catch (Exception e) {
             e.printStackTrace();
-            Appreference.printLog("getProjectHistoryTasks 2","Exception "+e.getMessage(),"WARN",null);
+            Appreference.printLog("getProjectHistoryTasks 2", "Exception " + e.getMessage(), "WARN", null);
         } finally {
             Log.i("getProjectHistory", "size " + arrayList.size());
             return arrayList;
@@ -4433,7 +4383,7 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
             projectBean.setTaskMemberList(taskDetailsBean.getGroupTaskMembers());
         } catch (Exception e) {
             e.printStackTrace();
-            Appreference.printLog("settaskDetailsBeantoProjectDetailsBean","Exception "+e.getMessage(),"WARN",null);
+            Appreference.printLog("settaskDetailsBeantoProjectDetailsBean", "Exception " + e.getMessage(), "WARN", null);
         }
         return projectBean;
     }
@@ -4485,11 +4435,11 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
                 }
             } catch (Exception e) {
                 e.printStackTrace();
-                Appreference.printLog("getGroupmemberHistory 1","Exception "+e.getMessage(),"WARN",null);
+                Appreference.printLog("getGroupmemberHistory 1", "Exception " + e.getMessage(), "WARN", null);
             }
         } catch (Exception e) {
             e.printStackTrace();
-            Appreference.printLog("getGroupmemberHistory 2","Exception "+e.getMessage(),"WARN",null);
+            Appreference.printLog("getGroupmemberHistory 2", "Exception " + e.getMessage(), "WARN", null);
 
         } finally {
             Log.i("groupmembers", "arraylist size is " + arrayList.size());
@@ -4516,7 +4466,7 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
             return from_userId;
         } catch (Exception e) {
             e.printStackTrace();
-            Appreference.printLog("getUserIdForUserName ","Exception "+e.getMessage(),"WARN",null);
+            Appreference.printLog("getUserIdForUserName ", "Exception " + e.getMessage(), "WARN", null);
             return from_userId;
         }
     }
@@ -4544,7 +4494,7 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
             }
         } catch (Exception e) {
             e.printStackTrace();
-            Appreference.printLog("selectGroupmembers ","Exception "+e.getMessage(),"WARN",null);
+            Appreference.printLog("selectGroupmembers ", "Exception " + e.getMessage(), "WARN", null);
 
         } finally {
             Log.i("file", "size" + arrayList.size());
@@ -4575,7 +4525,7 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
             }
         } catch (Exception e) {
             e.printStackTrace();
-            Appreference.printLog("selectGroupName ","Exception "+e.getMessage(),"WARN",null);
+            Appreference.printLog("selectGroupName ", "Exception " + e.getMessage(), "WARN", null);
 
         } finally {
             Log.i("file", "size" + arrayList.size());
@@ -4606,7 +4556,7 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
             }
         } catch (Exception e) {
             e.printStackTrace();
-            Appreference.printLog("selectContactList ","Exception "+e.getMessage(),"WARN",null);
+            Appreference.printLog("selectContactList ", "Exception " + e.getMessage(), "WARN", null);
 
         } finally {
             Log.i("file", "size " + arrayList.size());
@@ -4639,11 +4589,11 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
                 }
             } catch (Exception e) {
                 e.printStackTrace();
-                Appreference.printLog("getchatUnReadMsgCount 1 ","Exception "+e.getMessage(),"WARN",null);
+                Appreference.printLog("getchatUnReadMsgCount 1 ", "Exception " + e.getMessage(), "WARN", null);
             }
         } catch (Exception e) {
             e.printStackTrace();
-            Appreference.printLog("getchatUnReadMsgCount 2 ","Exception "+e.getMessage(),"WARN",null);
+            Appreference.printLog("getchatUnReadMsgCount 2 ", "Exception " + e.getMessage(), "WARN", null);
         } finally {
             return arrayList.size();
         }
@@ -4676,12 +4626,12 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
                 }
             } catch (Exception e) {
                 e.printStackTrace();
-                Appreference.printLog("selectContactName 1 ","Exception "+e.getMessage(),"WARN",null);
+                Appreference.printLog("selectContactName 1 ", "Exception " + e.getMessage(), "WARN", null);
 
             }
         } catch (Exception e) {
             e.printStackTrace();
-            Appreference.printLog("selectContactName 2 ","Exception "+e.getMessage(),"WARN",null);
+            Appreference.printLog("selectContactName 2 ", "Exception " + e.getMessage(), "WARN", null);
 
         } finally {
             Log.i("videocalldatabase", "contactName size is " + arrayList.size());
@@ -4717,11 +4667,11 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
                 }
             } catch (Exception e) {
                 e.printStackTrace();
-                Appreference.printLog("getContactsUnReadMsgCount 1 ","Exception "+e.getMessage(),"WARN",null);
+                Appreference.printLog("getContactsUnReadMsgCount 1 ", "Exception " + e.getMessage(), "WARN", null);
             }
         } catch (Exception e) {
             e.printStackTrace();
-            Appreference.printLog("getContactsUnReadMsgCount 2 ","Exception "+e.getMessage(),"WARN",null);
+            Appreference.printLog("getContactsUnReadMsgCount 2 ", "Exception " + e.getMessage(), "WARN", null);
 
         } finally {
             return arrayList.size();
@@ -4750,11 +4700,11 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
                 }
             } catch (Exception e) {
                 e.printStackTrace();
-                Appreference.printLog("getProjectsUnReadMsgCount 1 ","Exception "+e.getMessage(),"WARN",null);
+                Appreference.printLog("getProjectsUnReadMsgCount 1 ", "Exception " + e.getMessage(), "WARN", null);
             }
         } catch (Exception e) {
             e.printStackTrace();
-            Appreference.printLog("getProjectsUnReadMsgCount 2 ","Exception "+e.getMessage(),"WARN",null);
+            Appreference.printLog("getProjectsUnReadMsgCount 2 ", "Exception " + e.getMessage(), "WARN", null);
         } finally {
             return arrayList.size();
         }
@@ -4782,11 +4732,11 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
                 }
             } catch (Exception e) {
                 e.printStackTrace();
-                Appreference.printLog("getAllProjectsUnReadMsgCount 1 ","Exception "+e.getMessage(),"WARN",null);
+                Appreference.printLog("getAllProjectsUnReadMsgCount 1 ", "Exception " + e.getMessage(), "WARN", null);
             }
         } catch (Exception e) {
             e.printStackTrace();
-            Appreference.printLog("getAllProjectsUnReadMsgCount 2 ","Exception "+e.getMessage(),"WARN",null);
+            Appreference.printLog("getAllProjectsUnReadMsgCount 2 ", "Exception " + e.getMessage(), "WARN", null);
         } finally {
             return arrayList.size();
         }
@@ -4827,11 +4777,11 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
                 }
             } catch (Exception e) {
                 e.printStackTrace();
-                Appreference.printLog("getAllChatUnReadMsgCount 1 ","Exception "+e.getMessage(),"WARN",null);
+                Appreference.printLog("getAllChatUnReadMsgCount 1 ", "Exception " + e.getMessage(), "WARN", null);
             }
         } catch (Exception e) {
             e.printStackTrace();
-            Appreference.printLog("getAllChatUnReadMsgCount 2 ","Exception "+e.getMessage(),"WARN",null);
+            Appreference.printLog("getAllChatUnReadMsgCount 2 ", "Exception " + e.getMessage(), "WARN", null);
         } finally {
             return arrayList.size();
         }
@@ -4862,11 +4812,11 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
                 }
             } catch (Exception e) {
                 e.printStackTrace();
-                Appreference.printLog("getAllContactsUnReadMsgCount 1 ","Exception "+e.getMessage(),"WARN",null);
+                Appreference.printLog("getAllContactsUnReadMsgCount 1 ", "Exception " + e.getMessage(), "WARN", null);
             }
         } catch (Exception e) {
             e.printStackTrace();
-            Appreference.printLog("getAllContactsUnReadMsgCount 2 ","Exception "+e.getMessage(),"WARN",null);
+            Appreference.printLog("getAllContactsUnReadMsgCount 2 ", "Exception " + e.getMessage(), "WARN", null);
         } finally {
             return arrayList.size();
         }
@@ -4905,12 +4855,12 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
                 }
             } catch (Exception e) {
                 e.printStackTrace();
-                Appreference.printLog("getProjectdetails 1 ","Exception "+e.getMessage(),"WARN",null);
+                Appreference.printLog("getProjectdetails 1 ", "Exception " + e.getMessage(), "WARN", null);
                 Log.i("DB123", "Error====>getProjectdetails===>" + e.getMessage());
             }
         } catch (Exception e) {
             e.printStackTrace();
-            Appreference.printLog("getProjectdetails 2","Exception "+e.getMessage(),"WARN",null);
+            Appreference.printLog("getProjectdetails 2", "Exception " + e.getMessage(), "WARN", null);
         } finally {
             return arrayList;
         }
@@ -4948,11 +4898,11 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
                 }
             } catch (Exception e) {
                 e.printStackTrace();
-                Appreference.printLog("getTravelDetails 1","Exception "+e.getMessage(),"WARN",null);
+                Appreference.printLog("getTravelDetails 1", "Exception " + e.getMessage(), "WARN", null);
             }
         } catch (Exception e) {
             e.printStackTrace();
-            Appreference.printLog("getTravelDetails 2","Exception "+e.getMessage(),"WARN",null);
+            Appreference.printLog("getTravelDetails 2", "Exception " + e.getMessage(), "WARN", null);
         } finally {
             return arrayList;
         }
@@ -4988,11 +4938,11 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
                 }
             } catch (Exception e) {
                 e.printStackTrace();
-                Appreference.printLog("getExclationdetails 1","Exception "+e.getMessage(),"WARN",null);
+                Appreference.printLog("getExclationdetails 1", "Exception " + e.getMessage(), "WARN", null);
             }
         } catch (Exception e) {
             e.printStackTrace();
-            Appreference.printLog("getExclationdetails 2","Exception "+e.getMessage(),"WARN",null);
+            Appreference.printLog("getExclationdetails 2", "Exception " + e.getMessage(), "WARN", null);
         } finally {
             return arrayList;
         }
@@ -5026,11 +4976,11 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
                 }
             } catch (Exception e) {
                 e.printStackTrace();
-                Appreference.printLog("getTaskUnReadMsgCount 1","Exception "+e.getMessage(),"WARN",null);
+                Appreference.printLog("getTaskUnReadMsgCount 1", "Exception " + e.getMessage(), "WARN", null);
             }
         } catch (Exception e) {
             e.printStackTrace();
-            Appreference.printLog("getTaskUnReadMsgCount 2","Exception "+e.getMessage(),"WARN",null);
+            Appreference.printLog("getTaskUnReadMsgCount 2", "Exception " + e.getMessage(), "WARN", null);
 
         } finally {
             Log.i("TaskHistory", "setActiveAdapter 3" + " 1***** " + " 2.1******** " + arrayList.size());
@@ -5064,11 +5014,11 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
                 }
             } catch (Exception e) {
                 e.printStackTrace();
-                Appreference.printLog("getRemainderUnReadMsgCount 1","Exception "+e.getMessage(),"WARN",null);
+                Appreference.printLog("getRemainderUnReadMsgCount 1", "Exception " + e.getMessage(), "WARN", null);
             }
         } catch (Exception e) {
             e.printStackTrace();
-            Appreference.printLog("getRemainderUnReadMsgCount 2","Exception "+e.getMessage(),"WARN",null);
+            Appreference.printLog("getRemainderUnReadMsgCount 2", "Exception " + e.getMessage(), "WARN", null);
         } finally {
             Log.i("Reminder", "arrayList.size() final " + arrayList.size());
             return arrayList.size();
@@ -5115,11 +5065,11 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
                 }
             } catch (Exception e) {
                 e.printStackTrace();
-                Appreference.printLog("getChatHistoty 1","Exception "+e.getMessage(),"WARN",null);
+                Appreference.printLog("getChatHistoty 1", "Exception " + e.getMessage(), "WARN", null);
             }
         } catch (Exception e) {
             e.printStackTrace();
-            Appreference.printLog("getChatHistoty 2","Exception "+e.getMessage(),"WARN",null);
+            Appreference.printLog("getChatHistoty 2", "Exception " + e.getMessage(), "WARN", null);
 
         } finally {
             return beans;
@@ -5143,7 +5093,7 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
             return sessionId;
         } catch (Exception e) {
             e.printStackTrace();
-            Appreference.printLog("getSessionid ","Exception "+e.getMessage(),"WARN",null);
+            Appreference.printLog("getSessionid ", "Exception " + e.getMessage(), "WARN", null);
             return null;
         }
     }
@@ -5165,7 +5115,7 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
             return ListofMem;
         } catch (Exception e) {
             e.printStackTrace();
-            Appreference.printLog("getProjectListMembers ","Exception "+e.getMessage(),"WARN",null);
+            Appreference.printLog("getProjectListMembers ", "Exception " + e.getMessage(), "WARN", null);
             return null;
         }
     }
@@ -5208,7 +5158,7 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
             return from_userId;
         } catch (Exception e) {
             e.printStackTrace();
-            Appreference.printLog("getGroupMemberAccess ","Exception "+e.getMessage(),"WARN",null);
+            Appreference.printLog("getGroupMemberAccess ", "Exception " + e.getMessage(), "WARN", null);
             return null;
         }
     }
@@ -5230,7 +5180,7 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
             return rem_taskname;
         } catch (Exception e) {
             e.printStackTrace();
-            Appreference.printLog("getReminderTaskname ","Exception "+e.getMessage(),"WARN",null);
+            Appreference.printLog("getReminderTaskname ", "Exception " + e.getMessage(), "WARN", null);
             return null;
         }
     }
@@ -5334,19 +5284,18 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
                 }
             } catch (Exception e) {
                 e.printStackTrace();
-                Appreference.printLog("getChatHistoty 1","Exception "+e.getMessage(),"WARN",null);
+                Appreference.printLog("getChatHistoty 1", "Exception " + e.getMessage(), "WARN", null);
 
             }
         } catch (Exception e) {
             e.printStackTrace();
-            Appreference.printLog("getChatHistoty 2 ","Exception "+e.getMessage(),"WARN",null);
+            Appreference.printLog("getChatHistoty 2 ", "Exception " + e.getMessage(), "WARN", null);
 
         } finally {
             Log.i("file", "size " + beans.size());
             return beans;
         }
     }
-
 
 
     @SuppressWarnings("finally")
@@ -5377,11 +5326,11 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
                 }
             } catch (Exception e) {
                 e.printStackTrace();
-                Appreference.printLog("getCallHistoty 1 ","Exception "+e.getMessage(),"WARN",null);
+                Appreference.printLog("getCallHistoty 1 ", "Exception " + e.getMessage(), "WARN", null);
             }
         } catch (Exception e) {
             e.printStackTrace();
-            Appreference.printLog("getCallHistoty 2 ","Exception "+e.getMessage(),"WARN",null);
+            Appreference.printLog("getCallHistoty 2 ", "Exception " + e.getMessage(), "WARN", null);
 
         } finally {
             return beans;
@@ -5528,11 +5477,11 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
                 }
             } catch (Exception e) {
                 e.printStackTrace();
-                Appreference.printLog("getChatnames 1 ","Exception "+e.getMessage(),"WARN",null);
+                Appreference.printLog("getChatnames 1 ", "Exception " + e.getMessage(), "WARN", null);
             }
         } catch (Exception e) {
             e.printStackTrace();
-            Appreference.printLog("getChatnames 2 ","Exception "+e.getMessage(),"WARN",null);
+            Appreference.printLog("getChatnames 2 ", "Exception " + e.getMessage(), "WARN", null);
         } finally {
             return chatlist;
         }
@@ -5602,18 +5551,18 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
                 }
             } catch (Exception e) {
                 e.printStackTrace();
-                Appreference.printLog("getChatnames 3 ","Exception "+e.getMessage(),"WARN",null);
+                Appreference.printLog("getChatnames 3 ", "Exception " + e.getMessage(), "WARN", null);
             }
         } catch (Exception e) {
             e.printStackTrace();
-            Appreference.printLog("getChatnames 4 ","Exception "+e.getMessage(),"WARN",null);
+            Appreference.printLog("getChatnames 4 ", "Exception " + e.getMessage(), "WARN", null);
 
         } finally {
             return chatlist;
         }
     }
 
-    public ArrayList<TaskDetailsBean> getChatnames(String str, String tasktype) {
+    public ArrayList<TaskDetailsBean> getChatnames(String buddy_uri, String tasktype) {
         ArrayList<TaskDetailsBean> chatlist = new ArrayList<>();
         Cursor cur = null;
         try {
@@ -5621,13 +5570,14 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
                 db = getReadableDatabase();
             try {
                 if (db != null) {
-                    Log.i("chat", "DB-getChatname");
+                    Log.i("chat", "DB-getChatname "+tasktype);
+                    Log.i("chat", "DB-buddy_uri "+buddy_uri);
                     if (!db.isOpen())
                         openDatabase();
                     if (tasktype != null && !tasktype.equalsIgnoreCase("") && tasktype.equalsIgnoreCase("group")) {
-                        cur = db.rawQuery("select * from taskHistoryInfo where loginuser='" + Appreference.loginuserdetails.getEmail() + "' and ((ownerOfTask='" + Appreference.loginuserdetails.getUsername() + "' or taskReceiver='" + Appreference.loginuserdetails.getUsername() + "') and (taskType='group' or taskType='Group')) and (ownerOfTask='" + str + "' or taskReceiver='" + str + "') and category='chat'", null);
-                    } else if (tasktype.equalsIgnoreCase("individual")) {
-                        cur = db.rawQuery("select * from taskHistoryInfo where loginuser='" + Appreference.loginuserdetails.getEmail() + "' and ((ownerOfTask='" + Appreference.loginuserdetails.getUsername() + "' or taskReceiver='" + Appreference.loginuserdetails.getUsername() + "') and (taskType='individual' or taskType='Individual')) and (ownerOfTask='" + str + "' or taskReceiver='" + str + "') and category='chat'", null);
+                        cur = db.rawQuery("select * from taskHistoryInfo where loginuser='" + Appreference.loginuserdetails.getEmail() + "' and ((ownerOfTask='" + Appreference.loginuserdetails.getUsername() + "' or taskReceiver='" + Appreference.loginuserdetails.getUsername() + "') and (taskType='group' or taskType='Group')) and (ownerOfTask='" + buddy_uri + "' or taskReceiver='" + buddy_uri + "') and category='chat'", null);
+                    } else if (tasktype != null && !tasktype.equalsIgnoreCase("") && tasktype.equalsIgnoreCase("individual")) {
+                        cur = db.rawQuery("select * from taskHistoryInfo where loginuser='" + Appreference.loginuserdetails.getEmail() + "' and ((ownerOfTask='" + Appreference.loginuserdetails.getUsername() + "' or taskReceiver='" + Appreference.loginuserdetails.getUsername() + "') and (taskType='individual' or taskType='Individual')) and (ownerOfTask='" + buddy_uri + "' or taskReceiver='" + buddy_uri + "') and category='chat'", null);
                     }
                     cur.moveToFirst();
                     while (!cur.isAfterLast()) {
@@ -5681,11 +5631,11 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
                 }
             } catch (Exception e) {
                 e.printStackTrace();
-                Appreference.printLog("getChatnames 5 ","Exception "+e.getMessage(),"WARN",null);
+                Appreference.printLog("getChatnames 5 ", "Exception " + e.getMessage(), "WARN", null);
             }
         } catch (Exception e) {
             e.printStackTrace();
-            Appreference.printLog("getChatnames 6 ","Exception "+e.getMessage(),"WARN",null);
+            Appreference.printLog("getChatnames 6 ", "Exception " + e.getMessage(), "WARN", null);
         } finally {
             return chatlist;
         }
@@ -5707,7 +5657,7 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
         } catch (Exception e) {
             // TODO: handle exception
             e.printStackTrace();
-            Appreference.printLog("updateChathistoryForAddMembers ","Exception "+e.getMessage(),"WARN",null);
+            Appreference.printLog("updateChathistoryForAddMembers ", "Exception " + e.getMessage(), "WARN", null);
 
         } finally {
             return row_id;
@@ -5763,11 +5713,11 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
                 }
             } catch (Exception e) {
                 e.printStackTrace();
-                Appreference.printLog("getContact 1 ","Exception "+e.getMessage(),"WARN",null);
+                Appreference.printLog("getContact 1 ", "Exception " + e.getMessage(), "WARN", null);
             }
         } catch (Exception e) {
             e.printStackTrace();
-            Appreference.printLog("getContact 2 ","Exception "+e.getMessage(),"WARN",null);
+            Appreference.printLog("getContact 2 ", "Exception " + e.getMessage(), "WARN", null);
 
         } finally {
             return beans;
@@ -5820,11 +5770,11 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
                 }
             } catch (Exception e) {
                 e.printStackTrace();
-                Appreference.printLog("getAllContact 1 ","Exception "+e.getMessage(),"WARN",null);
+                Appreference.printLog("getAllContact 1 ", "Exception " + e.getMessage(), "WARN", null);
             }
         } catch (Exception e) {
             e.printStackTrace();
-            Appreference.printLog("getAllContact 2 ","Exception "+e.getMessage(),"WARN",null);
+            Appreference.printLog("getAllContact 2 ", "Exception " + e.getMessage(), "WARN", null);
         } finally {
             return beans;
         }
@@ -5881,7 +5831,7 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
             }
         } catch (Exception e) {
             e.printStackTrace();
-            Appreference.printLog("getContact 2 ","Exception "+e.getMessage(),"WARN",null);
+            Appreference.printLog("getContact 2 ", "Exception " + e.getMessage(), "WARN", null);
         } finally {
             return beans;
         }
@@ -5922,11 +5872,11 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
                 }
             } catch (Exception e) {
                 e.printStackTrace();
-                Appreference.printLog("getContactObject 1 ","Exception "+e.getMessage(),"WARN",null);
+                Appreference.printLog("getContactObject 1 ", "Exception " + e.getMessage(), "WARN", null);
             }
         } catch (Exception e) {
             e.printStackTrace();
-            Appreference.printLog("getContactObject 2 ","Exception "+e.getMessage(),"WARN",null);
+            Appreference.printLog("getContactObject 2 ", "Exception " + e.getMessage(), "WARN", null);
         } finally {
             return bean;
         }
@@ -5963,11 +5913,11 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
                 }
             } catch (Exception e) {
                 e.printStackTrace();
-                Appreference.printLog("getGroup 1 ","Exception "+e.getMessage(),"WARN",null);
+                Appreference.printLog("getGroup 1 ", "Exception " + e.getMessage(), "WARN", null);
             }
         } catch (Exception e) {
             e.printStackTrace();
-            Appreference.printLog("getGroup 2 ","Exception "+e.getMessage(),"WARN",null);
+            Appreference.printLog("getGroup 2 ", "Exception " + e.getMessage(), "WARN", null);
         } finally {
             return beans;
         }
@@ -6026,11 +5976,11 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
                 }
             } catch (Exception e) {
                 e.printStackTrace();
-                Appreference.printLog("getGroupMember 1 ","Exception "+e.getMessage(),"WARN",null);
+                Appreference.printLog("getGroupMember 1 ", "Exception " + e.getMessage(), "WARN", null);
             }
         } catch (Exception e) {
             e.printStackTrace();
-            Appreference.printLog("getGroupMember 2 ","Exception "+e.getMessage(),"WARN",null);
+            Appreference.printLog("getGroupMember 2 ", "Exception " + e.getMessage(), "WARN", null);
         } finally {
             return beans;
         }
@@ -6064,11 +6014,11 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
                 }
             } catch (Exception e) {
                 e.printStackTrace();
-                Appreference.printLog("getProjectParentTaskId 1 ","Exception "+e.getMessage(),"WARN",null);
+                Appreference.printLog("getProjectParentTaskId 1 ", "Exception " + e.getMessage(), "WARN", null);
             }
         } catch (Exception e) {
             e.printStackTrace();
-            Appreference.printLog("getProjectParentTaskId 2 ","Exception "+e.getMessage(),"WARN",null);
+            Appreference.printLog("getProjectParentTaskId 2 ", "Exception " + e.getMessage(), "WARN", null);
         } finally {
             return parenttaskid;
         }
@@ -6096,11 +6046,11 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
                 }
             } catch (Exception e) {
                 e.printStackTrace();
-                Appreference.printLog("getParentTaskId 1 ","Exception "+e.getMessage(),"WARN",null);
+                Appreference.printLog("getParentTaskId 1 ", "Exception " + e.getMessage(), "WARN", null);
             }
         } catch (Exception e) {
             e.printStackTrace();
-            Appreference.printLog("getParentTaskId 2 ","Exception "+e.getMessage(),"WARN",null);
+            Appreference.printLog("getParentTaskId 2 ", "Exception " + e.getMessage(), "WARN", null);
         } finally {
             return parenttaskid;
         }
@@ -6127,11 +6077,11 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
                 }
             } catch (Exception e) {
                 e.printStackTrace();
-                Appreference.printLog("getfirstname 1 ","Exception "+e.getMessage(),"WARN",null);
+                Appreference.printLog("getfirstname 1 ", "Exception " + e.getMessage(), "WARN", null);
             }
         } catch (Exception e) {
             e.printStackTrace();
-            Appreference.printLog("getfirstname 2 ","Exception "+e.getMessage(),"WARN",null);
+            Appreference.printLog("getfirstname 2 ", "Exception " + e.getMessage(), "WARN", null);
         } finally {
             return parenttaskid;
         }
@@ -6158,20 +6108,18 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
                 }
             } catch (Exception e) {
                 e.printStackTrace();
-                Appreference.printLog("getLastname 1 ","Exception "+e.getMessage(),"WARN",null);
+                Appreference.printLog("getLastname 1 ", "Exception " + e.getMessage(), "WARN", null);
             }
         } catch (Exception e) {
             e.printStackTrace();
-            Appreference.printLog("getLastname 2 ","Exception "+e.getMessage(),"WARN",null);
+            Appreference.printLog("getLastname 2 ", "Exception " + e.getMessage(), "WARN", null);
         } finally {
             return parenttaskid;
         }
     }
 
     @SuppressWarnings("finally")
-    public ArrayList<String> getProjectTaskId(String username) {
-
-        username = username;
+    public ArrayList<String> getProjectTaskId(String projectId) {
         ArrayList<String> beans = new ArrayList<>();
         Cursor cur;
         try {
@@ -6181,7 +6129,7 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
                 if (db != null) {
                     if (!db.isOpen())
                         openDatabase();
-                    cur = db.rawQuery("select taskId from projectHistory where projectId='" + username + "'", null);
+                    cur = db.rawQuery("select taskId from projectHistory where projectId='" + projectId + "'", null);
                     cur.moveToFirst();
                     while (!cur.isAfterLast()) {
                            /* ContactBean bean = new ContactBean();
@@ -6194,11 +6142,11 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
                 }
             } catch (Exception e) {
                 e.printStackTrace();
-                Appreference.printLog("getProjectTaskId 1 ","Exception "+e.getMessage(),"WARN",null);
+                Appreference.printLog("getProjectTaskId 1 ", "Exception " + e.getMessage(), "WARN", null);
             }
         } catch (Exception e) {
             e.printStackTrace();
-            Appreference.printLog("getProjectTaskId 2 ","Exception "+e.getMessage(),"WARN",null);
+            Appreference.printLog("getProjectTaskId 2 ", "Exception " + e.getMessage(), "WARN", null);
         } finally {
             return beans;
         }
@@ -6231,11 +6179,11 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
                 }
             } catch (Exception e) {
                 e.printStackTrace();
-                Appreference.printLog("getGroups 1 ","Exception "+e.getMessage(),"WARN",null);
+                Appreference.printLog("getGroups 1 ", "Exception " + e.getMessage(), "WARN", null);
             }
         } catch (Exception e) {
             e.printStackTrace();
-            Appreference.printLog("getGroups 2 ","Exception "+e.getMessage(),"WARN",null);
+            Appreference.printLog("getGroups 2 ", "Exception " + e.getMessage(), "WARN", null);
         } finally {
             return beans;
         }
@@ -6268,11 +6216,11 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
                 }
             } catch (Exception e) {
                 e.printStackTrace();
-                Appreference.printLog("getGroupName 1 ","Exception "+e.getMessage(),"WARN",null);
+                Appreference.printLog("getGroupName 1 ", "Exception " + e.getMessage(), "WARN", null);
             }
         } catch (Exception e) {
             e.printStackTrace();
-            Appreference.printLog("getGroupName 2 ","Exception "+e.getMessage(),"WARN",null);
+            Appreference.printLog("getGroupName 2 ", "Exception " + e.getMessage(), "WARN", null);
         } finally {
             return beans;
         }
@@ -6299,11 +6247,11 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
                 }
             } catch (Exception e) {
                 e.printStackTrace();
-                Appreference.printLog("getGroupImage 1 ","Exception "+e.getMessage(),"WARN",null);
+                Appreference.printLog("getGroupImage 1 ", "Exception " + e.getMessage(), "WARN", null);
             }
         } catch (Exception e) {
             e.printStackTrace();
-            Appreference.printLog("getGroupImage 2 ","Exception "+e.getMessage(),"WARN",null);
+            Appreference.printLog("getGroupImage 2 ", "Exception " + e.getMessage(), "WARN", null);
         } finally {
             return beans;
         }
@@ -6331,11 +6279,11 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
                 }
             } catch (Exception e) {
                 e.printStackTrace();
-                Appreference.printLog("getGroupId 1 ","Exception "+e.getMessage(),"WARN",null);
+                Appreference.printLog("getGroupId 1 ", "Exception " + e.getMessage(), "WARN", null);
             }
         } catch (Exception e) {
             e.printStackTrace();
-            Appreference.printLog("getGroupId 2 ","Exception "+e.getMessage(),"WARN",null);
+            Appreference.printLog("getGroupId 2 ", "Exception " + e.getMessage(), "WARN", null);
         } finally {
             return i;
         }
@@ -6363,11 +6311,11 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
                 }
             } catch (Exception e) {
                 e.printStackTrace();
-                Appreference.printLog("getMemberImage 1 ","Exception "+e.getMessage(),"WARN",null);
+                Appreference.printLog("getMemberImage 1 ", "Exception " + e.getMessage(), "WARN", null);
             }
         } catch (Exception e) {
             e.printStackTrace();
-            Appreference.printLog("getMemberImage 2 ","Exception "+e.getMessage(),"WARN",null);
+            Appreference.printLog("getMemberImage 2 ", "Exception " + e.getMessage(), "WARN", null);
         } finally {
             return beans;
         }
@@ -6396,11 +6344,11 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
                 }
             } catch (Exception e) {
                 e.printStackTrace();
-                Appreference.printLog("getName 1 ","Exception "+e.getMessage(),"WARN",null);
+                Appreference.printLog("getName 1 ", "Exception " + e.getMessage(), "WARN", null);
             }
         } catch (Exception e) {
             e.printStackTrace();
-            Appreference.printLog("getName 2 ","Exception "+e.getMessage(),"WARN",null);
+            Appreference.printLog("getName 2 ", "Exception " + e.getMessage(), "WARN", null);
         } finally {
             return name;
         }
@@ -6429,11 +6377,11 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
                 }
             } catch (Exception e) {
                 e.printStackTrace();
-                Appreference.printLog("getUserid 1 ","Exception "+e.getMessage(),"WARN",null);
+                Appreference.printLog("getUserid 1 ", "Exception " + e.getMessage(), "WARN", null);
             }
         } catch (Exception e) {
             e.printStackTrace();
-            Appreference.printLog("getUserid 2 ","Exception "+e.getMessage(),"WARN",null);
+            Appreference.printLog("getUserid 2 ", "Exception " + e.getMessage(), "WARN", null);
         } finally {
             return name;
         }
@@ -6447,7 +6395,7 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
             db.execSQL(s);
         } catch (Exception e) {
             e.printStackTrace();
-            Appreference.printLog("updateChatSentStatus ","Exception "+e.getMessage(),"WARN",null);
+            Appreference.printLog("updateChatSentStatus ", "Exception " + e.getMessage(), "WARN", null);
             Log.d("abcdef", "novalue in DB for " + signalID + " returns with error " + e.toString());
         }
     }
@@ -6458,7 +6406,7 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
             db.execSQL(s);
         } catch (Exception e) {
             e.printStackTrace();
-            Appreference.printLog("updateTaskSentStatus ","Exception "+e.getMessage(),"WARN",null);
+            Appreference.printLog("updateTaskSentStatus ", "Exception " + e.getMessage(), "WARN", null);
         }
     }
 
@@ -6470,7 +6418,7 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
             db.update("taskDetailsInfo", cv, "taskId" + "= ? and " + "(msgstatus" + "= ? or " + "msgstatus= ? )", new String[]{taskID, "24", "0"});
         } catch (Exception e) {
             e.printStackTrace();
-            Appreference.printLog("updateallmessage ","Exception "+e.getMessage(),"WARN",null);
+            Appreference.printLog("updateallmessage ", "Exception " + e.getMessage(), "WARN", null);
         }
     }
 
@@ -6489,7 +6437,7 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
             db.update("taskDetailsInfo", cv, "signalid" + "= ?", new String[]{signalID});
         } catch (Exception e) {
             e.printStackTrace();
-            Appreference.printLog("updateTaskSentStatus ","Exception "+e.getMessage(),"WARN",null);
+            Appreference.printLog("updateTaskSentStatus ", "Exception " + e.getMessage(), "WARN", null);
         }
     }
 
@@ -6500,7 +6448,7 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
             db.update("taskDetailsInfo", cv, "taskId" + "= ?", new String[]{signalID});
         } catch (Exception e) {
             e.printStackTrace();
-            Appreference.printLog("updateTaskNoteStatus ","Exception "+e.getMessage(),"WARN",null);
+            Appreference.printLog("updateTaskNoteStatus ", "Exception " + e.getMessage(), "WARN", null);
         }
     }
 
@@ -6510,7 +6458,7 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
             db.execSQL(s);
         } catch (Exception e) {
             e.printStackTrace();
-            Appreference.printLog("updateTaskMsgReadStatus ","Exception "+e.getMessage(),"WARN",null);
+            Appreference.printLog("updateTaskMsgReadStatus ", "Exception " + e.getMessage(), "WARN", null);
         }
     }
 
@@ -6520,7 +6468,7 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
             db.execSQL(s);
         } catch (Exception e) {
             e.printStackTrace();
-            Appreference.printLog("updateprojectMsgReadStatus ","Exception "+e.getMessage(),"WARN",null);
+            Appreference.printLog("updateprojectMsgReadStatus ", "Exception " + e.getMessage(), "WARN", null);
         }
     }
 
@@ -6531,7 +6479,7 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
             db.execSQL(s);
         } catch (Exception e) {
             e.printStackTrace();
-            Appreference.printLog("updateTaskMsgPriority ","Exception "+e.getMessage(),"WARN",null);
+            Appreference.printLog("updateTaskMsgPriority ", "Exception " + e.getMessage(), "WARN", null);
         }
     }
 
@@ -6542,7 +6490,7 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
             db.execSQL(s);
         } catch (Exception e) {
             e.printStackTrace();
-            Appreference.printLog("updateTaskRemainderPriority ","Exception "+e.getMessage(),"WARN",null);
+            Appreference.printLog("updateTaskRemainderPriority ", "Exception " + e.getMessage(), "WARN", null);
         }
     }
 
@@ -6553,7 +6501,7 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
             db.execSQL(s);
         } catch (Exception e) {
             e.printStackTrace();
-            Appreference.printLog("updateTaskProgressStatus ","Exception "+e.getMessage(),"WARN",null);
+            Appreference.printLog("updateTaskProgressStatus ", "Exception " + e.getMessage(), "WARN", null);
         }
     }
 
@@ -6564,7 +6512,7 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
             db.execSQL(s);
         } catch (Exception e) {
             e.printStackTrace();
-            Appreference.printLog("updatetaskIndiv_Owner ","Exception "+e.getMessage(),"WARN",null);
+            Appreference.printLog("updatetaskIndiv_Owner ", "Exception " + e.getMessage(), "WARN", null);
         }
     }
 
@@ -6575,7 +6523,7 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
             db.execSQL(s);
         } catch (Exception e) {
             e.printStackTrace();
-            Appreference.printLog("updatetaskstatus ","Exception "+e.getMessage(),"WARN",null);
+            Appreference.printLog("updatetaskstatus ", "Exception " + e.getMessage(), "WARN", null);
         }
     }
 
@@ -6606,11 +6554,11 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
                 }
             } catch (Exception e) {
                 e.printStackTrace();
-                Appreference.printLog("getlastCompletedParcentage 1 ","Exception "+e.getMessage(),"WARN",null);
+                Appreference.printLog("getlastCompletedParcentage 1 ", "Exception " + e.getMessage(), "WARN", null);
             }
         } catch (Exception e) {
             e.printStackTrace();
-            Appreference.printLog("getlastCompletedParcentage 2 ","Exception "+e.getMessage(),"WARN",null);
+            Appreference.printLog("getlastCompletedParcentage 2 ", "Exception " + e.getMessage(), "WARN", null);
         } finally {
             return value;
         }
@@ -6642,11 +6590,11 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
                 }
             } catch (Exception e) {
                 e.printStackTrace();
-                Appreference.printLog("getlastProjectCompletedPercentage 1 ","Exception "+e.getMessage(),"WARN",null);
+                Appreference.printLog("getlastProjectCompletedPercentage 1 ", "Exception " + e.getMessage(), "WARN", null);
             }
         } catch (Exception e) {
             e.printStackTrace();
-            Appreference.printLog("getlastProjectCompletedPercentage 2 ","Exception "+e.getMessage(),"WARN",null);
+            Appreference.printLog("getlastProjectCompletedPercentage 2 ", "Exception " + e.getMessage(), "WARN", null);
         } finally {
             return value;
         }
@@ -6712,11 +6660,11 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
                 }
             } catch (Exception e) {
                 e.printStackTrace();
-                Appreference.printLog("getlastCompletedParcentagesender 1 ","Exception "+e.getMessage(),"WARN",null);
+                Appreference.printLog("getlastCompletedParcentagesender 1 ", "Exception " + e.getMessage(), "WARN", null);
             }
         } catch (Exception e) {
             e.printStackTrace();
-            Appreference.printLog("getlastCompletedParcentagesender 2 ","Exception "+e.getMessage(),"WARN",null);
+            Appreference.printLog("getlastCompletedParcentagesender 2 ", "Exception " + e.getMessage(), "WARN", null);
         } finally {
             return value;
         }
@@ -6744,11 +6692,11 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
                 }
             } catch (Exception e) {
                 e.printStackTrace();
-                Appreference.printLog("getTakerlastCompletedParcentage 1 ","Exception "+e.getMessage(),"WARN",null);
+                Appreference.printLog("getTakerlastCompletedParcentage 1 ", "Exception " + e.getMessage(), "WARN", null);
             }
         } catch (Exception e) {
             e.printStackTrace();
-            Appreference.printLog("getTakerlastCompletedParcentage 2 ","Exception "+e.getMessage(),"WARN",null);
+            Appreference.printLog("getTakerlastCompletedParcentage 2 ", "Exception " + e.getMessage(), "WARN", null);
         } finally {
             return value;
         }
@@ -6793,7 +6741,7 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
             db.execSQL(s);
         } catch (Exception e) {
             e.printStackTrace();
-            Appreference.printLog("updateGroupTaskStatus  ","Exception "+e.getMessage(),"WARN",null);
+            Appreference.printLog("updateGroupTaskStatus  ", "Exception " + e.getMessage(), "WARN", null);
         }
     }
 
@@ -6816,7 +6764,7 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
             Log.d("task1234", "RequestStatus DB updated");
         } catch (Exception e) {
             e.printStackTrace();
-            Appreference.printLog("updateReminderTaskStatus  ","Exception "+e.getMessage(),"WARN",null);
+            Appreference.printLog("updateReminderTaskStatus  ", "Exception " + e.getMessage(), "WARN", null);
 
         }
     }
@@ -6839,7 +6787,7 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
             db.execSQL(s);
         } catch (Exception e) {
             e.printStackTrace();
-            Appreference.printLog("updateGroupCloseTaskStatus  ","Exception "+e.getMessage(),"WARN",null);
+            Appreference.printLog("updateGroupCloseTaskStatus  ", "Exception " + e.getMessage(), "WARN", null);
         }
     }
 
@@ -6849,7 +6797,7 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
             db.execSQL(query);
         } catch (Exception e) {
             e.printStackTrace();
-            Appreference.printLog("updategrouptaskstatus  ","Exception "+e.getMessage(),"WARN",null);
+            Appreference.printLog("updategrouptaskstatus  ", "Exception " + e.getMessage(), "WARN", null);
         }
     }
 
@@ -6859,7 +6807,7 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
             db.execSQL(s);
         } catch (Exception e) {
             e.printStackTrace();
-            Appreference.printLog("updategrouptaskstatus1  ","Exception "+e.getMessage(),"WARN",null);
+            Appreference.printLog("updategrouptaskstatus1  ", "Exception " + e.getMessage(), "WARN", null);
         }
     }
 
@@ -6869,7 +6817,7 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
             db.execSQL(query);
         } catch (Exception e) {
             e.printStackTrace();
-            Appreference.printLog("updateaccept  ","Exception "+e.getMessage(),"WARN",null);
+            Appreference.printLog("updateaccept  ", "Exception " + e.getMessage(), "WARN", null);
         }
     }
 
@@ -6879,7 +6827,7 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
             db.execSQL(s);
         } catch (Exception e) {
             e.printStackTrace();
-            Appreference.printLog("updateStatus  ","Exception "+e.getMessage(),"WARN",null);
+            Appreference.printLog("updateStatus  ", "Exception " + e.getMessage(), "WARN", null);
         }
     }
 
@@ -6889,7 +6837,7 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
             db.execSQL(s);
         } catch (Exception e) {
             e.printStackTrace();
-            Appreference.printLog("updateOverdueStatus  ","Exception "+e.getMessage(),"WARN",null);
+            Appreference.printLog("updateOverdueStatus  ", "Exception " + e.getMessage(), "WARN", null);
         }
     }
 
@@ -6900,7 +6848,7 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
             db.execSQL(s);
         } catch (Exception e) {
             e.printStackTrace();
-            Appreference.printLog("updatereject  ","Exception "+e.getMessage(),"WARN",null);
+            Appreference.printLog("updatereject  ", "Exception " + e.getMessage(), "WARN", null);
         }
     }
 
@@ -6987,11 +6935,11 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
                 }
             } catch (Exception e) {
                 e.printStackTrace();
-                Appreference.printLog("percentagechecker 1  ","Exception "+e.getMessage(),"WARN",null);
+                Appreference.printLog("percentagechecker 1  ", "Exception " + e.getMessage(), "WARN", null);
             }
         } catch (Exception e) {
             e.printStackTrace();
-            Appreference.printLog("percentagechecker 2  ","Exception "+e.getMessage(),"WARN",null);
+            Appreference.printLog("percentagechecker 2  ", "Exception " + e.getMessage(), "WARN", null);
         } finally {
             return p;
         }
@@ -7114,11 +7062,11 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
                 }
             } catch (Exception e) {
                 e.printStackTrace();
-                Appreference.printLog("getname 1  ","Exception "+e.getMessage(),"WARN",null);
+                Appreference.printLog("getname 1  ", "Exception " + e.getMessage(), "WARN", null);
             }
         } catch (Exception e) {
             e.printStackTrace();
-            Appreference.printLog("getname 2  ","Exception "+e.getMessage(),"WARN",null);
+            Appreference.printLog("getname 2  ", "Exception " + e.getMessage(), "WARN", null);
             if (name == null) {
                 name = username;
             }
@@ -7150,7 +7098,7 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
                 }
             } catch (Exception e) {
                 e.printStackTrace();
-                Appreference.printLog("getusername 1  ","Exception "+e.getMessage(),"WARN",null);
+                Appreference.printLog("getusername 1  ", "Exception " + e.getMessage(), "WARN", null);
 
                 if (name == null) {
                     name = firstname + " " + lastname;
@@ -7158,7 +7106,7 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
             }
         } catch (Exception e) {
             e.printStackTrace();
-            Appreference.printLog("getusername 2  ","Exception "+e.getMessage(),"WARN",null);
+            Appreference.printLog("getusername 2  ", "Exception " + e.getMessage(), "WARN", null);
 
         } finally {
             return name;
@@ -7188,7 +7136,7 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
                 }
             } catch (Exception e) {
                 e.printStackTrace();
-                Appreference.printLog("getusernameWithOutLast 1  ","Exception "+e.getMessage(),"WARN",null);
+                Appreference.printLog("getusernameWithOutLast 1  ", "Exception " + e.getMessage(), "WARN", null);
 
                 if (name == null) {
                     name = firstname;
@@ -7196,7 +7144,7 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
             }
         } catch (Exception e) {
             e.printStackTrace();
-            Appreference.printLog("getusernameWithOutLast 2  ","Exception "+e.getMessage(),"WARN",null);
+            Appreference.printLog("getusernameWithOutLast 2  ", "Exception " + e.getMessage(), "WARN", null);
 
         } finally {
             return name;
@@ -7228,14 +7176,14 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
                 }
             } catch (Exception e) {
                 e.printStackTrace();
-                Appreference.printLog("getTemplateTouserName 1  ","Exception "+e.getMessage(),"WARN",null);
+                Appreference.printLog("getTemplateTouserName 1  ", "Exception " + e.getMessage(), "WARN", null);
                 if (name == null) {
                     name = username;
                 }
             }
         } catch (Exception e) {
             e.printStackTrace();
-            Appreference.printLog("getTemplateTouserName 2  ","Exception "+e.getMessage(),"WARN",null);
+            Appreference.printLog("getTemplateTouserName 2  ", "Exception " + e.getMessage(), "WARN", null);
         } finally {
             return name;
         }
@@ -7277,11 +7225,11 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
                 }
             } catch (Exception e) {
                 e.printStackTrace();
-                Appreference.printLog("getcontactdetails 1  ","Exception "+e.getMessage(),"WARN",null);
+                Appreference.printLog("getcontactdetails 1  ", "Exception " + e.getMessage(), "WARN", null);
             }
         } catch (Exception e) {
             e.printStackTrace();
-            Appreference.printLog("getcontactdetails 2  ","Exception "+e.getMessage(),"WARN",null);
+            Appreference.printLog("getcontactdetails 2  ", "Exception " + e.getMessage(), "WARN", null);
         } finally {
             return beans;
         }
@@ -7310,11 +7258,11 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
                 }
             } catch (Exception e) {
                 e.printStackTrace();
-                Appreference.printLog("getGroupMembers 1  ","Exception "+e.getMessage(),"WARN",null);
+                Appreference.printLog("getGroupMembers 1  ", "Exception " + e.getMessage(), "WARN", null);
             }
         } catch (Exception e) {
             e.printStackTrace();
-            Appreference.printLog("getGroupMembers 2  ","Exception "+e.getMessage(),"WARN",null);
+            Appreference.printLog("getGroupMembers 2  ", "Exception " + e.getMessage(), "WARN", null);
         } finally {
             return members;
         }
@@ -7376,11 +7324,11 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
                 }
             } catch (Exception e) {
                 e.printStackTrace();
-                Appreference.printLog("getSetid 1  ","Exception "+e.getMessage(),"WARN",null);
+                Appreference.printLog("getSetid 1  ", "Exception " + e.getMessage(), "WARN", null);
             }
         } catch (Exception e) {
             e.printStackTrace();
-            Appreference.printLog("getSetid 2  ","Exception "+e.getMessage(),"WARN",null);
+            Appreference.printLog("getSetid 2  ", "Exception " + e.getMessage(), "WARN", null);
         } finally {
             return beans;
         }
@@ -7393,12 +7341,13 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
     @SuppressWarnings("finally")
     public int GroupPercentageChecker(String username, String taskid, String ownerOfTask) {
         int p = 0;
-        int s = 0;
+        int s;
         int total = 0, i = 0;
         Cursor cur, cur1;
-        String name = null;
+        String name;
         try {
             Log.i("videocalldatabase", "DBpercentage loginuser -> " + username);
+            Log.i("videocalldatabase", "taskid##  " + taskid);
             if (db == null)
                 db = getReadableDatabase();
 
@@ -7427,7 +7376,7 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
                             if (name.contains("Completed Percentage ")) {
                                 Log.i("videocalldatabase", "DBpercentage task completed percentage ---> " + name);
                                 name = cur.getString(0);
-                                if (name != null && !name.equalsIgnoreCase("")) {
+                                if (name != null && !name.equalsIgnoreCase("") && !name.equalsIgnoreCase(null) && name != null && !name.equalsIgnoreCase("null")) {
                                     Log.i("videocalldatabase", "DBpercentage percentage ----> " + name);
                                     s = Integer.parseInt(name);
                                     if (s > 0) {
@@ -7459,12 +7408,12 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
                     }
                 } catch (ArithmeticException e) {
                     e.printStackTrace();
-                    Appreference.printLog("GroupPercentageChecker 1  ","Exception "+e.getMessage(),"WARN",null);
+                    Appreference.printLog("GroupPercentageChecker 1  ", "Exception " + e.getMessage(), "WARN", null);
                 }
             }
         } catch (Exception e) {
             e.printStackTrace();
-            Appreference.printLog("GroupPercentageChecker 2","Exception "+e.getMessage(),"WARN",null);
+            Appreference.printLog("GroupPercentageChecker 2", "Exception " + e.getMessage(), "WARN", null);
         } finally {
             return p;
         }
@@ -7538,11 +7487,11 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
                 }
             } catch (Exception e) {
                 e.printStackTrace();
-                Appreference.printLog("ProjectGroupPercentageChecker 1","Exception "+e.getMessage(),"WARN",null);
+                Appreference.printLog("ProjectGroupPercentageChecker 1", "Exception " + e.getMessage(), "WARN", null);
             }
         } catch (Exception e) {
             e.printStackTrace();
-            Appreference.printLog("ProjectGroupPercentageChecker 2","Exception "+e.getMessage(),"WARN",null);
+            Appreference.printLog("ProjectGroupPercentageChecker 2", "Exception " + e.getMessage(), "WARN", null);
         } finally {
             return p;
         }
@@ -7551,45 +7500,40 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
     @SuppressWarnings("finally")
     public int groupPercentageStatus(String username, String taskid) {
         int p = 0;
-        int s = 0;
+        int s;
         Cursor cur;
-        String name = null;
+        String name;
+        Log.i("Task1", "DBpercentage " + username);
+        if (db == null)
+            db = getReadableDatabase();
         try {
-            Log.i("Task1", "DBpercentage " + username);
-            if (db == null)
-                db = getReadableDatabase();
+            if (db != null) {
+                if (!db.isOpen())
+                    openDatabase();
 
-            try {
-                if (db != null) {
-                    if (!db.isOpen())
-                        openDatabase();
-
-                    cur = db.rawQuery("select completedPercentage,taskDescription from taskDetailsInfo where fromUserName = '" + username + "' and taskId='" + taskid + "' ", null);
-                    cur.moveToFirst();
-                    while (!cur.isAfterLast()) {
-                        name = cur.getString(1);
-                        Log.i("Task1", "DBDescription " + cur.getString(1));
-                        if (name.contains("Completed Percentage ")) {
-                            Log.i("Task1", "DBpercentage " + name);
-                            name = cur.getString(0);
-                            if (name != null && !name.equalsIgnoreCase("") && !name.equalsIgnoreCase(null)) {
-                                Log.i("Task1", "groupPercentage last --> " + name);
-                                s = Integer.parseInt(name);
-                                if (s > 0) {
-                                    p = Integer.parseInt(name);
-                                }
+                cur = db.rawQuery("select completedPercentage,taskDescription from taskDetailsInfo where fromUserName = '" + username + "' and taskId='" + taskid + "' ", null);
+                cur.moveToFirst();
+                while (!cur.isAfterLast()) {
+                    name = cur.getString(1);
+                    Log.i("Task1", "DBDescription " + cur.getString(1));
+                    if (name.contains("Completed Percentage ")) {
+                        Log.i("Task1", "DBpercentage " + name);
+                        name = cur.getString(0);
+                        if (name != null && !name.equalsIgnoreCase("") && !name.equalsIgnoreCase(null)) {
+                            Log.i("Task1", "groupPercentage last --> " + name);
+                            s = Integer.parseInt(name);
+                            if (s > 0) {
+                                p = Integer.parseInt(name);
                             }
                         }
-                        cur.moveToNext();
                     }
+                    cur.moveToNext();
                 }
-            } catch (NumberFormatException e) {
-                e.printStackTrace();
-                Appreference.printLog("groupPercentageStatus 1","Exception "+e.getMessage(),"WARN",null);
+                cur.close();
             }
         } catch (Exception e) {
             e.printStackTrace();
-            Appreference.printLog("groupPercentageStatus 2","Exception "+e.getMessage(),"WARN",null);
+            Appreference.printLog("groupPercentageStatus 2", "Exception " + e.getMessage(), "WARN", null);
         } finally {
             return p;
         }
@@ -7656,11 +7600,11 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
                 }
             } catch (Exception e) {
                 e.printStackTrace();
-                Appreference.printLog("getGroupContact 1","Exception "+e.getMessage(),"WARN",null);
+                Appreference.printLog("getGroupContact 1", "Exception " + e.getMessage(), "WARN", null);
             }
         } catch (Exception e) {
             e.printStackTrace();
-            Appreference.printLog("getGroupContact 2","Exception "+e.getMessage(),"WARN",null);
+            Appreference.printLog("getGroupContact 2", "Exception " + e.getMessage(), "WARN", null);
         } finally {
             return beans;
         }
@@ -7716,11 +7660,11 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
                 }
             } catch (Exception e) {
                 e.printStackTrace();
-                Appreference.printLog("getOverdue 1","Exception "+e.getMessage(),"WARN",null);
+                Appreference.printLog("getOverdue 1", "Exception " + e.getMessage(), "WARN", null);
             }
         } catch (Exception e) {
             e.printStackTrace();
-            Appreference.printLog("getOverdue 2","Exception "+e.getMessage(),"WARN",null);
+            Appreference.printLog("getOverdue 2", "Exception " + e.getMessage(), "WARN", null);
         } finally {
             return name;
         }
@@ -7730,7 +7674,7 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
     @SuppressWarnings("finally")
     public String Statuscheker(String username) {
         String name = null;
-        Log.i("task", "string value" + username);
+        Log.i("task", "string value " + username);
         Cursor cur;
         try {
             if (db == null)
@@ -7751,11 +7695,11 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
                 }
             } catch (Exception e) {
                 e.printStackTrace();
-                Appreference.printLog("Statuscheker 1","Exception "+e.getMessage(),"WARN",null);
+                Appreference.printLog("Statuscheker 1", "Exception " + e.getMessage(), "WARN", null);
             }
         } catch (Exception e) {
             e.printStackTrace();
-            Appreference.printLog("Statuscheker 2","Exception "+e.getMessage(),"WARN",null);
+            Appreference.printLog("Statuscheker 2", "Exception " + e.getMessage(), "WARN", null);
         } finally {
             return name;
         }
@@ -7788,11 +7732,11 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
                 }
             } catch (Exception e) {
                 e.printStackTrace();
-                Appreference.printLog("DuplicateChecker 1","Exception "+e.getMessage(),"WARN",null);
+                Appreference.printLog("DuplicateChecker 1", "Exception " + e.getMessage(), "WARN", null);
             }
         } catch (Exception e) {
             e.printStackTrace();
-            Appreference.printLog("DuplicateChecker 2","Exception "+e.getMessage(),"WARN",null);
+            Appreference.printLog("DuplicateChecker 2", "Exception " + e.getMessage(), "WARN", null);
         } finally {
             return list;
         }
@@ -7824,11 +7768,11 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
                 }
             } catch (Exception e) {
                 e.printStackTrace();
-                Appreference.printLog("giverTaskCompletion 1","Exception "+e.getMessage(),"WARN",null);
+                Appreference.printLog("giverTaskCompletion 1", "Exception " + e.getMessage(), "WARN", null);
             }
         } catch (Exception e) {
             e.printStackTrace();
-            Appreference.printLog("giverTaskCompletion 2","Exception "+e.getMessage(),"WARN",null);
+            Appreference.printLog("giverTaskCompletion 2", "Exception " + e.getMessage(), "WARN", null);
         } finally {
             return list;
         }
@@ -7860,11 +7804,11 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
                 }
             } catch (Exception e) {
                 e.printStackTrace();
-                Appreference.printLog("DuplicateTaskIdChecker 1","Exception "+e.getMessage(),"WARN",null);
+                Appreference.printLog("DuplicateTaskIdChecker 1", "Exception " + e.getMessage(), "WARN", null);
             }
         } catch (Exception e) {
             e.printStackTrace();
-            Appreference.printLog("DuplicateTaskIdChecker 2","Exception "+e.getMessage(),"WARN",null);
+            Appreference.printLog("DuplicateTaskIdChecker 2", "Exception " + e.getMessage(), "WARN", null);
         } finally {
             return list;
         }
@@ -7895,11 +7839,11 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
                 }
             } catch (Exception e) {
                 e.printStackTrace();
-                Appreference.printLog("DuplicateProjectIdChecker 1","Exception "+e.getMessage(),"WARN",null);
+                Appreference.printLog("DuplicateProjectIdChecker 1", "Exception " + e.getMessage(), "WARN", null);
             }
         } catch (Exception e) {
             e.printStackTrace();
-            Appreference.printLog("DuplicateProjectIdChecker 2","Exception "+e.getMessage(),"WARN",null);
+            Appreference.printLog("DuplicateProjectIdChecker 2", "Exception " + e.getMessage(), "WARN", null);
         } finally {
             return list;
         }
@@ -7930,11 +7874,11 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
                 }
             } catch (Exception e) {
                 e.printStackTrace();
-                Appreference.printLog("DuplicateProjectTaskIdChecker 1","Exception "+e.getMessage(),"WARN",null);
+                Appreference.printLog("DuplicateProjectTaskIdChecker 1", "Exception " + e.getMessage(), "WARN", null);
             }
         } catch (Exception e) {
             e.printStackTrace();
-            Appreference.printLog("DuplicateProjectTaskIdChecker 2","Exception "+e.getMessage(),"WARN",null);
+            Appreference.printLog("DuplicateProjectTaskIdChecker 2", "Exception " + e.getMessage(), "WARN", null);
         } finally {
             return list;
         }
@@ -7964,11 +7908,11 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
                 }
             } catch (Exception e) {
                 e.printStackTrace();
-                Appreference.printLog("IstaskIdExist 1","Exception "+e.getMessage(),"WARN",null);
+                Appreference.printLog("IstaskIdExist 1", "Exception " + e.getMessage(), "WARN", null);
             }
         } catch (Exception e) {
             e.printStackTrace();
-            Appreference.printLog("IstaskIdExist 2","Exception "+e.getMessage(),"WARN",null);
+            Appreference.printLog("IstaskIdExist 2", "Exception " + e.getMessage(), "WARN", null);
         } finally {
             return list;
         }
@@ -7999,11 +7943,11 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
                 }
             } catch (Exception e) {
                 e.printStackTrace();
-                Appreference.printLog("DuplicatetaskTaskIdChecker 1","Exception "+e.getMessage(),"WARN",null);
+                Appreference.printLog("DuplicatetaskTaskIdChecker 1", "Exception " + e.getMessage(), "WARN", null);
             }
         } catch (Exception e) {
             e.printStackTrace();
-            Appreference.printLog("DuplicatetaskTaskIdChecker 2","Exception "+e.getMessage(),"WARN",null);
+            Appreference.printLog("DuplicatetaskTaskIdChecker 2", "Exception " + e.getMessage(), "WARN", null);
         } finally {
             return list;
         }
@@ -8037,11 +7981,11 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
                 }
             } catch (Exception e) {
                 e.printStackTrace();
-                Appreference.printLog("getAccept 1","Exception "+e.getMessage(),"WARN",null);
+                Appreference.printLog("getAccept 1", "Exception " + e.getMessage(), "WARN", null);
             }
         } catch (Exception e) {
             e.printStackTrace();
-            Appreference.printLog("getAccept 2","Exception "+e.getMessage(),"WARN",null);
+            Appreference.printLog("getAccept 2", "Exception " + e.getMessage(), "WARN", null);
         } finally {
             return list;
         }
@@ -8117,11 +8061,11 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
                 }
             } catch (Exception e) {
                 e.printStackTrace();
-                Appreference.printLog("getOverdueMsg 1","Exception "+e.getMessage(),"WARN",null);
+                Appreference.printLog("getOverdueMsg 1", "Exception " + e.getMessage(), "WARN", null);
             }
         } catch (Exception e) {
             e.printStackTrace();
-            Appreference.printLog("getOverdueMsg 2","Exception "+e.getMessage(),"WARN",null);
+            Appreference.printLog("getOverdueMsg 2", "Exception " + e.getMessage(), "WARN", null);
         } finally {
             return list;
         }
@@ -8185,11 +8129,11 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
                 }
             } catch (Exception e) {
                 e.printStackTrace();
-                Appreference.printLog("getTaskContent 1","Exception "+e.getMessage(),"WARN",null);
+                Appreference.printLog("getTaskContent 1", "Exception " + e.getMessage(), "WARN", null);
             }
         } catch (Exception e) {
             e.printStackTrace();
-            Appreference.printLog("getTaskContent 2","Exception "+e.getMessage(),"WARN",null);
+            Appreference.printLog("getTaskContent 2", "Exception " + e.getMessage(), "WARN", null);
         } finally {
             return taskDetailsBean;
         }
@@ -8264,11 +8208,11 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
                 }
             } catch (Exception e) {
                 e.printStackTrace();
-                Appreference.printLog("getProjectContent 1","Exception "+e.getMessage(),"WARN",null);
+                Appreference.printLog("getProjectContent 1", "Exception " + e.getMessage(), "WARN", null);
             }
         } catch (Exception e) {
             e.printStackTrace();
-            Appreference.printLog("getProjectContent 2","Exception "+e.getMessage(),"WARN",null);
+            Appreference.printLog("getProjectContent 2", "Exception " + e.getMessage(), "WARN", null);
         } finally {
             return taskDetailsBean;
         }
@@ -8318,11 +8262,11 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
                 }
             } catch (Exception e) {
                 e.printStackTrace();
-                Appreference.printLog("getnewAddedList 1","Exception "+e.getMessage(),"WARN",null);
+                Appreference.printLog("getnewAddedList 1", "Exception " + e.getMessage(), "WARN", null);
             }
         } catch (Exception e) {
             e.printStackTrace();
-            Appreference.printLog("getnewAddedList 2","Exception "+e.getMessage(),"WARN",null);
+            Appreference.printLog("getnewAddedList 2", "Exception " + e.getMessage(), "WARN", null);
         } finally {
             return listMember;
         }
@@ -8365,11 +8309,11 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
                 }
             } catch (Exception e) {
                 e.printStackTrace();
-                Appreference.printLog("getFormContent 1","Exception "+e.getMessage(),"WARN",null);
+                Appreference.printLog("getFormContent 1", "Exception " + e.getMessage(), "WARN", null);
             }
         } catch (Exception e) {
             e.printStackTrace();
-            Appreference.printLog("getFormContent 2","Exception "+e.getMessage(),"WARN",null);
+            Appreference.printLog("getFormContent 2", "Exception " + e.getMessage(), "WARN", null);
         } finally {
             return taskDetailsBean;
         }
@@ -8398,11 +8342,11 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
                 }
             } catch (Exception e) {
                 e.printStackTrace();
-                Appreference.printLog("getAccessType 1","Exception "+e.getMessage(),"WARN",null);
+                Appreference.printLog("getAccessType 1", "Exception " + e.getMessage(), "WARN", null);
             }
         } catch (Exception e) {
             e.printStackTrace();
-            Appreference.printLog("getAccessType 2","Exception "+e.getMessage(),"WARN",null);
+            Appreference.printLog("getAccessType 2", "Exception " + e.getMessage(), "WARN", null);
         }
         return name;
     }
@@ -8440,11 +8384,11 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
                 }
             } catch (Exception e) {
                 e.printStackTrace();
-                Appreference.printLog("getDatecheck 1","Exception "+e.getMessage(),"WARN",null);
+                Appreference.printLog("getDatecheck 1", "Exception " + e.getMessage(), "WARN", null);
             }
         } catch (Exception e) {
             e.printStackTrace();
-            Appreference.printLog("getDatecheck 1","Exception "+e.getMessage(),"WARN",null);
+            Appreference.printLog("getDatecheck 1", "Exception " + e.getMessage(), "WARN", null);
         } finally {
             return list;
         }
@@ -8520,11 +8464,11 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
                 }
             } catch (Exception e) {
                 e.printStackTrace();
-                Appreference.printLog("getSchuduleDetalis 1","Exception "+e.getMessage(),"WARN",null);
+                Appreference.printLog("getSchuduleDetalis 1", "Exception " + e.getMessage(), "WARN", null);
             }
         } catch (Exception e) {
             e.printStackTrace();
-            Appreference.printLog("getSchuduleDetalis 2","Exception "+e.getMessage(),"WARN",null);
+            Appreference.printLog("getSchuduleDetalis 2", "Exception " + e.getMessage(), "WARN", null);
         } finally {
             return taskDetailsBeanArrayList;
         }
@@ -8568,7 +8512,7 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
             }
         } catch (Exception e) {
             e.printStackTrace();
-            Appreference.printLog("UpdateOrInsertFormAccess ","Exception "+e.getMessage(),"WARN",null);
+            Appreference.printLog("UpdateOrInsertFormAccess ", "Exception " + e.getMessage(), "WARN", null);
         }
     }
 
@@ -8597,11 +8541,11 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
                 }
             } catch (Exception e) {
                 e.printStackTrace();
-                Appreference.printLog("getTaskcallContent 1","Exception "+e.getMessage(),"WARN",null);
+                Appreference.printLog("getTaskcallContent 1", "Exception " + e.getMessage(), "WARN", null);
             }
         } catch (Exception e) {
             e.printStackTrace();
-            Appreference.printLog("getTaskcallContent 2 ","Exception "+e.getMessage(),"WARN",null);
+            Appreference.printLog("getTaskcallContent 2 ", "Exception " + e.getMessage(), "WARN", null);
 
         } finally {
             return taskDetailsBean;
@@ -8656,11 +8600,11 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
                 }
             } catch (Exception e) {
                 e.printStackTrace();
-                Appreference.printLog("getMemberAccessList 1 ","Exception "+e.getMessage(),"WARN",null);
+                Appreference.printLog("getMemberAccessList 1 ", "Exception " + e.getMessage(), "WARN", null);
             }
         } catch (Exception e) {
             e.printStackTrace();
-            Appreference.printLog("getMemberAccessList 2 ","Exception "+e.getMessage(),"WARN",null);
+            Appreference.printLog("getMemberAccessList 2 ", "Exception " + e.getMessage(), "WARN", null);
         } finally {
             return groupMemberAccess;
         }
@@ -8689,11 +8633,11 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
                 }
             } catch (Exception e) {
                 e.printStackTrace();
-                Appreference.printLog("getChatHistoryAvailabeUser 1 ","Exception "+e.getMessage(),"WARN",null);
+                Appreference.printLog("getChatHistoryAvailabeUser 1 ", "Exception " + e.getMessage(), "WARN", null);
             }
         } catch (Exception e) {
             e.printStackTrace();
-            Appreference.printLog("getChatHistoryAvailabeUser 2 ","Exception "+e.getMessage(),"WARN",null);
+            Appreference.printLog("getChatHistoryAvailabeUser 2 ", "Exception " + e.getMessage(), "WARN", null);
         } finally {
             return name;
         }
@@ -8711,7 +8655,7 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
             cur.close();
         } catch (Exception e) {
             e.printStackTrace();
-            Appreference.printLog("getTaskHistoryRowCount ","Exception "+e.getMessage(),"WARN",null);
+            Appreference.printLog("getTaskHistoryRowCount ", "Exception " + e.getMessage(), "WARN", null);
         }
         return count;
     }
@@ -8738,11 +8682,11 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
                 }
             } catch (Exception e) {
                 e.printStackTrace();
-                Appreference.printLog("getReportUserName 1 ","Exception "+e.getMessage(),"WARN",null);
+                Appreference.printLog("getReportUserName 1 ", "Exception " + e.getMessage(), "WARN", null);
             }
         } catch (Exception e) {
             e.printStackTrace();
-            Appreference.printLog("getReportUserName 2 ","Exception "+e.getMessage(),"WARN",null);
+            Appreference.printLog("getReportUserName 2 ", "Exception " + e.getMessage(), "WARN", null);
         } finally {
             return name;
         }
@@ -9041,11 +8985,19 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
             cv.put("customersignature", taskDetailsBean.getCustomerSignature());
             cv.put("photo", taskDetailsBean.getPhotoPath());
             cv.put("techniciansignature", taskDetailsBean.getTechnicianSignature());
+
+            // added for location
+            cv.put("startDateLatitude", taskDetailsBean.getStartDateLatitude());
+            cv.put("startDateLongitude", taskDetailsBean.getStartDateLongitude());
+            cv.put("endDateLatitude", taskDetailsBean.getEndDateLatitude());
+            cv.put("endDateLongitude", taskDetailsBean.getEndDateLongitude());
+            Log.i("location", "DB_status $$ " + taskDetailsBean.getStartDateLatitude());
+            Log.i("location", "DB_status $$ " + taskDetailsBean.getEndDateLatitude());
             row_id = (int) db.insert("projectStatus", null, cv);
         } catch (Exception e) {
             // TODO: handle exception
             e.printStackTrace();
-            Appreference.printLog("insertORupdateStatus ","Exception "+e.getMessage(),"WARN",null);
+            Appreference.printLog("insertORupdateStatus ", "Exception " + e.getMessage(), "WARN", null);
         }
         return row_id;
     }
@@ -9061,7 +9013,7 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
             db.update("projectHistory", cv, "projectId='" + projectId + "'and taskId='" + taskId + "'", null);
         } catch (Exception e) {
             e.printStackTrace();
-            Appreference.printLog("eod_Update ","Exception "+e.getMessage(),"WARN",null);
+            Appreference.printLog("eod_Update ", "Exception " + e.getMessage(), "WARN", null);
         }
     }
 
@@ -9155,12 +9107,17 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
                             cv.put("techniciansignature", listTaskTransaction.getTechnicianSignature());
                             cv.put("synopsis", listTaskTransaction.getSynopsis());
 
+                            //added for Location
+                            cv.put("startDateLatitude", listTaskTransaction.getStartDateLatitude());
+                            cv.put("startDateLongitude", listTaskTransaction.getStartDateLongitude());
+                            cv.put("endDateLatitude", listTaskTransaction.getEndDateLatitude());
+                            cv.put("endDateLongitude", listTaskTransaction.getEndDateLongitude());
 
                             Log.i("Listtransation", "value===> " + cv);
                             if (IstaskIdExist(task_id, project_id) && !is_delete) {
                                 row_id = (int) db.delete("projectStatus", "taskId" + "= ? and " + "wssendstatus" + "!= ?", new String[]{task_id, "000"});
 //                                row_id=(int) db.delete("projectStatus","taskId"+"= ? and "+ "wssendstatus"+"!=?",new String[]{task_id,"000"});
-                                row_id=(int)db.delete("projectStatus","taskId='"+task_id + "'and wssendstatus IS NULL", null);
+                                row_id = (int) db.delete("projectStatus", "taskId='" + task_id + "'and wssendstatus IS NULL", null);
                                 is_delete = true;
                             }
                             row_id = (int) db.insert("projectStatus", null, cv);
@@ -9199,7 +9156,7 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
         } catch (Exception e) {
             // TODO: handle exception
             e.printStackTrace();
-            Appreference.printLog("insert_updateProjectStatus ","Exception "+e.getMessage(),"WARN",null);
+            Appreference.printLog("insert_updateProjectStatus ", "Exception " + e.getMessage(), "WARN", null);
         }
         return row_id;
     }
@@ -9224,11 +9181,11 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
                 }
             } catch (Exception e) {
                 e.printStackTrace();
-                Appreference.printLog("getCurrentStatus 1 ","Exception "+e.getMessage(),"WARN",null);
+                Appreference.printLog("getCurrentStatus 1 ", "Exception " + e.getMessage(), "WARN", null);
             }
         } catch (Exception e) {
             e.printStackTrace();
-            Appreference.printLog("getCurrentStatus 2 ","Exception "+e.getMessage(),"WARN",null);
+            Appreference.printLog("getCurrentStatus 2 ", "Exception " + e.getMessage(), "WARN", null);
 
         } finally {
             return row_id;
@@ -9309,12 +9266,12 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
                 }
             } catch (Exception e) {
                 e.printStackTrace();
-                Appreference.printLog("getDetails_to_complete_project 1 ","Exception "+e.getMessage(),"WARN",null);
+                Appreference.printLog("getDetails_to_complete_project 1 ", "Exception " + e.getMessage(), "WARN", null);
                 Log.i("eodlist123", "DB excepion" + e.getMessage());
             }
         } catch (Exception e) {
             e.printStackTrace();
-            Appreference.printLog("getDetails_to_complete_project 2 ","Exception "+e.getMessage(),"WARN",null);
+            Appreference.printLog("getDetails_to_complete_project 2 ", "Exception " + e.getMessage(), "WARN", null);
         } finally {
             return taskDetailsBean;
         }
@@ -9411,11 +9368,11 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
                 }
             } catch (Exception e) {
                 e.printStackTrace();
-                Appreference.printLog("getStatusCompletedProjectDetails 1 ","Exception "+e.getMessage(),"WARN",null);
+                Appreference.printLog("getStatusCompletedProjectDetails 1 ", "Exception " + e.getMessage(), "WARN", null);
             }
         } catch (Exception e) {
             e.printStackTrace();
-            Appreference.printLog("getStatusCompletedProjectDetails 2 ","Exception "+e.getMessage(),"WARN",null);
+            Appreference.printLog("getStatusCompletedProjectDetails 2 ", "Exception " + e.getMessage(), "WARN", null);
         } finally {
             //            Log.i("file", "size" + arrayList.size());
             return taskDetailsBean;
@@ -9472,12 +9429,12 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
 
             } catch (Exception e) {
                 e.printStackTrace();
-                Appreference.printLog("getDivertedProjId 1 ","Exception "+e.getMessage(),"WARN",null);
+                Appreference.printLog("getDivertedProjId 1 ", "Exception " + e.getMessage(), "WARN", null);
 
             }
         } catch (Exception e) {
             e.printStackTrace();
-            Appreference.printLog("getDivertedProjId 2 ","Exception "+e.getMessage(),"WARN",null);
+            Appreference.printLog("getDivertedProjId 2 ", "Exception " + e.getMessage(), "WARN", null);
         }
         return project_id;
     }
@@ -9499,17 +9456,23 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
                         taskDetailsBean.setTravelStartTime(cur.getString(cur.getColumnIndex("travelStartTime")));
                         taskDetailsBean.setTravelEndTime(cur.getString(cur.getColumnIndex("travelEndTime")));
                         taskDetailsBean.setWssendstatus(cur.getString(cur.getColumnIndex("wssendstatus")));
+
+                        //Added for Location
+                        taskDetailsBean.setStartDateLatitude(cur.getString(cur.getColumnIndex("startDateLatitude")));
+                        taskDetailsBean.setStartDateLongitude(cur.getString(cur.getColumnIndex("startDateLongitude")));
+                        taskDetailsBean.setEndDateLatitude(cur.getString(cur.getColumnIndex("endDateLatitude")));
+                        taskDetailsBean.setEndDateLongitude(cur.getString(cur.getColumnIndex("endDateLongitude")));
                         cur.moveToNext();
                     }
                     cur.close();
                 }
             } catch (Exception e) {
                 e.printStackTrace();
-                Appreference.printLog("getActivityTimeFromStatus 1 ","Exception "+e.getMessage(),"WARN",null);
+                Appreference.printLog("getActivityTimeFromStatus 1 ", "Exception " + e.getMessage(), "WARN", null);
             }
         } catch (Exception e) {
             e.printStackTrace();
-            Appreference.printLog("getActivityTimeFromStatus 2 ","Exception "+e.getMessage(),"WARN",null);
+            Appreference.printLog("getActivityTimeFromStatus 2 ", "Exception " + e.getMessage(), "WARN", null);
         } finally {
             return taskDetailsBean;
         }
@@ -9535,11 +9498,11 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
                 cur.close();
             } catch (Exception e) {
                 e.printStackTrace();
-                Appreference.printLog("getAllCurrentStatus 1 ","Exception "+e.getMessage(),"WARN",null);
+                Appreference.printLog("getAllCurrentStatus 1 ", "Exception " + e.getMessage(), "WARN", null);
             }
         } catch (Exception e) {
             e.printStackTrace();
-            Appreference.printLog("getAllCurrentStatus 2 ","Exception "+e.getMessage(),"WARN",null);
+            Appreference.printLog("getAllCurrentStatus 2 ", "Exception " + e.getMessage(), "WARN", null);
         }
         return status_all;
     }
@@ -9564,11 +9527,11 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
                 }
             } catch (Exception e) {
                 e.printStackTrace();
-                Appreference.printLog("CheckTravelEntryDetails 1 ","Exception "+e.getMessage(),"WARN",null);
+                Appreference.printLog("CheckTravelEntryDetails 1 ", "Exception " + e.getMessage(), "WARN", null);
             }
         } catch (Exception e) {
             e.printStackTrace();
-            Appreference.printLog("CheckTravelEntryDetails 2 ","Exception "+e.getMessage(),"WARN",null);
+            Appreference.printLog("CheckTravelEntryDetails 2 ", "Exception " + e.getMessage(), "WARN", null);
         } finally {
             return row;
         }
@@ -9590,11 +9553,11 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
                 }
             } catch (Exception e) {
                 e.printStackTrace();
-                Appreference.printLog("getCountForTravelEntry 1 ","Exception "+e.getMessage(),"WARN",null);
+                Appreference.printLog("getCountForTravelEntry 1 ", "Exception " + e.getMessage(), "WARN", null);
             }
         } catch (Exception e) {
             e.printStackTrace();
-            Appreference.printLog("getCountForTravelEntry 2 ","Exception "+e.getMessage(),"WARN",null);
+            Appreference.printLog("getCountForTravelEntry 2 ", "Exception " + e.getMessage(), "WARN", null);
         } finally {
             return row;
         }
@@ -9616,7 +9579,7 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
         } catch (Exception e) {
             // TODO: handle exception
             e.printStackTrace();
-            Appreference.printLog("insertvalueeula ","Exception "+e.getMessage(),"WARN",null);
+            Appreference.printLog("insertvalueeula ", "Exception " + e.getMessage(), "WARN", null);
         }
     }
 
@@ -9639,11 +9602,11 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
                 }
             } catch (Exception e) {
                 e.printStackTrace();
-                Appreference.printLog("geteulavalue 1","Exception "+e.getMessage(),"WARN",null);
+                Appreference.printLog("geteulavalue 1", "Exception " + e.getMessage(), "WARN", null);
             }
         } catch (Exception e) {
             e.printStackTrace();
-            Appreference.printLog("geteulavalue 2","Exception "+e.getMessage(),"WARN",null);
+            Appreference.printLog("geteulavalue 2", "Exception " + e.getMessage(), "WARN", null);
         }
         return newvalue;
 
@@ -9662,7 +9625,7 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
         } catch (Exception e) {
             // TODO: handle exception
             e.printStackTrace();
-            Appreference.printLog("isRecordExists ","Exception "+e.getMessage(),"WARN",null);
+            Appreference.printLog("isRecordExists ", "Exception " + e.getMessage(), "WARN", null);
         } finally {
             if (cur != null)
                 cur.close();
@@ -9679,11 +9642,11 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
             db.update("contact", cv, "userid" + "='" + userId + "'", null);
         } catch (Exception e) {
             e.printStackTrace();
-            Appreference.printLog("contactRoleIdUpdate ","Exception "+e.getMessage(),"WARN",null);
+            Appreference.printLog("contactRoleIdUpdate ", "Exception " + e.getMessage(), "WARN", null);
         }
     }
 
-    public ArrayList<String> getOracleProjectIdlist(String query,String fieldNameTogetResult) {
+    public ArrayList<String> getOracleProjectIdlist(String query, String fieldNameTogetResult) {
         ArrayList<String> arrayList = new ArrayList<>();
         Cursor cur;
         try {
@@ -9697,7 +9660,7 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
                     cur.moveToFirst();
                     while (!cur.isAfterLast()) {
                         if (cur.getString(cur.getColumnIndex(fieldNameTogetResult)) != null && !cur.getString(cur.getColumnIndex(fieldNameTogetResult)).equalsIgnoreCase("")) {
-                            if(!arrayList.contains(cur.getString(cur.getColumnIndex(fieldNameTogetResult)))) {
+                            if (!arrayList.contains(cur.getString(cur.getColumnIndex(fieldNameTogetResult)))) {
                                 arrayList.add(cur.getString(cur.getColumnIndex(fieldNameTogetResult)));
                             }
                             Log.i("oracle123", "Error====>oracleProjectId list===>" + cur.getString(cur.getColumnIndex(fieldNameTogetResult)));
@@ -9709,12 +9672,12 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
                 }
             } catch (Exception e) {
                 e.printStackTrace();
-                Appreference.printLog("getOracleProjectIdlist 1 ","Exception "+e.getMessage(),"WARN",null);
+                Appreference.printLog("getOracleProjectIdlist 1 ", "Exception " + e.getMessage(), "WARN", null);
                 Log.i("DB123", "Error====>getProjectdetails===>" + e.getMessage());
             }
         } catch (Exception e) {
             e.printStackTrace();
-            Appreference.printLog("getOracleProjectIdlist 2 ","Exception "+e.getMessage(),"WARN",null);
+            Appreference.printLog("getOracleProjectIdlist 2 ", "Exception " + e.getMessage(), "WARN", null);
         } finally {
             return arrayList;
         }
@@ -9821,6 +9784,12 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
                         taskDetailsBean.setSignalid(cur.getString(cur.getColumnIndex("signalId")));
                         taskDetailsBean.setEnd_dateStatus(cur.getString(cur.getColumnIndex("dateStatus")));
                         taskDetailsBean.setSynopsis(cur.getString(cur.getColumnIndex("synopsis")));
+
+                        //Added for Location
+                        taskDetailsBean.setStartDateLatitude(cur.getString(cur.getColumnIndex("startDateLatitude")));
+                        taskDetailsBean.setStartDateLongitude(cur.getString(cur.getColumnIndex("startDateLongitude")));
+                        taskDetailsBean.setEndDateLatitude(cur.getString(cur.getColumnIndex("endDateLatitude")));
+                        taskDetailsBean.setEndDateLongitude(cur.getString(cur.getColumnIndex("endDateLongitude")));
                         arrayList.add(taskDetailsBean);
                         cur.moveToNext();
                     }
@@ -9828,12 +9797,12 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
                 }
             } catch (Exception e) {
                 e.printStackTrace();
-                Appreference.printLog("getofflinesendlist 1 ","Exception "+e.getMessage(),"WARN",null);
+                Appreference.printLog("getofflinesendlist 1 ", "Exception " + e.getMessage(), "WARN", null);
                 Log.i("eodlist123", "DB excepion" + e.getMessage());
             }
         } catch (Exception e) {
             e.printStackTrace();
-            Appreference.printLog("getofflinesendlist 2 ","Exception "+e.getMessage(),"WARN",null);
+            Appreference.printLog("getofflinesendlist 2 ", "Exception " + e.getMessage(), "WARN", null);
         } finally {
             Log.i("file", "size" + arrayList.size());
             return arrayList;
@@ -9874,11 +9843,11 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
                 }
             } catch (Exception e) {
                 e.printStackTrace();
-                Appreference.printLog("getTaskDetailsInfo 1 ","Exception "+e.getMessage(),"WARN",null);
+                Appreference.printLog("getTaskDetailsInfo 1 ", "Exception " + e.getMessage(), "WARN", null);
             }
         } catch (Exception e) {
             e.printStackTrace();
-            Appreference.printLog("getTaskDetailsInfo 2 ","Exception "+e.getMessage(),"WARN",null);
+            Appreference.printLog("getTaskDetailsInfo 2 ", "Exception " + e.getMessage(), "WARN", null);
         } finally {
             Log.i("file", "size" + arrayList.size());
             return arrayList;
@@ -9917,11 +9886,11 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
                 }
             } catch (Exception e) {
                 e.printStackTrace();
-                Appreference.printLog("getUserdetails 1 ","Exception "+e.getMessage(),"WARN",null);
+                Appreference.printLog("getUserdetails 1 ", "Exception " + e.getMessage(), "WARN", null);
             }
         } catch (Exception e) {
             e.printStackTrace();
-            Appreference.printLog("getUserdetails 2 ","Exception "+e.getMessage(),"WARN",null);
+            Appreference.printLog("getUserdetails 2 ", "Exception " + e.getMessage(), "WARN", null);
         } finally {
             //            Log.i("file", "size" + arrayList.size());
             return taskDetailsBean;
@@ -9942,7 +9911,7 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
                     cur = db.rawQuery(traveltimeQuery, null);
                     cur.moveToFirst();
                     while (!cur.isAfterLast()) {
-                        if(cur.getString(cur.getColumnIndex("taskName")).equalsIgnoreCase("Travel Time")){
+                        if (cur.getString(cur.getColumnIndex("taskName")).equalsIgnoreCase("Travel Time")) {
                             travelTask = true;
                         }
                         cur.moveToNext();
@@ -9951,17 +9920,17 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
                 }
             } catch (Exception e) {
                 e.printStackTrace();
-                Appreference.printLog("getTraveltaskExistsOrNot 1 ","Exception "+e.getMessage(),"WARN",null);
+                Appreference.printLog("getTraveltaskExistsOrNot 1 ", "Exception " + e.getMessage(), "WARN", null);
             }
         } catch (Exception e) {
             e.printStackTrace();
-            Appreference.printLog("getTraveltaskExistsOrNot 2 ","Exception "+e.getMessage(),"WARN",null);
+            Appreference.printLog("getTraveltaskExistsOrNot 2 ", "Exception " + e.getMessage(), "WARN", null);
         } finally {
             return travelTask;
         }
     }
 
-    public String getAlertShownstatus(String alertQuery) {
+    public String getAlertShownstatus(String alertQuery,String fieldName) {
         String result_value ="";
         Cursor cur;
         try {
@@ -9974,7 +9943,7 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
                     cur = db.rawQuery(alertQuery, null);
                     cur.moveToFirst();
                     while (!cur.isAfterLast()) {
-                        result_value = cur.getString(cur.getColumnIndex("taskPlannedLatestEndDate"));
+                        result_value = cur.getString(cur.getColumnIndex(fieldName));
                         cur.moveToNext();
                     }
                     cur.close();
@@ -9991,4 +9960,72 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
             return result_value;
         }
     }
+
+    public String getValuefromDBEntry(String taskQuery,String fieldName) {
+        String result_value ="";
+        Log.i("estim123", "DB******** getValuefromDBEntry" + taskQuery);
+
+        Cursor cur;
+        try {
+            if (db == null)
+                db = getReadableDatabase();
+            try {
+                if (db != null) {
+                    if (!db.isOpen())
+                        openDatabase();
+                    cur = db.rawQuery(taskQuery, null);
+                    cur.moveToFirst();
+                    while (!cur.isAfterLast()) {
+                        result_value = cur.getString(cur.getColumnIndex(fieldName));
+                        cur.moveToNext();
+                    }
+                    cur.close();
+                }
+                Log.i("estim123", "DB******** getValuefromDBEntry result_value" + result_value);
+
+            } catch (Exception e) {
+                e.printStackTrace();
+                Log.i("estim123", "DB******** getValuefromDBEntry Exception  1 " + e.getMessage());
+                Appreference.printLog("getCurrentStatus 1 ","Exception "+e.getMessage(),"WARN",null);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            Log.i("estim123", "DB******** getValuefromDBEntry Exception  2 " + e.getMessage());
+            Appreference.printLog("getCurrentStatus 2 ","Exception "+e.getMessage(),"WARN",null);
+
+        } finally {
+            return result_value;
+        }
+    }
+
+    public String getEstimHoursForTaskId(String query) {
+        String result = "";
+        Cursor cur;
+        try {
+            if (db == null)
+                db = getReadableDatabase();
+            try {
+                if (db != null) {
+                    if (!db.isOpen())
+                        openDatabase();
+                    cur = db.rawQuery(query, null);
+                    cur.moveToFirst();
+                    while (!cur.isAfterLast()) {
+                        result = cur.getString(cur.getColumnIndex("estimatedTravelHrs"));
+                        cur.moveToNext();
+                    }
+                    cur.close();
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                Appreference.printLog("getEstimHoursForTaskId 1 ", "Exception " + e.getMessage(), "WARN", null);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            Appreference.printLog("getEstimHoursForTaskId 2 ", "Exception " + e.getMessage(), "WARN", null);
+        } finally {
+            return result;
+        }
+    }
+
 }

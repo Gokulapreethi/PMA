@@ -54,7 +54,7 @@ import android.os.Message;
 import android.os.PowerManager;
 import android.provider.Settings;
 import android.support.design.widget.TabLayout;
-import android.support.multidex.MultiDex;
+//import android.support.multidex.MultiDex;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
@@ -81,6 +81,7 @@ import android.widget.Toast;
 
 import com.ase.CustomVideoCamera;
 import com.ase.DatePicker.CustomTravelPickerActivity;
+import com.ase.ShowEstimTimeupAlert;
 import com.ase.ShowTimeupAlert;
 import com.ase.offlineSendService;
 import com.google.gson.Gson;
@@ -103,6 +104,7 @@ import com.ase.ChatFragment;
 import com.ase.ContactBean;
 import com.ase.ContactsFragment;
 import com.ase.DB.VideoCallDataBase;
+import com.ase.DatePicker.CustomTravelPickerActivity;
 import com.ase.Forms.FormAccessBean;
 import com.ase.Forms.FormEntryViewActivity;
 import com.ase.LoginActivity;
@@ -113,6 +115,7 @@ import com.ase.R;
 import com.ase.RandomNumber.IncomingCallAlert;
 import com.ase.ScheduleManager;
 import com.ase.SettingsFragment;
+import com.ase.ShowTimeupAlert;
 import com.ase.TaskHistory;
 import com.ase.TaskNotification;
 import com.ase.TasksFragment;
@@ -534,8 +537,8 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback,
 
         /*this is for location tracker */
 
-        startService(new Intent(getBaseContext(), LocationTrace.class));
-        stopService(new Intent(getBaseContext(), LocationTrace.class));
+//        startService(new Intent(getBaseContext(), LocationTrace.class));
+//        stopService(new Intent(getBaseContext(), LocationTrace.class));
 
         contactList = new ArrayList<>();
         taskList = new ArrayList<>();
@@ -1908,6 +1911,14 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback,
                             reRegister();
                         }
                     }, 15000);
+                }else if (Appreference.isPasswordChanged) {
+                    Appreference.isPasswordChanged = false;
+                    Log.i("SipReg", "changed_Password " + appSharedpreferences.getString("mPassword"));
+                    if (appSharedpreferences.getString("mPassword") != null && !appSharedpreferences.getString("mPassword").equalsIgnoreCase("")) {
+                        username = appSharedpreferences.getString("loginUserName");
+                        password = appSharedpreferences.getString("mPassword");
+                        init();
+                    }
                 } else {
                     if (Appreference.signout_pressed && account != null && account.isValid()) {
                         if (app != null) {
@@ -1920,6 +1931,8 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback,
                             logoutscreen.putExtra("logout", true);
                             //                            loginscreen.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
                             startActivity(logoutscreen);
+                            overridePendingTransition(R.anim.left_to_right, R.anim.right_to_left);
+
                             //                            Activity.class.getEnclosingClass();
                             finish();
                         }
@@ -2566,9 +2579,30 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback,
         }
     }
 
-    @Override
+   /* @Override
     public void onBackPressed() {
 //		super.onBackPressed();
+    }*/
+
+    boolean doubleBackToExitPressedOnce = false;
+
+    @Override
+    public void onBackPressed() {
+        if (doubleBackToExitPressedOnce) {
+            super.onBackPressed();
+            return;
+        }
+
+        this.doubleBackToExitPressedOnce = true;
+        Toast.makeText(this, "Press back once more to exit", Toast.LENGTH_SHORT).show();
+
+        new Handler().postDelayed(new Runnable() {
+
+            @Override
+            public void run() {
+                doubleBackToExitPressedOnce=false;
+            }
+        }, 2000);
     }
 
     public static void showToast(final String result) {
@@ -2640,8 +2674,10 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback,
                     Log.i("alarm123", "timer_Alert_by_current_status Mainactivity ===>***** " + timer_Alert_by_current_status);
 
                     String alertQuery = "select taskPlannedLatestEndDate from taskDetailsInfo where (taskStatus='Hold' or taskStatus='Paused') and projectId='" + jobcodeNo + "'and taskId= '" + taskId + "'";
-                    String isAlertShown = VideoCallDataBase.getDB(context).getAlertShownstatus(alertQuery);
+                    String isAlertShown = VideoCallDataBase.getDB(context).getAlertShownstatus(alertQuery,"taskPlannedLatestEndDate");
 
+                    /*isAlertShown==1  --> Alert Not yet shown
+                    * isAlertShown==0   -->Alert shown already*/
                     if (context != null) {
                         if ((isAlertShown != null && !isAlertShown.equalsIgnoreCase("") && !isAlertShown.equalsIgnoreCase(null) && isAlertShown.equalsIgnoreCase("1"))
                                 && (timer_Alert_by_current_status == 1 || timer_Alert_by_current_status == 3)) {
@@ -2670,6 +2706,30 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback,
                             intent.putExtra("OracleprojectId", OracleIdForProjectId);
                             intent.putExtra("OracletaskId", oracleTaskId);
                             startActivity(intent);
+                        }else {
+                            String taskQuery = "select EstimAlarm from taskDetailsInfo where (taskDescription='Task is Started') and projectId='" + jobcodeNo + "'and taskId= '" + taskId + "'";
+                            String getEstimetedTimeAlertShownOrNot = VideoCallDataBase.getDB(context).getAlertShownstatus(taskQuery,"EstimAlarm");
+                            if ((getEstimetedTimeAlertShownOrNot != null && !getEstimetedTimeAlertShownOrNot.equalsIgnoreCase("")
+                                    && !getEstimetedTimeAlertShownOrNot.equalsIgnoreCase(null) && getEstimetedTimeAlertShownOrNot.equalsIgnoreCase("1"))){
+                                String AlarmRingedUpdateQuery = "update taskDetailsInfo set EstimAlarm='0' where projectId='" + jobcodeNo + "'and taskId= '" + taskId + "'";
+                                Log.i("estimtone123", "updateSnoozeTime_query***********" + AlarmRingedUpdateQuery);
+                                VideoCallDataBase.getDB(context).updateaccept(AlarmRingedUpdateQuery);
+                                MainActivity.startAlarmRingTone();
+
+                                String get_OracleprojectId_query = "select oracleProjectId from projectDetails where loginuser = '" + Appreference.loginuserdetails.getEmail() + "'and projectId='" + jobcodeNo + "'";
+                                String OracleIdForProjectId = VideoCallDataBase.getDB(context).getprojectIdForOracleID(get_OracleprojectId_query);
+                                String quryActivity1 = "select oracleTaskId from projectHistory where projectId='" + jobcodeNo + "' and taskId= '" + taskId + "'";
+                                String oracleTaskId = VideoCallDataBase.getDB(getApplication()).getProjectParentTaskId(quryActivity1);
+                                Log.i("alarm123", "startHoldOrPauseAlarmManager started");
+
+
+                                Intent intent = new Intent(mainContext, ShowEstimTimeupAlert.class);
+                                intent.putExtra("projectId", jobcodeNo);
+                                intent.putExtra("taskId", String.valueOf(taskId));
+                                intent.putExtra("OracleprojectId", OracleIdForProjectId);
+                                intent.putExtra("OracletaskId", oracleTaskId);
+                                startActivity(intent);
+                            }
                         }
                     }
                 }
@@ -2681,7 +2741,6 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback,
         }
 
     }
-
 
     public void templateImageDownload(TaskDetailsBean fileName) {
         Log.i("profiledownload", "fileName--1 " + fileName);
@@ -3095,7 +3154,9 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback,
                                 tagNameValuePairs.add(new BasicNameValuePair("userId", String.valueOf(Appreference.loginuserdetails.getId())));
                                 //                Appreference.jsonRequestSender.listAllProject(EnumJsonWebservicename.listAllProject, tagNameValuePairs, this);
 //                            Appreference.jsonRequestSender.listAllMyProject(EnumJsonWebservicename.listAllMyProject, tagNameValuePairs, this);
+                                Log.i("wsTime123"," WS getAllJobDetails Request sent Time====>"+Appreference.getCurrentDateTime());
                                 Appreference.jsonRequestSender.getAllJobDetails(EnumJsonWebservicename.getAllJobDetails, tagNameValuePairs, this);
+                                Log.i("wsTime123"," WS getAllJobDetails Request sent Time====>"+Appreference.getCurrentDateTime());
                             } else
                                 Toast.makeText(MainActivity.this, "Check your internet connection", Toast.LENGTH_SHORT).show();
 
@@ -3166,7 +3227,7 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback,
                             }
                         } else if (notification.getAlert_sub_type() != null && notification.getAlert_sub_type().equalsIgnoreCase("Project Deleted")) {
                             TaskDetailsBean taskDetailsBean = notification.getTaskDetailsBean();
-                            VideoCallDataBase.getDB(context).deleteProject(taskDetailsBean);
+                            VideoCallDataBase.getDB(context).deleteProject(taskDetailsBean.getProjectId());
                             if (Appreference.context_table.containsKey("projecthistory")) {
                                 ProjectHistory projectHistory = (ProjectHistory) Appreference.context_table.get("projecthistory");
                                 if (projectHistory != null) {
@@ -3681,18 +3742,18 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback,
                     } else {
                         String query1 = "select * from taskHistoryInfo where loginuser ='" + Appreference.loginuserdetails.getEmail() + "' and taskId='" + taskDetailsBean.getTaskId() + "' order by id";
 
-                        Log.d("TaskObserver", "get Observer query  " + query1);
+                        Log.d("TaskObserver", "get Observer query $$ " + query1);
 
                         ArrayList<TaskDetailsBean> arrayList;
                         arrayList = VideoCallDataBase.getDB(context).getTaskHistoryInfo(query1);
 
-                        Log.d("TaskObserver", "Task Observer list size is == " + arrayList.size());
+                        Log.d("TaskObserver", "Task Observer list size is == $$ " + arrayList.size());
                         if (arrayList.size() > 0) {
                             TaskDetailsBean taskDetailsBean1 = arrayList.get(0);
 
                             String taskObservers = taskDetailsBean1.getTaskObservers();
                             int counter = 0;
-                            Log.d("TaskObserver", "Task Observer  == " + taskObservers);
+                            Log.d("TaskObserver", "Task Observer  == $$ " + taskObservers);
                             if (taskObservers != null) {
 
                                 for (int i = 0; i < taskObservers.length(); i++) {
@@ -3705,14 +3766,15 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback,
 
                                 for (int j = 0; j < counter + 1; j++) {
                                     if (counter == 0) {
-                                        if (Appreference.loginuserdetails.getUsername().equalsIgnoreCase(taskObservers)) {
-                                            listOfObservers.remove(taskObservers);
+                                        if (!taskObservers.equalsIgnoreCase(taskDetailsBean.getTaskReceiver())) {
+                                            listOfObservers.add(taskObservers);
+                                            Log.i("conversation", "Final observer if " + listOfObservers);
                                         }
-                                    }
-                                    if (!Appreference.loginuserdetails.getUsername().equalsIgnoreCase(taskObservers.split(",")[j])) {
-                                        if (!listOfObservers.contains(taskObservers.split(",")[j]))
+                                    } else {
+                                        if (!taskObservers.split(",")[j].equalsIgnoreCase(taskDetailsBean.getTaskReceiver())) {
                                             listOfObservers.add(taskObservers.split(",")[j]);
-                                        Log.d("TaskObserver", "Task Observer name not in same user== " + taskObservers.split(",")[j]);
+                                            Log.i("conversation", "Final observer else " + listOfObservers);
+                                        }
                                     }
                                 }
 
@@ -3720,14 +3782,16 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback,
                                 for (String s : listOfObservers) {
                                     name = name.concat(s) + ",";
                                 }
-                                if (name != null && !name.equalsIgnoreCase(""))
+                                Log.i("conversation", "name @@ " + name);
+                                if (name != null && !name.equalsIgnoreCase("") && name.contains(","))
                                     name = name.substring(0, name.length() - 1);
-
-                                if (name != null && !name.equalsIgnoreCase("") && !name.equalsIgnoreCase("null") && !name.equalsIgnoreCase(null) && !name.contains(Appreference.loginuserdetails.getUsername()) && !taskDetailsBean.getTaskReceiver().equalsIgnoreCase(Appreference.loginuserdetails.getUsername())) {
-                                    VideoCallDataBase.getDB(context).updateaccept("update taskHistoryInfo set taskObservers='" + name + "' where taskId='" + taskDetailsBean.getTaskId() + "'");
-                                    Log.i("conversation", "name ## " + name);
-                                }
-                                Log.i("mainactivity", "taskObservers updated " + name);
+                                Log.i("conversation", "name @@@ " + name);
+                                VideoCallDataBase.getDB(context).updateaccept("update taskHistoryInfo set taskObservers='" + name + "' where taskId='" + taskDetailsBean.getTaskId() + "'");
+//                                if (name != null && !name.equalsIgnoreCase("") && !name.equalsIgnoreCase("null") && !name.equalsIgnoreCase(null) && !name.contains(Appreference.loginuserdetails.getUsername()) && !taskDetailsBean.getTaskReceiver().equalsIgnoreCase(Appreference.loginuserdetails.getUsername())) {
+//                                    VideoCallDataBase.getDB(context).updateaccept("update taskHistoryInfo set taskObservers='" + name + "' where taskId='" + taskDetailsBean.getTaskId() + "'");
+//                                    Log.i("conversation", "name ## @$$ " + name);
+//                                }
+                                Log.i("mainactivity", "taskObservers updated $$ " + name);
 
                             }
                         }
@@ -4463,13 +4527,14 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback,
                                                         detailsBean.getId().equalsIgnoreCase(taskDetailsBean.getProjectId()) &&
                                                         detailsBean.getTaskId().equalsIgnoreCase(taskDetailsBean.getTaskId())) {
                                                     Log.i("notifyreceived", "for getTaskStatus==> 4  " + taskDetailsBean.getTaskStatus());
+                                                    detailsBean.setTaskType(taskDetailsBean.getTaskType());
                                                     detailsBean.setTaskStatus(taskDetailsBean.getTaskStatus());
                                                     detailsBean.setTaskReceiver(taskDetailsBean.getTaskReceiver());
-                                                    detailsBean.setTaskMemberList(taskDetailsBean.getTaskMemberList());
+                                                    detailsBean.setTaskMemberList(taskDetailsBean.getGroupTaskMembers());
                                                     Log.i("draft123", "Mainactivity before If" + taskDetailsBean.getTaskStatus());
                                                     Appreference.old_status.put(detailsBean.getTaskId(), taskDetailsBean.getTaskStatus());
                                                     Log.i("draft123", "Mainactivity Appreference added status " + taskDetailsBean.getTaskStatus());
-                                                    Log.i("draft123", "Mainactivity Appreference added getTaskReceiver @@ " + taskDetailsBean.getTaskReceiver());
+                                                        Log.i("draft123", "Mainactivity Appreference added getTaskReceiver @@ " + taskDetailsBean.getTaskReceiver());
                                                     Log.i("draft123", "Mainactivity Appreference added ID" + detailsBean.getTaskId());
                                                     break;
                                                 }
@@ -5458,6 +5523,7 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback,
                 Appreference.jsonRequestSender = jsonRequestParser;
                 jsonRequestParser.start();
             }
+            Log.i("wsTime123"," Ws listAllMyTask Request sent   Time====>"+Appreference.getCurrentDateTime());
             Appreference.jsonRequestSender.listAllMyTask(EnumJsonWebservicename.listAllMyTask, nameValuePairs1, MainActivity.this);
         } catch (Exception e) {
             e.printStackTrace();
@@ -5657,14 +5723,16 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback,
                         }
                     } else if (!s2.equalsIgnoreCase("getgroup") && !s2.equalsIgnoreCase("listUserGroupMemberAccess") && s2.equalsIgnoreCase("listAllMyTask")) {
                         cancelDialog();
-                        //                    Log.i("Responce", "ValueGroup2-------------->" + s2);
                         Log.i("task", "jelement.getAsJsonObject() != null all task");
+                        Log.i("wsTime123"," Ws listAllMyTask Response received Time====>"+Appreference.getCurrentDateTime());
 
                         Gson gson = new Gson();
                         Type collectionType = new TypeToken<List<ListAllTaskBean>>() {
                         }.getType();
                         List<ListAllTaskBean> lcs = new Gson().fromJson(s1, collectionType);
                         //                    Log.d("listAllMyTask", "1 firstname  " + lcs.size());
+                        Log.i("wsTime123"," Ws listAllMyTask After GSON parsing Time====>"+Appreference.getCurrentDateTime());
+                        Log.i("wsTime123"," Ws listAllMyTask Before DB Entry Time====>"+Appreference.getCurrentDateTime());
 
                         try {
                             for (int i = 0; i < lcs.size(); i++) {
@@ -5673,6 +5741,7 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback,
                                 Log.d("listAllMyTask", "3 firstname  " + listAllTaskbean.getId());
                                 VideoCallDataBase.getDB(context).insertORupdate_ListAllTaskDetails(listAllTaskbean);
                             }
+                            Log.i("wsTime123"," Ws listAllMyTask After DB Entry Time====>"+Appreference.getCurrentDateTime());
                         } catch (Exception e) {
                             e.printStackTrace();
                             Appreference.printLog("MainActivity listAllMyTask", "ResponceMethod Exception: " + e.getMessage(), "WARN", null);
@@ -7508,6 +7577,6 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback,
 
     protected void attachBaseContext(Context base) {
         super.attachBaseContext(base);
-        MultiDex.install(this);
+//        MultiDex.install(this);
     }
 }

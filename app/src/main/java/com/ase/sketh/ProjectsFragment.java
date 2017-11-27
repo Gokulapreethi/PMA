@@ -69,6 +69,7 @@ import com.baoyz.swipemenulistview.SwipeMenuItem;
 import com.baoyz.swipemenulistview.SwipeMenuListView;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.lowagie.text.pdf.hyphenation.TernaryTree;
 
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
@@ -89,10 +90,12 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.TimeZone;
 
@@ -177,6 +180,7 @@ public class ProjectsFragment extends Fragment implements View.OnClickListener, 
                             List<NameValuePair> tagNameValuePairs = new ArrayList<NameValuePair>();
                             tagNameValuePairs.add(new BasicNameValuePair("userId", String.valueOf(Appreference.loginuserdetails.getId())));
                             Log.i("ws123", "getAllJobDetails request");
+                            Log.i("wsTime123"," WS getAllJobDetails Request sent Time====>"+Appreference.getCurrentDateTime());
                             Appreference.jsonRequestSender.getAllJobDetails(EnumJsonWebservicename.getAllJobDetails, tagNameValuePairs, this);
                         } catch (Exception e) {
                             e.printStackTrace();
@@ -322,6 +326,7 @@ public class ProjectsFragment extends Fragment implements View.OnClickListener, 
                         final TextView tx_fst_end = (TextView) alertLayout.findViewById(R.id.fst_end);
                         AlertDialog.Builder alert = new AlertDialog.Builder(getActivity());
                         alert.setTitle("FSR REPORT");
+
                         // this is set the view from XML inside AlertDialog
                         alert.setView(alertLayout);
                         alert.setPositiveButton("Submit", null);
@@ -382,8 +387,8 @@ public class ProjectsFragment extends Fragment implements View.OnClickListener, 
                                     String selectedItemText = (String) parent.getItemAtPosition(position);
                                     Log.i("FSR", "ac_machine_no_spinner selectedItemText ==> " + selectedItemText);
                                     Log.i("FSR", "String.valueOf(ac_machine_no_spinner.getAdapter().getItem(position)) ==> " + String.valueOf(ac_machine_no_spinner.getAdapter().getItem(position)));
-                                    selected_mcSrNo = String.valueOf(ac_machine_no_spinner.getAdapter().getItem(position));/*selected jobcard from spinner*/
-                                    User_selected_mcsrNo = selected_mcSrNo;
+                                    /*selected_mcSrNo = String.valueOf(ac_machine_no_spinner.getAdapter().getItem(position));*//*selected jobcard from spinner*//*
+                                    User_selected_mcsrNo = selected_mcSrNo;*/
 
 
                                 } catch (Exception e) {
@@ -392,26 +397,18 @@ public class ProjectsFragment extends Fragment implements View.OnClickListener, 
                                 }
                             }
                         });
-                 /*   ac_machine_no_spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-                            @Override
-                            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                                String selectedItemText = (String) parent.getItemAtPosition(position);
-                                Log.i("FSR", "ac_machine_no_spinner selectedItemText ==> " + selectedItemText);
-                                selected_mcSrNo = String.valueOf(ac_machine_no_spinner.getAdapter().getItem(position));*//*selected jobcard from spinner*//*
-                                User_selected_mcsrNo=selected_mcSrNo;
-                            }
 
-                        @Override
-                        public void onNothingSelected(AdapterView<?> parent) {
-                        }
-                    });*/
                     tx_fst_start.setOnClickListener(new View.OnClickListener() {
                         final Calendar c = Calendar.getInstance();
 
                             @Override
                             public void onClick(View v) {
                                 try {
-                                    Log.i("FSR","selected_mcSrNo==> "+selected_mcSrNo);
+                                    if (ac_machine_no_spinner.getText()!=null) {
+                                        selected_mcSrNo = ac_machine_no_spinner.getText().toString();/*selected jobcard from spinner*/
+                                        Log.i("FSR","selected_mcSrNo==> "+selected_mcSrNo);
+                                        User_selected_mcsrNo = selected_mcSrNo;
+                                    }
                                     if (selected_mcSrNo != null && !selected_mcSrNo.equalsIgnoreCase("") && !selected_mcSrNo.equalsIgnoreCase(null)) {
                                         hideKeyboard_fsr(ac_machine_no_spinner);
 //                                        hideKeyboard();
@@ -960,6 +957,7 @@ public class ProjectsFragment extends Fragment implements View.OnClickListener, 
                             Log.i("ws123", " projectDetailsBean.userId()=========>" + String.valueOf(Appreference.loginuserdetails.getId()));
                             showprogress("Getting ActivityCode...");
                             try {
+                                Log.i("wsTime123"," Ws getTaskForJobID Request sent====>"+Appreference.getCurrentDateTime());
                                 Appreference.jsonRequestSender.getTaskForJobID(EnumJsonWebservicename.getTaskForJobID, nameValuePairs, ProjectsFragment.this);
                             } catch (Exception e) {
                                 e.printStackTrace();
@@ -1147,7 +1145,7 @@ public class ProjectsFragment extends Fragment implements View.OnClickListener, 
                         popup.getMenuInflater().inflate(R.menu.project_pop_menu, popup.getMenu());
                         popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                             public boolean onMenuItemClick(MenuItem item) {
-
+/*
                                 if (item.getTitle().toString().equalsIgnoreCase("FSR Report")) {
                                     try {
                                         List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
@@ -1159,7 +1157,8 @@ public class ProjectsFragment extends Fragment implements View.OnClickListener, 
                                         Appreference.printLog("ProjectFragment", "ProjectArrayAdapter OracleFSRJOBReport Exception : " + e.getMessage(), "WARN", null);
                                     }
 
-                                } else if (item.getTitle().toString().equalsIgnoreCase("Complete")) {
+                                } else */
+                                    if (item.getTitle().toString().equalsIgnoreCase("Complete")) {
                                     try {
                                         AlertDialog.Builder saveDialog = new AlertDialog.Builder(getActivity());
                                         saveDialog.setTitle("Project Completion");
@@ -1172,8 +1171,8 @@ public class ProjectsFragment extends Fragment implements View.OnClickListener, 
                                                     nameValuePairs.add(new BasicNameValuePair("userId", String.valueOf(Appreference.loginuserdetails.getId())));
                                                     Log.i("completed_status", "ProjectId()====>" + projectDetailsBean.getId());
                                                     Log.i("completed_status", " userId()=====>" + String.valueOf(Appreference.loginuserdetails.getId()));
-                                                    Appreference.jsonRequestSender.projectCompleted(EnumJsonWebservicename.projectCompleted, nameValuePairs, ProjectsFragment.this);
                                                     showprogress("Please wait...");
+                                                    Appreference.jsonRequestSender.projectCompleted(EnumJsonWebservicename.projectCompleted, nameValuePairs, ProjectsFragment.this);
                                                 } catch (Exception e) {
                                                     e.printStackTrace();
                                                     Appreference.printLog("ProjectFragment", "ProjectArrayAdapter projectCompleted Exception : " + e.getMessage(), "WARN", null);
@@ -1351,6 +1350,7 @@ public class ProjectsFragment extends Fragment implements View.OnClickListener, 
 //                    }
         } catch (Exception e) {
             e.printStackTrace();
+            Log.i("tnareport123","EXCEPTION show progress showing- error-------->");
             Appreference.printLog("ProjectFragment", "showprogress Exception : " + e.getMessage(), "WARN", null);
             Log.i("progress123", "EXCEPTION show progress showing- error-------->" + e.getMessage());
 
@@ -1589,27 +1589,46 @@ public class ProjectsFragment extends Fragment implements View.OnClickListener, 
                             Log.i("ws123", "getAllJobDetails response-->" + s1);
                             try {
                                 JSONArray jr = new JSONArray(s1);
+                                Collection listOfProjectsfrom_server=new ArrayList();
                                 if (jr.length() > 0) {
                                     JSONObject jb = jr.getJSONObject(0);
                                     if (jb.has("listallProject")) {
+                                        Log.i("wsTime123","WS getAllJobDetails Response Received Time====>"+Appreference.getCurrentDateTime());
                                         Type collectionType = new TypeToken<List<ListallProjectBean>>() {
                                         }.getType();
                                         List<ListallProjectBean> pdb = new Gson().fromJson(s1, collectionType);
+                                        Log.i("wsTime123"," WS getAllJobDetails Response After GSON ParsingTime====>"+Appreference.getCurrentDateTime());
+
                                         for (int i = 0; i < pdb.size(); i++) {
                                             ListallProjectBean listallProjectBean = pdb.get(i);
                                             Log.i("listAllMyJob", "listallProject size2222====>" + listallProjectBean.getListallProject().size());
+                                            Log.i("wsTime123","WS getAllJobDetails Response Before Inserting DB ====>"+Appreference.getCurrentDateTime());
+
                                             if (listallProjectBean.getListallProject() != null && listallProjectBean.getListallProject().size() > 0) {
                                                 for (int j = 0; j < listallProjectBean.getListallProject().size(); j++) {
                                                     ProjectDetailsBean projectDetailsBean1 = listallProjectBean.getListallProject().get(j);
+                                                    listOfProjectsfrom_server.add(projectDetailsBean1.getId());
                                                     VideoCallDataBase.getDB(classContext).insertProject_Details(projectDetailsBean1);
                                                 }
                                             } else
                                                 showToast("No JobCards Found..");
                                         }
+                                        Log.i("wsTime123"," Ws getAllJobDetails Response After DB Insertion====>"+Appreference.getCurrentDateTime());
                                     }
+                                }
+                                String GetOracleIdQuery= "select * from projectDetails where loginuser = '" + Appreference.loginuserdetails.getEmail() + "'order by projectId DESC";
+                                Collection my_listOfProject_db=VideoCallDataBase.getDB(classContext).getOracleProjectIdlist(GetOracleIdQuery,"projectId");
+                                my_listOfProject_db.removeAll(listOfProjectsfrom_server);
+                                if(my_listOfProject_db.size()>0){
+                                    Log.i("deleteproject123","listOfProjectsfrom_server======>"+listOfProjectsfrom_server.toString());
+                                    Log.i("deleteproject123","*****************************************************************");
+                                    Log.i("deleteproject123","my_listOfProject_db.iterator().next(======>"+my_listOfProject_db.iterator().next());
+                                    VideoCallDataBase.getDB(classContext).deleteProject(my_listOfProject_db.iterator().next().toString());
                                 }
                                 notifyNewProjectReceived();
                                 cancelDialog();
+                                Log.i("wsTime123"," Ws getAllJobDetails UI Notify Time====>"+Appreference.getCurrentDateTime());
+
                             } catch (Exception e) {
                                 e.printStackTrace();
                                 Appreference.printLog("ProjectFragment", "ResponceMethod getAllJobDetails Exception : " + e.getMessage(), "WARN", null);
@@ -1619,6 +1638,8 @@ public class ProjectsFragment extends Fragment implements View.OnClickListener, 
                             boolean Success = true;
                             try {
                                 final JSONObject jsonObject = new JSONObject(opr.getEmail());
+                                Log.i("wsTime123"," Ws getTaskForJobID Response Received====>"+Appreference.getCurrentDateTime());
+
                                 if (((String) jsonObject.get("result_text")).equalsIgnoreCase("pls send ur details")) {
                                     showToast("Please Send Correct Details!....");
                                     Appreference.isPauseStartFrom = false;
@@ -1630,9 +1651,13 @@ public class ProjectsFragment extends Fragment implements View.OnClickListener, 
                                     Type collectionType = new TypeToken<ListallProjectBean>() {
                                     }.getType();
                                     ListallProjectBean pdb = new Gson().fromJson(s1, collectionType);
+                                    Log.i("wsTime123"," Ws getTaskForJobID Response After Parsing Time====>"+Appreference.getCurrentDateTime());
+
+                                    Log.i("wsTime123"," Ws getTaskForJobID Response Before DB ENtry Time====>"+Appreference.getCurrentDateTime());
 
                                     VideoCallDataBase.getDB(classContext).insertProject_history(pdb);
                                     VideoCallDataBase.getDB(classContext).insert_updateProjectStatus(pdb);
+                                    Log.i("wsTime123"," Ws getTaskForJobID Response After DB ENtry Time====>"+Appreference.getCurrentDateTime());
 
                                     ProjectDetailsBean projectDetailsBean = pdb.getProjectDTO();
                                     project_id = projectDetailsBean.getId();
@@ -1662,6 +1687,8 @@ public class ProjectsFragment extends Fragment implements View.OnClickListener, 
                                     mainActivity.cancelDialog();
                                 }
                                 try {
+                                    Log.i("wsTime123"," Ws getTaskForJobID Response UI Notify   Time====>"+Appreference.getCurrentDateTime());
+
                                     Intent intent = new Intent(getActivity(), ProjectHistory.class);
                                     intent.putExtra("projectId", project_id);
                                     intent.putExtra("projectName", project_name);
@@ -1698,6 +1725,8 @@ public class ProjectsFragment extends Fragment implements View.OnClickListener, 
                                     Toast.makeText(getContext(), "JobCards Tasks Not Completed", Toast.LENGTH_LONG).show();
                                 } else if (((String) jsonObject.get("result_text")).equalsIgnoreCase("Job Completed")) {
                                     String result = (String) jsonObject.get("result_text");
+//                                    VideoCallDataBase.getDB(classContext).deleteProject(jsonObject.getString("projectId"));
+//                                    VideoCallDataBase.getDB(classContext.getApplicationContext()).deleteProjects(jsonObject.getString("projectId"));
                                     Toast.makeText(getContext(), "JobCard Completed Successfully", Toast.LENGTH_LONG).show();
                                 } else {
                                     String result = (String) jsonObject.get("result_text");
@@ -1747,9 +1776,12 @@ public class ProjectsFragment extends Fragment implements View.OnClickListener, 
 
                                     String pdfURL = getResources().getString(R.string.task_reminder) + jsonObject.getString("filename");
                                     String fileName = jsonObject.getString("filename");
+                                    Appreference.isTNAReport=true;
+                                    Log.i("tnareport123","Webservice response received================>");
                                     new DownloadImage(pdfURL, jsonObject.getString("filename")).execute();
                                 } else {
                                     String result = (String) jsonObject.get("result_text");
+                                    Log.i("tnareport123","Webservice response received================>"+result);
                                     Toast.makeText(getContext(), result, Toast.LENGTH_LONG).show();
                                 }
                             } catch (JSONException e) {
@@ -1999,7 +2031,8 @@ public class ProjectsFragment extends Fragment implements View.OnClickListener, 
             String response = "";
             try {
                 if (getNetworkState()) {
-                    showprogress("Downloading xls...");
+                    Log.i("tnareport123","Download Image doInBackground================>");
+//                    showprogress("Downloading xls...");
                     String profile1 = null;
                     if (downloadImageurl != null) {
                         if (downloadImageurl.contains("task"))
@@ -2045,9 +2078,11 @@ public class ProjectsFragment extends Fragment implements View.OnClickListener, 
                                     //End
                                 }
                             } catch (FileNotFoundException e) {
+                                Log.i("tnareport123","Download Image doInBackground FileNotFoundException exception================>"+e.getMessage());
                                 e.printStackTrace();
                                 Appreference.printLog("ProjectFragment", "DownloadImage doInBackground Exception : " + e.getMessage(), "WARN", null);
                             } catch (Exception e) {
+                                Log.i("tnareport123","Download Image doInBackground exception================>"+e.getMessage());
                                 e.printStackTrace();
                                 Appreference.printLog("ProjectFragment", "DownloadImage doInBackground Exception : " + e.getMessage(), "WARN", null);
                             }
@@ -2068,21 +2103,36 @@ public class ProjectsFragment extends Fragment implements View.OnClickListener, 
         protected void onPostExecute(String result) {
             cancelDialog();
             try {
+                Log.i("tnareport123","Download Image onPostExecute ================>");
                 File file;
                 file = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/High Message/downloads/" + namevalue);
                 if (file.exists()) {
                     Uri path = Uri.fromFile(file);
                     Intent pdfOpenintent = new Intent(Intent.ACTION_VIEW);
                     pdfOpenintent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                    pdfOpenintent.setDataAndType(path, "application/vnd.ms-excel");
+                    if(Appreference.isTNAReport) {
+                        pdfOpenintent.setDataAndType(path, "application/vnd.ms-excel");
+                    }else{
+                        pdfOpenintent.setDataAndType(path, "application/pdf");
+                    }
                     try {
+                        Log.i("tnareport123","Download Image onPostExecute startActivity Appreference.isTNAReport=================>"+Appreference.isTNAReport);
                         startActivity(pdfOpenintent);
+                        Appreference.isTNAReport=false;
                     } catch (ActivityNotFoundException e) {
+                        Log.i("tnareport123","Download Image onPostExecute ActivityNotFoundException =================>"+e.getMessage());
                         Appreference.printLog("ProjectFragment", "DownloadImage onPostExecute Exception : " + e.getMessage(), "WARN", null);
-                        Toast.makeText(getActivity(), "Please Install MS-Excel app to view the file", Toast.LENGTH_SHORT).show();
+                        if (Appreference.isTNAReport)
+                            Toast.makeText(getActivity(), "Please Install MS-Excel or WPS Office app to view the file", Toast.LENGTH_SHORT).show();
+                        else
+                            Toast.makeText(getActivity(), "Please Install WPS Office or Adobe Reader app to view the file", Toast.LENGTH_SHORT).show();
                     } catch (Exception e) {
+                        Log.i("tnareport123","Download Image onPostExecute Exception =================>"+e.getMessage());
                         Appreference.printLog("ProjectFragment", "DownloadImage onPostExecute Exception : " + e.getMessage(), "WARN", null);
-                        Toast.makeText(getActivity(), "Please Install MS-Excel app to view the file", Toast.LENGTH_SHORT).show();
+                        if (Appreference.isTNAReport)
+                            Toast.makeText(getActivity(), "Please Install MS-Excel or WPS Office app to view the file", Toast.LENGTH_SHORT).show();
+                        else
+                            Toast.makeText(getActivity(), "Please Install WPS Office or Adobe Reader app to view the file", Toast.LENGTH_SHORT).show();
                     }
                 } else {
                     Toast.makeText(getActivity(), "No Pdf Documentation", Toast.LENGTH_SHORT).show();
@@ -2090,6 +2140,7 @@ public class ProjectsFragment extends Fragment implements View.OnClickListener, 
 
             } catch (Exception e) {
                 e.printStackTrace();
+                Log.i("tnareport123","Download Image onPostExecute Exception 111 =================>"+e.getMessage());
                 Appreference.printLog("ProjectFragment", "DownloadImage Exception : " + e.getMessage(), "WARN", null);
             }
         }

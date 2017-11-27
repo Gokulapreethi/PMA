@@ -311,10 +311,10 @@ public class SettingsFragment extends Fragment implements WebServiceInterface {
         });
         Log.i("Appreference", "OncreateView check sync size --=====>-------->");
 
-        String Query = "select * from projectStatus where wssendstatus= '000' order by datenow";
+        String Query = "select * from projectStatus where wssendstatus='000' order by datenow";
         ArrayList<TaskDetailsBean> AlltaskBean = VideoCallDataBase.getDB(classContext).getofflinesendlist(Query);
 
-        String Query_media = "select * from taskDetailsInfo where wssendstatus= '000'";
+        String Query_media = "select * from taskDetailsInfo where wssendstatus='000'";
         ArrayList<TaskDetailsBean> AlltaskMediaBean = VideoCallDataBase.getDB(classContext).getTaskDetailsInfo(Query_media);
         if (AlltaskBean != null && AlltaskBean.size() > 0 || AlltaskMediaBean != null && AlltaskMediaBean.size() > 0) {
             sync_btn.setBackgroundResource(R.color.rednew);

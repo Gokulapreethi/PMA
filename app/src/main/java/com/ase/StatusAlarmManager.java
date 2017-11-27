@@ -27,17 +27,23 @@ public class StatusAlarmManager extends BroadcastReceiver {
         String tm = time.format(new Date());
         Log.i("alarm123", "Now Time Is====>" + tm);
         int id = intent.getExtras().getInt("id");
+        String typeOfTimer=intent.getExtras().getString("timerType");
         endTime = intent.getExtras().getString("endTime");
         String currentStatus = intent.getStringExtra("currentStatus");
         Log.i("alarm123", "StatusAlarmManager Now status Is====>" + currentStatus);
+        Log.i("alarm123", "StatusAlarmManager typeOfTimer====>" + typeOfTimer);
         jobcodeNo = intent.getExtras().getString("currentProjectId");
         String alrmtask = String.valueOf(id);
 
         MainActivity mainActivity = (MainActivity) Appreference.context_table.get("mainactivity");
-        if(mainActivity!=null)
-        mainActivity.showAlarmAlert(currentStatus,id,jobcodeNo);
-
-
+        if(mainActivity!=null) {
+            mainActivity.showAlarmAlert(currentStatus, id, jobcodeNo);
+          /*  if(typeOfTimer.equalsIgnoreCase("EstimTimer")){
+                mainActivity.showEstim_Bg_AlarmAlert(currentStatus, id, jobcodeNo);
+            }else {
+                mainActivity.showAlarmAlert(currentStatus, id, jobcodeNo);
+            }*/
+        }
     }
 
 

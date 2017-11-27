@@ -85,6 +85,12 @@ public class ListTaskTransaction {
     private String synopsis;
 
 
+    //Added for Location
+    private String startDateLatitude;
+    private String startDateLongitude;
+    private String endDateLatitude;
+    private String endDateLongitude;
+
 
     public Object getId() {
         return id;
@@ -306,5 +312,37 @@ public class ListTaskTransaction {
 
     public void setSynopsis(String synopsis) {
         this.synopsis = synopsis;
+    }
+
+    public String getStartDateLatitude() {
+        return startDateLatitude;
+    }
+
+    public void setStartDateLatitude(String startDateLatitude) {
+        this.startDateLatitude = startDateLatitude;
+    }
+
+    public String getStartDateLongitude() {
+        return startDateLongitude;
+    }
+
+    public void setStartDateLongitude(String startDateLongitude) {
+        this.startDateLongitude = startDateLongitude;
+    }
+
+    public String getEndDateLatitude() {
+        return endDateLatitude;
+    }
+
+    public void setEndDateLatitude(String endDateLatitude) {
+        this.endDateLatitude = endDateLatitude;
+    }
+
+    public String getEndDateLongitude() {
+        return endDateLongitude;
+    }
+
+    public void setEndDateLongitude(String endDateLongitude) {
+        this.endDateLongitude = endDateLongitude;
     }
 }

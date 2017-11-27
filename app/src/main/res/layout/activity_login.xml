@@ -109,13 +109,19 @@
                             android:id="@+id/email"
                             android:layout_width="250dp"
                             android:layout_height="wrap_content"
-                            android:hint="User email id"
+                            android:hint="User Email ID"
                             android:imeOptions="actionNext"
                             android:inputType="textEmailAddress"
                             android:maxLines="1"
                             android:singleLine="true" />
 
                     </android.support.design.widget.TextInputLayout>
+                    <ImageView
+                        android:id="@+id/error_info_email"
+                        android:layout_width="25dp"
+                        android:layout_height="wrap_content"
+                        android:visibility="gone"
+                        android:src="@drawable/error_icon_login" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -149,6 +155,12 @@
                             android:singleLine="true" />
 
                     </android.support.design.widget.TextInputLayout>
+                    <ImageView
+                        android:id="@+id/error_info_pass"
+                        android:layout_width="25dp"
+                        android:layout_height="wrap_content"
+                        android:visibility="gone"
+                        android:src="@drawable/error_icon_login" />
 
                 </LinearLayout>
 
@@ -156,6 +168,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
+                    android:id="@+id/terms_condition"
                     android:layout_gravity="center"
                     android:orientation="horizontal">
 
@@ -185,6 +198,13 @@
                     android:textAllCaps="false"
                     android:textColor="#FFFFFF"
                     android:textStyle="bold" />
+                <ProgressBar
+                    style="?android:attr/progressBarStyleLarge"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/progressBar_signin"
+                    android:visibility="gone"
+                    android:layout_below="@+id/terms_condition"/>
 
                 <Button
                     android:id="@+id/forget_sign_in_button"

@@ -524,6 +524,8 @@ public class CustomVideoCamera extends Activity {
                         start_rec.setEnabled(true);
                         front.setEnabled(true);
                         back.setEnabled(true);
+                        front.setVisibility(View.VISIBLE);
+                        back.setVisibility(View.GONE);
                         //                    File file = new File(filepath);
                         //                    boolean deleted = file.delete();
                         //                   cameraoption();
@@ -605,6 +607,8 @@ public class CustomVideoCamera extends Activity {
     private void startRecording() {
         try {
 
+            front.setVisibility(View.GONE);
+            back.setVisibility(View.GONE);
             // Release Camera before MediaRecorder start
             releaseCamera();
 
@@ -630,8 +634,8 @@ public class CustomVideoCamera extends Activity {
             //start
 //		   back.setVisibility(View.VISIBLE);
 //		   front.setVisibility(View.GONE);
-            back.setVisibility(View.GONE);
-            front.setVisibility(View.VISIBLE);
+           /* back.setVisibility(View.GONE);
+            front.setVisibility(View.VISIBLE);*/
             //end
             // myButton.setText("STOP");
             // myButton.setBackgroundResource(R.drawable.stop_recording);
@@ -848,13 +852,15 @@ public class CustomVideoCamera extends Activity {
                         Toast.makeText(getApplicationContext(),
                                 "Duration limit reached", Toast.LENGTH_LONG)
                                 .show();
-                        mediaRecorder.stop();
-                        releaseMediaRecorder();
-                        releaseCamera();
-                        Intent intent = new Intent();
+                        /*mediaRecorder.stop();
+                        releaseMediaRecorder();*/
+                        stopRecording();
+
+//                        releaseCamera();
+                        /*Intent intent = new Intent();
                         // intent.putExtra("MESSAGE", filename);
-                        setResult(RESULT_OK, intent);
-                        finish();
+                        setResult(RESULT_OK, intent);*/
+//                        finish();
                     }
                 }
             });
@@ -1091,6 +1097,7 @@ public class CustomVideoCamera extends Activity {
             @Override
             public void onClick(final View v) {
                 myButton.setEnabled(false);
+
                 try {
 
 

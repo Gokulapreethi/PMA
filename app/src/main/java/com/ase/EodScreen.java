@@ -107,6 +107,7 @@ public class EodScreen extends Activity {
         final TextView photo_custom1 = (TextView) findViewById(R.id.photo_custom1);
         final TextView tech_sign = (TextView) findViewById(R.id.tech_sign);
         final TextView synopsis_tv = (TextView) findViewById(R.id.synopsis_tv);
+        final TextView synopsis_input = (TextView) findViewById(R.id.synopsis_input);
 
 
         final EditText observation = (EditText) findViewById(R.id.observation);
@@ -372,6 +373,7 @@ public class EodScreen extends Activity {
             @Override
             public void onClick(View v) {
                 synopsis_tv.setTextColor(getResources().getColor(R.color.black));
+                synopsis_input.setTextColor(getResources().getColor(R.color.black));
                 AlertDialog.Builder saveDialog = new AlertDialog.Builder(context);
                 saveDialog.setTitle("Synopsis");
                 saveDialog.setCancelable(false);
@@ -589,6 +591,7 @@ public class EodScreen extends Activity {
             @Override
             public void onCheckedChanged(RadioGroup group, @IdRes int checkedId) {
                 synopsis_tv.setTextColor(getResources().getColor(R.color.black));
+                synopsis_input.setTextColor(getResources().getColor(R.color.black));
                 if (group.getCheckedRadioButtonId() != -1) {
                     View radioButton = group.findViewById(group.getCheckedRadioButtonId());
                     int radioId = group.indexOfChild(radioButton);
@@ -695,24 +698,24 @@ public class EodScreen extends Activity {
         Log.i("ws123", "username or employee name===>" + Appreference.loginuserdetails.getEmail());
         try {
             if (detailsBean.getMcModel()!=null && !detailsBean.getMcModel().equalsIgnoreCase("") && !detailsBean.getMcModel().equalsIgnoreCase(null)) {
-                mcModel.append(detailsBean.getMcModel());
+                mcModel.setText(detailsBean.getMcModel());
             }
-            if (detailsBean.getMcModel()!=null && !detailsBean.getMcModel().equalsIgnoreCase("") && !detailsBean.getMcModel().equalsIgnoreCase(null)) {
-                mcSrNo.append(detailsBean.getMcSrNo());
+            if (detailsBean.getMcSrNo()!=null && !detailsBean.getMcSrNo().equalsIgnoreCase("") && !detailsBean.getMcSrNo().equalsIgnoreCase(null)) {
+                mcSrNo.setText(detailsBean.getMcSrNo());
             }
-            if (detailsBean.getMcModel()!=null && !detailsBean.getMcModel().equalsIgnoreCase("") && !detailsBean.getMcModel().equalsIgnoreCase(null)) {
-                machine_make.append(detailsBean.getMachineMake());
+            if (detailsBean.getMachineMake()!=null && !detailsBean.getMachineMake().equalsIgnoreCase("") && !detailsBean.getMachineMake().equalsIgnoreCase(null)) {
+                machine_make.setText(detailsBean.getMachineMake());
             }
-            if (detailsBean.getMcModel()!=null && !detailsBean.getMcModel().equalsIgnoreCase("") && !detailsBean.getMcModel().equalsIgnoreCase(null)) {
-                description.append(detailsBean.getMcDescription());
+            if (detailsBean.getMcDescription()!=null && !detailsBean.getMcDescription().equalsIgnoreCase("") && !detailsBean.getMcDescription().equalsIgnoreCase(null)) {
+                description.setText(detailsBean.getMcDescription());
             }
-            if (detailsBean.getMcModel()!=null && !detailsBean.getMcModel().equalsIgnoreCase("") && !detailsBean.getMcModel().equalsIgnoreCase(null)) {
+            if (detailsBean.getEstimatedTravel()!=null && !detailsBean.getEstimatedTravel().equalsIgnoreCase("") && !detailsBean.getEstimatedTravel().equalsIgnoreCase(null)) {
                 est_travel.setText(detailsBean.getEstimatedTravel());
             }
-            if (detailsBean.getMcModel()!=null && !detailsBean.getMcModel().equalsIgnoreCase("") && !detailsBean.getMcModel().equalsIgnoreCase(null)) {
+            if (detailsBean.getEstimatedTravel()!=null && !detailsBean.getEstimatedTravel().equalsIgnoreCase("") && !detailsBean.getEstimatedTravel().equalsIgnoreCase(null)) {
                 est_activity.setText(detailsBean.getEstimatedTravel());
             }
-            if (detailsBean.getMcModel()!=null && !detailsBean.getMcModel().equalsIgnoreCase("") && !detailsBean.getMcModel().equalsIgnoreCase(null)) {
+//            if (detailsBean.getMcModel()!=null && !detailsBean.getMcModel().equalsIgnoreCase("") && !detailsBean.getMcModel().equalsIgnoreCase(null)) {
 //                service_date.setText(detailsBean.getDateTime());
                 /*changing openDate format  dd-MM-yyyy to  yyyy-MM-dd */
                 String JobOpenDate = "";
@@ -726,13 +729,13 @@ public class EodScreen extends Activity {
                     } catch (ParseException e) {
                         e.printStackTrace();
                     }
+                    service_date.setText(JobOpenDate);
                 }
-                service_date.setText(JobOpenDate);
-            }
-            if (detailsBean.getMcModel()!=null && !detailsBean.getMcModel().equalsIgnoreCase("") && !detailsBean.getMcModel().equalsIgnoreCase(null)) {
+//            }
+            if (detailsBean.getActivity()!=null && !detailsBean.getActivity().equalsIgnoreCase("") && !detailsBean.getActivity().equalsIgnoreCase(null)) {
                 proj_activity.setText(detailsBean.getActivity());
             }
-            if (detailsBean.getMcModel()!=null && !detailsBean.getMcModel().equalsIgnoreCase("") && !detailsBean.getMcModel().equalsIgnoreCase(null)) {
+            if (detailsBean.getAddress()!=null && !detailsBean.getAddress().equalsIgnoreCase("") && !detailsBean.getAddress().equalsIgnoreCase(null)) {
                 address.setText(detailsBean.getAddress());
             }
         } catch (Exception e) {
@@ -1036,23 +1039,23 @@ public class EodScreen extends Activity {
                     String customer_remarksEntry = "";
                     if (isRemarkstextselected) {
                         Log.i("oracle123", "isRemarkstextselected====> " + isRemarkstextselected);
-                        customer_remarksEntry = remarks_completion.getText().toString();
+                        customer_remarksEntry = remarks_completion.getText().toString().trim();
                     }
                     if (isSynopsistextselected)
-                        synopsis_status = synopsis_text.getText().toString();
+                        synopsis_status = synopsis_text.getText().toString().trim();
                     else
                         synopsis_status = "";
 
                     if (isobservationtextselected)
-                        observationStatus = observation.getText().toString();
+                        observationStatus = observation.getText().toString().trim();
                     else
                         observationStatus = "";
                     if (isactiontextselected)
-                        actiontakenStatus = action_taken.getText().toString();
+                        actiontakenStatus = action_taken.getText().toString().trim();
                     else
                         actiontakenStatus = "";
                     if (cust_sign_name.getText().toString() != null)
-                        custsignnameStatus = cust_sign_name.getText().toString();
+                        custsignnameStatus = cust_sign_name.getText().toString().trim();
                     else
                         custsignnameStatus = "";
                     if (HMReading.getText().toString() != null)
@@ -1060,19 +1063,19 @@ public class EodScreen extends Activity {
                     else
                         HMReadingStatus = "";
                     if (mcModel.getText().toString() != null)
-                        machine_model = mcModel.getText().toString();
+                        machine_model = mcModel.getText().toString().trim();
                     else
                         machine_model = "";
                     if (mcSrNo.getText().toString() != null)
-                        machine_serialno = mcSrNo.getText().toString();
+                        machine_serialno = mcSrNo.getText().toString().trim();
                     else
                         machine_serialno = "";
                     if (description.getText().toString() != null)
-                        machine_description = description.getText().toString();
+                        machine_description = description.getText().toString().trim();
                     else
                         machine_description = "";
                     if (machine_make.getText().toString() != null)
-                        machion_make_edit = machine_make.getText().toString();
+                        machion_make_edit = machine_make.getText().toString().trim();
                     else
                         machion_make_edit = "";
                     Log.i("desc123", "machine_model @@========>" + machine_model);
@@ -1199,7 +1202,7 @@ public class EodScreen extends Activity {
                         if ((!istaskCompletebyUser && (isSynopsistextselected && !synopsis_status.equalsIgnoreCase("") && synopsis_status != null && !synopsis_status.equalsIgnoreCase(null))
                                 || (isSynopsisSketchselected && !synopsis_path.equalsIgnoreCase("") && synopsis_path != null && !synopsis_path.equalsIgnoreCase(null))) || istaskCompletebyUser) {
                         } else {
-                            synopsis_tv.setTextColor(getResources().getColor(R.color.red));
+                            synopsis_input.setTextColor(getResources().getColor(R.color.red));
                         }
 
                     }

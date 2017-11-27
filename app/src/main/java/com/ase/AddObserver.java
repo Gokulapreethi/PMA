@@ -277,8 +277,8 @@ public class AddObserver extends Activity implements View.OnClickListener, WebSe
             SimpleDateFormat dateFormatt = new SimpleDateFormat("dd/MM/yyyy hh:mm:ss a");
             taskTime = dateFormatt.format(new Date());
             taskTime = taskTime.split(" ")[1] + " " + taskTime.split(" ")[2];
-            String query = "select * from taskDetailsInfo where loginuser='" + Appreference.loginuserdetails.getEmail() + "' and taskId='" + taskId + "' and mimeType='observer' order by id DESC LIMIT 1";
-            ArrayList<TaskDetailsBean> taskDetailsBeenList = VideoCallDataBase.getDB(context).getTaskHistory(query);
+//            String query = "select * from taskDetailsInfo where loginuser='" + Appreference.loginuserdetails.getEmail() + "' and taskId='" + taskId + "' and mimeType='observer' order by id DESC LIMIT 1";
+//            ArrayList<TaskDetailsBean> taskDetailsBeenList = VideoCallDataBase.getDB(context).getTaskHistory(query);
 
 
         /*String query = "select * from taskDetailsInfo where loginuser='" + Appreference.loginuserdetails.getEmail() + "' and taskId='" + taskId + "' and mimeType='observer' order by id DESC LIMIT 1";
@@ -879,12 +879,10 @@ public class AddObserver extends Activity implements View.OnClickListener, WebSe
             CommunicationBean communicationBean = (CommunicationBean) object;
             String response = communicationBean.getEmail();
             Log.i("template", response);
-            ArrayList<TaskDetailsBean> arrayList = new ArrayList<>();
+            ArrayList<TaskDetailsBean> arrayList;
             JsonElement jelement = new JsonParser().parse(response);
             if (jelement.getAsJsonObject() != null) {
                 JsonObject jobject = jelement.getAsJsonObject();
-
-
                 newtaskId = jobject.get("id").toString();
                 Log.i("template", "new task Id " + newtaskId);
                 toId = jobject.get("to").toString();
@@ -893,7 +891,9 @@ public class AddObserver extends Activity implements View.OnClickListener, WebSe
                 Log.i("template", "taskId " + taskId);
                 Log.i("template", "query " + query);
                 Log.i("template", "arrayList " + arrayList.size());
-                for (TaskDetailsBean bean : arrayList) {
+//                for (TaskDetailsBean bean : arrayList) {
+                for (int i = 0; i < arrayList.size(); i++) {
+                    TaskDetailsBean bean = arrayList.get(i);
                     if (bean.getMimeType().equalsIgnoreCase("date")) {
                         bean.setMimeType("dates");
                     }
@@ -920,8 +920,13 @@ public class AddObserver extends Activity implements View.OnClickListener, WebSe
                         bean.setTaskRequestType("group");
 //                    percentage=VideoCallDataBase.getDB(context).getlastCompletedParcentage(taskId);
                     bean.setCompletedPercentage("0");
-                    bean.setCustomTagVisible(true);
-//                    VideoCallDataBase.getDB(context).insertORupdate_Task_history(bean);
+                    bean.setCustomTagVisible(false);
+                    if (i == 0) {
+                        bean.setSubType("taskDescription");
+                    } else {
+                        bean.setSubType("normal");
+                    }
+                    VideoCallDataBase.getDB(context).insertORupdate_Task_history(bean);
                     VideoCallDataBase.getDB(context).insertORupdate_TaskHistoryInfo(bean);
 //                    appSharedpreferences.saveBoolean("syncTask" + bean.getTaskId(), true);
                 }

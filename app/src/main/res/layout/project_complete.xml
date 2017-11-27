@@ -1210,6 +1210,7 @@
                 android:visibility="gone">
 
                 <TextView
+                    android:id="@+id/synopsis_input"
                     android:layout_width="180dp"
                     android:layout_height="wrap_content"
                     android:background="#FFFFFF"

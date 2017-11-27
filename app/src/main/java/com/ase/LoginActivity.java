@@ -40,6 +40,7 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -49,16 +50,20 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.ase.Bean.User_Details;
 import com.ase.DB.VideoCallDataBase;
+import com.google.gson.reflect.TypeToken;
 
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
+import org.pjsip.AESCrypto;
 import org.pjsip.pjsua2.app.MainActivity;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import it.sephiroth.android.library.tooltip.Tooltip;
 import json.CommunicationBean;
 import json.EnumJsonWebservicename;
 import json.JsonRequestSender;
@@ -107,6 +112,8 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     static int no_Of_Login = 1;
     List<User_Details> list_Of_User = new LinkedList<User_Details>();
     ImageView imageView;
+    public Button mEmailSignInButton;
+    public ProgressBar spinner_signin;
 
     public static LoginActivity getInstance() {
         return loginActivity;
@@ -140,23 +147,16 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         filter.addAction(Intent.ACTION_SCREEN_OFF);
         imageView = (ImageView) findViewById(R.id.logo);
 
-        checkeula=(CheckBox)findViewById(R.id.check_eula);
+        checkeula = (CheckBox) findViewById(R.id.check_eula);
         checkeula.setChecked(true);
-        int value= VideoCallDataBase.getDB(getApplicationContext()).geteulavalue();
+        int value = VideoCallDataBase.getDB(getApplicationContext()).geteulavalue();
         checkeula.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (isChecked == true){
+                if (isChecked == true) {
                     VideoCallDataBase.getDB(getApplicationContext()).insertvalueeula(true);
-                }else {
-//                    VideoCallDataBase.getDB(getApplicationContext()).insertvalueeula(false);
+                } else {
                 }
-              /*  Intent intent;
-                int value= VideoCallDataBase.getDB(getApplicationContext()).geteulavalue();
-                if (value == 0) {
-                    intent = new Intent(LoginActivity.this, EulaScreen.class);
-                    startActivity(intent);
-                }*/
             }
         });
 
@@ -175,14 +175,16 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         preferences = PreferenceManager
                 .getDefaultSharedPreferences(getApplicationContext());
 
-        Button mEmailSignInButton = (Button) findViewById(R.id.email_sign_in_button);
+        mEmailSignInButton = (Button) findViewById(R.id.email_sign_in_button);
+        spinner_signin = (ProgressBar) findViewById(R.id.progressBar_signin);
         mEmailSignInButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
+                Log.i("login1234", "mEmailSignInButton clickListener");
                 if (checkeula.isChecked() == true) {
                     loginMethod(view);
-                }else{
-                    Toast.makeText(getApplicationContext(),"Please Agree to Terms and Conditions",Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(getApplicationContext(), "Please Agree to Terms and Conditions", Toast.LENGTH_SHORT).show();
                 }
 
                 //attemptLogin();
@@ -201,40 +203,28 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             mEmailView.setText(username);
             mPasswordView.setText(password);
             if (isNetworkAvailable() && appSharedpreferences.getBoolean("login")) {
-                List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
-                nameValuePairs.add(new BasicNameValuePair("email", mEmailView.getText().toString()));
-                nameValuePairs.add(new BasicNameValuePair("password", mPasswordView.getText().toString()));
-                JsonRequestSender jsonRequestParser = new JsonRequestSender();
-                Appreference.jsonRequestSender = jsonRequestParser;
-                Log.i("login123","Login webservice calling oncreate.......");
+                Log.i("login1234", "autoLogin if case");
 
-                jsonRequestParser.login(EnumJsonWebservicename.loginMobile, nameValuePairs, LoginActivity.this);
-                jsonRequestParser.start();
-                if(progress == null) {
-                    progress = new ProgressDialog(context);
-                    progress.setMessage("Signing in...");
-                    progress.show();
+                if (!Appreference.isLoginRequestSent) {
+                    List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
+                    nameValuePairs.add(new BasicNameValuePair("email", mEmailView.getText().toString()));
+                    nameValuePairs.add(new BasicNameValuePair("password", mPasswordView.getText().toString()));
+//                    nameValuePairs.add(new BasicNameValuePair("textId", AESCrypto.encrypt(Appreference.getIMEINumber(context))));
+                    JsonRequestSender jsonRequestParser = new JsonRequestSender();
+                    Appreference.jsonRequestSender = jsonRequestParser;
+                    Log.i("login123", "Login webservice calling oncreate.......");
+
+                    jsonRequestParser.login(EnumJsonWebservicename.loginMobile, nameValuePairs, LoginActivity.this);
+                    jsonRequestParser.start();
+                    mEmailSignInButton.setVisibility(View.GONE);
+                    spinner_signin.setVisibility(View.VISIBLE);
                 }
-                final ProgressDialog dialog1 = ProgressDialog.show(LoginActivity.this, "", "Signing in...",
-                        true);
-                dialog1.show();
-                Handler handler = new Handler();
-                handler.postDelayed(new Runnable() {
-                    public void run() {
-                        dialog1.dismiss();
-                    }
-                }, 3000);
 
-            } else if(appSharedpreferences.getBoolean("login")){
-                final ProgressDialog dialog2 = ProgressDialog.show(LoginActivity.this, "", "Signing in...",
-                        true);
-                dialog2.show();
-                Handler handler = new Handler();
-                handler.postDelayed(new Runnable() {
-                    public void run() {
-                        dialog2.dismiss();
-                    }
-                }, 3000);
+            } else if (appSharedpreferences.getBoolean("login")) {
+                Log.i("login1234", "autoLogin else case");
+
+                mEmailSignInButton.setVisibility(View.GONE);
+                spinner_signin.setVisibility(View.VISIBLE);
                 if (Appreference.jsonRequestSender == null) {
                     JsonRequestSender jsonRequestParser = new JsonRequestSender();
                     Appreference.jsonRequestSender = jsonRequestParser;
@@ -246,11 +236,15 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                 Toast.makeText(getApplicationContext(), "Please Check Your Internet", Toast.LENGTH_LONG).show();
             }*/
         } else {
+            Log.i("login1234", "not an autoLogin else case");
+
             Log.i("autologin", "username ,password==null && logoutSuccess=true");
             mEmailView.setText("");
             mPasswordView.setText("");
+            mEmailSignInButton.setVisibility(View.VISIBLE);
+            spinner_signin.setVisibility(View.GONE);
         }
-        appSharedpreferences.saveBoolean("login",false);
+        appSharedpreferences.saveBoolean("login", false);
     }
 
     @Override
@@ -260,47 +254,117 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 //        startService(new Intent(getApplicationContext(), offlineSendService.class));
     }
 
-    public void loginMethod(View view){
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        Log.i("LoginActivity", "onBackPressed ");
+        try {
+            finish();
+            overridePendingTransition(R.anim.left_to_right, R.anim.right_to_left);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Appreference.printLog("LoginActivity", "onBackPressed Exception : " + e.getMessage(), "WARN", null);
+        }
+    }
+
+    public void loginMethod(View view) {
         mPasswordView.clearFocus();
         String em = mEmailView.getText().toString();
         String pa = mPasswordView.getText().toString();
+        ImageView img_error_user = (ImageView) findViewById(R.id.error_info_email);
+        ImageView img_error_pass = (ImageView) findViewById(R.id.error_info_pass);
+
         if (em.equals("") || em.equals(null)) {
-            Toast.makeText(getApplicationContext(), "Please Enter email id", Toast.LENGTH_SHORT).show();
+            img_error_user.setVisibility(View.VISIBLE);
+            mEmailSignInButton.setVisibility(View.VISIBLE);
+            spinner_signin.setVisibility(View.GONE);
+            Tooltip.make(this,
+                    new Tooltip.Builder(102)
+                            .anchor(img_error_user, Tooltip.Gravity.BOTTOM)
+                            .closePolicy(new Tooltip.ClosePolicy()
+                                    .insidePolicy(true, false)
+                                    .outsidePolicy(true, false), 4000)
+                            .activateDelay(900)
+                            .showDelay(400)
+                            .text("Please Enter Your Email ID")
+                            .maxWidth(600)
+                            .withArrow(true)
+                            .withOverlay(true).build()
+            ).show();
+//            Toast.makeText(getApplicationContext(), "Please Enter Your Email ID", Toast.LENGTH_SHORT).show();
         } else if (!(em.contains("@") && em.contains("."))) {
-            Toast.makeText(getApplicationContext(), "Please Enter correct email id", Toast.LENGTH_SHORT).show();
+            img_error_user.setVisibility(View.VISIBLE);
+            mEmailSignInButton.setVisibility(View.VISIBLE);
+            spinner_signin.setVisibility(View.GONE);
+            Tooltip.make(this,
+                    new Tooltip.Builder(102)
+                            .anchor(img_error_user, Tooltip.Gravity.BOTTOM)
+                            .closePolicy(new Tooltip.ClosePolicy()
+                                    .insidePolicy(true, false)
+                                    .outsidePolicy(true, false), 4000)
+                            .activateDelay(900)
+                            .showDelay(400)
+                            .text("Please Enter Correct Email ID")
+                            .maxWidth(600)
+                            .withArrow(true)
+                            .withOverlay(true).build()
+            ).show();
+//            Toast.makeText(getApplicationContext(), "Please Enter Correct Email ID", Toast.LENGTH_SHORT).show();
         } else if (pa.equals("") || pa.equals(null)) {
-            Toast.makeText(getApplicationContext(), "Please Enter password", Toast.LENGTH_SHORT).show();
+            img_error_pass.setVisibility(View.VISIBLE);
+            img_error_user.setVisibility(View.GONE);
+            mEmailSignInButton.setVisibility(View.VISIBLE);
+            spinner_signin.setVisibility(View.GONE);
+            Tooltip.make(this,
+                    new Tooltip.Builder(102)
+                            .anchor(img_error_pass, Tooltip.Gravity.BOTTOM)
+                            .closePolicy(new Tooltip.ClosePolicy()
+                                    .insidePolicy(true, false)
+                                    .outsidePolicy(true, false), 4000)
+                            .activateDelay(900)
+                            .showDelay(400)
+                            .text("Please Enter password")
+                            .maxWidth(600)
+                            .withArrow(true)
+                            .withOverlay(true).build()
+            ).show();
+//            Toast.makeText(getApplicationContext(), "Please Enter password", Toast.LENGTH_SHORT).show();
         } else {
             if (isNetworkAvailable()) {
                 try {
+                    if (!Appreference.isLoginRequestSent) {
+                        img_error_user.setVisibility(View.GONE);
+                        img_error_pass.setVisibility(View.GONE);
 
-                    List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
-                    nameValuePairs.add(new BasicNameValuePair("email", mEmailView.getText().toString()));
-                    nameValuePairs.add(new BasicNameValuePair("password", mPasswordView.getText().toString()));
-                    JsonRequestSender jsonRequestParser = new JsonRequestSender();
-                    Appreference.jsonRequestSender = jsonRequestParser;
-                    Log.i("login123","Login webservice calling loginMethod.......");
+                        List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
+                        nameValuePairs.add(new BasicNameValuePair("email", mEmailView.getText().toString()));
+                        nameValuePairs.add(new BasicNameValuePair("password", mPasswordView.getText().toString()));
+//                        nameValuePairs.add(new BasicNameValuePair("textId", AESCrypto.encrypt(Appreference.getIMEINumber(context))));
+                        JsonRequestSender jsonRequestParser = new JsonRequestSender();
 
-                    jsonRequestParser.login(EnumJsonWebservicename.loginMobile, nameValuePairs, LoginActivity.this);
-                    jsonRequestParser.start();
-                    InputMethodManager imm = (InputMethodManager) loginActivity.getSystemService(Activity.INPUT_METHOD_SERVICE);
-                    //Find the currently focused view, so we can grab the correct window token from it.
-                    View view1 = loginActivity.getCurrentFocus();
-                    //If no view currently has focus, create a new one, just so we can grab a window token from it
-                    if (view1 == null) {
-                        view1 = new View(loginActivity);
-                    }
-                    imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
-                    if(progress == null) {
-                        progress = new ProgressDialog(context);
-                        progress.setMessage("Signing in...");
-                        progress.show();
+                        Appreference.jsonRequestSender = jsonRequestParser;
+                        Log.i("login123", "Login webservice calling loginMethod.......");
+                        mEmailSignInButton.setVisibility(View.GONE);
+                        spinner_signin.setVisibility(View.VISIBLE);
+
+                        jsonRequestParser.login(EnumJsonWebservicename.loginMobile, nameValuePairs, LoginActivity.this);
+                        jsonRequestParser.start();
+                        InputMethodManager imm = (InputMethodManager) loginActivity.getSystemService(Activity.INPUT_METHOD_SERVICE);
+                        //Find the currently focused view, so we can grab the correct window token from it.
+                        View view1 = loginActivity.getCurrentFocus();
+                        //If no view currently has focus, create a new one, just so we can grab a window token from it
+                        if (view1 == null) {
+                            view1 = new View(loginActivity);
+                        }
+                        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
                     }
 
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
             } else {
+                mEmailSignInButton.setVisibility(View.VISIBLE);
+                spinner_signin.setVisibility(View.GONE);
 //                Toast.makeText(getApplicationContext(), "Please Check Your Internet", Toast.LENGTH_LONG).show();
             }
         }
@@ -539,23 +603,31 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                     if (!jelement.getAsJsonObject().equals(null)) {
                         JsonObject jobject = jelement.getAsJsonObject();
                         if (jobject.has("result_code")) {
-                            Log.i("login123","Login webservice jobject.has(\"result_code\").......");
-
+                            /*negative response might comes here*/
+                            Log.i("login123", "Login webservice jobject.has(\"result_code\").......");
+                            mEmailSignInButton.setVisibility(View.VISIBLE);
+                            spinner_signin.setVisibility(View.GONE);
+                            Appreference.isLoginRequestSent = false;
                             String result = jobject.get("result_text").toString();
                             Log.i("Responce", "demo" + result);
                             NegativeValue u = g.fromJson(test, NegativeValue.class);
                             Log.i("Value=-->", "" + u);
                             Log.i("Value=-->", "value" + u.getText());
                             Answer = result;
-                            progress.dismiss();
+//                            progress.dismiss();
                         } else {
-                            Log.i("login123","Login webservice not jobject.has(\"result_code\").......");
+                            Log.i("login123", "Login webservice not jobject.has(\"result_code\").......");
+                            /*Positive response might comes here*/
 
                             Gson g1 = new Gson();
                             String test1 = s1.toString();
-                            Loginuserdetails u1 = g1.fromJson(test1, Loginuserdetails.class);
+                            Type collectionType = new TypeToken<Loginuserdetails>() {
+                            }.getType();
+                            Loginuserdetails u1 = new Gson().fromJson(s1, collectionType);
+//                            Loginuserdetails u1 = g1.fromJson(test1, Loginuserdetails.class);
 //                            String loginuserdetails = g1.toJson(test1);
                             Appreference.loginuserdetails = u1;
+                            Appreference.isLoginRequestSent = false;
                             try {
 
                                 String saved_username = appSharedpreferences.getString("loginUserName");
@@ -614,19 +686,18 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 //                    }
                     if (Answer != null && Answer.equals("login")) {
                         attemptLogin();
-                        if (progress.isShowing())
-                            progress.dismiss();
+                       /* if (progress.isShowing())
+                            progress.dismiss();*/
                     } else {
                         Toast.makeText(getApplicationContext(), Answer, Toast.LENGTH_LONG).show();
-
                     }
-
-
                 } catch (Exception e) {
                     e.printStackTrace();
+                    mEmailSignInButton.setVisibility(View.VISIBLE);
+                    spinner_signin.setVisibility(View.GONE);
                     Toast.makeText(getApplicationContext(), "Unable to Login...", Toast.LENGTH_LONG).show();
-                    if (progress != null && progress.isShowing())
-                        progress.dismiss();
+                   /* if (progress != null && progress.isShowing())
+                        progress.dismiss();*/
                 }
 
             }
@@ -636,7 +707,13 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
     @Override
     public void ErrorMethod(Object object) {
-
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                mEmailSignInButton.setVisibility(View.VISIBLE);
+                spinner_signin.setVisibility(View.GONE);
+            }
+        });
     }
 
 
@@ -740,6 +817,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 //                Intent intent = new Intent(context,AppMainActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(intent);
+                overridePendingTransition(R.anim.right_anim, R.anim.left_anim);
             } else {
                 mPasswordView.setError(getString(R.string.error_incorrect_password));
                 mPasswordView.requestFocus();

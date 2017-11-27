@@ -1,11 +1,17 @@
 package com.ase.DatePicker;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.location.LocationManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.os.Handler;
+import android.provider.Settings;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,6 +27,7 @@ import com.ase.Appreference;
 import com.ase.Bean.TaskDetailsBean;
 import com.ase.DB.VideoCallDataBase;
 import com.ase.DateTimePicker;
+import com.ase.LOCTracker;
 import com.ase.NewTaskConversation;
 import com.ase.R;
 import com.ase.TravelJobDetails;
@@ -42,8 +49,14 @@ public class CustomTravelPickerActivity extends Activity implements DateTimePick
     String currentDateTimeString;
 
 
-    String date1, date2, date3,date4;
-    Date date_from, date_to, date_from1,date_initial;
+    String date1, date2, date3, date4;
+    Date date_from, date_to, date_from1, date_initial;
+
+    LocationManager locationManager;
+    double latitude;
+    double longitude;
+    private boolean back_preesed = false;
+    private static Handler handler = new Handler();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -117,6 +130,7 @@ public class CustomTravelPickerActivity extends Activity implements DateTimePick
                 try {
                     //New Code Start
                     final Dialog mDateTimeDialog = new Dialog(context);
+                    mDateTimeDialog.setCanceledOnTouchOutside(false);
                     // Inflate the root layout
                     final RelativeLayout mDateTimeDialogView = (RelativeLayout) getLayoutInflater().inflate(R.layout.new_date_picker, null);
 
@@ -179,8 +193,7 @@ public class CustomTravelPickerActivity extends Activity implements DateTimePick
                                     } else {
                                         travel_start.setText(form);
                                     }
-                                }
-                                else {
+                                } else {
                                     travel_start.setText(form);
                                 }
                             }
@@ -231,6 +244,7 @@ public class CustomTravelPickerActivity extends Activity implements DateTimePick
                     // Create the dialog
                     //New Code Start
                     final Dialog mDateTimeDialog = new Dialog(context);
+                    mDateTimeDialog.setCanceledOnTouchOutside(false);
                     // Inflate the root layout
                     final RelativeLayout mDateTimeDialogView = (RelativeLayout) getLayoutInflater().inflate(R.layout.new_date_picker, null);
 
@@ -339,21 +353,25 @@ public class CustomTravelPickerActivity extends Activity implements DateTimePick
                 if(EndDate!=null)
                 intentMessage.putExtra("DateEnd",EndDate);
                 setResult(120,intentMessage);*/
-               try {
+                try {
 
 //                   if (getNetworkState()) {
-                       //New Code Start
-                       SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MMM-yyyy HH:mm");
-                       SimpleDateFormat originalFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-                       Date dt_temp;
-                       if (travel_start.getText().toString().length() > 0) {
-                           dt_temp = dateFormat.parse(travel_start.getText().toString());
-                           StartDate=originalFormat.format(dt_temp);
-                       }
-                       if (travel_end.getText().toString().length() > 0) {
-                           dt_temp = dateFormat.parse(travel_end.getText().toString());
-                           EndDate=originalFormat.format(dt_temp);
-                       }
+                    //New Code Start
+                    LOCTracker loc = new LOCTracker(CustomTravelPickerActivity.this);
+                    locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
+                    Log.i("Location", "canGetLocation ##$$ ==> " + loc.canGetLocation());
+                    if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+                        SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MMM-yyyy HH:mm");
+                        SimpleDateFormat originalFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                        Date dt_temp;
+                        if (travel_start.getText().toString().length() > 0) {
+                            dt_temp = dateFormat.parse(travel_start.getText().toString());
+                            StartDate = originalFormat.format(dt_temp);
+                        }
+                        if (travel_end.getText().toString().length() > 0) {
+                            dt_temp = dateFormat.parse(travel_end.getText().toString());
+                            EndDate = originalFormat.format(dt_temp);
+                        }
 
                        //New Code End
 
@@ -386,10 +404,34 @@ public class CustomTravelPickerActivity extends Activity implements DateTimePick
                            Toast.makeText(CustomTravelPickerActivity.this, "Please Enter DateTime to send", Toast.LENGTH_SHORT).show();
 //                   }else
 //                       Toast.makeText(CustomTravelPickerActivity.this, "Check your internet connection", Toast.LENGTH_SHORT).show();
+                    } else {
+                        try {
+                            AlertDialog.Builder alertDialog = new AlertDialog.Builder(CustomTravelPickerActivity.this);
+                            alertDialog.setTitle("Gps setting");
+                            alertDialog.setMessage("Unable to get current location. Change permissions");
+                            alertDialog.setCancelable(false);
+                            alertDialog.setPositiveButton("Setting", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    Intent in = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                                    startActivity(in);
+                                }
+                            });
+                            alertDialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.cancel();
+                                }
+                            });
+                            alertDialog.show();
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
 
-               }catch (Exception e){
-                   e.printStackTrace();
-               }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
         });
     }
@@ -416,11 +458,10 @@ public class CustomTravelPickerActivity extends Activity implements DateTimePick
         return isValid;
     }
 
-    private boolean getNetworkState()
-    {
-        boolean isNetwork=false;
-        ConnectivityManager ConnectionManager=(ConnectivityManager)getSystemService(Context.CONNECTIVITY_SERVICE);
-        if(ConnectionManager!=null) {
+    private boolean getNetworkState() {
+        boolean isNetwork = false;
+        ConnectivityManager ConnectionManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        if (ConnectionManager != null) {
             NetworkInfo networkInfo = ConnectionManager.getActiveNetworkInfo();
             if (networkInfo != null && networkInfo.isConnected() == true)
                 isNetwork= true;

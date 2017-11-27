@@ -188,12 +188,13 @@ public class Contactlistpage extends Activity implements WebServiceInterface {
                 if (tasktype.equalsIgnoreCase("Individual")) {
                     ContactBean item = contactBean;
                     String buddy_uri = item.getUsername();
-                    Log.i("chat", "chat Selected user-->" + buddy_uri);
-                    ArrayList<TaskDetailsBean> taskDetailsBean = VideoCallDataBase.getDB(classContext).getChatnames(buddy_uri);
+                    Log.i("chat", "Contactlistpage Individual : ==> ");
+                    Log.i("chat", "chat Selected user--> " + buddy_uri);
+                    ArrayList<TaskDetailsBean> taskDetailsBean = VideoCallDataBase.getDB(classContext).getChatnames(buddy_uri,"individual");
                     if (taskDetailsBean != null && taskDetailsBean.size() > 0 && taskDetailsBean.get(0) != null) {
-                        Log.i("chat", "Chatetails size--->" + taskDetailsBean.get(0).getToUserId());
-                        Log.i("chat", "db datetime-->" + taskDetailsBean.get(0));
-                        Log.i("chat", "db cahtid--->" + taskDetailsBean.get(0));
+                        Log.i("chat", "Chatetails size---> " + taskDetailsBean.get(0).getToUserId());
+                        Log.i("chat", "db datetime--> " + taskDetailsBean.get(0));
+                        Log.i("chat", "db cahtid---> " + taskDetailsBean.get(0));
                         i.putExtra("chatid", taskDetailsBean.get(0).getTaskId());
                         i.putExtra("task", "chathistory");
                         i.putExtra("chatHistoryBean", taskDetailsBean.get(0));
@@ -206,7 +207,7 @@ public class Contactlistpage extends Activity implements WebServiceInterface {
                     }
                     finish();
                 } else if (tasktype.equalsIgnoreCase("Group")) {
-
+                    Log.i("chat", "Contactlistpage Group : ==> ");
                     i.putExtra("task", "chat");
                     i.putExtra("type", "group");
                     i.putExtra("touser", groupname);

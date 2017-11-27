@@ -55,6 +55,84 @@
 
         </LinearLayout>
 
+        <RelativeLayout
+            android:id="@+id/task_giverlayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/ll_2"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/text11"
+                android:layout_width="wrap_content"
+                android:layout_height="30dp"
+                android:layout_marginLeft="10dp"
+                android:gravity="center"
+                android:paddingLeft="3dp"
+                android:paddingRight="3dp"
+                android:text="Giver: "
+                android:textColor="@color/appcolor"
+                android:textSize="15dp" />
+
+            <TextView
+                android:id="@+id/text12"
+                android:layout_width="wrap_content"
+                android:layout_height="30dp"
+                android:layout_toRightOf="@+id/text11"
+                android:gravity="center"
+                android:paddingLeft="3dp"
+                android:paddingRight="3dp"
+                android:text="Me"
+                android:textColor="@color/appcolor"
+                android:textSize="15dp" />
+
+        </RelativeLayout>
+        <RelativeLayout
+            android:id="@+id/job_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <TextView
+                android:id="@+id/estim_travel_timer"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text=""
+                android:layout_marginLeft="14dp"
+                android:textColor="@color/lightgreennew"
+                android:textSize="18dp"
+                android:textStyle="italic"
+                android:visibility="visible"
+                android:layout_centerVertical="true" />
+
+            <ImageView
+                android:id="@+id/status_job"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginEnd="10dp"
+                android:layout_marginRight="2dp"
+                android:background="@drawable/status_info"
+                android:textColor="@color/red"
+                android:visibility="gone" />
+
+            <ImageView
+                android:id="@+id/travel_job"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_alignTop="@+id/status_job"
+                android:layout_centerVertical="true"
+                android:layout_marginEnd="16dp"
+                android:layout_marginRight="12dp"
+                android:layout_toLeftOf="@+id/status_job"
+                android:layout_toStartOf="@+id/status_job"
+                android:background="@drawable/plus_blue_custom1"
+                android:textColor="@color/red"
+                android:visibility="gone" />
+        </RelativeLayout>
+
+
         <View
             android:layout_width="wrap_content"
             android:layout_height="1dp"
@@ -86,84 +164,6 @@
                 android:text="Reassign Task"
                 android:textColor="@color/white"
                 android:textStyle="bold" />
-
-        </RelativeLayout>
-
-        <RelativeLayout
-            android:id="@+id/task_giverlayout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_below="@+id/ll_2"
-            >
-
-            <TextView
-                android:id="@+id/text11"
-                android:layout_width="wrap_content"
-                android:layout_height="30dp"
-                android:layout_marginLeft="10dp"
-                android:gravity="center"
-                android:paddingLeft="3dp"
-                android:paddingRight="3dp"
-                android:text="Giver: "
-                android:textColor="@color/appcolor"
-                android:textSize="15dp" />
-
-            <TextView
-                android:id="@+id/text12"
-                android:layout_width="wrap_content"
-                android:layout_height="30dp"
-                android:layout_toRightOf="@+id/text11"
-                android:gravity="center"
-                android:paddingLeft="3dp"
-                android:paddingRight="3dp"
-                android:text="Me"
-                android:textColor="@color/appcolor"
-                android:textSize="15dp" />
-
-
-            <TextView
-                android:id="@+id/text13"
-                android:layout_width="wrap_content"
-                android:layout_height="30dp"
-                android:layout_alignParentTop="true"
-                android:layout_gravity=""
-                android:layout_marginEnd="46dp"
-                android:layout_marginRight="46dp"
-                android:layout_toLeftOf="@+id/status_job"
-                android:layout_toStartOf="@+id/status_job"
-                android:gravity="center"
-                android:paddingRight="30dp"
-                android:text=""
-                android:textColor="@color/red"
-                android:visibility="visible" />
-
-            <ImageView
-                android:id="@+id/status_job"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:layout_alignParentEnd="true"
-                android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
-                android:layout_marginEnd="10dp"
-                android:layout_marginRight="2dp"
-                android:background="@drawable/status_info"
-                android:textColor="@color/red"
-                android:visibility="gone" />
-
-            <ImageView
-                android:id="@+id/travel_job"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:layout_alignTop="@+id/status_job"
-                android:layout_centerVertical="true"
-                android:layout_marginEnd="16dp"
-                android:layout_marginRight="12dp"
-                android:layout_toLeftOf="@+id/status_job"
-                android:layout_toStartOf="@+id/status_job"
-                android:background="@drawable/plus_blue_custom1"
-                android:textColor="@color/red"
-                android:visibility="gone" />
 
         </RelativeLayout>
 

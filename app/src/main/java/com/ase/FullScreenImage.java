@@ -55,8 +55,13 @@ public class FullScreenImage extends Activity {
 
 					Bitmap bitmap = decryptBitmap(file.getAbsolutePath());
 					if(Appreference.getDeviceName()!=null && Appreference.getDeviceName().equalsIgnoreCase("motorola MotoG3")){
-						int size = 10;
-						Bitmap bitmapsimplesize = Bitmap.createScaledBitmap(bitmap, bitmap.getWidth() / size, bitmap.getHeight() / size, true);
+						// start chages for image quality 04-10-2017
+
+//						int size = 10;
+//						Bitmap bitmapsimplesize = Bitmap.createScaledBitmap(bitmap, bitmap.getWidth() / size, bitmap.getHeight() / size, true);
+						int nh = (int) ( bitmap.getHeight() * (512.0 / bitmap.getWidth()) );
+						Bitmap bitmapsimplesize = Bitmap.createScaledBitmap(bitmap, 512, nh, true);
+                        // end 04-10-2017 changes //
 						bitmap.recycle();
 						LinearLayout layout = (LinearLayout) findViewById(R.id.layoutView);
 

@@ -108,8 +108,8 @@ public class GCMPushReceiverService extends FirebaseMessagingService {
 
                 try {
                     if (data != null && data.get("message").toString() != null && !data.get("message").toString().equalsIgnoreCase(null) && !data.get("message").toString().contains("{}")) {
-                        Log.i("gcm", "mesage1 " + message.getCollapseKey());
-                        Log.i("gcm", "mesage1  ====  " + data.get("message").toString());
+                        Log.i("gcm", "mesage1 ## " + message.getCollapseKey());
+                        Log.i("gcm", "mesage1  ## ====  " + data.get("message").toString());
                         demo1 = parseObject(message.getCollapseKey(), data.get("message").toString());
                         Log.i("gcm", "value1 " + demo1);
                     }
@@ -980,16 +980,24 @@ public class GCMPushReceiverService extends FirebaseMessagingService {
     public String parseObject(String collapse_key, String objectValue) {
         String value = "";
         Log.i("gcm push notification", "check === " + collapse_key);
+        Log.i("gcm push notification", "objectValue === " + objectValue);
         try {
 
-            JSONObject jsonObject_check = new JSONObject(objectValue);
-
-            if (jsonObject_check.has("serverKey")) {
-                collapse_key = jsonObject_check.getString("serverKey");
-            } else if (jsonObject_check.has("collapseKey")) {
-                collapse_key = jsonObject_check.getString("collapseKey");
+            JSONObject jsonObject_check = null;
+            try {
+                if (objectValue != null && objectValue.contains("{") && objectValue.contains("}")) {
+                    jsonObject_check = new JSONObject(objectValue);
+                    if (jsonObject_check.has("serverKey")) {
+                        collapse_key = jsonObject_check.getString("serverKey");
+                        collapseKey = collapse_key;
+                    } else if (jsonObject_check.has("collapseKey")) {
+                        collapse_key = jsonObject_check.getString("collapseKey");
+                        collapseKey = collapse_key;
+                    }
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
             }
-
 
             if (objectValue != null && objectValue.contains("firingTime") && (collapse_key == null || collapse_key.equalsIgnoreCase("Task Reminder") || collapse_key.equalsIgnoreCase("do_not_collapse"))) {
                 Log.i("gcm push notification", "reminder text ");

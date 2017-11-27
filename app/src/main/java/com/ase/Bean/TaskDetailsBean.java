@@ -120,6 +120,9 @@ public class TaskDetailsBean implements Serializable,Cloneable {
     private String Activity;
     private String CustomerRemarks;
     private String CustomerSignature;
+    /*added for EstimTimer*/
+    private String estimTimeForTimer;
+    private String EstimAlarm;
 
 
 
@@ -147,7 +150,12 @@ public class TaskDetailsBean implements Serializable,Cloneable {
     private String isActiveStatus;
     private String caption;
 
+    //added for Location
 
+    private String startDateLatitude;
+    private String startDateLongitude;
+    private String endDateLatitude;
+    private String endDateLongitude;
 
 
     public String getEstimatedTravel() {
@@ -1174,6 +1182,53 @@ private String sender_reply;
 
     public void setCaption(String caption) {
         this.caption = caption;
+    }
+
+    public String getEstimTimeForTimer() {
+        return estimTimeForTimer;
+    }
+
+    public void setEstimTimeForTimer(String estimTimeForTimer) {
+        this.estimTimeForTimer = estimTimeForTimer;
+    }
+
+    public String getEstimAlarm() {
+        return EstimAlarm;
+    }
+
+    public void setEstimAlarm(String estimAlarm) {
+        EstimAlarm = estimAlarm;
+    }
+	  public String getStartDateLatitude() {
+        return startDateLatitude;
+    }
+
+    public void setStartDateLatitude(String startDateLatitude) {
+        this.startDateLatitude = startDateLatitude;
+    }
+
+    public String getStartDateLongitude() {
+        return startDateLongitude;
+    }
+
+    public void setStartDateLongitude(String startDateLongitude) {
+        this.startDateLongitude = startDateLongitude;
+    }
+
+    public String getEndDateLatitude() {
+        return endDateLatitude;
+    }
+
+    public void setEndDateLatitude(String endDateLatitude) {
+        this.endDateLatitude = endDateLatitude;
+    }
+
+    public String getEndDateLongitude() {
+        return endDateLongitude;
+    }
+
+    public void setEndDateLongitude(String endDateLongitude) {
+        this.endDateLongitude = endDateLongitude;
     }
 }
 
