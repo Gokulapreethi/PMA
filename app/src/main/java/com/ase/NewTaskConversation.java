@@ -7443,9 +7443,7 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
             Appreference.printLog("NewTaskConversation", "Onclick event Exception : " + e.getMessage(), "WARN", null);
         }
     }
-    public void onLocationChanged(){
 
-    }
     @Override
     protected void onResume() {
         super.onResume();

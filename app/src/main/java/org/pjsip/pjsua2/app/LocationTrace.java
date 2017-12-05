@@ -49,26 +49,15 @@ public class LocationTrace extends Service implements LocationListener {
     public void onLocationChanged(Location location) {
         if ((location != null) && (location.getLatitude() != 0) && (location.getLongitude() != 0)) {
 
-//            latitude = location.getLatitude();
-//            longitude = location.getLongitude();
-
-           /* if (!Utils.getuserid(context).equalsIgnoreCase("")) {
-                Double[] arr = { location.getLatitude(), location.getLongitude() };
-
-                // DO ASYNCTASK
-            }*/
-//            double lat1 = Appreference.latitude;
-//            double lng1 = Appreference.longitude;
-            latitude=13.00864;
-            longitude=80.2011492;
+           /* latitude=13.00864;
+            longitude=80.2011492;*/
 
             double lat1 = 12.9229;
             double lng1 = 80.1275;
             Log.i("LocationTrace", "Lat" + "long" + latitude + longitude);
             Log.i("LocationTrace", "Lat" + "long" + lat1 + lng1);
 
-
-            Double dist = getDistance(latitude, longitude, lat1, lng1);
+            Double dist = getDistance(location.getLatitude(), location.getLongitude(), lat1, lng1);
             Log.d("Location", "distance " + dist);
             if (dist > 3) {
                 Log.d("Location", "distance after getting current location " + dist);

@@ -1389,10 +1389,8 @@ public class TravelJobDetails extends Activity implements View.OnClickListener, 
             Log.i("estim123", " getEstimatedTimer started===============>" + getEstimatedTimer);
             if (!status.equalsIgnoreCase("0") && !status.equalsIgnoreCase("8") && !status.equalsIgnoreCase("9")) {
                 Log.i("estim123", " getEstimatedTimer from DB added===============>" + getEstimatedTimer);
-                Appreference.EstimTimerValue = getEstimatedTimer;
-            } /*else if (status.equalsIgnoreCase("9")) {
-                ShowEstimWishAlert(projectId,webtaskId);
-            }*/
+                Appreference.Estim_travel_TimerValue = getEstimatedTimer;
+            }
                 /*code ended for Estim Timer*/
 
             if (status.equalsIgnoreCase("9")) {

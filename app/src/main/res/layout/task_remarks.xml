@@ -17,24 +17,25 @@
         android:id="@+id/template_header"
         />
 
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="10dp" />
+
     <EditText
         android:id="@+id/remarks"
         android:layout_width="match_parent"
         android:layout_height="85dp"
-        android:layout_marginTop="20dp"
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
+        android:layout_marginTop="20dp"
+        android:background="@layout/iphone_edittext_into_android"
         android:ems="10"
         android:gravity="center"
-        android:background="@layout/iphone_edittext_into_android"
-        android:hint="" >
+        android:hint="">
 
         <requestFocus />
     </EditText>
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="10dp" />
     <View
         android:layout_width="match_parent"
         android:layout_height="0.1dp"

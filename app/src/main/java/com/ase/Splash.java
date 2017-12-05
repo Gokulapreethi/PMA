@@ -9,6 +9,8 @@ import android.widget.ImageView;
 
 import com.ase.DB.VideoCallDataBase;
 
+import org.pjsip.pjsua2.app.LocationTrace;
+
 /**
  * Created by vignesh on 6/17/2016.
  */
