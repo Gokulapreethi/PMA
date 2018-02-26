@@ -112,9 +112,9 @@ public class JsonRequestResponce extends Thread {
 
                         Log.i("JsonLeave", "Try catch 1 ");
 
-//                            HttpPost httppost = new HttpPost("https://66.109.17.204/ASE/" + obj.getEnumJsonWebservicename()); //ip US Server 204
+                            HttpPost httppost = new HttpPost("https://66.109.17.204/ASE/" + obj.getEnumJsonWebservicename()); //ip US Server 204
 
-                        HttpPost httppost = new HttpPost("https://172.16.1.203:8443/ASE/" + obj.getEnumJsonWebservicename());  //new ip for local 203
+//                        HttpPost httppost = new HttpPost("https://172.16.1.203:8443/ASE/" + obj.getEnumJsonWebservicename());  //new ip for local 203
 
 //                         HttpPost httppost = new HttpPost("http://151.253.12.203/ASE/" + obj.getEnumJsonWebservicename());
 
