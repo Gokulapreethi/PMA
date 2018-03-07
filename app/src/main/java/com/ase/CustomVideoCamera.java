@@ -7,6 +7,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
@@ -69,7 +70,7 @@ public class CustomVideoCamera extends Activity {
     ProgressBar progressBar;
     SurfaceHolder surfaceHolder;
     boolean recording;
-    Button back, front, retake, usephoto, usevideo;
+    Button back, front, retake, usephoto, usevideo, flash_OFF, flash_ON;
     FrameLayout myCameraPreview, newmyCameraPreview;
     VideoView mVideoView;
     // private String filename;
@@ -89,11 +90,13 @@ public class CustomVideoCamera extends Activity {
     private ShowOrCancelProgress progressListener;
     private boolean photo_stored = false;
     Bitmap realImage;
+    boolean flash_switch_flag = true;
     final SimpleDateFormat ft = new SimpleDateFormat("E yyyy.MM.dd 'at' hh:mm:ss.SSS a zzz");
 
     PictureCallback jpegCallback = new PictureCallback() {
         public void onPictureTaken(byte[] data, Camera camera) {
             data_1 = data;
+            Log.i("step123", "jpegCallback PictureCallback ");
             releaseCamera();
             usephoto.setVisibility(View.VISIBLE);
             retake.setVisibility(View.VISIBLE);
@@ -173,8 +176,11 @@ public class CustomVideoCamera extends Activity {
     private boolean ispaused = false;
     private Handler handler = new Handler();
     private boolean saved_complated = true;
+    private Boolean isFlashAvailable;
 
     public static String decryptFile(Context context, String filePath) {
+        Log.i("step123", "decryptFile ********** ");
+
         try {
             if (flag) {
                 File file = new File(filePath);
@@ -201,7 +207,7 @@ public class CustomVideoCamera extends Activity {
             }
         } catch (Exception e) {
             e.printStackTrace();
-            Appreference.printLog("CustomVideoCamera decryptFile","Exception "+e.getMessage(),"WARN",null);
+            Appreference.printLog("CustomVideoCamera decryptFile", "Exception " + e.getMessage(), "WARN", null);
         }
         return filePath;
     }
@@ -225,6 +231,7 @@ public class CustomVideoCamera extends Activity {
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
         context = this;
+        Log.i("step123", "OnCreate method");
 //        recording = false;
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.customvideo);
@@ -245,6 +252,8 @@ public class CustomVideoCamera extends Activity {
         start_rec = (Button) findViewById(R.id.mybutton1);
         front = (Button) findViewById(R.id.Button1);
         back = (Button) findViewById(R.id.Button2);
+        flash_ON = (Button) findViewById(R.id.myflash_switch_on);
+        flash_OFF = (Button) findViewById(R.id.myflash_switch_off);
         retake = (Button) findViewById(R.id.retake);
         usephoto = (Button) findViewById(R.id.use_photo);
         usevideo = (Button) findViewById(R.id.use_video);
@@ -261,6 +270,12 @@ public class CustomVideoCamera extends Activity {
         Log.i("camera", "1 Device Name :" + getDevice_Name());
         Log.i("camera", "2 Device Name :" + getDeviceName());
 
+        isFlashAvailable = getApplicationContext().getPackageManager()
+                .hasSystemFeature(PackageManager.FEATURE_CAMERA_FLASH);
+        if (!isFlashAvailable) {
+            flash_ON.setVisibility(View.GONE);
+            flash_OFF.setVisibility(View.GONE);
+        }
         if (phoneModel != null && phoneModel.equalsIgnoreCase("Nexus 5X") && camera_no == 0) {
             orientation = "270";
         } else {
@@ -328,8 +343,39 @@ public class CustomVideoCamera extends Activity {
             }
         } catch (Exception e) {
             e.printStackTrace();
-            Appreference.printLog("CustomVideoCamera oncreate","Exception "+e.getMessage(),"WARN",null);
+            Appreference.printLog("CustomVideoCamera oncreate", "Exception " + e.getMessage(), "WARN", null);
         }
+
+//        flash_ON.setOnClickListener(new OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//
+//                flash_ON.setVisibility(View.GONE);
+//                flash_OFF.setVisibility(View.VISIBLE);
+//                if (flash_OFF.getVisibility() == View.VISIBLE) {
+//                    flash_switch_flag = false;
+//                } else
+//                    flash_switch_flag = true;
+//                Log.i("step123", "flash_ON  click********** " + flash_switch_flag);
+//
+//            }
+//        });
+
+
+//        flash_OFF.setOnClickListener(new OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//
+//                flash_OFF.setVisibility(View.GONE);
+//                flash_ON.setVisibility(View.VISIBLE);
+//                if (flash_ON.getVisibility() == View.VISIBLE) {
+//                    flash_switch_flag = true;
+//                } else
+//                    flash_switch_flag = false;
+//                Log.i("step123", "flash_OFF ******** click********** " + flash_switch_flag);
+//
+//            }
+//        });
 
         usephoto.setOnClickListener(new OnClickListener() {
             @Override
@@ -360,7 +406,7 @@ public class CustomVideoCamera extends Activity {
                                     saved_complated = true;
                                 } catch (Exception e) {
                                     e.printStackTrace();
-                                    Appreference.printLog("CustomVideoCamera usePhoto.setOnClickListener","Exception "+e.getMessage(),"WARN",null);
+                                    Appreference.printLog("CustomVideoCamera usePhoto.setOnClickListener", "Exception " + e.getMessage(), "WARN", null);
                                 } finally {
                                     try {
                                         if (out != null) {
@@ -368,7 +414,7 @@ public class CustomVideoCamera extends Activity {
                                         }
                                     } catch (IOException e) {
                                         e.printStackTrace();
-                                        Appreference.printLog("CustomVideoCamera usePhoto.setOnClickListener","Exception "+e.getMessage(),"WARN",null);
+                                        Appreference.printLog("CustomVideoCamera usePhoto.setOnClickListener", "Exception " + e.getMessage(), "WARN", null);
                                     }
                                 }
                                 Date dn1 = new Date();
@@ -427,9 +473,9 @@ public class CustomVideoCamera extends Activity {
                                     }
                                 } catch (IOException e) {
                                     e.printStackTrace();
-                                    Appreference.printLog("CustomVideoCamera usePhoto.setOnClickListener","Exception "+e.getMessage(),"WARN",null);
+                                    Appreference.printLog("CustomVideoCamera usePhoto.setOnClickListener", "Exception " + e.getMessage(), "WARN", null);
                                 }
-                                if(progress != null && progress.isShowing()) {
+                                if (progress != null && progress.isShowing()) {
                                     progress.cancel();
                                 }
                                 Date dn1 = new Date();
@@ -505,6 +551,13 @@ public class CustomVideoCamera extends Activity {
                         back.setEnabled(true);
                         front.setVisibility(View.VISIBLE);
                         back.setVisibility(View.GONE);
+                        if (isFlashAvailable) {
+                            if (flash_switch_flag) {
+                                flash_ON.setVisibility(View.VISIBLE);
+                            } else {
+                                flash_OFF.setVisibility(View.VISIBLE);
+                            }
+                        }
                         cameraoption();
                     } else {
                         myCameraPreview.removeView(myCameraSurfaceView);
@@ -543,7 +596,7 @@ public class CustomVideoCamera extends Activity {
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
-                    Appreference.printLog("CustomVideoCamera retake.setOnclickListener","Exception "+e.getMessage(),"WARN",null);
+                    Appreference.printLog("CustomVideoCamera retake.setOnclickListener", "Exception " + e.getMessage(), "WARN", null);
                 }
             }
         });
@@ -562,7 +615,7 @@ public class CustomVideoCamera extends Activity {
             public void run() {
                 Toast.makeText(context, message, Toast.LENGTH_LONG).show();
             }
-        },3000);
+        }, 3000);
 
     }
 
@@ -571,6 +624,8 @@ public class CustomVideoCamera extends Activity {
 
         @Override
         public void handleMessage(Message msg) {
+            Log.i("step123", "splashHandler ********** ");
+
             switch (msg.what) {
                 case STARTSPLASH:
                     progressBar.setVisibility(View.VISIBLE);
@@ -578,10 +633,10 @@ public class CustomVideoCamera extends Activity {
                     break;
                 case STOPSPLASH:
                     Log.i("startapp", "inside stop splash");
-                    if(progressBar != null) {
+                    if (progressBar != null) {
                         progressBar.setVisibility(View.GONE);
                     }
-                    if(progress != null && progress.isShowing()) {
+                    if (progress != null && progress.isShowing()) {
                         progress.cancel();
                     }
                     break;
@@ -591,6 +646,8 @@ public class CustomVideoCamera extends Activity {
     };
 
     public String getFileName() {
+        Log.i("step123", "getFileName ********** ");
+
         String strFilename = null;
         try {
             SimpleDateFormat dateFormat = new SimpleDateFormat("ddMMyyyyHHmmss");
@@ -599,12 +656,14 @@ public class CustomVideoCamera extends Activity {
         } catch (Exception e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
-            Appreference.printLog("CustomVideoCamera getFileName","Exception "+e.getMessage(),"WARN",null);
+            Appreference.printLog("CustomVideoCamera getFileName", "Exception " + e.getMessage(), "WARN", null);
         }
         return strFilename;
     }
 
     private void startRecording() {
+        Log.i("step123", "startRecording ********** ");
+
         try {
 
             front.setVisibility(View.GONE);
@@ -644,11 +703,12 @@ public class CustomVideoCamera extends Activity {
         } catch (Exception e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
-            Appreference.printLog("CustomVideoCamera startRecording","Exception "+e.getMessage(),"WARN",null);
+            Appreference.printLog("CustomVideoCamera startRecording", "Exception " + e.getMessage(), "WARN", null);
         }
     }
 
     public void stopRecording() {
+        Log.i("step123", "stopRecording ********** ");
 
         try {
             if (recording) {
@@ -658,7 +718,7 @@ public class CustomVideoCamera extends Activity {
                         mediaRecorder.stop();// stop the recording
                     } catch (Exception e) {
                         e.printStackTrace();
-                        Appreference.printLog("CustomVideoCamera stopRecording","Exception "+e.getMessage(),"WARN",null);
+                        Appreference.printLog("CustomVideoCamera stopRecording", "Exception " + e.getMessage(), "WARN", null);
                     }
                 releaseMediaRecorder(); // release the MediaRecorder
                 // object
@@ -731,7 +791,7 @@ public class CustomVideoCamera extends Activity {
                                 Log.i("customcamera", "value...2" + filepath);
                             } catch (Exception e) {
                                 e.printStackTrace();
-                                Appreference.printLog("CustomVideoCamera stopRecording","Exception "+e.getMessage(),"WARN",null);
+                                Appreference.printLog("CustomVideoCamera stopRecording", "Exception " + e.getMessage(), "WARN", null);
                                 Toast.makeText(getApplicationContext(),
                                         "Unable to play video.", Toast.LENGTH_SHORT).show();
                                 CustomVideoCamera.this.finish();
@@ -747,12 +807,14 @@ public class CustomVideoCamera extends Activity {
             }
         } catch (Exception e) {
             e.printStackTrace();
-            Appreference.printLog("CustomVideoCamera stopRecording","Exception "+e.getMessage(),"WARN",null);
+            Appreference.printLog("CustomVideoCamera stopRecording", "Exception " + e.getMessage(), "WARN", null);
         }
     }
 
     private void getCameraInstance(int front_back) {
         // TODO Auto-generated method stub
+        Log.i("step123", "getCameraInstance ********** ");
+
         try {
 
             CameraInfo camInfo = new CameraInfo();
@@ -769,11 +831,12 @@ public class CustomVideoCamera extends Activity {
         } catch (Exception e) {
             // Camera is not available (in use or does not exist)
             e.printStackTrace();
-            Appreference.printLog("CustomVideoCamera getcameraInstance","Exception "+e.getMessage(),"WARN",null);
+            Appreference.printLog("CustomVideoCamera getcameraInstance", "Exception " + e.getMessage(), "WARN", null);
         }
     }
 
     private boolean prepareMediaRecorder(String filename) {
+        Log.i("step123", "prepareMediaRecorder ********** ");
 
         try {
             // String path = Environment.getExternalStorageDirectory()
@@ -870,11 +933,11 @@ public class CustomVideoCamera extends Activity {
             try {
                 mediaRecorder.prepare();
             } catch (IllegalStateException e) {
-                Appreference.printLog("CustomVideoCamera setPreviewDisplay","Exception "+e.getMessage(),"WARN",null);
+                Appreference.printLog("CustomVideoCamera setPreviewDisplay", "Exception " + e.getMessage(), "WARN", null);
                 releaseMediaRecorder();
                 return false;
             } catch (IOException e) {
-                Appreference.printLog("CustomVideoCamera setPreviewDisplay","Exception "+e.getMessage(),"WARN",null);
+                Appreference.printLog("CustomVideoCamera setPreviewDisplay", "Exception " + e.getMessage(), "WARN", null);
                 releaseMediaRecorder();
                 return false;
             }
@@ -882,19 +945,21 @@ public class CustomVideoCamera extends Activity {
         } catch (Exception e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
-            Appreference.printLog("CustomVideoCamera setPreviewDisplay","Exception "+e.getMessage(),"WARN",null);
+            Appreference.printLog("CustomVideoCamera setPreviewDisplay", "Exception " + e.getMessage(), "WARN", null);
             return false;
         }
     }
 
     @Override
     protected void onPause() {
+        Log.i("step123", "onPause ********** ");
+
         try {
             ispaused = true;
             super.onPause();
             if (isPhoto) {
-                photo_taken_orientatio = orientation;
-                myCamera.takePicture(null, null, jpegCallback);
+//                photo_taken_orientatio = orientation;
+//                myCamera.takePicture(null, null, jpegCallback);
             } else {
                 stopRecording();
             }
@@ -905,11 +970,13 @@ public class CustomVideoCamera extends Activity {
         } catch (Exception e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
-            Appreference.printLog("CustomVideoCamera onPause","Exception "+e.getMessage(),"WARN",null);
+            Appreference.printLog("CustomVideoCamera onPause", "Exception " + e.getMessage(), "WARN", null);
         }
     }
 
     private void releaseMediaRecorder() {
+        Log.i("step123", "releaseMediaRecorder ********** ");
+
         if (mediaRecorder != null) {
             mediaRecorder.reset(); // clear recorder configuration
             mediaRecorder.release(); // release the recorder object
@@ -920,6 +987,8 @@ public class CustomVideoCamera extends Activity {
     }
 
     private void releaseCamera() {
+        Log.i("step123", "releaseCamera ********** ");
+
         try {
             if (myCamera != null) {
                 myCamera.setPreviewCallback(null);
@@ -930,7 +999,7 @@ public class CustomVideoCamera extends Activity {
             }
         } catch (Exception e) {
             e.printStackTrace();
-            Appreference.printLog("CustomVideoCamera releaseCamera","Exception "+e.getMessage(),"WARN",null);
+            Appreference.printLog("CustomVideoCamera releaseCamera", "Exception " + e.getMessage(), "WARN", null);
             Log.e("error", e.toString());
             myCamera = null;
         }
@@ -1001,6 +1070,8 @@ public class CustomVideoCamera extends Activity {
     @Override
     protected void onDestroy() {
         // TODO Auto-generated method stub
+        Log.i("step123", "onDestroy ********** ");
+
         super.onDestroy();
         if (orientationEventListener != null) {
             orientationEventListener.disable();
@@ -1092,6 +1163,8 @@ public class CustomVideoCamera extends Activity {
     }
 
     public void cameraoption() {
+        Log.i("step123", "cameraoption ********** ");
+
         OnClickListener myButtonOnClickListener = new OnClickListener() {
 
             @Override
@@ -1102,6 +1175,8 @@ public class CustomVideoCamera extends Activity {
 
 
                     if (isPhoto) {
+                        flash_ON.setVisibility(View.GONE);
+                        flash_OFF.setVisibility(View.GONE);
                         photo_taken_orientatio = orientation;
                         myCamera.takePicture(null, null, jpegCallback);
                     } else {
@@ -1109,7 +1184,7 @@ public class CustomVideoCamera extends Activity {
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
-                    Appreference.printLog("CustomVideoCamera cameraOption","Exception "+e.getMessage(),"WARN",null);
+                    Appreference.printLog("CustomVideoCamera cameraOption", "Exception " + e.getMessage(), "WARN", null);
                     finish();
                     Log.i("Costom video ", "error occured ");
                 }
@@ -1185,6 +1260,7 @@ public class CustomVideoCamera extends Activity {
             }
 
             myButton.setOnClickListener(myButtonOnClickListener);
+
             front.setOnClickListener(new OnClickListener() {
 
                 @Override
@@ -1192,6 +1268,7 @@ public class CustomVideoCamera extends Activity {
                     try {
                         // TODO Auto-generated method stub
                         Log.i("camera", "front click");
+
                         myCameraPreview.removeView(myCameraSurfaceView);
                         myCamera.stopPreview();
                         myCamera.release();
@@ -1204,10 +1281,12 @@ public class CustomVideoCamera extends Activity {
                         camera_no = 1;
                         front.setVisibility(View.GONE);
                         back.setVisibility(View.VISIBLE);
+                        flash_ON.setVisibility(View.GONE);
+                        flash_OFF.setVisibility(View.GONE);
                     } catch (Exception e) {
                         // TODO Auto-generated catch block
                         e.printStackTrace();
-                        Appreference.printLog("CustomVideoCamera front.setOnClickListener","Exception "+e.getMessage(),"WARN",null);
+                        Appreference.printLog("CustomVideoCamera front.setOnClickListener", "Exception " + e.getMessage(), "WARN", null);
                     }
                 }
             });
@@ -1230,24 +1309,31 @@ public class CustomVideoCamera extends Activity {
                         camera_no = 0;
                         back.setVisibility(View.GONE);
                         front.setVisibility(View.VISIBLE);
+                        if (isFlashAvailable) {
+                            if (flash_switch_flag) {
+                                flash_ON.setVisibility(View.VISIBLE);
+                            } else {
+                                flash_OFF.setVisibility(View.VISIBLE);
+                            }
+                        }
                     } catch (Exception e) {
                         // TODO Auto-generated catch block
                         e.printStackTrace();
-                        Appreference.printLog("CustomVideoCamera back.setOnClickListener","Exception "+e.getMessage(),"WARN",null);
+                        Appreference.printLog("CustomVideoCamera back.setOnClickListener", "Exception " + e.getMessage(), "WARN", null);
                     }
                 }
             });
         } catch (Exception e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
-            Appreference.printLog("CustomVideoCamera back.setOnClickListener","Exception "+e.getMessage(),"WARN",null);
+            Appreference.printLog("CustomVideoCamera back.setOnClickListener", "Exception " + e.getMessage(), "WARN", null);
             camera_no = 0;
             try {
                 myCamera = Camera
                         .open(CameraInfo.CAMERA_FACING_BACK);
             } catch (Exception e1) {
                 e1.printStackTrace();
-                Appreference.printLog("CustomVideoCamera back.setOnClickListener","Exception "+e.getMessage(),"WARN",null);
+                Appreference.printLog("CustomVideoCamera back.setOnClickListener", "Exception " + e.getMessage(), "WARN", null);
                 Toast.makeText(CustomVideoCamera.this, "Camera not Available", Toast.LENGTH_SHORT).show();
                 finish();
             }
@@ -1264,6 +1350,8 @@ public class CustomVideoCamera extends Activity {
         @SuppressWarnings("deprecation")
         public MyCameraSurfaceView(Context context, Camera camera) {
             super(context);
+            Log.i("step123", "MyCameraSurfaceView  SurfaceView********** ");
+
             mCamera = camera;
             Log.i("log", "mycamSurfaceView");
             mHolder = getHolder();
@@ -1274,6 +1362,8 @@ public class CustomVideoCamera extends Activity {
         @Override
         public void surfaceChanged(SurfaceHolder holder, int format,
                                    int weight, int height) {
+            Log.i("step123", "MyCameraSurfaceView  surfaceChanged********** ");
+
             if (mHolder.getSurface() == null) {
                 // preview surface does not exist
 
@@ -1283,7 +1373,7 @@ public class CustomVideoCamera extends Activity {
                 mCamera.stopPreview();
             } catch (Exception e) {
                 e.printStackTrace();
-                Appreference.printLog("CustomVideoCamera surfaceChanged","Exception "+e.getMessage(),"WARN",null);
+                Appreference.printLog("CustomVideoCamera surfaceChanged", "Exception " + e.getMessage(), "WARN", null);
             }
             try {
                 if (phoneModel != null && phoneModel.equalsIgnoreCase("Nexus 5X")) {
@@ -1308,6 +1398,13 @@ public class CustomVideoCamera extends Activity {
                     parameters.setRotation(270);
                 }
                 parameters.setPreviewSize(320, 240);
+                if (flash_switch_flag) {
+                    Log.i("step123", "***************surfaceChanged flash_switch_flag true**************");
+                    parameters.setFlashMode(Camera.Parameters.FLASH_MODE_ON);
+                } else {
+                    Log.i("step123", "***************surfaceChanged flash_switch_flag false**************");
+                    parameters.setFlashMode(Camera.Parameters.FLASH_MODE_OFF);
+                }
                 mCamera.setParameters(parameters);
                 mCamera.setPreviewDisplay(mHolder);
                 mCamera.startPreview();
@@ -1324,11 +1421,49 @@ public class CustomVideoCamera extends Activity {
         @Override
         public void surfaceCreated(SurfaceHolder holder) {
             // TODO Auto-generated method stub
+            Log.i("step123", "MyCameraSurfaceView  surfaceCreated********** ");
+
             if (ispaused) {
                 mCamera = null;
                 getCameraInstance(camera_no);
                 mCamera = myCamera;
             }
+
+            OnClickListener flash_ONOnClickListener = new OnClickListener() {
+
+                @Override
+                public void onClick(final View v) {
+
+                    flash_ON.setVisibility(View.GONE);
+                    flash_OFF.setVisibility(View.VISIBLE);
+                    if (flash_OFF.getVisibility() == View.VISIBLE) {
+                        flash_switch_flag = false;
+                    } else
+                        flash_switch_flag = true;
+                    turnONOFF_Flash();
+                    Log.i("step123", "flash_ON  click********** " + flash_switch_flag);
+
+                }
+            };
+            OnClickListener flash_OFFOnClickListener = new OnClickListener() {
+
+                @Override
+                public void onClick(final View v) {
+
+                    flash_OFF.setVisibility(View.GONE);
+                    flash_ON.setVisibility(View.VISIBLE);
+                    if (flash_ON.getVisibility() == View.VISIBLE) {
+                        flash_switch_flag = true;
+                    } else
+                        flash_switch_flag = false;
+                    turnONOFF_Flash();
+                    Log.i("step123", "flash_OFF ******** click********** " + flash_switch_flag);
+
+                }
+            };
+            flash_ON.setOnClickListener(flash_ONOnClickListener);
+            flash_OFF.setOnClickListener(flash_OFFOnClickListener);
+
             try {
                 if (phoneModel != null && phoneModel.equalsIgnoreCase("Nexus 5X")) {
 //                    myCamera.setDisplayOrientation(270);
@@ -1352,12 +1487,60 @@ public class CustomVideoCamera extends Activity {
                     parameters.setRotation(270);
                 }
                 parameters.setPreviewSize(320, 240);
+                if (flash_switch_flag) {
+                    Log.i("step123", "***************surfaceCreated flash_switch_flag true**************");
+                    parameters.setFlashMode(Camera.Parameters.FLASH_MODE_ON);
+                } else {
+                    Log.i("step123", "***************surfaceCreated flash_switch_flag false**************");
+                    parameters.setFlashMode(Camera.Parameters.FLASH_MODE_OFF);
+                }
                 mCamera.setParameters(parameters);
                 mCamera.setPreviewDisplay(mHolder);
                 mCamera.startPreview();
             } catch (IOException e) {
                 e.printStackTrace();
                 Appreference.printLog("CustomVideoCamera SurfaceCreated", "Exception " + e.getMessage(), "WARN", null);
+            }
+        }
+
+        private void turnONOFF_Flash() {
+            try {
+                if (phoneModel != null && phoneModel.equalsIgnoreCase("Nexus 5X")) {
+//                    myCamera.setDisplayOrientation(270);
+                    if (camera_no == 0) {
+                        myCamera.setDisplayOrientation(270);
+                    } else {
+                        myCamera.setDisplayOrientation(90);
+                    }
+                } else {
+                    mCamera.setDisplayOrientation(90);
+                }
+                Camera.Parameters parameters = mCamera.getParameters();
+                parameters.set("orientation", "portrait");
+                if (camera_no == 0) {
+                    if (phoneModel != null && phoneModel.equalsIgnoreCase("Nexus 5X")) {
+                        parameters.setRotation(270);
+                    } else {
+                        parameters.setRotation(90);
+                    }
+                } else {
+                    parameters.setRotation(270);
+                }
+                parameters.setPreviewSize(320, 240);
+                if (flash_switch_flag) {
+                    Log.i("step123", "***************surfaceChanged flash_switch_flag true**************");
+                    parameters.setFlashMode(Camera.Parameters.FLASH_MODE_ON);
+                } else {
+                    Log.i("step123", "***************surfaceChanged flash_switch_flag false**************");
+                    parameters.setFlashMode(Camera.Parameters.FLASH_MODE_OFF);
+                }
+                mCamera.setParameters(parameters);
+                mCamera.setPreviewDisplay(mHolder);
+                mCamera.startPreview();
+
+            } catch (Exception e) {
+                e.printStackTrace();
+                Appreference.printLog("CustomVideoCamera surfaceChanged", "Exception " + e.getMessage(), "WARN", null);
             }
         }
 
@@ -1368,10 +1551,13 @@ public class CustomVideoCamera extends Activity {
         }
     }
 
+
     private class SaveImageTask extends AsyncTask<byte[], Void, Void> {
 
         @Override
         protected Void doInBackground(byte[]... data) {
+            Log.i("step123", "SaveImageTask  doInBackground********** ");
+
             FileOutputStream outStream;
 
             // Write to SD Card
@@ -1411,7 +1597,7 @@ public class CustomVideoCamera extends Activity {
                             Bitmap bitmapsimplesize = Bitmap.createScaledBitmap(bitmapOriginal, bitmapOriginal.getWidth() / size, bitmapOriginal.getHeight() / size, true);
                             bitmapOriginal.recycle();
                             image.setImageBitmap(bitmapsimplesize);
-                            Log.i("CustomCamera","bitmapsimplesize==> "+bitmapsimplesize);
+                            Log.i("CustomCamera", "bitmapsimplesize==> " + bitmapsimplesize);
                         }
                     } catch (OutOfMemoryError error) {
                         error.printStackTrace();
@@ -1437,58 +1623,6 @@ public class CustomVideoCamera extends Activity {
             }
         }
     }
-   /* @Override
-    public boolean onKeyDown(int keyCode, KeyEvent event)  {
-        if (Integer.parseInt(android.os.Build.VERSION.SDK) > 5
-                && keyCode == KeyEvent.KEYCODE_BACK
-                && event.getRepeatCount() == 0) {
-            Log.d("CDA", "onKeyDown Called");
-            onBackPressed();
-            return true;
-        }
-        return super.onKeyDown(keyCode, event);
-    }*/
-
-
-//    @Override
-//    public void onBackPressed() {
-//        Log.d("CDA", "onBackPressed Called");
-//
-//       /* Intent setIntent = new Intent(Intent.ACTION_MAIN);
-//        setIntent.addCategory(Intent.CATEGORY_HOME);
-//        setIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-//        startActivity(setIntent);*/
-////        moveTaskToBack(true);
-//        myCameraPreview.removeView(myCameraSurfaceView);
-//        newmyCameraPreview.removeView(mVideoView);
-//        File f = new File(filepath);
-//        Boolean deleted = f.delete();
-//        filepath = path + getFileName() + ".mp4";
-//        Log.i("Videofile", "file deleted " + deleted);
-//        usevideo.setVisibility(View.GONE);
-//        retake.setVisibility(View.GONE);
-//        newmyCameraPreview.setVisibility(View.GONE);
-//        myCameraPreview.setVisibility(View.VISIBLE);
-//        myButton.setVisibility(View.GONE);
-//        start_rec.setVisibility(View.VISIBLE);
-//        myButton.setEnabled(true);
-//        start_rec.setEnabled(true);
-//        front.setEnabled(true);
-//        back.setEnabled(true);
-//        cameraoption();
-//        myCamera.stopPreview();
-//        myCamera.release();
-//        myCamera = null;
-//        myCamera = Camera
-//                .open(Camera.CameraInfo.CAMERA_FACING_BACK);
-//        myCameraSurfaceView = new MyCameraSurfaceView(
-//                CustomVideoCamera.this, myCamera);
-//        myCameraPreview.addView(myCameraSurfaceView);
-//        camera_no = 0;
-//        chronometer.setBase(SystemClock.elapsedRealtime());
-//
-//    }
-
 
     private void showprogress(String message) {
 //        handler.post(new Runnable() {

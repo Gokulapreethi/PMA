@@ -150,6 +150,10 @@ public class TaskDetailsBean implements Serializable,Cloneable {
     private String isActiveStatus;
     private String caption;
 
+
+    //Added for ASE reminingTime Alarm
+    private String estimRemainingAlarmTime;
+
     //added for Location
 
     private String startDateLatitude;
@@ -1229,6 +1233,14 @@ private String sender_reply;
 
     public void setEndDateLongitude(String endDateLongitude) {
         this.endDateLongitude = endDateLongitude;
+    }
+
+    public String getEstimRemainingAlarmTime() {
+        return estimRemainingAlarmTime;
+    }
+
+    public void setEstimRemainingAlarmTime(String estimRemainingAlarmTime) {
+        this.estimRemainingAlarmTime = estimRemainingAlarmTime;
     }
 }
 

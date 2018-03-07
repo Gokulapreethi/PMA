@@ -32,7 +32,7 @@ public class offlineSendService extends Service {
 
         try {
             myreciReceiver=new NetworkChangeReceiver();
-            IntentFilter intentFilter=new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
+            IntentFilter intentFilter=new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION); //Context-registered receivers
             registerReceiver(myreciReceiver, intentFilter);
         } catch (Exception e) {
             e.printStackTrace();

@@ -20,9 +20,9 @@
             android:drawablePadding="-10dp"
             android:gravity="center|start"
             android:text="Back"
-            android:textStyle="bold"
             android:textColor="@color/appcolor"
-            android:textSize="22dp" />
+            android:textSize="22dp"
+            android:textStyle="bold" />
 
         <TextView
             android:id="@+id/project_name"
@@ -782,6 +782,7 @@
                     android:layout_width="30dp"
                     android:layout_height="30dp"
                     android:background="@drawable/writeordraw" />
+
 
                 <EditText
                     android:id="@+id/observation"

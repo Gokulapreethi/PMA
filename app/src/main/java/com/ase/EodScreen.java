@@ -19,17 +19,21 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.ase.Bean.ListTaskTransaction;
 import com.ase.Bean.TaskDetailsBean;
 import com.ase.DB.VideoCallDataBase;
 
@@ -58,13 +62,72 @@ public class EodScreen extends Activity {
     boolean isCustomerSign, isObservation, isActionTaken, isCustomerRemarks, isSynopsis;
     boolean istaskCompletebyUser = false;
     boolean isForOracleProject = false;
-
+    private  ArrayList<String> observation_list, Action_Taken_list, customerRemarks_list;
     public static EodScreen getInstance() {
         return eodScreen;
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+        if (isObservation) {
+            if (Appreference.EodSketchList != null && Appreference.EodSketchList.size() > 0) {
+
+                observation_path = Appreference.EodSketchList.get(0);
+                observation_list =(ArrayList<String>) Appreference.EodSketchList.clone();
+                Appreference.observation_list = (ArrayList<String>) Appreference.EodSketchList.clone();
+                if (observation_1 != null) {
+                    File imgFile = new File(observation_path);
+                    if (imgFile.exists()) {
+                        Bitmap myBitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
+                                        /*commented by preethi 27Feb18*/
+                        observation_1.setImageBitmap(myBitmap);
+                    }
+                    observation_1.setVisibility(View.VISIBLE);
+                }
+            }
+        } else if (isActionTaken) {
+            if (Appreference.EodSketchList != null && Appreference.EodSketchList.size() > 0) {
+                Action_Taken_path = Appreference.EodSketchList.get(0);
+                Action_Taken_list = (ArrayList<String>) Appreference.EodSketchList.clone();
+                Appreference.Action_Taken_list = (ArrayList<String>) Appreference.EodSketchList.clone();
+                if (action_taken_1 != null) {
+                    File imgFile = new File(Action_Taken_path);
+                    if (imgFile.exists()) {
+                        Bitmap myBitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
+                        action_taken_1.setImageBitmap(myBitmap);
+                    }
+                    action_taken_1.setVisibility(View.VISIBLE);
+                }
+            }
+        } else if (isCustomerRemarks) {
+            if (Appreference.EodSketchList != null && Appreference.EodSketchList.size() > 0) {
+                customerRemarks_path = Appreference.EodSketchList.get(0);
+                customerRemarks_list = (ArrayList<String>) Appreference.EodSketchList.clone();
+                Appreference.customerRemarks_list = (ArrayList<String>) Appreference.EodSketchList.clone();
+                if (remarks_complete_1 != null) {
+                    File imgFile = new File(customerRemarks_path);
+                    if (imgFile.exists()) {
+                        Bitmap myBitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
+                        remarks_complete_1.setImageBitmap(myBitmap);
+                    }
+                    remarks_complete_1.setVisibility(View.VISIBLE);
+                }
+            }
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Appreference.observation_list.clear();
+        Appreference.Action_Taken_list.clear();
+        Appreference.customerRemarks_list.clear();
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.project_complete);
         context = this;
@@ -73,9 +136,8 @@ public class EodScreen extends Activity {
         taskName = getIntent().getStringExtra("taskName");
         JobCodeNo = getIntent().getStringExtra("JobCodeNo");
         ActivityCode = getIntent().getStringExtra("ActivityCode");
-
+        Appreference.context_table.put("eodscreen", this);
         TextView back = (TextView) findViewById(R.id.back);
-
         final Calendar calendar = Calendar.getInstance();
         final SimpleDateFormat mdformat = new SimpleDateFormat("yyyy-MM-dd");
         String taskcomplete_date = mdformat.format(calendar.getTime());
@@ -111,6 +173,8 @@ public class EodScreen extends Activity {
 
 
         final EditText observation = (EditText) findViewById(R.id.observation);
+
+
         Button observation_type = (Button) findViewById(R.id.observation_type);
         observation_1 = (ImageView) findViewById(R.id.observation_1);
 
@@ -140,6 +204,8 @@ public class EodScreen extends Activity {
                     public void onClick(DialogInterface dialog, int which) {
                         isobservationtextselected = true;
                         observation.setCursorVisible(true);
+                        Appreference.observation_list.clear();
+//                        observation_list.clear();
                         observation.setFocusableInTouchMode(true);
                         observation_1.setVisibility(View.GONE);
                         observation.setVisibility(View.VISIBLE);
@@ -163,6 +229,10 @@ public class EodScreen extends Activity {
                                     observation.getText().clear();
                                     observationStatus = "";
                                     observation_1.setVisibility(View.VISIBLE);
+                                    Appreference.EodSketchList.clear();
+                                    if(Appreference.observation_list!=null && Appreference.observation_list.size()>0) {
+                                        Appreference.EodSketchList = Appreference.observation_list;
+                                    }
                                     Intent i = new Intent(getApplicationContext(), HandSketchActivity2.class);
                                     //                                            i.putExtra("observation","observation");
                                     i.putExtra("isFromEod", true);
@@ -223,7 +293,8 @@ public class EodScreen extends Activity {
                         isactiontextselected = true;
                         action_taken.setCursorVisible(true);
                         action_taken.setFocusableInTouchMode(true);
-
+                        Appreference.Action_Taken_list.clear();
+//                        Action_Taken_list.clear();
                         action_taken_1.setVisibility(View.GONE);
                         action_taken.setVisibility(View.VISIBLE);
                         Action_Taken_path = "";
@@ -246,6 +317,10 @@ public class EodScreen extends Activity {
                                     actiontakenStatus = "";
                                     action_taken.setVisibility(View.GONE);
                                     action_taken_1.setVisibility(View.VISIBLE);
+                                    Appreference.EodSketchList.clear();
+                                    if(Appreference.Action_Taken_list!=null && Appreference.Action_Taken_list.size()>0) {
+                                        Appreference.EodSketchList=Appreference.Action_Taken_list;
+                                    }
                                     Intent i = new Intent(getApplicationContext(), HandSketchActivity2.class);
                                     i.putExtra("isFromEod", true);
                                     i.putExtra("isFromEodsign", false);
@@ -302,6 +377,8 @@ public class EodScreen extends Activity {
                     public void onClick(DialogInterface dialog, int which) {
                         isremarksSketchselected = false;
                         isRemarkstextselected = true;
+                        Appreference.customerRemarks_list.clear();
+//                        customerRemarks_list.clear();
                         remarks_completion.setCursorVisible(true);
                         remarks_completion.setFocusableInTouchMode(true);
                         remarks_complete_1.setVisibility(View.GONE);
@@ -325,6 +402,10 @@ public class EodScreen extends Activity {
                                     remarks_completion.getText().clear();
                                     remarks_completion.setVisibility(View.GONE);
                                     remarks_complete_1.setVisibility(View.VISIBLE);
+                                    Appreference.EodSketchList.clear();
+                                    if(Appreference.customerRemarks_list!=null &&Appreference.customerRemarks_list.size()>0) {
+                                        Appreference.EodSketchList=Appreference.customerRemarks_list;
+                                    }
                                     Intent i = new Intent(getApplicationContext(), HandSketchActivity2.class);
                                     i.putExtra("isFromEod", true);
                                     i.putExtra("isFromEodsign", false);
@@ -690,52 +771,52 @@ public class EodScreen extends Activity {
         });
         String Query = "Select * from projectHistory where projectId ='" + projectId + "' and taskId = '" + webtaskId + "'";
         detailsBean = VideoCallDataBase.getDB(context).getDetails_to_complete_project(Query);
-        String getOpen_date_query="select openDate from projectDetails where loginuser = '" + Appreference.loginuserdetails.getEmail() + "'and projectId='" + projectId + "'";
+        String getOpen_date_query = "select openDate from projectDetails where loginuser = '" + Appreference.loginuserdetails.getEmail() + "'and projectId='" + projectId + "'";
         String My_open_date = VideoCallDataBase.getDB(context).getValuesForQuery(getOpen_date_query);
         project_id.setText(detailsBean.getProjectId());
         project_name.setText("Job Card No :" + JobCodeNo + "\nActivity Code :" + ActivityCode);
         task_id.setText(ActivityCode);
         Log.i("ws123", "username or employee name===>" + Appreference.loginuserdetails.getEmail());
         try {
-            if (detailsBean.getMcModel()!=null && !detailsBean.getMcModel().equalsIgnoreCase("") && !detailsBean.getMcModel().equalsIgnoreCase(null)) {
+            if (detailsBean.getMcModel() != null && !detailsBean.getMcModel().equalsIgnoreCase("") && !detailsBean.getMcModel().equalsIgnoreCase(null)) {
                 mcModel.setText(detailsBean.getMcModel());
             }
-            if (detailsBean.getMcSrNo()!=null && !detailsBean.getMcSrNo().equalsIgnoreCase("") && !detailsBean.getMcSrNo().equalsIgnoreCase(null)) {
+            if (detailsBean.getMcSrNo() != null && !detailsBean.getMcSrNo().equalsIgnoreCase("") && !detailsBean.getMcSrNo().equalsIgnoreCase(null)) {
                 mcSrNo.setText(detailsBean.getMcSrNo());
             }
-            if (detailsBean.getMachineMake()!=null && !detailsBean.getMachineMake().equalsIgnoreCase("") && !detailsBean.getMachineMake().equalsIgnoreCase(null)) {
+            if (detailsBean.getMachineMake() != null && !detailsBean.getMachineMake().equalsIgnoreCase("") && !detailsBean.getMachineMake().equalsIgnoreCase(null)) {
                 machine_make.setText(detailsBean.getMachineMake());
             }
-            if (detailsBean.getMcDescription()!=null && !detailsBean.getMcDescription().equalsIgnoreCase("") && !detailsBean.getMcDescription().equalsIgnoreCase(null)) {
+            if (detailsBean.getMcDescription() != null && !detailsBean.getMcDescription().equalsIgnoreCase("") && !detailsBean.getMcDescription().equalsIgnoreCase(null)) {
                 description.setText(detailsBean.getMcDescription());
             }
-            if (detailsBean.getEstimatedTravel()!=null && !detailsBean.getEstimatedTravel().equalsIgnoreCase("") && !detailsBean.getEstimatedTravel().equalsIgnoreCase(null)) {
+            if (detailsBean.getEstimatedTravel() != null && !detailsBean.getEstimatedTravel().equalsIgnoreCase("") && !detailsBean.getEstimatedTravel().equalsIgnoreCase(null)) {
                 est_travel.setText(detailsBean.getEstimatedTravel());
             }
-            if (detailsBean.getEstimatedTravel()!=null && !detailsBean.getEstimatedTravel().equalsIgnoreCase("") && !detailsBean.getEstimatedTravel().equalsIgnoreCase(null)) {
+            if (detailsBean.getEstimatedTravel() != null && !detailsBean.getEstimatedTravel().equalsIgnoreCase("") && !detailsBean.getEstimatedTravel().equalsIgnoreCase(null)) {
                 est_activity.setText(detailsBean.getEstimatedTravel());
             }
 //            if (detailsBean.getMcModel()!=null && !detailsBean.getMcModel().equalsIgnoreCase("") && !detailsBean.getMcModel().equalsIgnoreCase(null)) {
 //                service_date.setText(detailsBean.getDateTime());
                 /*changing openDate format  dd-MM-yyyy to  yyyy-MM-dd */
-                String JobOpenDate = "";
-                if (My_open_date != null) {
-                    SimpleDateFormat inputFormat = new SimpleDateFormat("dd-MM-yyyy");
-                    SimpleDateFormat outputFormat = new SimpleDateFormat("yyyy-MM-dd");
-                    Date openDate;
-                    try {
-                        openDate = inputFormat.parse(My_open_date);
-                        JobOpenDate = outputFormat.format(openDate);
-                    } catch (ParseException e) {
-                        e.printStackTrace();
-                    }
-                    service_date.setText(JobOpenDate);
+            String JobOpenDate = "";
+            if (My_open_date != null) {
+                SimpleDateFormat inputFormat = new SimpleDateFormat("dd-MM-yyyy");
+                SimpleDateFormat outputFormat = new SimpleDateFormat("yyyy-MM-dd");
+                Date openDate;
+                try {
+                    openDate = inputFormat.parse(My_open_date);
+                    JobOpenDate = outputFormat.format(openDate);
+                } catch (ParseException e) {
+                    e.printStackTrace();
                 }
+                service_date.setText(JobOpenDate);
+            }
 //            }
-            if (detailsBean.getActivity()!=null && !detailsBean.getActivity().equalsIgnoreCase("") && !detailsBean.getActivity().equalsIgnoreCase(null)) {
+            if (detailsBean.getActivity() != null && !detailsBean.getActivity().equalsIgnoreCase("") && !detailsBean.getActivity().equalsIgnoreCase(null)) {
                 proj_activity.setText(detailsBean.getActivity());
             }
-            if (detailsBean.getAddress()!=null && !detailsBean.getAddress().equalsIgnoreCase("") && !detailsBean.getAddress().equalsIgnoreCase(null)) {
+            if (detailsBean.getAddress() != null && !detailsBean.getAddress().equalsIgnoreCase("") && !detailsBean.getAddress().equalsIgnoreCase(null)) {
                 address.setText(detailsBean.getAddress());
             }
         } catch (Exception e) {
@@ -827,9 +908,14 @@ public class EodScreen extends Activity {
                     if (ImageName != null && !ImageName.equalsIgnoreCase("")) {
                         file = new File(ImageName);
                         if (file.exists()) {
-                            Intent intent = new Intent(context, FullScreenImage.class);
-                            intent.putExtra("image", file.toString());
-                            context.startActivity(intent);
+                            Intent i = new Intent(EodScreen.this, FullScreenViewActivity.class);
+                            i.putExtra("position", "0");
+                            i.putExtra("pathSketch", observation_list);
+                            startActivity(i);
+
+//                            Intent intent = new Intent(context, FullScreenImage.class);
+//                            intent.putExtra("image", file.toString());
+//                            context.startActivity(intent);
                         } else {
                             File file1 = null;
                             file1 = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/High Message/" + ImageName);
@@ -859,9 +945,13 @@ public class EodScreen extends Activity {
                     if (ImageName != null && !ImageName.equalsIgnoreCase("")) {
                         file = new File(ImageName);
                         if (file.exists()) {
-                            Intent intent = new Intent(context, FullScreenImage.class);
-                            intent.putExtra("image", file.toString());
-                            context.startActivity(intent);
+                            Intent i = new Intent(EodScreen.this, FullScreenViewActivity.class);
+                            i.putExtra("position", "0");
+                            i.putExtra("pathSketch", Action_Taken_list);
+                            startActivity(i);
+//                            Intent intent = new Intent(context, FullScreenImage.class);
+//                            intent.putExtra("image", file.toString());
+//                            context.startActivity(intent);
                         } else {
                             File file1 = null;
                             file1 = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/High Message/" + ImageName);
@@ -889,9 +979,13 @@ public class EodScreen extends Activity {
                     if (ImageName != null && !ImageName.equalsIgnoreCase("")) {
                         file = new File(ImageName);
                         if (file.exists()) {
-                            Intent intent = new Intent(context, FullScreenImage.class);
-                            intent.putExtra("image", file.toString());
-                            context.startActivity(intent);
+                            Intent i = new Intent(EodScreen.this, FullScreenViewActivity.class);
+                            i.putExtra("position", "0");
+                            i.putExtra("pathSketch", customerRemarks_list);
+                            startActivity(i);
+//                            Intent intent = new Intent(context, FullScreenImage.class);
+//                            intent.putExtra("image", file.toString());
+//                            context.startActivity(intent);
                         } else {
                             File file1 = null;
                             file1 = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/High Message/" + ImageName);
@@ -1272,6 +1366,10 @@ public class EodScreen extends Activity {
             if (requestCode == 423) {
                 try {
                     strIPath = data.getStringExtra("path");
+                    String myPath = data.getStringExtra("sss");
+                    Log.i("check123", "strIPath strIPath==> " + strIPath);
+                    Log.i("check123", "strIPath myPath==> " + myPath);
+
                     Log.i("result_handsketch", "strIPath==> " + strIPath);
                     Log.i("result_handsketch", "isCustomerSign==> ## " + isCustomerSign);
                     Log.i("result_handsketch", "isObservation==> ## " + isObservation);
@@ -1292,6 +1390,7 @@ public class EodScreen extends Activity {
                             File imgFile = new File(observation_path);
                             if (imgFile.exists()) {
                                 Bitmap myBitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
+                                /*commented by preethi 27Feb18*/
                                 observation_1.setImageBitmap(myBitmap);
                             }
                             observation_1.setVisibility(View.VISIBLE);
@@ -1383,4 +1482,99 @@ public class EodScreen extends Activity {
         }
         return super.onKeyDown(keyCode, event);
     }
+
+
+
+   /* public class MySketchAdapter extends ArrayAdapter<ListTaskTransaction> {
+
+        ArrayList<ListTaskTransaction> arrayMediaList;
+        LayoutInflater inflater = null;
+        Context adapContext;
+        ImageLoader imageLoader1;
+
+
+        public MySketchAdapter(Context context, ArrayList<ListTaskTransaction> mediaList) {
+
+            super(context, R.layout.media_list_row, mediaList);
+            arrayMediaList = mediaList;
+            adapContext = context;
+            imageLoader1 = new ImageLoader(adapContext);
+        }
+        @Override
+        public int getCount() {
+            return arrayMediaList.size();
+        }
+
+
+        @Override
+        public long getItemId(int position) {
+
+            return position;
+        }
+
+        public int getItemViewType(int position) {
+            int value = 0;
+
+            return value;
+        }
+        @Override
+        public View getView(final int position, View view, ViewGroup arg2) {
+            View row = view;
+
+            try {
+                final MediaSearch.MediaListAdapter.ViewHolder holder;
+                if (row == null) {
+                    holder = new MediaSearch.MediaListAdapter.ViewHolder();
+                    LayoutInflater inflater = (LayoutInflater) adapContext
+                            .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                    row = inflater.inflate(R.layout.media_list_row, null, false);
+                    holder.taskId = (TextView) row.findViewById(R.id.fromvalue);
+                    holder.createdDate = (TextView) row.findViewById(R.id.tovalue);
+                    holder.filetype = (TextView) row.findViewById(R.id.filetype);
+                    holder.fileresource = (TextView) row.findViewById(R.id.fileresource);
+                    holder.image = (ImageView) row.findViewById(R.id.image);
+                    row.setTag(holder);
+                } else {
+                    holder = (MediaSearch.MediaListAdapter.ViewHolder) row.getTag();
+                }
+                final ListTaskTransaction pBean = (ListTaskTransaction) arrayMediaList.get(position);
+                holder.taskId.setText(pBean.getCreatedDate());
+                holder.createdDate.setText(pBean.getCreatedDate());
+                holder.fileresource.setText(pBean.getCreatedDate());
+                holder.filetype.setText("image");
+                holder.image.setBackgroundResource(R.drawable.unknown);
+
+
+
+               *//* File tech_sign = new File(pBean.getTechnicianSignature());
+                if (tech_sign.exists()) {
+                    Picasso.with(adapContext).load(tech_sign).into(holder.image);
+                } else {
+                    holder.image.setImageResource(R.drawable.unknown);
+                }*//*
+
+             *//*   File cust_sign = new File(pBean.getSignature());
+                if (cust_sign.exists()) {
+                    Picasso.with(adapContext).load(cust_sign).into(holder.image);
+                } else {
+                    holder.image.setImageResource(R.drawable.unknown);
+                }
+
+                File photo_sign = new File(pBean.getSignature());
+                if (photo_sign.exists()) {
+                    Picasso.with(adapContext).load(photo_sign).into(holder.image);
+                } else {
+                    holder.image.setImageResource(R.drawable.unknown);
+                }*//*
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return row;
+        }
+
+        private class ViewHolder {
+            TextView taskId, createdDate, filetype, fileresource;
+            ImageView image;
+        }
+    }*/
 }

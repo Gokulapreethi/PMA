@@ -3,6 +3,7 @@ package com.ase;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.ContentUris;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -16,15 +17,18 @@ import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.media.ExifInterface;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
+import android.provider.DocumentsContract;
 import android.provider.MediaStore;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Display;
 import android.view.Gravity;
 import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
@@ -71,7 +75,7 @@ public class HandSketchActivity2 extends Activity implements OnClickListener {
     private Context context;
     private boolean send = false;
     private ImageView btn_cancel1, sizeButt;
-    private Button btn_cmp, clearButt;
+    private Button btn_cmp, clearButt, addNew_sketch;
     private TextView title;
     private String folderPath = Environment.getExternalStorageDirectory() + "/High Message/";
     //	private CallDispatcher callDisp;
@@ -81,6 +85,7 @@ public class HandSketchActivity2 extends Activity implements OnClickListener {
     private String StoredFilepath, check = "pencil";
     private Uri SelectedGallaryImage;
     private LinearLayout show;
+    private LinearLayout parentLinearLayout;
     private Handler handler;
     String filename;
     boolean isFromEod, isFromEodsign;
@@ -97,7 +102,16 @@ public class HandSketchActivity2 extends Activity implements OnClickListener {
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
         setContentView(R.layout.handsketch_layout);
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
-        context = this;
+        myInit();
+        parentLinearLayout = (LinearLayout) findViewById(R.id.parent_linear_layout);
+        // ATTENTION: This was auto-generated to implement the App Indexing API.
+        // See https://g.co/AppIndexing/AndroidStudio for more information.
+//		client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
+    }
+
+
+    private void myInit() {
+
         handler = new Handler();
         try {
             send = getIntent().getBooleanExtra("send", false);
@@ -172,7 +186,12 @@ public class HandSketchActivity2 extends Activity implements OnClickListener {
 //		redoButt.setOnClickListener(this);
 
         clearButt = (Button) findViewById(R.id.clearButt);
+        addNew_sketch = (Button) findViewById(R.id.addSketch);
+        if (isFromEod) {
+            addNew_sketch.setVisibility(View.VISIBLE);
+        }
         clearButt.setOnClickListener(this);
+        addNew_sketch.setOnClickListener(this);
 
 		/*sizeButt = (ImageView) findViewById(R.id.save_btn);
         sizeButt.setOnClickListener(this);*/
@@ -215,10 +234,6 @@ public class HandSketchActivity2 extends Activity implements OnClickListener {
             }
         };
         brushSeek.setOnSeekBarChangeListener(seekListenerbrush);
-
-        // ATTENTION: This was auto-generated to implement the App Indexing API.
-        // See https://g.co/AppIndexing/AndroidStudio for more information.
-//		client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
     }
 
     @Override
@@ -286,22 +301,25 @@ public class HandSketchActivity2 extends Activity implements OnClickListener {
             } else if (imageSelectedOption == 1) {
                 if (SelectedGallaryImage != null) {
                     Bitmap board;
+                    String picturePath= getUriPath(this,SelectedGallaryImage);
 
-                    String[] filePathColumn = {MediaStore.Images.Media.DATA};
-                    Cursor cursor = getContentResolver().query(SelectedGallaryImage,
-                            filePathColumn, null, null, null);
-                    cursor.moveToFirst();
+//                    String[] filePathColumn = {MediaStore.Images.Media.DATA};
+//                    Cursor cursor = getContentResolver().query(SelectedGallaryImage,
+//                            filePathColumn, null, null, null);
+//                    cursor.moveToFirst();
+//
+//                    int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
+//                    String picturePath = cursor.getString(columnIndex);
+//                    cursor.close();
 
-                    int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
-                    String picturePath = cursor.getString(columnIndex);
-                    cursor.close();
-
-                    board = BitmapFactory.decodeFile(picturePath);
-                    int h = drawView.getHeight(); // 320; // Height in pixels
-                    int w = drawView.getWidth();// 480; // Width in pixels
-                    board = Bitmap.createScaledBitmap(
-                            BitmapFactory.decodeFile(picturePath), w, h, true);
-                    drawView.setImage(board);
+                    if (picturePath != null) {
+                        board = BitmapFactory.decodeFile(picturePath);
+                        int h = drawView.getHeight(); // 320; // Height in pixels
+                        int w = drawView.getWidth();// 480; // Width in pixels
+                        board = Bitmap.createScaledBitmap(
+                                BitmapFactory.decodeFile(picturePath), w, h, true);
+                        drawView.setImage(board);
+                    }
                 }
             }
 
@@ -316,6 +334,8 @@ public class HandSketchActivity2 extends Activity implements OnClickListener {
             } else if (drawView.count() == 0) {
                 selectImage();
             }
+        } else if (view.getId() == R.id.addSketch) {
+            saveCurrentSketch();
         } else if (view.getId() == R.id.clearButt) {
             isCleared = true;
             drawView.startNew();
@@ -377,7 +397,7 @@ public class HandSketchActivity2 extends Activity implements OnClickListener {
     }
 
     private void selectImage() {
-        final Dialog dialog = new Dialog(context);
+        final Dialog dialog = new Dialog(HandSketchActivity2.this);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setContentView(R.layout.dialog_myacc_menu);
         WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
@@ -418,10 +438,32 @@ public class HandSketchActivity2 extends Activity implements OnClickListener {
         gallery.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(
-                        Intent.ACTION_PICK,
-                        MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                startActivityForResult(intent, GALLERY_REQUEST);
+
+
+                if (Build.VERSION.SDK_INT < 19) {
+                    Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+                    intent.setType("image/*");
+                    startActivityForResult(intent, GALLERY_REQUEST);
+                } else {
+                    Log.i("img", "sdk is above 19");
+                    Log.i("clone", "====> inside gallery");
+                    Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
+                    intent.addCategory(Intent.CATEGORY_OPENABLE);
+                    intent.setType("image/*");
+                    startActivityForResult(intent, GALLERY_REQUEST);
+                }
+//                Intent intent = new Intent();
+//                intent.setType("image/*");
+//                intent.setAction(Intent.ACTION_GET_CONTENT);
+//                startActivityForResult(Intent.createChooser(intent,
+//                        "Select Picture"), 1);
+
+
+//
+//                Intent intent = new Intent(
+//                        Intent.ACTION_PICK,
+//                        MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+//                startActivityForResult(intent, GALLERY_REQUEST);
                 dialog.dismiss();
             }
         });
@@ -431,12 +473,6 @@ public class HandSketchActivity2 extends Activity implements OnClickListener {
 
         // save drawing
 
-		/*AlertDialog.Builder saveDialog = new AlertDialog.Builder(this);
-                saveDialog.setTitle("Send Handsketch");
-				saveDialog.setMessage("Send handsketch?");
-		saveDialog.setPositiveButton("Yes",
-				new DialogInterface.OnClickListener() {
-					public void onClick(DialogInterface dialog, int which) {*/
         // save drawing
         drawView.setDrawingCacheEnabled(true);
         // attempt to save
@@ -476,11 +512,7 @@ public class HandSketchActivity2 extends Activity implements OnClickListener {
         }
         // feedback
         if (imgSaved != null) {
-            // Toast savedToast = Toast.makeText(
-            // getApplicationContext(),
-            // "Drawing saved to Gallery!",
-            // Toast.LENGTH_SHORT);
-            // savedToast.show();
+
         } else {
             Toast unsavedToast = Toast.makeText(
                     getApplicationContext(),
@@ -491,9 +523,32 @@ public class HandSketchActivity2 extends Activity implements OnClickListener {
         drawView.destroyDrawingCache();
         try {
             if (isFromEod) {
-                Intent intent = new Intent(HandSketchActivity2.this, CropImage.class);
-                intent.putExtra("path", filename);
-                startActivityForResult(intent, 423);
+                try {
+                    AlertDialog.Builder saveDialog = new AlertDialog.Builder(HandSketchActivity2.this);
+                    saveDialog.setTitle("Hand sketch");
+                    saveDialog.setCancelable(false);
+                    saveDialog.setMessage("Do you want to crop this Image?");
+                    saveDialog.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog1, int which) {
+                            Intent intent = new Intent(HandSketchActivity2.this, CropImage.class);
+                            intent.putExtra("path", filename);
+                            startActivityForResult(intent, 423);
+                        }
+                    });
+                    saveDialog.setNegativeButton("No",
+                            new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog1, int which) {
+                                    Appreference.EodSketchList.add(filename);
+                                    Log.i("check123", "Sketch File saveNote == No ===> " + Appreference.EodSketchList);
+                                    finish();
+                                }
+                            });
+                    saveDialog.show();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    Appreference.printLog("HandSketchActivity2 onKeyDown", "Exception " + e.getMessage(), "WARN", null);
+                }
+
 //                alert_dialog();
             } else {
                 Intent i = new Intent();
@@ -507,15 +562,100 @@ public class HandSketchActivity2 extends Activity implements OnClickListener {
             e.printStackTrace();
             Appreference.printLog("HandSketchActivity2 saveNote", "Exception " + e.getMessage(), "WARN", null);
         }
-        //}
-        //});
-        /*saveDialog.setNegativeButton("Cancel",
-                new DialogInterface.OnClickListener() {
-					public void onClick(DialogInterface dialog, int which) {
-						dialog.cancel();
-					}
-				});
-		saveDialog.show();*/
+    }
+
+
+    public void saveCurrentSketch() {
+        drawView.setDrawingCacheEnabled(true);
+        // attempt to save
+        File dir = new File(folderPath);
+        Log.i("thgg", "#####################" + dir.exists());
+        if (!dir.exists()) {
+            dir.mkdir();
+        }
+        filename = folderPath + "Sketch_file"
+                + getFileName() + ".jpg";
+        String imgSaved =
+                MediaStore.Images.Media.insertImage(
+                        getContentResolver(),
+                        drawView.getDrawingCache(), filename, "drawing");
+        Bitmap img = drawView.getDrawingCache();
+        Log.i("sketch", "img==> " + img);
+        Log.i("sketch", "filename==> " + filename);
+        Log.i("Crop", "sketch getHeight==> " + img.getHeight());
+        Log.i("Crop", "sketch getWidth==> " + img.getWidth());
+
+        if (img != null) {
+            BufferedOutputStream stream;
+            try {
+                stream = new BufferedOutputStream(new FileOutputStream(new File(filename)));
+                img.compress(CompressFormat.JPEG, 75, stream);
+
+                imgSaved = "saved";
+
+            } catch (FileNotFoundException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+                Appreference.printLog("HandSketchActivity2 saveNote", "Exception " + e.getMessage(), "WARN", null);
+            }
+
+        }
+//        Appreference.EodSketchList.add(filename);
+//        Log.i("check123","Sketch File saveCurrentSketch ===> "+Appreference.EodSketchList);
+
+        // feedback
+        if (imgSaved != null) {
+
+        } else {
+            Toast unsavedToast = Toast.makeText(
+                    getApplicationContext(),
+                    "Oops! Image could not be saved.",
+                    Toast.LENGTH_SHORT);
+            unsavedToast.show();
+        }
+        try {
+            if (isFromEod) {
+                try {
+                    AlertDialog.Builder saveDialog = new AlertDialog.Builder(HandSketchActivity2.this);
+                    saveDialog.setTitle("Hand sketch");
+                    saveDialog.setCancelable(false);
+                    saveDialog.setMessage("Do you want to crop this Image?");
+                    saveDialog.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog1, int which) {
+                            Intent intent = new Intent(HandSketchActivity2.this, CropImage.class);
+                            intent.putExtra("path", filename);
+                            startActivityForResult(intent, 424);
+                        }
+                    });
+                    saveDialog.setNegativeButton("No",
+                            new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog1, int which) {
+                                    Appreference.EodSketchList.add(filename);
+                                    Log.i("check123", "Sketch File saveCurrentSketch == No ===> " + Appreference.EodSketchList);
+//                                    LayoutInflater layoutInflater =
+//                                            (LayoutInflater) getBaseContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+//                                    final View rowView = layoutInflater.inflate(R.layout.handsketch_layout_new, null,false);
+//                                    // Add the new row before the add field button.
+//                                    parentLinearLayout.addView(rowView);
+                                    Intent i = new Intent(getApplicationContext(), HandSketchActivity2.class);
+                                    i.putExtra("isFromEod", true);
+                                    i.putExtra("isFromEodsign", false);
+                                    startActivity(i);
+                                    finish();
+                                }
+                            });
+                    saveDialog.show();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    Appreference.printLog("HandSketchActivity2 onKeyDown", "Exception " + e.getMessage(), "WARN", null);
+                }
+            }
+
+        } catch (Exception e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+            Appreference.printLog("HandSketchActivity2 saveNote", "Exception " + e.getMessage(), "WARN", null);
+        }
 
     }
 
@@ -601,13 +741,6 @@ public class HandSketchActivity2 extends Activity implements OnClickListener {
     @Override
     protected void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
         try {
-//			super.onActivityResult(requestCode, resultCode, data);
-//			handler.post(new Runnable() {
-//				@Override
-//				public void run() {
-
-//					Bitmap board;
-
             Appreference.isImageSelected = false;
             if (requestCode == CAMERA_REQUEST && resultCode == RESULT_OK) {
                 String filePath = data.getStringExtra("filePath");
@@ -650,6 +783,9 @@ public class HandSketchActivity2 extends Activity implements OnClickListener {
                     && resultCode == RESULT_OK && data != null) {
                 imageSelectedOption = 1;
                 SelectedGallaryImage = data.getData();
+//                Uri selectedImageUri = data.getData();
+//
+//                String SelectedGallaryImage1 = getUriPath(this,selectedImageUri);
                 handler.postDelayed(new Runnable() {
                     @Override
                     public void run() {
@@ -657,31 +793,32 @@ public class HandSketchActivity2 extends Activity implements OnClickListener {
                         drawBtn.performClick();
                     }
                 }, 2000);
-//						String[] filePathColumn = {MediaStore.Images.Media.DATA};
-//
-//						Cursor cursor = getContentResolver().query(selectedImage,
-//								filePathColumn, null, null, null);
-//						cursor.moveToFirst();
-//
-//						int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
-//						String picturePath = cursor.getString(columnIndex);
-//						cursor.close();
-//
-//						// board=BitmapFactory.decodeFile(picturePath);
-//						int h = drawView.getHeight(); // 320; // Height in pixels
-//						int w = drawView.getWidth();// 480; // Width in pixels
-//						board = Bitmap.createScaledBitmap(
-//								BitmapFactory.decodeFile(picturePath), w, h, true);
-//						drawView.setImage(board);
-//						drawView.setErase(false);
-
             } else if (requestCode == 423) {
                 String crop_image = data.getStringExtra("path");
-                Log.i("Crop", "sketch crop_image ==> " + crop_image);
-                Intent i = new Intent();
-                i.putExtra("path", crop_image);
-                setResult(RESULT_OK, i);
+                Appreference.EodSketchList.add(crop_image);
+                Log.i("check123", "Sketch File requestCode == 423 ===> " + Appreference.EodSketchList);
+//                EodScreen eodScreen=(EodScreen)Appreference.context_table.get("eodscreen");
+//                if(eodScreen!=null){
+//                    eodScreen.getMySketch_FileNames(Appreference.EodSketchList);
+//                }
+//                Log.i("Crop", "sketch crop_image ==> " + crop_image);
+//                Intent i = new Intent();
+//                i.putExtra("path", crop_image);
+//                i.putExtra("sss", Appreference.EodSketchList);
+//                setResult(RESULT_OK, i);
                 finish();
+
+            } else if (requestCode == 424) {
+                String crop_image = data.getStringExtra("path");
+                Appreference.EodSketchList.add(crop_image);
+                Log.i("check123", "Sketch File requestCode == 424 ===> " + Appreference.EodSketchList);
+
+                Intent i = new Intent(getApplicationContext(), HandSketchActivity2.class);
+                i.putExtra("isFromEod", true);
+                i.putExtra("isFromEodsign", false);
+                startActivity(i);
+                finish();
+
             }
 //				}
 //			});
@@ -693,6 +830,140 @@ public class HandSketchActivity2 extends Activity implements OnClickListener {
 
     }
 
+    public static String getUriPath(final Context context, final Uri uri) {
+
+        final boolean isKitKat = Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT;
+
+        // DocumentProvider
+        if (isKitKat && DocumentsContract.isDocumentUri(context, uri)) {
+            // ExternalStorageProvider
+            if (isExternalStorageDocument(uri)) {
+                final String docId = DocumentsContract.getDocumentId(uri);
+                final String[] split = docId.split(":");
+                final String type = split[0];
+
+                if ("primary".equalsIgnoreCase(type)) {
+                    return Environment.getExternalStorageDirectory() + "/" + split[1];
+                }
+
+                // TODO handle non-primary volumes
+            }
+            // DownloadsProvider
+            else if (isDownloadsDocument(uri)) {
+
+                final String id = DocumentsContract.getDocumentId(uri);
+                final Uri contentUri = ContentUris.withAppendedId(
+                        Uri.parse("content://downloads/public_downloads"), Long.valueOf(id));
+
+                return getDataColumn(context, contentUri, null, null);
+            }
+            // MediaProvider
+            else if (isMediaDocument(uri)) {
+                final String docId = DocumentsContract.getDocumentId(uri);
+                final String[] split = docId.split(":");
+                final String type = split[0];
+
+                Uri contentUri = null;
+                if ("image".equals(type)) {
+                    contentUri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
+                } else if ("video".equals(type)) {
+                    contentUri = MediaStore.Video.Media.EXTERNAL_CONTENT_URI;
+                } else if ("audio".equals(type)) {
+                    contentUri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
+                }
+
+                final String selection = "_id=?";
+                final String[] selectionArgs = new String[]{
+                        split[1]
+                };
+
+                return getDataColumn(context, contentUri, selection, selectionArgs);
+            }
+        }
+        // MediaStore (and general)
+        else if ("content".equalsIgnoreCase(uri.getScheme())) {
+
+            // Return the remote address
+            if (isGooglePhotosUri(uri))
+                return uri.getLastPathSegment();
+
+            return getDataColumn(context, uri, null, null);
+        }
+        // File
+        else if ("file".equalsIgnoreCase(uri.getScheme())) {
+            return uri.getPath();
+        }
+
+        return null;
+    }
+
+    /**
+     * Get the value of the data column for this Uri. This is useful for
+     * MediaStore Uris, and other file-based ContentProviders.
+     *
+     * @param context       The context.
+     * @param uri           The Uri to query.
+     * @param selection     (Optional) Filter used in the query.
+     * @param selectionArgs (Optional) Selection arguments used in the query.
+     * @return The value of the _data column, which is typically a file path.
+     */
+    public static String getDataColumn(Context context, Uri uri, String selection,
+                                       String[] selectionArgs) {
+
+        Cursor cursor = null;
+        final String column = "_data";
+        final String[] projection = {
+                column
+        };
+
+        try {
+            cursor = context.getContentResolver().query(uri, projection, selection, selectionArgs,
+                    null);
+            if (cursor != null && cursor.moveToFirst()) {
+                final int index = cursor.getColumnIndexOrThrow(column);
+                return cursor.getString(index);
+            }
+        } finally {
+            if (cursor != null)
+                cursor.close();
+        }
+        return null;
+    }
+
+
+    /**
+     * @param uri The Uri to check.
+     * @return Whether the Uri authority is ExternalStorageProvider.
+     */
+    public static boolean isExternalStorageDocument(Uri uri) {
+        return "com.android.externalstorage.documents".equals(uri.getAuthority());
+    }
+
+    /**
+     * @param uri The Uri to check.
+     * @return Whether the Uri authority is DownloadsProvider.
+     */
+    public static boolean isDownloadsDocument(Uri uri) {
+        return "com.android.providers.downloads.documents".equals(uri.getAuthority());
+    }
+
+    /**
+     * @param uri The Uri to check.
+     * @return Whether the Uri authority is MediaProvider.
+     */
+    public static boolean isMediaDocument(Uri uri) {
+        return "com.android.providers.media.documents".equals(uri.getAuthority());
+    }
+
+    /**
+     * @param uri The Uri to check.
+     * @return Whether the Uri authority is Google Photos.
+     */
+    public static boolean isGooglePhotosUri(Uri uri) {
+        return "com.google.android.apps.photos.content".equals(uri.getAuthority());
+    }
+
+
     public void alert_dialog() {
         try {
             AlertDialog.Builder saveDialog = new AlertDialog.Builder(HandSketchActivity2.this);
@@ -701,6 +972,7 @@ public class HandSketchActivity2 extends Activity implements OnClickListener {
             saveDialog.setMessage("Are you sure want to go back?");
             saveDialog.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog1, int which) {
+                    Appreference.EodSketchList.clear();
                     finish();
                     overridePendingTransition(R.anim.left_to_right, R.anim.right_to_left);
                 }
@@ -803,7 +1075,7 @@ public class HandSketchActivity2 extends Activity implements OnClickListener {
 
         // ATTENTION: This was auto-generated to implement the App Indexing API.
     /*	// See https://g.co/AppIndexing/AndroidStudio for more information.
-		Action viewAction = Action.newAction(
+        Action viewAction = Action.newAction(
 				Action.TYPE_VIEW, // TODO: choose an action type.
 				"HandSketchActivity2 Page", // TODO: Define a title for the content shown.
 				// TODO: If you have web page content that matches this app activity's content,

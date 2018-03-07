@@ -151,6 +151,22 @@ public class Appreference {
     public static boolean isTemplateTaskProfile = false;
     public static boolean isPasswordChanged = false;
 
+
+
+
+    /************ADDED FOR ASE PHASE 2 FEB 26********/
+
+    public static int setlatestFilteredOption = -1;
+    public static ArrayList<String> EodSketchList = new ArrayList<String>();
+    public static ArrayList<String> observation_list = new ArrayList<String>();
+    public static ArrayList<String> Action_Taken_list = new ArrayList<String>();
+    public static ArrayList<String> customerRemarks_list = new ArrayList<String>();
+
+
+
+
+    /************ADDED FOR ASE PHASE 2 FEB 26********/
+
     public static void printLog(String tag, String message, String type,
                                 Throwable e) {
         try {

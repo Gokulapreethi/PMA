@@ -929,7 +929,7 @@ public class TravelJobDetails extends Activity implements View.OnClickListener, 
 
                 public boolean onMenuItemClick(MenuItem item) {
                     if (item.getTitle().toString().equalsIgnoreCase("Start")) {
-                        String timerToSet = getEstimatedTime_to_set();
+                        String timerToSet = getEstimatedTime_to_set(true);
                         sendStatus_webservice("0", timerToSet, "", "Started", "Started");
                     }
                     if (item.getTitle().toString().equalsIgnoreCase("Complete")) {
@@ -1082,7 +1082,7 @@ public class TravelJobDetails extends Activity implements View.OnClickListener, 
         }
     }
 
-    private String getEstimatedTime_to_set() {
+    private String getEstimatedTime_to_set(boolean isTravelStartNow) {
         String timer = "";
         try {
             int timer_hour = 0, timer_minutes = 0;
@@ -1098,44 +1098,92 @@ public class TravelJobDetails extends Activity implements View.OnClickListener, 
             } catch (ParseException e) {
                 e.printStackTrace();
             }
-            Calendar calendar = Calendar.getInstance();
-            calendar.setTime(date);
-            String estim_timeQuery = "Select * from projectHistory where projectId ='" + projectId + "' and taskId = '" + webtaskId + "'";
-            String timeToAdd = VideoCallDataBase.getDB(context).getEstimHoursForTaskId(estim_timeQuery);
-            Log.i("estim123", "estimated Time added===>*****" + timeToAdd);
+            if (isTravelStartNow) {
+                Calendar calendar = Calendar.getInstance();
+                calendar.setTime(date);
+                String estim_timeQuery = "Select * from projectHistory where projectId ='" + projectId + "' and taskId = '" + webtaskId + "'";
+                String timeToAdd = VideoCallDataBase.getDB(context).getEstimHoursForTaskId(estim_timeQuery);
+                Log.i("estim123", "estimated Time added===>*****" + timeToAdd);
 
-            if (timeToAdd!=null && !timeToAdd.equalsIgnoreCase("0") && !timeToAdd.equalsIgnoreCase("0.0")) {
-                //        timeToAdd= String.valueOf(0.10);
-                double d_timeToAdd=Double.parseDouble(timeToAdd);
+                if (timeToAdd != null && !timeToAdd.equalsIgnoreCase("0") && !timeToAdd.equalsIgnoreCase("0.0")) {
+//                            timeToAdd= String.valueOf(0.10);
+                    double d_timeToAdd = Double.parseDouble(timeToAdd);
 
-                Log.i("checktime123", "estimated Time timeToAdd===>*****" + timeToAdd);
+                    Log.i("checktime123", "estimated Time timeToAdd===>*****" + timeToAdd);
 
-                if (timeToAdd!=null && !(d_timeToAdd==(Math.ceil(d_timeToAdd)))) {
-        //            String timer_result[] = timeToAdd.split("\\.");
-                    double d_minutes=d_timeToAdd%1;
-                    int i_hour=(int)d_timeToAdd;
-                    Log.i("checktime123", "Integer.parseInt(timer_result[0])===>*****" + i_hour);
-                    Log.i("checktime123", "(Integer.parseInt(timer_result[1])======"+d_minutes);
-                    Log.i("checktime123", "(Integer.parseInt(timer_result[1]*60)======"+d_minutes* 60);
+                    if (timeToAdd != null && !(d_timeToAdd == (Math.ceil(d_timeToAdd)))) {
+                        //            String timer_result[] = timeToAdd.split("\\.");
+                        double d_minutes = d_timeToAdd % 1;
+                        int i_hour = (int) d_timeToAdd;
+                        Log.i("checktime123", "Integer.parseInt(timer_result[0])===>*****" + i_hour);
+                        Log.i("checktime123", "(Integer.parseInt(timer_result[1])======" + d_minutes);
+                        Log.i("checktime123", "(Integer.parseInt(timer_result[1]*60)======" + d_minutes * 60);
 
-                    try {
-                        timer_hour = i_hour;
-                        timer_minutes = (int) (d_minutes* 60);
-                    } catch (NumberFormatException e) {
-                        e.printStackTrace();
+                        try {
+                            timer_hour = i_hour;
+                            timer_minutes = (int) (d_minutes * 60);
+                        } catch (NumberFormatException e) {
+                            e.printStackTrace();
+                        }
+                        calendar.add(Calendar.HOUR, timer_hour);
+                        calendar.add(Calendar.MINUTE, timer_minutes);
+                    } else {
+                        try {
+                            calendar.add(Calendar.HOUR, Integer.parseInt(timeToAdd));
+                        } catch (NumberFormatException e) {
+                            e.printStackTrace();
+                        }
                     }
-                    calendar.add(Calendar.HOUR, timer_hour);
-                    calendar.add(Calendar.MINUTE, timer_minutes);
-                } else {
-                    try {
-                        calendar.add(Calendar.HOUR, Integer.parseInt(timeToAdd));
-                    } catch (NumberFormatException e) {
-                        e.printStackTrace();
-                    }
+                    final SimpleDateFormat mdformat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                    timer = mdformat.format(calendar.getTime());
+                    Log.i("estim123", "Calculated Timer details===>timer******" + timer);
                 }
-                final SimpleDateFormat mdformat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-                timer = mdformat.format(calendar.getTime());
-                Log.i("estim123", "Calculated Timer details===>timer******" + timer);
+            } else {
+                try {
+                    String taskQueryRemainingTime = "select estimRemainingTime from taskDetailsInfo where (taskDescription='Task is Started') and projectId='" + projectId + "'and taskId= '" + webtaskId + "'";
+                    String getLastEndTime = VideoCallDataBase.getDB(context).getValuefromDBEntry(taskQueryRemainingTime, "estimRemainingTime");
+                    String taskQuery = "select estimTime from taskDetailsInfo where (taskDescription='Task is Started') and projectId='" + projectId + "'and taskId= '" + webtaskId + "'";
+                    String getEstimatedTimer = VideoCallDataBase.getDB(context).getValuefromDBEntry(taskQuery, "estimTime");
+                    Log.i("remain123", " getEstimatedTime_to_set getEstimatedTime========>" + getEstimatedTimer);
+                    Log.i("remain123", " getEstimatedTime_to_set getLastEndTime FROM DB========>" + getLastEndTime);
+
+                    if (getLastEndTime != null) {
+                        String dateTime_fromDB[] = getLastEndTime.split(" ");
+                        Date datefromDB = null;
+                        Log.i("remain123", "getEstimatedTime_to_set split Time From DB dateTime_fromDB[0]*****" + dateTime_fromDB[0]);
+                        Log.i("remain123", "getEstimatedTime_to_set split Time From DB dateTime_fromDB[1]*****" + dateTime_fromDB[1]);
+
+
+                        Calendar calendar = Calendar.getInstance();
+                        calendar.setTime(date);
+
+                        String timeToAdd = null;
+                        if (dateTime_fromDB != null) {
+                            timeToAdd = dateTime_fromDB[1];
+                        }
+
+                        if (timeToAdd != null && !timeToAdd.equalsIgnoreCase("")) {
+                            String HMS_fromDB[] = timeToAdd.split(":");
+                            if (HMS_fromDB != null) {
+                                int hour_DB = Integer.parseInt(HMS_fromDB[0]);
+                                int minutes_DB = Integer.parseInt(HMS_fromDB[1]);
+                                int seconds_DB = Integer.parseInt(HMS_fromDB[2]);
+                                calendar.add(Calendar.HOUR, hour_DB);
+                                calendar.add(Calendar.MINUTE, minutes_DB);
+                                calendar.add(Calendar.SECOND, seconds_DB);
+
+
+                              /*  calendar.add(Calendar.HOUR, 0);
+                                calendar.add(Calendar.MINUTE, 4);
+                                calendar.add(Calendar.SECOND, seconds_DB);*/
+                                final SimpleDateFormat mdformat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                                timer = mdformat.format(calendar.getTime());
+                            }
+                        }
+                    }
+                } catch (NumberFormatException e) {
+                    e.printStackTrace();
+                }
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -1274,6 +1322,37 @@ public class TravelJobDetails extends Activity implements View.OnClickListener, 
                         travel_date_details.add("Longitude : " + taskDetailsBean.getEndDateLongitude());
                         taskDetailsBean.setTravelEndTime(ActivityEnddate);
                     }
+
+                    if (status.equalsIgnoreCase("7")) {
+                        String restartTimer = getEstimatedTime_to_set(false);
+                        Log.i("remain123", "Newtask conv restart restartTimer value***********" + restartTimer);
+
+                        if (restartTimer != null && !restartTimer.equalsIgnoreCase("")) {
+
+
+                              /*update query : set alarm toned*/
+                            String AlarmRingedUpdateQuery = "update taskDetailsInfo set EstimAlarm='1' where projectId='" + projectId + "'and taskId= '" + webtaskId + "'";
+                            Log.i("estimtone123", "updateSnoozeTime_query***********" + AlarmRingedUpdateQuery);
+                            VideoCallDataBase.getDB(context).updateaccept(AlarmRingedUpdateQuery);
+
+                /*update Query : set Task completed before the EstimatedHours*/
+                            String EstimatedTimeQuery = "update taskDetailsInfo set estimCompletion='0' where (taskDescription='Task is Started') and projectId='" + projectId + "'and taskId= '" + webtaskId + "'";
+                            Log.i("tone123", "updateSnoozeTime_query***********" + EstimatedTimeQuery);
+                            VideoCallDataBase.getDB(context).updateaccept(EstimatedTimeQuery);
+
+
+                            String EstimTimeQuery = "update taskDetailsInfo set estimTime='" + restartTimer + "' where (taskDescription='Task is Started') and projectId='" + projectId + "'and taskId= '" + webtaskId + "'";
+                            Log.i("remain123", "estimTime restart time set query***********" + EstimatedTimeQuery);
+                            VideoCallDataBase.getDB(context).updateaccept(EstimTimeQuery);
+
+                            String taskQuery = "select estimTime from taskDetailsInfo where (taskDescription='Task is Started') and projectId='" + projectId + "'and taskId= '" + webtaskId + "'";
+                            String getEstimatedTimer = VideoCallDataBase.getDB(context).getValuefromDBEntry(taskQuery, "estimTime");
+                            Log.i("remain123", "estimTime restart EnteredValue***********" + getEstimatedTimer);
+                            Appreference.Estim_travel_TimerValue = restartTimer;
+                          /*  startHoldOrPauseAlarmManager(restartTimer, webtaskId, projectCurrentStatus, taskDetailsBean.getProjectId(), "EstimTimer");
+                            ShowEstimTimerDisplay(false);*/
+                        }
+                    }
                 } catch (Exception e) {
                     e.printStackTrace();
                     Appreference.printLog("TravelJobDetails", "sendStatus_webservice travel_date_details Exception : " + e.getMessage(), "WARN", null);
@@ -1342,7 +1421,7 @@ public class TravelJobDetails extends Activity implements View.OnClickListener, 
 
             if (projectCurrentStatus != null && projectCurrentStatus.equalsIgnoreCase("DeAssign")) {
                 isDeassign = true;
-                taskDetailsBean.setTaskDescription(Appreference.loginuserdetails.getFirstName()+" "+Appreference.loginuserdetails.getLastName()+ " Left");
+                taskDetailsBean.setTaskDescription(Appreference.loginuserdetails.getFirstName() + " " + Appreference.loginuserdetails.getLastName() + " Left");
                 taskDetailsBean.setSubType("deassign");
             } else if (status.equalsIgnoreCase("7") || status.equalsIgnoreCase("9")) {
                 taskDetailsBean.setTaskDescription("Gathering Details...");
@@ -1527,7 +1606,7 @@ public class TravelJobDetails extends Activity implements View.OnClickListener, 
                         Log.i("tone123", "updateSnoozeTime_query***********" + EstimatedTimeQuery);
                         VideoCallDataBase.getDB(context).updateaccept(EstimatedTimeQuery);
                     }
-                    if (!status.equalsIgnoreCase("8")) {
+                    if (!status.equalsIgnoreCase("8") && !status.equalsIgnoreCase("9")) {
                         Log.i("estim1234", "task started response ************");
                         String estim_taskQuery = "select * from taskDetailsInfo where projectId='" + projectId + "'and taskId= '" + webtaskId + "' and estimCompletion='1'";
                         int getEstimatedTimerCompleted = VideoCallDataBase.getDB(context).getCountForTravelEntry(estim_taskQuery);
@@ -1541,6 +1620,7 @@ public class TravelJobDetails extends Activity implements View.OnClickListener, 
                     }
                     /*code started for EstimTimer :positive Alert after DB Entry*/
                     if (status.equalsIgnoreCase("9")) {
+                        Appreference.isEstimPositiveAlertShown = false;
                         ShowEstimWishAlert(projectId, webtaskId);
                     }
                   /*code Ended for EstimTimer*/
@@ -1560,13 +1640,67 @@ public class TravelJobDetails extends Activity implements View.OnClickListener, 
 
     private void ShowEstimWishAlert(String projectId, String taskId) {
         try {
-            Log.i("reminder123","ShowEstimWishAlert=====>");
+            Log.i("reminder123", "ShowEstimWishAlert=====>");
 
             String taskQuery = "select EstimAlarm from taskDetailsInfo where (taskDescription='Task is Started') and projectId='" + projectId + "'and taskId= '" + webtaskId + "'";
             String getEstimetedTimeAlertShownOrNot = VideoCallDataBase.getDB(context).getAlertShownstatus(taskQuery, "EstimAlarm");
 
             Log.i("estimtone123", "getEstimetedTimeAlertShownOrNot taskQuery==>" + taskQuery);
             Log.i("estimtone123", "getEstimetedTimeAlertShownOrNot ==>" + getEstimetedTimeAlertShownOrNot);
+
+
+
+            /********************************************/
+            /*******************added 7thMar18 ********/
+            /********************************************/
+
+            /*start for RemainingTime estim timer*/
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            String getLastEndTime = sdf.format(new Date());
+
+            /*getLastEndTime interval details*/
+            String Expected_HMS;
+//            String taskQueryRemainingTime = "select estimRemainingTime from taskDetailsInfo where (taskStatus='Started') and projectId='" + projectId + "'and taskId= '" + webtaskId + "'";
+//            String getLastEndTime = VideoCallDataBase.getDB(context).getValuefromDBEntry(taskQueryRemainingTime, "estimRemainingTime");
+            String initialEstimTime = "select estimTime from taskDetailsInfo where (taskDescription='Task is Started') and projectId='" + projectId + "'and taskId= '" + webtaskId + "'";
+            String getEstimatedTimer = VideoCallDataBase.getDB(context).getValuefromDBEntry(initialEstimTime, "estimTime");
+            Log.i("remain123", " showEstimWishAlert  getEstimatedTime==============>" + getEstimatedTimer);
+            Date date2 = null;
+            Date date1 = null;
+            try {
+                date1 = sdf.parse(getLastEndTime);
+                date2 = sdf.parse(getEstimatedTimer);
+            } catch (Exception e) {
+                Log.i("remain123", " showEstimWishAlert  data parse Exception==============>" + e.getMessage());
+                e.printStackTrace();
+            }
+            final long mills = date2.getTime() - date1.getTime();
+            final long seconds = 1000;
+            Log.i("remain123", " showEstimWishAlert  mills==============>" + mills);
+
+            if (mills > 0) {
+                String hms = String.format("%02d:%02d:%02d", TimeUnit.MILLISECONDS.toHours(mills), TimeUnit.MILLISECONDS.toMinutes(mills) - TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(mills)), TimeUnit.MILLISECONDS.toSeconds(mills) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(mills)));
+                Log.i("remain123", "Remaining Time" + hms);
+//                    timer = hms;
+                Expected_HMS = hms;
+            } else
+                Expected_HMS = "";
+            Log.i("remain123", " showEstimWishAlert  Expected_HMS==============>" + Expected_HMS);
+
+            if (Expected_HMS!=null & !Expected_HMS.equalsIgnoreCase("")) {
+                Calendar calendar = Calendar.getInstance();
+                SimpleDateFormat mdformat = new SimpleDateFormat("yyyy-MM-dd");
+                String strDate = mdformat.format(calendar.getTime());
+                Expected_HMS = strDate + " " + Expected_HMS;
+                String EstimatedRemainingTimeQuery = "update taskDetailsInfo set estimRemainingTime='" + Expected_HMS + "' where (taskDescription='Task is Started') and projectId='" + projectId + "'and taskId= '" + webtaskId + "'";
+                Log.i("remain123", "updateSnoozeTime_query***********" + EstimatedRemainingTimeQuery);
+                VideoCallDataBase.getDB(context).updateaccept(EstimatedRemainingTimeQuery);
+            }
+            Log.i("remain123", "showEstimWishAlert  Expected_HMS DB Updated==============>");
+
+            /********************************************/
+            /*end for RemainingTime estim timer*/
+            /********************************************/
 
 
             if ((getEstimetedTimeAlertShownOrNot != null && !getEstimetedTimeAlertShownOrNot.equalsIgnoreCase("")
@@ -1594,7 +1728,7 @@ public class TravelJobDetails extends Activity implements View.OnClickListener, 
                             @Override
                             public void run() {
                                 if (!Appreference.isEstimPositiveAlertShown) {
-                                    Appreference.isEstimPositiveAlertShown=true;
+                                    Appreference.isEstimPositiveAlertShown = true;
                                     EstimTimerstop();
 
                                     MainActivity.startAlarmRingTone();
@@ -1849,7 +1983,7 @@ public class TravelJobDetails extends Activity implements View.OnClickListener, 
     }
 
     public void PercentageWebService(String getMediaType, String getMediaPath, String getExt, String sig_id, int isDateorUpdateorNormal, TaskDetailsBean bean) {
-        Log.i("reminder123","PercentageWebService=====>");
+        Log.i("reminder123", "PercentageWebService=====>");
 
         try {
             if (!getMediaPath.equals(null)) {
@@ -2892,7 +3026,7 @@ public class TravelJobDetails extends Activity implements View.OnClickListener, 
         try {
             Log.d("chat", "------sendMessage entry------");
             Log.i("taskConversation", "private sendMessage * 0 ");
-            Log.i("reminder123","PercentageWebService=====>");
+            Log.i("reminder123", "PercentageWebService=====>");
 
 
             SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -3051,7 +3185,7 @@ public class TravelJobDetails extends Activity implements View.OnClickListener, 
 
                 refresh();
                 listLastposition();
-                Log.i("reminder123","project status in sendMessage=END ====>"+chatBean.getProjectStatus());
+                Log.i("reminder123", "project status in sendMessage=END ====>" + chatBean.getProjectStatus());
             }
             Log.i("estim1234", "=============================");
             Log.i("estim1234", "listOfObservers******" + listOfObservers);
@@ -3656,7 +3790,7 @@ public class TravelJobDetails extends Activity implements View.OnClickListener, 
         boolean isAssigned = false;
         if (WebServiceEnum_Response != null && WebServiceEnum_Response.equalsIgnoreCase(("taskStatus"))) {
             Log.i(tab, "NewTaskConverstaion taskStatus ResponceMethod");
-            Log.i("reminder123","taskStatus response=====>");
+            Log.i("reminder123", "taskStatus response=====>");
             try {
                 final JSONObject jsonObject = new JSONObject(communicationBean.getEmail());
                 if (((String) jsonObject.get("result_text")).equalsIgnoreCase("task started")) {
@@ -3720,8 +3854,8 @@ public class TravelJobDetails extends Activity implements View.OnClickListener, 
                     Appreference.printLog("TravelJobDetails", "ResponceMethod runOnUiThread complete Exception : " + e.getMessage(), "WARN", null);
                 }
 
-                if(detailsBean.getProjectStatus()!=null && detailsBean.getProjectStatus().equalsIgnoreCase("9")){
-                    Appreference.isEstimPositiveAlertShown=false;
+                if (detailsBean.getProjectStatus() != null && detailsBean.getProjectStatus().equalsIgnoreCase("9")) {
+                    Appreference.isEstimPositiveAlertShown = false;
                     ShowEstimWishAlert(projectId, webtaskId);
                 }
 
@@ -3803,7 +3937,7 @@ public class TravelJobDetails extends Activity implements View.OnClickListener, 
         } else if ((WebServiceEnum_Response != null && WebServiceEnum_Response.equalsIgnoreCase("taskConversationEntry"))) {
             try {
                 Log.i("response", "Notes  15 ");
-                Log.i("reminder123","taskConversationEntry response=====>");
+                Log.i("reminder123", "taskConversationEntry response=====>");
 
                 //Get Response for all text message
                 TaskDetailsBean taskDetailsBean = new TaskDetailsBean();
