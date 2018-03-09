@@ -157,6 +157,8 @@ import org.pjsip.pjsua2.AuthCredInfo;
 import org.pjsip.pjsua2.AuthCredInfoVector;
 import org.pjsip.pjsua2.BuddyConfig;
 import org.pjsip.pjsua2.CallInfo;
+import org.pjsip.pjsua2.CallMediaInfo;
+import org.pjsip.pjsua2.CallMediaInfoVector;
 import org.pjsip.pjsua2.CallOpParam;
 import org.pjsip.pjsua2.PresenceStatus;
 import org.pjsip.pjsua2.SendInstantMessageParam;
@@ -164,10 +166,13 @@ import org.pjsip.pjsua2.StringVector;
 import org.pjsip.pjsua2.VideoPreview;
 import org.pjsip.pjsua2.VideoWindow;
 import org.pjsip.pjsua2.pjmedia_srtp_use;
+import org.pjsip.pjsua2.pjmedia_type;
 import org.pjsip.pjsua2.pjrpid_activity;
 import org.pjsip.pjsua2.pjsip_inv_state;
 import org.pjsip.pjsua2.pjsip_status_code;
+import org.pjsip.pjsua2.pjsua2;
 import org.pjsip.pjsua2.pjsua_buddy_status;
+import org.pjsip.pjsua2.pjsua_call_media_status;
 
 import java.io.BufferedOutputStream;
 import java.io.File;
@@ -1140,6 +1145,8 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback,
 
     @Override
     public boolean handleMessage(Message m) {
+        Log.i("SipVideo123", "came to MainAct handleMessage");
+
         try {
             if (m.what == 0) {
 
@@ -1180,6 +1187,8 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback,
 
             } else if (m.what == MSG_TYPE.CALL_MEDIA_STATE) {
                 Log.d("VideoCall", "Inside the m.what == MSG_TYPE.CALL_MEDIA_STATE method ==  " + CallActivity.handler_);
+                Log.i("SipVideo123", "came to MainAct MSG_TYPE.CALL_MEDIA_STATE");
+
                 /* Forward the message to CallActivity */
                 try {
                     if (CallActivity.handler_ != null) {
@@ -2190,7 +2199,38 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback,
     public void notifyCallMediaState(MyCall call) {
         try {
             Log.d("VideoCall", "Inside the notifyCallMediaState method ==  " + handler);
-            Message m = Message.obtain(handler, MSG_TYPE.CALL_MEDIA_STATE, null);
+          /*  try {
+                CallInfo ci;
+
+                ci = call.getInfo();
+                CallMediaInfoVector cmiv = ci.getMedia();
+                for (int i = 0; i < cmiv.size(); i++) {
+                    CallMediaInfo cmi = cmiv.get(i);
+                    if (cmi.getType() == pjmedia_type.PJMEDIA_TYPE_VIDEO &&
+                            cmi.getStatus() ==
+                                    pjsua_call_media_status.PJSUA_CALL_MEDIA_ACTIVE &&
+                            cmi.getVideoIncomingWindowId() != pjsua2.INVALID_ID) {
+                        Log.d("SipVideo123", "Mainact notifyCallMediaState Before: " + cmi.getVideoCapDev());
+
+                        cmi.setVideoCapDev(0);
+                        Log.d("SipVideo123", "Mainact notifyCallMediaState  after: " + cmi.getVideoCapDev());
+
+                    }
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }*/
+
+            CallInfo ci;
+
+                ci = call.getInfo();
+            ArrayList<Object> objects = new ArrayList<Object>();
+            objects.add(call);
+            objects.add(ci);
+            Log.d("SipVideo123", "Mainact VideoPreview call: " + call);
+            Log.d("SipVideo123", "Mainact VideoPreview ci: " + ci);
+
+            Message m = Message.obtain(handler, MSG_TYPE.CALL_MEDIA_STATE, objects);
             m.sendToTarget();
         } catch (Exception e) {
             e.printStackTrace();

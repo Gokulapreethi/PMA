@@ -75,16 +75,21 @@ import org.pjsip.pjsua2.CallMediaInfo;
 import org.pjsip.pjsua2.CallMediaInfoVector;
 import org.pjsip.pjsua2.CallOpParam;
 import org.pjsip.pjsua2.CallSetting;
+import org.pjsip.pjsua2.CallVidSetStreamParam;
 import org.pjsip.pjsua2.Media;
 import org.pjsip.pjsua2.SendInstantMessageParam;
+import org.pjsip.pjsua2.VideoPreview;
 import org.pjsip.pjsua2.VideoPreviewOpParam;
+import org.pjsip.pjsua2.VideoWindow;
 import org.pjsip.pjsua2.VideoWindowHandle;
 import org.pjsip.pjsua2.pjmedia_orient;
 import org.pjsip.pjsua2.pjmedia_type;
 import org.pjsip.pjsua2.pjsip_inv_state;
 import org.pjsip.pjsua2.pjsip_role_e;
 import org.pjsip.pjsua2.pjsip_status_code;
+import org.pjsip.pjsua2.pjsua2;
 import org.pjsip.pjsua2.pjsua_call_media_status;
+import org.pjsip.pjsua2.pjsua_call_vid_strm_op;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -99,6 +104,9 @@ import java.util.TimerTask;
 
 import xml.xmlcomposer;
 import xml.xmlparser;
+
+import org.pjsip.pjsua2.CallVidSetStreamParam;
+
 
 class VideoPreviewHandler implements SurfaceHolder.Callback {
     public boolean videoPreviewActive = true;
@@ -200,7 +208,7 @@ public class CallActivity extends Activity
     //For ChangesHost
     String newhost = null;
     ImageView iv_changeHost;
-    private Button chat;
+    private Button chat,camera_switch_front,camera_switch_back;
     RelativeLayout linearLayout;
     private Chronometer chronometer;
     private boolean chronometer_started = false;
@@ -267,6 +275,8 @@ public class CallActivity extends Activity
             rl_co_ordinate = (RelativeLayout) findViewById(R.id.coordinator_layout);
             host_speaker = (ImageView) findViewById(R.id.btn_speaker);
             chat = (Button) findViewById(R.id.btn_back);
+            camera_switch_front = (Button) findViewById(R.id.camera_switch1);
+            camera_switch_back = (Button) findViewById(R.id.camera_switch2);
             chronometer = (Chronometer) findViewById(R.id.chronometer);
 //            chronometer_land = (Chronometer) findViewById(R.id.chronometer_land);
             Date strt_dt = new Date();
@@ -429,6 +439,44 @@ public class CallActivity extends Activity
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
+                }
+            });
+            camera_switch_front.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Log.d("SipVideo123", "CallAct  camera_switch_front: " );
+                    camera_switch_front.setVisibility(View.GONE);
+                    camera_switch_back.setVisibility(View.VISIBLE);
+                    MyCall myCall= MainActivity.currentCallArrayList.get(0);
+                    boolean camera_changed= myCall.changeCamera(2);
+                    handler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            onConfigurationChangedForAndroid(null,false);
+                        }
+                    }, 1000);
+//                    Log.d("SipVideo123", "CallAct  camera_switch_front camera_changed: "+camera_changed );
+
+                }
+            });
+            camera_switch_back.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Log.d("SipVideo123", "CallAct  camera_switch_back: " );
+                    camera_switch_front.setVisibility(View.VISIBLE);
+                    camera_switch_back.setVisibility(View.GONE);
+                   MyCall myCall= MainActivity.currentCallArrayList.get(0);
+                   boolean camera_changed= myCall.changeCamera(1);
+                    handler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            onConfigurationChangedForAndroid(null,true);
+                        }
+                    }, 1000);
+
+//                    Log.d("SipVideo123", "CallAct  camera_switch_back: "+camera_changed);
+
+
                 }
             });
             rl_mic_mute.setOnClickListener(new View.OnClickListener() {
@@ -881,7 +929,25 @@ public class CallActivity extends Activity
         }
     }
 
+    public boolean changeCamera(int cameraId) {
+        try {
 
+//            if(!MainActivity.medreceived && !Appreference.changehost_request_received) {
+//                MainActivity.medreceived =true;
+//                MainActivity.isAudioCall = false;
+//                CallVidSetStreamParam callVidSetStreamParam = new CallVidSetStreamParam();
+//                callVidSetStreamParam.setCapDev(cameraId);
+//            }
+            CallVidSetStreamParam callVidSetStreamParam = new CallVidSetStreamParam();
+            callVidSetStreamParam.setCapDev(cameraId);
+//            vidSetStream(pjsua_call_vid_strm_op.PJSUA_CALL_VID_STRM_CHANGE_CAP_DEV,
+//                    callVidSetStreamParam);
+            int currentCameraId = cameraId;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return true;
+    }
     private void mute(boolean mute) {
 
         for (int j = 0; j < MainActivity.currentCallArrayList.size(); j++) {
@@ -1076,8 +1142,9 @@ public class CallActivity extends Activity
         }
     }
 
-    public void onConfigurationChangedForAndroid(Configuration newConfig) {
+    public void onConfigurationChangedForAndroid(Configuration newConfig,boolean isFront) {
         Log.i("SipVideo", "came to onConfigurationChangedForAndroid");
+        Log.d("SipVideo123", "CallAct  onConfigurationChangedForAndroid: " +isFront );
         WindowManager wm;
         Display display;
         int rotation;
@@ -1097,10 +1164,15 @@ public class CallActivity extends Activity
 //                orient = pjmedia_orient.PJMEDIA_ORIENT_NATURAL;
 //                break;
 //            case Surface.ROTATION_180:
-        if (getResources().getString(R.string.videocall_for_android).equalsIgnoreCase("enable")) {
+//        if (getResources().getString(R.string.videocall_for_android).equalsIgnoreCase("enable")) {
+//            orient = pjmedia_orient.PJMEDIA_ORIENT_ROTATE_90DEG;
+//        } else {
+//            orient = pjmedia_orient.PJMEDIA_ORIENT_ROTATE_90DEG;
+//        }
+        if(isFront){
             orient = pjmedia_orient.PJMEDIA_ORIENT_ROTATE_270DEG;
-        } else {
-            orient = pjmedia_orient.PJMEDIA_ORIENT_ROTATE_270DEG;
+        }else{
+            orient = pjmedia_orient.PJMEDIA_ORIENT_ROTATE_90DEG;
         }
 //                break;
 //            case Surface.ROTATION_270: // Landscape, home button on the left
@@ -1112,10 +1184,20 @@ public class CallActivity extends Activity
 
         if (MyApp.ep != null && MainActivity.account != null) {
             try {
+                Log.d("SipVideo123", "CallAct  onConfigurationChangedForAndroid: MainActivity.account != null "  );
+
                 AccountConfig cfg = MainActivity.account.cfg;
-                int cap_dev = cfg.getVideoConfig().getDefaultCaptureDevice();
+
+                int cap_dev =0;
+                if(isFront) {
+                    cap_dev = cfg.getVideoConfig().getDefaultCaptureDevice();
+                } else{
+                    cap_dev=2;
+                }
                 MyApp.ep.vidDevManager().setCaptureOrient(cap_dev, orient,
                         true);
+                Log.d("SipVideo123", "CallAct  onConfigurationChangedForAndroid:cap_dev  "  +""+cap_dev+" orient " +orient);
+
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -1532,6 +1614,8 @@ public class CallActivity extends Activity
 
     @Override
     public boolean handleMessage(Message m) {
+        Log.i("SipVideo123", "came to CallAct handleMessage");
+
         try {
             if (m.what == MainActivity.MSG_TYPE.CALL_STATE) {
                 Log.i("SipVideo", "handlemessage in CallAvtivity");
@@ -1543,6 +1627,8 @@ public class CallActivity extends Activity
                 updateCallState(myCall , callInfo);
 
             } else if (m.what == MainActivity.MSG_TYPE.CALL_MEDIA_STATE) {
+                Log.i("SipVideo123", "came to CallAct MainActivity.MSG_TYPE.CALL_MEDIA_STATE");
+
                 Log.i("SipVideo", "came to handleMessage \n MainActivity.currentCall : "+MainActivity.currentCall);
                 if (MainActivity.currentCall != null){
                     Log.i("SipVideo", " MainActivity.currentCall.vidWin : "+MainActivity.currentCall.vidWin);
@@ -1556,6 +1642,34 @@ public class CallActivity extends Activity
 				 * device orientation.
 				 */
                     if (!MainActivity.isAudioCall) {
+
+
+
+                      /*  try {
+                            ArrayList<Object> objects = (ArrayList<Object>) m.obj;
+                            Log.d("SipVideo123", "callAct objects : " + objects);
+
+                            MyCall myCall = (MyCall) objects.get(0);
+                            CallInfo callInfo= (CallInfo) objects.get(1);
+
+                            CallMediaInfoVector cmiv = callInfo.getMedia();
+                            for (int i = 0; i < cmiv.size(); i++) {
+                                CallMediaInfo cmi = cmiv.get(i);
+                                if (cmi.getType() == pjmedia_type.PJMEDIA_TYPE_VIDEO &&
+                                        cmi.getStatus() ==
+                                                pjsua_call_media_status.PJSUA_CALL_MEDIA_ACTIVE &&
+                                        cmi.getVideoIncomingWindowId() != pjsua2.INVALID_ID) {
+                                    Log.d("SipVideo123", "Call Activity VideoPreview Before: " + cmi.getVideoCapDev());
+
+                                    cmi.setVideoCapDev(0);
+                                    Log.d("SipVideo123", "Call Activity VideoPreview after: " + cmi.getVideoCapDev());
+
+                                }
+                            }
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }*/
+
 //                        endcall_visiblelayout_land.setVisibility(View.GONE);
                         endcall_layout.setVisibility(View.VISIBLE);
                         headerc.setVisibility(View.VISIBLE);
@@ -1602,7 +1716,7 @@ public class CallActivity extends Activity
                         }
                     }
                     //                    onConfigurationChanged(getResources().getConfiguration());
-                    onConfigurationChangedForAndroid(getResources().getConfiguration());
+                    onConfigurationChangedForAndroid(getResources().getConfiguration(),true);
 				/* If there's incoming video, display it. */
 
                     if(!Appreference.broadcast_call && !Appreference.received_broadcastcall) {

@@ -60,7 +60,7 @@ public class CallSetting {
   }
 
   public void setVideoCount(long value) {
-    pjsua2JNI.CallSetting_videoCount_set(swigCPtr, this, value);
+      pjsua2JNI.CallSetting_videoCount_set(swigCPtr, this, value);
   }
 
   public long getVideoCount() {

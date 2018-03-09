@@ -9,6 +9,7 @@ import org.pjsip.pjsua2.Call;
 import org.pjsip.pjsua2.CallInfo;
 import org.pjsip.pjsua2.CallMediaInfo;
 import org.pjsip.pjsua2.CallMediaInfoVector;
+import org.pjsip.pjsua2.CallVidSetStreamParam;
 import org.pjsip.pjsua2.Media;
 import org.pjsip.pjsua2.OnCallMediaStateParam;
 import org.pjsip.pjsua2.OnCallRxOfferParam;
@@ -21,6 +22,7 @@ import org.pjsip.pjsua2.VideoWindow;
 import org.pjsip.pjsua2.pjmedia_type;
 import org.pjsip.pjsua2.pjsua2;
 import org.pjsip.pjsua2.pjsua_call_media_status;
+import org.pjsip.pjsua2.pjsua_call_vid_strm_op;
 
 public class MyCall extends Call {
     public VideoWindow vidWin;
@@ -34,6 +36,7 @@ public class MyCall extends Call {
     @Override
     public void onCallState(OnCallStateParam prm) {
 
+        Log.i("SipVideo123", "came to Mycall onCallState");
 
         Log.i("SipVideo", "onCallState in MyCall 1 : "+swigCPtr);
         try {
@@ -58,7 +61,7 @@ public class MyCall extends Call {
     @Override
     public void onCallMediaState(OnCallMediaStateParam prm) {
         try {
-            Log.i("SipVideo", "came to onCallMediaState");
+            Log.i("SipVideo123", "came to  Mycall onCallMediaState");
             CallInfo ci;
             try {
                 ci = getInfo();
@@ -117,7 +120,10 @@ public class MyCall extends Call {
                         vidWin = new VideoWindow(cmi.getVideoIncomingWindowId());
                         MainActivity.totalvideoWindows.add(vidWin);
                         if (!Appreference.received_broadcastcall)
-                            vidPrev = new VideoPreview(cmi.getVideoCapDev());
+                            Log.d("SipVideo123", "VideoPreview Before: " + cmi.getVideoCapDev());
+//                        cmi.setVideoCapDev(0);
+                        vidPrev = new VideoPreview(cmi.getVideoCapDev());
+                        Log.d("SipVideo123", "VideoPreview after: " + cmi.getVideoCapDev());
                         Log.d("SipVideo", "vidPrev : " + vidPrev + " vidWin : " + vidWin);
                         if (vidPrev != null) {
                             Log.d("SipVideo", "vidPrev 1 : " + vidPrev + " vidWin : " + vidWin);
@@ -133,8 +139,24 @@ public class MyCall extends Call {
             e.printStackTrace();
         }
     }
+    public boolean changeCamera(int cameraId) {
+        try {
+            Log.d("SipVideo123", "Mycall  changeCamera: " );
+
+            CallVidSetStreamParam callVidSetStreamParam = new CallVidSetStreamParam();
+            callVidSetStreamParam.setCapDev(cameraId);
+            vidSetStream(pjsua_call_vid_strm_op.PJSUA_CALL_VID_STRM_CHANGE_CAP_DEV,
+                    callVidSetStreamParam);
+            int currentCameraId = cameraId;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return true;
+    }
 
     private void connectBuddies(int id, AudioMedia am_new) {
+        Log.i("SipVideo123", "came to Mycall connectBuddies");
+
         Log.i("SipVideo", "came to connectBuddies : id = " + id);
         try {
             for (int j = 0; j < MainActivity.currentCallArrayList.size(); j++) {
