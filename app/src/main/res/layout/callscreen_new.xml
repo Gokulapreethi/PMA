@@ -350,7 +350,7 @@
             android:layout_width="fill_parent"
             android:layout_height="60dp"
             android:padding="5dp"
-            android:visibility="visible"
+            android:visibility="gone"
             android:weightSum="4">
 
             <RelativeLayout
@@ -363,21 +363,21 @@
 
                 <Button
                     android:id="@+id/camera_switch1"
-                    android:layout_width="50dp"
-                    android:layout_height="40dp"
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
                     android:layout_weight="1"
-                    android:background="@drawable/ic_switch_camera_call"
+                    android:background="@drawable/switch_camera_call"
                     android:layout_centerInParent="true"
                     android:layout_alignTop="@+id/camera_switch2"
                     android:visibility="visible"/>
 
                 <Button
                     android:id="@+id/camera_switch2"
-                    android:layout_width="50dp"
-                    android:layout_height="40dp"
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
                     android:layout_weight="1"
                     android:layout_centerInParent="true"
-                    android:background="@drawable/ic_switch_camera_call"
+                    android:background="@drawable/switch_camera_call"
                     android:visibility="gone"/>
             </RelativeLayout>
 

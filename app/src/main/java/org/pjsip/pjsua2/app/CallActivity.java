@@ -449,12 +449,14 @@ public class CallActivity extends Activity
                     camera_switch_back.setVisibility(View.VISIBLE);
                     MyCall myCall= MainActivity.currentCallArrayList.get(0);
                     boolean camera_changed= myCall.changeCamera(2);
-                    handler.postDelayed(new Runnable() {
+                    onConfigurationChangedForAndroid(null,false);
+
+                  /*  handler.postDelayed(new Runnable() {
                         @Override
                         public void run() {
                             onConfigurationChangedForAndroid(null,false);
                         }
-                    }, 1000);
+                    }, 1000);*/
 //                    Log.d("SipVideo123", "CallAct  camera_switch_front camera_changed: "+camera_changed );
 
                 }
@@ -467,12 +469,14 @@ public class CallActivity extends Activity
                     camera_switch_back.setVisibility(View.GONE);
                    MyCall myCall= MainActivity.currentCallArrayList.get(0);
                    boolean camera_changed= myCall.changeCamera(1);
-                    handler.postDelayed(new Runnable() {
+                    onConfigurationChangedForAndroid(null,true);
+
+                   /* handler.postDelayed(new Runnable() {
                         @Override
                         public void run() {
                             onConfigurationChangedForAndroid(null,true);
                         }
-                    }, 1000);
+                    }, 1000);*/
 
 //                    Log.d("SipVideo123", "CallAct  camera_switch_back: "+camera_changed);
 
