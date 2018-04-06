@@ -1680,7 +1680,7 @@ public class ProjectsFragment extends Fragment implements View.OnClickListener, 
                                         for (int i = 0; i < pdb.size(); i++) {
                                             ProjectDetailsBean projectDetailsBean = pdb.get(i);
                                             VideoCallDataBase.getDB(classContext).insertProject_Details(projectDetailsBean);
-                                            Log.i("listAllMyProject", "projectDetailsBean DB inserted id is " + projectDetailsBean.getId());
+                                            Log.i(  "listAllMyProject", "projectDetailsBean DB inserted id is " + projectDetailsBean.getId());
                                             Log.i("listAllMyProject", "projectDetailsBean DB inserted id is " + projectDetailsBean.getProjectName());
                                         }
                                     }

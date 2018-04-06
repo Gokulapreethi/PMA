@@ -80,7 +80,7 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
     public static final String CREATE_TABLE_CALLS = "create table if not exists call(callid INTEGER PRIMARY KEY AUTOINCREMENT,calltype varchar(100),host varchar(100),participant varchar(100),start_time varchar(100),call_duration varchar(100),recording_path varchar(100),loginuser varchar(100))";
     public static final String CREATE_TABLE_TASK = "create table if not exists taskDetailsInfo(id integer primary key autoincrement,loginuser varchar(100),fromUserId integer,toUserId integer,plannedStartDateTime varchar(100),plannedEndDateTime varchar(100),remainderFrequency varchar(100),duration varchar(100),durationunit varchar(100),taskDescription TEXT,isRemainderRequired varchar(100),taskStatus varchar(100),signalid varchar(100),fromUserName varchar(100),toUserName varchar(100),sendStatus varchar(100),completedPercentage varchar(100),taskType varchar(100),mimeType varchar(100),taskPriority varchar(100),dateFrequency varchar(100),timeFrequency varchar(100),taskNo varchar(100),taskId varchar(100),msgstatus varchar(5),showprogress varchar(5),readStatus varchar(5),reminderquotes varchar(100),remark varchar(100),tasktime varchar(100),serverFileName varchar(100),requestStatus varchar(100),dateTime varchar(100),subType varchar(20),daysOfTheWeek varchar(100),repeatFrequency varchar(5),taskTagName varchar(20),customTagId varchar(20),customTagVisible varchar(20),customSetId varchar(20),syncEnable varchar(100),wssendstatus varchar(20),projectId varchar(100),parentTaskId varchar(100),longmessage varchar(100),private_member varchar(200),replyMessage varchar(100),taskPlannedBeforeEndDate varchar(100),taskPlannedLatestEndDate varchar(100),fromTaskName varchar(100),toTaskName varchar(100),sender_reply varchar(100),reply_sendername varchar(100),caption varchar(100),wscaptionstatus varchar(20),estimTime varchar(20),estimCompletion varchar(10),EstimAlarm varchar(10),estimRemainingTime varchar(10))";
     public static final String CREATE_TABLE_TASK_HISTORY = "create table if not exists taskHistoryInfo(id integer primary key autoincrement,loginuser varchar(100),taskNo varchar(100),taskName varchar(100),plannedStartDateTime varchar(100),plannedEndDateTime varchar(100),remainderFrequency varchar(100),taskDescription TEXT,taskObservers TEXT,taskStatus varchar(100),signalid varchar(100),completedPercentage varchar(100),taskType varchar(100),ownerOfTask varchar(100),mimeType varchar(100),parentTaskId varchar(100),taskId varchar(100),readStatus varchar(5),tasktime varchar(100),taskReceiver varchar(100),taskMemberList TEXT,dateTime varchar(100),badgeCount varchar(20),category vrchar(100),taskPlannedBeforeEndDate varchar(100),taskPlannedLatestEndDate varchar(100),fromTaskName varchar(100),toTaskName varchar(100),sender_reply varchar(100),reply_sendername varchar(100))";
-    public static final String CREATE_TABLE_PROJECT = "create table if not exists projectDetails(id integer primary key autoincrement,loginuser varchar(100),projectId varchar(100),projectName varchar(100),projectDescription varchar(100),projectOrganisation varchar(100),projectOwner varchar(100),listOfMembers varchar(100),completedPercentage varchar(100),taskStatus varchar(100),readStatus varchar(5),requestStatus varchar(100),oracleProjectId varchar(100),customerName varchar(100),address varchar(100),mcModel varchar(100),mcSrNo varchar(100),serviceRequestDate varchar(100),chasisNo varchar(100),observation varchar(100),oracleCustomerId integer,activity varchar(100),processFlag varchar(100),projectcompletedstatus varchar(100),isActiveStatus varchar(100),jobCardType varchar(100),machineMake varchar(100),jobDescription varchar(100),openDate varchar(100))";
+    public static final String CREATE_TABLE_PROJECT = "create table if not exists projectDetails(id integer primary key autoincrement,loginuser varchar(100),projectId varchar(100),projectName varchar(100),projectDescription varchar(100),groupAdminobserver varchar(10), projectOrganisation varchar(100),projectOwner varchar(100),listOfMembers varchar(100),completedPercentage varchar(100),taskStatus varchar(100),readStatus varchar(5),requestStatus varchar(100),oracleProjectId varchar(100),customerName varchar(100),address varchar(100),mcModel varchar(100),mcSrNo varchar(100),serviceRequestDate varchar(100),chasisNo varchar(100),observation varchar(100),oracleCustomerId integer,activity varchar(100),processFlag varchar(100),projectcompletedstatus varchar(100),isActiveStatus varchar(100),jobCardType varchar(100),machineMake varchar(100),jobDescription varchar(100),openDate varchar(100))";
     public static final String CREATE_TABLE_PROJECT_HISTORY = "create table if not exists projectHistory(id integer primary key autoincrement,loginuser varchar(100),projectId varchar(100),parentTaskId varchar(100),projectOwner varchar(100),projectName TEXT,fromUserId varchar(100),toUserId varchar(100),fromUserName varchar(100),toUserName varchar(100),projectDescription varchar(100),projectOrganisation varchar(100),plannedStartDateTime varchar(100),plannedEndDateTime varchar(100),taskMemberList varchar(100),taskStatus varchar(100),ownerOfTask varchar(100),taskReceiver varchar(100),taskObservers TEXT,taskNo varchar(100),taskName varchar(100),taskDescription varchar(100),taskType varchar(100),mimeType varchar(100),taskId varchar(100),signalId varchar(100),completedPercentage varchar(100),readStatus varchar(5),category varchar(10),isParentTask varchar(5),issueParentId varchar(100),requestStatus varchar(100),oracleTaskId varchar(100),estimatedTravelHrs integer,estimatedActivityHrs integer,activity varchar(100),oracleProjectId varchar(100),customerName varchar(100),address varchar(100),mcModel varchar(100),mcSrNo varchar(100),serviceRequestDate varchar(100),chasisNo varchar(100),observation varchar(100),oracleCustomerId integer,processFlag varchar(100),projectcompletedstatus varchar(100),isActiveStatus varchar(100),jobCardType varchar(100),machineMake varchar(100),mcDescription varchar(100))";
     public static final String CREATE_TABLE_FORM_ACCESS = "create table if not exists FormAccess(id integer primary key autoincrement,taskId varchar(50),formId varchar(50),formAccessId varchar(50),taskGiver varchar(50),memberName varchar(50),accessMode varchar(50))";
     public static final String CREATE_TABLE_List_User_Group_Member_Access = "create table if not exists listUserGroupMemberAccess(userid integer,groupid integer,groupname varchar(100),loginuser varchar(100),respondVideo varchar(50),respondFiles varchar(50),accessForms varchar(50),respondAudio varchar(50),videoAccess varchar(50),adminAccess varchar(50),respondDateChange varchar(50),respondLocation varchar(50),respondConfCall varchar(50),audioAccess varchar(50),chatAccess varchar(50),respondText varchar(50),respondPrivate varchar(50),respondPhoto varchar(50),accessReminder varchar(50),respondSketch varchar(50),respondTask varchar(50),accessScheduledCNF varchar(50),GroupTask varchar(50),ReassignTask varchar(50),ChangeTaskName varchar(50),TaskDescriptions varchar(50),TemplateExistingTask varchar(50),ApproveLeave varchar(50),RemindMe varchar(50),AddObserver varchar(50),TaskPriority varchar(50),Escalations varchar(50))";
@@ -759,7 +759,7 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
     public boolean insertORupdate_Task_history(TaskDetailsBean bean) {
         int row_id = 0;
         boolean inserted = false;
-        Log.i("reminder123","insertORupdate_Task_history=====>");
+        Log.i("reminder123", "insertORupdate_Task_history=====>");
 
         try {
             String logginuser = AppSharedpreferences.getInstance(context).getString("loginUserName");
@@ -779,7 +779,7 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
             cv.put("taskPlannedLatestEndDate", bean.getTaskPlannedLatestEndDate());
             cv.put("plannedEndDateTime", bean.getUtcplannedEndDateTime());
             cv.put("estimTime", bean.getEstimTimeForTimer());
-            cv.put("EstimAlarm",bean.getEstimAlarm());
+            cv.put("EstimAlarm", bean.getEstimAlarm());
             cv.put("remainderFrequency", bean.getUtcPemainderFrequency());
             cv.put("duration", bean.getDuration());
             cv.put("durationunit", bean.getDurationUnit());
@@ -2076,6 +2076,13 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
             cv.put("jobCardType", projectDetailsBean.getJobCardType());
             cv.put("machineMake", projectDetailsBean.getMachineMake());
             cv.put("jobDescription", projectDetailsBean.getJobDescription());
+            String groupAdminObserver="user4_hm.net" + "," + "user5_hm.net";
+
+                        /*added for GroupAdmin observer Start*/
+//            cv.put("groupAdminobserver", groupAdminObserver);
+            cv.put("groupAdminobserver", projectDetailsBean.getProjectGroupObservers());
+                        /*added for GroupAdmin observer End*/
+
 
             /*changing openDate format yyyy-MM-dd to dd-MM-yyyy*/
             String JobOpenDate = "";
@@ -2368,10 +2375,20 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
                             list_observer_1 = list_observer_1.concat(listobservers.getUsername() + ",");
                         }
                         list_observer_1 = list_observer_1.substring(0, list_observer_1.length() - 1);
-//                        cv.put("taskObservers", list_observer_1);
+
+                            /*Added for groupAdmin observer start*/
+//                        list_observer_1 = "user4_hm.net" + "," + "user5_hm.net";
+                           /* Added for groupAdmin observer end*/
+
                         cv_1.put("taskObservers", list_observer_1);
                         Log.i("projectobserver", "list_observer_1 subtask task is " + list_observer_1 + " " + listAllgetTaskDetailses1.getName());
                     }
+                    /*else{
+                          *//*Added for groupAdmin observer start*//*
+                        list_observer_1 = "user4_hm.net" + "," + "user5_hm.net";
+                        cv_1.put("taskObservers", list_observer_1);
+                         *//* Added for groupAdmin observer end*//*
+                    }*/
 
                     ArrayList<String> grouplist2 = VideoCallDataBase.getDB(context).selectGroupmembers("select * from contact", "username");
                     if (grouplist2.size() > 0) {
@@ -2641,32 +2658,32 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
                     if (listTaskFile.size() == 0) {
 //                        if (listAllgetTaskDetailses1.getPlannedStartDateTime() == null && listAllgetTaskDetailses1.getPlannedEndDateTime() == null && listAllgetTaskDetailses1.getRemainderDateTime() == null) {
 //                            if (listAllgetTaskDetailses1.getDuration() == null || listAllgetTaskDetailses1.getDurationWords() == null || (listAllgetTaskDetailses1.getTimeFrequency() == null)) {
-                                signal_id = listAllgetTaskDetailses1.getSignalId();
-                                cv.put("signalId", signal_id);
-                                cv_1.put("signalId", signal_id);
-                                cv_1.put("isParentTask", "N");
-                                if (listAllgetTaskDetailses1.getDescription() != null && !listAllgetTaskDetailses1.getDescription().equalsIgnoreCase("")) {
-                                    cv.put("taskDescription", listAllgetTaskDetailses1.getDescription());
-                                    cv_1.put("taskDescription", listAllgetTaskDetailses1.getDescription());
-                                    cv_1.put("mcDescription", listAllgetTaskDetailses1.getDescription());
-                                } else {
-                                    cv.put("taskDescription", listAllgetTaskDetailses1.getName());
-                                    cv_1.put("taskDescription", listAllgetTaskDetailses1.getName());
+                        signal_id = listAllgetTaskDetailses1.getSignalId();
+                        cv.put("signalId", signal_id);
+                        cv_1.put("signalId", signal_id);
+                        cv_1.put("isParentTask", "N");
+                        if (listAllgetTaskDetailses1.getDescription() != null && !listAllgetTaskDetailses1.getDescription().equalsIgnoreCase("")) {
+                            cv.put("taskDescription", listAllgetTaskDetailses1.getDescription());
+                            cv_1.put("taskDescription", listAllgetTaskDetailses1.getDescription());
+                            cv_1.put("mcDescription", listAllgetTaskDetailses1.getDescription());
+                        } else {
+                            cv.put("taskDescription", listAllgetTaskDetailses1.getName());
+                            cv_1.put("taskDescription", listAllgetTaskDetailses1.getName());
 //                            cv_1.put("mcDescription", listAllgetTaskDetailses1.getName());
-                                }
-
-                                cv.put("mimeType", "text");
-                                if (!DuplicateProjectTaskIdChecker(task_id)) {
-                                    row_id = (int) db.insert("projectHistory", null, cv_1);
-                                    Log.d("Response", "projectDetailsBean inside projectHistory empty task");
-                                } else {
-                                    row_id = (int) db.update("projectHistory", cv_1, "taskId" + "='" + task_id + "'", null);
-                                    Log.d("Response", "projectDetailsBean inside else projectHistory empty task");
-                                }
-                                Log.i("Response", "projectDetailsBean signalId for empty task " + signal_id + " " + task_id);
-                            }
                         }
+
+                        cv.put("mimeType", "text");
+                        if (!DuplicateProjectTaskIdChecker(task_id)) {
+                            row_id = (int) db.insert("projectHistory", null, cv_1);
+                            Log.d("Response", "projectDetailsBean inside projectHistory empty task");
+                        } else {
+                            row_id = (int) db.update("projectHistory", cv_1, "taskId" + "='" + task_id + "'", null);
+                            Log.d("Response", "projectDetailsBean inside else projectHistory empty task");
+                        }
+                        Log.i("Response", "projectDetailsBean signalId for empty task " + signal_id + " " + task_id);
                     }
+                }
+            }
         } catch (Exception e) {
             // TODO: handle exception
             e.printStackTrace();
@@ -5570,8 +5587,8 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
                 db = getReadableDatabase();
             try {
                 if (db != null) {
-                    Log.i("chat", "DB-getChatname "+tasktype);
-                    Log.i("chat", "DB-buddy_uri "+buddy_uri);
+                    Log.i("chat", "DB-getChatname " + tasktype);
+                    Log.i("chat", "DB-buddy_uri " + buddy_uri);
                     if (!db.isOpen())
                         openDatabase();
                     if (tasktype != null && !tasktype.equalsIgnoreCase("") && tasktype.equalsIgnoreCase("group")) {
@@ -9930,8 +9947,8 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
         }
     }
 
-    public String getAlertShownstatus(String alertQuery,String fieldName) {
-        String result_value ="";
+    public String getAlertShownstatus(String alertQuery, String fieldName) {
+        String result_value = "";
         Cursor cur;
         try {
             if (db == null)
@@ -9950,19 +9967,19 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
                 }
             } catch (Exception e) {
                 e.printStackTrace();
-                Appreference.printLog("getCurrentStatus 1 ","Exception "+e.getMessage(),"WARN",null);
+                Appreference.printLog("getCurrentStatus 1 ", "Exception " + e.getMessage(), "WARN", null);
             }
         } catch (Exception e) {
             e.printStackTrace();
-            Appreference.printLog("getCurrentStatus 2 ","Exception "+e.getMessage(),"WARN",null);
+            Appreference.printLog("getCurrentStatus 2 ", "Exception " + e.getMessage(), "WARN", null);
 
         } finally {
             return result_value;
         }
     }
 
-    public String getValuefromDBEntry(String taskQuery,String fieldName) {
-        String result_value ="";
+    public String getValuefromDBEntry(String taskQuery, String fieldName) {
+        String result_value = "";
         Log.i("estim123", "DB******** getValuefromDBEntry" + taskQuery);
 
         Cursor cur;
@@ -9986,12 +10003,12 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
             } catch (Exception e) {
                 e.printStackTrace();
                 Log.i("estim123", "DB******** getValuefromDBEntry Exception  1 " + e.getMessage());
-                Appreference.printLog("getCurrentStatus 1 ","Exception "+e.getMessage(),"WARN",null);
+                Appreference.printLog("getCurrentStatus 1 ", "Exception " + e.getMessage(), "WARN", null);
             }
         } catch (Exception e) {
             e.printStackTrace();
             Log.i("estim123", "DB******** getValuefromDBEntry Exception  2 " + e.getMessage());
-            Appreference.printLog("getCurrentStatus 2 ","Exception "+e.getMessage(),"WARN",null);
+            Appreference.printLog("getCurrentStatus 2 ", "Exception " + e.getMessage(), "WARN", null);
 
         } finally {
             return result_value;
@@ -10028,4 +10045,18 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
         }
     }
 
+    public int DB_converstion_Delete(String taskId,String projId) {
+        int row_id = 0;
+        try {
+            if (!db.isOpen())
+                openDatabase();
+            row_id = (int) db.delete("taskDetailsInfo", "projectId='" +projId + "' and taskId='" + taskId+ "'", null);
+            Log.i("online123", "DB_converstion_Delete********projectId ==> "+projId + " taskID==>  " +taskId);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            Appreference.printLog("deleteProjectDraft", "Exception " + e.getMessage(), "WARN", null);
+        }
+        return row_id;
+    }
 }

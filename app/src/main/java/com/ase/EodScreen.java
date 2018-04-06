@@ -62,7 +62,8 @@ public class EodScreen extends Activity {
     boolean isCustomerSign, isObservation, isActionTaken, isCustomerRemarks, isSynopsis;
     boolean istaskCompletebyUser = false;
     boolean isForOracleProject = false;
-    private  ArrayList<String> observation_list, Action_Taken_list, customerRemarks_list;
+    private ArrayList<String> observation_list, Action_Taken_list, customerRemarks_list, synopsis_list;
+
     public static EodScreen getInstance() {
         return eodScreen;
     }
@@ -74,7 +75,7 @@ public class EodScreen extends Activity {
             if (Appreference.EodSketchList != null && Appreference.EodSketchList.size() > 0) {
 
                 observation_path = Appreference.EodSketchList.get(0);
-                observation_list =(ArrayList<String>) Appreference.EodSketchList.clone();
+                observation_list = (ArrayList<String>) Appreference.EodSketchList.clone();
                 Appreference.observation_list = (ArrayList<String>) Appreference.EodSketchList.clone();
                 if (observation_1 != null) {
                     File imgFile = new File(observation_path);
@@ -114,15 +115,39 @@ public class EodScreen extends Activity {
                     remarks_complete_1.setVisibility(View.VISIBLE);
                 }
             }
+        } else if (isSynopsis) {
+            if (Appreference.EodSketchList != null && Appreference.EodSketchList.size() > 0) {
+                synopsis_path = Appreference.EodSketchList.get(0);
+                synopsis_list = (ArrayList<String>) Appreference.EodSketchList.clone();
+                Appreference.Synopsis_list = (ArrayList<String>) Appreference.EodSketchList.clone();
+                if (synopsis_img != null) {
+                    File imgFile = new File(synopsis_path);
+                    if (imgFile.exists()) {
+                        Bitmap myBitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
+                        synopsis_img.setImageBitmap(myBitmap);
+                    }
+                    synopsis_img.setVisibility(View.VISIBLE);
+                    Log.i("result_handsketch", "synopsis_path==>$$ !! " + synopsis_path);
+                }
+            }
         }
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        Appreference.observation_list.clear();
-        Appreference.Action_Taken_list.clear();
-        Appreference.customerRemarks_list.clear();
+        if (isobservationSketchselected) {
+            Appreference.observation_list.clear();
+        }
+        if (isactionSketchselected) {
+            Appreference.Action_Taken_list.clear();
+        }
+        if (isremarksSketchselected) {
+            Appreference.customerRemarks_list.clear();
+        }
+        if (isSynopsisSketchselected) {
+            Appreference.Synopsis_list.clear();
+        }
     }
 
     @Override
@@ -204,7 +229,9 @@ public class EodScreen extends Activity {
                     public void onClick(DialogInterface dialog, int which) {
                         isobservationtextselected = true;
                         observation.setCursorVisible(true);
-                        Appreference.observation_list.clear();
+                        if (Appreference.observation_list!=null) {
+                            Appreference.observation_list.clear();
+                        }
 //                        observation_list.clear();
                         observation.setFocusableInTouchMode(true);
                         observation_1.setVisibility(View.GONE);
@@ -230,7 +257,7 @@ public class EodScreen extends Activity {
                                     observationStatus = "";
                                     observation_1.setVisibility(View.VISIBLE);
                                     Appreference.EodSketchList.clear();
-                                    if(Appreference.observation_list!=null && Appreference.observation_list.size()>0) {
+                                    if (Appreference.observation_list != null && Appreference.observation_list.size() > 0) {
                                         Appreference.EodSketchList = Appreference.observation_list;
                                     }
                                     Intent i = new Intent(getApplicationContext(), HandSketchActivity2.class);
@@ -293,7 +320,9 @@ public class EodScreen extends Activity {
                         isactiontextselected = true;
                         action_taken.setCursorVisible(true);
                         action_taken.setFocusableInTouchMode(true);
-                        Appreference.Action_Taken_list.clear();
+                        if ( Appreference.Action_Taken_list!=null) {
+                            Appreference.Action_Taken_list.clear();
+                        }
 //                        Action_Taken_list.clear();
                         action_taken_1.setVisibility(View.GONE);
                         action_taken.setVisibility(View.VISIBLE);
@@ -318,8 +347,8 @@ public class EodScreen extends Activity {
                                     action_taken.setVisibility(View.GONE);
                                     action_taken_1.setVisibility(View.VISIBLE);
                                     Appreference.EodSketchList.clear();
-                                    if(Appreference.Action_Taken_list!=null && Appreference.Action_Taken_list.size()>0) {
-                                        Appreference.EodSketchList=Appreference.Action_Taken_list;
+                                    if (Appreference.Action_Taken_list != null && Appreference.Action_Taken_list.size() > 0) {
+                                        Appreference.EodSketchList = Appreference.Action_Taken_list;
                                     }
                                     Intent i = new Intent(getApplicationContext(), HandSketchActivity2.class);
                                     i.putExtra("isFromEod", true);
@@ -377,7 +406,9 @@ public class EodScreen extends Activity {
                     public void onClick(DialogInterface dialog, int which) {
                         isremarksSketchselected = false;
                         isRemarkstextselected = true;
-                        Appreference.customerRemarks_list.clear();
+                        if (Appreference.customerRemarks_list!=null) {
+                            Appreference.customerRemarks_list.clear();
+                        }
 //                        customerRemarks_list.clear();
                         remarks_completion.setCursorVisible(true);
                         remarks_completion.setFocusableInTouchMode(true);
@@ -403,8 +434,8 @@ public class EodScreen extends Activity {
                                     remarks_completion.setVisibility(View.GONE);
                                     remarks_complete_1.setVisibility(View.VISIBLE);
                                     Appreference.EodSketchList.clear();
-                                    if(Appreference.customerRemarks_list!=null &&Appreference.customerRemarks_list.size()>0) {
-                                        Appreference.EodSketchList=Appreference.customerRemarks_list;
+                                    if (Appreference.customerRemarks_list != null && Appreference.customerRemarks_list.size() > 0) {
+                                        Appreference.EodSketchList = Appreference.customerRemarks_list;
                                     }
                                     Intent i = new Intent(getApplicationContext(), HandSketchActivity2.class);
                                     i.putExtra("isFromEod", true);
@@ -462,9 +493,13 @@ public class EodScreen extends Activity {
                 saveDialog.setPositiveButton("Text", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         isSynopsistextselected = true;
+                        isSynopsisSketchselected=false;
                         synopsis_text.setCursorVisible(true);
                         synopsis_text.setFocusableInTouchMode(true);
                         synopsis_img.setVisibility(View.GONE);
+                        if (Appreference.Synopsis_list!=null) {
+                            Appreference.Synopsis_list.clear();
+                        }
                         synopsis_text.setVisibility(View.VISIBLE);
                         synopsis_path = "";
                         dialog.cancel();
@@ -484,8 +519,12 @@ public class EodScreen extends Activity {
                                     isForOracleProject = true;
                                     synopsis_text.setVisibility(View.GONE);
                                     synopsis_text.getText().clear();
+                                    Appreference.EodSketchList.clear();
                                     synopsis_status = "";
                                     synopsis_img.setVisibility(View.VISIBLE);
+                                    if (Appreference.Synopsis_list != null && Appreference.Synopsis_list.size() > 0) {
+                                        Appreference.EodSketchList = Appreference.Synopsis_list;
+                                    }
                                     Intent i = new Intent(getApplicationContext(), HandSketchActivity2.class);
                                     //                                            i.putExtra("observation","observation");
                                     i.putExtra("isFromEod", true);
@@ -1104,9 +1143,13 @@ public class EodScreen extends Activity {
                     if (ImageName != null && !ImageName.equalsIgnoreCase("")) {
                         file = new File(ImageName);
                         if (file.exists()) {
-                            Intent intent = new Intent(context, FullScreenImage.class);
-                            intent.putExtra("image", file.toString());
-                            context.startActivity(intent);
+                            Intent i = new Intent(EodScreen.this, FullScreenViewActivity.class);
+                            i.putExtra("position", "0");
+                            i.putExtra("pathSketch", synopsis_list);
+                            startActivity(i);
+//                            Intent intent = new Intent(context, FullScreenImage.class);
+//                            intent.putExtra("image", file.toString());
+//                            context.startActivity(intent);
                         } else {
                             File file1 = null;
                             file1 = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/High Message/" + ImageName);
@@ -1215,21 +1258,25 @@ public class EodScreen extends Activity {
                             eodScreenbean.setObservation(observationStatus);
                         } else {
                             eodScreenbean.setObservation(observation_path);
+                            eodScreenbean.setMultiObservation_list(observation_list);
                         }
                         if (isactiontextselected) {
                             eodScreenbean.setActionTaken(actiontakenStatus);
                         } else {
                             eodScreenbean.setActionTaken(Action_Taken_path);
+                            eodScreenbean.setMultiActionTaken_list(Action_Taken_list);
                         }
                         if (isRemarkstextselected) {
                             eodScreenbean.setCustomerRemarks(customer_remarksEntry);
                         } else {
                             eodScreenbean.setCustomerRemarks(customerRemarks_path);
+                            eodScreenbean.setMulticustomerRemarks_list(customerRemarks_list);
                         }
                         if (isSynopsistextselected) {
                             eodScreenbean.setSynopsis(synopsis_status);
                         } else if (isSynopsisSketchselected) {
                             eodScreenbean.setSynopsis(synopsis_path);
+                            eodScreenbean.setMultiSynopsis_list(synopsis_list);
                         }
                         Intent i = new Intent();
                         Log.i("EOD_submit", "getCustomerRemarks===> " + eodScreenbean.getCustomerRemarks());

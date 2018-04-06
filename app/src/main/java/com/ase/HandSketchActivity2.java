@@ -426,7 +426,7 @@ public class HandSketchActivity2 extends Activity implements OnClickListener {
             public void onClick(View v) {
                 String file = folderPath + "Instruction_image"
                         + getFileName() + ".jpg";
-                Intent intent = new Intent(context,
+                Intent intent = new Intent(HandSketchActivity2.this,
                         CustomVideoCamera.class);
                 intent.putExtra("filePath", file);
                 intent.putExtra("isPhoto", true);

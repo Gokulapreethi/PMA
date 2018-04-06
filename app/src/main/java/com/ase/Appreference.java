@@ -14,6 +14,7 @@ import android.text.format.DateFormat;
 import android.text.style.ForegroundColorSpan;
 import android.util.Log;
 
+import com.ase.DB.VideoCallDataBase;
 import com.google.gson.Gson;
 import com.ase.Bean.TaskDetailsBean;
 import com.ase.RandomNumber.Logger;
@@ -53,7 +54,7 @@ public class Appreference {
     public static String template_page = null;
     public static HashMap<String, Object> context_table = new HashMap<>();
     public static JsonRequestSender jsonRequestSender = null;
-    
+
     public static JsonOfflineRequestSender jsonOfflineRequestSender = null;
     public static JsonRequestResponce jsonRequestResponce = null;
     public static Loginuserdetails loginuserdetails = null;
@@ -70,20 +71,20 @@ public class Appreference {
     public static String fillter = null;
     public static boolean conflicttask = false;
     //For ASE
-    public static boolean isPauseStartFrom=false;
-    public static HashMap<String,String> old_status=new HashMap<>();
-    public static boolean isremarksEntered=false;
-    public static boolean isTimeUpshown=false;
-    public static String HoldOrPauseTimervalue="";
-    public static String EstimTimerValue="";
-    public static String Estim_travel_TimerValue="";
-    public static boolean isTNAReport=false;
-    public static boolean isLoginRequestSent=false;
-    public static boolean isEstimTimerStarted=false;
-    public static boolean isTravelRem_time=false;
-    public static boolean isEstimPositiveAlertShown=false;
+    public static boolean isPauseStartFrom = false;
+    public static HashMap<String, String> old_status = new HashMap<>();
+    public static boolean isremarksEntered = false;
+    public static boolean isTimeUpshown = false;
+    public static String HoldOrPauseTimervalue = "";
+    public static String EstimTimerValue = "";
+    public static String Estim_travel_TimerValue = "";
+    public static boolean isTNAReport = false;
+    public static boolean isLoginRequestSent = false;
+    public static boolean isEstimTimerStarted = false;
+    public static boolean isTravelRem_time = false;
+    public static boolean isEstimPositiveAlertShown = false;
 
-    public static boolean isImageSelected=false;
+    public static boolean isImageSelected = false;
     public static boolean isLocation = false;
     public static HashMap<String, Boolean> isRem_Enable_details = new HashMap<>();
     public static HashMap<String, Boolean> isOverdue = new HashMap<>();
@@ -152,8 +153,6 @@ public class Appreference {
     public static boolean isPasswordChanged = false;
 
 
-
-
     /************ADDED FOR ASE PHASE 2 FEB 26********/
 
     public static int setlatestFilteredOption = -1;
@@ -161,8 +160,13 @@ public class Appreference {
     public static ArrayList<String> observation_list = new ArrayList<String>();
     public static ArrayList<String> Action_Taken_list = new ArrayList<String>();
     public static ArrayList<String> customerRemarks_list = new ArrayList<String>();
+    public static ArrayList<String> Synopsis_list = new ArrayList<String>();
+    public static boolean isAlreadyLoadedofflineData=false;
+    public static boolean isAlreadyLoadedofflineTravelData=false;
 
+        /*added for multi sketch in eod screen Start*/
 
+        /*added for multi sketch in eod screen End*/
 
 
     /************ADDED FOR ASE PHASE 2 FEB 26********/
@@ -170,7 +174,7 @@ public class Appreference {
     public static void printLog(String tag, String message, String type,
                                 Throwable e) {
         try {
-            message = tag+" : "+message;
+            message = tag + " : " + message;
            /* SpannableStringBuilder builder = new SpannableStringBuilder();
             SpannableString redSpannable= new SpannableString(message);
             redSpannable.setSpan(new ForegroundColorSpan(Color.RED), 0, message.length(), 0);
@@ -236,12 +240,13 @@ public class Appreference {
     }
 
 
-    public static String getCurrentDateTime(){
+    public static String getCurrentDateTime() {
         Timestamp ts = new Timestamp(System.currentTimeMillis());
         String str = "[" + ts.toString() + "]";
         ts = null;
         return str;
     }
+
     public static String getEndOfDay(String date) {
         String enddate = "";
         try {

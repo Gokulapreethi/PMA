@@ -333,11 +333,13 @@ public class TravelJobDetails extends Activity implements View.OnClickListener, 
             Appreference.printLog("TravelJobDetails", "text12 Exception : " + e.getMessage(), "WARN", null);
         }
         Log.i(tab, "taskStatus **$  ==> " + taskStatus);
+        String GroupAdmin_observer = getGroupAdmin_observer_DB();
         try {
             if (taskStatus != null && (taskStatus.equalsIgnoreCase("draft") || taskStatus.equalsIgnoreCase("Unassigned"))) {
-                if (Appreference.loginuserdetails != null && Appreference.loginuserdetails.getRoleId() != null
+                if ((Appreference.loginuserdetails != null && Appreference.loginuserdetails.getRoleId() != null
                         && Appreference.loginuserdetails.getRoleId().equalsIgnoreCase("2")
-                        && !oracleProjectOwner.equalsIgnoreCase(Appreference.loginuserdetails.getUsername())) {
+                        && !oracleProjectOwner.equalsIgnoreCase(Appreference.loginuserdetails.getUsername())) &&
+                        (GroupAdmin_observer != null && !GroupAdmin_observer.contains(Appreference.loginuserdetails.getUsername()))) {
                     ll_2.setVisibility(View.GONE);
                 } else {
                     ll_2.setVisibility(View.VISIBLE);
@@ -353,9 +355,13 @@ public class TravelJobDetails extends Activity implements View.OnClickListener, 
         }
         try {
             Log.i(tab, "oracleProjectOwner **  ==> " + oracleProjectOwner);
+            /*Code Added for GroupAdmin-Observer Start*/
+
             if (taskStatus != null && (!taskStatus.equalsIgnoreCase("draft") && !taskStatus.equalsIgnoreCase("template") && !taskStatus.equalsIgnoreCase("Unassigned"))) {
                 tv_reassign.setVisibility(View.GONE);
-            } else if (oracleProjectOwner != null && oracleProjectOwner.equalsIgnoreCase(Appreference.loginuserdetails.getUsername())) {
+            } else if ((oracleProjectOwner != null && oracleProjectOwner.equalsIgnoreCase(Appreference.loginuserdetails.getUsername())) ||
+                    (GroupAdmin_observer != null && GroupAdmin_observer.contains(Appreference.loginuserdetails.getUsername()))) {
+                 /*Code Added for GroupAdmin-Observer End*/
                 tv_reassign.setText("Assign Task");
                 status_job.setVisibility(View.GONE);
                 travel_job.setVisibility(View.GONE);
@@ -368,7 +374,9 @@ public class TravelJobDetails extends Activity implements View.OnClickListener, 
             Appreference.printLog("TravelJobDetails", "tv_reassign Exception : " + e.getMessage(), "WARN", null);
         }
         try {
-            if (isProjectFromOracle && (oracleProjectOwner != null && !oracleProjectOwner.equalsIgnoreCase(Appreference.loginuserdetails.getUsername()))) {
+            if (isProjectFromOracle && (oracleProjectOwner != null && !oracleProjectOwner.equalsIgnoreCase(Appreference.loginuserdetails.getUsername())
+                    && (Appreference.loginuserdetails != null && Appreference.loginuserdetails.getRoleId() != null
+                    && !Appreference.loginuserdetails.getRoleId().equalsIgnoreCase("2")))) {
                 if (!isTaskCompleted && (!taskStatus.equalsIgnoreCase("draft") && !taskStatus.equalsIgnoreCase("template") && !taskStatus.equalsIgnoreCase("Unassigned"))) {
                     Log.i(tab, "isTaskCompleted $ **  ==> " + isTaskCompleted);
                     status_job.setVisibility(View.VISIBLE);
@@ -385,7 +393,16 @@ public class TravelJobDetails extends Activity implements View.OnClickListener, 
                 } else if (isTaskCompleted) {
                     status_job.setVisibility(View.GONE);
                 }
+            /*added for GroupAdmin observer start*/
+            } else if (isProjectFromOracle && (Appreference.loginuserdetails != null && Appreference.loginuserdetails.getRoleId() != null
+                    && Appreference.loginuserdetails.getRoleId().equalsIgnoreCase("2"))) {
+            /*added for GroupAdmin observer*/
+                if (taskStatus != null && (!taskStatus.equalsIgnoreCase("draft") && !taskStatus.equalsIgnoreCase("template") && !taskStatus.equalsIgnoreCase("Unassigned"))) {
+                    status_job.setVisibility(View.VISIBLE);
+                    travel_job.setVisibility(View.GONE);
+                }
             }
+        /*added for GroupAdmin observerm end*/
             if (taskStatus != null && (taskStatus.equalsIgnoreCase("Completed") || taskStatus.equalsIgnoreCase("complete"))) {
                 handler.post(new Runnable() {
                     @Override
@@ -633,7 +650,12 @@ public class TravelJobDetails extends Activity implements View.OnClickListener, 
                         handler.post(new Runnable() {
                             @Override
                             public void run() {
-                                if (oracleProjectOwner != null && !oracleProjectOwner.equalsIgnoreCase(Appreference.loginuserdetails.getUsername())) {
+                                /*code Added for groupAdmin-observer Start*/
+
+                                if (oracleProjectOwner != null && !oracleProjectOwner.equalsIgnoreCase(Appreference.loginuserdetails.getUsername())
+                                        && (Appreference.loginuserdetails != null && Appreference.loginuserdetails.getRoleId() != null
+                                        && !Appreference.loginuserdetails.getRoleId().equalsIgnoreCase("2"))) {
+                                    /*code Added for groupAdmin-observer End*/
                                     ll_2.setVisibility(View.GONE);
                                     status_job.setVisibility(View.VISIBLE);
                                     travel_job.setVisibility(View.VISIBLE);
@@ -857,8 +879,13 @@ public class TravelJobDetails extends Activity implements View.OnClickListener, 
                     Log.i("output123", "project CurrentStatus from current_status " + current_status);
                 }
             }
+            /*added for GroupAdmin Observer Start*/
+            String get_groupAdminobserver_query = "select groupAdminobserver from projectDetails where loginuser = '" + Appreference.loginuserdetails.getEmail() + "'and projectId='" + projectId + "'";
+            String OraclegroupAdminObserver = VideoCallDataBase.getDB(context).getprojectIdForOracleID(get_groupAdminobserver_query);
+            /*added for GroupAdmin Observer End*/
             Log.i(tab, "project CurrentStatus from DB====>" + current_status);
-            if (oracleProjectOwner != null && !oracleProjectOwner.equalsIgnoreCase(Appreference.loginuserdetails.getUsername())) {
+            if (oracleProjectOwner != null && !oracleProjectOwner.equalsIgnoreCase(Appreference.loginuserdetails.getUsername()) &&
+                    (OraclegroupAdminObserver != null && !OraclegroupAdminObserver.contains(Appreference.loginuserdetails.getUsername()))) {
                 if (current_status == -1) {
                     popup.getMenu().getItem(0).setVisible(true);
                     popup.getMenu().getItem(1).setVisible(false);
@@ -1649,7 +1676,6 @@ public class TravelJobDetails extends Activity implements View.OnClickListener, 
             Log.i("estimtone123", "getEstimetedTimeAlertShownOrNot ==>" + getEstimetedTimeAlertShownOrNot);
 
 
-
             /********************************************/
             /*******************added 7thMar18 ********/
             /********************************************/
@@ -1687,7 +1713,7 @@ public class TravelJobDetails extends Activity implements View.OnClickListener, 
                 Expected_HMS = "";
             Log.i("remain123", " showEstimWishAlert  Expected_HMS==============>" + Expected_HMS);
 
-            if (Expected_HMS!=null & !Expected_HMS.equalsIgnoreCase("")) {
+            if (Expected_HMS != null & !Expected_HMS.equalsIgnoreCase("")) {
                 Calendar calendar = Calendar.getInstance();
                 SimpleDateFormat mdformat = new SimpleDateFormat("yyyy-MM-dd");
                 String strDate = mdformat.format(calendar.getTime());
@@ -3112,9 +3138,11 @@ public class TravelJobDetails extends Activity implements View.OnClickListener, 
                 Log.i("deassign123", "project_deassignMems **  " + project_deassignMems);
                 Log.i("deassign123", "------listOfObservers ==> " + listOfObservers);
                 Log.i("deassign123", "------ownerOfTask ==> " + ownerOfTask);
+
                 if (project_deassignMems != null && !project_deassignMems.equalsIgnoreCase("") && !project_deassignMems.equalsIgnoreCase(null)) {
                     chatBean.setGroupTaskMembers(listTaskMembers());
                     listOfObservers.clear();
+
                     if (project_deassignMems != null) {
                         String members_deassign[] = project_deassignMems.split(",");
                         for (int i = 0; i < members_deassign.length; i++) {
@@ -3192,6 +3220,28 @@ public class TravelJobDetails extends Activity implements View.OnClickListener, 
             Log.i("estim1234", "listOfObservers size******" + listOfObservers.size());
             Log.i("estim1234", "=============================");
 
+                /*added for groupAdmin-Observer Start*/
+
+            if (ownerOfTask.equalsIgnoreCase(Appreference.loginuserdetails.getUsername())) {
+                listOfObservers.clear();
+            }
+
+            String groupAdmin_observer = getGroupAdmin_observer_DB();
+            if (groupAdmin_observer != null && !groupAdmin_observer.equalsIgnoreCase("") && !groupAdmin_observer.equalsIgnoreCase(null)
+                    && groupAdmin_observer.contains(",")) {
+                String members_groupAdmin[] = groupAdmin_observer.split(",");
+                for (int i = 0; i < members_groupAdmin.length; i++) {
+                    if (!members_groupAdmin[i].equalsIgnoreCase(Appreference.loginuserdetails.getUsername())) {
+                        listOfObservers.add(members_groupAdmin[i]);
+                    }
+                }
+            } else {
+                listOfObservers.add(groupAdmin_observer);
+            }
+            if (taskReceiver!=null && !taskReceiver.equalsIgnoreCase(Appreference.loginuserdetails.getUsername()) && !listOfObservers.contains(taskReceiver)) {
+                listOfObservers.add(taskReceiver);
+            }
+            /*added for groupAdmin-Observer End*/
 
             if (listOfObservers != null && listOfObservers.size() > 0) {
                 if (getResources().getString(R.string.proxyua).equalsIgnoreCase("enable")) {
@@ -3241,6 +3291,13 @@ public class TravelJobDetails extends Activity implements View.OnClickListener, 
             e.printStackTrace();
             Appreference.printLog("TravelJobDetails", "sendMessage Exception : " + e.getMessage(), "WARN", null);
         }
+    }
+
+    private String getGroupAdmin_observer_DB() {
+        String get_groupAdminobserver_query = "select groupAdminobserver from projectDetails where loginuser = '" + Appreference.loginuserdetails.getEmail() + "'and projectId='" + projectId + "'";
+        String OraclegroupAdminObserver = VideoCallDataBase.getDB(context).getprojectIdForOracleID(get_groupAdminobserver_query);
+        Log.i("observer123", "OraclegroupAdminObserver ====> " + OraclegroupAdminObserver);
+        return OraclegroupAdminObserver;
     }
 
     private String getStatusForNumber(String status) {
@@ -4488,6 +4545,21 @@ public class TravelJobDetails extends Activity implements View.OnClickListener, 
 
         }
 
+    }
+
+    public  void isCameFromOffline(boolean isofflineData_Exist){
+        if (isofflineData_Exist) {
+            Log.i("online123", "isofflineData_Exist********"+isofflineData_Exist);
+
+            Appreference.isAlreadyLoadedofflineTravelData=false;
+            VideoCallDataBase.getDB(context).DB_converstion_Delete(webtaskId,projectId);
+        }
+
+        Log.i("online123", "isCameFromOffline********"+webtaskId);
+        if (webtaskId != null) {
+            appSharedpreferences.saveBoolean("syncTask" + webtaskId, true);
+        }
+        gettaskwebservice();
     }
 
     private class CounterTravelClass extends CountDownTimer {

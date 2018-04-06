@@ -137,6 +137,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         TextView highmessage = (TextView) findViewById(R.id.highmessage);
         this.context = this;
         loginActivity = this;
+        Appreference.mainContect = this;
         logoutSuccess = getIntent().getBooleanExtra("logout", false);
         // Set up the login form.
         mEmailView = (AutoCompleteTextView) findViewById(R.id.email);
@@ -209,7 +210,8 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                     List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
                     nameValuePairs.add(new BasicNameValuePair("email", mEmailView.getText().toString()));
                     nameValuePairs.add(new BasicNameValuePair("password", mPasswordView.getText().toString()));
-//                    nameValuePairs.add(new BasicNameValuePair("textId", AESCrypto.encrypt(Appreference.getIMEINumber(context))));
+                    nameValuePairs.add(new BasicNameValuePair("version", "1.5.3"));
+                    nameValuePairs.add(new BasicNameValuePair("textId", AESCrypto.encrypt(Appreference.getIMEINumber(context))));
                     JsonRequestSender jsonRequestParser = new JsonRequestSender();
                     Appreference.jsonRequestSender = jsonRequestParser;
                     Log.i("login123", "Login webservice calling oncreate.......");
@@ -339,7 +341,8 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                         List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
                         nameValuePairs.add(new BasicNameValuePair("email", mEmailView.getText().toString()));
                         nameValuePairs.add(new BasicNameValuePair("password", mPasswordView.getText().toString()));
-//                        nameValuePairs.add(new BasicNameValuePair("textId", AESCrypto.encrypt(Appreference.getIMEINumber(context))));
+                        nameValuePairs.add(new BasicNameValuePair("version", "1.5.3"));
+                        nameValuePairs.add(new BasicNameValuePair("textId", AESCrypto.encrypt(Appreference.getIMEINumber(context))));
                         JsonRequestSender jsonRequestParser = new JsonRequestSender();
 
                         Appreference.jsonRequestSender = jsonRequestParser;

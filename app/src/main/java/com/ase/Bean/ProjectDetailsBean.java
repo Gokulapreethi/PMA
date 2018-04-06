@@ -74,6 +74,8 @@ public class ProjectDetailsBean implements Serializable {
     private String jobCardType;
     private String machineMake;
     private String jobDescription;
+    private String projectGroupObservers;
+
 
     public String getId() {
         return id;
@@ -554,5 +556,13 @@ public class ProjectDetailsBean implements Serializable {
 
     public void setOpenDate(String openDate) {
         this.openDate = openDate;
+    }
+
+    public String getProjectGroupObservers() {
+        return projectGroupObservers;
+    }
+
+    public void setProjectGroupObservers(String projectGroupObservers) {
+        this.projectGroupObservers = projectGroupObservers;
     }
 }

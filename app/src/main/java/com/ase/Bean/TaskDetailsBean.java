@@ -162,6 +162,14 @@ public class TaskDetailsBean implements Serializable,Cloneable {
     private String endDateLongitude;
 
 
+    /*added for multisketch attach in eod screen Start*/
+    private ArrayList<String> multiActionTaken_list;
+    private ArrayList<String> multicustomerRemarks_list;
+    private ArrayList<String> multiObservation_list;
+    private ArrayList<String> multiSynopsis_list;
+    /*added for multisketch attach in eod screen End*/
+
+
     public String getEstimatedTravel() {
         return EstimatedTravel;
     }
@@ -1241,6 +1249,38 @@ private String sender_reply;
 
     public void setEstimRemainingAlarmTime(String estimRemainingAlarmTime) {
         this.estimRemainingAlarmTime = estimRemainingAlarmTime;
+    }
+
+    public ArrayList<String> getMultiActionTaken_list() {
+        return multiActionTaken_list;
+    }
+
+    public void setMultiActionTaken_list(ArrayList<String> multiActionTaken_list) {
+        this.multiActionTaken_list = multiActionTaken_list;
+    }
+
+    public ArrayList<String> getMulticustomerRemarks_list() {
+        return multicustomerRemarks_list;
+    }
+
+    public void setMulticustomerRemarks_list(ArrayList<String> multicustomerRemarks_list) {
+        this.multicustomerRemarks_list = multicustomerRemarks_list;
+    }
+
+    public ArrayList<String> getMultiObservation_list() {
+        return multiObservation_list;
+    }
+
+    public void setMultiObservation_list(ArrayList<String> multiObservation_list) {
+        this.multiObservation_list = multiObservation_list;
+    }
+
+    public ArrayList<String> getMultiSynopsis_list() {
+        return multiSynopsis_list;
+    }
+
+    public void setMultiSynopsis_list(ArrayList<String> multiSynopsis_list) {
+        this.multiSynopsis_list = multiSynopsis_list;
     }
 }
 

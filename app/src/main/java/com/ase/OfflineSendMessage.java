@@ -32,6 +32,7 @@ import java.io.InputStream;
 import java.nio.charset.Charset;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.TimeZone;
@@ -63,6 +64,7 @@ public class OfflineSendMessage implements WebServiceInterface {
         TaskDetailsBean machineDetailsBean;
         TaskDetailsBean traveldatebean;
         travel_date_details = new ArrayList<>();
+
         try {
 //            if (isNetworkAvailable()) {
 //                showprogress("Please wait...");
@@ -367,23 +369,50 @@ public class OfflineSendMessage implements WebServiceInterface {
                             taskbean2.setMimeType("image");
                             taskbean2.setTaskRequestType("observation");
                             taskbean2.setTaskDescription(detailsBean.getObservation());
-                            jsonObject7.put("fileContent", encodeTobase64(BitmapFactory.decodeFile(detailsBean.getObservation())));
+
+                                    /*Code Added for Eod Offline*********** multiSketch Start*/
+//                            String path = "/storage/emulated/0/High Message/Sketch_file22032018125639.jpg,/storage/emulated/0/High Message/Sketch_file22032018125642.jpg,/storage/emulated/0/High Message/Sketch_file22032018125645.jpg";
+//                            detailsBean.setObservation(path);
+                            String[] myObservation = detailsBean.getObservation().split(",");
+                            JSONArray Multi_array = new JSONArray();
+                            if (myObservation != null) {
+                                for (int i = 0; i < myObservation.length; i++) {
+                                    JSONObject jsonObject_sketch = new JSONObject();
+                                    Log.i("sketch123", "observation myObservation[i] *****" + myObservation[i]);
+
+                                    jsonObject_sketch.put("fileContent", encodeTobase64(BitmapFactory.decodeFile(myObservation[i].trim())));
+                                    jsonObject_sketch.put("taskFileExt", "jpg");
+                                    Multi_array.put(i, jsonObject_sketch);
+                                }
+                            }
+
+                            jsonObject.put("observationImage", Multi_array);
+                            Log.i("sketch123", "observationImage set *****");
+
+                                  /*Code Added for Eod Offline************* multiSketch End */
+
+
+                            /*jsonObject7.put("fileContent", encodeTobase64(BitmapFactory.decodeFile(detailsBean.getObservation())));
                             jsonObject7.put("taskFileExt", "jpg");
-                            jsonObject.put("observationImage", jsonObject7);
+                            jsonObject.put("observationImage", jsonObject7);*/
 //                                statusBean.setObservation(detailsBean.getObservation());
                         } catch (CloneNotSupportedException e) {
                             e.printStackTrace();
                             Appreference.printLog("OfflineSendMessage", "detailsBean.getObservation() CloneNotSupportedException Exception : " + e.getMessage(), "WARN", null);
                         } catch (Exception e) {
                             e.printStackTrace();
+                            Log.i("sketch123", " myObservation Exception *****" + e.getMessage());
+
                             Appreference.printLog("OfflineSendMessage", "detailsBean.getObservation() Exception : " + e.getMessage(), "WARN", null);
                         }
                     } else if (detailsBean.getObservation() != null && !detailsBean.getObservation().equalsIgnoreCase(null)
                             && !detailsBean.getObservation().equalsIgnoreCase("")) {
                         jsonObject.put("observation", detailsBean.getObservation());
+                        Log.i("sketch123", "observation set *****");
 //                            statusBean.setObservation(detailsBean.getObservation());
                     } else {
                         jsonObject.put("observation", "");
+                        Log.i("sketch123", "observation set null*****");
                     }
                     JSONObject jsonObject8 = new JSONObject();
                     if (detailsBean.getActionTaken() != null && !detailsBean.getActionTaken().equalsIgnoreCase(null)
@@ -393,15 +422,36 @@ public class OfflineSendMessage implements WebServiceInterface {
                             taskbean2.setMimeType("image");
                             taskbean2.setTaskRequestType("actionTaken");
                             taskbean2.setTaskDescription(detailsBean.getActionTaken());
-                            jsonObject8.put("fileContent", encodeTobase64(BitmapFactory.decodeFile(detailsBean.getActionTaken())));
+
+                             /*Code Added for Eod Offline*********** multiSketch Start*/
+
+                            String[] myactionTaken = detailsBean.getActionTaken().split(",");
+                            JSONArray Multi_array = new JSONArray();
+                            if (myactionTaken != null) {
+                                for (int i = 0; i < myactionTaken.length; i++) {
+                                    JSONObject jsonObject_sketch = new JSONObject();
+                                    Log.i("sketch123", "ActionTaken myactionTaken[i] *****" + myactionTaken[i]);
+                                    jsonObject_sketch.put("fileContent", encodeTobase64(BitmapFactory.decodeFile(myactionTaken[i].trim())));
+                                    jsonObject_sketch.put("taskFileExt", "jpg");
+                                    Multi_array.put(i, jsonObject_sketch);
+                                }
+                            }
+                            Log.i("sketch123", "myactionTaken *****" + Multi_array.toString());
+
+                            jsonObject.put("actionTakenImage", Multi_array);
+
+                            /*Code Added for Eod Offline************* multiSketch End */
+
+                          /*  jsonObject8.put("fileContent", encodeTobase64(BitmapFactory.decodeFile(detailsBean.getActionTaken())));
                             jsonObject8.put("taskFileExt", "jpg");
-                            jsonObject.put("actionTakenImage", jsonObject8);
+                            jsonObject.put("actionTakenImage", jsonObject8);*/
 //                                statusBean.setActionTaken(detailsBean.getActionTaken());
                         } catch (CloneNotSupportedException e) {
                             e.printStackTrace();
                             Appreference.printLog("OfflineSendMessage", "detailsBean.getActionTaken()CloneNotSupportedException Exception : " + e.getMessage(), "WARN", null);
                         } catch (Exception e) {
                             e.printStackTrace();
+                            Log.i("sketch123", "myactionTaken Exception *****" + e.getMessage());
                             Appreference.printLog("OfflineSendMessage", "detailsBean.getActionTaken() Exception : " + e.getMessage(), "WARN", null);
                         }
                     } else if (detailsBean.getActionTaken() != null && !detailsBean.getActionTaken().equalsIgnoreCase("")) {
@@ -418,9 +468,28 @@ public class OfflineSendMessage implements WebServiceInterface {
                             taskbean2.setMimeType("image");
                             taskbean2.setTaskRequestType("customerRemarks");
                             taskbean2.setTaskDescription(detailsBean.getCustomerRemarks());
-                            jsonObject9.put("fileContent", encodeTobase64(BitmapFactory.decodeFile(detailsBean.getCustomerRemarks())));
+
+                            /*Code Added for Eod Offline*********** multiSketch Start*/
+
+                            String[] mycustomerRemarks = detailsBean.getCustomerRemarks().split(",");
+                            JSONArray Multi_array = new JSONArray();
+                            if (mycustomerRemarks != null) {
+                                for (int i = 0; i < mycustomerRemarks.length; i++) {
+                                    JSONObject jsonObject_sketch = new JSONObject();
+
+                                    Log.i("sketch123", "CustomerRemarks mycustomerRemarks[i] *****" + mycustomerRemarks[i]);
+                                    jsonObject_sketch.put("fileContent", encodeTobase64(BitmapFactory.decodeFile(mycustomerRemarks[i].trim())));
+                                    jsonObject_sketch.put("taskFileExt", "jpg");
+                                    Multi_array.put(i, jsonObject_sketch);
+                                }
+                            }
+                            jsonObject.put("remarksImage", Multi_array);
+
+                            /*Code Added for Eod Offline************* multiSketch End */
+
+                           /* jsonObject9.put("fileContent", encodeTobase64(BitmapFactory.decodeFile(detailsBean.getCustomerRemarks())));
                             jsonObject9.put("taskFileExt", "jpg");
-                            jsonObject.put("remarksImage", jsonObject9);
+                            jsonObject.put("remarksImage", jsonObject9);*/
 //                                statusBean.setCustomerRemarks(detailsBean.getCustomerRemarks());
                         } catch (CloneNotSupportedException e) {
                             e.printStackTrace();
@@ -444,9 +513,27 @@ public class OfflineSendMessage implements WebServiceInterface {
                             taskbean2.setMimeType("image");
                             taskbean2.setTaskRequestType("synopsis");
                             taskbean2.setTaskDescription(detailsBean.getSynopsis());
-                            jsonObject10.put("fileContent", encodeTobase64(BitmapFactory.decodeFile(detailsBean.getSynopsis())));
+
+                            /*Code Added for Eod Offline*********** multiSketch Start*/
+
+                            String[] mysynopsis = detailsBean.getSynopsis().split(",");
+                            JSONArray Multi_array = new JSONArray();
+                            if (mysynopsis != null) {
+                                for (int i = 0; i < mysynopsis.length; i++) {
+                                    JSONObject jsonObject_sketch = new JSONObject();
+                                    Log.i("sketch123", "Synopsis mysynopsis[i] *****" + mysynopsis[i]);
+                                    jsonObject_sketch.put("fileContent", encodeTobase64(BitmapFactory.decodeFile(mysynopsis[i].trim())));
+                                    jsonObject_sketch.put("taskFileExt", "jpg");
+                                    Multi_array.put(i, jsonObject_sketch);
+                                }
+                            }
+                            jsonObject.put("synopsisImage", Multi_array);
+
+                            /*Code Added for Eod Offline************* multiSketch End */
+
+                           /* jsonObject10.put("fileContent", encodeTobase64(BitmapFactory.decodeFile(detailsBean.getSynopsis())));
                             jsonObject10.put("taskFileExt", "jpg");
-                            jsonObject.put("synopsisImage", jsonObject10);
+                            jsonObject.put("synopsisImage", jsonObject10);*/
 //                                statusBean.setCustomerRemarks(detailsBean.getCustomerRemarks());
                         } catch (CloneNotSupportedException e) {
                             e.printStackTrace();
@@ -471,6 +558,7 @@ public class OfflineSendMessage implements WebServiceInterface {
                     }
                     OfflineSendMessage offlineSendMessage = new OfflineSendMessage();
                     Log.i("sendofflinemsg", "obj-->" + offlineSendMessage);
+
                     Appreference.printLog("taskStatus", jsonObject.toString(), "offline Request", null);
                     Appreference.jsonOfflineRequestSender.taskStatus(EnumJsonWebservicename.taskStatus, jsonObject, statusBean, offlineSendMessage);
                 }
@@ -482,6 +570,37 @@ public class OfflineSendMessage implements WebServiceInterface {
          /*   } else {
                 showToast("No Internet,Try again Later...");
             }*/
+            String Query_media = "select * from taskDetailsInfo where wssendstatus= '000'";
+            ArrayList<TaskDetailsBean> AlltaskMediaBean;
+            AlltaskMediaBean = VideoCallDataBase.getDB(MainActivity.mainContext).getTaskDetailsInfo(Query_media);
+            Log.i("offline123", "OfflineStatusSend query-=====> $$$ " + AlltaskMediaBean.size());
+            if ((AlltaskBean != null && AlltaskBean.size() > 0)||(AlltaskMediaBean != null && AlltaskMediaBean.size() > 0)) {
+                Appreference.isAlreadyLoadedofflineData = true;
+                Appreference.isAlreadyLoadedofflineTravelData = true;
+                Log.i("online123", "AlltaskBeanData_Exist AlltaskBean********"+AlltaskBean.size());
+                Log.i("online123", "AlltaskMediaBeanData_Exist AlltaskMediaBean********"+AlltaskMediaBean.size());
+
+                handler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        // Do something after 5s = 5000ms
+                        CallSync();
+                    }
+                }, 30000);
+
+            } else {
+                Log.i("online123", " AlltaskBeanData_Exist,AlltaskMediaBeanData NOT Exist *******");
+
+                CallSync();
+                /*NewTaskConversation conversation = (NewTaskConversation) Appreference.context_table.get("taskcoversation");
+                if (conversation != null) {
+                    conversation.isCameFromOffline(Appreference.isAlreadyLoadedofflineData);
+                }
+                TravelJobDetails travelJobDetails = (TravelJobDetails) Appreference.context_table.get("traveljobdetails");
+                if (travelJobDetails != null) {
+                    travelJobDetails.isCameFromOffline(Appreference.isAlreadyLoadedofflineTravelData);
+                }*/
+            }
         } catch (JSONException e) {
             e.printStackTrace();
             Appreference.printLog("OfflineSendMessage", "JSONException Exception : " + e.getMessage(), "WARN", null);
@@ -490,6 +609,17 @@ public class OfflineSendMessage implements WebServiceInterface {
             e.printStackTrace();
             Appreference.printLog("OfflineSendMessage", " Exception : " + e.getMessage(), "WARN", null);
             Log.i("offline123", "ERROR-->" + e.getMessage());
+        }
+    }
+
+    private void CallSync() {
+        NewTaskConversation conversation = (NewTaskConversation) Appreference.context_table.get("taskcoversation");
+        if (conversation != null) {
+            conversation.isCameFromOffline(Appreference.isAlreadyLoadedofflineData);
+        }
+        TravelJobDetails travelJobDetails = (TravelJobDetails) Appreference.context_table.get("traveljobdetails");
+        if (travelJobDetails != null) {
+            travelJobDetails.isCameFromOffline(Appreference.isAlreadyLoadedofflineTravelData);
         }
     }
 
@@ -564,11 +694,25 @@ public class OfflineSendMessage implements WebServiceInterface {
     }
 
     private String encodeTobase64(Bitmap image) {
-        Bitmap immagex = image;
+       /* Bitmap immagex = image;
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         immagex.compress(Bitmap.CompressFormat.JPEG, 75, baos);
         byte[] b = baos.toByteArray();
         String imageEncoded = Base64.encodeToString(b, Base64.DEFAULT);
+        return imageEncoded;*/
+        String imageEncoded = null;
+        try {
+            Bitmap immagex = image;
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            immagex.compress(Bitmap.CompressFormat.JPEG, 75, baos);
+            byte[] b = baos.toByteArray();
+            imageEncoded = Base64.encodeToString(b, Base64.DEFAULT);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Log.i("sketch123", "encodeTobase64 *****" + e.getMessage());
+
+            Appreference.printLog("NewTaskConversation", "encodeTobase64 Exception : " + e.getMessage(), "WARN", null);
+        }
         return imageEncoded;
     }
 
@@ -944,6 +1088,26 @@ public class OfflineSendMessage implements WebServiceInterface {
             ArrayList<String> listOfObservers = new ArrayList<>();
 
             listOfObservers.add(taskDetailsBean.getOwnerOfTask());
+
+            /*added for groupAdmin-Observer Start*/
+            String groupAdmin_observer = getGroupAdmin_observer_DB(taskDetailsBean.getProjectId());
+            Log.i("observer123", "************ getGroupAdmin_observer_DB************ " + groupAdmin_observer);
+
+            if (groupAdmin_observer != null && !groupAdmin_observer.equalsIgnoreCase("") && !groupAdmin_observer.equalsIgnoreCase(null)
+                    && groupAdmin_observer.contains(",")) {
+                String members_groupAdmin[] = groupAdmin_observer.split(",");
+                for (int i = 0; i < members_groupAdmin.length; i++) {
+                    if (!members_groupAdmin[i].equalsIgnoreCase(Appreference.loginuserdetails.getUsername())) {
+                        listOfObservers.add(members_groupAdmin[i]);
+                    }
+                }
+            } else {
+                if (groupAdmin_observer != null && !groupAdmin_observer.equalsIgnoreCase("")) {
+                    listOfObservers.add(groupAdmin_observer);
+                }
+            }
+            /*added for groupAdmin-Observer End*/
+
             Log.i("offline", "listOfObservers==> $$ " + listOfObservers.size());
             if (listOfObservers != null && listOfObservers.size() > 0) {
                 Log.i("offline", "listOfObservers==> " + listOfObservers.size());
@@ -966,6 +1130,13 @@ public class OfflineSendMessage implements WebServiceInterface {
             e.printStackTrace();
             Appreference.printLog("OfflineSendMessage", "sendMessage Exception : " + e.getMessage(), "WARN", null);
         }
+    }
+
+    private String getGroupAdmin_observer_DB(String projectId) {
+        String get_groupAdminobserver_query = "select groupAdminobserver from projectDetails where loginuser = '" + Appreference.loginuserdetails.getEmail() + "'and projectId='" + projectId + "'";
+        String OraclegroupAdminObserver = VideoCallDataBase.getDB(MainActivity.mainContext).getprojectIdForOracleID(get_groupAdminobserver_query);
+        Log.i("observer123", "OraclegroupAdminObserver ====> " + OraclegroupAdminObserver);
+        return OraclegroupAdminObserver;
     }
 
     public String composeChatXML(TaskDetailsBean cmbean) {
@@ -1470,26 +1641,32 @@ public class OfflineSendMessage implements WebServiceInterface {
 
                                 if (detailsBean.getTravelStartTime() != null) {
                                     Log.i("travelcheck123", "getTravelStartTime ====> ");
+                                    Log.i("signal123", "getTravelStartTime ====> " + detailsBean.getSignalid());
                                     PercentageWebService("text", "StartTime : " + detailsBean.getTravelStartTime(), "", Utility.getSessionID(), 0, detailsBean);
                                 }
                                 if (detailsBean.getTravelEndTime() != null) {
                                     Log.i("travelcheck123", "getTravelEndTime ====> ");
+                                    Log.i("signal123", "getTravelEndTime ====> " + detailsBean.getSignalid());
                                     PercentageWebService("text", "EndTime : " + detailsBean.getTravelEndTime(), "", Utility.getSessionID(), 0, detailsBean);
                                 }
                                 if (detailsBean.getStartDateLatitude() != null) {
                                     Log.i("travelcheck123", "getStartDateLatitude ====> ");
+                                    Log.i("signal123", "getStartDateLatitude ====> " + detailsBean.getSignalid());
                                     PercentageWebService("text", "Latitude : " + detailsBean.getStartDateLatitude(), "", Utility.getSessionID(), 0, detailsBean);
                                 }
                                 if (detailsBean.getStartDateLongitude() != null) {
                                     Log.i("travelcheck123", "getStartDateLongitude ====> ");
+                                    Log.i("signal123", "getStartDateLongitude ====> " + detailsBean.getSignalid());
                                     PercentageWebService("text", "Longitude : " + detailsBean.getStartDateLongitude(), "", Utility.getSessionID(), 0, detailsBean);
                                 }
                                 if (detailsBean.getEndDateLatitude() != null) {
                                     Log.i("travelcheck123", "getEndDateLatitude ====> ");
+                                    Log.i("signal123", "getEndDateLatitude ====> " + detailsBean.getSignalid());
                                     PercentageWebService("text", "Latitude : " + detailsBean.getEndDateLatitude(), "", Utility.getSessionID(), 0, detailsBean);
                                 }
                                 if (detailsBean.getEndDateLongitude() != null) {
                                     Log.i("travelcheck123", "getEndDateLongitude ====> ");
+                                    Log.i("signal123", "getEndDateLongitude ====> " + detailsBean.getSignalid());
                                     PercentageWebService("text", "Longitude : " + detailsBean.getEndDateLongitude(), "", Utility.getSessionID(), 0, detailsBean);
                                 }
                                /* Log.i("offline123", "traveldatebean === > 1 "+detailsBean.getTaskDescription());
@@ -1589,9 +1766,9 @@ public class OfflineSendMessage implements WebServiceInterface {
                 handler.post(new Runnable() {
                     @Override
                     public void run() {
-                        if (taskDetailsBean.getProjectId() !=null && !taskDetailsBean.getProjectId().equalsIgnoreCase("") && taskDetailsBean.getSignalid() != null) {
+                        if (taskDetailsBean.getProjectId() != null && !taskDetailsBean.getProjectId().equalsIgnoreCase("") && taskDetailsBean.getSignalid() != null) {
                             VideoCallDataBase.getDB(MainActivity.mainContext).taskWSStatusUpdateINStatus(taskDetailsBean.getSignalid(), "000");
-                        }else{
+                        } else {
                             VideoCallDataBase.getDB(MainActivity.mainContext).taskWSStatusUpdate(taskDetailsBean.getSignalid(), "000");
                         }
                     }

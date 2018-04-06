@@ -272,7 +272,7 @@ public class CustomVideoCamera extends Activity {
 
         isFlashAvailable = getApplicationContext().getPackageManager()
                 .hasSystemFeature(PackageManager.FEATURE_CAMERA_FLASH);
-        if (!isFlashAvailable) {
+        if (!isFlashAvailable || !isPhoto) {
             flash_ON.setVisibility(View.GONE);
             flash_OFF.setVisibility(View.GONE);
         }

@@ -720,7 +720,11 @@ public class AudioRecorder extends Activity implements WebServiceInterface {
         try {
             if (mRecorder != null) {
                 record.setBackgroundResource(R.drawable.record_blue);
-                mRecorder.stop();
+                try {
+                    mRecorder.stop();
+                } catch (RuntimeException e) {
+                    e.printStackTrace();
+                }
                 mRecorder.release();
                 mRecorder = null;
             }
