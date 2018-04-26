@@ -28,13 +28,13 @@ import java.util.Date;
 public class SearchMediaWebView extends AppCompatActivity {
     TextView title_header;
     Context context;
-    private ProgressDialog progress;
     WebView browser;
     ProgressBar pbar;
     LinearLayout back_linear;
     RelativeLayout relate_upper;
-    Handler handler=new Handler();
+    Handler handler = new Handler();
     long loadstart, loadend;
+    private ProgressDialog progress;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,7 +46,7 @@ public class SearchMediaWebView extends AppCompatActivity {
             Appreference.context_table.put("searchmedia", this);
             setContentView(R.layout.searchmedia_webview);
             context = this;
-            title_header=(TextView)findViewById(R.id.tv_heading);
+            title_header = (TextView) findViewById(R.id.tv_heading);
             relate_upper = (RelativeLayout) findViewById(R.id.upper_progress);
             browser = (WebView) findViewById(R.id.assets_webview);
             pbar = (ProgressBar) findViewById(R.id.progress);
@@ -72,21 +72,34 @@ public class SearchMediaWebView extends AppCompatActivity {
 //                tv_loading.setText(progress+" %");
                 }
             });
-            String url=null;
-            if(getIntent()!=null && getIntent().getStringExtra("urlload")!=null &&
+            String url = null;
+            if (getIntent() != null && getIntent().getStringExtra("urlload") != null &&
                     getIntent().getStringExtra("urlload").equalsIgnoreCase("searchmedia")) {
-                url = getResources().getString(R.string.app_url)+"mediaView";
-            }else if(getIntent()!=null && getIntent().getStringExtra("urlload")!=null &&
-                    getIntent().getStringExtra("urlload").equalsIgnoreCase("tnareport")){
-                url =  getResources().getString(R.string.app_url)+"tnaReport";
+                url = getResources().getString(R.string.app_url) + "mediaView";
+            } else if (getIntent() != null && getIntent().getStringExtra("urlload") != null &&
+                    getIntent().getStringExtra("urlload").equalsIgnoreCase("tnareport")) {
+                url = getResources().getString(R.string.app_url) + "tnaReport";
                 title_header.setText("TNA Report");
+            } else if (getIntent() != null && getIntent().getStringExtra("urlload") != null &&
+                    getIntent().getStringExtra("urlload").equalsIgnoreCase("pms")) {
+                String PMS_Name = getIntent().getStringExtra("desc");
+                browser.clearCache(true);
+                url = "https://www.google.com";
+//                url = "http://server1.snowwood.com:3000/checkList;jobcard= " + PMS_Name;
+                url = "http://server1.snowwood.com:3000/checkList";
+
+                Log.i("pms123", "PMS URL====> " + url);
+//                url =  getResources().getString(R.string.app_url)+"tnaReport";
+                title_header.setText("PMS");
             }
             Log.i("webview", "URL-->" + url);
             try {
                 browser.loadUrl(url);
             } catch (Exception e) {
+                Log.i("pms123", "PMS Exception====> " + e.getMessage());
                 e.printStackTrace();
             } catch (Error e) {
+                Log.i("pms123", "PMS Error====> " + e.getMessage());
                 e.printStackTrace();
             }
             back_linear.setOnClickListener(new View.OnClickListener() {
@@ -96,28 +109,60 @@ public class SearchMediaWebView extends AppCompatActivity {
                     overridePendingTransition(R.anim.left_to_right, R.anim.right_to_left);
                 }
             });
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
-        }catch (Error e2){
+        } catch (Error e2) {
             e2.printStackTrace();
         }
     }
+
+    public boolean isNetworkAvailable() {
+        ConnectivityManager connectivityManager = (ConnectivityManager) getApplicationContext().getSystemService(getApplicationContext().CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Appreference.context_table.remove("searchmedia");
+    }
+
+    @Override
+    protected void onPostResume() {
+        super.onPostResume();
+        Log.i("onPostResume", "Assetwebview Activity Onpostresume method");
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+
+        finish();
+        overridePendingTransition(R.anim.left_to_right, R.anim.right_to_left);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+    }
+
     private class SSLTolerentWebViewClient extends WebViewClient {
         @Override
         public void onPageStarted(WebView view, String url, Bitmap favicon) {
             super.onPageStarted(view, url, favicon);
-        try{
-            relate_upper.setVisibility(View.VISIBLE);
+            try {
+                relate_upper.setVisibility(View.VISIBLE);
             /*progress.setCancelable(false);
             progress.setProgressStyle(ProgressDialog.STYLE_SPINNER);
             progress.setMessage("Loading...");
             progress.setIndeterminate(false);
             progress.show();*/
-            loadstart = (new Date()).getTime();
-            Log.i("webview","load start time-->"+loadstart);
-        }catch(Exception e){
-            e.printStackTrace();
-        }
+                loadstart = (new Date()).getTime();
+                Log.i("webview", "load start time-->" + loadstart);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
 
         @Override
@@ -126,7 +171,7 @@ public class SearchMediaWebView extends AppCompatActivity {
 //            progress.cancel();
             relate_upper.setVisibility(View.GONE);
             loadend = (new Date()).getTime();
-            Log.i("webview","load end time-->"+loadend);
+            Log.i("webview", "load end time-->" + loadend);
 //            view.setInitialScale((int)(100*view.getScale()));
         }
 
@@ -138,16 +183,21 @@ public class SearchMediaWebView extends AppCompatActivity {
             switch (error.getPrimaryError()) {
                 case SslError.SSL_UNTRUSTED:
                     message = "The certificate authority is not trusted.";
+                    Log.i("pms123", "PMS SslError====> " + message);
                     break;
                 case SslError.SSL_EXPIRED:
                     message = "The certificate has expired.";
+                    Log.i("pms123", "PMS SslError====> " + message);
                     break;
                 case SslError.SSL_IDMISMATCH:
                     message = "The certificate Hostname mismatch.";
+                    Log.i("pms123", "PMS SslError====> " + message);
                     break;
                 case SslError.SSL_NOTYETVALID:
                     message = "The certificate is not yet valid.";
+                    Log.i("pms123", "PMS SslError====> " + message);
                     break;
+
             }
             handler.proceed();
 
@@ -156,44 +206,10 @@ public class SearchMediaWebView extends AppCompatActivity {
 
         @Override
         public boolean shouldOverrideUrlLoading(WebView view, String url) {
-            Log.i("redirect","url--->"+url);
+            Log.i("redirect", "url--->" + url);
             return super.shouldOverrideUrlLoading(view, url);
         }
 
-    }
-
-    public boolean isNetworkAvailable() {
-        ConnectivityManager connectivityManager = (ConnectivityManager) getApplicationContext().getSystemService(getApplicationContext().CONNECTIVITY_SERVICE);
-        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
-        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
-    }
-
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        Appreference.context_table.remove("searchmedia");
-    }
-
-
-
-    @Override
-    protected void onPostResume() {
-        super.onPostResume();
-        Log.i("onPostResume","Assetwebview Activity Onpostresume method");
-    }
-
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-
-        finish();
-        overridePendingTransition(R.anim.left_to_right,R.anim.right_to_left);
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
     }
 
 }

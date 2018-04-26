@@ -48,6 +48,8 @@ public class CommunicationBean {
 
     List<NameValuePair> nameValuePairs;
 
+    String inputString;
+
     WebServiceInterface access;
 
     JSONObject jsonObject;
@@ -216,5 +218,13 @@ public class CommunicationBean {
 
     public void setGetStatusListForMedia(ArrayList<TaskDetailsBean> getStatusListForMedia) {
         this.getStatusListForMedia = getStatusListForMedia;
+    }
+
+    public String getInputString() {
+        return inputString;
+    }
+
+    public void setInputString(String inputString) {
+        this.inputString = inputString;
     }
 }

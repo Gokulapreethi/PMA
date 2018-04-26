@@ -31,6 +31,7 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
@@ -548,8 +549,6 @@ public class HandSketchActivity2 extends Activity implements OnClickListener {
                     e.printStackTrace();
                     Appreference.printLog("HandSketchActivity2 onKeyDown", "Exception " + e.getMessage(), "WARN", null);
                 }
-
-//                alert_dialog();
             } else {
                 Intent i = new Intent();
                 i.putExtra("path", filename);

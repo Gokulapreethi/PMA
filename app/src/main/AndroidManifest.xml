@@ -426,6 +426,12 @@
             android:name=".SearchMediaWebView"
             android:screenOrientation="portrait" />
         <activity
+            android:name=".FormsView"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".gcm.NotificationActivity"
+            android:screenOrientation="portrait" />
+        <activity
             android:name=".WebViewActivity"
             android:screenOrientation="portrait" />
         <activity android:name=".TravelJobDetails"
@@ -458,6 +464,10 @@
             android:theme="@style/Theme.AppCompat.Light.Dialog" />
         <activity
             android:name=".EodScreen"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden" />
+         <activity
+            android:name=".CheckListActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden" />
         <activity

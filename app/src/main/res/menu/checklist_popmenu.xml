@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <item
+        android:id="@+id/checklist_ok"
+        android:title="OK" />
+    <item
+        android:id="@+id/checklist_NotOk"
+        android:title="Not Ok"/>
+    <item
+        android:id="@+id/checklist_NA"
+        android:title="N/A"/>
+    <item
+        android:id="@+id/checklist_cleaned"
+        android:title="Cleaned"/>
+    <item
+        android:id="@+id/checklist_lubricated"
+        android:title="Lubricated"/>
+    <item
+        android:id="@+id/checklist_adjusted"
+        android:title="Adjusted"/>
+    <item
+        android:id="@+id/checklist_replaced"
+        android:title="Replaced"/>
+
+    <item
+        android:id="@+id/checklist_topUp"
+        android:title="Top up"/>
+
+    <item
+        android:id="@+id/checklist_repaired"
+        android:title="Repaired"/>
+    <item
+        android:id="@+id/checklist_parts"
+        android:title="Parts Req"/>
+
+</menu>

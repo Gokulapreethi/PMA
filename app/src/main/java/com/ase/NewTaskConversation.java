@@ -55,6 +55,7 @@ import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -74,6 +75,7 @@ import com.ase.Bean.ListofFileds;
 import com.ase.Bean.ProjectDetailsBean;
 import com.ase.Bean.SipNotification;
 import com.ase.Bean.TaskDetailsBean;
+import com.ase.Bean.checkListDetails;
 import com.ase.Bean.listofEscalations;
 import com.ase.DB.VideoCallDataBase;
 import com.ase.DatePicker.CustomTravelPickerActivity;
@@ -4965,6 +4967,7 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
         popup.getMenu().getItem(5).setVisible(false);
         popup.getMenu().getItem(6).setVisible(false);
         popup.getMenu().getItem(7).setVisible(false);
+        popup.getMenu().getItem(8).setVisible(false);
         String query = "select status from projectStatus where projectId='" + projectId + "' and userId='" + Appreference.loginuserdetails.getId() + "' and taskId= '" + webtaskId + "'";
         int current_status = VideoCallDataBase.getDB(context).getCurrentStatus(query);
 
@@ -4998,6 +5001,13 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
         String get_groupAdminobserver_query = "select groupAdminobserver from projectDetails where loginuser = '" + Appreference.loginuserdetails.getEmail() + "'and projectId='" + projectId + "'";
         String OraclegroupAdminObserver = VideoCallDataBase.getDB(context).getprojectIdForOracleID(get_groupAdminobserver_query);
         /*added for GroupAdmin Observer End*/
+
+        /*added for checklist_PMS Start*/
+        String PMSJobcard_query = "select  isActiveStatus from projectDetails where loginuser = '" + Appreference.loginuserdetails.getEmail() + "'and projectId='" + projectId + "'";
+        String PMSJobcard = VideoCallDataBase.getDB(context).getprojectIdForOracleID(PMSJobcard_query);
+        Log.i("pms123","PMSCARD====> "+PMSJobcard);
+        /*added for checklist_PMS End*/
+
         if (oracleProjectOwner != null && !oracleProjectOwner.equalsIgnoreCase(Appreference.loginuserdetails.getUsername()) &&
                 (OraclegroupAdminObserver != null && !OraclegroupAdminObserver.contains(Appreference.loginuserdetails.getUsername()))) {
 //            popup.getMenu().getItem(7).setVisible(false);
@@ -5011,6 +5021,9 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                 popup.getMenu().getItem(3).setVisible(true);
                 popup.getMenu().getItem(5).setVisible(true);
                 popup.getMenu().getItem(6).setVisible(true);
+                if (PMSJobcard!=null && PMSJobcard.equalsIgnoreCase("0")) {
+                    popup.getMenu().getItem(8).setVisible(true);
+                }
             } else if (current_status == 1) {
                 hold_work = true;
                 popup.getMenu().getItem(0).setVisible(false);
@@ -5020,6 +5033,7 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                 popup.getMenu().getItem(4).setVisible(false);
                 popup.getMenu().getItem(5).setVisible(false);
                 popup.getMenu().getItem(6).setVisible(false);
+                popup.getMenu().getItem(8).setVisible(false);
             } else if (current_status == 2) {
                 resume_work = true;
                 popup.getMenu().getItem(0).setVisible(false);
@@ -5029,6 +5043,9 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                 popup.getMenu().getItem(4).setVisible(false);
                 popup.getMenu().getItem(5).setVisible(true);
                 popup.getMenu().getItem(6).setVisible(true);
+                if (PMSJobcard!=null && PMSJobcard.equalsIgnoreCase("0")) {
+                    popup.getMenu().getItem(8).setVisible(true);
+                }
             } else if (current_status == 3) {
                 pause_work = true;
                 popup.getMenu().getItem(0).setVisible(false);
@@ -5038,6 +5055,7 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                 popup.getMenu().getItem(4).setVisible(true);
                 popup.getMenu().getItem(5).setVisible(false);
                 popup.getMenu().getItem(6).setVisible(false);
+                popup.getMenu().getItem(8).setVisible(false);
             } else if (current_status == 4) {
                 restart_work = true;
                 popup.getMenu().getItem(0).setVisible(false);
@@ -5047,6 +5065,9 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                 popup.getMenu().getItem(4).setVisible(false);
                 popup.getMenu().getItem(5).setVisible(true);
                 popup.getMenu().getItem(6).setVisible(true);
+                if (PMSJobcard!=null && PMSJobcard.equalsIgnoreCase("0")) {
+                    popup.getMenu().getItem(8).setVisible(true);
+                }
             } else if (current_status == 5) {
                 completed_work = true;
                 popup.getMenu().getItem(0).setVisible(false);
@@ -5506,6 +5527,59 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                         }
                     } else {
                         Toast.makeText(NewTaskConversation.this, "No StartEndTime Found", Toast.LENGTH_SHORT).show();
+                    }
+                }
+                if (item.getTitle().toString().equalsIgnoreCase("checklist")) {
+                    try {
+                        /*added for checklist_PMS Start*/
+                        String PMSJobcard_query = "select  jobDescription from projectDetails where loginuser = '" + Appreference.loginuserdetails.getEmail() + "'and projectId='" + projectId + "'";
+                        String PMSJobDescription = VideoCallDataBase.getDB(context).getprojectIdForOracleID(PMSJobcard_query);
+                       /*added for checklist_PMS End*/
+//                        hideKeyboard();
+                      /*  Intent intent = new Intent(NewTaskConversation.this, FormsView.class);
+                        startActivity(intent);
+                        overridePendingTransition(R.anim.right_anim, R.anim.left_anim);*/
+                       /* AlertDialog.Builder builderSingle = new AlertDialog.Builder(NewTaskConversation.this);
+                        builderSingle.setIcon(R.drawable.accept_notify);
+                        builderSingle.setTitle("Select Service Type");
+
+                        final ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(NewTaskConversation.this, android.R.layout.simple_selectable_list_item);
+                        arrayAdapter.add("PMS_TANA_250 HOURS SERVICE");
+                        arrayAdapter.add("PMS_TANA_500 HOURS SERVICE");
+                        arrayAdapter.add("PMS_TANA_1000 HOURS SERVICE");
+                        arrayAdapter.add("PMS_TANA_2000 HOURS SERVICE");
+
+                        builderSingle.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                            }
+                        });
+
+                        builderSingle.setAdapter(arrayAdapter, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                String strName = arrayAdapter.getItem(which);
+                                try {
+                                    showprogress();
+                                    Appreference.jsonRequestSender.getChecklistForm(EnumJsonWebservicename.getCheckListDetailsFromClient, strName, NewTaskConversation.this);
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                    Appreference.printLog("ProjectFragment", "ProjectArrayAdapter projectCompleted Exception : " + e.getMessage(), "WARN", null);
+                                }
+                            }
+                        });
+                        builderSingle.show();*/
+                        try {
+                            showprogress();
+                            Appreference.jsonRequestSender.getChecklistForm(EnumJsonWebservicename.getCheckListDetailsFromClient, PMSJobDescription, NewTaskConversation.this);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                            Appreference.printLog("ProjectFragment", "ProjectArrayAdapter projectCompleted Exception : " + e.getMessage(), "WARN", null);
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        Appreference.printLog("ProjectFragment", "image_search Exception : " + e.getMessage(), "WARN", null);
                     }
                 }
                 if (item.getTitle().toString().equalsIgnoreCase("DeAssign")) {
@@ -12866,7 +12940,24 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                                              e.printStackTrace();
                                              Appreference.printLog("NewTaskConversation", "ResponceMethod assignTask Exception : " + e.getMessage(), "WARN", null);
                                          }
-                                     } else if (WebServiceEnum_Response != null && WebServiceEnum_Response.equalsIgnoreCase(("listGroupTaskUsers"))) {
+                                     } else if(WebServiceEnum_Response != null && WebServiceEnum_Response.equalsIgnoreCase(("getCheckListDetailsFromClient"))){
+                                         Log.i("pmsresponse123", "getCheckListDetailsFromClient"+server_Response_string);
+                                         try {
+
+                                             Type collectionType = new TypeToken<checkListDetails>() {
+                                             }.getType();
+                                             checkListDetails checklist = new Gson().fromJson(server_Response_string, collectionType);
+                                             Log.i("pmsresponse123", "getCheckListDetailsFromClient==>"+checklist);
+                                             Intent intent=new Intent(NewTaskConversation.this,CheckListActivity.class);
+                                             intent.putExtra("checklistBean",checklist);
+                                             startActivity(intent);
+                                         } catch (Exception e) {
+                                             e.printStackTrace();
+                                             Log.i("pmsresponse123", "getCheckListDetailsFromClient Error==>"+e.getMessage());
+
+                                         }
+                                     }
+                                         else if (WebServiceEnum_Response != null && WebServiceEnum_Response.equalsIgnoreCase(("listGroupTaskUsers"))) {
                                          handler.post(new Runnable() {
                                              @Override
                                              public void run() {
@@ -21612,15 +21703,16 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
             Appreference.printLog("NewTaskConversation", "notifyGroupMemberAccess Exception : " + e.getMessage(), "WARN", null);
         }
     }
-    public  void isCameFromOffline(boolean isofflineData_Exist){
-        if (isofflineData_Exist) {
-            Log.i("online123", "isofflineData_Exist********"+isofflineData_Exist);
 
-            Appreference.isAlreadyLoadedofflineData=false;
-            VideoCallDataBase.getDB(context).DB_converstion_Delete(webtaskId,projectId);
+    public void isCameFromOffline(boolean isofflineData_Exist) {
+        if (isofflineData_Exist) {
+            Log.i("online123", "isofflineData_Exist********" + isofflineData_Exist);
+
+            Appreference.isAlreadyLoadedofflineData = false;
+            VideoCallDataBase.getDB(context).DB_converstion_Delete(webtaskId, projectId);
         }
 
-        Log.i("online123", "isCameFromOffline********"+webtaskId);
+        Log.i("online123", "isCameFromOffline********" + webtaskId);
         Appreference.webid = webtaskId;
         if (webtaskId != null) {
             appSharedpreferences.saveBoolean("syncTask" + webtaskId, true);
@@ -21630,7 +21722,7 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
 
     public void notifyTaskReceived(final TaskDetailsBean taskDetailsBean) {
         try {
-            Log.i("online123", "notifyTaskReceived******** " );
+            Log.i("online123", "notifyTaskReceived******** ");
             Log.i("notifyTaskReceived", "taskStatus " + taskStatus);
             Log.i("notifyTaskReceived", "TaskId  " + taskDetailsBean.getTaskId());
             Log.i("notifyTaskReceived", "webtaskId  " + webtaskId);

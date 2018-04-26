@@ -1096,12 +1096,21 @@ public class ProjectsFragment extends Fragment implements View.OnClickListener, 
 
                 try {
                     if (projectDetailsBean.getIsActiveStatus() != null && projectDetailsBean.getIsActiveStatus().equalsIgnoreCase("1")) {
+                        //IsActive status : 1 its a Monthly JobCard
                         layoutcard.setBackgroundResource(R.color.appcolor);
                         project_id.setTextColor(getResources().getColor(android.R.color.white));
                         project_name.setTextColor(getResources().getColor(android.R.color.white));
                         task_giver.setTextColor(getResources().getColor(android.R.color.white));
                         job_date.setTextColor(getResources().getColor(android.R.color.white));
+                    } else if (projectDetailsBean.getIsActiveStatus() != null && projectDetailsBean.getIsActiveStatus().equalsIgnoreCase("0")) {
+                        //IsActive status : 0 its a PMS JobCard
+                        layoutcard.setBackgroundResource(R.color.yellownew);
+                        project_id.setTextColor(getResources().getColor(android.R.color.white));
+                        project_name.setTextColor(getResources().getColor(android.R.color.white));
+                        task_giver.setTextColor(getResources().getColor(android.R.color.white));
+                        job_date.setTextColor(getResources().getColor(android.R.color.white));
                     } else {
+                        //IsActive status : null  its a Normal JobCard
                         layoutcard.setBackgroundResource(R.color.white);
                         project_id.setTextColor(getResources().getColor(android.R.color.black));
                         project_name.setTextColor(getResources().getColor(android.R.color.black));
@@ -1680,7 +1689,7 @@ public class ProjectsFragment extends Fragment implements View.OnClickListener, 
                                         for (int i = 0; i < pdb.size(); i++) {
                                             ProjectDetailsBean projectDetailsBean = pdb.get(i);
                                             VideoCallDataBase.getDB(classContext).insertProject_Details(projectDetailsBean);
-                                            Log.i(  "listAllMyProject", "projectDetailsBean DB inserted id is " + projectDetailsBean.getId());
+                                            Log.i("listAllMyProject", "projectDetailsBean DB inserted id is " + projectDetailsBean.getId());
                                             Log.i("listAllMyProject", "projectDetailsBean DB inserted id is " + projectDetailsBean.getProjectName());
                                         }
                                     }

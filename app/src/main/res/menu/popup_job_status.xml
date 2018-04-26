@@ -36,4 +36,8 @@
         android:id="@+id/completed_job1"
         android:title="Complete"
         android:icon="@drawable/completed"/>
+    <item
+        android:id="@+id/checklist"
+        android:title="CheckList"
+        android:icon="@drawable/checklist_pms"/>
 </menu>

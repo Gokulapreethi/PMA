@@ -33,6 +33,7 @@ import org.apache.http.StatusLine;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.conn.ClientConnectionManager;
 import org.apache.http.conn.ConnectTimeoutException;
@@ -100,6 +101,7 @@ public class JsonRequestResponce extends Thread {
                     String responseString = null;*/
 
                     HttpResponse response;
+                    HttpGet httpGet = null;
                     String responseString = "";
                     StringBuilder builder = new StringBuilder();
                     HttpClient httpclient = getHttpsClient(new DefaultHttpClient(httpParameters));
@@ -110,18 +112,26 @@ public class JsonRequestResponce extends Thread {
 
                     try {
 
-                        Log.i("JsonLeave", "Try catch 1 ");
+                        HttpPost httppost = null;  //new ip for local 203
+                        if (!obj.getEnumJsonWebservicename().toString().equalsIgnoreCase("getCheckListDetailsFromClient")) {
+                            Log.i("JsonLeave", "Try catch 1 ");
 
-                            HttpPost httppost = new HttpPost("https://66.109.17.204/ASE/" + obj.getEnumJsonWebservicename()); //ip US Server 204
+//                             httppost = new HttpPost("https://66.109.17.204/ASE/" + obj.getEnumJsonWebservicename()); //ip US Server 204
 
-//                        HttpPost httppost = new HttpPost("https://172.16.1.203:8443/ASE/" + obj.getEnumJsonWebservicename());  //new ip for local 203
+                            httppost = new HttpPost("https://172.16.1.203:8443/ASE/" + obj.getEnumJsonWebservicename());
 //
 //                         HttpPost httppost = new HttpPost("http://151.253.12.203/ASE/" + obj.getEnumJsonWebservicename());
 
 
 //                          HttpPost httppost = new HttpPost("http://151.253.12.204/ASE/" + obj.getEnumJsonWebservicename()); //new dubai server 204
 
-                        Log.i("json", obj.getEnumJsonWebservicename().toString());
+                            Log.i("json", obj.getEnumJsonWebservicename().toString());
+                        } else {
+
+                            String url="http://66.109.17.204:3000/api/getCheckListDetailsFromClient/PMS_TANA_250_HOURS_SERVICE";
+                            httpGet = new HttpGet(url);
+//                            httpGet = new HttpGet("http://66.109.17.204:3000/api/" + obj.getEnumJsonWebservicename());
+                        }
 
 //                        Appreference.printLog("jsonwebservice", "REQUEST SENT TIME-- >"+Appreference.getCurrentDateTime()+" WS NAME" + obj.getEnumJsonWebservicename().toString(), "DEBUG", null);
                         Appreference.printLog("jsonwebservice", "webservice request name-- >" + obj.getEnumJsonWebservicename().toString(), "DEBUG", null);
@@ -142,6 +152,11 @@ public class JsonRequestResponce extends Thread {
                             for (NameValuePair nameValuePair : obj.getNameValuePairs()) {
                                 Log.i("jsonwebservice", " nameValuePair   " + nameValuePair.getName() + " : " + nameValuePair.getValue());
                             }
+                        }else if(obj.getInputString() != null){
+                            Log.i("jsonwebservice", "list  getInputString==>  " + obj.getInputString());
+//                            StringEntity se = new StringEntity(obj.getInputString(), HTTP.UTF_8);
+//                            httpGet.setEntity(se);
+//                            httppost.setEntity(new StringEntity(obj.getInputString()));
                         }
 
                         if (obj.getJsonObject() != null || obj.getJsonArray() != null) {
@@ -215,7 +230,12 @@ public class JsonRequestResponce extends Thread {
                             Log.i("JsonLeave", "Try catch 10 ");
                             Log.i("jsonwebservice", "inside jsonobject else--->");
                             // Execute HTTP Post Request
-                            response = httpclient.execute(httppost);
+                            if (!obj.getEnumJsonWebservicename().toString().equalsIgnoreCase("getCheckListDetailsFromClient")) {
+                                response = httpclient.execute(httppost);
+                            } else {
+                                response = httpclient.execute(httpGet);
+
+                            }
 
                             StatusLine statusLine = response.getStatusLine();
                             // Use this status line for getting the response and parse the json
@@ -243,6 +263,16 @@ public class JsonRequestResponce extends Thread {
 
                             } else {
 //                            errorResponse(obj.getEnumJsonWebservicename(), "Unsuccessfull Response");
+                                HttpEntity httpEntity = response.getEntity();
+                                InputStream is = httpEntity.getContent();
+                                BufferedReader reader = new BufferedReader(new InputStreamReader(is, "iso-8859-1"), 8);
+                                StringBuilder sb = new StringBuilder();
+                                String line = null;
+                                while ((line = reader.readLine()) != null) {
+                                    sb.append(line + "\n");
+                                }
+                                is.close();
+                                responseString = sb.toString();
                                 System.out.println("Result Not OK " + statusLine.getReasonPhrase());
                                 Appreference.printLog("jsonwebservice", "Result Not OK", "DEBUG", null);
                                 Log.i("jsonwebservice", "Result Not OK");
@@ -267,6 +297,8 @@ public class JsonRequestResponce extends Thread {
                                 obj.setFirstname("listAllMyProject");
                             } else if (obj.getEnumJsonWebservicename().toString().equals("getAllJobDetails")) {
                                 obj.setFirstname("getAllJobDetails");
+                            }else if (obj.getEnumJsonWebservicename().toString().equals("updatePMSNotificationDetails")) {
+                                obj.setFirstname("updatePMSNotificationDetails");
                             } else if (obj.getEnumJsonWebservicename().toString().equals("getProject")) {
                                 obj.setFirstname("getProject");
                             }  else if (obj.getEnumJsonWebservicename().toString().equals("getTaskForJobID")) {
@@ -307,6 +339,8 @@ public class JsonRequestResponce extends Thread {
                                 obj.setFirstname("reactivateStatus");
                             }else if (obj.getEnumJsonWebservicename().toString().equals("projectCompleted")) {
                                 obj.setFirstname("projectCompleted");
+                            }else if (obj.getEnumJsonWebservicename().toString().equals("getCheckListDetailsFromClient")) {
+                                obj.setFirstname("getCheckListDetailsFromClient");
                             }else if (obj.getEnumJsonWebservicename().toString().equals("taskConversactionCaption")) {
                                 obj.setFirstname("taskConversactionCaption");
                             }
@@ -562,6 +596,9 @@ public class JsonRequestResponce extends Thread {
                 ProjectsFragment.getInstance().showToast(result);
                 inter.ErrorMethod(obj);
                 break;
+            case updatePMSNotificationDetails:
+                inter.ErrorMethod(obj);
+                break;
 
             case getProject:
                 ProjectsFragment.getInstance().cancelDialog();
@@ -580,6 +617,11 @@ public class JsonRequestResponce extends Thread {
             case projectCompleted:
                 ProjectsFragment.getInstance().cancelDialog();
                 ProjectsFragment.getInstance().showToast(result);
+                inter.ErrorMethod(obj);
+                break;
+            case getCheckListDetailsFromClient:
+                NewTaskConversation.getInstance().cancelDialog();
+                NewTaskConversation.getInstance().showToast("getCheckListDetailsFromClient error . Try again later");
                 inter.ErrorMethod(obj);
                 break;
             case taskConversactionCaption:
@@ -639,6 +681,10 @@ public class JsonRequestResponce extends Thread {
 
                         Log.d("jsonwebservice", "fcm   = =  " + responseString.toString());
 
+                        break;
+
+                    case updatePMSNotificationDetails:
+                        inter.ResponceMethod(obj);
                         break;
 
                     case changePercentageCompleted:

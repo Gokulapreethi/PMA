@@ -10,6 +10,7 @@ import android.graphics.Color;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Environment;
 import android.os.Handler;
 import android.support.v4.app.NotificationCompat;
@@ -173,6 +174,24 @@ public class GCMPushReceiverService extends FirebaseMessagingService {
                                             sendNotification(message.getSentTime(), message.getCollapseKey(), data.get("message").toString());
                                     }
                                 }
+                            } else if (AppSharedpreferences.getInstance(this).getBoolean("login")) {
+                                JSONObject jsonObject_check = null;
+                                String PMS_collapse_key = null;
+                                long PMS_DueDate = 0;
+                                try {
+                                    if (data.get("message").toString() != null && data.get("message").toString().contains("{") && data.get("message").toString().contains("}")) {
+                                        jsonObject_check = new JSONObject(data.get("message").toString());
+                                        if (jsonObject_check.has("serverKey")) {
+                                            PMS_collapse_key = jsonObject_check.getString("serverKey");
+                                        }
+                                        if (PMS_collapse_key != null && PMS_collapse_key.contains("PMS-Alert")) {
+                                            ShowNotification(PMS_DueDate, jsonObject_check, jsonObject_check.getString("Technician_Name"));
+                                        }
+                                    }
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
+
                             } else {
                                 Log.d("gcmMessage1", "App Logout state * *");
                                 if (AppSharedpreferences.getInstance(this).getBoolean("login") && (message.getCollapseKey() != null && (message.getCollapseKey().equalsIgnoreCase("Call Notification") || collapseKey.equalsIgnoreCase("Call Notification")))) {
@@ -211,8 +230,8 @@ public class GCMPushReceiverService extends FirebaseMessagingService {
                             Log.i("Gcm", " remTask_Receiver ------- >  . " + remTask_Receiver);
                             Log.i("Gcm", " remTask_Mems ------- >  . " + remTask_Mems);
                             if ((remTask_Id != null && !VideoCallDataBase.getDB(context).getOverdueMsg(remTask_Id)
-                                    && ((toUser_Name!=null && toUser_Name.equalsIgnoreCase(Appreference.loginuserdetails.getUsername())) || (remTask_Receiver!=null && remTask_Receiver.equalsIgnoreCase(toUser_Name)) || (remTask_Mems!=null && remTask_Mems.contains(toUser_Name))))
-                                    ||(task_overdue != null && task_overdue.equalsIgnoreCase("Y"))) {
+                                    && ((toUser_Name != null && toUser_Name.equalsIgnoreCase(Appreference.loginuserdetails.getUsername())) || (remTask_Receiver != null && remTask_Receiver.equalsIgnoreCase(toUser_Name)) || (remTask_Mems != null && remTask_Mems.contains(toUser_Name))))
+                                    || (task_overdue != null && task_overdue.equalsIgnoreCase("Y"))) {
                                 if (Appreference.context_table.get("mainactivity") != null) {
                                     try {
                                         NewTaskConversation newTaskConversation = (NewTaskConversation) Appreference.context_table.get("taskcoversation");
@@ -680,6 +699,118 @@ public class GCMPushReceiverService extends FirebaseMessagingService {
         }
     }
 
+    private void ShowNotification(long when, JSONObject content, String technician_name) {
+        /*Notification notification;
+        RemoteViews remoteViews = new RemoteViews(context.getPackageName(), R.layout.notification_layout);
+        remoteViews.setImageViewResource(R.id.notifimage, R.drawable.logo);
+        remoteViews.setTextViewText(R.id.notiftitle, technician_name);
+        remoteViews.setTextViewText(R.id.notiftext, Message);
+
+        Uri uri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+        if (!appSharedpreferences.getBoolean("muteConversations")) {
+            Ringtone r = RingtoneManager.getRingtone(getApplicationContext(), uri);
+            r.play();
+        }
+
+        NotificationCompat.Builder noBuilder = new NotificationCompat.Builder(this)
+                .setSmallIcon(R.drawable.logo)
+                .setContentTitle("PMS-Service-Due-Alert")
+                .setContentText("PMS_Notification")
+                .setAutoCancel(true)
+                .setPriority(1)
+                .setContent(remoteViews);
+        NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        notificationManager.notify((int) when, noBuilder.build());
+        notification = noBuilder.build();
+        startForeground(309, notification);*/
+
+
+//build notification
+        int notificationAcceptId = new Random().nextInt(); // just use a counter in some util class...
+        Log.i("pms123", "notification notifyID=======>notifyId  " + notificationAcceptId);
+
+        int m = (int) ((new Date().getTime() / 1000L) % Integer.MAX_VALUE);
+
+        NotificationCompat.Builder builder = null;
+
+        int dismissId = (int) ((new Date().getTime() / 1000L) % Integer.MAX_VALUE);
+
+        /*Dismiss Intent Start*/
+        Intent notificationIntent = new Intent(getApplicationContext(), NotificationActivity.class);
+        notificationIntent.putExtra("NotificationMessage", "Dismiss");
+        notificationIntent.putExtra("notifyId", notificationAcceptId);
+        notificationIntent.setAction("0");
+        try {
+            notificationIntent.putExtra("NotificationKey", content.getString("NotificationKey"));
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        notificationIntent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        PendingIntent dismissIntent_new = PendingIntent.getActivity(getApplicationContext(), dismissId, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        /*Dismiss Intent End*/
+
+        /************************************************************/
+
+        /*Accept Intent Start*/
+        int AcceptId = (int) ((new Date().getTime() / 1000L) % Integer.MAX_VALUE);
+        Intent AcceptIntent = new Intent(getApplicationContext(), NotificationActivity.class);
+        AcceptIntent.putExtra("NotificationMessage", "Accept");
+        AcceptIntent.putExtra("notifyId", notificationAcceptId);
+        AcceptIntent.setAction("1");
+        try {
+            AcceptIntent.putExtra("NotificationKey", content.getString("NotificationKey"));
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        AcceptIntent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        PendingIntent acceptIntent_new = PendingIntent.getActivity(getApplicationContext(), AcceptId, AcceptIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        /*Accept Intent End*/
+
+
+        try {
+            builder = new NotificationCompat.Builder(this)
+                    .setSmallIcon(R.drawable.logo)
+                    .setColor(getResources().getColor(R.color.bluenew))
+                    .setContentTitle(content.getString("serverKey"))
+                    .setAutoCancel(true)
+                    .setOngoing(true)
+                    .setContentText(content.getString("result_text"))
+                    .setDefaults(Notification.DEFAULT_ALL) // must requires VIBRATE permission
+                    .setPriority(NotificationCompat.PRIORITY_HIGH) //must give priority to High, Max which will considered as heads-up notification
+                    .addAction(R.drawable.accept_notify, "ACCEPT", acceptIntent_new)
+                    .addAction(R.drawable.dismiss_notify, "Dismiss", dismissIntent_new);
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+
+       /* String msgText = "A notification's big view appears only when the notification is expanded, " +
+                "which happens when the notification is at the top of the notification drawer, or when the user " +
+                "expands the notification " + "with a gesture. Expanded notifications are available starting with Android 4.1.";*/
+
+// Gets an instance of the NotificationManager service
+        /*Notification notification = new NotificationCompat.BigTextStyle(builder)
+                .bigText(msgText).build();*/
+        Notification notification = null;
+        try {
+            notification = new NotificationCompat.BigTextStyle(builder)
+                    .bigText(content.getString("Message")).build();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        NotificationManager notificationManager =
+                (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+
+        builder.build().flags |= Notification.FLAG_AUTO_CANCEL;
+//to post your notification to the notification bar with a id. If a notification with same id already exists, it will get replaced with updated information.
+//        notificationManager.notify(m, builder.build());
+        notificationManager.notify(notificationAcceptId, notification);
+
+
+    }
+
 
     public boolean isApplicationBroughtToBackground() {
         boolean openPinActivity = false;
@@ -838,8 +969,7 @@ public class GCMPushReceiverService extends FirebaseMessagingService {
             } else if (message != null && message.equalsIgnoreCase("Misc Reminder")) {
                 message = "Misc Reminder ";
                 title = "Escalation Received ";
-            }else
-            {
+            } else {
                 title = "New Reminder Received";
             }
             /*else if (message != null && message.equalsIgnoreCase("Task Reminder")) {
@@ -855,12 +985,14 @@ public class GCMPushReceiverService extends FirebaseMessagingService {
                             .setContentText(title)
                             .setAutoCancel(true)
                             .setSound(null)
+                            .setPriority(1)
                             .setContentIntent(pendingIntent);
                     NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
                     notificationManager.notify((int) when, noBuilder.build()); //0 = ID of notification
                 } else {
 
                     Uri notification = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+                    Notification notificationTet;
                     Ringtone r = RingtoneManager.getRingtone(getApplicationContext(), notification);
                     r.play();
 
@@ -875,20 +1007,31 @@ public class GCMPushReceiverService extends FirebaseMessagingService {
                     //                        AudioManager.STREAM_MUSIC,
                     //                        vol_ring,
                     //                        0);
+
+
+//                    NotificationCompat.Builder noBuilder = new NotificationCompat.Builder(this)
+//                            .setSmallIcon(R.drawable.logo)
+//                            .setContentTitle(message)
+//                            .setContentText(title)
+//                            .setAutoCancel(true)
+//                            .setPriority(2)
+//                            .setContentIntent(pendingIntent);
+//                    NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+//                    notificationManager.notify((int) when, noBuilder.build());
+
                     NotificationCompat.Builder noBuilder = new NotificationCompat.Builder(this)
                             .setSmallIcon(R.drawable.logo)
                             .setContentTitle(message)
                             .setContentText(title)
                             .setAutoCancel(true)
-
+                            .setPriority(1)
                             .setContentIntent(pendingIntent);
                     NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
                     notificationManager.notify((int) when, noBuilder.build());
+                    notificationTet = noBuilder.build();
+                    startForeground(309, notificationTet);
 
-                    //                am.setStreamVolume(
-                    //                        AudioManager.STREAM_MUSIC,
-                    //                        vol_ring,
-                    //                        0);
+
                 }
         } catch (Exception e) {
             e.printStackTrace();
@@ -1063,7 +1206,7 @@ public class GCMPushReceiverService extends FirebaseMessagingService {
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
-                }catch (Exception e){
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
 

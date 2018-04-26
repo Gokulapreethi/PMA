@@ -11,6 +11,7 @@ import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
@@ -62,7 +63,10 @@ public class EodScreen extends Activity {
     boolean isCustomerSign, isObservation, isActionTaken, isCustomerRemarks, isSynopsis;
     boolean istaskCompletebyUser = false;
     boolean isForOracleProject = false;
-    private ArrayList<String> observation_list, Action_Taken_list, customerRemarks_list, synopsis_list;
+    private ArrayList<String> observation_image_list = new ArrayList<>();
+    private ArrayList<String> observation_list,Action_Taken_list, customerRemarks_list, synopsis_list;
+    private ArrayList<String> customerRemarks_image_list, synopsis_image_list;
+    private static int GALLERY_REQUEST = 1;
 
     public static EodScreen getInstance() {
         return eodScreen;
@@ -71,12 +75,25 @@ public class EodScreen extends Activity {
     @Override
     protected void onResume() {
         super.onResume();
+        Log.i("pms123","onResume EODScreen====> ");
         if (isObservation) {
             if (Appreference.EodSketchList != null && Appreference.EodSketchList.size() > 0) {
 
                 observation_path = Appreference.EodSketchList.get(0);
                 observation_list = (ArrayList<String>) Appreference.EodSketchList.clone();
                 Appreference.observation_list = (ArrayList<String>) Appreference.EodSketchList.clone();
+                Log.i("eod1234","onResume observation image size =====> "+observation_image_list.size());
+                Log.i("eod1234","onResume observation_list clone size  =====> "+observation_list.size());
+
+                if(observation_image_list!=null && observation_image_list.size()>0){
+                    for(int i=0;i<observation_image_list.size();i++){
+                        Log.i("eod1234","onResume observation image item =====> "+observation_image_list.get(i));
+                        observation_list.add(observation_image_list.get(i));
+//                        Appreference.observation_list.add(observation_image_list.get(i));
+                    }
+                }
+                Log.i("eod1234","onResume after add observation_list  size =====> "+observation_list.size());
+
                 if (observation_1 != null) {
                     File imgFile = new File(observation_path);
                     if (imgFile.exists()) {
@@ -136,6 +153,10 @@ public class EodScreen extends Activity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        if (observation_list != null) {
+            observation_list.clear();
+            Appreference.EodSketchList.clear();
+        }
         if (isobservationSketchselected) {
             Appreference.observation_list.clear();
         }
@@ -221,10 +242,10 @@ public class EodScreen extends Activity {
             @Override
             public void onClick(View v) {
                 observation_tv.setTextColor(getResources().getColor(R.color.black));
-                AlertDialog.Builder saveDialog = new AlertDialog.Builder(context);
+                /*AlertDialog.Builder saveDialog = new AlertDialog.Builder(context);
                 saveDialog.setTitle("Observation");
                 saveDialog.setCancelable(false);
-                saveDialog.setMessage("You want to type or draw  sketch in " + taskName);
+                saveDialog.setMessage("You want to type or draw sketch in " + taskName);
                 saveDialog.setPositiveButton("Text", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         isobservationtextselected = true;
@@ -278,7 +299,102 @@ public class EodScreen extends Activity {
                                 dialog.cancel();
                             }
                         });
-                saveDialog.show();
+                saveDialog.show();*/
+                LayoutInflater myLayout = LayoutInflater.from(context);
+                final View dialogView = myLayout.inflate(R.layout.eod_option, null);
+                AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
+                        context);
+                alertDialogBuilder.setTitle("Pick one");
+                alertDialogBuilder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                        //pass
+                    }
+                });
+                alertDialogBuilder.setCancelable(false);
+                alertDialogBuilder.setView(dialogView);
+                final AlertDialog eod_dialog = alertDialogBuilder.show();
+                ImageView text_choose = (ImageView) dialogView.findViewById(R.id.text_icon);
+                ImageView sketch_choose = (ImageView) dialogView.findViewById(R.id.sketch_icon);
+                ImageView image_choose = (ImageView) dialogView.findViewById(R.id.image_icon);
+                text_choose.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        isobservationtextselected = true;
+                        observation.setCursorVisible(true);
+                        if (Appreference.observation_list != null) {
+                            Appreference.observation_list.clear();
+                        }
+//                        observation_list.clear();
+                        observation.setFocusableInTouchMode(true);
+                        observation_1.setVisibility(View.GONE);
+                        observation.setVisibility(View.VISIBLE);
+                        observation_path = "";
+                        eod_dialog.dismiss();
+
+                    }
+                });
+                sketch_choose.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        try {
+                            isobservationtextselected = false;
+                            isobservationSketchselected = true;
+                            isObservation = true;
+                            isCustomerRemarks = false;
+                            isActionTaken = false;
+                            isCustomerSign = false;
+                            isSynopsis = false;
+                            isForOracleProject = true;
+                            observation.setVisibility(View.GONE);
+                            observation.getText().clear();
+                            observationStatus = "";
+                            observation_1.setVisibility(View.VISIBLE);
+                            Appreference.EodSketchList.clear();
+                            if (Appreference.observation_list != null && Appreference.observation_list.size() > 0) {
+                                Appreference.EodSketchList = Appreference.observation_list;
+                            }
+                            Intent i = new Intent(getApplicationContext(), HandSketchActivity2.class);
+                            //                                            i.putExtra("observation","observation");
+                            i.putExtra("isFromEod", true);
+                            i.putExtra("isFromEodsign", false);
+                            startActivityForResult(i, 423);
+                            eod_dialog.dismiss();
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                            Appreference.printLog("EodScreen", "observation_type Exception : " + e.getMessage(), "WARN", null);
+                        }
+                    }
+                });
+                image_choose.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        isobservationtextselected = false;
+                        isobservationSketchselected = true;
+                        isObservation = true;
+                        isCustomerRemarks = false;
+                        isActionTaken = false;
+                        isCustomerSign = false;
+                        isSynopsis = false;
+                        isForOracleProject = true;
+                        observation.setVisibility(View.GONE);
+                        observation.getText().clear();
+                        observationStatus = "";
+                        observation_1.setVisibility(View.VISIBLE);
+                        if (Build.VERSION.SDK_INT < 19) {
+                            Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+                            intent.setType("image/*");
+                            startActivityForResult(intent, GALLERY_REQUEST);
+                        } else {
+                            Log.i("img", "sdk is above 19");
+                            Log.i("clone", "====> inside gallery");
+                            Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
+                            intent.addCategory(Intent.CATEGORY_OPENABLE);
+                            intent.setType("image/*");
+                            startActivityForResult(intent, GALLERY_REQUEST);
+                        }
+                        eod_dialog.dismiss();
+                    }
+                });
 
             }
         });
@@ -320,7 +436,7 @@ public class EodScreen extends Activity {
                         isactiontextselected = true;
                         action_taken.setCursorVisible(true);
                         action_taken.setFocusableInTouchMode(true);
-                        if ( Appreference.Action_Taken_list!=null) {
+                        if (Appreference.Action_Taken_list != null) {
                             Appreference.Action_Taken_list.clear();
                         }
 //                        Action_Taken_list.clear();
@@ -406,7 +522,7 @@ public class EodScreen extends Activity {
                     public void onClick(DialogInterface dialog, int which) {
                         isremarksSketchselected = false;
                         isRemarkstextselected = true;
-                        if (Appreference.customerRemarks_list!=null) {
+                        if (Appreference.customerRemarks_list != null) {
                             Appreference.customerRemarks_list.clear();
                         }
 //                        customerRemarks_list.clear();
@@ -493,11 +609,11 @@ public class EodScreen extends Activity {
                 saveDialog.setPositiveButton("Text", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         isSynopsistextselected = true;
-                        isSynopsisSketchselected=false;
+                        isSynopsisSketchselected = false;
                         synopsis_text.setCursorVisible(true);
                         synopsis_text.setFocusableInTouchMode(true);
                         synopsis_img.setVisibility(View.GONE);
-                        if (Appreference.Synopsis_list!=null) {
+                        if (Appreference.Synopsis_list != null) {
                             Appreference.Synopsis_list.clear();
                         }
                         synopsis_text.setVisibility(View.VISIBLE);
@@ -948,8 +1064,12 @@ public class EodScreen extends Activity {
                         file = new File(ImageName);
                         if (file.exists()) {
                             Intent i = new Intent(EodScreen.this, FullScreenViewActivity.class);
-                            i.putExtra("position", "0");
-                            i.putExtra("pathSketch", observation_list);
+                            i.putExtra("position", 0);
+                            if (observation_list!=null && observation_list.size()>0) {
+                                i.putExtra("pathSketch", observation_list);
+                            }else{
+                                i.putExtra("pathSketch", observation_image_list);
+                            }
                             startActivity(i);
 
 //                            Intent intent = new Intent(context, FullScreenImage.class);
@@ -985,7 +1105,7 @@ public class EodScreen extends Activity {
                         file = new File(ImageName);
                         if (file.exists()) {
                             Intent i = new Intent(EodScreen.this, FullScreenViewActivity.class);
-                            i.putExtra("position", "0");
+                            i.putExtra("position", 0);
                             i.putExtra("pathSketch", Action_Taken_list);
                             startActivity(i);
 //                            Intent intent = new Intent(context, FullScreenImage.class);
@@ -1019,7 +1139,7 @@ public class EodScreen extends Activity {
                         file = new File(ImageName);
                         if (file.exists()) {
                             Intent i = new Intent(EodScreen.this, FullScreenViewActivity.class);
-                            i.putExtra("position", "0");
+                            i.putExtra("position", 0);
                             i.putExtra("pathSketch", customerRemarks_list);
                             startActivity(i);
 //                            Intent intent = new Intent(context, FullScreenImage.class);
@@ -1144,7 +1264,7 @@ public class EodScreen extends Activity {
                         file = new File(ImageName);
                         if (file.exists()) {
                             Intent i = new Intent(EodScreen.this, FullScreenViewActivity.class);
-                            i.putExtra("position", "0");
+                            i.putExtra("position", 0);
                             i.putExtra("pathSketch", synopsis_list);
                             startActivity(i);
 //                            Intent intent = new Intent(context, FullScreenImage.class);
@@ -1433,6 +1553,8 @@ public class EodScreen extends Activity {
                     } else if (isObservation) {
                         Log.i("result_handsketch", "isObservation==> " + strIPath);
                         observation_path = strIPath;
+                        Log.i("eod1234","onActivityResult observation image or sketch added=====> "+observation_path);
+                        observation_image_list.add(observation_path);
                         if (observation_1 != null) {
                             File imgFile = new File(observation_path);
                             if (imgFile.exists()) {
@@ -1511,6 +1633,97 @@ public class EodScreen extends Activity {
                     e.printStackTrace();
                     Appreference.printLog("EodScreen", "onActivityResult 132 image Exception " + e.getMessage(), "WARN", null);
                 }
+            } else if (requestCode == GALLERY_REQUEST
+                    && resultCode == RESULT_OK && data != null) {
+                Uri SelectedGallaryImage = data.getData();
+                String picturePath = HandSketchActivity2.getUriPath(this, SelectedGallaryImage);
+                Intent intent = new Intent(EodScreen.this, CropImage.class);
+                intent.putExtra("path", picturePath);
+                startActivityForResult(intent, 423);
+
+                /*observation_list.add(picturePath);
+                Appreference.observation_list.add(picturePath);
+                try {
+                    strIPath =  HandSketchActivity2.getUriPath(this,SelectedGallaryImage);
+                    Log.i("pms123","picturePath selected===> " +strIPath);
+
+
+                    Log.i("pms123", "isCustomerSign==> ## " + isCustomerSign);
+                    Log.i("pms123", "isObservation==> ## " + isObservation);
+                    if (isCustomerSign) {
+                        status_signature = strIPath;
+                        if (signature_path != null) {
+                            File imgFile = new File(status_signature);
+                            if (imgFile.exists()) {
+                                Bitmap myBitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
+                                signature_path.setImageBitmap(myBitmap);
+                            }
+                            signature_path.setVisibility(View.VISIBLE);
+                        }
+                    } else if (isObservation) {
+                        Log.i("result_handsketch", "isObservation==> " + strIPath);
+                        observation_path = strIPath;
+                        if (observation_1 != null) {
+                            File imgFile = new File(observation_path);
+                            if (imgFile.exists()) {
+                                Bitmap myBitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
+                                *//*commented by preethi 27Feb18*//*
+                                observation_1.setImageBitmap(myBitmap);
+                            }
+                            observation_1.setVisibility(View.VISIBLE);
+                            Log.i("result_handsketch", "observation_1==>$$ !! " + strIPath);
+                        }
+                    } else if (isActionTaken) {
+                        Log.i("result_handsketch", "isActionTaken==> " + strIPath);
+                        Action_Taken_path = strIPath;
+                        if (action_taken_1 != null) {
+                            File imgFile = new File(Action_Taken_path);
+                            if (imgFile.exists()) {
+                                Bitmap myBitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
+                                action_taken_1.setImageBitmap(myBitmap);
+                            }
+                            action_taken_1.setVisibility(View.VISIBLE);
+                            Log.i("result_handsketch", "action_taken_1==>$$ !! " + strIPath);
+                        }
+                    } else if (isCustomerRemarks) {
+                        Log.i("result_handsketch", "isCustomerRemarks==> " + strIPath);
+                        customerRemarks_path = strIPath;
+                        if (remarks_complete_1 != null) {
+                            File imgFile = new File(customerRemarks_path);
+                            if (imgFile.exists()) {
+                                Bitmap myBitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
+                                remarks_complete_1.setImageBitmap(myBitmap);
+                            }
+                            remarks_complete_1.setVisibility(View.VISIBLE);
+                            Log.i("result_handsketch", "remarks_complete_1==>$$ !! " + strIPath);
+                        }
+                    } else if (isSynopsis) {
+                        Log.i("result_handsketch", "isSynopsis==> " + strIPath);
+                        synopsis_path = strIPath;
+                        if (synopsis_img != null) {
+                            File imgFile = new File(synopsis_path);
+                            if (imgFile.exists()) {
+                                Bitmap myBitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
+                                synopsis_img.setImageBitmap(myBitmap);
+                            }
+                            synopsis_img.setVisibility(View.VISIBLE);
+                            Log.i("result_handsketch", "synopsis_path==>$$ !! " + synopsis_path);
+                        }
+                    } else {
+                        tech_signature = strIPath;
+                        if (tech_signature_path != null) {
+                            File imgFile = new File(tech_signature);
+                            if (imgFile.exists()) {
+                                Bitmap myBitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
+                                tech_signature_path.setImageBitmap(myBitmap);
+                            }
+                            tech_signature_path.setVisibility(View.VISIBLE);
+                        }
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    Appreference.printLog("EodScreen", "onActivityResult 423 sketch Exception " + e.getMessage(), "WARN", null);
+                }*/
             }
         }
     }

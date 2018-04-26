@@ -5,7 +5,9 @@ import android.util.Log;
 import com.ase.Appreference;
 import com.ase.Bean.ListofFileds;
 import com.ase.Bean.TaskDetailsBean;
+import com.ase.NewTaskConversation;
 import com.ase.chat.ChatBean;
+import com.ase.gcm.NotificationActivity;
 
 import org.apache.http.NameValuePair;
 import org.json.JSONArray;
@@ -648,6 +650,25 @@ public class JsonRequestSender {
         communicationBean.setAccess(access);
         queue.addMsg(communicationBean);
     }
+
+    public void getPMSNotificationDetails(EnumJsonWebservicename webservicename, JSONObject jsonObject, WebServiceInterface access) {
+        CommunicationBean communicationBean = new CommunicationBean();
+        communicationBean.setEnumJsonWebservicename(webservicename);
+        if (jsonObject != null) {
+            communicationBean.setJsonObject(jsonObject);
+        }
+        communicationBean.setAccess(access);
+        queue.addMsg(communicationBean);
+    }
+
+    public void getChecklistForm(EnumJsonWebservicename webservicename, String strName, WebServiceInterface access) {
+        CommunicationBean communicationBean = new CommunicationBean();
+        communicationBean.setEnumJsonWebservicename(webservicename);
+        communicationBean.setInputString(strName);
+        communicationBean.setAccess(access);
+        queue.addMsg(communicationBean);
+    }
+
     /*public void listMembersInGroup(EnumJsonWebservicename webservicename, List<NameValuePair> valuePair, WebServiceInterface access){
 
         CommunicationBean communicationBean=new CommunicationBean();
