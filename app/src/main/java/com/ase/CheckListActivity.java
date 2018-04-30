@@ -273,12 +273,17 @@ public class CheckListActivity extends Activity {
                     row = inflater.inflate(R.layout.checklist_row, null, false);
                     holder.Description = (TextView) row.findViewById(R.id.desc_list);
                     holder.checklist_menu = (TextView) row.findViewById(R.id.checklist_popup);
+                    holder.checklist_item = (TextView) row.findViewById(R.id.checklist_item);
+                    holder.checklist_issue_type = (TextView) row.findViewById(R.id.checklist_issue);
                     row.setTag(holder);
                 } else {
                     holder = (ViewHolder) row.getTag();
                 }
                 final Label pBean = (Label) arrayCheckList.get(position);
                 holder.Description.setText(pBean.getJobDescription());
+                holder.checklist_item.setText(pBean.getItem());
+                holder.checklist_issue_type.setText(pBean.getIssueType());
+
 //                holder.checklist_menu.setText(String.valueOf(pBean.getJobstatus()));
                 if (!holder.checklist_menu.getText().toString().equalsIgnoreCase("")) {
                     holder.checklist_menu.setClickable(false);
@@ -344,6 +349,8 @@ public class CheckListActivity extends Activity {
         private class ViewHolder {
             TextView Description;
             TextView checklist_menu;
+            TextView checklist_issue_type;
+            TextView checklist_item;
         }
     }
 }

@@ -14,13 +14,36 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:weightSum="2">
+            android:weightSum="2.6">
+            <TextView
+                android:id="@+id/checklist_issue"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.1"
+                android:layout_marginLeft="5dp"
+                android:gravity="center_vertical"
+                android:background="@color/lightgray"
+                android:layout_gravity="center_vertical"
+                android:text="M"
+                android:textColor="@color/fontcolor"
+                android:textSize="18sp" />
+            <TextView
+                android:id="@+id/checklist_item"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.1"
+                android:layout_marginLeft="5dp"
+                android:gravity="center_vertical"
+                android:layout_gravity="center_vertical"
+                android:text="1"
+                android:textColor="@color/fontcolor"
+                android:textSize="18sp" />
 
             <TextView
                 android:id="@+id/desc_list"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1.2"
+                android:layout_weight="1.4"
                 android:layout_marginLeft="5dp"
                 android:gravity="center_vertical"
                 android:layout_gravity="center_vertical"
@@ -32,7 +55,7 @@
                 android:id="@+id/checklist_popup"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_weight="0.8"
+                android:layout_weight="1"
                 android:textSize="18dp"
                 android:background="@color/lightgray"
                 android:layout_marginLeft="5dp"
