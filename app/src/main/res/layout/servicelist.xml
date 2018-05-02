@@ -220,7 +220,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:orientation="horizontal"
-                        android:weightSum="1">
+                        android:weightSum="0.68">
 
                         <TextView
                             android:layout_width="0dp"
@@ -257,31 +257,7 @@
                             android:textColor="@color/black2"
                             android:textSize="15sp" />
 
-                        <TextView
-                            android:id="@+id/task_status"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_column="2"
-                            android:layout_marginLeft="1dp"
-                            android:layout_marginStart="1dp"
-                            android:layout_marginTop="5dp"
-                            android:layout_weight="0.10"
-                            android:gravity="start"
-                            android:singleLine="true"
-                            android:text="HMR"
-                            android:textColor="@color/black2"
-                            android:textDirection="firstStrong"
-                            android:textSize="15sp" />
 
-                        <TextView
-                            android:id="@+id/checklist_HMR"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="1dp"
-                            android:layout_marginTop="5sp"
-                            android:layout_weight="0.23"
-                            android:textColor="@color/black2"
-                            android:textSize="15sp" />
                     </LinearLayout>
 
                 </TableLayout>
@@ -354,7 +330,7 @@
         android:background="@color/appcolor"
         android:gravity="center_vertical"
         android:paddingLeft="10dp"
-        android:text="250 Hrs CheckList"
+        android:text=""
         android:textColor="#fff"
         android:textSize="20sp"
         android:textStyle="bold"

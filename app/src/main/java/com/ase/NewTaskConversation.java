@@ -10467,7 +10467,6 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                     }
                 } else if (requestCode == 423) {
                     try {
-
                         strIPath = data.getStringExtra("path");
                         Log.i("result_handsketch", "strIPath==> " + strIPath);
                         Log.i("result_handsketch", "isCustomerSign==> ## " + isCustomerSign);

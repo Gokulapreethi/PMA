@@ -4,11 +4,17 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
+    <View
+        android:layout_width="wrap_content"
+        android:layout_height="1.20dp"
+        android:background="@color/gray" />
+
     <TableLayout
         android:id="@+id/taskidrowfortasklist"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginLeft="10dp">
+
 
         <TableLayout
             android:layout_width="match_parent"
@@ -19,7 +25,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:weightSum="3.2">
+                android:weightSum="2">
 
                 <TextView
                     android:layout_width="0dp"
@@ -28,20 +34,71 @@
                     android:layout_marginLeft="5dp"
                     android:layout_marginStart="5dp"
                     android:layout_marginTop="5dp"
-                    android:layout_weight="1"
+                    android:layout_weight="0.8"
                     android:gravity="center_vertical"
-                    android:text="Commands (if any)"
+                    android:text="Date *"
+                    android:textColor="@color/black"
+                    android:textDirection="firstStrong"
+                    android:textSize="18sp" />
+                <Button
+                    android:id="@+id/checklist_date_btn"
+                    android:layout_width="20dp"
+                    android:layout_height="30dp"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginLeft="10dp"
+                    android:layout_weight="0.1"
+                    android:background="@drawable/ic_date_chang_request"
+                    android:gravity="center_vertical" />
+
+
+                <TextView
+                    android:id="@+id/checklist_date_now"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginTop="5dp"
+                    android:layout_weight="1"
+                    android:gravity="start"
+                    android:singleLine="true"
+                    android:textColor="@color/black"
+                    android:textSize="18sp"
+                    android:visibility="visible" />
+
+            </LinearLayout>
+        </TableLayout>
+
+        <TableLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:weightSum="3.7">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginStart="5dp"
+                    android:layout_marginTop="5dp"
+                    android:layout_weight="1.50"
+                    android:gravity="center_vertical"
+                    android:text="Comments (if any)"
                     android:textColor="@color/black"
                     android:textDirection="firstStrong"
                     android:textSize="18sp" />
 
                 <Button
-                    android:id="@+id/ohecklist_commands"
+                    android:id="@+id/checklist_commands"
                     android:layout_width="0dp"
                     android:layout_height="30dp"
-                    android:layout_weight="0.2"
-                    android:layout_marginLeft="10dp"
                     android:layout_gravity="center_vertical"
+                    android:layout_marginLeft="10dp"
+                    android:layout_weight="0.2"
                     android:background="@drawable/writeordraw"
                     android:gravity="center_vertical" />
 
@@ -49,12 +106,12 @@
                     android:id="@+id/checklist_cmds_text"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="5dp"
-                    android:layout_weight="1.65"
-                    android:gravity="start"
                     android:layout_gravity="center_vertical"
-                    android:hint="Type Here"
                     android:layout_marginLeft="15dp"
+                    android:layout_marginTop="5dp"
+                    android:layout_weight="1"
+                    android:gravity="start"
+                    android:hint="Type Here"
                     android:singleLine="true"
                     android:textColor="@color/black"
                     android:textSize="18sp"
@@ -73,11 +130,197 @@
 
         </TableLayout>
 
+        <TableLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:weightSum="3.7">
+
+                <TextView
+                    android:id="@+id/textView15"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginStart="5dp"
+                    android:layout_marginTop="5dp"
+                    android:layout_weight="1.50"
+                    android:gravity="center_vertical"
+                    android:text="Advice to the Customer"
+                    android:textColor="@color/black"
+                    android:textDirection="firstStrong"
+                    android:textSize="18sp" />
+
+                <Button
+                    android:id="@+id/checklist_advice"
+                    android:layout_width="0dp"
+                    android:layout_height="30dp"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginLeft="10dp"
+                    android:layout_weight="0.2"
+                    android:background="@drawable/writeordraw"
+                    android:gravity="center_vertical" />
+
+                <EditText
+                    android:id="@+id/checklist_advice_text"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginTop="5dp"
+                    android:layout_weight="1"
+                    android:gravity="start"
+                    android:hint="Type Here"
+                    android:singleLine="true"
+                    android:textColor="@color/black"
+                    android:textSize="18sp"
+                    android:visibility="gone" />
+
+                <ImageView
+                    android:id="@+id/checklist_advice_img"
+                    android:layout_width="80dp"
+                    android:layout_height="80dp"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginLeft="15dp"
+                    android:layout_weight="1"
+                    android:gravity="center_vertical"
+                    android:visibility="visible" />
+            </LinearLayout>
+
+        </TableLayout>
 
         <TableLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp">
+            android:layout_height="wrap_content">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:weightSum="2">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginStart="5dp"
+                    android:layout_marginTop="5dp"
+                    android:layout_weight="1"
+                    android:gravity="center_vertical"
+                    android:text="HM Reading *"
+                    android:textColor="@color/black"
+                    android:textDirection="firstStrong"
+                    android:textSize="18sp" />
+
+                <EditText
+                    android:id="@+id/checklist_HMReading"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginTop="5dp"
+                    android:layout_weight="1"
+                    android:gravity="start"
+                    android:hint="Type Here"
+                    android:singleLine="true"
+                    android:textColor="@color/black"
+                    android:textSize="18sp"
+                    android:visibility="visible" />
+
+            </LinearLayout>
+        </TableLayout>
+        <TableLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:weightSum="2">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginStart="5dp"
+                    android:layout_marginTop="5dp"
+                    android:layout_weight="1"
+                    android:gravity="center_vertical"
+                    android:text="Customer Name *"
+                    android:textColor="@color/black"
+                    android:textDirection="firstStrong"
+                    android:textSize="18sp" />
+
+                <EditText
+                    android:id="@+id/checklist_name_entry"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginTop="5dp"
+                    android:layout_weight="1"
+                    android:gravity="start"
+                    android:hint="Type Here"
+                    android:singleLine="true"
+                    android:textColor="@color/black"
+                    android:textSize="18sp"
+                    android:visibility="visible" />
+
+            </LinearLayout>
+        </TableLayout>
+        <TableLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:weightSum="2">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginStart="5dp"
+                    android:layout_marginTop="5dp"
+                    android:layout_weight="1"
+                    android:gravity="center_vertical"
+                    android:text="Technician Name *"
+                    android:textColor="@color/black"
+                    android:textDirection="firstStrong"
+                    android:textSize="18sp" />
+
+                <EditText
+                    android:id="@+id/checklist_tech_name"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:layout_weight="1"
+                    android:gravity="start"
+                    android:layout_gravity="center_vertical"
+                    android:hint="Type Here"
+                    android:layout_marginLeft="15dp"
+                    android:singleLine="true"
+                    android:textColor="@color/black"
+                    android:textSize="18sp"
+                    android:visibility="visible" />
+
+            </LinearLayout>
+        </TableLayout>
+
+
+        <TableLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -101,12 +344,12 @@
 
 
                 <Button
-                    android:id="@+id/ohecklist_tech_sign"
+                    android:id="@+id/checklist_tech_sign"
                     android:layout_width="0dp"
                     android:layout_height="30dp"
-                    android:layout_weight="0.2"
-                    android:layout_marginLeft="10dp"
                     android:layout_gravity="center_vertical"
+                    android:layout_marginLeft="10dp"
+                    android:layout_weight="0.2"
                     android:background="@drawable/writeordraw"
                     android:gravity="center_vertical" />
 
@@ -125,8 +368,7 @@
 
         <TableLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="15dp">
+            android:layout_height="wrap_content">
 
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -149,12 +391,12 @@
                     android:textSize="18sp" />
 
                 <Button
-                    android:id="@+id/ohecklist_cust_sign"
+                    android:id="@+id/checklist_cust_sign"
                     android:layout_width="0dp"
                     android:layout_height="30dp"
-                    android:layout_weight="0.2"
-                    android:layout_marginLeft="10dp"
                     android:layout_gravity="center_vertical"
+                    android:layout_marginLeft="10dp"
+                    android:layout_weight="0.2"
                     android:background="@drawable/writeordraw"
                     android:gravity="center_vertical" />
 
