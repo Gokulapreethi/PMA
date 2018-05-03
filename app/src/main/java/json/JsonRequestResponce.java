@@ -127,8 +127,12 @@ public class JsonRequestResponce extends Thread {
 
                             Log.i("json", obj.getEnumJsonWebservicename().toString());
                         } else {
-
-                            String url="http://66.109.17.204:3000/api/getCheckListDetailsFromClient/PMS_TANA_250_HOURS_SERVICE";
+                            String PMSInput="";
+                            for (NameValuePair nameValuePair : obj.getNameValuePairs()) {
+                                Log.i("jsonwebservice", " nameValuePair   " + nameValuePair.getName() + " : " + nameValuePair.getValue());
+                                 PMSInput=PMSInput+"/"+nameValuePair.getValue().toLowerCase();
+                            }
+                            String url="http://66.109.17.204:3000/api/getCheckListDetailsFromClient"+PMSInput;
                             httpGet = new HttpGet(url);
 //                            httpGet = new HttpGet("http://66.109.17.204:3000/api/" + obj.getEnumJsonWebservicename());
                         }
@@ -142,7 +146,7 @@ public class JsonRequestResponce extends Thread {
                             StringEntity se = new StringEntity(obj.getMessage().toString(), HTTP.UTF_8);
                             se.setContentType(new BasicHeader(HTTP.CONTENT_TYPE, "application/json"));
                             httppost.setEntity(se);
-                        } else if (obj.getNameValuePairs() != null) {
+                        } else if (obj.getNameValuePairs() != null && !obj.getEnumJsonWebservicename().toString().equalsIgnoreCase("getCheckListDetailsFromClient") ) {
                             httppost.setEntity(new UrlEncodedFormEntity(obj.getNameValuePairs()));
                             Log.i("JsonLeave", "Try catch 3 ");
                             Log.i("jsonwebservice", "list size for nameValuePair" + obj.getNameValuePairs().size());

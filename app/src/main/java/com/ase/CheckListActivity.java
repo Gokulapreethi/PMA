@@ -32,6 +32,7 @@ import android.widget.Toast;
 
 import com.ase.Bean.Label;
 import com.ase.Bean.checkListDetails;
+import com.ase.DB.VideoCallDataBase;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
@@ -53,12 +54,14 @@ public class CheckListActivity extends Activity {
     Context checkListContext;
     CheckListItemAdapter adapter;
     private View stickyViewSpacer;
-    TextView custName, custAddress, checklist_date, machine_serial, machine_model, checklist_back,checklist_date_now;
+    TextView custName, custAddress, checklist_date, machine_serial, machine_model, checklist_back, checklist_date_now, checklist_jobNo;
     String strIPath;
     boolean isCommentsImg, isAdviceImg, isTechnicianSign, isCustomerSign;
     String comments_path, advice_path, techSign_path, custSign_path;
     ImageView checklist_commands_img, checklist_advice_img, checklist_tech_sign_img, checklist_cust_sign_img;
-    Button checklist_tech_signature, checklist_cust_signature,checklist_date_btn;
+    Button checklist_tech_signature, checklist_cust_signature, checklist_date_btn;
+    ArrayList<Label> AllServiceDetails = new ArrayList<>();
+    String ProjectId, TaskId;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -67,6 +70,8 @@ public class CheckListActivity extends Activity {
         Intent intent = getIntent();
         checkListContext = this;
         checklistBean = (checkListDetails) intent.getSerializableExtra("checklistBean");
+        ProjectId = intent.getStringExtra("PMSprojectId");
+        TaskId = intent.getStringExtra("PMStaskId");
          /* Initialise list view, hero image, and sticky view */
         listView = (ListView) findViewById(R.id.listView);
 //        heroImageView = findViewById(R.id.heroImageView);
@@ -79,6 +84,7 @@ public class CheckListActivity extends Activity {
         machine_serial = (TextView) findViewById(R.id.checklist_machineNo);
         machine_model = (TextView) findViewById(R.id.checklist_machineMac);
         checklist_back = (TextView) findViewById(R.id.checklist_back);
+        checklist_jobNo = (TextView) findViewById(R.id.checklist_jobNo);
 
 
         stickyView.setText(checklistBean.getCheckListName());
@@ -88,13 +94,22 @@ public class CheckListActivity extends Activity {
         checklist_date.setText(checklistBean.getDate());
         machine_serial.setText(checklistBean.getSerialNumber());
         machine_model.setText(checklistBean.getModel());*/
-
-        custName.setText("Bin Touq Transport");
-        custAddress.setText("+971 562107436");
+        String PMScustomerName_query = "select customerName from projectDetails where loginuser = '" + Appreference.loginuserdetails.getEmail() + "'and projectId='" + ProjectId + "'";
+        String PMS_Customer = VideoCallDataBase.getDB(checkListContext).getprojectIdForOracleID(PMScustomerName_query);
+        String PMScustomerAddr_query = "select address from projectDetails where loginuser = '" + Appreference.loginuserdetails.getEmail() + "'and projectId='" + ProjectId + "'";
+        String PMS_Address = VideoCallDataBase.getDB(checkListContext).getprojectIdForOracleID(PMScustomerAddr_query);
+        String PMSserialNo_query = "select machineMake from projectDetails where loginuser = '" + Appreference.loginuserdetails.getEmail() + "'and projectId='" + ProjectId + "'";
+        String PMS_machine_serial = VideoCallDataBase.getDB(checkListContext).getprojectIdForOracleID(PMSserialNo_query);
+        String PMSmodel_query = "select mcSrNo from projectDetails where loginuser = '" + Appreference.loginuserdetails.getEmail() + "'and projectId='" + ProjectId + "'";
+        String PMS_machine_model = VideoCallDataBase.getDB(checkListContext).getprojectIdForOracleID(PMSmodel_query);
+        String PMSOracleId_query = "select oracleProjectId from projectDetails where loginuser = '" + Appreference.loginuserdetails.getEmail() + "'and projectId='" + ProjectId + "'";
+        String PMS_oracle_projectId = VideoCallDataBase.getDB(checkListContext).getprojectIdForOracleID(PMSOracleId_query);
+        custName.setText(PMS_Customer);
+        custAddress.setText(PMS_Address);
         checklist_date.setText("30-Apr-18");
-        machine_serial.setText("NDM454640");
-        machine_model.setText("SR200");
-
+        machine_serial.setText(PMS_machine_serial);
+        machine_model.setText(PMS_machine_model);
+        checklist_jobNo.setText(PMS_oracle_projectId);
 
         adapter = new CheckListItemAdapter(checkListContext, checklistBean.getLabel());
 
@@ -122,7 +137,7 @@ public class CheckListActivity extends Activity {
         checklist_cust_sign_img = (ImageView) footerView.findViewById(R.id.checklist_cust_img);
         checklist_tech_sign_img = (ImageView) footerView.findViewById(R.id.checklist_tech_img);
         checklist_date_btn = (Button) footerView.findViewById(R.id.checklist_date_btn);
-        checklist_date_now=(TextView)footerView.findViewById(R.id.checklist_date_now);
+        checklist_date_now = (TextView) footerView.findViewById(R.id.checklist_date_now);
         checklist_commands.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -548,7 +563,7 @@ public class CheckListActivity extends Activity {
             super(context, R.layout.checklist_row, CheckListDetails);
             arrayCheckList = CheckListDetails;
             adapContext = context;
-            mylist=new Label();
+            mylist = new Label();
         }
 
         @Override
@@ -612,43 +627,153 @@ public class CheckListActivity extends Activity {
                             public boolean onMenuItemClick(MenuItem item) {
                                 switch (item.getItemId()) {
                                     case R.id.checklist_ok:
+                                        mylist.setJobDescription(holder.Description.getText().toString());
+                                        mylist.setJobstatus(item.getTitle().toString());
+                                        mylist.setIssueType(holder.checklist_issue_type.getText().toString());
+                                        mylist.setItem(holder.checklist_item.getText().toString());
                                         holder.checklist_menu.setText(item.getTitle().toString());
+                                        for (int i = 0; i < AllServiceDetails.size(); i++) {
+                                            if (AllServiceDetails.get(i).getItem().equalsIgnoreCase(holder.checklist_item.getText().toString())) {
+                                                AllServiceDetails.remove(i);
+                                            }
+                                        }
+                                        AllServiceDetails.add(mylist);
+                                        Log.i("checklist123", "AllServiceDetails size====> " + AllServiceDetails.size());
                                         return true;
                                     case R.id.checklist_NotOk:
+                                        mylist.setJobDescription(holder.Description.getText().toString());
+                                        mylist.setJobstatus(item.getTitle().toString());
+                                        mylist.setIssueType(holder.checklist_issue_type.getText().toString());
+                                        mylist.setItem(holder.checklist_item.getText().toString());
                                         holder.checklist_menu.setText(item.getTitle().toString());
+                                        for (int i = 0; i < AllServiceDetails.size(); i++) {
+                                            if (AllServiceDetails.get(i).getItem().equalsIgnoreCase(holder.checklist_item.getText().toString())) {
+                                                AllServiceDetails.remove(i);
+                                            }
+                                        }
+                                        AllServiceDetails.add(mylist);
+                                        Log.i("checklist123", "AllServiceDetails size====> " + AllServiceDetails.size());
                                         return true;
                                     case R.id.checklist_NA:
+                                        mylist.setJobDescription(holder.Description.getText().toString());
+                                        mylist.setJobstatus(item.getTitle().toString());
+                                        mylist.setIssueType(holder.checklist_issue_type.getText().toString());
+                                        mylist.setItem(holder.checklist_item.getText().toString());
                                         holder.checklist_menu.setText(item.getTitle().toString());
+                                        for (int i = 0; i < AllServiceDetails.size(); i++) {
+                                            if (AllServiceDetails.get(i).getItem().equalsIgnoreCase(holder.checklist_item.getText().toString())) {
+                                                AllServiceDetails.remove(i);
+                                            }
+                                        }
+                                        AllServiceDetails.add(mylist);
+                                        Log.i("checklist123", "AllServiceDetails size====> " + AllServiceDetails.size());
                                         return true;
                                     case R.id.checklist_cleaned:
+                                        mylist.setJobDescription(holder.Description.getText().toString());
+                                        mylist.setJobstatus(item.getTitle().toString());
+                                        mylist.setIssueType(holder.checklist_issue_type.getText().toString());
+                                        mylist.setItem(holder.checklist_item.getText().toString());
                                         holder.checklist_menu.setText(item.getTitle().toString());
+                                        for (int i = 0; i < AllServiceDetails.size(); i++) {
+                                            if (AllServiceDetails.get(i).getItem().equalsIgnoreCase(holder.checklist_item.getText().toString())) {
+                                                AllServiceDetails.remove(i);
+                                            }
+                                        }
+                                        AllServiceDetails.add(mylist);
+                                        Log.i("checklist123", "AllServiceDetails size====> " + AllServiceDetails.size());
                                         return true;
                                     case R.id.checklist_lubricated:
+                                        mylist.setJobDescription(holder.Description.getText().toString());
+                                        mylist.setJobstatus(item.getTitle().toString());
+                                        mylist.setIssueType(holder.checklist_issue_type.getText().toString());
+                                        mylist.setItem(holder.checklist_item.getText().toString());
                                         holder.checklist_menu.setText(item.getTitle().toString());
+                                        for (int i = 0; i < AllServiceDetails.size(); i++) {
+                                            if (AllServiceDetails.get(i).getItem().equalsIgnoreCase(holder.checklist_item.getText().toString())) {
+                                                AllServiceDetails.remove(i);
+                                            }
+                                        }
+                                        AllServiceDetails.add(mylist);
+                                        Log.i("checklist123", "AllServiceDetails size====> " + AllServiceDetails.size());
                                         return true;
                                     case R.id.checklist_adjusted:
+                                        mylist.setJobDescription(holder.Description.getText().toString());
+                                        mylist.setJobstatus(item.getTitle().toString());
+                                        mylist.setIssueType(holder.checklist_issue_type.getText().toString());
+                                        mylist.setItem(holder.checklist_item.getText().toString());
                                         holder.checklist_menu.setText(item.getTitle().toString());
+                                        for (int i = 0; i < AllServiceDetails.size(); i++) {
+                                            if (AllServiceDetails.get(i).getItem().equalsIgnoreCase(holder.checklist_item.getText().toString())) {
+                                                AllServiceDetails.remove(i);
+                                            }
+                                        }
+                                        AllServiceDetails.add(mylist);
+                                        Log.i("checklist123", "AllServiceDetails size====> " + AllServiceDetails.size());
                                         return true;
                                     case R.id.checklist_replaced:
+                                        mylist.setJobDescription(holder.Description.getText().toString());
+                                        mylist.setJobstatus(item.getTitle().toString());
+                                        mylist.setIssueType(holder.checklist_issue_type.getText().toString());
+                                        mylist.setItem(holder.checklist_item.getText().toString());
                                         holder.checklist_menu.setText(item.getTitle().toString());
+                                        for (int i = 0; i < AllServiceDetails.size(); i++) {
+                                            if (AllServiceDetails.get(i).getItem().equalsIgnoreCase(holder.checklist_item.getText().toString())) {
+                                                AllServiceDetails.remove(i);
+                                            }
+                                        }
+                                        AllServiceDetails.add(mylist);
+                                        Log.i("checklist123", "AllServiceDetails size====> " + AllServiceDetails.size());
                                         return true;
                                     case R.id.checklist_topUp:
+                                        mylist.setJobDescription(holder.Description.getText().toString());
+                                        mylist.setJobstatus(item.getTitle().toString());
+                                        mylist.setIssueType(holder.checklist_issue_type.getText().toString());
+                                        mylist.setItem(holder.checklist_item.getText().toString());
                                         holder.checklist_menu.setText(item.getTitle().toString());
+                                        for (int i = 0; i < AllServiceDetails.size(); i++) {
+                                            if (AllServiceDetails.get(i).getItem().equalsIgnoreCase(holder.checklist_item.getText().toString())) {
+                                                AllServiceDetails.remove(i);
+                                            }
+                                        }
+                                        AllServiceDetails.add(mylist);
+                                        Log.i("checklist123", "AllServiceDetails size====> " + AllServiceDetails.size());
                                         return true;
                                     case R.id.checklist_repaired:
+                                        mylist.setJobDescription(holder.Description.getText().toString());
+                                        mylist.setJobstatus(item.getTitle().toString());
+                                        mylist.setIssueType(holder.checklist_issue_type.getText().toString());
+                                        mylist.setItem(holder.checklist_item.getText().toString());
                                         holder.checklist_menu.setText(item.getTitle().toString());
+                                        for (int i = 0; i < AllServiceDetails.size(); i++) {
+                                            if (AllServiceDetails.get(i).getItem().equalsIgnoreCase(holder.checklist_item.getText().toString())) {
+                                                AllServiceDetails.remove(i);
+                                            }
+                                        }
+                                        AllServiceDetails.add(mylist);
+                                        Log.i("checklist123", "AllServiceDetails size====> " + AllServiceDetails.size());
                                         return true;
                                     case R.id.checklist_parts:
+                                        mylist.setJobDescription(holder.Description.getText().toString());
+                                        mylist.setJobstatus(item.getTitle().toString());
+                                        mylist.setIssueType(holder.checklist_issue_type.getText().toString());
+                                        mylist.setItem(holder.checklist_item.getText().toString());
                                         holder.checklist_menu.setText(item.getTitle().toString());
+                                        for (int i = 0; i < AllServiceDetails.size(); i++) {
+                                            if (AllServiceDetails.get(i).getItem().equalsIgnoreCase(holder.checklist_item.getText().toString())) {
+                                                AllServiceDetails.remove(i);
+                                            }
+                                        }
+                                        AllServiceDetails.add(mylist);
+                                        Log.i("checklist123", "AllServiceDetails size====> " + AllServiceDetails.size());
                                         return true;
                                     default:
                                         return false;
                                 }
+
                             }
                         });
                     }
                 });
-
 
             } catch (Exception e) {
                 e.printStackTrace();

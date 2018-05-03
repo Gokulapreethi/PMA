@@ -22,7 +22,7 @@ public class Label implements Serializable{
     private String jobDescription;
     @SerializedName("jobstatus")
     @Expose
-    private Boolean jobstatus;
+    private String jobstatus;
 
     public String getIssueType() {
         return issueType;
@@ -48,12 +48,11 @@ public class Label implements Serializable{
         this.jobDescription = jobDescription;
     }
 
-    public Boolean getJobstatus() {
+    public String getJobstatus() {
         return jobstatus;
     }
 
-    public void setJobstatus(Boolean jobstatus) {
+    public void setJobstatus(String jobstatus) {
         this.jobstatus = jobstatus;
     }
-
 }

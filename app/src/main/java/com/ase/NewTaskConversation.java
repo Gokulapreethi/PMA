@@ -5003,7 +5003,7 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
         /*added for GroupAdmin Observer End*/
 
         /*added for checklist_PMS Start*/
-        String PMSJobcard_query = "select  isActiveStatus from projectDetails where loginuser = '" + Appreference.loginuserdetails.getEmail() + "'and projectId='" + projectId + "'";
+        String PMSJobcard_query = "select isActiveStatus from projectDetails where loginuser = '" + Appreference.loginuserdetails.getEmail() + "'and projectId='" + projectId + "'";
         String PMSJobcard = VideoCallDataBase.getDB(context).getprojectIdForOracleID(PMSJobcard_query);
         Log.i("pms123","PMSCARD====> "+PMSJobcard);
         /*added for checklist_PMS End*/
@@ -5572,7 +5572,16 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                         builderSingle.show();*/
                         try {
                             showprogress();
-                            Appreference.jsonRequestSender.getChecklistForm(EnumJsonWebservicename.getCheckListDetailsFromClient, PMSJobDescription, NewTaskConversation.this);
+                            String PMSmake_query = "select machineMake from projectDetails where loginuser = '" + Appreference.loginuserdetails.getEmail() + "'and projectId='" + projectId + "'";
+                            String PMS_machine_make = VideoCallDataBase.getDB(context).getprojectIdForOracleID(PMSmake_query);
+                            String PMSmodel_query = "select mcSrNo from projectDetails where loginuser = '" + Appreference.loginuserdetails.getEmail() + "'and projectId='" + projectId + "'";
+                            String PMS_machine_model = VideoCallDataBase.getDB(context).getprojectIdForOracleID(PMSmodel_query);
+                            List<NameValuePair> tagNameValuePairs = new ArrayList<NameValuePair>();
+                            tagNameValuePairs.add(new BasicNameValuePair("machinemake", PMS_machine_make));
+                            tagNameValuePairs.add(new BasicNameValuePair("machinemodel", PMS_machine_model));
+                            tagNameValuePairs.add(new BasicNameValuePair("serviceType","250"));
+
+                            Appreference.jsonRequestSender.getChecklistForm(EnumJsonWebservicename.getCheckListDetailsFromClient, tagNameValuePairs, NewTaskConversation.this);
                         } catch (Exception e) {
                             e.printStackTrace();
                             Appreference.printLog("ProjectFragment", "ProjectArrayAdapter projectCompleted Exception : " + e.getMessage(), "WARN", null);
@@ -12949,6 +12958,8 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                                              Log.i("pmsresponse123", "getCheckListDetailsFromClient==>"+checklist);
                                              Intent intent=new Intent(NewTaskConversation.this,CheckListActivity.class);
                                              intent.putExtra("checklistBean",checklist);
+                                             intent.putExtra("PMSprojectId",projectId);
+                                             intent.putExtra("PMStaskId",webtaskId);
                                              startActivity(intent);
                                          } catch (Exception e) {
                                              e.printStackTrace();

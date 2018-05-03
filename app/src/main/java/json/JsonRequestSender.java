@@ -661,10 +661,10 @@ public class JsonRequestSender {
         queue.addMsg(communicationBean);
     }
 
-    public void getChecklistForm(EnumJsonWebservicename webservicename, String strName, WebServiceInterface access) {
+    public void getChecklistForm(EnumJsonWebservicename webservicename, List<NameValuePair> strName, WebServiceInterface access) {
         CommunicationBean communicationBean = new CommunicationBean();
         communicationBean.setEnumJsonWebservicename(webservicename);
-        communicationBean.setInputString(strName);
+        communicationBean.setNameValuePairs(strName);
         communicationBean.setAccess(access);
         queue.addMsg(communicationBean);
     }
