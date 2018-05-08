@@ -14,6 +14,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginLeft="10dp">
+
         <TableLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
@@ -40,14 +41,18 @@
 
             </LinearLayout>
         </TableLayout>
+
         <View
             android:layout_width="wrap_content"
             android:layout_height="1dp"
             android:layout_marginTop="5dp"
-            android:background="@color/gray" />
+            android:background="@color/gray"
+            android:visibility="gone"/>
+
         <TableLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:visibility="gone">
 
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -86,10 +91,9 @@
                     android:layout_gravity="center_vertical"
                     android:layout_marginLeft="15dp"
                     android:layout_marginTop="5dp"
-                    android:layout_weight="1"
+                    android:layout_weight="2.5"
                     android:gravity="start"
                     android:hint="Type Here"
-                    android:singleLine="true"
                     android:textColor="@color/black"
                     android:textSize="18sp"
                     android:visibility="gone" />
@@ -105,11 +109,13 @@
                     android:visibility="visible" />
             </LinearLayout>
         </TableLayout>
+
         <View
             android:layout_width="wrap_content"
             android:layout_height="1dp"
             android:layout_marginTop="5dp"
             android:background="@color/gray" />
+
         <TableLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
@@ -152,10 +158,9 @@
                     android:layout_gravity="center_vertical"
                     android:layout_marginLeft="15dp"
                     android:layout_marginTop="5dp"
-                    android:layout_weight="1"
+                    android:layout_weight="2.5"
                     android:gravity="start"
                     android:hint="Type Here"
-                    android:singleLine="true"
                     android:textColor="@color/black"
                     android:textSize="18sp"
                     android:visibility="gone" />
@@ -207,12 +212,12 @@
                     android:id="@+id/checklist_tech_name"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginLeft="15dp"
                     android:layout_marginTop="5dp"
                     android:layout_weight="1"
                     android:gravity="start"
-                    android:layout_gravity="center_vertical"
                     android:hint="Type Here"
-                    android:layout_marginLeft="15dp"
                     android:singleLine="true"
                     android:textColor="@color/black"
                     android:textSize="18sp"
@@ -270,11 +275,13 @@
             </LinearLayout>
 
         </TableLayout>
+
         <View
             android:layout_width="wrap_content"
             android:layout_height="1dp"
             android:layout_marginTop="5dp"
             android:background="@color/gray" />
+
         <TableLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
@@ -300,7 +307,7 @@
                     android:textSize="18sp" />
 
                 <EditText
-                    android:id="@+id/checklist_name_entry"
+                    android:id="@+id/checklist_client_name"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
@@ -309,13 +316,13 @@
                     android:layout_weight="1"
                     android:gravity="start"
                     android:hint="Type Here"
-                    android:singleLine="true"
                     android:textColor="@color/black"
                     android:textSize="18sp"
                     android:visibility="visible" />
 
             </LinearLayout>
         </TableLayout>
+
         <TableLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
@@ -362,16 +369,18 @@
             </LinearLayout>
 
         </TableLayout>
+
         <View
             android:layout_width="wrap_content"
             android:layout_height="1dp"
             android:layout_marginTop="5dp"
             android:background="@color/gray" />
+
         <TableLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:layout_marginBottom="20dp">
+            android:layout_marginBottom="20dp"
+            android:layout_marginTop="10dp">
 
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -392,6 +401,7 @@
                     android:textColor="@color/black"
                     android:textDirection="firstStrong"
                     android:textSize="18sp" />
+
                 <Button
                     android:id="@+id/checklist_date_btn"
                     android:layout_width="20dp"
@@ -412,13 +422,13 @@
                     android:layout_marginTop="5dp"
                     android:layout_weight="1"
                     android:gravity="start"
-                    android:singleLine="true"
                     android:textColor="@color/black"
                     android:textSize="18sp"
                     android:visibility="visible" />
 
             </LinearLayout>
         </TableLayout>
+
         <View
             android:layout_width="wrap_content"
             android:layout_height="1dp"

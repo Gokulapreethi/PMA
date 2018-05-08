@@ -71,6 +71,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.ase.Bean.CustomBean;
+import com.ase.Bean.Label;
 import com.ase.Bean.ListofFileds;
 import com.ase.Bean.ProjectDetailsBean;
 import com.ase.Bean.SipNotification;
@@ -5005,7 +5006,7 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
         /*added for checklist_PMS Start*/
         String PMSJobcard_query = "select isActiveStatus from projectDetails where loginuser = '" + Appreference.loginuserdetails.getEmail() + "'and projectId='" + projectId + "'";
         String PMSJobcard = VideoCallDataBase.getDB(context).getprojectIdForOracleID(PMSJobcard_query);
-        Log.i("pms123","PMSCARD====> "+PMSJobcard);
+        Log.i("pms123", "PMSCARD====> " + PMSJobcard);
         /*added for checklist_PMS End*/
 
         if (oracleProjectOwner != null && !oracleProjectOwner.equalsIgnoreCase(Appreference.loginuserdetails.getUsername()) &&
@@ -5021,7 +5022,7 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                 popup.getMenu().getItem(3).setVisible(true);
                 popup.getMenu().getItem(5).setVisible(true);
                 popup.getMenu().getItem(6).setVisible(true);
-                if (PMSJobcard!=null && PMSJobcard.equalsIgnoreCase("0")) {
+                if (PMSJobcard != null && PMSJobcard.equalsIgnoreCase("0")) {
                     popup.getMenu().getItem(8).setVisible(true);
                 }
             } else if (current_status == 1) {
@@ -5043,7 +5044,7 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                 popup.getMenu().getItem(4).setVisible(false);
                 popup.getMenu().getItem(5).setVisible(true);
                 popup.getMenu().getItem(6).setVisible(true);
-                if (PMSJobcard!=null && PMSJobcard.equalsIgnoreCase("0")) {
+                if (PMSJobcard != null && PMSJobcard.equalsIgnoreCase("0")) {
                     popup.getMenu().getItem(8).setVisible(true);
                 }
             } else if (current_status == 3) {
@@ -5065,7 +5066,7 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                 popup.getMenu().getItem(4).setVisible(false);
                 popup.getMenu().getItem(5).setVisible(true);
                 popup.getMenu().getItem(6).setVisible(true);
-                if (PMSJobcard!=null && PMSJobcard.equalsIgnoreCase("0")) {
+                if (PMSJobcard != null && PMSJobcard.equalsIgnoreCase("0")) {
                     popup.getMenu().getItem(8).setVisible(true);
                 }
             } else if (current_status == 5) {
@@ -5571,17 +5572,42 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                         });
                         builderSingle.show();*/
                         try {
-                            showprogress();
-                            String PMSmake_query = "select machineMake from projectDetails where loginuser = '" + Appreference.loginuserdetails.getEmail() + "'and projectId='" + projectId + "'";
-                            String PMS_machine_make = VideoCallDataBase.getDB(context).getprojectIdForOracleID(PMSmake_query);
-                            String PMSmodel_query = "select mcSrNo from projectDetails where loginuser = '" + Appreference.loginuserdetails.getEmail() + "'and projectId='" + projectId + "'";
-                            String PMS_machine_model = VideoCallDataBase.getDB(context).getprojectIdForOracleID(PMSmodel_query);
-                            List<NameValuePair> tagNameValuePairs = new ArrayList<NameValuePair>();
-                            tagNameValuePairs.add(new BasicNameValuePair("machinemake", PMS_machine_make));
-                            tagNameValuePairs.add(new BasicNameValuePair("machinemodel", PMS_machine_model));
-                            tagNameValuePairs.add(new BasicNameValuePair("serviceType","250"));
+                            String query = "select * from checklistDetails where projectId='" + projectId + "'and taskId='" + webtaskId + "'and userId='" + Appreference.loginuserdetails.getId() + "'";
+                            checkListDetails checklistBean = VideoCallDataBase.getDB(context).getchecklistdetails(query);
 
-                            Appreference.jsonRequestSender.getChecklistForm(EnumJsonWebservicename.getCheckListDetailsFromClient, tagNameValuePairs, NewTaskConversation.this);
+                            if (checklistBean.getId() != null) {
+                                String checklistData_query = "select * from checklistData where checklistdataid='" + checklistBean.getId() + "'";
+                                ArrayList<Label> dataBean = VideoCallDataBase.getDB(context).getchecklistData(checklistData_query);
+                                checklistBean.setLabel(dataBean);
+                                Intent intent = new Intent(NewTaskConversation.this, CheckListActivity.class);
+                                intent.putExtra("checklistBean", checklistBean);
+                                intent.putExtra("isExistingView", true);
+                                intent.putExtra("PMSprojectId", projectId);
+                                intent.putExtra("PMStaskId", webtaskId);
+                                startActivity(intent);
+                            } else if (!isNetworkAvailable() && Appreference.myOfflineCheckListDetails!=null && !Appreference.myOfflineCheckListDetails.toString().equalsIgnoreCase("")) {
+                                Intent intent = new Intent(NewTaskConversation.this, CheckListActivity.class);
+                                intent.putExtra("checklistBean", Appreference.myOfflineCheckListDetails);
+                                intent.putExtra("isExistingView", false);
+                                intent.putExtra("PMSprojectId", projectId);
+                                intent.putExtra("PMStaskId", webtaskId);
+                                startActivity(intent);
+                            } else if(isNetworkAvailable()) {
+                                showprogress();
+                                String PMSmake_query = "select machineMake from projectDetails where loginuser = '" + Appreference.loginuserdetails.getEmail() + "'and projectId='" + projectId + "'";
+                                String PMS_machine_make = VideoCallDataBase.getDB(context).getprojectIdForOracleID(PMSmake_query);
+                                String PMSmodel_query = "select mcModel from projectDetails where loginuser = '" + Appreference.loginuserdetails.getEmail() + "'and projectId='" + projectId + "'";
+                                String PMS_machine_model = VideoCallDataBase.getDB(context).getprojectIdForOracleID(PMSmodel_query);
+                                List<NameValuePair> tagNameValuePairs = new ArrayList<NameValuePair>();
+                                tagNameValuePairs.add(new BasicNameValuePair("machinemake", PMS_machine_make));
+                                tagNameValuePairs.add(new BasicNameValuePair("machinemodel", PMS_machine_model));
+                                tagNameValuePairs.add(new BasicNameValuePair("serviceType", "250"));
+
+                                Appreference.jsonRequestSender.getChecklistForm(EnumJsonWebservicename.getCheckListDetailsFromClient, tagNameValuePairs, NewTaskConversation.this);
+                            }else{
+                                Toast.makeText(NewTaskConversation.this,"CheckList Not Available....",Toast.LENGTH_SHORT).show();
+
+                            }
                         } catch (Exception e) {
                             e.printStackTrace();
                             Appreference.printLog("ProjectFragment", "ProjectArrayAdapter projectCompleted Exception : " + e.getMessage(), "WARN", null);
@@ -12948,26 +12974,26 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                                              e.printStackTrace();
                                              Appreference.printLog("NewTaskConversation", "ResponceMethod assignTask Exception : " + e.getMessage(), "WARN", null);
                                          }
-                                     } else if(WebServiceEnum_Response != null && WebServiceEnum_Response.equalsIgnoreCase(("getCheckListDetailsFromClient"))){
-                                         Log.i("pmsresponse123", "getCheckListDetailsFromClient"+server_Response_string);
+                                     } else if (WebServiceEnum_Response != null && WebServiceEnum_Response.equalsIgnoreCase(("getCheckListDetailsFromClient"))) {
+                                         Log.i("pmsresponse123", "getCheckListDetailsFromClient" + server_Response_string);
                                          try {
 
                                              Type collectionType = new TypeToken<checkListDetails>() {
                                              }.getType();
                                              checkListDetails checklist = new Gson().fromJson(server_Response_string, collectionType);
-                                             Log.i("pmsresponse123", "getCheckListDetailsFromClient==>"+checklist);
-                                             Intent intent=new Intent(NewTaskConversation.this,CheckListActivity.class);
-                                             intent.putExtra("checklistBean",checklist);
-                                             intent.putExtra("PMSprojectId",projectId);
-                                             intent.putExtra("PMStaskId",webtaskId);
+                                             Log.i("pmsresponse123", "getCheckListDetailsFromClient==>" + checklist);
+                                             Intent intent = new Intent(NewTaskConversation.this, CheckListActivity.class);
+                                             intent.putExtra("checklistBean", checklist);
+                                             intent.putExtra("isExistingView", false);
+                                             intent.putExtra("PMSprojectId", projectId);
+                                             intent.putExtra("PMStaskId", webtaskId);
                                              startActivity(intent);
                                          } catch (Exception e) {
                                              e.printStackTrace();
-                                             Log.i("pmsresponse123", "getCheckListDetailsFromClient Error==>"+e.getMessage());
+                                             Log.i("pmsresponse123", "getCheckListDetailsFromClient Error==>" + e.getMessage());
 
                                          }
-                                     }
-                                         else if (WebServiceEnum_Response != null && WebServiceEnum_Response.equalsIgnoreCase(("listGroupTaskUsers"))) {
+                                     } else if (WebServiceEnum_Response != null && WebServiceEnum_Response.equalsIgnoreCase(("listGroupTaskUsers"))) {
                                          handler.post(new Runnable() {
                                              @Override
                                              public void run() {
@@ -14241,6 +14267,8 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                         progress.setMessage("Creating Note");
                     } else if (chat) {
                         progress.setMessage("Creating Chat");
+                    } else {
+                        progress.setMessage("Please wait....");
                     }
                     progress.setProgressStyle(ProgressDialog.STYLE_SPINNER);
                     progress.setProgress(0);
@@ -14313,7 +14341,7 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                 category = "Task";
                 issueId = "";
             }
-            if (projectBean.getTaskId() != null && !projectBean.getTaskId().equalsIgnoreCase("")) {
+            if (Appreference.loginuserdetails.getUsername() != null && projectBean.getTaskId() != null && !projectBean.getTaskId().equalsIgnoreCase("")) {
                 if (projectBean.getToUserName() != null && !projectBean.getToUserName().equalsIgnoreCase(Appreference.loginuserdetails.getUsername())) {
                     from_UserName = Appreference.loginuserdetails.getUsername();
                     toUserName = projectBean.getToUserName();

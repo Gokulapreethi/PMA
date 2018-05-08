@@ -12,6 +12,7 @@ import com.ase.AppSharedpreferences;
 import com.ase.Appreference;
 import com.ase.Bean.From;
 import com.ase.Bean.Group;
+import com.ase.Bean.Label;
 import com.ase.Bean.ListAllTaskBean;
 import com.ase.Bean.ListMembers;
 import com.ase.Bean.ListObserver;
@@ -26,6 +27,7 @@ import com.ase.Bean.Task;
 import com.ase.Bean.TaskDetailsBean;
 import com.ase.Bean.ToUser;
 import com.ase.Bean.User;
+import com.ase.Bean.checkListDetails;
 import com.ase.ContactBean;
 import com.ase.Forms.FormAccessBean;
 import com.ase.ListAllgetTaskDetails;
@@ -85,7 +87,9 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
     public static final String CREATE_TABLE_FORM_ACCESS = "create table if not exists FormAccess(id integer primary key autoincrement,taskId varchar(50),formId varchar(50),formAccessId varchar(50),taskGiver varchar(50),memberName varchar(50),accessMode varchar(50))";
     public static final String CREATE_TABLE_List_User_Group_Member_Access = "create table if not exists listUserGroupMemberAccess(userid integer,groupid integer,groupname varchar(100),loginuser varchar(100),respondVideo varchar(50),respondFiles varchar(50),accessForms varchar(50),respondAudio varchar(50),videoAccess varchar(50),adminAccess varchar(50),respondDateChange varchar(50),respondLocation varchar(50),respondConfCall varchar(50),audioAccess varchar(50),chatAccess varchar(50),respondText varchar(50),respondPrivate varchar(50),respondPhoto varchar(50),accessReminder varchar(50),respondSketch varchar(50),respondTask varchar(50),accessScheduledCNF varchar(50),GroupTask varchar(50),ReassignTask varchar(50),ChangeTaskName varchar(50),TaskDescriptions varchar(50),TemplateExistingTask varchar(50),ApproveLeave varchar(50),RemindMe varchar(50),AddObserver varchar(50),TaskPriority varchar(50),Escalations varchar(50))";
     public static final String CREATE_TABLE_PROJECT_STATUS = "create table if not exists projectStatus(id integer primary key autoincrement,userId integer,projectId integer,taskId integer,taskDescription varchar(100),travelStartTime varchar(100),activityStartTime varchar(100),activityEndTime varchar(100),travelEndTime varchar(100),totravelstartdatetime varchar(100),totravelenddatetime varchar(100),remarks varchar(500),hourMeterReading varchar(100),status varchar(100),customersignaturename varchar(100),photo varchar(100),techniciansignature varchar(100),customersignature varchar(100),observation varchar(500),actionTaken varchar(500),taskcompleteddate varchar(100),datenow varchar(100),wssendstatus varchar(100),signalId varchar(100),dateStatus varchar(100),synopsis varchar(100),startDateLatitude varchar(100),startDateLongitude varchar(100),endDateLatitude varchar(100),endDateLongitude varchar(100))";
-
+    /*For Checklist DB Entry */
+    public static final String CREATE_TABLE_CHECKLIST_DETAILS = "create table if not exists checklistDetails(id integer primary key autoincrement,projectId integer,taskId integer,userId integer,advice varchar(100),checkListName varchar(100),checklistDate varchar(100),hmReading varchar(100),technicianSignature varchar(100),customerSignature varchar(100),checklistEntryDate varchar(100),clientName varchar(100),technicianName varchar(100))";
+    public static final String CREATE_TABLE_CHECKLIST_DATA = "create table if not exists checklistData(checklistdataid integer,issueType varchar(100),checklistItem varchar(100),jobDescription varchar(100),jobStatus varchar(100),quantity varchar(100), FOREIGN KEY (checklistdataid) REFERENCES checklistDetails (id))";
     public static final String EULATABLE = "eulaagree";
     public static final String EULACREATE = "create table if not exists '" + EULATABLE + "'(id integer (1),selection varchar(1))";
 
@@ -151,6 +155,8 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
         db.execSQL(CREATE_TABLE_FORM_ACCESS);
         db.execSQL(CREATE_TABLE_List_User_Group_Member_Access);
         db.execSQL(CREATE_TABLE_PROJECT_STATUS);
+        db.execSQL(CREATE_TABLE_CHECKLIST_DETAILS);
+        db.execSQL(CREATE_TABLE_CHECKLIST_DATA);
         db.execSQL(EULACREATE);
     }
 
@@ -2076,7 +2082,7 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
             cv.put("jobCardType", projectDetailsBean.getJobCardType());
             cv.put("machineMake", projectDetailsBean.getMachineMake());
             cv.put("jobDescription", projectDetailsBean.getJobDescription());
-            String groupAdminObserver="user4_hm.net" + "," + "user5_hm.net";
+            String groupAdminObserver = "user4_hm.net" + "," + "user5_hm.net";
 
                         /*added for GroupAdmin observer Start*/
 //            cv.put("groupAdminobserver", groupAdminObserver);
@@ -10045,18 +10051,177 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
         }
     }
 
-    public int DB_converstion_Delete(String taskId,String projId) {
+    public int DB_converstion_Delete(String taskId, String projId) {
         int row_id = 0;
         try {
             if (!db.isOpen())
                 openDatabase();
-            row_id = (int) db.delete("taskDetailsInfo", "projectId='" +projId + "' and taskId='" + taskId+ "'", null);
-            Log.i("online123", "DB_converstion_Delete********projectId ==> "+projId + " taskID==>  " +taskId);
+            row_id = (int) db.delete("taskDetailsInfo", "projectId='" + projId + "' and taskId='" + taskId + "'", null);
+            Log.i("online123", "DB_converstion_Delete********projectId ==> " + projId + " taskID==>  " + taskId);
 
         } catch (Exception e) {
             e.printStackTrace();
             Appreference.printLog("deleteProjectDraft", "Exception " + e.getMessage(), "WARN", null);
         }
         return row_id;
+    }
+
+    public int insertORupdateCheckListDetails(checkListDetails checklistAllBean) {
+
+        int row_id = 0;
+        try {
+            if (!db.isOpen())
+                openDatabase();
+            ContentValues cv = new ContentValues();
+            cv.put("projectId", checklistAllBean.getChecklist_projectId());
+            cv.put("taskId", checklistAllBean.getChecklist_taskId());
+            cv.put("userId", checklistAllBean.getChecklist_fromId());
+            cv.put("advice", checklistAllBean.getAdvicetoCustomer());
+            cv.put("checkListName", checklistAllBean.getCheckListName());
+            cv.put("checklistDate", checklistAllBean.getDate());
+            cv.put("hmReading", checklistAllBean.getHourMeter());
+            cv.put("technicianSignature", checklistAllBean.getTechnicianSignature());
+            cv.put("customerSignature", checklistAllBean.getClientSignature());
+            cv.put("checklistEntryDate", checklistAllBean.getSignedDate());
+            cv.put("clientName", checklistAllBean.getClientName());
+            cv.put("technicianName", checklistAllBean.getTechnicianName());
+            row_id = (int) db.insert("checklistDetails", null, cv);
+
+        } catch (Exception e) {
+            // TODO: handle exception
+            e.printStackTrace();
+            Appreference.printLog("insertORupdateStatus ", "Exception " + e.getMessage(), "WARN", null);
+        }
+        return row_id;
+    }
+
+    public int insertORupdateCheckListData(List<Label> label) {
+        int row_id = 0;
+        try {
+            if (!db.isOpen())
+                openDatabase();
+            ContentValues cv = new ContentValues();
+            String query = "select max(id) from checklistDetails";
+            int checkListDetailsId = getChecklistDetailsId(query);
+            for (int i = 0; i < label.size(); i++) {
+                Label checklist_row = label.get(i);
+                cv.put("checklistdataid", checkListDetailsId);
+                cv.put("issueType", checklist_row.getIssueType());
+                cv.put("checklistItem", checklist_row.getItem());
+                cv.put("jobDescription", checklist_row.getJobDescription());
+                cv.put("jobStatus", checklist_row.getJobstatus());
+                cv.put("quantity", checklist_row.getQuantity());
+                row_id = (int) db.insert("checklistData", null, cv);
+            }
+        } catch (Exception e) {
+            // TODO: handle exception
+            e.printStackTrace();
+            Appreference.printLog("insertORupdateStatus ", "Exception " + e.getMessage(), "WARN", null);
+        }
+        return row_id;
+    }
+
+    public int getChecklistDetailsId(String query) {
+        Cursor cur = null;
+        int result = 0;
+        try {
+            if (!db.isOpen())
+                openDatabase();
+            cur = db.rawQuery(query, null);
+            cur.moveToFirst();
+            while (!cur.isAfterLast()) {
+                result = cur.getInt(0);
+                cur.moveToNext();
+            }
+            cur.close();
+            return result;
+        } catch (Exception e) {
+            e.printStackTrace();
+            Appreference.printLog("getChecklistDetailsId ", "Exception " + e.getMessage(), "WARN", null);
+            return result;
+        }
+    }
+
+    public checkListDetails getchecklistdetails(String query) {
+        checkListDetails checklistEntryBean = new checkListDetails();
+        Cursor cur;
+        try {
+            if (db == null)
+                db = getReadableDatabase();
+            try {
+                if (db != null) {
+                    if (!db.isOpen())
+                        openDatabase();
+                    cur = db.rawQuery(query, null);
+                    cur.moveToFirst();
+
+                    while (!cur.isAfterLast()) {
+
+                        checklistEntryBean.setId(cur.getString(cur.getColumnIndex("id")));
+                        checklistEntryBean.setChecklist_projectId(cur.getString(cur.getColumnIndex("projectId")));
+                        checklistEntryBean.setChecklist_taskId(cur.getString(cur.getColumnIndex("taskId")));
+                        checklistEntryBean.setChecklist_fromId(cur.getString(cur.getColumnIndex("userId")));
+                        checklistEntryBean.setAdvicetoCustomer(cur.getString(cur.getColumnIndex("advice")));
+                        checklistEntryBean.setDate(cur.getString(cur.getColumnIndex("checklistDate")));
+                        checklistEntryBean.setHourMeter(cur.getString(cur.getColumnIndex("hmReading")));
+                        checklistEntryBean.setTechnicianSignature(cur.getString(cur.getColumnIndex("technicianSignature")));
+                        checklistEntryBean.setClientSignature(cur.getString(cur.getColumnIndex("customerSignature")));
+                        checklistEntryBean.setSignedDate(cur.getString(cur.getColumnIndex("checklistEntryDate")));
+                        checklistEntryBean.setClientName(cur.getString(cur.getColumnIndex("clientName")));
+                        checklistEntryBean.setCheckListName(cur.getString(cur.getColumnIndex("checkListName")));
+                        checklistEntryBean.setTechnicianName(cur.getString(cur.getColumnIndex("technicianName")));
+                        cur.moveToNext();
+                    }
+                    cur.close();
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                Appreference.printLog("getchecklistdetails 1", "Exception " + e.getMessage(), "WARN", null);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            Appreference.printLog("getchecklistdetails 2", "Exception " + e.getMessage(), "WARN", null);
+        } finally {
+            return checklistEntryBean;
+        }
+    }
+
+
+    public ArrayList<Label> getchecklistData(String checklistData_query) {
+        ArrayList<Label> arrayList = new ArrayList<>();
+        Cursor cur;
+        try {
+            if (db == null)
+                db = getReadableDatabase();
+            try {
+                if (db != null) {
+                    if (!db.isOpen())
+                        openDatabase();
+                    cur = db.rawQuery(checklistData_query, null);
+                    cur.moveToFirst();
+
+                    while (!cur.isAfterLast()) {
+                        Label bean = new Label();
+                        bean.setIssueType(cur.getString(cur.getColumnIndex("issueType")));
+                        bean.setItem(cur.getString(cur.getColumnIndex("checklistItem")));
+                        bean.setJobDescription(cur.getString(cur.getColumnIndex("jobDescription")));
+                        bean.setJobstatus(cur.getString(cur.getColumnIndex("jobStatus")));
+                        bean.setQuantity(cur.getString(cur.getColumnIndex("quantity")));
+                        arrayList.add(bean);
+                        cur.moveToNext();
+                    }
+                    cur.close();
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                Appreference.printLog("getchecklistData 1 ", "Exception " + e.getMessage(), "WARN", null);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            Appreference.printLog("getchecklistData 2 ", "Exception " + e.getMessage(), "WARN", null);
+        } finally {
+            Log.i("file", "size" + arrayList.size());
+            return arrayList;
+        }
     }
 }

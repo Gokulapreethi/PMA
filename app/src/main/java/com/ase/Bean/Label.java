@@ -24,6 +24,8 @@ public class Label implements Serializable{
     @Expose
     private String jobstatus;
 
+    private String quantity;
+
     public String getIssueType() {
         return issueType;
     }
@@ -54,5 +56,13 @@ public class Label implements Serializable{
 
     public void setJobstatus(String jobstatus) {
         this.jobstatus = jobstatus;
+    }
+
+    public String getQuantity() {
+        return quantity;
+    }
+
+    public void setQuantity(String quantity) {
+        this.quantity = quantity;
     }
 }

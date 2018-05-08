@@ -5,6 +5,7 @@ import android.util.Log;
 import com.ase.Appreference;
 import com.ase.Bean.ListofFileds;
 import com.ase.Bean.TaskDetailsBean;
+import com.ase.CheckListActivity;
 import com.ase.NewTaskConversation;
 import com.ase.chat.ChatBean;
 import com.ase.gcm.NotificationActivity;
@@ -665,6 +666,16 @@ public class JsonRequestSender {
         CommunicationBean communicationBean = new CommunicationBean();
         communicationBean.setEnumJsonWebservicename(webservicename);
         communicationBean.setNameValuePairs(strName);
+        communicationBean.setAccess(access);
+        queue.addMsg(communicationBean);
+    }
+
+    public void SaveCheckListForm(EnumJsonWebservicename webservicename, JSONObject jsonObject, WebServiceInterface access) {
+        CommunicationBean communicationBean = new CommunicationBean();
+        communicationBean.setEnumJsonWebservicename(webservicename);
+        if (jsonObject != null) {
+            communicationBean.setJsonObject(jsonObject);
+        }
         communicationBean.setAccess(access);
         queue.addMsg(communicationBean);
     }

@@ -3,16 +3,23 @@ package com.ase;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
+import android.media.Image;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.PopupMenu;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuInflater;
@@ -20,6 +27,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
@@ -27,100 +35,135 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.TableLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.ase.Bean.Label;
 import com.ase.Bean.checkListDetails;
 import com.ase.DB.VideoCallDataBase;
+import com.ase.RandomNumber.Utility;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+
+import json.CommunicationBean;
+import json.EnumJsonWebservicename;
+import json.WebServiceInterface;
 
 /**
  * Created by Preethi on 4/25/2018.
  */
 
-public class CheckListActivity extends Activity {
+public class CheckListActivity extends Activity implements WebServiceInterface {
     checkListDetails checklistBean;
     private TextView stickyView;
     private ListView listView;
     private View heroImageView;
     LinearLayout checklist_master;
+    TableLayout listHeading;
     Context checkListContext;
     CheckListItemAdapter adapter;
     private View stickyViewSpacer;
     TextView custName, custAddress, checklist_date, machine_serial, machine_model, checklist_back, checklist_date_now, checklist_jobNo;
     String strIPath;
+    Handler handler;
+    ProgressDialog progress;
     boolean isCommentsImg, isAdviceImg, isTechnicianSign, isCustomerSign;
     String comments_path, advice_path, techSign_path, custSign_path;
-    ImageView checklist_commands_img, checklist_advice_img, checklist_tech_sign_img, checklist_cust_sign_img;
+    ImageView checklist_commands_img, checklist_advice_img, checklist_tech_sign_img, checklist_cust_sign_img, send_completion;
     Button checklist_tech_signature, checklist_cust_signature, checklist_date_btn;
-    ArrayList<Label> AllServiceDetails = new ArrayList<>();
     String ProjectId, TaskId;
+    String PMS_Customer, PMS_Address, PMS_machine_serial, PMS_machine_model;
+    EditText checklist_HMReading, checklist_tech_name, checklist_client_name;
+    static CheckListActivity checkListActivity;
+    boolean isReadOnlyView;
 
+    public static CheckListActivity getInstance() {
+        return checkListActivity;
+    }
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.servicelist);
         Intent intent = getIntent();
         checkListContext = this;
+        handler = new Handler();
         checklistBean = (checkListDetails) intent.getSerializableExtra("checklistBean");
+        Appreference.myOfflineCheckListDetails=checklistBean;
         ProjectId = intent.getStringExtra("PMSprojectId");
         TaskId = intent.getStringExtra("PMStaskId");
+        isReadOnlyView = intent.getBooleanExtra("isExistingView",false);
          /* Initialise list view, hero image, and sticky view */
         listView = (ListView) findViewById(R.id.listView);
 //        heroImageView = findViewById(R.id.heroImageView);
-        stickyView = (TextView) findViewById(R.id.stickyView);
-        checklist_master = (LinearLayout) findViewById(R.id.checklist_master);
+          /* Inflate list header layout */
+        LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View listHeader = inflater.inflate(R.layout.checklist_header, null);
+        checklist_master = (LinearLayout) listHeader.findViewById(R.id.checklist_master);
+        stickyView = (TextView) listHeader.findViewById(R.id.stickyView);
 
-        custName = (TextView) findViewById(R.id.checklist_cust_name);
-        custAddress = (TextView) findViewById(R.id.checklist_cust_address);
-        checklist_date = (TextView) findViewById(R.id.checklist_date);
-        machine_serial = (TextView) findViewById(R.id.checklist_machineNo);
-        machine_model = (TextView) findViewById(R.id.checklist_machineMac);
-        checklist_back = (TextView) findViewById(R.id.checklist_back);
-        checklist_jobNo = (TextView) findViewById(R.id.checklist_jobNo);
+        custName = (TextView) listHeader.findViewById(R.id.checklist_cust_name);
+        custAddress = (TextView) listHeader.findViewById(R.id.checklist_cust_address);
+        checklist_date = (TextView) listHeader.findViewById(R.id.checklist_date);
+        machine_serial = (TextView) listHeader.findViewById(R.id.checklist_machineNo);
+        machine_model = (TextView) listHeader.findViewById(R.id.checklist_machineMac);
+        checklist_back = (TextView) listHeader.findViewById(R.id.checklist_back);
+        checklist_jobNo = (TextView) listHeader.findViewById(R.id.checklist_jobNo);
+        listHeading = (TableLayout) listHeader.findViewById(R.id.listHeading);
+        send_completion = (ImageView) listHeader.findViewById(R.id.send_completion);
+        checklist_HMReading = (EditText) listHeader.findViewById(R.id.checklist_HMReading);
 
 
         stickyView.setText(checklistBean.getCheckListName());
 
-       /* custName.setText(checklistBean.getCustomer());
-        custAddress.setText(checklistBean.getCustomer());
-        checklist_date.setText(checklistBean.getDate());
-        machine_serial.setText(checklistBean.getSerialNumber());
-        machine_model.setText(checklistBean.getModel());*/
         String PMScustomerName_query = "select customerName from projectDetails where loginuser = '" + Appreference.loginuserdetails.getEmail() + "'and projectId='" + ProjectId + "'";
-        String PMS_Customer = VideoCallDataBase.getDB(checkListContext).getprojectIdForOracleID(PMScustomerName_query);
+        PMS_Customer = VideoCallDataBase.getDB(checkListContext).getprojectIdForOracleID(PMScustomerName_query);
         String PMScustomerAddr_query = "select address from projectDetails where loginuser = '" + Appreference.loginuserdetails.getEmail() + "'and projectId='" + ProjectId + "'";
-        String PMS_Address = VideoCallDataBase.getDB(checkListContext).getprojectIdForOracleID(PMScustomerAddr_query);
-        String PMSserialNo_query = "select machineMake from projectDetails where loginuser = '" + Appreference.loginuserdetails.getEmail() + "'and projectId='" + ProjectId + "'";
-        String PMS_machine_serial = VideoCallDataBase.getDB(checkListContext).getprojectIdForOracleID(PMSserialNo_query);
-        String PMSmodel_query = "select mcSrNo from projectDetails where loginuser = '" + Appreference.loginuserdetails.getEmail() + "'and projectId='" + ProjectId + "'";
-        String PMS_machine_model = VideoCallDataBase.getDB(checkListContext).getprojectIdForOracleID(PMSmodel_query);
+        PMS_Address = VideoCallDataBase.getDB(checkListContext).getprojectIdForOracleID(PMScustomerAddr_query);
+        String PMSserialNo_query = "select mcSrNo  from projectDetails where loginuser = '" + Appreference.loginuserdetails.getEmail() + "'and projectId='" + ProjectId + "'";
+        PMS_machine_serial = VideoCallDataBase.getDB(checkListContext).getprojectIdForOracleID(PMSserialNo_query);
+        String PMSmodel_query = "select mcModel from projectDetails where loginuser = '" + Appreference.loginuserdetails.getEmail() + "'and projectId='" + ProjectId + "'";
+        PMS_machine_model = VideoCallDataBase.getDB(checkListContext).getprojectIdForOracleID(PMSmodel_query);
         String PMSOracleId_query = "select oracleProjectId from projectDetails where loginuser = '" + Appreference.loginuserdetails.getEmail() + "'and projectId='" + ProjectId + "'";
         String PMS_oracle_projectId = VideoCallDataBase.getDB(checkListContext).getprojectIdForOracleID(PMSOracleId_query);
+
+        String PMSOpenDate_query = "select openDate from projectDetails where loginuser = '" + Appreference.loginuserdetails.getEmail() + "'and projectId='" + ProjectId + "'";
+        String PMS_OpenDate = VideoCallDataBase.getDB(checkListContext).getprojectIdForOracleID(PMSOpenDate_query);
+
+
         custName.setText(PMS_Customer);
         custAddress.setText(PMS_Address);
-        checklist_date.setText("30-Apr-18");
+        if (checklistBean.getDate() != null && !checklistBean.getDate().equalsIgnoreCase("")) {
+            checklist_date.setText(checklistBean.getDate());
+        } else {
+            checklist_date.setText(PMS_OpenDate);
+        }
         machine_serial.setText(PMS_machine_serial);
         machine_model.setText(PMS_machine_model);
         checklist_jobNo.setText(PMS_oracle_projectId);
+        if (checklistBean.getHourMeter() != null && !checklistBean.getHourMeter().equalsIgnoreCase("")) {
+            checklist_HMReading.setText(checklistBean.getHourMeter());
+        }
+
+
 
         adapter = new CheckListItemAdapter(checkListContext, checklistBean.getLabel());
-
         listView.setAdapter(adapter);
         adapter.notifyDataSetChanged();
 
-        /* Inflate list header layout */
-        LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View listHeader = inflater.inflate(R.layout.checklist_header, null);
-        View footerView = getLayoutInflater().inflate(R.layout.checklist_footer, null);
 
+        View footerView = getLayoutInflater().inflate(R.layout.checklist_footer, null);
         stickyViewSpacer = listHeader.findViewById(R.id.stickyViewPlaceholder);
 
         /* Add list view header */
@@ -138,6 +181,82 @@ public class CheckListActivity extends Activity {
         checklist_tech_sign_img = (ImageView) footerView.findViewById(R.id.checklist_tech_img);
         checklist_date_btn = (Button) footerView.findViewById(R.id.checklist_date_btn);
         checklist_date_now = (TextView) footerView.findViewById(R.id.checklist_date_now);
+        checklist_tech_name = (EditText) footerView.findViewById(R.id.checklist_tech_name);
+        checklist_client_name = (EditText) footerView.findViewById(R.id.checklist_client_name);
+
+
+        if(isReadOnlyView){
+            checklist_HMReading.setEnabled(false);
+            checklist_advice.setEnabled(false);
+            checklist_tech_name.setEnabled(false);
+            checklist_tech_signature.setEnabled(false);
+            checklist_cust_signature.setEnabled(false);
+            checklist_client_name.setEnabled(false);
+            checklist_date_btn.setEnabled(false);
+            send_completion.setVisibility(View.GONE);
+        }
+
+
+        if (checklistBean.getRemarks() != null && !checklistBean.getRemarks().equalsIgnoreCase("")) {
+            if (checklistBean.getRemarks().contains(".jpg")) {
+                File imgFile = new File(checklistBean.getRemarks());
+                if (imgFile.exists()) {
+                    Bitmap myBitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
+                    checklist_commands_img.setImageBitmap(myBitmap);
+                }
+                checklist_commands_img.setVisibility(View.VISIBLE);
+            } else {
+                checklist_commands_text.setVisibility(View.VISIBLE);
+                checklist_commands_text.setText(checklistBean.getRemarks());
+            }
+        }
+
+
+        if (checklistBean.getAdvicetoCustomer() != null && !checklistBean.getAdvicetoCustomer().equalsIgnoreCase("")) {
+            if (checklistBean.getAdvicetoCustomer().contains(".jpg")) {
+                File imgFile = new File(checklistBean.getAdvicetoCustomer());
+                if (imgFile.exists()) {
+                    Bitmap myBitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
+                    checklist_advice_img.setImageBitmap(myBitmap);
+                }
+                checklist_advice_img.setVisibility(View.VISIBLE);
+            } else {
+                checklist_advice_text.setVisibility(View.VISIBLE);
+                checklist_advice_text.setText(checklistBean.getAdvicetoCustomer());
+            }
+        }
+
+
+        if (checklistBean.getTechnicianName() != null && !checklistBean.getTechnicianName().equalsIgnoreCase("")) {
+            checklist_tech_name.setText(checklistBean.getTechnicianName());
+        }
+        if (checklistBean.getClientName() != null && !checklistBean.getClientName().equalsIgnoreCase("")) {
+            checklist_client_name.setText(checklistBean.getClientName());
+        }
+
+        if (checklistBean.getTechnicianSignature() != null && !checklistBean.getTechnicianSignature().equalsIgnoreCase("")) {
+            File imgFile = new File(checklistBean.getTechnicianSignature());
+            if (imgFile.exists()) {
+                Bitmap myBitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
+                checklist_tech_sign_img.setImageBitmap(myBitmap);
+            }
+            checklist_tech_sign_img.setVisibility(View.VISIBLE);
+        }
+
+        if (checklistBean.getClientSignature() != null && !checklistBean.getClientSignature().equalsIgnoreCase("")) {
+            File imgFile = new File(checklistBean.getClientSignature());
+            if (imgFile.exists()) {
+                Bitmap myBitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
+                checklist_cust_sign_img.setImageBitmap(myBitmap);
+            }
+            checklist_cust_sign_img.setVisibility(View.VISIBLE);
+        }
+
+        if (checklistBean.getSignedDate() != null && !checklistBean.getSignedDate().equalsIgnoreCase("")) {
+            checklist_date_now.setText(checklistBean.getSignedDate());
+        }
+
+
         checklist_commands.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -449,8 +568,14 @@ public class CheckListActivity extends Activity {
                 dpd.show();
             }
         });
-        /* Handle list View scroll events */
-        listView.setOnScrollListener(new AbsListView.OnScrollListener() {
+        checklist_back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+        /* Handle list View scroll events*/
+       /* listView.setOnScrollListener(new AbsListView.OnScrollListener() {
 
             @Override
             public void onScrollStateChanged(AbsListView view, int scrollState) {
@@ -459,7 +584,7 @@ public class CheckListActivity extends Activity {
             @Override
             public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
 
-                /* Check if the first item is already reached to top.*/
+                 *//*Check if the first item is already reached to top.*//*
                 if (listView.getFirstVisiblePosition() == 0) {
                     View firstChild = listView.getChildAt(0);
                     int topY = 0;
@@ -468,20 +593,213 @@ public class CheckListActivity extends Activity {
                     }
 
                     int heroTopY = stickyViewSpacer.getTop();
-                    stickyView.setY(Math.max(0, heroTopY + topY));
+                    int headerXY = checklist_master.getHeight();
 
-                    /* Set the image to scroll half of the amount that of ListView */
+                    stickyView.setY(Math.max(0, headerXY + topY+10));
+
+*//*
+                     Set the image to scroll half of the amount that of ListView*//*
                     checklist_master.setY(topY * 0.5f);
+                    int listHeadingXY = listHeading.getTop();
+                    listHeading.setY(Math.max(0, listHeadingXY+70));
+                    Log.i("checklist123", "heroTopY====> " + heroTopY);
+                    Log.i("checklist123", "checklist_master XY====> " + topY * 0.5f);
+                    Log.i("checklist123", "headerXY====> " + headerXY);
+                    Log.i("checklist123", "topY====> " + topY);
+                }
+            }
+        });*/
+
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+            @Override
+            public void onItemClick(AdapterView<?> arg0, View view, int position,
+                                    long id) {
+//                listView.getChildAt(position).setBackgroundColor(Color.LTGRAY);
+            }
+        });
+        send_completion.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                try {
+                    checkListDetails checklistAllBean = new checkListDetails();
+                    JSONObject jsonObjectAll = new JSONObject();
+                    JSONObject jsonObject1 = new JSONObject();
+                    jsonObject1.put("id", ProjectId);
+                    checklistAllBean.setChecklist_projectId(ProjectId);
+                    jsonObjectAll.put("project", jsonObject1);
+
+                    JSONObject jsonObject2 = new JSONObject();
+                    jsonObject2.put("id", TaskId);
+                    checklistAllBean.setChecklist_taskId(TaskId);
+                    jsonObjectAll.put("task", jsonObject2);
+
+                    JSONObject jsonObject3 = new JSONObject();
+                    jsonObject3.put("id", Appreference.loginuserdetails.getId());
+                    checklistAllBean.setChecklist_fromId(String.valueOf(Appreference.loginuserdetails.getId()));
+                    jsonObjectAll.put("from", jsonObject3);
+
+//                    jsonObjectAll.put("customerName", PMS_Customer);
+                    checklistAllBean.setCustomer(PMS_Customer);
+
+//                    jsonObjectAll.put("customerAddress", PMS_Address);
+                    checklistAllBean.setCustomerAddress(PMS_Address);
+
+//                    jsonObjectAll.put("machineSerial", PMS_machine_serial);
+                    checklistAllBean.setSerialNumber(PMS_machine_serial);
+
+//                    jsonObjectAll.put("machineModal", PMS_machine_model);
+                    checklistAllBean.setModel(PMS_machine_model);
+
+//                    jsonObjectAll.put("checklistDate", checklist_date.getText().toString());
+                    checklistAllBean.setDate(checklist_date.getText().toString());
+
+                    jsonObjectAll.put("hmReading", checklist_HMReading.getText().toString());
+                    checklistAllBean.setHourMeter(checklist_HMReading.getText().toString());
+
+//                    jsonObjectAll.put("remarks", checklist_commands_text.getText().toString());
+                    checklistAllBean.setRemarks(checklist_commands_text.getText().toString());
+
+                    jsonObjectAll.put("advicetoCustomer", checklist_advice_text.getText().toString());
+                    checklistAllBean.setAdvicetoCustomer(checklist_advice_text.getText().toString());
+
+//                    jsonObjectAll.put("technicianName", checklist_tech_name.getText().toString());
+                    checklistAllBean.setTechnicianName(checklist_tech_name.getText().toString());
+
+                    jsonObjectAll.put("clientName", checklist_client_name.getText().toString());
+                    checklistAllBean.setClientName(checklist_client_name.getText().toString());
+
+                    jsonObjectAll.put("checklistEntryDate", checklist_date_now.getText().toString());
+                    checklistAllBean.setSignedDate(checklist_date_now.getText().toString());
+
+//                    jsonObjectAll.put("checkListName", stickyView.getText().toString());
+                    checklistAllBean.setCheckListName(stickyView.getText().toString());
+
+
+                    JSONObject jsonObject4 = new JSONObject();
+                    if (techSign_path != null && !techSign_path.equalsIgnoreCase(null) && !techSign_path.equalsIgnoreCase("")) {
+                        try {
+
+                            jsonObject4.put("fileContent", encodeTobase64(BitmapFactory.decodeFile(techSign_path)));
+                            jsonObject4.put("taskFileExt", "jpg");
+                            jsonObjectAll.put("technicianSignatures", jsonObject4);
+                            checklistAllBean.setTechnicianSignature(techSign_path);
+
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                            Appreference.printLog("checkListActivity", "sendchecklist_webservice  tech_signature Exception : " + e.getMessage(), "WARN", null);
+                        }
+                    }
+                    JSONObject jsonObject5 = new JSONObject();
+                    if (custSign_path != null && !custSign_path.equalsIgnoreCase(null) && !custSign_path.equalsIgnoreCase("")) {
+                        try {
+
+                            jsonObject5.put("fileContent", encodeTobase64(BitmapFactory.decodeFile(custSign_path)));
+                            jsonObject5.put("taskFileExt", "jpg");
+                            checklistAllBean.setClientSignature(custSign_path);
+                            jsonObjectAll.put("clientSignatures", jsonObject5);
+
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                            Appreference.printLog("checkListActivity", "sendchecklist_webservice  custSign_path Exception : " + e.getMessage(), "WARN", null);
+                        }
+                    }
+                    JSONObject jsonObject6 = new JSONObject();
+                    if (comments_path != null && !comments_path.equalsIgnoreCase(null) && !comments_path.equalsIgnoreCase("")) {
+                        try {
+
+                            jsonObject6.put("fileContent", encodeTobase64(BitmapFactory.decodeFile(comments_path)));
+                            jsonObject6.put("taskFileExt", "jpg");
+                            jsonObjectAll.put("remarksImage", jsonObject6);
+                            checklistAllBean.setRemarks(comments_path);
+
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                            Appreference.printLog("checkListActivity", "sendchecklist_webservice  comments_path Exception : " + e.getMessage(), "WARN", null);
+                        }
+                    }
+
+                    JSONObject jsonObject7 = new JSONObject();
+                    if (advice_path != null && !advice_path.equalsIgnoreCase(null) && !advice_path.equalsIgnoreCase("")) {
+                        try {
+                            jsonObject7.put("fileContent", encodeTobase64(BitmapFactory.decodeFile(advice_path)));
+                            jsonObject7.put("taskFileExt", "jpg");
+                            jsonObjectAll.put("adviceImage", jsonObject7);
+                            checklistAllBean.setAdvicetoCustomer(advice_path);
+
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                            Appreference.printLog("checkListActivity", "sendchecklist_webservice  advice_path Exception : " + e.getMessage(), "WARN", null);
+                        }
+                    }
+                    JSONArray Multi_array = new JSONArray();
+
+                    if (checklistBean != null) {
+                        for (int i = 0; i < checklistBean.getLabel().size(); i++) {
+                            JSONObject checklist_row = new JSONObject();
+                            Label fieldvalues = checklistBean.getLabel().get(i);
+//                            checklist_row.put("issueType", fieldvalues.getIssueType());
+                            checklist_row.put("checkListDetailId", fieldvalues.getItem());
+//                            checklist_row.put("jobDescription", fieldvalues.getJobDescription());
+                            checklist_row.put("jobstatus", fieldvalues.getJobstatus());
+                            checklist_row.put("quantity", fieldvalues.getQuantity());
+                            Multi_array.put(i, checklist_row);
+                        }
+                    }
+                    checklistAllBean.setLabel(checklistBean.getLabel());
+                    jsonObjectAll.put("servicelist", Multi_array);
+
+                    VideoCallDataBase.getDB(checkListContext).insertORupdateCheckListDetails(checklistAllBean);
+                    VideoCallDataBase.getDB(checkListContext).insertORupdateCheckListData(checklistAllBean.getLabel());
+                    showprogress();
+
+                    Appreference.jsonRequestSender.SaveCheckListForm(EnumJsonWebservicename.saveCheckListDataDetails, jsonObjectAll, CheckListActivity.this);
+
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
             }
         });
-        checklist_back.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
 
+    }
+    public void showToast(final String msg) {
+        try {
+            handler.post(new Runnable() {
+                @Override
+                public void run() {
+                    Toast.makeText(CheckListActivity.this, msg, Toast.LENGTH_LONG).show();
+                }
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+            Appreference.printLog("NewTaskConversation", "showToast() Exception : " + e.getMessage(), "WARN", null);
+        }
+    }
+    private void showprogress() {
+        handler.post(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    Log.i("login123", "inside showProgressDialog");
+                    if (progress == null)
+                        progress = new ProgressDialog(checkListContext);
+                    progress.setCancelable(false);
+                    progress.setMessage("Saving.....");
+                    progress.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+                    progress.setProgress(0);
+                    progress.setMax(100);
+                    progress.show();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    Appreference.printLog("NewTaskConversation", "showprogress() Exception : " + e.getMessage(), "WARN", null);
+                }
+            }
+
+
+        });
     }
 
     @Override
@@ -549,6 +867,70 @@ public class CheckListActivity extends Activity {
         }
     }
 
+    private String encodeTobase64(Bitmap image) {
+        String imageEncoded = null;
+        try {
+            Bitmap immagex = image;
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            immagex.compress(Bitmap.CompressFormat.JPEG, 75, baos);
+            byte[] b = baos.toByteArray();
+            imageEncoded = Base64.encodeToString(b, Base64.DEFAULT);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Appreference.printLog("NewTaskConversation", "encodeTobase64 Exception : " + e.getMessage(), "WARN", null);
+        }
+        return imageEncoded;
+    }
+
+    @Override
+    public void ResponceMethod(final Object object) {
+        Log.i("checklist123", "ResponceMethod CheckList Saved Successfully====> ");
+
+        handler.post(new Runnable() {
+            @Override
+            public void run() {
+                Log.i("taskresponse123", "NewTaskConversation ResponceMethod");
+                CommunicationBean communicationBean = (CommunicationBean) object;
+                cancelDialog();
+                try {
+                    final String server_Response_string = String.valueOf(communicationBean.getEnumJsonWebservicename());
+                    Log.d("Task2", "Response Email" + server_Response_string);
+                    String WebServiceEnum_Response = communicationBean.getFirstname();
+                    Log.d("Task2", "name   == " + WebServiceEnum_Response);
+
+                    if (server_Response_string != null && server_Response_string.equalsIgnoreCase("saveCheckListDataDetails")) {
+                        Toast.makeText(CheckListActivity.this,"CheckList Saved Successfully....",Toast.LENGTH_SHORT).show();
+                        finish();
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+    }
+
+    public void cancelDialog() {
+        try {
+            if (progress != null && progress.isShowing()) {
+                Log.i("register", "--progress bar end-----");
+                Log.i("getTask123", "getTask cancelDialog*************");
+                progress.dismiss();
+                Appreference.isRequested_date = false;
+                progress = null;
+            }
+        } catch (Exception e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+            Appreference.printLog("NewTaskConversation", "cancelDialog Exception : " + e.getMessage(), "WARN", null);
+            Log.i("getTask123", "getTask cancelDialog Exception*************" + e.getMessage());
+        }
+
+    }
+
+    @Override
+    public void ErrorMethod(Object object) {
+
+    }
 
     public class CheckListItemAdapter extends ArrayAdapter<Label> {
 
@@ -556,14 +938,19 @@ public class CheckListActivity extends Activity {
         LayoutInflater inflater = null;
         Context adapContext;
         Label mylist;
+        String myQuantityArray[];
+        public  HashMap<Integer,String> myQuantityList;
+
+
 
 
         public CheckListItemAdapter(Context context, List<Label> CheckListDetails) {
 
-            super(context, R.layout.checklist_row, CheckListDetails);
+            super(context, R.layout.checklist_row_new, CheckListDetails);
             arrayCheckList = CheckListDetails;
             adapContext = context;
-            mylist = new Label();
+            myQuantityArray=new String[CheckListDetails.size()];
+            myQuantityList=new HashMap<Integer,String>();
         }
 
         @Override
@@ -594,11 +981,14 @@ public class CheckListActivity extends Activity {
                     holder = new ViewHolder();
                     LayoutInflater inflater = (LayoutInflater) adapContext
                             .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-                    row = inflater.inflate(R.layout.checklist_row, null, false);
+                    row = inflater.inflate(R.layout.checklist_row_new, null, false);
                     holder.Description = (TextView) row.findViewById(R.id.desc_list);
                     holder.checklist_menu = (TextView) row.findViewById(R.id.checklist_popup);
                     holder.checklist_item = (TextView) row.findViewById(R.id.checklist_item);
                     holder.checklist_issue_type = (TextView) row.findViewById(R.id.checklist_issue);
+                    holder.layoutcard = (TableLayout) row.findViewById(R.id.tab_card_view);
+                    holder.tab_quantity = (TableLayout) row.findViewById(R.id.tab_quantity);
+                    holder.checklist_parts_qty = (EditText) row.findViewById(R.id.checklist_parts_qty);
                     row.setTag(holder);
                 } else {
                     holder = (ViewHolder) row.getTag();
@@ -608,163 +998,129 @@ public class CheckListActivity extends Activity {
                 holder.checklist_item.setText(pBean.getItem());
                 holder.checklist_issue_type.setText(pBean.getIssueType());
 
-
-//                holder.checklist_menu.setText(String.valueOf(pBean.getJobstatus()));
-                if (!holder.checklist_menu.getText().toString().equalsIgnoreCase("")) {
-                    holder.checklist_menu.setClickable(false);
-                } else {
-                    holder.checklist_menu.setClickable(true);
+                if(isReadOnlyView) {
+                    holder.checklist_parts_qty.setEnabled(false);
+                }else{
+                    holder.checklist_parts_qty.setEnabled(true);
                 }
+//                arrayCheckList.get(9).setQuantity("Need battery to check engine power");
+                holder.checklist_parts_qty.setText(pBean.getQuantity());
+                /*if (pBean.getQuantity() != null && !pBean.getQuantity().equalsIgnoreCase("")) {
+                    holder.checklist_parts_qty.setText(pBean.getQuantity());
+                }else {
+                    holder.checklist_parts_qty.setText("");
+                }*/
+
+                if (pBean.getJobstatus()!=null && !pBean.getJobstatus().equalsIgnoreCase("")) {
+                    holder.checklist_menu.setText(pBean.getJobstatus().toString());
+                    holder.layoutcard.setBackgroundColor(getResources().getColor(R.color.lgyellow));
+                } else {
+                    holder.checklist_menu.setText("");
+                    holder.layoutcard.setBackgroundColor(getResources().getColor(R.color.white));
+                }
+
+                if(pBean.getJobstatus()!=null && !pBean.getJobstatus().equalsIgnoreCase("") && pBean.getJobstatus().equalsIgnoreCase("Parts Req")){
+                    holder.tab_quantity.setVisibility(View.VISIBLE);
+                }else{
+                    holder.tab_quantity.setVisibility(View.GONE);
+                }
+                holder.checklist_parts_qty.addTextChangedListener(new TextWatcher() {
+
+                    @Override
+                    public void onTextChanged(CharSequence arg0, int arg1, int arg2, int arg3) {
+                        // TODO Auto-generated method stub
+                    }
+
+                    @Override
+                    public void beforeTextChanged(CharSequence arg0, int arg1, int arg2,
+                                                  int arg3) {
+                        // TODO Auto-generated method stub
+
+                    }
+
+                    @Override
+                    public void afterTextChanged(Editable arg0) {
+                        // TODO Auto-generated method stub
+                        Log.i("checklist123","afterTextChanged position=====> "+position);
+                        Log.i("checklist123","afterTextChanged arg0.toString()=====> "+arg0.toString());
+                            pBean.setQuantity(arg0.toString());
+
+                    }
+                });
+
                 holder.checklist_menu.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        PopupMenu popup = new PopupMenu(checkListContext, v);
+                        final PopupMenu popup = new PopupMenu(checkListContext, v);
                         MenuInflater inflater = popup.getMenuInflater();
                         inflater.inflate(R.menu.checklist_popmenu, popup.getMenu());
-                        popup.show();
+                        if(!isReadOnlyView){
+                            popup.show();
+                        }
+                        mylist = new Label();
                         popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                             @Override
                             public boolean onMenuItemClick(MenuItem item) {
                                 switch (item.getItemId()) {
                                     case R.id.checklist_ok:
-                                        mylist.setJobDescription(holder.Description.getText().toString());
-                                        mylist.setJobstatus(item.getTitle().toString());
-                                        mylist.setIssueType(holder.checklist_issue_type.getText().toString());
-                                        mylist.setItem(holder.checklist_item.getText().toString());
                                         holder.checklist_menu.setText(item.getTitle().toString());
-                                        for (int i = 0; i < AllServiceDetails.size(); i++) {
-                                            if (AllServiceDetails.get(i).getItem().equalsIgnoreCase(holder.checklist_item.getText().toString())) {
-                                                AllServiceDetails.remove(i);
-                                            }
-                                        }
-                                        AllServiceDetails.add(mylist);
-                                        Log.i("checklist123", "AllServiceDetails size====> " + AllServiceDetails.size());
+                                        pBean.setJobstatus(item.getTitle().toString());
+                                        holder.layoutcard.setBackgroundColor(getResources().getColor(R.color.lgyellow));
+                                        holder.tab_quantity.setVisibility(View.GONE);
                                         return true;
                                     case R.id.checklist_NotOk:
-                                        mylist.setJobDescription(holder.Description.getText().toString());
-                                        mylist.setJobstatus(item.getTitle().toString());
-                                        mylist.setIssueType(holder.checklist_issue_type.getText().toString());
-                                        mylist.setItem(holder.checklist_item.getText().toString());
                                         holder.checklist_menu.setText(item.getTitle().toString());
-                                        for (int i = 0; i < AllServiceDetails.size(); i++) {
-                                            if (AllServiceDetails.get(i).getItem().equalsIgnoreCase(holder.checklist_item.getText().toString())) {
-                                                AllServiceDetails.remove(i);
-                                            }
-                                        }
-                                        AllServiceDetails.add(mylist);
-                                        Log.i("checklist123", "AllServiceDetails size====> " + AllServiceDetails.size());
+                                        pBean.setJobstatus(item.getTitle().toString());
+                                        holder.layoutcard.setBackgroundColor(getResources().getColor(R.color.lgyellow));
+                                        holder.tab_quantity.setVisibility(View.GONE);
                                         return true;
                                     case R.id.checklist_NA:
-                                        mylist.setJobDescription(holder.Description.getText().toString());
-                                        mylist.setJobstatus(item.getTitle().toString());
-                                        mylist.setIssueType(holder.checklist_issue_type.getText().toString());
-                                        mylist.setItem(holder.checklist_item.getText().toString());
                                         holder.checklist_menu.setText(item.getTitle().toString());
-                                        for (int i = 0; i < AllServiceDetails.size(); i++) {
-                                            if (AllServiceDetails.get(i).getItem().equalsIgnoreCase(holder.checklist_item.getText().toString())) {
-                                                AllServiceDetails.remove(i);
-                                            }
-                                        }
-                                        AllServiceDetails.add(mylist);
-                                        Log.i("checklist123", "AllServiceDetails size====> " + AllServiceDetails.size());
+                                        pBean.setJobstatus(item.getTitle().toString());
+                                        holder.layoutcard.setBackgroundColor(getResources().getColor(R.color.lgyellow));
+                                        holder.tab_quantity.setVisibility(View.GONE);
                                         return true;
                                     case R.id.checklist_cleaned:
-                                        mylist.setJobDescription(holder.Description.getText().toString());
-                                        mylist.setJobstatus(item.getTitle().toString());
-                                        mylist.setIssueType(holder.checklist_issue_type.getText().toString());
-                                        mylist.setItem(holder.checklist_item.getText().toString());
                                         holder.checklist_menu.setText(item.getTitle().toString());
-                                        for (int i = 0; i < AllServiceDetails.size(); i++) {
-                                            if (AllServiceDetails.get(i).getItem().equalsIgnoreCase(holder.checklist_item.getText().toString())) {
-                                                AllServiceDetails.remove(i);
-                                            }
-                                        }
-                                        AllServiceDetails.add(mylist);
-                                        Log.i("checklist123", "AllServiceDetails size====> " + AllServiceDetails.size());
+                                        pBean.setJobstatus(item.getTitle().toString());
+                                        holder.layoutcard.setBackgroundColor(getResources().getColor(R.color.lgyellow));
+                                        holder.tab_quantity.setVisibility(View.GONE);
                                         return true;
                                     case R.id.checklist_lubricated:
-                                        mylist.setJobDescription(holder.Description.getText().toString());
-                                        mylist.setJobstatus(item.getTitle().toString());
-                                        mylist.setIssueType(holder.checklist_issue_type.getText().toString());
-                                        mylist.setItem(holder.checklist_item.getText().toString());
                                         holder.checklist_menu.setText(item.getTitle().toString());
-                                        for (int i = 0; i < AllServiceDetails.size(); i++) {
-                                            if (AllServiceDetails.get(i).getItem().equalsIgnoreCase(holder.checklist_item.getText().toString())) {
-                                                AllServiceDetails.remove(i);
-                                            }
-                                        }
-                                        AllServiceDetails.add(mylist);
-                                        Log.i("checklist123", "AllServiceDetails size====> " + AllServiceDetails.size());
+                                        pBean.setJobstatus(item.getTitle().toString());
+                                        holder.layoutcard.setBackgroundColor(getResources().getColor(R.color.lgyellow));
+                                        holder.tab_quantity.setVisibility(View.GONE);
                                         return true;
                                     case R.id.checklist_adjusted:
-                                        mylist.setJobDescription(holder.Description.getText().toString());
-                                        mylist.setJobstatus(item.getTitle().toString());
-                                        mylist.setIssueType(holder.checklist_issue_type.getText().toString());
-                                        mylist.setItem(holder.checklist_item.getText().toString());
                                         holder.checklist_menu.setText(item.getTitle().toString());
-                                        for (int i = 0; i < AllServiceDetails.size(); i++) {
-                                            if (AllServiceDetails.get(i).getItem().equalsIgnoreCase(holder.checklist_item.getText().toString())) {
-                                                AllServiceDetails.remove(i);
-                                            }
-                                        }
-                                        AllServiceDetails.add(mylist);
-                                        Log.i("checklist123", "AllServiceDetails size====> " + AllServiceDetails.size());
+                                        pBean.setJobstatus(item.getTitle().toString());
+                                        holder.layoutcard.setBackgroundColor(getResources().getColor(R.color.lgyellow));
+                                        holder.tab_quantity.setVisibility(View.GONE);
                                         return true;
                                     case R.id.checklist_replaced:
-                                        mylist.setJobDescription(holder.Description.getText().toString());
-                                        mylist.setJobstatus(item.getTitle().toString());
-                                        mylist.setIssueType(holder.checklist_issue_type.getText().toString());
-                                        mylist.setItem(holder.checklist_item.getText().toString());
                                         holder.checklist_menu.setText(item.getTitle().toString());
-                                        for (int i = 0; i < AllServiceDetails.size(); i++) {
-                                            if (AllServiceDetails.get(i).getItem().equalsIgnoreCase(holder.checklist_item.getText().toString())) {
-                                                AllServiceDetails.remove(i);
-                                            }
-                                        }
-                                        AllServiceDetails.add(mylist);
-                                        Log.i("checklist123", "AllServiceDetails size====> " + AllServiceDetails.size());
+                                        pBean.setJobstatus(item.getTitle().toString());
+                                        holder.layoutcard.setBackgroundColor(getResources().getColor(R.color.lgyellow));
+                                        holder.tab_quantity.setVisibility(View.GONE);
                                         return true;
                                     case R.id.checklist_topUp:
-                                        mylist.setJobDescription(holder.Description.getText().toString());
-                                        mylist.setJobstatus(item.getTitle().toString());
-                                        mylist.setIssueType(holder.checklist_issue_type.getText().toString());
-                                        mylist.setItem(holder.checklist_item.getText().toString());
                                         holder.checklist_menu.setText(item.getTitle().toString());
-                                        for (int i = 0; i < AllServiceDetails.size(); i++) {
-                                            if (AllServiceDetails.get(i).getItem().equalsIgnoreCase(holder.checklist_item.getText().toString())) {
-                                                AllServiceDetails.remove(i);
-                                            }
-                                        }
-                                        AllServiceDetails.add(mylist);
-                                        Log.i("checklist123", "AllServiceDetails size====> " + AllServiceDetails.size());
+                                        pBean.setJobstatus(item.getTitle().toString());
+                                        holder.layoutcard.setBackgroundColor(getResources().getColor(R.color.lgyellow));
+                                        holder.tab_quantity.setVisibility(View.GONE);
                                         return true;
                                     case R.id.checklist_repaired:
-                                        mylist.setJobDescription(holder.Description.getText().toString());
-                                        mylist.setJobstatus(item.getTitle().toString());
-                                        mylist.setIssueType(holder.checklist_issue_type.getText().toString());
-                                        mylist.setItem(holder.checklist_item.getText().toString());
                                         holder.checklist_menu.setText(item.getTitle().toString());
-                                        for (int i = 0; i < AllServiceDetails.size(); i++) {
-                                            if (AllServiceDetails.get(i).getItem().equalsIgnoreCase(holder.checklist_item.getText().toString())) {
-                                                AllServiceDetails.remove(i);
-                                            }
-                                        }
-                                        AllServiceDetails.add(mylist);
-                                        Log.i("checklist123", "AllServiceDetails size====> " + AllServiceDetails.size());
+                                        pBean.setJobstatus(item.getTitle().toString());
+                                        holder.layoutcard.setBackgroundColor(getResources().getColor(R.color.lgyellow));
+                                        holder.tab_quantity.setVisibility(View.GONE);
                                         return true;
                                     case R.id.checklist_parts:
-                                        mylist.setJobDescription(holder.Description.getText().toString());
-                                        mylist.setJobstatus(item.getTitle().toString());
-                                        mylist.setIssueType(holder.checklist_issue_type.getText().toString());
-                                        mylist.setItem(holder.checklist_item.getText().toString());
                                         holder.checklist_menu.setText(item.getTitle().toString());
-                                        for (int i = 0; i < AllServiceDetails.size(); i++) {
-                                            if (AllServiceDetails.get(i).getItem().equalsIgnoreCase(holder.checklist_item.getText().toString())) {
-                                                AllServiceDetails.remove(i);
-                                            }
-                                        }
-                                        AllServiceDetails.add(mylist);
-                                        Log.i("checklist123", "AllServiceDetails size====> " + AllServiceDetails.size());
+                                        pBean.setJobstatus(item.getTitle().toString());
+                                        holder.layoutcard.setBackgroundColor(getResources().getColor(R.color.lgyellow));
+                                        holder.tab_quantity.setVisibility(View.VISIBLE);
                                         return true;
                                     default:
                                         return false;
@@ -781,11 +1137,16 @@ public class CheckListActivity extends Activity {
             return row;
         }
 
-        private class ViewHolder {
+
+
+        public class ViewHolder {
             TextView Description;
             TextView checklist_menu;
             TextView checklist_issue_type;
             TextView checklist_item;
+            TableLayout layoutcard;
+            EditText checklist_parts_qty;
+            TableLayout tab_quantity;
         }
     }
 }

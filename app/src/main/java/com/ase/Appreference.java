@@ -14,6 +14,7 @@ import android.text.format.DateFormat;
 import android.text.style.ForegroundColorSpan;
 import android.util.Log;
 
+import com.ase.Bean.checkListDetails;
 import com.ase.DB.VideoCallDataBase;
 import com.google.gson.Gson;
 import com.ase.Bean.TaskDetailsBean;
@@ -163,6 +164,7 @@ public class Appreference {
     public static ArrayList<String> Synopsis_list = new ArrayList<String>();
     public static boolean isAlreadyLoadedofflineData=false;
     public static boolean isAlreadyLoadedofflineTravelData=false;
+    public static checkListDetails myOfflineCheckListDetails;
 
         /*added for multi sketch in eod screen Start*/
 

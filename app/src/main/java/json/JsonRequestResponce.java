@@ -8,6 +8,7 @@ import com.ase.Appreference;
 import com.ase.AudioRecorder;
 import com.ase.CaptionMedia;
 import com.ase.ChangePassword;
+import com.ase.CheckListActivity;
 import com.ase.ContactsFragment;
 import com.ase.Forms.FormEntryViewActivity;
 import com.ase.Forms.FormsEntryActivity;
@@ -303,7 +304,7 @@ public class JsonRequestResponce extends Thread {
                                 obj.setFirstname("getAllJobDetails");
                             }else if (obj.getEnumJsonWebservicename().toString().equals("updatePMSNotificationDetails")) {
                                 obj.setFirstname("updatePMSNotificationDetails");
-                            } else if (obj.getEnumJsonWebservicename().toString().equals("getProject")) {
+                            }else if (obj.getEnumJsonWebservicename().toString().equals("getProject")) {
                                 obj.setFirstname("getProject");
                             }  else if (obj.getEnumJsonWebservicename().toString().equals("getTaskForJobID")) {
                                 obj.setFirstname("getTaskForJobID");
@@ -345,6 +346,8 @@ public class JsonRequestResponce extends Thread {
                                 obj.setFirstname("projectCompleted");
                             }else if (obj.getEnumJsonWebservicename().toString().equals("getCheckListDetailsFromClient")) {
                                 obj.setFirstname("getCheckListDetailsFromClient");
+                            }else if (obj.getEnumJsonWebservicename().toString().equals("saveCheckListDataDetails")) {
+                                obj.setFirstname("saveCheckListDataDetails");
                             }else if (obj.getEnumJsonWebservicename().toString().equals("taskConversactionCaption")) {
                                 obj.setFirstname("taskConversactionCaption");
                             }
@@ -603,7 +606,6 @@ public class JsonRequestResponce extends Thread {
             case updatePMSNotificationDetails:
                 inter.ErrorMethod(obj);
                 break;
-
             case getProject:
                 ProjectsFragment.getInstance().cancelDialog();
                 ProjectsFragment.getInstance().showToast(result);
@@ -626,6 +628,11 @@ public class JsonRequestResponce extends Thread {
             case getCheckListDetailsFromClient:
                 NewTaskConversation.getInstance().cancelDialog();
                 NewTaskConversation.getInstance().showToast("getCheckListDetailsFromClient error . Try again later");
+                inter.ErrorMethod(obj);
+                break;
+           case saveCheckListDataDetails:
+                CheckListActivity.getInstance().cancelDialog();
+               CheckListActivity.getInstance().showToast("saveCheckListDataDetails error . Try again later");
                 inter.ErrorMethod(obj);
                 break;
             case taskConversactionCaption:
@@ -688,6 +695,10 @@ public class JsonRequestResponce extends Thread {
                         break;
 
                     case updatePMSNotificationDetails:
+                        inter.ResponceMethod(obj);
+                        break;
+
+                     case saveCheckListDataDetails:
                         inter.ResponceMethod(obj);
                         break;
 
