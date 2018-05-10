@@ -933,21 +933,25 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
         Log.i("newTask", "JobCodeNo==> " + JobCodeNo);
         Log.i("newTask", "ActivityCode==> " + ActivityCode);
 
-        String query = "select status from projectStatus where projectId='" + projectId + "' and userId='" + Appreference.loginuserdetails.getId() + "' and taskId= '" + webtaskId + "'";
-        int disable_by_current_status = VideoCallDataBase.getDB(context).getCurrentStatus(query);
-        if (disable_by_current_status == 5)
-            isTaskCompleted = true;
-        if (disable_by_current_status == 1 || disable_by_current_status == 3) {
-            Appreference.isEstimTimerStarted = false;
-            getLabelForEstimTimer(disable_by_current_status);
-            ShowHoldOrPauseTimerDisplay();
-        } else if (disable_by_current_status != 1 || disable_by_current_status != 3 || disable_by_current_status != 8) {
-            Appreference.isEstimTimerStarted = true;
-            String taskQuery = "select * from taskDetailsInfo where projectId='" + projectId + "'and taskId= '" + webtaskId + "' and estimCompletion='1'";
-            int getEstimatedTimerCompleted = VideoCallDataBase.getDB(context).getCountForTravelEntry(taskQuery);
-            if (getEstimatedTimerCompleted == 0) {
-                ShowEstimTimerDisplay();
+        try {
+            String query = "select status from projectStatus where projectId='" + projectId + "' and userId='" + Appreference.loginuserdetails.getId() + "' and taskId= '" + webtaskId + "'";
+            int disable_by_current_status = VideoCallDataBase.getDB(context).getCurrentStatus(query);
+            if (disable_by_current_status == 5)
+                isTaskCompleted = true;
+            if (disable_by_current_status == 1 || disable_by_current_status == 3) {
+                Appreference.isEstimTimerStarted = false;
+                getLabelForEstimTimer(disable_by_current_status);
+                ShowHoldOrPauseTimerDisplay();
+            } else if (disable_by_current_status != 1 || disable_by_current_status != 3 || disable_by_current_status != 8) {
+                Appreference.isEstimTimerStarted = true;
+                String taskQuery = "select * from taskDetailsInfo where projectId='" + projectId + "'and taskId= '" + webtaskId + "' and estimCompletion='1'";
+                int getEstimatedTimerCompleted = VideoCallDataBase.getDB(context).getCountForTravelEntry(taskQuery);
+                if (getEstimatedTimerCompleted == 0) {
+                    ShowEstimTimerDisplay();
+                }
             }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
          /*Code Added for GroupAdmin-Observer Start*/
         String GroupAdmin_observer = getGroupAdmin_observer_DB();
@@ -5575,7 +5579,7 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                             String query = "select * from checklistDetails where projectId='" + projectId + "'and taskId='" + webtaskId + "'and userId='" + Appreference.loginuserdetails.getId() + "'";
                             checkListDetails checklistBean = VideoCallDataBase.getDB(context).getchecklistdetails(query);
 
-                            if (checklistBean.getId() != null) {
+                            if (checklistBean.getId() != null && checklistBean.getIsServiceDone().equalsIgnoreCase("1")) {
                                 String checklistData_query = "select * from checklistData where checklistdataid='" + checklistBean.getId() + "'";
                                 ArrayList<Label> dataBean = VideoCallDataBase.getDB(context).getchecklistData(checklistData_query);
                                 checklistBean.setLabel(dataBean);
@@ -5585,9 +5589,12 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                                 intent.putExtra("PMSprojectId", projectId);
                                 intent.putExtra("PMStaskId", webtaskId);
                                 startActivity(intent);
-                            } else if (!isNetworkAvailable() && Appreference.myOfflineCheckListDetails!=null && !Appreference.myOfflineCheckListDetails.toString().equalsIgnoreCase("")) {
+                            } else if (checklistBean.getId() != null && checklistBean.getIsServiceDone().equalsIgnoreCase("0")) {
+                                String checklistData_query = "select * from checklistData where checklistdataid='" + checklistBean.getId() + "'";
+                                ArrayList<Label> dataBean = VideoCallDataBase.getDB(context).getchecklistData(checklistData_query);
+                                checklistBean.setLabel(dataBean);
                                 Intent intent = new Intent(NewTaskConversation.this, CheckListActivity.class);
-                                intent.putExtra("checklistBean", Appreference.myOfflineCheckListDetails);
+                                intent.putExtra("checklistBean", checklistBean);
                                 intent.putExtra("isExistingView", false);
                                 intent.putExtra("PMSprojectId", projectId);
                                 intent.putExtra("PMStaskId", webtaskId);
@@ -14341,7 +14348,7 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                 category = "Task";
                 issueId = "";
             }
-            if (Appreference.loginuserdetails.getUsername() != null && projectBean.getTaskId() != null && !projectBean.getTaskId().equalsIgnoreCase("")) {
+            if (Appreference.loginuserdetails!=null && Appreference.loginuserdetails.getUsername() != null && projectBean.getTaskId() != null && !projectBean.getTaskId().equalsIgnoreCase("")) {
                 if (projectBean.getToUserName() != null && !projectBean.getToUserName().equalsIgnoreCase(Appreference.loginuserdetails.getUsername())) {
                     from_UserName = Appreference.loginuserdetails.getUsername();
                     toUserName = projectBean.getToUserName();

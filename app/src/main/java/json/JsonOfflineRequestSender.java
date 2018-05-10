@@ -5,6 +5,7 @@ import android.util.Log;
 import com.ase.Appreference;
 import com.ase.Bean.ListofFileds;
 import com.ase.Bean.TaskDetailsBean;
+import com.ase.Bean.checkListDetails;
 import com.ase.SettingsFragment;
 import com.ase.chat.ChatBean;
 
@@ -75,6 +76,21 @@ public class JsonOfflineRequestSender {
         communicationBean.setEnumJsonWebservicename(webservicename);
         communicationBean.setNameValuePairs(valuePair);
         communicationBean.setTaskDetailsBean(taskDetailsBean);
+        communicationBean.setAccess(access);
+        queue.addMsg(communicationBean);
+    }
+
+    public void SaveCheckListForm(EnumJsonWebservicename webservicename, JSONObject jsonObject, checkListDetails checklistBean, WebServiceInterface access) {
+
+        CommunicationBean communicationBean = new CommunicationBean();
+        communicationBean.setEnumJsonWebservicename(webservicename);
+        if (jsonObject != null) {
+            communicationBean.setJsonObject(jsonObject);
+        }
+
+        if (checklistBean != null) {
+            communicationBean.setChecklistBean(checklistBean);
+        }
         communicationBean.setAccess(access);
         queue.addMsg(communicationBean);
     }

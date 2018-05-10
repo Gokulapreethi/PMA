@@ -119,6 +119,8 @@ public class JsonRequestResponce extends Thread {
 
 //                             httppost = new HttpPost("https://66.109.17.204/ASE/" + obj.getEnumJsonWebservicename()); //ip US Server 204
 
+//                             httppost = new HttpPost("https://66.109.17.205/ASE/" + obj.getEnumJsonWebservicename()); //ip Local Server 205
+
                             httppost = new HttpPost("https://172.16.1.203:8443/ASE/" + obj.getEnumJsonWebservicename());
 //
 //                         HttpPost httppost = new HttpPost("http://151.253.12.203/ASE/" + obj.getEnumJsonWebservicename());
@@ -698,10 +700,6 @@ public class JsonRequestResponce extends Thread {
                         inter.ResponceMethod(obj);
                         break;
 
-                     case saveCheckListDataDetails:
-                        inter.ResponceMethod(obj);
-                        break;
-
                     case changePercentageCompleted:
                         Log.i("jsonwebservice", "CASE changePercentageCompleted  webserviceResponse--->" + responseString);
                         if (obj.getEnumJsonWebservicename().toString().equals("changePercentageCompleted")) {
@@ -866,6 +864,12 @@ public class JsonRequestResponce extends Thread {
                     case taskStatus:
                         obj.setEmail(responseString);
                         obj.setFirstname("taskStatus");
+                        Log.i("sendofflinemsg","response taskstatus-->"+inter);
+                        inter.ResponceMethod(obj);
+                        break;
+                   case saveCheckListDataDetails:
+                        obj.setEmail(responseString);
+                        obj.setFirstname("saveCheckListDataDetails");
                         Log.i("sendofflinemsg","response taskstatus-->"+inter);
                         inter.ResponceMethod(obj);
                         break;

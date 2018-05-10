@@ -11,7 +11,9 @@ import android.util.Base64;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.ase.Bean.Label;
 import com.ase.Bean.TaskDetailsBean;
+import com.ase.Bean.checkListDetails;
 import com.ase.DB.VideoCallDataBase;
 import com.ase.RandomNumber.Utility;
 
@@ -61,6 +63,7 @@ public class OfflineSendMessage implements WebServiceInterface {
         Log.i("travelcheck123", "OfflineSendMessage called successfully-=====>");
         TaskDetailsBean taskDetailsBean = new TaskDetailsBean();
         ArrayList<TaskDetailsBean> AlltaskBean;
+        ArrayList<checkListDetails> AllcheckListBean;
         TaskDetailsBean machineDetailsBean;
         TaskDetailsBean traveldatebean;
         travel_date_details = new ArrayList<>();
@@ -69,9 +72,22 @@ public class OfflineSendMessage implements WebServiceInterface {
 //            if (isNetworkAvailable()) {
 //                showprogress("Please wait...");
             multimedia();
-            String Query = "select * from projectStatus where wssendstatus='000' order by datenow";
+            String Query_taskStatus = "select * from projectStatus where wssendstatus='000' order by datenow";
 
-            AlltaskBean = VideoCallDataBase.getDB(MainActivity.mainContext).getofflinesendlist(Query);
+            AlltaskBean = VideoCallDataBase.getDB(MainActivity.mainContext).getofflinesendlist(Query_taskStatus);
+
+            String Query_checklist = "select * from checklistDetails where wsSendStatus='00'";
+            AllcheckListBean = VideoCallDataBase.getDB(MainActivity.mainContext).getoffline_checklist(Query_checklist);
+
+            for(int j=0;j<AllcheckListBean.size();j++){
+                checkListDetails bean=AllcheckListBean.get(j);
+                if(bean.getId()!=null){
+                    String checklistData_query = "select * from checklistData where checklistdataid='" + bean.getId() + "'";
+                    ArrayList<Label> dataBean = VideoCallDataBase.getDB(MainActivity.mainContext).getchecklistData(checklistData_query);
+                    bean.setLabel(dataBean);
+                }
+            }
+
 
             Log.i("travelcheck123", "OfflineStatusSendActivity query-=====>" + AlltaskBean.size());
             if (AlltaskBean != null && AlltaskBean.size() > 0) {
@@ -562,14 +578,13 @@ public class OfflineSendMessage implements WebServiceInterface {
                     Appreference.printLog("taskStatus", jsonObject.toString(), "offline Request", null);
                     Appreference.jsonOfflineRequestSender.taskStatus(EnumJsonWebservicename.taskStatus, jsonObject, statusBean, offlineSendMessage);
                 }
-            } /*else {
-                    cancelDialog();
-                    showToast("No task to sync....");
-                }*/
+            } else  if (AllcheckListBean != null && AllcheckListBean.size() > 0) {
+                for (checkListDetails checklistBean : AllcheckListBean) {
+                    composeChecklist_Json(checklistBean);
+                }
+            }
 
-         /*   } else {
-                showToast("No Internet,Try again Later...");
-            }*/
+
             String Query_media = "select * from taskDetailsInfo where wssendstatus= '000'";
             ArrayList<TaskDetailsBean> AlltaskMediaBean;
             AlltaskMediaBean = VideoCallDataBase.getDB(MainActivity.mainContext).getTaskDetailsInfo(Query_media);
@@ -592,14 +607,7 @@ public class OfflineSendMessage implements WebServiceInterface {
                 Log.i("online123", " AlltaskBeanData_Exist,AlltaskMediaBeanData NOT Exist *******");
 
                 CallSync();
-                /*NewTaskConversation conversation = (NewTaskConversation) Appreference.context_table.get("taskcoversation");
-                if (conversation != null) {
-                    conversation.isCameFromOffline(Appreference.isAlreadyLoadedofflineData);
-                }
-                TravelJobDetails travelJobDetails = (TravelJobDetails) Appreference.context_table.get("traveljobdetails");
-                if (travelJobDetails != null) {
-                    travelJobDetails.isCameFromOffline(Appreference.isAlreadyLoadedofflineTravelData);
-                }*/
+
             }
         } catch (JSONException e) {
             e.printStackTrace();
@@ -609,6 +617,97 @@ public class OfflineSendMessage implements WebServiceInterface {
             e.printStackTrace();
             Appreference.printLog("OfflineSendMessage", " Exception : " + e.getMessage(), "WARN", null);
             Log.i("offline123", "ERROR-->" + e.getMessage());
+        }
+    }
+
+    private void composeChecklist_Json(checkListDetails checklistBean) {
+        try {
+            checkListDetails checkBean=new checkListDetails();
+            JSONObject jsonObjectAll = new JSONObject();
+            JSONObject jsonObject1 = new JSONObject();
+            jsonObject1.put("id", checklistBean.getChecklist_projectId());
+            jsonObjectAll.put("project", jsonObject1);
+            checkBean.setChecklist_projectId(checklistBean.getChecklist_projectId());
+            checkBean.setChecklist_taskId(checklistBean.getChecklist_taskId());
+            checkBean.setChecklist_fromId(checklistBean.getChecklist_fromId());
+
+            JSONObject jsonObject2 = new JSONObject();
+            jsonObject2.put("id", checklistBean.getChecklist_taskId());
+            jsonObjectAll.put("task", jsonObject2);
+
+            JSONObject jsonObject3 = new JSONObject();
+            jsonObject3.put("id", checklistBean.getChecklist_fromId());
+            jsonObjectAll.put("from", jsonObject3);
+
+            jsonObjectAll.put("hmReading", checklistBean.getHourMeter());
+            jsonObjectAll.put("advicetoCustomer",checklistBean.getAdvicetoCustomer());
+            jsonObjectAll.put("clientName", checklistBean.getClientName());
+            jsonObjectAll.put("checklistEntryDate",checklistBean.getSignedDate());
+
+            JSONObject jsonObject4 = new JSONObject();
+            if (checklistBean.getTechnicianSignature() != null && !checklistBean.getTechnicianSignature().equalsIgnoreCase(null)
+                    && !checklistBean.getTechnicianSignature().equalsIgnoreCase("")) {
+                try {
+                    jsonObject4.put("fileContent", encodeTobase64(BitmapFactory.decodeFile(checklistBean.getTechnicianSignature())));
+                    jsonObject4.put("taskFileExt", "jpg");
+                    jsonObjectAll.put("technicianSignatures", jsonObject4);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    Appreference.printLog("checkListActivity", "sendchecklist_webservice  tech_signature Exception : " + e.getMessage(), "WARN", null);
+                }
+            }
+            JSONObject jsonObject5 = new JSONObject();
+            if (checklistBean.getClientSignature() != null && !checklistBean.getClientSignature().equalsIgnoreCase(null)
+                    && !checklistBean.getClientSignature().equalsIgnoreCase("")) {
+                try {
+                    jsonObject5.put("fileContent", encodeTobase64(BitmapFactory.decodeFile(checklistBean.getClientSignature())));
+                    jsonObject5.put("taskFileExt", "jpg");
+                    jsonObjectAll.put("clientSignatures", jsonObject5);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    Appreference.printLog("checkListActivity", "sendchecklist_webservice  custSign_path Exception : " + e.getMessage(), "WARN", null);
+                }
+            }
+            JSONObject jsonObject7 = new JSONObject();
+            if (checklistBean.getAdvicetoCustomer() != null && !checklistBean.getAdvicetoCustomer().equalsIgnoreCase(null)
+                    && !checklistBean.getAdvicetoCustomer().equalsIgnoreCase("")) {
+                try {
+                    if (checklistBean.getAdvicetoCustomer().contains("jpg")) {
+                        jsonObject7.put("fileContent", encodeTobase64(BitmapFactory.decodeFile(checklistBean.getAdvicetoCustomer())));
+                        jsonObject7.put("taskFileExt", "jpg");
+                        jsonObjectAll.put("adviceImage", jsonObject7);
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    Appreference.printLog("checkListActivity", "sendchecklist_webservice  advice_path Exception : " + e.getMessage(), "WARN", null);
+                }
+            }
+            JSONArray Multi_array = new JSONArray();
+
+            if (checklistBean != null) {
+                for (int i = 0; i < checklistBean.getLabel().size(); i++) {
+                    JSONObject checklist_row = new JSONObject();
+                    Label fieldvalues = checklistBean.getLabel().get(i);
+                    checklist_row.put("checkListDetailId", fieldvalues.getItem());
+                    checklist_row.put("jobstatus", fieldvalues.getJobstatus());
+                    checklist_row.put("quantity", fieldvalues.getQuantity());
+                    Multi_array.put(i, checklist_row);
+                }
+            }
+            jsonObjectAll.put("servicelist", Multi_array);
+//                showprogress("checklist sending...");
+            if (Appreference.jsonOfflineRequestSender == null) {
+                JsonOfflineRequestSender jsonRequestofflineParser = new JsonOfflineRequestSender();
+                Appreference.jsonOfflineRequestSender = jsonRequestofflineParser;
+                jsonRequestofflineParser.start();
+            }
+            Appreference.jsonOfflineRequestSender.SaveCheckListForm(EnumJsonWebservicename.saveCheckListDataDetails, jsonObjectAll, checkBean, OfflineSendMessage.this);
+
+//            Appreference.jsonRequestSender.SaveCheckListForm(EnumJsonWebservicename.saveCheckListDataDetails, jsonObjectAll, OfflineSendMessage.this);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
@@ -633,14 +732,6 @@ public class OfflineSendMessage implements WebServiceInterface {
         }
     }
 
-   /* public void showToast(final String result) {
-        handler.post(new Runnable() {
-            @Override
-            public void run() {
-                Toast.makeText(MainActivity.mainContext, result, Toast.LENGTH_LONG).show();
-            }
-        });
-    }*/
 
     public boolean isNetworkAvailable() {
         ConnectivityManager connectivityManager = (ConnectivityManager) MainActivity.mainContext.getSystemService(MainActivity.mainContext.getApplicationContext().CONNECTIVITY_SERVICE);
@@ -1599,7 +1690,7 @@ public class OfflineSendMessage implements WebServiceInterface {
                     String s1 = ((CommunicationBean) object).getEmail();
                     String WebServiceEnum_Response = ((CommunicationBean) object).getFirstname();
                     Log.d("Task2", "name   == " + WebServiceEnum_Response);
-                    JSONObject jsonObject = new JSONObject(s1);
+//                    JSONObject jsonObject = new JSONObject(s1);
                     if (WebServiceEnum_Response != null && WebServiceEnum_Response.equalsIgnoreCase(("taskStatus"))) {
                         final JSONObject jsonObject1 = new JSONObject(s1);
                         if ((int) jsonObject1.get("result_code") == 0) {
@@ -1618,7 +1709,7 @@ public class OfflineSendMessage implements WebServiceInterface {
                                     projectCurrentStatus = "restart";
                                 } else if (((String) json_Object.get("result_text")).equalsIgnoreCase("task completed")) {
                                     projectCurrentStatus = "Completed";
-                                } else if (((String) jsonObject.get("result_text")).equalsIgnoreCase("task deassign")) {
+                                } else if (((String) json_Object.get("result_text")).equalsIgnoreCase("task deassign")) {
                                     projectCurrentStatus = "DeAssign";
                                 }
                                 final TaskDetailsBean detailsBean = bean1.getTaskDetailsBean();
@@ -1746,6 +1837,10 @@ public class OfflineSendMessage implements WebServiceInterface {
                             e.printStackTrace();
                             Appreference.printLog("offlineSendMessage", "ResponceMethod JSONExceptionException : " + e.getMessage(), "WARN", null);
                         }
+                    } else if (WebServiceEnum_Response != null && WebServiceEnum_Response.equalsIgnoreCase("saveCheckListDataDetails")) {
+                        final checkListDetails checkBean = bean1.getChecklistBean();
+                        String checklistUpdate_query = "update checklistDetails set wsSendStatus='11' where  projectId='" + checkBean.getChecklist_projectId() + "'and taskId= '" + checkBean.getChecklist_taskId() + "' and userId='"+checkBean.getChecklist_fromId()+"'";
+                        VideoCallDataBase.getDB(MainActivity.mainContext).updateaccept(checklistUpdate_query);
                     }
                 } catch (Exception e) {
                     e.printStackTrace();

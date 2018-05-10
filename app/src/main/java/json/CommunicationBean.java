@@ -2,6 +2,7 @@ package json;
 
 import com.ase.Bean.ListofFileds;
 import com.ase.Bean.TaskDetailsBean;
+import com.ase.Bean.checkListDetails;
 
 import org.apache.http.NameValuePair;
 import org.json.JSONArray;
@@ -57,6 +58,8 @@ public class CommunicationBean {
     JSONArray jsonArray;
 
     TaskDetailsBean taskDetailsBean;
+
+    checkListDetails checklistBean;
 
     GroupMemberAccess groupMemberAccess;
 
@@ -226,5 +229,13 @@ public class CommunicationBean {
 
     public void setInputString(String inputString) {
         this.inputString = inputString;
+    }
+
+    public checkListDetails getChecklistBean() {
+        return checklistBean;
+    }
+
+    public void setChecklistBean(checkListDetails checklistBean) {
+        this.checklistBean = checklistBean;
     }
 }

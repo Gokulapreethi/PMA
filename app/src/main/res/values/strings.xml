@@ -100,17 +100,33 @@
     <string name="user_upload">http://192.168.1.3:8080/uploads/highmessaging/user/</string>
     <string name="group_profile">http://192.168.1.3:8080/uploads/highmessaging/group/</string>-->
 
+    <!--new Local 205 server  Start 10May18-->
+    // new Local 205 server sip:tls:5061
+
+    <!--<string name="app_version">205</string>
+    <string name="app_versionDate">Version No : 1.5.3</string>
+    <string name="app_releaseDate">Release No : 0020</string>
+    <string name="app_url">https://66.109.17.205/ASE/</string>
+    <string name="server_ip">66.109.17.205</string>
+    <string name="file_upload">http://66.109.17.205/uploads/highmessaging/chat/</string>
+    <string name="task_reminder">http://66.109.17.205/uploads/highmessaging/task/</string>
+    <string name="user_upload">http://66.109.17.205/uploads/highmessaging/user/</string>
+    <string name="group_profile">http://66.109.17.205/uploads/highmessaging/group/</string>-->
+
+    <!--new Local 205 server  End 10May18-->
+
+
     //IP for US Server 204 sip:tls:5061
 
-  <!--  <string name="app_version">204</string>
-   <string name="app_versionDate">Version No : 1.5.3</string>
-   <string name="app_releaseDate">Release No : 0020</string>
-   <string name="app_url">https://66.109.17.204/ASE/</string>
-   <string name="server_ip">66.109.17.204</string>
-   <string name="file_upload">http://66.109.17.204/uploads/highmessaging/chat/</string>
-   <string name="task_reminder">http://66.109.17.204/uploads/highmessaging/task/</string>
-   <string name="user_upload">http://66.109.17.204/uploads/highmessaging/user/</string>
-   <string name="group_profile">http://66.109.17.204/uploads/highmessaging/group/</string>-->
+    <!--  <string name="app_version">204</string>
+     <string name="app_versionDate">Version No : 1.5.3</string>
+     <string name="app_releaseDate">Release No : 0020</string>
+     <string name="app_url">https://66.109.17.204/ASE/</string>
+     <string name="server_ip">66.109.17.204</string>
+     <string name="file_upload">http://66.109.17.204/uploads/highmessaging/chat/</string>
+     <string name="task_reminder">http://66.109.17.204/uploads/highmessaging/task/</string>
+     <string name="user_upload">http://66.109.17.204/uploads/highmessaging/user/</string>
+     <string name="group_profile">http://66.109.17.204/uploads/highmessaging/group/</string>-->
 
     //new ip for local 203 sip:tls:5061
 
@@ -125,7 +141,6 @@
     <string name="group_profile">http://172.16.1.203:8080/uploads/highmessaging/group/</string>
 
 
-
     <!--<string name="app_version">203</string>
     <string name="app_versionDate">Version No : 1.5.2</string>
     <string name="app_releaseDate">Release No : 0039</string>
@@ -137,19 +152,20 @@
     <string name="group_profile">http://151.253.12.203/uploads/highmessaging/group/</string>-->
 
     <!--New dubai server Start 31OCt17-->
-  //  New Dubai server sip:8444
+    // New Dubai server sip:8444
 
-   <!-- <string name="app_version">204</string>
-    <string name="app_versionDate">Version No : 1.5.3</string>
-    <string name="app_releaseDate">Release No : 0021</string>
-    <string name="app_url">http://151.253.12.204/ASE/</string>
-    <string name="server_ip">151.253.12.204</string>
-    <string name="file_upload">http://151.253.12.204/uploads/highmessaging/chat/</string>
-    <string name="task_reminder">http://151.253.12.204/uploads/highmessaging/task/</string>
-    <string name="user_upload">http://151.253.12.204/uploads/highmessaging/user/</string>
-    <string name="group_profile">http://151.253.12.204/uploads/highmessaging/group/</string>-->
+    <!-- <string name="app_version">204</string>
+     <string name="app_versionDate">Version No : 1.5.3</string>
+     <string name="app_releaseDate">Release No : 0021</string>
+     <string name="app_url">http://151.253.12.204/ASE/</string>
+     <string name="server_ip">151.253.12.204</string>
+     <string name="file_upload">http://151.253.12.204/uploads/highmessaging/chat/</string>
+     <string name="task_reminder">http://151.253.12.204/uploads/highmessaging/task/</string>
+     <string name="user_upload">http://151.253.12.204/uploads/highmessaging/user/</string>
+     <string name="group_profile">http://151.253.12.204/uploads/highmessaging/group/</string>-->
 
     <!--New dubai server End 31OCt17-->
+
 
     <!--<string name="app_version">171</string>-->
     <!--<string name="app_url">https://122.165.92.171:8443/highMessage/</string>-->
@@ -159,13 +175,7 @@
     <!--<string name="user_upload">http://122.165.92.171:8080/uploads/highmessaging/user/</string>-->
     <!--<string name="group_profile">http://122.165.92.171:8080/uploads/highmessaging/group/</string>-->
 
-    <!-- <string name="app_version">205</string>
-    <string name="app_url">https://66.109.17.205/highMessage/</string>
-    <string name="server_ip">66.109.17.205</string>
-    <string name="file_upload">http://66.109.17.205/uploads/highmessaging/chat/</string>
-    <string name="task_reminder">http://66.109.17.205/uploads/highmessaging/task/</string>
-    <string name="user_upload">http://66.109.17.205/uploads/highmessaging/user/</string>
-    <string name="group_profile">http://66.109.17.205/uploads/highmessaging/group/</string>-->
+
     <!---->
     <!--  <string name="app_version">204</string>
     <string name="app_url">https://66.109.17.204/highMessage/</string>

@@ -61,6 +61,10 @@ public class checkListDetails implements Serializable{
 
     private String id;
 
+    private String wsSendStatus;
+
+    private String isServiceDone;
+
 
 
     public String getCheckListName() {
@@ -229,5 +233,21 @@ public class checkListDetails implements Serializable{
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public String getWsSendStatus() {
+        return wsSendStatus;
+    }
+
+    public void setWsSendStatus(String wsSendStatus) {
+        this.wsSendStatus = wsSendStatus;
+    }
+
+    public String getIsServiceDone() {
+        return isServiceDone;
+    }
+
+    public void setIsServiceDone(String isServiceDone) {
+        this.isServiceDone = isServiceDone;
     }
 }

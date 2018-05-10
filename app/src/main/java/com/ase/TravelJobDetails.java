@@ -867,6 +867,7 @@ public class TravelJobDetails extends Activity implements View.OnClickListener, 
             }
             popup.getMenuInflater().inflate(R.menu.popup_job_status, popup.getMenu());
             popup.getMenu().getItem(1).setVisible(false);
+            popup.getMenu().getItem(8).setVisible(false);
 
             String query = "select status from projectStatus where projectId='" + projectId + "' and userId='" + Appreference.loginuserdetails.getId() + "' and taskId= '" + webtaskId + "'";
             int current_status = VideoCallDataBase.getDB(context).getCurrentStatus(query);
