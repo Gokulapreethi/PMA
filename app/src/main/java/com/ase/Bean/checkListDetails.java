@@ -14,6 +14,9 @@ public class checkListDetails implements Serializable{
     @SerializedName("checkListName")
     @Expose
     private String checkListName;
+    @SerializedName("serviceType")
+    @Expose
+    private String serviceType;
     @SerializedName("model")
     @Expose
     private String model;
@@ -249,5 +252,13 @@ public class checkListDetails implements Serializable{
 
     public void setIsServiceDone(String isServiceDone) {
         this.isServiceDone = isServiceDone;
+    }
+
+    public String getServiceType() {
+        return serviceType;
+    }
+
+    public void setServiceType(String serviceType) {
+        this.serviceType = serviceType;
     }
 }

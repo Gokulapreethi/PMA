@@ -4,6 +4,7 @@ import com.ase.ListAllgetTaskDetails;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.List;
 
 import json.ListMember;
 
@@ -24,6 +25,7 @@ public class ProjectDetailsBean implements Serializable {
     private ArrayList<ListMember> listMemberProject;
     private ArrayList<ListAllgetTaskDetails> listSubTask;
     private ArrayList<ListMember> listTaskToUser;
+    private ArrayList<checkListDetails> serviceCheckList;
     public ListAllgetTaskDetails parentTask;
     /*Added ASE*/
     private String oracleProjectId;
@@ -42,6 +44,7 @@ public class ProjectDetailsBean implements Serializable {
     private String estimatedTravelHours;
     private String estimatedActivityHrs;
     private String openDate;
+    private String serviceType;
 
 
     private String parentTaskId;
@@ -564,5 +567,21 @@ public class ProjectDetailsBean implements Serializable {
 
     public void setProjectGroupObservers(String projectGroupObservers) {
         this.projectGroupObservers = projectGroupObservers;
+    }
+
+    public ArrayList<checkListDetails> getServiceCheckList() {
+        return serviceCheckList;
+    }
+
+    public void setServiceCheckList(ArrayList<checkListDetails> serviceCheckList) {
+        this.serviceCheckList = serviceCheckList;
+    }
+
+    public String getServiceType() {
+        return serviceType;
+    }
+
+    public void setServiceType(String serviceType) {
+        this.serviceType = serviceType;
     }
 }

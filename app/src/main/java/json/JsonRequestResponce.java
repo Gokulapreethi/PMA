@@ -119,9 +119,9 @@ public class JsonRequestResponce extends Thread {
 
 //                             httppost = new HttpPost("https://66.109.17.204/ASE/" + obj.getEnumJsonWebservicename()); //ip US Server 204
 
-//                             httppost = new HttpPost("https://66.109.17.205/ASE/" + obj.getEnumJsonWebservicename()); //ip Local Server 205
+                             httppost = new HttpPost("https://66.109.17.205/ASE/" + obj.getEnumJsonWebservicename()); //ip Local Server 205
 
-                            httppost = new HttpPost("https://172.16.1.203:8443/ASE/" + obj.getEnumJsonWebservicename());
+//                            httppost = new HttpPost("https://172.16.1.203:8443/ASE/" + obj.getEnumJsonWebservicename());
 //
 //                         HttpPost httppost = new HttpPost("http://151.253.12.203/ASE/" + obj.getEnumJsonWebservicename());
 

@@ -82,7 +82,7 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
     public static final String CREATE_TABLE_CALLS = "create table if not exists call(callid INTEGER PRIMARY KEY AUTOINCREMENT,calltype varchar(100),host varchar(100),participant varchar(100),start_time varchar(100),call_duration varchar(100),recording_path varchar(100),loginuser varchar(100))";
     public static final String CREATE_TABLE_TASK = "create table if not exists taskDetailsInfo(id integer primary key autoincrement,loginuser varchar(100),fromUserId integer,toUserId integer,plannedStartDateTime varchar(100),plannedEndDateTime varchar(100),remainderFrequency varchar(100),duration varchar(100),durationunit varchar(100),taskDescription TEXT,isRemainderRequired varchar(100),taskStatus varchar(100),signalid varchar(100),fromUserName varchar(100),toUserName varchar(100),sendStatus varchar(100),completedPercentage varchar(100),taskType varchar(100),mimeType varchar(100),taskPriority varchar(100),dateFrequency varchar(100),timeFrequency varchar(100),taskNo varchar(100),taskId varchar(100),msgstatus varchar(5),showprogress varchar(5),readStatus varchar(5),reminderquotes varchar(100),remark varchar(100),tasktime varchar(100),serverFileName varchar(100),requestStatus varchar(100),dateTime varchar(100),subType varchar(20),daysOfTheWeek varchar(100),repeatFrequency varchar(5),taskTagName varchar(20),customTagId varchar(20),customTagVisible varchar(20),customSetId varchar(20),syncEnable varchar(100),wssendstatus varchar(20),projectId varchar(100),parentTaskId varchar(100),longmessage varchar(100),private_member varchar(200),replyMessage varchar(100),taskPlannedBeforeEndDate varchar(100),taskPlannedLatestEndDate varchar(100),fromTaskName varchar(100),toTaskName varchar(100),sender_reply varchar(100),reply_sendername varchar(100),caption varchar(100),wscaptionstatus varchar(20),estimTime varchar(20),estimCompletion varchar(10),EstimAlarm varchar(10),estimRemainingTime varchar(10))";
     public static final String CREATE_TABLE_TASK_HISTORY = "create table if not exists taskHistoryInfo(id integer primary key autoincrement,loginuser varchar(100),taskNo varchar(100),taskName varchar(100),plannedStartDateTime varchar(100),plannedEndDateTime varchar(100),remainderFrequency varchar(100),taskDescription TEXT,taskObservers TEXT,taskStatus varchar(100),signalid varchar(100),completedPercentage varchar(100),taskType varchar(100),ownerOfTask varchar(100),mimeType varchar(100),parentTaskId varchar(100),taskId varchar(100),readStatus varchar(5),tasktime varchar(100),taskReceiver varchar(100),taskMemberList TEXT,dateTime varchar(100),badgeCount varchar(20),category vrchar(100),taskPlannedBeforeEndDate varchar(100),taskPlannedLatestEndDate varchar(100),fromTaskName varchar(100),toTaskName varchar(100),sender_reply varchar(100),reply_sendername varchar(100))";
-    public static final String CREATE_TABLE_PROJECT = "create table if not exists projectDetails(id integer primary key autoincrement,loginuser varchar(100),projectId varchar(100),projectName varchar(100),projectDescription varchar(100),groupAdminobserver varchar(10), projectOrganisation varchar(100),projectOwner varchar(100),listOfMembers varchar(100),completedPercentage varchar(100),taskStatus varchar(100),readStatus varchar(5),requestStatus varchar(100),oracleProjectId varchar(100),customerName varchar(100),address varchar(100),mcModel varchar(100),mcSrNo varchar(100),serviceRequestDate varchar(100),chasisNo varchar(100),observation varchar(100),oracleCustomerId integer,activity varchar(100),processFlag varchar(100),projectcompletedstatus varchar(100),isActiveStatus varchar(100),jobCardType varchar(100),machineMake varchar(100),jobDescription varchar(100),openDate varchar(100))";
+    public static final String CREATE_TABLE_PROJECT = "create table if not exists projectDetails(id integer primary key autoincrement,loginuser varchar(100),projectId varchar(100),projectName varchar(100),projectDescription varchar(100),groupAdminobserver varchar(10), projectOrganisation varchar(100),projectOwner varchar(100),listOfMembers varchar(100),completedPercentage varchar(100),taskStatus varchar(100),readStatus varchar(5),requestStatus varchar(100),oracleProjectId varchar(100),customerName varchar(100),address varchar(100),mcModel varchar(100),mcSrNo varchar(100),serviceType varchar(100),serviceRequestDate varchar(100),chasisNo varchar(100),observation varchar(100),oracleCustomerId integer,activity varchar(100),processFlag varchar(100),projectcompletedstatus varchar(100),isActiveStatus varchar(100),jobCardType varchar(100),machineMake varchar(100),jobDescription varchar(100),openDate varchar(100))";
     public static final String CREATE_TABLE_PROJECT_HISTORY = "create table if not exists projectHistory(id integer primary key autoincrement,loginuser varchar(100),projectId varchar(100),parentTaskId varchar(100),projectOwner varchar(100),projectName TEXT,fromUserId varchar(100),toUserId varchar(100),fromUserName varchar(100),toUserName varchar(100),projectDescription varchar(100),projectOrganisation varchar(100),plannedStartDateTime varchar(100),plannedEndDateTime varchar(100),taskMemberList varchar(100),taskStatus varchar(100),ownerOfTask varchar(100),taskReceiver varchar(100),taskObservers TEXT,taskNo varchar(100),taskName varchar(100),taskDescription varchar(100),taskType varchar(100),mimeType varchar(100),taskId varchar(100),signalId varchar(100),completedPercentage varchar(100),readStatus varchar(5),category varchar(10),isParentTask varchar(5),issueParentId varchar(100),requestStatus varchar(100),oracleTaskId varchar(100),estimatedTravelHrs integer,estimatedActivityHrs integer,activity varchar(100),oracleProjectId varchar(100),customerName varchar(100),address varchar(100),mcModel varchar(100),mcSrNo varchar(100),serviceRequestDate varchar(100),chasisNo varchar(100),observation varchar(100),oracleCustomerId integer,processFlag varchar(100),projectcompletedstatus varchar(100),isActiveStatus varchar(100),jobCardType varchar(100),machineMake varchar(100),mcDescription varchar(100))";
     public static final String CREATE_TABLE_FORM_ACCESS = "create table if not exists FormAccess(id integer primary key autoincrement,taskId varchar(50),formId varchar(50),formAccessId varchar(50),taskGiver varchar(50),memberName varchar(50),accessMode varchar(50))";
     public static final String CREATE_TABLE_List_User_Group_Member_Access = "create table if not exists listUserGroupMemberAccess(userid integer,groupid integer,groupname varchar(100),loginuser varchar(100),respondVideo varchar(50),respondFiles varchar(50),accessForms varchar(50),respondAudio varchar(50),videoAccess varchar(50),adminAccess varchar(50),respondDateChange varchar(50),respondLocation varchar(50),respondConfCall varchar(50),audioAccess varchar(50),chatAccess varchar(50),respondText varchar(50),respondPrivate varchar(50),respondPhoto varchar(50),accessReminder varchar(50),respondSketch varchar(50),respondTask varchar(50),accessScheduledCNF varchar(50),GroupTask varchar(50),ReassignTask varchar(50),ChangeTaskName varchar(50),TaskDescriptions varchar(50),TemplateExistingTask varchar(50),ApproveLeave varchar(50),RemindMe varchar(50),AddObserver varchar(50),TaskPriority varchar(50),Escalations varchar(50))";
@@ -90,6 +90,7 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
     /*For Checklist DB Entry */
     public static final String CREATE_TABLE_CHECKLIST_DETAILS = "create table if not exists checklistDetails(id integer primary key autoincrement,projectId integer,taskId integer,userId integer,advice varchar(100),checkListName varchar(100),checklistDate varchar(100),hmReading varchar(100),technicianSignature varchar(100),customerSignature varchar(100),checklistEntryDate varchar(100),clientName varchar(100),technicianName varchar(100),isServiceDone integer,wsSendStatus varchar(100))";
     public static final String CREATE_TABLE_CHECKLIST_DATA = "create table if not exists checklistData(checklistdataid integer,issueType varchar(100),checklistItem varchar(100),jobDescription varchar(100),jobStatus varchar(100),quantity varchar(100), FOREIGN KEY (checklistdataid) REFERENCES checklistDetails (id))";
+    public static final String CREATE_TABLE_CHECKLIST_TEMPLATE = "create table if not exists checklistTemplate(id integer primary key autoincrement,checklistName varchar(100),machine varchar(100),modal varchar(100),serviceType varchar(100),checklistFieldId integer,issueType varchar(100),checklistItem varchar(100),jobDescription varchar(100))";
     public static final String EULATABLE = "eulaagree";
     public static final String EULACREATE = "create table if not exists '" + EULATABLE + "'(id integer (1),selection varchar(1))";
 
@@ -157,6 +158,7 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
         db.execSQL(CREATE_TABLE_PROJECT_STATUS);
         db.execSQL(CREATE_TABLE_CHECKLIST_DETAILS);
         db.execSQL(CREATE_TABLE_CHECKLIST_DATA);
+        db.execSQL(CREATE_TABLE_CHECKLIST_TEMPLATE);
         db.execSQL(EULACREATE);
     }
 
@@ -2105,7 +2107,7 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
                 cv.put("openDate", JobOpenDate);
             } else
                 cv.put("openDate", projectDetailsBean.getOpenDate());
-
+            cv.put("serviceType", projectDetailsBean.getServiceType());
             if (!DuplicateProjectIdChecker(projectDetailsBean.getId())) {
                 row_id = (int) db.insert("projectDetails", null, cv);
             } else {
@@ -4870,6 +4872,11 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
                         projectDetailsBean.setIsActiveStatus(cur.getString(cur.getColumnIndex("isActiveStatus")));
                         projectDetailsBean.setJobDescription(cur.getString(cur.getColumnIndex("jobDescription")));
                         projectDetailsBean.setCustomerName(cur.getString(cur.getColumnIndex("customerName")));
+                        projectDetailsBean.setAddress(cur.getString(cur.getColumnIndex("address")));
+                        projectDetailsBean.setMcSrNo(cur.getString(cur.getColumnIndex("mcSrNo")));
+                        projectDetailsBean.setMcModel(cur.getString(cur.getColumnIndex("mcModel")));
+                        projectDetailsBean.setMachineMake(cur.getString(cur.getColumnIndex("machineMake")));
+                        projectDetailsBean.setServiceType(cur.getString(cur.getColumnIndex("serviceType")));
                         projectDetailsBean.setOpenDate(cur.getString(cur.getColumnIndex("openDate")));
                         arrayList.add(projectDetailsBean);
                         cur.moveToNext();
@@ -10136,7 +10143,7 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
 
     public int insertORupdateCheckListData(List<Label> label) {
         int row_id = 0;
-        Log.i("checklist123", "insertORupdateCheckListData DB ****====> " );
+        Log.i("checklist123", "insertORupdateCheckListData DB ****====> ");
 
         try {
             if (!db.isOpen())
@@ -10322,6 +10329,84 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
             Appreference.printLog("getoffline_checklist 2 ", "Exception " + e.getMessage(), "WARN", null);
         } finally {
             Log.i("file", "size" + arrayList.size());
+            return arrayList;
+        }
+    }
+
+    public int insert_updateCheckListTemplates(ListallProjectBean pdb) {
+        int row_id = 0;
+        try {
+            if (!db.isOpen())
+                openDatabase();
+            ContentValues cv = new ContentValues();
+            ProjectDetailsBean projectDetailsBean = pdb.getProjectDTO();
+            String projectId = projectDetailsBean.getId();
+            String getMacModalQuery = "select * from projectDetails where projectId='" + projectId + "'";
+            ArrayList<ProjectDetailsBean> projectList = VideoCallDataBase.getDB(context).getProjectdetails(getMacModalQuery);
+            ArrayList<checkListDetails> checkListBean = projectDetailsBean.getServiceCheckList();
+            for (int i = 0; i < checkListBean.size(); i++) {
+                checkListDetails checkBean = checkListBean.get(i);
+
+                for (int k = 0; k < checkBean.getLabel().size(); k++) {
+
+                    final ProjectDetailsBean projectBean = projectList.get(0);
+                    cv.put("checklistName", checkBean.getCheckListName());
+                    cv.put("machine", projectBean.getMachineMake());
+                    cv.put("modal", projectBean.getMcModel());
+                    cv.put("serviceType", checkBean.getServiceType());
+
+                    Label checkLabel = checkBean.getLabel().get(k);
+                    cv.put("checklistFieldId", checkLabel.getId());
+                    cv.put("issueType", checkLabel.getIssueType());
+                    cv.put("checklistItem", checkLabel.getItem());
+                    cv.put("jobDescription", checkLabel.getJobDescription());
+                    if (isAgendaRecordExists("select * from checklistTemplate where machine='" + projectBean.getMachineMake() + "'and modal='" + projectBean.getMcModel() + "'and checklistFieldId='" + checkLabel.getId() + "'")) {
+                        Log.i("checklist123", "checklistTemplate Update=====> ");
+                        row_id = (int) db.update("checklistTemplate", cv, "machine='" + projectBean.getMachineMake() + "'and modal='" + projectBean.getMcModel() + "'and checklistFieldId='" + checkLabel.getId() + "'", null);
+                    } else {
+                        Log.i("checklist123", "checkListDetails Insert=====> ");
+                        row_id = (int) db.insert("checklistTemplate", null, cv);
+                    }
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return row_id;
+    }
+
+    public ArrayList<Label> getTemplatedetails(String checklistTemplate_quey) {
+        ArrayList<Label> arrayList = new ArrayList<>();
+        Cursor cur;
+        try {
+            if (db == null)
+                db = getReadableDatabase();
+            try {
+                if (db != null) {
+                    if (!db.isOpen())
+                        openDatabase();
+                    cur = db.rawQuery(checklistTemplate_quey, null);
+                    cur.moveToFirst();
+                    while (!cur.isAfterLast()) {
+                        Label bean = new Label();
+                        bean.setId(cur.getString(cur.getColumnIndex("checklistFieldId")));
+                        bean.setIssueType(cur.getString(cur.getColumnIndex("issueType")));
+                        bean.setItem(cur.getString(cur.getColumnIndex("checklistItem")));
+                        bean.setJobDescription(cur.getString(cur.getColumnIndex("jobDescription")));
+                        arrayList.add(bean);
+                        cur.moveToNext();
+                    }
+                    cur.close();
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                Appreference.printLog("getProjectdetails 1 ", "Exception " + e.getMessage(), "WARN", null);
+                Log.i("DB123", "Error====>getProjectdetails===>" + e.getMessage());
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            Appreference.printLog("getProjectdetails 2", "Exception " + e.getMessage(), "WARN", null);
+        } finally {
             return arrayList;
         }
     }

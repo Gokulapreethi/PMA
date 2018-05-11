@@ -242,7 +242,7 @@ public class EodScreen extends Activity {
             @Override
             public void onClick(View v) {
                 observation_tv.setTextColor(getResources().getColor(R.color.black));
-                /*AlertDialog.Builder saveDialog = new AlertDialog.Builder(context);
+                AlertDialog.Builder saveDialog = new AlertDialog.Builder(context);
                 saveDialog.setTitle("Observation");
                 saveDialog.setCancelable(false);
                 saveDialog.setMessage("You want to type or draw sketch in " + taskName);
@@ -299,8 +299,9 @@ public class EodScreen extends Activity {
                                 dialog.cancel();
                             }
                         });
-                saveDialog.show();*/
-                LayoutInflater myLayout = LayoutInflater.from(context);
+                saveDialog.show();
+
+                /*LayoutInflater myLayout = LayoutInflater.from(context);
                 final View dialogView = myLayout.inflate(R.layout.eod_option, null);
                 AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
                         context);
@@ -382,20 +383,19 @@ public class EodScreen extends Activity {
                         observation_1.setVisibility(View.VISIBLE);
                         if (Build.VERSION.SDK_INT < 19) {
                             Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-                            intent.setType("image/*");
+                            intent.setType("image*//*");
                             startActivityForResult(intent, GALLERY_REQUEST);
                         } else {
                             Log.i("img", "sdk is above 19");
                             Log.i("clone", "====> inside gallery");
                             Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
                             intent.addCategory(Intent.CATEGORY_OPENABLE);
-                            intent.setType("image/*");
+                            intent.setType("image*//*");
                             startActivityForResult(intent, GALLERY_REQUEST);
                         }
                         eod_dialog.dismiss();
                     }
-                });
-
+                });*/
             }
         });
 

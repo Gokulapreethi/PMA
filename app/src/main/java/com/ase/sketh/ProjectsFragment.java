@@ -1772,6 +1772,7 @@ public class ProjectsFragment extends Fragment implements View.OnClickListener, 
 
                                     VideoCallDataBase.getDB(classContext).insertProject_history(pdb);
                                     VideoCallDataBase.getDB(classContext).insert_updateProjectStatus(pdb);
+                                    VideoCallDataBase.getDB(classContext).insert_updateCheckListTemplates(pdb);
                                     Log.i("wsTime123", " Ws getTaskForJobID Response After DB ENtry Time====>" + Appreference.getCurrentDateTime());
 
                                     ProjectDetailsBean projectDetailsBean = pdb.getProjectDTO();

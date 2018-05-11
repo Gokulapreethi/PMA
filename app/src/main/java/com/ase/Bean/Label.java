@@ -23,6 +23,9 @@ public class Label implements Serializable{
     @SerializedName("jobstatus")
     @Expose
     private String jobstatus;
+    @SerializedName("id")
+    @Expose
+    private String id;
 
     private String quantity;
 
@@ -64,5 +67,13 @@ public class Label implements Serializable{
 
     public void setQuantity(String quantity) {
         this.quantity = quantity;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 }
