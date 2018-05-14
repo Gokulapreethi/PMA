@@ -5540,9 +5540,8 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                         String PMSJobcard_query = "select  jobDescription from projectDetails where loginuser = '" + Appreference.loginuserdetails.getEmail() + "'and projectId='" + projectId + "'";
                         String PMSJobDescription = VideoCallDataBase.getDB(context).getprojectIdForOracleID(PMSJobcard_query);
                        /*added for checklist_PMS End*/
-                        String PMSServiceType_query = "select * from projectDetails where loginuser ='" + Appreference.loginuserdetails.getEmail() + "'and projectId='" + projectId + "'";
-                        ArrayList<ProjectDetailsBean> projectList = VideoCallDataBase.getDB(context).getProjectdetails(PMSServiceType_query);
-                        final ProjectDetailsBean PMSJobDetails = projectList.get(0);
+                       final ProjectDetailsBean PMSJobDetails=getprojectDetails_Row();
+
 //                        hideKeyboard();
                       /*  Intent intent = new Intent(NewTaskConversation.this, FormsView.class);
                         startActivity(intent);
@@ -5579,7 +5578,7 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                                     @Override
                                     public void onClick(DialogInterface dialog, int which) {
                                         String strName = arrayAdapter.getItem(which);
-                                        ArrayList<Label> mychecklistTemplate = null;
+                                       checkListDetails mychecklistTemplate = null;
                                         try {
                                             if (which == 0) {
                                                 mychecklistTemplate = getTemplateList(PMSJobDetails, 250);
@@ -5590,18 +5589,11 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                                             } else {
                                                 mychecklistTemplate = getTemplateList(PMSJobDetails, 2000);
                                             }
-                                            if (mychecklistTemplate.size()>0) {
-                                                checkListDetails AllCheckListdetails = new checkListDetails();
-                                          /*  AllCheckListdetails.setCustomer(PMSJobDetails.getCustomerName());
-                                            AllCheckListdetails.setCustomerAddress(PMSJobDetails.getAddress());
-                                            AllCheckListdetails.setModel(PMSJobDetails.getMcModel());
-                                            AllCheckListdetails.setSerialNumber(PMSJobDetails.getMcSrNo());
-                                            AllCheckListdetails.setDate(PMSJobDetails.getOpenDate());
-                                            AllCheckListdetails.setLabel(mychecklistTemplate);*/
-                                                AllCheckListdetails.setLabel(mychecklistTemplate);
-                                                if (AllCheckListdetails != null) {
+                                            if (mychecklistTemplate.getLabel().size()>0) {
+
+                                                if (mychecklistTemplate != null) {
                                                     Intent intent = new Intent(NewTaskConversation.this, CheckListActivity.class);
-                                                    intent.putExtra("checklistBean", AllCheckListdetails);
+                                                    intent.putExtra("checklistBean", mychecklistTemplate);
                                                     intent.putExtra("isExistingView", false);
                                                     intent.putExtra("PMSprojectId", projectId);
                                                     intent.putExtra("PMStaskId", webtaskId);
@@ -5727,6 +5719,12 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
         popup.show();
     }
 
+    private ProjectDetailsBean getprojectDetails_Row() {
+        String PMSServiceType_query = "select * from projectDetails where loginuser ='" + Appreference.loginuserdetails.getEmail() + "'and projectId='" + projectId + "'";
+        ArrayList<ProjectDetailsBean> projectList = VideoCallDataBase.getDB(context).getProjectdetails(PMSServiceType_query);
+        return projectList.get(0);
+    }
+
     private void getChecklistExistData() {
         try {
             String query = "select * from checklistDetails where projectId='" + projectId + "'and taskId='" + webtaskId + "'and userId='" + Appreference.loginuserdetails.getId() + "'";
@@ -5753,7 +5751,21 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                 intent.putExtra("PMStaskId", webtaskId);
                 startActivity(intent);
             } else {
-                Toast.makeText(NewTaskConversation.this, "CheckList Not Available....", Toast.LENGTH_SHORT).show();
+//                Toast.makeText(NewTaskConversation.this, "CheckList Not Available....", Toast.LENGTH_SHORT).show();
+                final ProjectDetailsBean PMSJobDetails=getprojectDetails_Row();
+                checkListDetails mychecklistTemplate = getTemplateList(PMSJobDetails, 250);
+                if (mychecklistTemplate.getLabel().size()>0) {
+                    if (mychecklistTemplate != null) {
+                        Intent intent = new Intent(NewTaskConversation.this, CheckListActivity.class);
+                        intent.putExtra("checklistBean", mychecklistTemplate);
+                        intent.putExtra("isExistingView", false);
+                        intent.putExtra("PMSprojectId", projectId);
+                        intent.putExtra("PMStaskId", webtaskId);
+                        startActivity(intent);
+                    }
+                }else{
+                    Toast.makeText(NewTaskConversation.this, "CheckList Not Available....", Toast.LENGTH_SHORT).show();
+                }
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -5761,9 +5773,9 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
         }
     }
 
-    private ArrayList<Label> getTemplateList(ProjectDetailsBean PMSJobDetails, int ServiceType) {
+    private checkListDetails getTemplateList(ProjectDetailsBean PMSJobDetails, int ServiceType) {
         String checklistTemplate_quey = "select * from checklistTemplate where machine='" + PMSJobDetails.getMachineMake() + "'and modal='" + PMSJobDetails.getMcModel() + "'and serviceType='" + ServiceType + "'";
-        ArrayList<Label> mychecklistTemplate = VideoCallDataBase.getDB(context).getTemplatedetails(checklistTemplate_quey);
+        checkListDetails mychecklistTemplate = VideoCallDataBase.getDB(context).getTemplatedetails(checklistTemplate_quey);
         return mychecklistTemplate;
     }
 
@@ -14715,9 +14727,14 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
     }
 
     private String getGroupAdmin_observer_DB() {
-        String get_groupAdminobserver_query = "select groupAdminobserver from projectDetails where loginuser = '" + Appreference.loginuserdetails.getEmail() + "'and projectId='" + projectId + "'";
-        String OraclegroupAdminObserver = VideoCallDataBase.getDB(context).getprojectIdForOracleID(get_groupAdminobserver_query);
-        Log.i("observer123", "OraclegroupAdminObserver ====> " + OraclegroupAdminObserver);
+        String OraclegroupAdminObserver="";
+        try {
+            String get_groupAdminobserver_query = "select groupAdminobserver from projectDetails where loginuser = '" + Appreference.loginuserdetails.getEmail() + "'and projectId='" + projectId + "'";
+             OraclegroupAdminObserver = VideoCallDataBase.getDB(context).getprojectIdForOracleID(get_groupAdminobserver_query);
+            Log.i("observer123", "OraclegroupAdminObserver ====> " + OraclegroupAdminObserver);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         return OraclegroupAdminObserver;
     }
 

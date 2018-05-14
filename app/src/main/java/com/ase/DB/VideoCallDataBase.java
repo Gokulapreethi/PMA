@@ -10375,8 +10375,9 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
         return row_id;
     }
 
-    public ArrayList<Label> getTemplatedetails(String checklistTemplate_quey) {
+    public checkListDetails getTemplatedetails(String checklistTemplate_quey) {
         ArrayList<Label> arrayList = new ArrayList<>();
+        checkListDetails bean = new checkListDetails();
         Cursor cur;
         try {
             if (db == null)
@@ -10388,15 +10389,19 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
                     cur = db.rawQuery(checklistTemplate_quey, null);
                     cur.moveToFirst();
                     while (!cur.isAfterLast()) {
-                        Label bean = new Label();
-                        bean.setId(cur.getString(cur.getColumnIndex("checklistFieldId")));
-                        bean.setIssueType(cur.getString(cur.getColumnIndex("issueType")));
-                        bean.setItem(cur.getString(cur.getColumnIndex("checklistItem")));
-                        bean.setJobDescription(cur.getString(cur.getColumnIndex("jobDescription")));
-                        arrayList.add(bean);
+                        Label beanLabel = new Label();
+                        beanLabel.setId(cur.getString(cur.getColumnIndex("checklistFieldId")));
+                        beanLabel.setIssueType(cur.getString(cur.getColumnIndex("issueType")));
+                        beanLabel.setItem(cur.getString(cur.getColumnIndex("checklistItem")));
+                        beanLabel.setJobDescription(cur.getString(cur.getColumnIndex("jobDescription")));
+                        arrayList.add(beanLabel);
+                        bean.setCheckListName(cur.getString(cur.getColumnIndex("checklistName")));
+                        bean.setLabel(arrayList);
                         cur.moveToNext();
                     }
+
                     cur.close();
+
                 }
             } catch (Exception e) {
                 e.printStackTrace();
@@ -10407,7 +10412,7 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
             e.printStackTrace();
             Appreference.printLog("getProjectdetails 2", "Exception " + e.getMessage(), "WARN", null);
         } finally {
-            return arrayList;
+            return bean;
         }
     }
 }

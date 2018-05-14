@@ -800,7 +800,7 @@ public class CheckListActivity extends Activity implements WebServiceInterface {
                     JSONObject checklist_row = new JSONObject();
                     Label fieldvalues = checklistBean.getLabel().get(i);
 //                            checklist_row.put("issueType", fieldvalues.getIssueType());
-                    checklist_row.put("checkListDetailId", fieldvalues.getItem());
+                    checklist_row.put("checkListDetailId", fieldvalues.getId());
 //                            checklist_row.put("jobDescription", fieldvalues.getJobDescription());
                     checklist_row.put("jobstatus", fieldvalues.getJobstatus());
                     checklist_row.put("quantity", fieldvalues.getQuantity());
@@ -810,7 +810,7 @@ public class CheckListActivity extends Activity implements WebServiceInterface {
             checklistAllBean.setLabel(checklistBean.getLabel());
             jsonObjectAll.put("servicelist", Multi_array);
 
-            if (isNetworkAvailable()) {
+            if (!isNetworkAvailable()) {
                 checklistAllBean.setWsSendStatus("00");
             }
             /****************************/

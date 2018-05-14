@@ -105,7 +105,7 @@
 
     <string name="app_version">205</string>
     <string name="app_versionDate">Version No : 1.5.4</string>
-    <string name="app_releaseDate">Release No : 002</string>
+    <string name="app_releaseDate">Release No : 003</string>
     <string name="app_url">https://66.109.17.205/ASE/</string>
     <string name="server_ip">66.109.17.205</string>
     <string name="file_upload">http://66.109.17.205/uploads/highmessaging/chat/</string>
@@ -131,15 +131,15 @@
     //new ip for local 203 sip:tls:5061
 
    <!-- <string name="app_version">3</string>
-    <string name="app_versionDate">Version No : 1.5.3</string>
-    <string name="app_releaseDate">Release No : 0054</string>
+    <string name="app_versionDate">Version No : 1.5.4</string>
+    <string name="app_releaseDate">Release No : 001</string>
     <string name="app_url">https://172.16.1.203:8443/ASE/</string>
     <string name="server_ip">172.16.1.203</string>
     <string name="file_upload">http://172.16.1.203:8080/uploads/highmessaging/chat/</string>
     <string name="task_reminder">http://172.16.1.203:8080/uploads/highmessaging/task/</string>
     <string name="user_upload">http://172.16.1.203:8080/uploads/highmessaging/user/</string>
-    <string name="group_profile">http://172.16.1.203:8080/uploads/highmessaging/group/</string>-->
-
+    <string name="group_profile">http://172.16.1.203:8080/uploads/highmessaging/group/</string>
+-->
 
     <!--<string name="app_version">203</string>
     <string name="app_versionDate">Version No : 1.5.2</string>
