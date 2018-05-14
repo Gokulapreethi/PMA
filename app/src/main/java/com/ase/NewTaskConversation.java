@@ -5753,7 +5753,7 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
             } else {
 //                Toast.makeText(NewTaskConversation.this, "CheckList Not Available....", Toast.LENGTH_SHORT).show();
                 final ProjectDetailsBean PMSJobDetails=getprojectDetails_Row();
-                checkListDetails mychecklistTemplate = getTemplateList(PMSJobDetails, 250);
+                checkListDetails mychecklistTemplate = getTemplateList(PMSJobDetails, Integer.parseInt(PMSJobDetails.getServiceType()));
                 if (mychecklistTemplate.getLabel().size()>0) {
                     if (mychecklistTemplate != null) {
                         Intent intent = new Intent(NewTaskConversation.this, CheckListActivity.class);
