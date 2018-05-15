@@ -138,8 +138,7 @@
     <string name="file_upload">http://172.16.1.203:8080/uploads/highmessaging/chat/</string>
     <string name="task_reminder">http://172.16.1.203:8080/uploads/highmessaging/task/</string>
     <string name="user_upload">http://172.16.1.203:8080/uploads/highmessaging/user/</string>
-    <string name="group_profile">http://172.16.1.203:8080/uploads/highmessaging/group/</string>
--->
+    <string name="group_profile">http://172.16.1.203:8080/uploads/highmessaging/group/</string>-->
 
     <!--<string name="app_version">203</string>
     <string name="app_versionDate">Version No : 1.5.2</string>

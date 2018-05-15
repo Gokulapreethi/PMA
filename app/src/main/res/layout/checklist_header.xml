@@ -437,7 +437,7 @@
                             android:layout_marginTop="5dp"
                             android:layout_weight="0.65"
                             android:gravity="start"
-                            android:text="HM Reading  *"
+                            android:text="HMR "
                             android:textColor="@color/black2"
                             android:textDirection="firstStrong"
                             android:textSize="15sp" />
@@ -458,7 +458,7 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="0.50"
                             android:hint="Type Here"
-                            android:gravity="center"
+                            android:gravity="start"
                             android:singleLine="true"
                             android:inputType="number"
                             android:textColor="@color/black"

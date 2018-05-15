@@ -59,6 +59,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.TimeZone;
 
 import json.CommunicationBean;
 import json.EnumJsonWebservicename;
@@ -87,7 +88,7 @@ public class CheckListActivity extends Activity implements WebServiceInterface {
     ImageView checklist_commands_img, checklist_advice_img, checklist_tech_sign_img, checklist_cust_sign_img, send_completion;
     Button checklist_tech_signature, checklist_cust_signature, checklist_date_btn;
     String ProjectId, TaskId;
-    String PMS_Customer, PMS_Address, PMS_machine_serial, PMS_machine_model;
+    String PMS_Customer, PMS_Address, PMS_machine_serial, PMS_machine_model,PMS_machine_make;
     EditText checklist_HMReading, checklist_tech_name, checklist_client_name, checklist_advice_text;
     static CheckListActivity checkListActivity;
     boolean isReadOnlyView;
@@ -142,6 +143,8 @@ public class CheckListActivity extends Activity implements WebServiceInterface {
         PMS_machine_serial = VideoCallDataBase.getDB(checkListContext).getprojectIdForOracleID(PMSserialNo_query);
         String PMSmodel_query = "select mcModel from projectDetails where loginuser = '" + Appreference.loginuserdetails.getEmail() + "'and projectId='" + ProjectId + "'";
         PMS_machine_model = VideoCallDataBase.getDB(checkListContext).getprojectIdForOracleID(PMSmodel_query);
+        String PMSmake_query = "select machineMake from projectDetails where loginuser = '" + Appreference.loginuserdetails.getEmail() + "'and projectId='" + ProjectId + "'";
+        PMS_machine_make = VideoCallDataBase.getDB(checkListContext).getprojectIdForOracleID(PMSmake_query);
         String PMSOracleId_query = "select oracleProjectId from projectDetails where loginuser = '" + Appreference.loginuserdetails.getEmail() + "'and projectId='" + ProjectId + "'";
         String PMS_oracle_projectId = VideoCallDataBase.getDB(checkListContext).getprojectIdForOracleID(PMSOracleId_query);
 
@@ -163,7 +166,7 @@ public class CheckListActivity extends Activity implements WebServiceInterface {
         machine_serial.setText(PMS_machine_serial);
         checklistBean.setSerialNumber(PMS_machine_serial);
 
-        machine_model.setText(PMS_machine_model);
+        machine_model.setText(PMS_machine_make+" / "+PMS_machine_model);
         checklistBean.setModel(PMS_machine_model);
 
         checklist_jobNo.setText(PMS_oracle_projectId);
@@ -548,7 +551,7 @@ public class CheckListActivity extends Activity implements WebServiceInterface {
                                 try {
                                     String curr_date = null;
                                     try {
-                                        SimpleDateFormat simpleDateFormat_1 = new SimpleDateFormat("yyyy-MM-dd");
+                                        SimpleDateFormat simpleDateFormat_1 = new SimpleDateFormat("dd-MM-yyyy");
                                         curr_date = simpleDateFormat_1.format(new Date());
                                     } catch (Exception e) {
                                         e.printStackTrace();
@@ -566,7 +569,7 @@ public class CheckListActivity extends Activity implements WebServiceInterface {
                                     } else {
                                         days = String.valueOf(dayOfMonth);
                                     }
-                                    String start_date = year + "-" + months + "-" + days;
+                                    String start_date = days + "-" + months + "-" +year;
                                     Log.i("TNA", "start_date---> " + start_date);
                                     Log.i("TNA", "curr_date---> " + curr_date);
                                     if (curr_date != null && curr_date.compareTo(start_date) > 0) {
@@ -649,18 +652,20 @@ public class CheckListActivity extends Activity implements WebServiceInterface {
         send_completion.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                sendCheckListAlert_Dialog();
+                composeChecklistXml();
             }
         });
 
     }
 
-    private void sendCheckListAlert_Dialog() {
+    private void sendCheckListAlert_Dialog(final JSONObject jsonObjectAll, final checkListDetails checklistAllBean) {
         try {
             AlertDialog alertDialog = new AlertDialog.Builder(CheckListActivity.this).create();
             alertDialog.setTitle(checklistBean.getCheckListName());
             alertDialog.setCancelable(false);
-            alertDialog.setMessage("Are you sure want to Send?");
+            alertDialog.setMessage("You are submitting the check list changes to Server! \n" +
+                    "No more changes allowed after this Submit event! \n" +
+                    "Are you sure of your action?");
             alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "No",
                     new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
@@ -670,7 +675,35 @@ public class CheckListActivity extends Activity implements WebServiceInterface {
             alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "Yes",
                     new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
-                            composeChecklistXml();
+                            /****************************/
+                            SaveDB(checklistAllBean, 1);
+                            /****************************/
+                            if (isNetworkAvailable()) {
+                                showprogress();
+                                Appreference.jsonRequestSender.SaveCheckListForm(EnumJsonWebservicename.saveCheckListDataDetails, jsonObjectAll, CheckListActivity.this);
+                            } else {
+                                Toast.makeText(CheckListActivity.this, "Network Not Available!", Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    });
+
+            alertDialog.show();
+        } catch (Exception e) {
+            e.printStackTrace();
+            Appreference.printLog("EodScreen", "alert_dialog Exception : " + e.getMessage(), "WARN", null);
+        }
+    }
+
+    private void sendCheckListMandatory_Alert(String Message) {
+        try {
+            AlertDialog alertDialog = new AlertDialog.Builder(CheckListActivity.this).create();
+            alertDialog.setTitle(checklistBean.getCheckListName());
+            alertDialog.setCancelable(false);
+            alertDialog.setMessage(Message);
+            alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "ok",
+                    new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
                         }
                     });
 
@@ -730,7 +763,23 @@ public class CheckListActivity extends Activity implements WebServiceInterface {
             jsonObjectAll.put("clientName", checklist_client_name.getText().toString());
             checklistAllBean.setClientName(checklist_client_name.getText().toString());
 
-            jsonObjectAll.put("checklistEntryDate", checklist_date_now.getText().toString());
+            String signed_dateUTC = "";
+            Date date = null;
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            SimpleDateFormat dateParse = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
+            String signed_date = checklist_date_now.getText().toString() + " " + "00:00:00";
+            if (signed_date != null && !signed_date.equalsIgnoreCase("")) {
+                try {
+                    date = dateParse.parse(signed_date);
+                    signed_dateUTC = dateFormat.format(date);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    Appreference.printLog("checkListActivity", "signed_dateUTC Exception : " + e.getMessage(), "WARN", null);
+                }
+            }
+            jsonObjectAll.put("checklistEntryDate", signed_dateUTC);
+
             checklistAllBean.setSignedDate(checklist_date_now.getText().toString());
 
 //                    jsonObjectAll.put("checkListName", stickyView.getText().toString());
@@ -750,6 +799,19 @@ public class CheckListActivity extends Activity implements WebServiceInterface {
                     e.printStackTrace();
                     Appreference.printLog("checkListActivity", "sendchecklist_webservice  tech_signature Exception : " + e.getMessage(), "WARN", null);
                 }
+            }else{
+                if (checklistBean != null) {
+                    try {
+                        jsonObject4.put("fileContent", encodeTobase64(BitmapFactory.decodeFile(checklistBean.getTechnicianSignature())));
+                        jsonObject4.put("taskFileExt", "jpg");
+                        jsonObjectAll.put("technicianSignatures", jsonObject4);
+                        checklistAllBean.setTechnicianSignature(checklistBean.getTechnicianSignature());
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        Appreference.printLog("checkListActivity", "sendchecklist_webservice  tech_signature Exception : " + e.getMessage(), "WARN", null);
+                    }
+                }
+
             }
             JSONObject jsonObject5 = new JSONObject();
             if (custSign_path != null && !custSign_path.equalsIgnoreCase(null) && !custSign_path.equalsIgnoreCase("")) {
@@ -764,21 +826,20 @@ public class CheckListActivity extends Activity implements WebServiceInterface {
                     e.printStackTrace();
                     Appreference.printLog("checkListActivity", "sendchecklist_webservice  custSign_path Exception : " + e.getMessage(), "WARN", null);
                 }
+            }else{
+                if (checklistBean != null) {
+                    try {
+                        jsonObject5.put("fileContent", encodeTobase64(BitmapFactory.decodeFile(checklistBean.getClientSignature())));
+                        jsonObject5.put("taskFileExt", "jpg");
+                        checklistAllBean.setClientSignature(checklistBean.getClientSignature());
+                        jsonObjectAll.put("clientSignatures", jsonObject5);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        Appreference.printLog("checkListActivity", "sendchecklist_webservice  custSign_path Exception : " + e.getMessage(), "WARN", null);
+                    }
+                }
             }
-                   /* JSONObject jsonObject6 = new JSONObject();
-                    if (comments_path != null && !comments_path.equalsIgnoreCase(null) && !comments_path.equalsIgnoreCase("")) {
-                        try {
 
-                            jsonObject6.put("fileContent", encodeTobase64(BitmapFactory.decodeFile(comments_path)));
-                            jsonObject6.put("taskFileExt", "jpg");
-                            jsonObjectAll.put("remarksImage", jsonObject6);
-                            checklistAllBean.setRemarks(comments_path);
-
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                            Appreference.printLog("checkListActivity", "sendchecklist_webservice  comments_path Exception : " + e.getMessage(), "WARN", null);
-                        }
-                    }*/
 
             JSONObject jsonObject7 = new JSONObject();
             if (advice_path != null && !advice_path.equalsIgnoreCase(null) && !advice_path.equalsIgnoreCase("")) {
@@ -792,6 +853,18 @@ public class CheckListActivity extends Activity implements WebServiceInterface {
                     e.printStackTrace();
                     Appreference.printLog("checkListActivity", "sendchecklist_webservice  advice_path Exception : " + e.getMessage(), "WARN", null);
                 }
+            }else{
+                if (checklistBean != null && checklistBean.getAdvicetoCustomer()!=null && checklistBean.getAdvicetoCustomer().contains(".jpg")) {
+                    try {
+                        jsonObject7.put("fileContent", encodeTobase64(BitmapFactory.decodeFile(checklistBean.getAdvicetoCustomer())));
+                        jsonObject7.put("taskFileExt", "jpg");
+                        jsonObjectAll.put("adviceImage", jsonObject7);
+                        checklistAllBean.setAdvicetoCustomer(checklistBean.getAdvicetoCustomer());
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        Appreference.printLog("checkListActivity", "sendchecklist_webservice  advice_path Exception : " + e.getMessage(), "WARN", null);
+                    }
+                }
             }
             JSONArray Multi_array = new JSONArray();
 
@@ -799,9 +872,13 @@ public class CheckListActivity extends Activity implements WebServiceInterface {
                 for (int i = 0; i < checklistBean.getLabel().size(); i++) {
                     JSONObject checklist_row = new JSONObject();
                     Label fieldvalues = checklistBean.getLabel().get(i);
-//                            checklist_row.put("issueType", fieldvalues.getIssueType());
+                    if (fieldvalues.getIssueType().equalsIgnoreCase("M") && fieldvalues.getJobstatus() != null) {
+                        Appreference.isMandatoryLabelNotFilled = false;
+                    } else {
+                        Appreference.isMandatoryLabelNotFilled = true;
+                        break;
+                    }
                     checklist_row.put("checkListDetailId", fieldvalues.getId());
-//                            checklist_row.put("jobDescription", fieldvalues.getJobDescription());
                     checklist_row.put("jobstatus", fieldvalues.getJobstatus());
                     checklist_row.put("quantity", fieldvalues.getQuantity());
                     Multi_array.put(i, checklist_row);
@@ -813,15 +890,26 @@ public class CheckListActivity extends Activity implements WebServiceInterface {
             if (!isNetworkAvailable()) {
                 checklistAllBean.setWsSendStatus("00");
             }
-            /****************************/
-            SaveDB(checklistAllBean, 1);
-            /****************************/
 
-            if (isNetworkAvailable()) {
-                showprogress();
-                Appreference.jsonRequestSender.SaveCheckListForm(EnumJsonWebservicename.saveCheckListDataDetails, jsonObjectAll, CheckListActivity.this);
+
+            if (!Appreference.isMandatoryLabelNotFilled) {
+                if ((checklistAllBean.getTechnicianName() != null && !checklistAllBean.getTechnicianName().equalsIgnoreCase("")
+                        && !checklistAllBean.getTechnicianName().equalsIgnoreCase(null) && !checklistAllBean.getTechnicianName().equalsIgnoreCase("null"))
+                        && (checklistAllBean.getClientName() != null && !checklistAllBean.getClientName().equalsIgnoreCase("")
+                        && !checklistAllBean.getClientName().equalsIgnoreCase(null) && !checklistAllBean.getClientName().equalsIgnoreCase("null"))
+                        && (checklistAllBean.getTechnicianSignature() != null && !checklistAllBean.getTechnicianSignature().equalsIgnoreCase("")
+                        && !checklistAllBean.getTechnicianSignature().equalsIgnoreCase(null) && !checklistAllBean.getTechnicianSignature().equalsIgnoreCase("null"))
+                        && (checklistAllBean.getClientSignature() != null && !checklistAllBean.getClientSignature().equalsIgnoreCase("")
+                        && !checklistAllBean.getClientSignature().equalsIgnoreCase(null) && !checklistAllBean.getClientSignature().equalsIgnoreCase("null"))
+                        && (checklistAllBean.getSignedDate() != null && !checklistAllBean.getSignedDate().equalsIgnoreCase("")
+                        && !checklistAllBean.getSignedDate().equalsIgnoreCase(null) && !checklistAllBean.getSignedDate().equalsIgnoreCase("null"))) {
+
+                    sendCheckListAlert_Dialog(jsonObjectAll, checklistAllBean);
+                } else {
+                    sendCheckListMandatory_Alert("Please fill name and signature field and submit again! ");
+                }
             } else {
-                finish();
+                sendCheckListMandatory_Alert("Please fill all the Mandatory fields and submit again!");
             }
         } catch (JSONException e) {
             e.printStackTrace();

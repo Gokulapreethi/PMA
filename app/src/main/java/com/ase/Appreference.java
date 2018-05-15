@@ -153,6 +153,11 @@ public class Appreference {
     public static boolean isTemplateTaskProfile = false;
     public static boolean isPasswordChanged = false;
 
+/*************************added for checklist start*/
+    public static checkListDetails mychecklistTemplate;
+    public static boolean isMandatoryLabelNotFilled=false;
+/*************************added for checklist End*/
+
 
     /************ADDED FOR ASE PHASE 2 FEB 26********/
 

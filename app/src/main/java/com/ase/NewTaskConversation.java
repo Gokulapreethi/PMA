@@ -954,39 +954,43 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
             e.printStackTrace();
         }
          /*Code Added for GroupAdmin-Observer Start*/
-        String GroupAdmin_observer = getGroupAdmin_observer_DB();
-        Log.i("onCreate", "is project  $$ " + project);
-        if (project) {
-            if (taskStatus != null && !taskStatus.equalsIgnoreCase("null") && (taskStatus.equalsIgnoreCase("draft") || taskStatus.equalsIgnoreCase("Unassigned"))) {
-                if ((Appreference.loginuserdetails != null && Appreference.loginuserdetails.getRoleId() != null
-                        && Appreference.loginuserdetails.getRoleId().equalsIgnoreCase("2")
-                        && isProjectFromOracle && !oracleProjectOwner.equalsIgnoreCase(Appreference.loginuserdetails.getUsername())) &&
-                        (GroupAdmin_observer != null && !GroupAdmin_observer.contains(Appreference.loginuserdetails.getUsername()))) {
+        try {
+            String GroupAdmin_observer = getGroupAdmin_observer_DB();
+            Log.i("onCreate", "is project  $$ " + project);
+            if (project) {
+                if (taskStatus != null && !taskStatus.equalsIgnoreCase("null") && (taskStatus.equalsIgnoreCase("draft") || taskStatus.equalsIgnoreCase("Unassigned"))) {
+                    if ((Appreference.loginuserdetails != null && Appreference.loginuserdetails.getRoleId() != null
+                            && Appreference.loginuserdetails.getRoleId().equalsIgnoreCase("2")
+                            && isProjectFromOracle && !oracleProjectOwner.equalsIgnoreCase(Appreference.loginuserdetails.getUsername())) &&
+                            (GroupAdmin_observer != null && !GroupAdmin_observer.contains(Appreference.loginuserdetails.getUsername()))) {
+                        assign_taskview.setVisibility(View.GONE);
+                    } else {
+                        assign_taskview.setVisibility(View.VISIBLE);
+                    }
+                    status_job.setVisibility(View.GONE);
+                    travel_job.setVisibility(View.GONE);
+                } else {
+                    assign_taskview.setVisibility(View.GONE);
+                }
+            }
+            if (taskStatus != null && (!taskStatus.equalsIgnoreCase("draft") && !taskStatus.equalsIgnoreCase("template") && !taskStatus.equalsIgnoreCase("Unassigned"))) {
+                assign_taskview.setVisibility(View.GONE);
+            } else if (isProjectFromOracle && oracleProjectOwner.equalsIgnoreCase(Appreference.loginuserdetails.getUsername()) ||
+                    (GroupAdmin_observer != null && GroupAdmin_observer.contains(Appreference.loginuserdetails.getUsername()))) {
+                assign_taskview.setVisibility(View.VISIBLE);
+                tv_reassign.setText("Assign Task");
+            } else if (isProjectFromOracle && !oracleProjectOwner.equalsIgnoreCase(Appreference.loginuserdetails.getUsername())) {
+                if (Appreference.loginuserdetails != null && Appreference.loginuserdetails.getRoleId() != null
+                        && Appreference.loginuserdetails.getRoleId().equalsIgnoreCase("2")) {
                     assign_taskview.setVisibility(View.GONE);
                 } else {
                     assign_taskview.setVisibility(View.VISIBLE);
                 }
-                status_job.setVisibility(View.GONE);
-                travel_job.setVisibility(View.GONE);
-            } else {
-                assign_taskview.setVisibility(View.GONE);
+                tv_reassign.setText("Assign to me");
+                Self_assign = true;
             }
-        }
-        if (taskStatus != null && (!taskStatus.equalsIgnoreCase("draft") && !taskStatus.equalsIgnoreCase("template") && !taskStatus.equalsIgnoreCase("Unassigned"))) {
-            assign_taskview.setVisibility(View.GONE);
-        } else if (isProjectFromOracle && oracleProjectOwner.equalsIgnoreCase(Appreference.loginuserdetails.getUsername()) ||
-                (GroupAdmin_observer != null && GroupAdmin_observer.contains(Appreference.loginuserdetails.getUsername()))) {
-            assign_taskview.setVisibility(View.VISIBLE);
-            tv_reassign.setText("Assign Task");
-        } else if (isProjectFromOracle && !oracleProjectOwner.equalsIgnoreCase(Appreference.loginuserdetails.getUsername())) {
-            if (Appreference.loginuserdetails != null && Appreference.loginuserdetails.getRoleId() != null
-                    && Appreference.loginuserdetails.getRoleId().equalsIgnoreCase("2")) {
-                assign_taskview.setVisibility(View.GONE);
-            } else {
-                assign_taskview.setVisibility(View.VISIBLE);
-            }
-            tv_reassign.setText("Assign to me");
-            Self_assign = true;
+        } catch (Exception e) {
+            e.printStackTrace();
         }
          /*Code Added for GroupAdmin-Observer End*/
         if (isProjectFromOracle && (oracleProjectOwner != null && !oracleProjectOwner.equalsIgnoreCase(Appreference.loginuserdetails.getUsername())
@@ -5514,18 +5518,25 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                     int complete_travel = VideoCallDataBase.getDB(context).CheckTravelEntryDetails("select * from projectStatus where projectId ='" + projectId + "' and taskId = '" + webtaskId + "' and status = '10' and taskcompleteddate like '" + taskcomplete_date + "%" + "'");
                     Log.i("ws123", "complete_travel $$--> " + complete_travel);
                     int travelentry = VideoCallDataBase.getDB(context).CheckTravelEntryDetails("select * from projectStatus where projectId ='" + projectId + "' and taskId = '" + webtaskId + "' and travelStartTime IS NOT NULL and travelEndTime IS NULL");
+                    String checklist_available_query = "select * from checklistDetails where projectId='" + projectId + "'and taskId='" + webtaskId + "'and userId='" + Appreference.loginuserdetails.getId() + "'";
+                    checkListDetails checklistBean = VideoCallDataBase.getDB(context).getchecklistdetails(checklist_available_query);
+
                     if (count != 0) {
                         if (travelentry == 0) {
-                            if (complete_travel == 0) {
-                                Intent i = new Intent(context, EodScreen.class);
-                                i.putExtra("projectId", projectId);
-                                i.putExtra("webtaskId", webtaskId);
-                                i.putExtra("taskName", taskName);
-                                i.putExtra("JobCodeNo", JobCodeNo);
-                                i.putExtra("ActivityCode", ActivityCode);
-                                startActivityForResult(i, 9999);
-                            } else {
-                                Toast.makeText(NewTaskConversation.this, "Already EOD sent", Toast.LENGTH_SHORT).show();
+                            if (checklistBean.getId() != null && checklistBean.getIsServiceDone().equalsIgnoreCase("1")) {
+                                if (complete_travel == 0) {
+                                    Intent i = new Intent(context, EodScreen.class);
+                                    i.putExtra("projectId", projectId);
+                                    i.putExtra("webtaskId", webtaskId);
+                                    i.putExtra("taskName", taskName);
+                                    i.putExtra("JobCodeNo", JobCodeNo);
+                                    i.putExtra("ActivityCode", ActivityCode);
+                                    startActivityForResult(i, 9999);
+                                } else {
+                                    Toast.makeText(NewTaskConversation.this, "Already EOD sent", Toast.LENGTH_SHORT).show();
+                                }
+                            }else {
+                                Toast.makeText(NewTaskConversation.this, "Please submit the check list before EOD!", Toast.LENGTH_SHORT).show();
                             }
                         } else {
                             Toast.makeText(NewTaskConversation.this, "Enter end date and time and then proceed to complete the task.", Toast.LENGTH_SHORT).show();
@@ -5578,33 +5589,48 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                                     @Override
                                     public void onClick(DialogInterface dialog, int which) {
                                         String strName = arrayAdapter.getItem(which);
-                                       checkListDetails mychecklistTemplate = null;
+                                        final String type_service=getselectedService(which);
                                         try {
-                                            if (which == 0) {
-                                                mychecklistTemplate = getTemplateList(PMSJobDetails, 250);
-                                            } else if (which == 1) {
-                                                mychecklistTemplate = getTemplateList(PMSJobDetails, 500);
-                                            } else if (which == 2) {
-                                                mychecklistTemplate = getTemplateList(PMSJobDetails, 1000);
-                                            } else {
-                                                mychecklistTemplate = getTemplateList(PMSJobDetails, 2000);
-                                            }
-                                            if (mychecklistTemplate.getLabel().size()>0) {
+                                            AlertDialog alertDialog = new AlertDialog.Builder(NewTaskConversation.this).create();
+                                            alertDialog.setTitle(strName);
+                                            alertDialog.setCancelable(false);
+                                            alertDialog.setMessage("Adding " +type_service+" Hours Check list to this Job card! \n" +
+                                                    "Are you sure of your selection?");
+                                            alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "No",
+                                                    new DialogInterface.OnClickListener() {
+                                                        public void onClick(DialogInterface dialogAlert, int which) {
 
-                                                if (mychecklistTemplate != null) {
-                                                    Intent intent = new Intent(NewTaskConversation.this, CheckListActivity.class);
-                                                    intent.putExtra("checklistBean", mychecklistTemplate);
-                                                    intent.putExtra("isExistingView", false);
-                                                    intent.putExtra("PMSprojectId", projectId);
-                                                    intent.putExtra("PMStaskId", webtaskId);
-                                                    startActivity(intent);
-                                                }
-                                            }else{
-                                                Toast.makeText(NewTaskConversation.this, "CheckList Not Available....", Toast.LENGTH_SHORT).show();
-                                            }
+                                                            dialogAlert.dismiss();
+                                                        }
+                                                    });
+                                            alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "Yes",
+                                                    new DialogInterface.OnClickListener() {
+                                                        public void onClick(DialogInterface dialog, int which) {
+                                                            Appreference.mychecklistTemplate = getTemplateList(PMSJobDetails, Integer.parseInt(type_service));
+                                                            try {
+                                                                if (Appreference.mychecklistTemplate.getLabel().size()>0) {
+
+                                                                    if (Appreference.mychecklistTemplate != null) {
+                                                                        Intent intent = new Intent(NewTaskConversation.this, CheckListActivity.class);
+                                                                        intent.putExtra("checklistBean", Appreference.mychecklistTemplate);
+                                                                        intent.putExtra("isExistingView", false);
+                                                                        intent.putExtra("PMSprojectId", projectId);
+                                                                        intent.putExtra("PMStaskId", webtaskId);
+                                                                        startActivity(intent);
+                                                                    }
+                                                                }else{
+                                                                    Toast.makeText(NewTaskConversation.this, "CheckList Not Available....", Toast.LENGTH_SHORT).show();
+                                                                }
+                                                            } catch (Exception e) {
+                                                                e.printStackTrace();
+                                                                Appreference.printLog("NewTaskConversation", "mychecklistTemplate  Exception : " + e.getMessage(), "WARN", null);
+                                                            }
+                                                        }
+                                                    });
+                                            alertDialog.show();
                                         } catch (Exception e) {
                                             e.printStackTrace();
-                                            Appreference.printLog("ProjectFragment", "ProjectArrayAdapter projectCompleted Exception : " + e.getMessage(), "WARN", null);
+                                            Appreference.printLog("EodScreen", "alert_dialog Exception : " + e.getMessage(), "WARN", null);
                                         }
                                     }
                                 });
@@ -5718,6 +5744,21 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
         });
         popup.show();
     }
+
+    private String getselectedService(int position) {
+        String type="";
+        if(position==0){
+            type="250";
+        }else if(position==1){
+            type="500";
+        }else if(position==2){
+            type="1000";
+        }else if(position==3){
+            type="2000";
+        }
+        return type;
+    }
+
 
     private ProjectDetailsBean getprojectDetails_Row() {
         String PMSServiceType_query = "select * from projectDetails where loginuser ='" + Appreference.loginuserdetails.getEmail() + "'and projectId='" + projectId + "'";
