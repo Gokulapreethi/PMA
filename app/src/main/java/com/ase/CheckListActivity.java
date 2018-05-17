@@ -175,6 +175,8 @@ public class CheckListActivity extends Activity implements WebServiceInterface {
         }
 
 
+
+
         adapter = new CheckListItemAdapter(checkListContext, checklistBean.getLabel());
         listView.setAdapter(adapter);
         adapter.notifyDataSetChanged();
@@ -201,6 +203,10 @@ public class CheckListActivity extends Activity implements WebServiceInterface {
         checklist_tech_name = (EditText) footerView.findViewById(R.id.checklist_tech_name);
         checklist_client_name = (EditText) footerView.findViewById(R.id.checklist_client_name);
 
+        if(Appreference.loginuserdetails!=null && Appreference.loginuserdetails.getUsername()!=null){
+            checklist_tech_name.setText(Appreference.loginuserdetails.getFirstName()+" "+Appreference.loginuserdetails.getLastName());
+            checklist_tech_name.setEnabled(false);
+        }
 
         if (isReadOnlyView) {
             checklist_HMReading.setEnabled(false);
@@ -330,7 +336,7 @@ public class CheckListActivity extends Activity implements WebServiceInterface {
                 saveDialog.setPositiveButton("Text", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         checklist_advice_text.setVisibility(View.VISIBLE);
-                        checklist_advice_img.setVisibility(View.GONE);
+                        checklist_advice_img.setVisibility(View.INVISIBLE);
                         isAdviceImg = false;
                         dialog.cancel();
                     }
@@ -766,7 +772,7 @@ public class CheckListActivity extends Activity implements WebServiceInterface {
             String signed_dateUTC = "";
             Date date = null;
             SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-            SimpleDateFormat dateParse = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            SimpleDateFormat dateParse = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
             dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
             String signed_date = checklist_date_now.getText().toString() + " " + "00:00:00";
             if (signed_date != null && !signed_date.equalsIgnoreCase("")) {

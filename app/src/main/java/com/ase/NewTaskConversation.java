@@ -15050,7 +15050,7 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                     listOfObservers.add(taskReceiver);
                 }
             }
-            if (listOfObservers.contains(Appreference.loginuserdetails.getUsername())) {
+            if (Appreference.loginuserdetails!=null && listOfObservers.contains(Appreference.loginuserdetails.getUsername())) {
                 listOfObservers.remove(Appreference.loginuserdetails.getUsername());
             }
             Log.i("taskConversation", "project_details listOfObservers Group " + listOfObservers);

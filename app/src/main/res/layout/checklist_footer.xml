@@ -124,7 +124,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:weightSum="3.7">
+                android:weightSum="3">
 
                 <TextView
                     android:id="@+id/textView15"
@@ -134,7 +134,7 @@
                     android:layout_marginLeft="5dp"
                     android:layout_marginStart="5dp"
                     android:layout_marginTop="5dp"
-                    android:layout_weight="1.50"
+                    android:layout_weight="1"
                     android:gravity="center_vertical"
                     android:text="Advice to the Customer"
                     android:textColor="@color/black"
@@ -158,7 +158,7 @@
                     android:layout_gravity="center_vertical"
                     android:layout_marginLeft="15dp"
                     android:layout_marginTop="5dp"
-                    android:layout_weight="2.5"
+                    android:layout_weight="1"
                     android:gravity="start"
                     android:hint="Type Here"
                     android:textColor="@color/black"
@@ -173,7 +173,7 @@
                     android:layout_marginLeft="15dp"
                     android:layout_weight="1"
                     android:gravity="center_vertical"
-                    android:visibility="visible" />
+                    android:visibility="invisible" />
             </LinearLayout>
 
         </TableLayout>
@@ -192,7 +192,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:weightSum="2">
+                android:weightSum="3">
 
                 <TextView
                     android:layout_width="0dp"
@@ -219,7 +219,7 @@
                     android:gravity="start"
                     android:hint="Type Here"
                     android:singleLine="true"
-                    android:textColor="@color/black"
+                    android:textColor="@color/appcolor"
                     android:textSize="18sp"
                     android:visibility="visible" />
 
@@ -235,7 +235,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:weightSum="2.3">
+                android:weightSum="3">
 
                 <TextView
                     android:id="@+id/textView17"
@@ -290,7 +290,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:weightSum="2">
+                android:weightSum="3">
 
                 <TextView
                     android:layout_width="0dp"
@@ -331,9 +331,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:weightSum="2.3">
+                android:weightSum="3">
 
                 <TextView
+                    android:id="@+id/textView23"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
@@ -386,7 +387,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:weightSum="1.9">
+                android:weightSum="3">
 
                 <TextView
                     android:layout_width="0dp"
@@ -395,19 +396,20 @@
                     android:layout_marginLeft="5dp"
                     android:layout_marginStart="5dp"
                     android:layout_marginTop="5dp"
-                    android:layout_weight="0.6"
+                    android:layout_weight="1"
                     android:gravity="center_vertical"
                     android:text="Date *"
                     android:textColor="@color/black"
                     android:textDirection="firstStrong"
                     android:textSize="18sp" />
 
+
                 <Button
                     android:id="@+id/checklist_date_btn"
                     android:layout_width="20dp"
                     android:layout_height="30dp"
+                    android:layout_marginRight="40dp"
                     android:layout_gravity="center_vertical"
-                    android:layout_marginLeft="10dp"
                     android:layout_weight="0.1"
                     android:background="@drawable/ic_date_chang_request"
                     android:gravity="center_vertical" />

@@ -2084,6 +2084,7 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
             cv.put("jobCardType", projectDetailsBean.getJobCardType());
             cv.put("machineMake", projectDetailsBean.getMachineMake());
             cv.put("jobDescription", projectDetailsBean.getJobDescription());
+            cv.put("serviceType", projectDetailsBean.getServiceType());
             String groupAdminObserver = "user4_hm.net" + "," + "user5_hm.net";
 
                         /*added for GroupAdmin observer Start*/
