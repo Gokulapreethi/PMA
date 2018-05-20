@@ -5608,7 +5608,8 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                                                         public void onClick(DialogInterface dialog, int which) {
                                                             Appreference.mychecklistTemplate = getTemplateList(PMSJobDetails, Integer.parseInt(type_service));
                                                             try {
-                                                                if (Appreference.mychecklistTemplate.getLabel().size()>0) {
+                                                                if (Appreference.mychecklistTemplate.getLabel()!=null
+                                                                        && Appreference.mychecklistTemplate.getLabel().size()>0) {
 
                                                                     if (Appreference.mychecklistTemplate != null) {
                                                                         Intent intent = new Intent(NewTaskConversation.this, CheckListActivity.class);
@@ -5619,7 +5620,7 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                                                                         startActivity(intent);
                                                                     }
                                                                 }else{
-                                                                    Toast.makeText(NewTaskConversation.this, "CheckList Not Available....", Toast.LENGTH_SHORT).show();
+                                                                    Toast.makeText(NewTaskConversation.this, "Check List unavailable for the Make- Model!....", Toast.LENGTH_SHORT).show();
                                                                 }
                                                             } catch (Exception e) {
                                                                 e.printStackTrace();

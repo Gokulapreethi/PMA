@@ -116,8 +116,8 @@ import static android.graphics.Color.rgb;
 public class ProjectsFragment extends Fragment implements View.OnClickListener, WebServiceInterface, DateTimePicker.DateWatcher {
     public View view;
     private SwipeMenuListView listview_project;
-    TextView heading_project, exclation_counter, first_fsr, end_fsr, tna_middle;
-    ImageView image_search, reportdetails, fsrDetails;
+    TextView heading_project, exclation_counter, first_fsr, end_fsr, tna_middle, checklist_fsr;
+    ImageView image_search, reportdetails, fsrDetails, PMS_checklist;
     public static Context classContext;
     static ProjectsFragment fragment;
     ProgressDialog progress;
@@ -137,7 +137,7 @@ public class ProjectsFragment extends Fragment implements View.OnClickListener, 
     Button submit_button;
     String TNAReportStart, TNAReportEnd;
     String User_selected_mcsrNo, User_selected_startDate, User_selected_endDate;
-    ArrayList<String> ar_My_machineSerialNo;
+    ArrayList<String> ar_My_machineSerialNo, pms_projectList;
 
     public static ProjectsFragment getInstance() {
         return projectsFragment;
@@ -230,6 +230,7 @@ public class ProjectsFragment extends Fragment implements View.OnClickListener, 
             typeFilter = (ImageView) view.findViewById(R.id.my_filter_type);
             NoResults = (TextView) view.findViewById(R.id.Noresult);
             tna_middle = (TextView) view.findViewById(R.id.tna_middle);
+            checklist_fsr = (TextView) view.findViewById(R.id.checklist_fsr);
             first_fsr = (TextView) view.findViewById(R.id.first_fsr);
             end_fsr = (TextView) view.findViewById(R.id.end_fsr);
             listview_project = (SwipeMenuListView) view.findViewById(R.id.listview_project);
@@ -238,8 +239,10 @@ public class ProjectsFragment extends Fragment implements View.OnClickListener, 
             image_search = (ImageView) view.findViewById(R.id.image_search);
             reportdetails = (ImageView) view.findViewById(R.id.reportdetails);
             fsrDetails = (ImageView) view.findViewById(R.id.fsrDetails);
+            PMS_checklist = (ImageView) view.findViewById(R.id.PMS_checklist);
             reportdetails.setOnClickListener(this);
             fsrDetails.setOnClickListener(this);
+            PMS_checklist.setOnClickListener(this);
 
             try {
                 if (Appreference.loginuserdetails != null && Appreference.loginuserdetails.getRoleId() != null
@@ -247,17 +250,30 @@ public class ProjectsFragment extends Fragment implements View.OnClickListener, 
                     image_search.setVisibility(View.VISIBLE);
                     reportdetails.setVisibility(View.VISIBLE);
                     fsrDetails.setVisibility(View.VISIBLE);
+                    PMS_checklist.setVisibility(View.VISIBLE);
+
                     tna_middle.setVisibility(View.VISIBLE);
                     first_fsr.setVisibility(View.VISIBLE);
                     end_fsr.setVisibility(View.VISIBLE);
+                    checklist_fsr.setVisibility(View.VISIBLE);
                 } else {
                     image_search.setVisibility(View.GONE);
                     reportdetails.setVisibility(View.GONE);
                     fsrDetails.setVisibility(View.VISIBLE);
-                    tna_middle.setVisibility(View.GONE);
+                    RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) fsrDetails.getLayoutParams();
+                    params.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
+
+                    fsrDetails.setLayoutParams(params); //causes layout update
+                    PMS_checklist.setVisibility(View.VISIBLE);
+                    checklist_fsr.setVisibility(View.GONE);
+
                     first_fsr.setVisibility(View.GONE);
                     end_fsr.setVisibility(View.VISIBLE);
                     end_fsr.setText("FSR");
+                    tna_middle.setVisibility(View.VISIBLE);
+                    tna_middle.setText("checklist");
+
+
                 }
             } catch (Exception e) {
                 e.printStackTrace();
@@ -352,20 +368,7 @@ public class ProjectsFragment extends Fragment implements View.OnClickListener, 
 //                    Collections.sort(ar_My_machineSerialNo);
 
                         ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.select_dialog_item, ar_My_machineSerialNo) {
-                            /*  @Override
-                              public boolean isEnabled(int position) {
-                                  if(position == 0)
-                                  {
-                                      // Disable the first item from Spinner
-                                      // First item will be use for hint
-                                      return false;
-                                  }
-                                  else
-                                  {
-                                      return true;
-                                  }
-                              }
-      */
+
                             @Override
                             public View getDropDownView(int position, View convertView, ViewGroup parent) {
                                 View view = super.getDropDownView(position, convertView, parent);
@@ -625,6 +628,127 @@ public class ProjectsFragment extends Fragment implements View.OnClickListener, 
                         e.printStackTrace();
                         Appreference.printLog("ProjectFragment", "fsrDetails onclick Exception : " + e.getMessage(), "WARN", null);
                     }
+                }
+            });
+
+
+            PMS_checklist.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    try {
+                        hideKeyboard();
+                        LayoutInflater inflater = getActivity().getLayoutInflater();
+                        View alertLayout = inflater.inflate(R.layout.checklist_request_view, null);
+                        final AutoCompleteTextView checklist_spinner = (AutoCompleteTextView) alertLayout.findViewById(R.id.auto_complete_pms);
+
+                        AlertDialog.Builder alert = new AlertDialog.Builder(getActivity());
+                        alert.setTitle("CHECKLIST REPORT");
+
+                        // this is set the view from XML inside AlertDialog
+                        alert.setView(alertLayout);
+                        alert.setPositiveButton("Submit", null);
+                        alert.setNegativeButton("Cancel", null);
+                        // disallow cancel of AlertDialog on click of back button and outside touch
+                        alert.setCancelable(false);
+                        pms_projectList = new ArrayList<>();
+                        pms_projectList.clear();
+                    /*getting list of jobcards for the user from table*/
+                        String PMSServiceType_query = "select * from projectDetails where loginuser ='" + Appreference.loginuserdetails.getEmail() + "' and isActiveStatus='0'";
+                        pms_projectList = VideoCallDataBase.getDB(getActivity()).getOracleProjectIdlist(PMSServiceType_query, "oracleProjectId");
+
+//                    Collections.sort(ar_My_machineSerialNo);
+
+                        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.select_dialog_item, pms_projectList) {
+
+                            @Override
+                            public View getDropDownView(int position, View convertView, ViewGroup parent) {
+                                View view = super.getDropDownView(position, convertView, parent);
+                                TextView tv = (TextView) view;
+                                if (position == 0) {
+                                    // Set the hint text color gray
+                                    tv.setTextColor(Color.GRAY);
+                                } else {
+                                    tv.setTextColor(Color.BLACK);
+                                }
+                                return view;
+                            }
+                        };
+                        // Drop down layout style - list view with radio button
+//                    dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                        checklist_spinner.setThreshold(1);
+                        // attaching data adapter to spinner
+                        checklist_spinner.setAdapter(dataAdapter);
+
+                        checklist_spinner.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                            @Override
+                            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                                try {
+                                    InputMethodManager in = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                                    in.hideSoftInputFromWindow(view.getApplicationWindowToken(), 0);
+                                    String selectedItemText = (String) parent.getItemAtPosition(position);
+                                    Log.i("FSR", "ac_machine_no_spinner selectedItemText ==> " + selectedItemText);
+                                    Log.i("FSR", "String.valueOf(ac_machine_no_spinner.getAdapter().getItem(position)) ==> " + String.valueOf(checklist_spinner.getAdapter().getItem(position)));
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                    Appreference.printLog("ProjectFragment", "checkList checklist_spinner Exception : " + e.getMessage(), "WARN", null);
+                                }
+                            }
+                        });
+                        final AlertDialog mAlertDialog = alert.create();
+                        mAlertDialog.setOnShowListener(new DialogInterface.OnShowListener() {
+
+                            @Override
+                            public void onShow(final DialogInterface dialog) {
+
+                                Button b = mAlertDialog.getButton(AlertDialog.BUTTON_POSITIVE);
+                                b.setOnClickListener(new View.OnClickListener() {
+
+                                    @Override
+                                    public void onClick(View view) {
+                                        // TODO Do something
+                                        try {
+                                            if (getNetworkState()) {
+                                                try {
+                                                    showprogress("Getting checkList...");
+                                                    List<NameValuePair> tagNameValuePairs = new ArrayList<NameValuePair>();
+                                                    tagNameValuePairs.add(new BasicNameValuePair("jobCardNumber", checklist_spinner.getText().toString()));
+                                                    Appreference.jsonRequestSender.checkListReport(EnumJsonWebservicename.checkListReport, tagNameValuePairs, ProjectsFragment.this);
+                                                    dialog.dismiss();
+                                                } catch (Exception e) {
+                                                    e.printStackTrace();
+                                                    Appreference.printLog("ProjectFragment", "setUserVisibleHint getAllJobDetails Exception : " + e.getMessage(), "WARN", null);
+                                                }
+                                            } else {
+                                                Toast.makeText(getActivity(), "Check your internet connection", Toast.LENGTH_SHORT).show();
+                                            }
+                                        } catch (Exception e) {
+                                            e.printStackTrace();
+                                            Appreference.printLog("ProjectFragment", "checkList mAlertDialog_showListener Exception : " + e.getMessage(), "WARN", null);
+                                        }
+
+                                    }
+                                });
+                                Button a = mAlertDialog.getButton(AlertDialog.BUTTON_NEGATIVE);
+                                a.setOnClickListener(new View.OnClickListener() {
+
+                                    @Override
+                                    public void onClick(View view) {
+                                        // TODO Do something
+                                        hideKeyboard_fsr(checklist_spinner);
+//                                        hideKeyboard();
+                                        dialog.dismiss();
+                                    }
+                                });
+                            }
+                        });
+                        if (!mAlertDialog.isShowing()) {
+                            mAlertDialog.show();
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        Appreference.printLog("ProjectFragment", "checkList onclick Exception : " + e.getMessage(), "WARN", null);
+                    }
+
                 }
             });
 
@@ -1941,6 +2065,26 @@ public class ProjectsFragment extends Fragment implements View.OnClickListener, 
                                 e.printStackTrace();
                                 Appreference.printLog("ProjectFragment", "ResponceMethod fieldServiceSearch Exception : " + e.getMessage(), "WARN", null);
                             }
+                        } else if (s2 != null && s2.equalsIgnoreCase(("checkListReport"))) {
+                            final JSONObject jsonObject = new JSONObject(opr.getEmail());
+                            cancelDialog();
+                            try {
+                                if (((String) jsonObject.get("result_text")).equalsIgnoreCase("Job Card Number CheckList Report Send successfully")) {
+                                    Log.i("output123", " Filename" + jsonObject.getString("fileName"));
+                                    String pdfURL = getResources().getString(R.string.task_reminder) + jsonObject.getString("fileName");
+                                    String fileName = jsonObject.getString("fileName");
+                                    new DownloadImage(pdfURL, jsonObject.getString("fileName")).execute();
+                                }  else {
+                                    String result = (String) jsonObject.get("result_text");
+                                    Toast.makeText(getContext(), result, Toast.LENGTH_LONG).show();
+                                }
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                                Appreference.printLog("ProjectFragment", "ResponceMethod fieldServiceReportJobWise Exception : " + e.getMessage(), "WARN", null);
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                                Appreference.printLog("ProjectFragment", "ResponceMethod fieldServiceReportJobWise Exception : " + e.getMessage(), "WARN", null);
+                            }
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -1978,11 +2122,6 @@ public class ProjectsFragment extends Fragment implements View.OnClickListener, 
             alert.setCancelable(false);
 
 
-
-       /* String[] list = new String[] {User_selected_mcsrNo};
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(),
-                android.R.layout.simple_spinner_item, list);
-        machine_no_spinner.setAdapter(adapter);*/
             machine_no_spinner.setText(User_selected_mcsrNo);
             machine_no_spinner.setEnabled(false);
             fst_start.setText(User_selected_startDate);
@@ -2000,11 +2139,7 @@ public class ProjectsFragment extends Fragment implements View.OnClickListener, 
                 public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                     String selected_jobcard = String.valueOf(job_spinner.getSelectedItem());
 
-                    //*getting projectid from table relevant to oracleprojectId*//*
-               /* String get_projectId_query = "select projectId from projectDetails where loginuser = '" + Appreference.loginuserdetails.getEmail() + "'and oracleProjectId='" + selected_jobcard + "'";
-                String fsr_ProjectId = VideoCallDataBase.getDB(getActivity()).getprojectIdForOracleID(get_projectId_query);
-                fsr_jobId = fsr_ProjectId;
-*/
+
                     if (projectIdForOracleId.containsKey(selected_jobcard)) {
                         fsr_jobId = projectIdForOracleId.get(selected_jobcard);
                     }

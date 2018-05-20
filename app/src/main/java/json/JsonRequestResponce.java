@@ -117,13 +117,13 @@ public class JsonRequestResponce extends Thread {
                         if (!obj.getEnumJsonWebservicename().toString().equalsIgnoreCase("getCheckListDetailsFromClient")) {
                             Log.i("JsonLeave", "Try catch 1 ");
 
-                             httppost = new HttpPost("https://www1.cognitivemobile.net/ASE/" + obj.getEnumJsonWebservicename()); //ip US Server 204 Registered
+//                             httppost = new HttpPost("https://www1.cognitivemobile.net/ASE/" + obj.getEnumJsonWebservicename()); //ip US Server 204 Registered
 
 //                             httppost = new HttpPost("https://66.109.17.204/ASE/" + obj.getEnumJsonWebservicename()); //ip US Server 204
 
-                             httppost = new HttpPost("https://66.109.17.205/ASE/" + obj.getEnumJsonWebservicename()); //ip Local Server 205
+//                             httppost = new HttpPost("https://66.109.17.205/ASE/" + obj.getEnumJsonWebservicename()); //ip Local Server 205
 
-//                            httppost = new HttpPost("https://172.16.1.203:8443/ASE/" + obj.getEnumJsonWebservicename());
+                            httppost = new HttpPost("https://172.16.1.203:8443/ASE/" + obj.getEnumJsonWebservicename());
 //
 //                         HttpPost httppost = new HttpPost("http://151.253.12.203/ASE/" + obj.getEnumJsonWebservicename());
 
@@ -306,6 +306,8 @@ public class JsonRequestResponce extends Thread {
                                 obj.setFirstname("listAllMyProject");
                             } else if (obj.getEnumJsonWebservicename().toString().equals("getAllJobDetails")) {
                                 obj.setFirstname("getAllJobDetails");
+                            }else if (obj.getEnumJsonWebservicename().toString().equals("checkListReport")) {
+                                obj.setFirstname("checkListReport");
                             }else if (obj.getEnumJsonWebservicename().toString().equals("updatePMSNotificationDetails")) {
                                 obj.setFirstname("updatePMSNotificationDetails");
                             }else if (obj.getEnumJsonWebservicename().toString().equals("getProject")) {
@@ -603,6 +605,11 @@ public class JsonRequestResponce extends Thread {
                 inter.ErrorMethod(obj);
                 break;
             case getAllJobDetails:
+                ProjectsFragment.getInstance().cancelDialog();
+                ProjectsFragment.getInstance().showToast(result);
+                inter.ErrorMethod(obj);
+                break;
+             case checkListReport:
                 ProjectsFragment.getInstance().cancelDialog();
                 ProjectsFragment.getInstance().showToast(result);
                 inter.ErrorMethod(obj);

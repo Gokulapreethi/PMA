@@ -1,0 +1,50 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@android:drawable/dialog_holo_light_frame">
+
+
+    <LinearLayout
+        android:id="@+id/head_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:background="@color/lgyellow"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:id="@+id/fsr_machine_no"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="20dp"
+            android:background="@color/lgyellow"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/pms_jobNo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/view_land"
+                android:layout_marginLeft="20dp"
+                android:text="JOB CARD NO :"
+                android:textColor="@color/background"
+                android:textSize="20dp" />
+
+            <AutoCompleteTextView
+                android:id="@+id/auto_complete_pms"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/fsr_msn"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="2dp"
+                android:dropDownHeight="200dp"
+                android:ems="5"
+                android:hint=" Enter your number"
+                android:scrollbars="vertical"
+                android:singleLine="true"></AutoCompleteTextView>
+        </LinearLayout>
+    </LinearLayout>
+</RelativeLayout>

@@ -1,6 +1,7 @@
 package json;
 
 import android.util.Log;
+import android.view.View;
 
 import com.ase.Appreference;
 import com.ase.Bean.ListofFileds;
@@ -676,6 +677,14 @@ public class JsonRequestSender {
         if (jsonObject != null) {
             communicationBean.setJsonObject(jsonObject);
         }
+        communicationBean.setAccess(access);
+        queue.addMsg(communicationBean);
+    }
+
+    public void checkListReport(EnumJsonWebservicename webservicename, List<NameValuePair> tagNameValuePairs, WebServiceInterface access) {
+        CommunicationBean communicationBean = new CommunicationBean();
+        communicationBean.setEnumJsonWebservicename(webservicename);
+        communicationBean.setNameValuePairs(tagNameValuePairs);
         communicationBean.setAccess(access);
         queue.addMsg(communicationBean);
     }
