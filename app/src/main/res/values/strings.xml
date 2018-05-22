@@ -118,15 +118,15 @@
 
     //IP for US Server 204(SSL ceritified)) sip:tls:5061
 
-  <!--    <string name="app_version">204</string>
-     <string name="app_versionDate">Version No : 1.5.4</string>
-     <string name="app_releaseDate">Release No : 002_204</string>
-     <string name="app_url">https://www1.cognitivemobile.net/ASE/</string>
-     <string name="server_ip">www1.cognitivemobile.net</string>
-     <string name="file_upload">https://www1.cognitivemobile.net/uploads/highmessaging/chat/</string>
-     <string name="task_reminder">https://www1.cognitivemobile.net/uploads/highmessaging/task/</string>
-     <string name="user_upload">https://www1.cognitivemobile.net/uploads/highmessaging/user/</string>
-     <string name="group_profile">https://www1.cognitivemobile.net/uploads/highmessaging/group/</string>-->
+   <!-- <string name="app_version">204</string>
+    <string name="app_versionDate">Version No : 1.5.4</string>
+    <string name="app_releaseDate">Release No : 003_204</string>
+    <string name="app_url">https://www1.cognitivemobile.net/ASE/</string>
+    <string name="server_ip">www1.cognitivemobile.net</string>
+    <string name="file_upload">https://www1.cognitivemobile.net/uploads/highmessaging/chat/</string>
+    <string name="task_reminder">https://www1.cognitivemobile.net/uploads/highmessaging/task/</string>
+    <string name="user_upload">https://www1.cognitivemobile.net/uploads/highmessaging/user/</string>
+    <string name="group_profile">https://www1.cognitivemobile.net/uploads/highmessaging/group/</string>-->
 
 
     //IP for US Server 204 sip:tls:5061

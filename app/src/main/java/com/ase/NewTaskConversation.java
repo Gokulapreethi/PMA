@@ -992,34 +992,38 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
         } catch (Exception e) {
             e.printStackTrace();
         }
+        try {
          /*Code Added for GroupAdmin-Observer End*/
-        if (isProjectFromOracle && (oracleProjectOwner != null && !oracleProjectOwner.equalsIgnoreCase(Appreference.loginuserdetails.getUsername())
-                && (Appreference.loginuserdetails != null && Appreference.loginuserdetails.getRoleId() != null
-                && !Appreference.loginuserdetails.getRoleId().equalsIgnoreCase("2")))) {
-            if (!isTaskCompleted && !template) {
-                Log.i("desc123", "is template=======> $$ " + template);
-                status_job.setVisibility(View.VISIBLE);
-                travel_job.setVisibility(View.VISIBLE);
-            } else if (isTaskCompleted) {
-                status_job.setVisibility(View.GONE);
-                travel_job.setVisibility(View.GONE);
-                sendBtn.setEnabled(false);
+            if (isProjectFromOracle && (oracleProjectOwner != null && !oracleProjectOwner.equalsIgnoreCase(Appreference.loginuserdetails.getUsername())
+                    && (Appreference.loginuserdetails != null && Appreference.loginuserdetails.getRoleId() != null
+                    && !Appreference.loginuserdetails.getRoleId().equalsIgnoreCase("2")))) {
+                if (!isTaskCompleted && !template) {
+                    Log.i("desc123", "is template=======> $$ " + template);
+                    status_job.setVisibility(View.VISIBLE);
+                    travel_job.setVisibility(View.VISIBLE);
+                } else if (isTaskCompleted) {
+                    status_job.setVisibility(View.GONE);
+                    travel_job.setVisibility(View.GONE);
+                    sendBtn.setEnabled(false);
+                }
+            } else if (isProjectFromOracle && (oracleProjectOwner != null && oracleProjectOwner.equalsIgnoreCase(Appreference.loginuserdetails.getUsername()))) {
+                if (!isTaskCompleted && !template) {
+                    Log.i("desc123", "is template=======> ## " + template);
+                    status_job.setVisibility(View.VISIBLE);
+                } else if (isTaskCompleted) {
+                    status_job.setVisibility(View.GONE);
+                    sendBtn.setEnabled(false);
+                }
+                 /*added for GroupAdmin observer start*/
+            } else if (isProjectFromOracle && (Appreference.loginuserdetails != null && Appreference.loginuserdetails.getRoleId() != null
+                    && Appreference.loginuserdetails.getRoleId().equalsIgnoreCase("2"))) {
+                /*added for GroupAdmin observer*/
+                if (taskStatus != null && (!taskStatus.equalsIgnoreCase("draft") && !taskStatus.equalsIgnoreCase("template") && !taskStatus.equalsIgnoreCase("Unassigned"))) {
+                    status_job.setVisibility(View.VISIBLE);
+                }
             }
-        } else if (isProjectFromOracle && (oracleProjectOwner != null && oracleProjectOwner.equalsIgnoreCase(Appreference.loginuserdetails.getUsername()))) {
-            if (!isTaskCompleted && !template) {
-                Log.i("desc123", "is template=======> ## " + template);
-                status_job.setVisibility(View.VISIBLE);
-            } else if (isTaskCompleted) {
-                status_job.setVisibility(View.GONE);
-                sendBtn.setEnabled(false);
-            }
-             /*added for GroupAdmin observer start*/
-        } else if (isProjectFromOracle && (Appreference.loginuserdetails != null && Appreference.loginuserdetails.getRoleId() != null
-                && Appreference.loginuserdetails.getRoleId().equalsIgnoreCase("2"))) {
-            /*added for GroupAdmin observer*/
-            if (taskStatus != null && (!taskStatus.equalsIgnoreCase("draft") && !taskStatus.equalsIgnoreCase("template") && !taskStatus.equalsIgnoreCase("Unassigned"))) {
-                status_job.setVisibility(View.VISIBLE);
-            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         /*added for GroupAdmin observerm end*/
 
@@ -1051,31 +1055,35 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
         travel_job.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String query = "select status from projectStatus where projectId='" + projectId + "' and userId='" + Appreference.loginuserdetails.getId() + "' and taskId= '" + webtaskId + "'";
-                int current_status = VideoCallDataBase.getDB(context).getCurrentStatus(query);
+                try {
+                    String query = "select status from projectStatus where projectId='" + projectId + "' and userId='" + Appreference.loginuserdetails.getId() + "' and taskId= '" + webtaskId + "'";
+                    int current_status = VideoCallDataBase.getDB(context).getCurrentStatus(query);
 
-                String Query = "Select * from projectHistory where projectId ='" + projectId + "' and taskId = '" + webtaskId + "'";
-                TaskDetailsBean MonthlyJobBean = VideoCallDataBase.getDB(context).getDetails_to_complete_project(Query);
-                Log.i("monthly123", "MonthlyJobBean===>" + MonthlyJobBean.getIsActiveStatus());
-                Log.i("monthly123", "current_status===>" + current_status);
-                if (current_status == -1 || current_status == 8) {
-//                    travel_job.setEnabled(false);
-                    if (MonthlyJobBean.getIsActiveStatus() != null) {
-                        showtravelTimePopup(v);
+                    String Query = "Select * from projectHistory where projectId ='" + projectId + "' and taskId = '" + webtaskId + "'";
+                    TaskDetailsBean MonthlyJobBean = VideoCallDataBase.getDB(context).getDetails_to_complete_project(Query);
+                    Log.i("monthly123", "MonthlyJobBean===>" + MonthlyJobBean.getIsActiveStatus());
+                    Log.i("monthly123", "current_status===>" + current_status);
+                    if (current_status == -1 || current_status == 8) {
+    //                    travel_job.setEnabled(false);
+                        if (MonthlyJobBean.getIsActiveStatus() != null) {
+                            showtravelTimePopup(v);
+                        } else {
+                            showToast("The task has not yet started...");
+                        }
+                    } else if (current_status == 1 || current_status == 3) {
+                        showToast("you are not allowed when you are Hold/Pause the task..");
                     } else {
-                        showToast("The task has not yet started...");
+                        Log.i("Location", "canGetLocation ## ==> " + loc.canGetLocation());
+                        if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+                            Log.i("Location", "Latitude ## ==> " + loc.getLatitude() + " Longitude " + loc.getLongitude());
+                            travel_job.setEnabled(true);
+                            showtravelTimePopup(v);
+                        } else {
+                            showSettingsAlert("Unable to get current location. Change permissions ");
+                        }
                     }
-                } else if (current_status == 1 || current_status == 3) {
-                    showToast("you are not allowed when you are Hold/Pause the task..");
-                } else {
-                    Log.i("Location", "canGetLocation ## ==> " + loc.canGetLocation());
-                    if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
-                        Log.i("Location", "Latitude ## ==> " + loc.getLatitude() + " Longitude " + loc.getLongitude());
-                        travel_job.setEnabled(true);
-                        showtravelTimePopup(v);
-                    } else {
-                        showSettingsAlert("Unable to get current location. Change permissions ");
-                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
             }
 
@@ -1083,65 +1091,69 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
         Arrow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (isNetworkAvailable()) {
-                    if (!arrow) {
-                        Log.i("Arrow", "visible item 0 ");
-                        InputMethodManager imm = (InputMethodManager) newTaskConversation.getSystemService(Activity.INPUT_METHOD_SERVICE);
-                        //Find the currently focused view, so we can grab the correct window token from it.
-                        View view = newTaskConversation.getCurrentFocus();
-                        //If no view currently has focus, create a new one, just so we can grab a window token from it
-                        if (view == null) {
-                            view = new View(newTaskConversation);
-                        }
-                        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
-                        Arrow.setImageResource(R.drawable.ic_more_filled_50);
+                try {
+                    if (isNetworkAvailable()) {
+                        if (!arrow) {
+                            Log.i("Arrow", "visible item 0 ");
+                            InputMethodManager imm = (InputMethodManager) newTaskConversation.getSystemService(Activity.INPUT_METHOD_SERVICE);
+                            //Find the currently focused view, so we can grab the correct window token from it.
+                            View view = newTaskConversation.getCurrentFocus();
+                            //If no view currently has focus, create a new one, just so we can grab a window token from it
+                            if (view == null) {
+                                view = new View(newTaskConversation);
+                            }
+                            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+                            Arrow.setImageResource(R.drawable.ic_more_filled_50);
 
 
-                        if (ownerOfTask != null && ownerOfTask.equalsIgnoreCase(Appreference.loginuserdetails.getUsername())) {
-                            gridview.setVisibility(View.VISIBLE);
-                        } else if (taskReceiver != null && (taskReceiver.contains(Appreference.loginuserdetails.getUsername()) || taskType.equalsIgnoreCase("group"))) {
-                            if (taskType.equalsIgnoreCase("group")) {
-                                if (project) {
-                                    String groupname_query = "select taskObservers from projectHistory where taskId='" + webtaskId + "'";
-                                    String group_name = VideoCallDataBase.getDB(context).getProjectParentTaskId(groupname_query);
-                                    if (group_name != null && group_name.contains(Appreference.loginuserdetails.getUsername())) {
-                                        gridview_observer.setVisibility(View.VISIBLE);
+                            if (ownerOfTask != null && ownerOfTask.equalsIgnoreCase(Appreference.loginuserdetails.getUsername())) {
+                                gridview.setVisibility(View.VISIBLE);
+                            } else if (taskReceiver != null && (taskReceiver.contains(Appreference.loginuserdetails.getUsername()) || taskType.equalsIgnoreCase("group"))) {
+                                if (taskType.equalsIgnoreCase("group")) {
+                                    if (project) {
+                                        String groupname_query = "select taskObservers from projectHistory where taskId='" + webtaskId + "'";
+                                        String group_name = VideoCallDataBase.getDB(context).getProjectParentTaskId(groupname_query);
+                                        if (group_name != null && group_name.contains(Appreference.loginuserdetails.getUsername())) {
+                                            gridview_observer.setVisibility(View.VISIBLE);
+                                        } else {
+                                            gridview_taker.setVisibility(View.VISIBLE);
+                                        }
                                     } else {
-                                        gridview_taker.setVisibility(View.VISIBLE);
+                                        String groupname_query = "select taskObservers from taskHistoryInfo where taskId='" + webtaskId + "'";
+                                        String group_name = VideoCallDataBase.getDB(context).getProjectParentTaskId(groupname_query);
+                                        if (group_name != null && group_name.contains(Appreference.loginuserdetails.getUsername())) {
+                                            gridview_observer.setVisibility(View.VISIBLE);
+                                        } else {
+                                            gridview_taker.setVisibility(View.VISIBLE);
+                                        }
                                     }
                                 } else {
-                                    String groupname_query = "select taskObservers from taskHistoryInfo where taskId='" + webtaskId + "'";
-                                    String group_name = VideoCallDataBase.getDB(context).getProjectParentTaskId(groupname_query);
-                                    if (group_name != null && group_name.contains(Appreference.loginuserdetails.getUsername())) {
-                                        gridview_observer.setVisibility(View.VISIBLE);
-                                    } else {
-                                        gridview_taker.setVisibility(View.VISIBLE);
-                                    }
+                                    gridview_taker.setVisibility(View.VISIBLE);
                                 }
                             } else {
-                                gridview_taker.setVisibility(View.VISIBLE);
+                                gridview_observer.setVisibility(View.VISIBLE);
                             }
+                            arrow = true;
                         } else {
-                            gridview_observer.setVisibility(View.VISIBLE);
+                            Log.i("Arrow", "nonvisible item 0 ");
+                            Arrow.setImageResource(R.drawable.ic_more_filled_50);
+                            gridview.setVisibility(View.GONE);
+                            gridview_taker.setVisibility(View.GONE);
+                            gridview_observer.setVisibility(View.GONE);
+                            icons.setVisibility(View.VISIBLE);
+                            arrow = false;
                         }
-                        arrow = true;
+                        handler.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                list_all.setSelection(list_all.getAdapter().getCount() - 1);
+                            }
+                        });
                     } else {
-                        Log.i("Arrow", "nonvisible item 0 ");
-                        Arrow.setImageResource(R.drawable.ic_more_filled_50);
-                        gridview.setVisibility(View.GONE);
-                        gridview_taker.setVisibility(View.GONE);
-                        gridview_observer.setVisibility(View.GONE);
-                        icons.setVisibility(View.VISIBLE);
-                        arrow = false;
+                        Toast.makeText(NewTaskConversation.this, "Check your internet connection", Toast.LENGTH_SHORT).show();
                     }
-                    handler.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            list_all.setSelection(list_all.getAdapter().getCount() - 1);
-                        }
-                    });
-                } else {
-                    Toast.makeText(NewTaskConversation.this, "Check your internet connection", Toast.LENGTH_SHORT).show();
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
             }
         });
@@ -3370,16 +3382,20 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
             e.printStackTrace();
             Appreference.printLog("NewTaskConversation", "Edittext clicklistener Exception " + e.getMessage(), "WARN", null);
         }
-        list_all = (ListView) findViewById(R.id.list_all);
-        list_all.setAdapter(medialistadapter);
-        swipeDetector = new SwipeListview();
-        buddyList = VideoCallDataBase.getDB(context).getContact(Appreference.loginuserdetails.getUsername());
-        ArrayList<String> list2 = new ArrayList<String>();
-        list2.add(0, "Please Select");
-        if (buddyList != null && buddyList.size() > 0) {
-            for (ContactBean a : buddyList) {
-                list2.add(a.getFirstname() + " " + a.getLastname());
+        try {
+            list_all = (ListView) findViewById(R.id.list_all);
+            list_all.setAdapter(medialistadapter);
+            swipeDetector = new SwipeListview();
+            buddyList = VideoCallDataBase.getDB(context).getContact(Appreference.loginuserdetails.getUsername());
+            ArrayList<String> list2 = new ArrayList<String>();
+            list2.add(0, "Please Select");
+            if (buddyList != null && buddyList.size() > 0) {
+                for (ContactBean a : buddyList) {
+                    list2.add(a.getFirstname() + " " + a.getLastname());
+                }
             }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         addTxt.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -4085,48 +4101,53 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
 
             }
         });
-        int row_count = VideoCallDataBase.getDB(context).getTaskHistoryRowCount("select * from taskDetailsInfo where (loginuser='" + Appreference.loginuserdetails.getEmail() + "') and (taskId='" + webtaskId + "')   and customTagVisible = '1';");
-        Log.i("lazyloadtaskcv", "oncreate conversation page row_count-->" + row_count);
         String query_1 = null;
-        if (project) {
-            if (note) {
-                query_1 = "select * from taskDetailsInfo where (loginuser='" + Appreference.loginuserdetails.getEmail() + "') and (taskId='" + webtaskId + "') and (projectId='" + projectId + "') and customTagVisible = '1';";
+        try {
+            int row_count = VideoCallDataBase.getDB(context).getTaskHistoryRowCount("select * from taskDetailsInfo where (loginuser='" + Appreference.loginuserdetails.getEmail() + "') and (taskId='" + webtaskId + "')   and customTagVisible = '1';");
+            Log.i("lazyloadtaskcv", "oncreate conversation page row_count-->" + row_count);
+            query_1 = null;
+            if (project) {
+                if (note) {
+                    query_1 = "select * from taskDetailsInfo where (loginuser='" + Appreference.loginuserdetails.getEmail() + "') and (taskId='" + webtaskId + "') and (projectId='" + projectId + "') and customTagVisible = '1';";
+                } else if (template) {
+                    query_1 = "select * from taskDetailsInfo where (loginuser='" + Appreference.loginuserdetails.getEmail() + "') and (taskStatus!='note') and (taskId='" + webtaskId + "') and (projectId='" + projectId + "') and customTagVisible = '1';";
+                } else {
+                    query_1 = "select * from taskDetailsInfo where (loginuser='" + Appreference.loginuserdetails.getEmail() + "') and (taskStatus!='note' and taskStatus!='draft') and (taskId='" + webtaskId + "') and (projectId='" + projectId + "') and customTagVisible = '1';";
+                }
+
             } else if (template) {
-                query_1 = "select * from taskDetailsInfo where (loginuser='" + Appreference.loginuserdetails.getEmail() + "') and (taskStatus!='note') and (taskId='" + webtaskId + "') and (projectId='" + projectId + "') and customTagVisible = '1';";
+                if (note) {
+                    query_1 = "select * from taskDetailsInfo where (loginuser='" + Appreference.loginuserdetails.getEmail() + "') and (taskId='" + webtaskId + "') and customTagVisible = '1';";
+                } else if (chat) {
+                    query_1 = "select * from taskDetailsInfo where (loginuser='" + Appreference.loginuserdetails.getEmail() + "') and (taskId='" + webtaskId + "') and customTagVisible = '1';";
+                } else {
+                    query_1 = "select * from taskDetailsInfo where (loginuser='" + Appreference.loginuserdetails.getEmail() + "') and (taskStatus='draft') and (taskId='" + webtaskId + "') and customTagVisible = '1';";
+                }
             } else {
-                query_1 = "select * from taskDetailsInfo where (loginuser='" + Appreference.loginuserdetails.getEmail() + "') and (taskStatus!='note' and taskStatus!='draft') and (taskId='" + webtaskId + "') and (projectId='" + projectId + "') and customTagVisible = '1';";
-            }
+               /* boolean countAboveten = false;
+                if (row_count != 0 && row_count >= 10) {
+                    row_count = row_count - 10;
+                    taskList_count = row_count;
+                    countAboveten = true;
+                } else if (row_count < 10) {
+                    taskList_count = 0;
+                } else {
+                    row_count = 0;
+                    taskList_count = 0;
+                }
+                Log.i("lazyloadtaskcv", "oncreate db count--->" + row_count);
+                Log.i("lazyloadtaskcv", "buddyOrgroup_count--->" + taskList_count);
+                if (row_count == 0 && !countAboveten) {
+                    query_1 = "select * from taskDetailsInfo where (loginuser='" + Appreference.loginuserdetails.getEmail() + "') and (taskId='" + webtaskId + "')   and customTagVisible = '1';";
+                } else if (row_count < 10 && !countAboveten) {
+                    query_1 = "select * from taskDetailsInfo where (loginuser='" + Appreference.loginuserdetails.getEmail() + "') and (taskId='" + webtaskId + "')   and customTagVisible = '1' order by dateTime ASC LIMIT " + row_count + " OFFSET 0";
+                } else {
+                    query_1 = "select * from taskDetailsInfo where (loginuser='" + Appreference.loginuserdetails.getEmail() + "') and (taskId='" + webtaskId + "')   and customTagVisible = '1' order by dateTime ASC LIMIT 10 OFFSET " + row_count + "";
 
-        } else if (template) {
-            if (note) {
-                query_1 = "select * from taskDetailsInfo where (loginuser='" + Appreference.loginuserdetails.getEmail() + "') and (taskId='" + webtaskId + "') and customTagVisible = '1';";
-            } else if (chat) {
-                query_1 = "select * from taskDetailsInfo where (loginuser='" + Appreference.loginuserdetails.getEmail() + "') and (taskId='" + webtaskId + "') and customTagVisible = '1';";
-            } else {
-                query_1 = "select * from taskDetailsInfo where (loginuser='" + Appreference.loginuserdetails.getEmail() + "') and (taskStatus='draft') and (taskId='" + webtaskId + "') and customTagVisible = '1';";
+                }*/
             }
-        } else {
-           /* boolean countAboveten = false;
-            if (row_count != 0 && row_count >= 10) {
-                row_count = row_count - 10;
-                taskList_count = row_count;
-                countAboveten = true;
-            } else if (row_count < 10) {
-                taskList_count = 0;
-            } else {
-                row_count = 0;
-                taskList_count = 0;
-            }
-            Log.i("lazyloadtaskcv", "oncreate db count--->" + row_count);
-            Log.i("lazyloadtaskcv", "buddyOrgroup_count--->" + taskList_count);
-            if (row_count == 0 && !countAboveten) {
-                query_1 = "select * from taskDetailsInfo where (loginuser='" + Appreference.loginuserdetails.getEmail() + "') and (taskId='" + webtaskId + "')   and customTagVisible = '1';";
-            } else if (row_count < 10 && !countAboveten) {
-                query_1 = "select * from taskDetailsInfo where (loginuser='" + Appreference.loginuserdetails.getEmail() + "') and (taskId='" + webtaskId + "')   and customTagVisible = '1' order by dateTime ASC LIMIT " + row_count + " OFFSET 0";
-            } else {
-                query_1 = "select * from taskDetailsInfo where (loginuser='" + Appreference.loginuserdetails.getEmail() + "') and (taskId='" + webtaskId + "')   and customTagVisible = '1' order by dateTime ASC LIMIT 10 OFFSET " + row_count + "";
-
-            }*/
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         Log.d("task", "query " + query_1);
         if (!isswipe) {
@@ -19420,8 +19441,6 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
      */
 
     public void TakerofTasks() {
-
-
         // UI for task
         try {
             addObserver.setVisibility(View.GONE);
@@ -19431,7 +19450,7 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
             remind_me.setVisibility(View.GONE);
             reassign_note.setVisibility(View.GONE);
             tab_datechangerequest.setVisibility(View.GONE);
-            calen_picker.setVisibility(View.GONE);
+            calen_picker.setVisibility(View.VISIBLE);
 
             if (dataBase.getProjectParentTaskId("select mimetype from taskDetailsInfo where ((mimeType = 'Remove')  or (mimeType = 'Reassign')) and taskId ='" + webtaskId + "' order by id desc limit 1").equalsIgnoreCase("Remove")) {
                 if (dataBase.getProjectParentTaskId("select mimetype from taskDetailsInfo where ((mimeType = 'Remove')  or (mimeType = 'Reassign')) and taskId ='" + webtaskId + "' order by id desc limit 1").equalsIgnoreCase("Remove"))

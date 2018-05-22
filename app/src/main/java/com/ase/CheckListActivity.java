@@ -880,7 +880,7 @@ public class CheckListActivity extends Activity implements WebServiceInterface {
                     Label fieldvalues = checklistBean.getLabel().get(i);
                     if (fieldvalues.getIssueType().equalsIgnoreCase("M") && fieldvalues.getJobstatus() != null) {
                         Appreference.isMandatoryLabelNotFilled = false;
-                    } else {
+                    } else if(fieldvalues.getIssueType().equalsIgnoreCase("M")){
                         Appreference.isMandatoryLabelNotFilled = true;
                         break;
                     }

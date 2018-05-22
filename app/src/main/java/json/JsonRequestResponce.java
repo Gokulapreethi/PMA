@@ -117,7 +117,7 @@ public class JsonRequestResponce extends Thread {
                         if (!obj.getEnumJsonWebservicename().toString().equalsIgnoreCase("getCheckListDetailsFromClient")) {
                             Log.i("JsonLeave", "Try catch 1 ");
 
-//                             httppost = new HttpPost("https://www1.cognitivemobile.net/ASE/" + obj.getEnumJsonWebservicename()); //ip US Server 204 Registered
+//                             httppost = new HttpPost("https://www1.cognitivemobile.net/ASE/" + obj.getEnumJsonWebservicename()); //ip US Server 204 SSL ceritified
 
 //                             httppost = new HttpPost("https://66.109.17.204/ASE/" + obj.getEnumJsonWebservicename()); //ip US Server 204
 
