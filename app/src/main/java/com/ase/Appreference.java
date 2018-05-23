@@ -156,6 +156,7 @@ public class Appreference {
 /*************************added for checklist start*/
     public static checkListDetails mychecklistTemplate;
     public static boolean isMandatoryLabelNotFilled=false;
+    public static boolean ischecklistIDEmpty=false;
 /*************************added for checklist End*/
 
 

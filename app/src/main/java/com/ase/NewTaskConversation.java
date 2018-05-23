@@ -5541,10 +5541,12 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                     int travelentry = VideoCallDataBase.getDB(context).CheckTravelEntryDetails("select * from projectStatus where projectId ='" + projectId + "' and taskId = '" + webtaskId + "' and travelStartTime IS NOT NULL and travelEndTime IS NULL");
                     String checklist_available_query = "select * from checklistDetails where projectId='" + projectId + "'and taskId='" + webtaskId + "'and userId='" + Appreference.loginuserdetails.getId() + "'";
                     checkListDetails checklistBean = VideoCallDataBase.getDB(context).getchecklistdetails(checklist_available_query);
+                    final ProjectDetailsBean PMSJobDetails=getprojectDetails_Row();
 
                     if (count != 0) {
                         if (travelentry == 0) {
-                            if (checklistBean.getId() != null && checklistBean.getIsServiceDone().equalsIgnoreCase("1")) {
+                            if (checklistBean.getId() != null && checklistBean.getIsServiceDone().equalsIgnoreCase("1")
+                                    || PMSJobDetails!=null && PMSJobDetails.getChecklistSent()!=null && PMSJobDetails.getChecklistSent().equalsIgnoreCase("yes") ) {
                                 if (complete_travel == 0) {
                                     Intent i = new Intent(context, EodScreen.class);
                                     i.putExtra("projectId", projectId);
@@ -5586,7 +5588,8 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                         } else {
                             String query = "select * from checklistDetails where projectId='" + projectId + "'and taskId='" + webtaskId + "'and userId='" + Appreference.loginuserdetails.getId() + "'";
                             checkListDetails checklistBean = VideoCallDataBase.getDB(context).getchecklistdetails(query);
-                            if (checklistBean.getId() != null) {
+                            if (checklistBean.getId() != null
+                                    || PMSJobDetails!=null && PMSJobDetails.getChecklistSent()!=null &&PMSJobDetails.getChecklistSent().equalsIgnoreCase("yes")) {
                                 getChecklistExistData();
                             } else {
                                 AlertDialog.Builder builderSingle = new AlertDialog.Builder(NewTaskConversation.this);
@@ -5792,9 +5795,12 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
         try {
             String query = "select * from checklistDetails where projectId='" + projectId + "'and taskId='" + webtaskId + "'and userId='" + Appreference.loginuserdetails.getId() + "'";
             checkListDetails checklistBean = VideoCallDataBase.getDB(context).getchecklistdetails(query);
+            final ProjectDetailsBean PMSJobchecklistDetails=getprojectDetails_Row();
+            if ((checklistBean.getId() != null && checklistBean.getIsServiceDone().equalsIgnoreCase("1"))
+                    || PMSJobchecklistDetails!=null && PMSJobchecklistDetails.getChecklistSent().equalsIgnoreCase("yes")) {
+                Toast.makeText(NewTaskConversation.this, "CheckList Already sent....", Toast.LENGTH_SHORT).show();
 
-            if (checklistBean.getId() != null && checklistBean.getIsServiceDone().equalsIgnoreCase("1")) {
-                String checklistData_query = "select * from checklistData where checklistdataid='" + checklistBean.getId() + "'";
+               /* String checklistData_query = "select * from checklistData where checklistdataid='" + checklistBean.getId() + "'";
                 ArrayList<Label> dataBean = VideoCallDataBase.getDB(context).getchecklistData(checklistData_query);
                 checklistBean.setLabel(dataBean);
                 Intent intent = new Intent(NewTaskConversation.this, CheckListActivity.class);
@@ -5802,7 +5808,7 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                 intent.putExtra("isExistingView", true);
                 intent.putExtra("PMSprojectId", projectId);
                 intent.putExtra("PMStaskId", webtaskId);
-                startActivity(intent);
+                startActivity(intent);*/
             } else if (checklistBean.getId() != null && checklistBean.getIsServiceDone().equalsIgnoreCase("0")) {
                 String checklistData_query = "select * from checklistData where checklistdataid='" + checklistBean.getId() + "'";
                 ArrayList<Label> dataBean = VideoCallDataBase.getDB(context).getchecklistData(checklistData_query);
@@ -5817,7 +5823,7 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
 //                Toast.makeText(NewTaskConversation.this, "CheckList Not Available....", Toast.LENGTH_SHORT).show();
                 final ProjectDetailsBean PMSJobDetails=getprojectDetails_Row();
                 checkListDetails mychecklistTemplate = getTemplateList(PMSJobDetails, Integer.parseInt(PMSJobDetails.getServiceType()));
-                if (mychecklistTemplate.getLabel().size()>0) {
+                if (mychecklistTemplate.getLabel()!=null && mychecklistTemplate.getLabel().size()>0) {
                     if (mychecklistTemplate != null) {
                         Intent intent = new Intent(NewTaskConversation.this, CheckListActivity.class);
                         intent.putExtra("checklistBean", mychecklistTemplate);
@@ -19450,7 +19456,7 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
             remind_me.setVisibility(View.GONE);
             reassign_note.setVisibility(View.GONE);
             tab_datechangerequest.setVisibility(View.GONE);
-            calen_picker.setVisibility(View.VISIBLE);
+            calen_picker.setVisibility(View.GONE);
 
             if (dataBase.getProjectParentTaskId("select mimetype from taskDetailsInfo where ((mimeType = 'Remove')  or (mimeType = 'Reassign')) and taskId ='" + webtaskId + "' order by id desc limit 1").equalsIgnoreCase("Remove")) {
                 if (dataBase.getProjectParentTaskId("select mimetype from taskDetailsInfo where ((mimeType = 'Remove')  or (mimeType = 'Reassign')) and taskId ='" + webtaskId + "' order by id desc limit 1").equalsIgnoreCase("Remove"))

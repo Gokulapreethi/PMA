@@ -884,7 +884,15 @@ public class CheckListActivity extends Activity implements WebServiceInterface {
                         Appreference.isMandatoryLabelNotFilled = true;
                         break;
                     }
-                    checklist_row.put("checkListDetailId", fieldvalues.getId());
+                    if (fieldvalues.getId()!=null && !fieldvalues.getId().equalsIgnoreCase("")
+                            &&!fieldvalues.getId().equalsIgnoreCase("null")
+                            && !fieldvalues.getId().equalsIgnoreCase(null)){
+                        Appreference.ischecklistIDEmpty=false;
+                        checklist_row.put("checkListDetailId", fieldvalues.getId());
+                    }else{
+                        Appreference.ischecklistIDEmpty=true;
+                        break;
+                    }
                     checklist_row.put("jobstatus", fieldvalues.getJobstatus());
                     checklist_row.put("quantity", fieldvalues.getQuantity());
                     Multi_array.put(i, checklist_row);
@@ -898,24 +906,28 @@ public class CheckListActivity extends Activity implements WebServiceInterface {
             }
 
 
-            if (!Appreference.isMandatoryLabelNotFilled) {
-                if ((checklistAllBean.getTechnicianName() != null && !checklistAllBean.getTechnicianName().equalsIgnoreCase("")
-                        && !checklistAllBean.getTechnicianName().equalsIgnoreCase(null) && !checklistAllBean.getTechnicianName().equalsIgnoreCase("null"))
-                        && (checklistAllBean.getClientName() != null && !checklistAllBean.getClientName().equalsIgnoreCase("")
-                        && !checklistAllBean.getClientName().equalsIgnoreCase(null) && !checklistAllBean.getClientName().equalsIgnoreCase("null"))
-                        && (checklistAllBean.getTechnicianSignature() != null && !checklistAllBean.getTechnicianSignature().equalsIgnoreCase("")
-                        && !checklistAllBean.getTechnicianSignature().equalsIgnoreCase(null) && !checklistAllBean.getTechnicianSignature().equalsIgnoreCase("null"))
-                        && (checklistAllBean.getClientSignature() != null && !checklistAllBean.getClientSignature().equalsIgnoreCase("")
-                        && !checklistAllBean.getClientSignature().equalsIgnoreCase(null) && !checklistAllBean.getClientSignature().equalsIgnoreCase("null"))
-                        && (checklistAllBean.getSignedDate() != null && !checklistAllBean.getSignedDate().equalsIgnoreCase("")
-                        && !checklistAllBean.getSignedDate().equalsIgnoreCase(null) && !checklistAllBean.getSignedDate().equalsIgnoreCase("null"))) {
+            if (!Appreference.ischecklistIDEmpty) {
+                if (!Appreference.isMandatoryLabelNotFilled) {
+                    if ((checklistAllBean.getTechnicianName() != null && !checklistAllBean.getTechnicianName().equalsIgnoreCase("")
+                            && !checklistAllBean.getTechnicianName().equalsIgnoreCase(null) && !checklistAllBean.getTechnicianName().equalsIgnoreCase("null"))
+                            && (checklistAllBean.getClientName() != null && !checklistAllBean.getClientName().equalsIgnoreCase("")
+                            && !checklistAllBean.getClientName().equalsIgnoreCase(null) && !checklistAllBean.getClientName().equalsIgnoreCase("null"))
+                            && (checklistAllBean.getTechnicianSignature() != null && !checklistAllBean.getTechnicianSignature().equalsIgnoreCase("")
+                            && !checklistAllBean.getTechnicianSignature().equalsIgnoreCase(null) && !checklistAllBean.getTechnicianSignature().equalsIgnoreCase("null"))
+                            && (checklistAllBean.getClientSignature() != null && !checklistAllBean.getClientSignature().equalsIgnoreCase("")
+                            && !checklistAllBean.getClientSignature().equalsIgnoreCase(null) && !checklistAllBean.getClientSignature().equalsIgnoreCase("null"))
+                            && (checklistAllBean.getSignedDate() != null && !checklistAllBean.getSignedDate().equalsIgnoreCase("")
+                            && !checklistAllBean.getSignedDate().equalsIgnoreCase(null) && !checklistAllBean.getSignedDate().equalsIgnoreCase("null"))) {
 
-                    sendCheckListAlert_Dialog(jsonObjectAll, checklistAllBean);
+                        sendCheckListAlert_Dialog(jsonObjectAll, checklistAllBean);
+                    } else {
+                        sendCheckListMandatory_Alert("Please fill name and signature field and submit again! ");
+                    }
                 } else {
-                    sendCheckListMandatory_Alert("Please fill name and signature field and submit again! ");
+                    sendCheckListMandatory_Alert("Please fill all the Mandatory fields and submit again!");
                 }
-            } else {
-                sendCheckListMandatory_Alert("Please fill all the Mandatory fields and submit again!");
+            }else{
+                sendCheckListMandatory_Alert("EXCEPTION! checklistID NULL! ");
             }
         } catch (JSONException e) {
             e.printStackTrace();
@@ -1228,9 +1240,15 @@ public class CheckListActivity extends Activity implements WebServiceInterface {
                     Log.d("Task2", "Response Email" + server_Response_string);
                     String WebServiceEnum_Response = communicationBean.getFirstname();
                     Log.d("Task2", "name   == " + WebServiceEnum_Response);
+                    final JSONObject jsonObject = new JSONObject(communicationBean.getEmail());
 
                     if (server_Response_string != null && server_Response_string.equalsIgnoreCase("saveCheckListDataDetails")) {
-                        Toast.makeText(CheckListActivity.this, "CheckList Saved Successfully....", Toast.LENGTH_SHORT).show();
+                        if (((String) jsonObject.get("result_text")).equalsIgnoreCase("saveCheckListDataDetails saved successfully")) {
+                            Toast.makeText(CheckListActivity.this, "CheckList Saved Successfully....", Toast.LENGTH_SHORT).show();
+                        }else {
+                            String result = (String) jsonObject.get("result_text");
+                            Toast.makeText(checkListContext, result, Toast.LENGTH_LONG).show();
+                        }
                         finish();
                     }
                 } catch (Exception e) {

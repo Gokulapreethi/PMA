@@ -45,6 +45,8 @@ public class ProjectDetailsBean implements Serializable {
     private String estimatedActivityHrs;
     private String openDate;
     private String serviceType;
+    private String checklistSent;
+
 
 
     private String parentTaskId;
@@ -583,5 +585,13 @@ public class ProjectDetailsBean implements Serializable {
 
     public void setServiceType(String serviceType) {
         this.serviceType = serviceType;
+    }
+
+    public String getChecklistSent() {
+        return checklistSent;
+    }
+
+    public void setChecklistSent(String checklistSent) {
+        this.checklistSent = checklistSent;
     }
 }
