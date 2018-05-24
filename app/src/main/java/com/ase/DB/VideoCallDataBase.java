@@ -89,7 +89,7 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
     public static final String CREATE_TABLE_PROJECT_STATUS = "create table if not exists projectStatus(id integer primary key autoincrement,userId integer,projectId integer,taskId integer,taskDescription varchar(100),travelStartTime varchar(100),activityStartTime varchar(100),activityEndTime varchar(100),travelEndTime varchar(100),totravelstartdatetime varchar(100),totravelenddatetime varchar(100),remarks varchar(500),hourMeterReading varchar(100),status varchar(100),customersignaturename varchar(100),photo varchar(100),techniciansignature varchar(100),customersignature varchar(100),observation varchar(500),actionTaken varchar(500),taskcompleteddate varchar(100),datenow varchar(100),wssendstatus varchar(100),signalId varchar(100),dateStatus varchar(100),synopsis varchar(100),startDateLatitude varchar(100),startDateLongitude varchar(100),endDateLatitude varchar(100),endDateLongitude varchar(100))";
     /*For Checklist DB Entry */
     public static final String CREATE_TABLE_CHECKLIST_DETAILS = "create table if not exists checklistDetails(id integer primary key autoincrement,projectId integer,taskId integer,userId integer,advice varchar(100),checkListName varchar(100),checklistDate varchar(100),hmReading varchar(100),technicianSignature varchar(100),customerSignature varchar(100),checklistEntryDate varchar(100),clientName varchar(100),technicianName varchar(100),isServiceDone integer,wsSendStatus varchar(100))";
-    public static final String CREATE_TABLE_CHECKLIST_DATA = "create table if not exists checklistData(checklistdataid integer,issueType varchar(100),checklistItem varchar(100),jobDescription varchar(100),jobStatus varchar(100),quantity varchar(100), FOREIGN KEY (checklistdataid) REFERENCES checklistDetails (id))";
+    public static final String CREATE_TABLE_CHECKLIST_DATA = "create table if not exists checklistData(checklistFieldId integer,checklistdataid integer,issueType varchar(100),checklistItem varchar(100),jobDescription varchar(100),jobStatus varchar(100),quantity varchar(100), FOREIGN KEY (checklistdataid) REFERENCES checklistDetails (id))";
     public static final String CREATE_TABLE_CHECKLIST_TEMPLATE = "create table if not exists checklistTemplate(id integer primary key autoincrement,checklistName varchar(100),machine varchar(100),modal varchar(100),serviceType varchar(100),checklistFieldId integer,issueType varchar(100),checklistItem varchar(100),jobDescription varchar(100))";
     public static final String EULATABLE = "eulaagree";
     public static final String EULACREATE = "create table if not exists '" + EULATABLE + "'(id integer (1),selection varchar(1))";
@@ -10156,6 +10156,7 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
             int checkListDetailsId = getChecklistDetailsId(query);
             for (int i = 0; i < label.size(); i++) {
                 Label checklist_row = label.get(i);
+                cv.put("checklistFieldId", checklist_row.getId());
                 cv.put("checklistdataid", checkListDetailsId);
                 cv.put("issueType", checklist_row.getIssueType());
                 cv.put("checklistItem", checklist_row.getItem());
@@ -10262,6 +10263,7 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
 
                     while (!cur.isAfterLast()) {
                         Label bean = new Label();
+                        bean.setId(cur.getString(cur.getColumnIndex("checklistFieldId")));
                         bean.setIssueType(cur.getString(cur.getColumnIndex("issueType")));
                         bean.setItem(cur.getString(cur.getColumnIndex("checklistItem")));
                         bean.setJobDescription(cur.getString(cur.getColumnIndex("jobDescription")));
