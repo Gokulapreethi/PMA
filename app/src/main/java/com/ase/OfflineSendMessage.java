@@ -79,13 +79,14 @@ public class OfflineSendMessage implements WebServiceInterface {
             String Query_checklist = "select * from checklistDetails where wsSendStatus='00'";
             AllcheckListBean = VideoCallDataBase.getDB(MainActivity.mainContext).getoffline_checklist(Query_checklist);
 
-            for(int j=0;j<AllcheckListBean.size();j++){
-                checkListDetails bean=AllcheckListBean.get(j);
-                if(bean.getId()!=null){
+            for (int j = 0; j < AllcheckListBean.size(); j++) {
+                checkListDetails bean = AllcheckListBean.get(j);
+                if (bean.getId() != null) {
                     String checklistData_query = "select * from checklistData where checklistdataid='" + bean.getId() + "'";
                     ArrayList<Label> dataBean = VideoCallDataBase.getDB(MainActivity.mainContext).getchecklistData(checklistData_query);
                     bean.setLabel(dataBean);
                 }
+
             }
 
 
@@ -578,7 +579,7 @@ public class OfflineSendMessage implements WebServiceInterface {
                     Appreference.printLog("taskStatus", jsonObject.toString(), "offline Request", null);
                     Appreference.jsonOfflineRequestSender.taskStatus(EnumJsonWebservicename.taskStatus, jsonObject, statusBean, offlineSendMessage);
                 }
-            } else  if (AllcheckListBean != null && AllcheckListBean.size() > 0) {
+            } else if (AllcheckListBean != null && AllcheckListBean.size() > 0) {
                 for (checkListDetails checklistBean : AllcheckListBean) {
                     composeChecklist_Json(checklistBean);
                 }
@@ -589,11 +590,11 @@ public class OfflineSendMessage implements WebServiceInterface {
             ArrayList<TaskDetailsBean> AlltaskMediaBean;
             AlltaskMediaBean = VideoCallDataBase.getDB(MainActivity.mainContext).getTaskDetailsInfo(Query_media);
             Log.i("offline123", "OfflineStatusSend query-=====> $$$ " + AlltaskMediaBean.size());
-            if ((AlltaskBean != null && AlltaskBean.size() > 0)||(AlltaskMediaBean != null && AlltaskMediaBean.size() > 0)) {
+            if ((AlltaskBean != null && AlltaskBean.size() > 0) || (AlltaskMediaBean != null && AlltaskMediaBean.size() > 0)) {
                 Appreference.isAlreadyLoadedofflineData = true;
                 Appreference.isAlreadyLoadedofflineTravelData = true;
-                Log.i("online123", "AlltaskBeanData_Exist AlltaskBean********"+AlltaskBean.size());
-                Log.i("online123", "AlltaskMediaBeanData_Exist AlltaskMediaBean********"+AlltaskMediaBean.size());
+                Log.i("online123", "AlltaskBeanData_Exist AlltaskBean********" + AlltaskBean.size());
+                Log.i("online123", "AlltaskMediaBeanData_Exist AlltaskMediaBean********" + AlltaskMediaBean.size());
 
                 handler.postDelayed(new Runnable() {
                     @Override
@@ -622,7 +623,7 @@ public class OfflineSendMessage implements WebServiceInterface {
 
     private void composeChecklist_Json(checkListDetails checklistBean) {
         try {
-            checkListDetails checkBean=new checkListDetails();
+            checkListDetails checkBean = new checkListDetails();
             JSONObject jsonObjectAll = new JSONObject();
             JSONObject jsonObject1 = new JSONObject();
             jsonObject1.put("id", checklistBean.getChecklist_projectId());
@@ -640,9 +641,25 @@ public class OfflineSendMessage implements WebServiceInterface {
             jsonObjectAll.put("from", jsonObject3);
 
             jsonObjectAll.put("hmReading", checklistBean.getHourMeter());
-            jsonObjectAll.put("advicetoCustomer",checklistBean.getAdvicetoCustomer());
+            jsonObjectAll.put("advicetoCustomer", checklistBean.getAdvicetoCustomer());
             jsonObjectAll.put("clientName", checklistBean.getClientName());
-            jsonObjectAll.put("checklistEntryDate",checklistBean.getSignedDate());
+
+            String signed_dateUTC = "";
+            Date date = null;
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            SimpleDateFormat dateParse = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
+            dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
+            String signed_date = checklistBean.getSignedDate() + " " + "00:00:00";
+            if (signed_date != null && !signed_date.equalsIgnoreCase("")) {
+                try {
+                    date = dateParse.parse(signed_date);
+                    signed_dateUTC = dateFormat.format(date);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    Appreference.printLog("checkListActivity", "signed_dateUTC Exception : " + e.getMessage(), "WARN", null);
+                }
+            }
+            jsonObjectAll.put("checklistEntryDate", signed_dateUTC);
 
             JSONObject jsonObject4 = new JSONObject();
             if (checklistBean.getTechnicianSignature() != null && !checklistBean.getTechnicianSignature().equalsIgnoreCase(null)
@@ -688,7 +705,7 @@ public class OfflineSendMessage implements WebServiceInterface {
                 for (int i = 0; i < checklistBean.getLabel().size(); i++) {
                     JSONObject checklist_row = new JSONObject();
                     Label fieldvalues = checklistBean.getLabel().get(i);
-                    checklist_row.put("checkListDetailId", fieldvalues.getItem());
+                    checklist_row.put("checkListDetailId", fieldvalues.getId());
                     checklist_row.put("jobstatus", fieldvalues.getJobstatus());
                     checklist_row.put("quantity", fieldvalues.getQuantity());
                     Multi_array.put(i, checklist_row);
@@ -1838,9 +1855,12 @@ public class OfflineSendMessage implements WebServiceInterface {
                             Appreference.printLog("offlineSendMessage", "ResponceMethod JSONExceptionException : " + e.getMessage(), "WARN", null);
                         }
                     } else if (WebServiceEnum_Response != null && WebServiceEnum_Response.equalsIgnoreCase("saveCheckListDataDetails")) {
-                        final checkListDetails checkBean = bean1.getChecklistBean();
-                        String checklistUpdate_query = "update checklistDetails set wsSendStatus='11' where  projectId='" + checkBean.getChecklist_projectId() + "'and taskId= '" + checkBean.getChecklist_taskId() + "' and userId='"+checkBean.getChecklist_fromId()+"'";
-                        VideoCallDataBase.getDB(MainActivity.mainContext).updateaccept(checklistUpdate_query);
+                        final JSONObject jsonObject11 = new JSONObject(s1);
+                        if (((String) jsonObject11.get("result_text")).equalsIgnoreCase("saveCheckListDataDetails saved successfully")) {
+                            final checkListDetails checkBean = bean1.getChecklistBean();
+                            String checklistUpdate_query = "update checklistDetails set wsSendStatus='11' where  projectId='" + checkBean.getChecklist_projectId() + "'and taskId= '" + checkBean.getChecklist_taskId() + "' and userId='" + checkBean.getChecklist_fromId() + "'";
+                            VideoCallDataBase.getDB(MainActivity.mainContext).updateaccept(checklistUpdate_query);
+                        }
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
