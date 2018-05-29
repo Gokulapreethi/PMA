@@ -773,7 +773,10 @@ public class CheckListActivity extends Activity implements WebServiceInterface {
             SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
             SimpleDateFormat dateParse = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
             dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
-            String signed_date = checklist_date_now.getText().toString() + " " + "00:00:00";
+//            String signed_date = checklist_date_now.getText().toString() + " " + "00:00:00";
+            SimpleDateFormat mdformat = new SimpleDateFormat("HH:mm:ss");
+            String time = mdformat.format(Calendar.getInstance().getTime());
+            String signed_date = checklist_date_now.getText().toString() +" " + time;
             if (signed_date != null && !signed_date.equalsIgnoreCase("")) {
                 try {
                     date = dateParse.parse(signed_date);
