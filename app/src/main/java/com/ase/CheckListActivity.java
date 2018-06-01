@@ -609,41 +609,7 @@ public class CheckListActivity extends Activity implements WebServiceInterface {
                 finish();*/
             }
         });
-        /* Handle list View scroll events*/
-       /* listView.setOnScrollListener(new AbsListView.OnScrollListener() {
-
-            @Override
-            public void onScrollStateChanged(AbsListView view, int scrollState) {
-            }
-
-            @Override
-            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-
-                 *//*Check if the first item is already reached to top.*//*
-                if (listView.getFirstVisiblePosition() == 0) {
-                    View firstChild = listView.getChildAt(0);
-                    int topY = 0;
-                    if (firstChild != null) {
-                        topY = firstChild.getTop();
-                    }
-
-                    int heroTopY = stickyViewSpacer.getTop();
-                    int headerXY = checklist_master.getHeight();
-
-                    stickyView.setY(Math.max(0, headerXY + topY+10));
-
-*//*
-                     Set the image to scroll half of the amount that of ListView*//*
-                    checklist_master.setY(topY * 0.5f);
-                    int listHeadingXY = listHeading.getTop();
-                    listHeading.setY(Math.max(0, listHeadingXY+70));
-                    Log.i("checklist123", "heroTopY====> " + heroTopY);
-                    Log.i("checklist123", "checklist_master XY====> " + topY * 0.5f);
-                    Log.i("checklist123", "headerXY====> " + headerXY);
-                    Log.i("checklist123", "topY====> " + topY);
-                }
-            }
-        });*/
+       
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
