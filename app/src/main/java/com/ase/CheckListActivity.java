@@ -609,7 +609,7 @@ public class CheckListActivity extends Activity implements WebServiceInterface {
                 finish();*/
             }
         });
-       
+
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
