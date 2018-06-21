@@ -769,6 +769,7 @@ public class ProjectHistory extends Activity implements WebServiceInterface, Swi
     }
 
     public void showDialog() {
+        try {
         /*handler.post(new Runnable() {
             @Override
             public void run() {*/
@@ -780,6 +781,9 @@ public class ProjectHistory extends Activity implements WebServiceInterface, Swi
         dialog.show();
            /* }
         });*/
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public void cancelDialog() {

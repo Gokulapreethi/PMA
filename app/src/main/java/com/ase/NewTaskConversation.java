@@ -73,6 +73,7 @@ import android.widget.Toast;
 import com.ase.Bean.CustomBean;
 import com.ase.Bean.Label;
 import com.ase.Bean.ListofFileds;
+import com.ase.Bean.PdfManualListBean;
 import com.ase.Bean.ProjectDetailsBean;
 import com.ase.Bean.SipNotification;
 import com.ase.Bean.TaskDetailsBean;
@@ -96,6 +97,8 @@ import com.lowagie.text.Font;
 import com.lowagie.text.Phrase;
 import com.lowagie.text.pdf.PdfPCell;
 import com.lowagie.text.pdf.PdfPTable;
+
+import net.sf.andpdf.pdfviewer.PdfViewerActivity;
 
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
@@ -121,14 +124,20 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
+import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.RandomAccessFile;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Type;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.Charset;
+import java.security.SecureRandom;
+import java.security.Security;
+import java.security.cert.CertificateException;
+import java.security.cert.X509Certificate;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -148,6 +157,13 @@ import java.util.TimeZone;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.TimeUnit;
+
+import javax.net.ssl.HostnameVerifier;
+import javax.net.ssl.HttpsURLConnection;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLSession;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.X509TrustManager;
 
 import Services.ShowOrCancelProgress;
 import json.CommunicationBean;
@@ -339,6 +355,7 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
     double latitude_global = 0.0;
     double longitude_global = 0.0;
     private boolean back_preesed = false;
+    private JSONObject jsonObjectPDf;
 
     public static NewTaskConversation getInstance() {
         return newTaskConversation;
@@ -1064,7 +1081,7 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                     Log.i("monthly123", "MonthlyJobBean===>" + MonthlyJobBean.getIsActiveStatus());
                     Log.i("monthly123", "current_status===>" + current_status);
                     if (current_status == -1 || current_status == 8) {
-    //                    travel_job.setEnabled(false);
+                        //                    travel_job.setEnabled(false);
                         if (MonthlyJobBean.getIsActiveStatus() != null) {
                             showtravelTimePopup(v);
                         } else {
@@ -4185,6 +4202,7 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
     private void downLoadcustom1() {
         try {
             final TaskDetailsBean detailsBean;
+            Appreference.do_downloadForServiceManualPDF = false;
             String Querystatus = "Select * from projectStatus where projectId ='" + projectId + "' and taskId = '" + webtaskId + "'";
             detailsBean = VideoCallDataBase.getDB(context).getStatusCompletedProjectDetails(Querystatus);
             Log.i("downLoadcustom1", "getObservation ==> " + detailsBean.getObservation());
@@ -5039,7 +5057,8 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
         /*added for checklist_PMS End*/
 
         if (oracleProjectOwner != null && !oracleProjectOwner.equalsIgnoreCase(Appreference.loginuserdetails.getUsername()) &&
-                (OraclegroupAdminObserver != null && !OraclegroupAdminObserver.contains(Appreference.loginuserdetails.getUsername()))) {
+                (OraclegroupAdminObserver != null && !OraclegroupAdminObserver.contains(Appreference.loginuserdetails.getUsername()))
+                && (taskReceiver != null && taskReceiver.equalsIgnoreCase(Appreference.loginuserdetails.getUsername()))) {
 //            popup.getMenu().getItem(7).setVisible(false);
             if (current_status == -1)
                 popup.getMenu().getItem(0).setVisible(true);
@@ -5541,26 +5560,31 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                     int travelentry = VideoCallDataBase.getDB(context).CheckTravelEntryDetails("select * from projectStatus where projectId ='" + projectId + "' and taskId = '" + webtaskId + "' and travelStartTime IS NOT NULL and travelEndTime IS NULL");
                     String checklist_available_query = "select * from checklistDetails where projectId='" + projectId + "'and taskId='" + webtaskId + "'and userId='" + Appreference.loginuserdetails.getId() + "'";
                     checkListDetails checklistBean = VideoCallDataBase.getDB(context).getchecklistdetails(checklist_available_query);
-                    final ProjectDetailsBean PMSJobDetails=getprojectDetails_Row();
+                    final ProjectDetailsBean PMSJobDetails = getprojectDetails_Row();
+                    boolean isPMSJobCard;
+                    if (PMSJobDetails == null)
+                        isPMSJobCard = false;
+                    else
+                        isPMSJobCard = true;
 
                     if (count != 0) {
                         if (travelentry == 0) {
-                            if (checklistBean.getId() != null && checklistBean.getIsServiceDone().equalsIgnoreCase("1")
-                                    || PMSJobDetails!=null && PMSJobDetails.getChecklistSent()!=null && PMSJobDetails.getChecklistSent().equalsIgnoreCase("yes") ) {
-                                if (complete_travel == 0) {
-                                    Intent i = new Intent(context, EodScreen.class);
-                                    i.putExtra("projectId", projectId);
-                                    i.putExtra("webtaskId", webtaskId);
-                                    i.putExtra("taskName", taskName);
-                                    i.putExtra("JobCodeNo", JobCodeNo);
-                                    i.putExtra("ActivityCode", ActivityCode);
-                                    startActivityForResult(i, 9999);
-                                } else {
-                                    Toast.makeText(NewTaskConversation.this, "Already EOD sent", Toast.LENGTH_SHORT).show();
-                                }
-                            }else {
-                                Toast.makeText(NewTaskConversation.this, "Please submit the check list before EOD!", Toast.LENGTH_SHORT).show();
+//                            if ((isPMSJobCard && (checklistBean.getId() != null && checklistBean.getIsServiceDone().equalsIgnoreCase("1")))
+//                                     || !isPMSJobCard){
+                            if (complete_travel == 0) {
+                                Intent i = new Intent(context, EodScreen.class);
+                                i.putExtra("projectId", projectId);
+                                i.putExtra("webtaskId", webtaskId);
+                                i.putExtra("taskName", taskName);
+                                i.putExtra("JobCodeNo", JobCodeNo);
+                                i.putExtra("ActivityCode", ActivityCode);
+                                startActivityForResult(i, 9999);
+                            } else {
+                                Toast.makeText(NewTaskConversation.this, "Already EOD sent", Toast.LENGTH_SHORT).show();
                             }
+//                            } else {
+//                                Toast.makeText(NewTaskConversation.this, "Please submit the check list before EOD!", Toast.LENGTH_SHORT).show();
+//                            }
                         } else {
                             Toast.makeText(NewTaskConversation.this, "Enter end date and time and then proceed to complete the task.", Toast.LENGTH_SHORT).show();
                         }
@@ -5574,7 +5598,7 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                         String PMSJobcard_query = "select  jobDescription from projectDetails where loginuser = '" + Appreference.loginuserdetails.getEmail() + "'and projectId='" + projectId + "'";
                         String PMSJobDescription = VideoCallDataBase.getDB(context).getprojectIdForOracleID(PMSJobcard_query);
                        /*added for checklist_PMS End*/
-                       final ProjectDetailsBean PMSJobDetails=getprojectDetails_Row();
+                        final ProjectDetailsBean PMSJobDetails = getprojectDetails_Row();
 
 //                        hideKeyboard();
                       /*  Intent intent = new Intent(NewTaskConversation.this, FormsView.class);
@@ -5589,7 +5613,7 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                             String query = "select * from checklistDetails where projectId='" + projectId + "'and taskId='" + webtaskId + "'and userId='" + Appreference.loginuserdetails.getId() + "'";
                             checkListDetails checklistBean = VideoCallDataBase.getDB(context).getchecklistdetails(query);
                             if (checklistBean.getId() != null
-                                    || PMSJobDetails!=null && PMSJobDetails.getChecklistSent()!=null &&PMSJobDetails.getChecklistSent().equalsIgnoreCase("yes")) {
+                                    || PMSJobDetails != null && PMSJobDetails.getChecklistSent() != null && PMSJobDetails.getChecklistSent().equalsIgnoreCase("yes")) {
                                 getChecklistExistData();
                             } else {
                                 AlertDialog.Builder builderSingle = new AlertDialog.Builder(NewTaskConversation.this);
@@ -5613,12 +5637,12 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                                     @Override
                                     public void onClick(DialogInterface dialog, int which) {
                                         String strName = arrayAdapter.getItem(which);
-                                        final String type_service=getselectedService(which);
+                                        final String type_service = getselectedService(which);
                                         try {
                                             AlertDialog alertDialog = new AlertDialog.Builder(NewTaskConversation.this).create();
                                             alertDialog.setTitle(strName);
                                             alertDialog.setCancelable(false);
-                                            alertDialog.setMessage("Adding " +type_service+" Hours Check list to this Job card! \n" +
+                                            alertDialog.setMessage("Adding " + type_service + " Hours Check list to this Job card! \n" +
                                                     "Are you sure of your selection?");
                                             alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "No",
                                                     new DialogInterface.OnClickListener() {
@@ -5632,8 +5656,8 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                                                         public void onClick(DialogInterface dialog, int which) {
                                                             Appreference.mychecklistTemplate = getTemplateList(PMSJobDetails, Integer.parseInt(type_service));
                                                             try {
-                                                                if (Appreference.mychecklistTemplate.getLabel()!=null
-                                                                        && Appreference.mychecklistTemplate.getLabel().size()>0) {
+                                                                if (Appreference.mychecklistTemplate.getLabel() != null
+                                                                        && Appreference.mychecklistTemplate.getLabel().size() > 0) {
 
                                                                     if (Appreference.mychecklistTemplate != null) {
                                                                         Intent intent = new Intent(NewTaskConversation.this, CheckListActivity.class);
@@ -5643,7 +5667,7 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                                                                         intent.putExtra("PMStaskId", webtaskId);
                                                                         startActivity(intent);
                                                                     }
-                                                                }else{
+                                                                } else {
                                                                     Toast.makeText(NewTaskConversation.this, "Check List unavailable for the Make- Model!....", Toast.LENGTH_SHORT).show();
                                                                 }
                                                             } catch (Exception e) {
@@ -5771,15 +5795,15 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
     }
 
     private String getselectedService(int position) {
-        String type="";
-        if(position==0){
-            type="250";
-        }else if(position==1){
-            type="500";
-        }else if(position==2){
-            type="1000";
-        }else if(position==3){
-            type="2000";
+        String type = "";
+        if (position == 0) {
+            type = "250";
+        } else if (position == 1) {
+            type = "500";
+        } else if (position == 2) {
+            type = "1000";
+        } else if (position == 3) {
+            type = "2000";
         }
         return type;
     }
@@ -5795,9 +5819,9 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
         try {
             String query = "select * from checklistDetails where projectId='" + projectId + "'and taskId='" + webtaskId + "'and userId='" + Appreference.loginuserdetails.getId() + "'";
             checkListDetails checklistBean = VideoCallDataBase.getDB(context).getchecklistdetails(query);
-            final ProjectDetailsBean PMSJobchecklistDetails=getprojectDetails_Row();
+            final ProjectDetailsBean PMSJobchecklistDetails = getprojectDetails_Row();
             if ((checklistBean.getId() != null && checklistBean.getIsServiceDone().equalsIgnoreCase("1"))
-                    || PMSJobchecklistDetails!=null && PMSJobchecklistDetails.getChecklistSent().equalsIgnoreCase("yes")) {
+                    || PMSJobchecklistDetails != null && PMSJobchecklistDetails.getChecklistSent().equalsIgnoreCase("yes")) {
                 Toast.makeText(NewTaskConversation.this, "CheckList Already sent....", Toast.LENGTH_SHORT).show();
 
                /* String checklistData_query = "select * from checklistData where checklistdataid='" + checklistBean.getId() + "'";
@@ -5821,9 +5845,9 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                 startActivity(intent);
             } else {
 //                Toast.makeText(NewTaskConversation.this, "CheckList Not Available....", Toast.LENGTH_SHORT).show();
-                final ProjectDetailsBean PMSJobDetails=getprojectDetails_Row();
+                final ProjectDetailsBean PMSJobDetails = getprojectDetails_Row();
                 checkListDetails mychecklistTemplate = getTemplateList(PMSJobDetails, Integer.parseInt(PMSJobDetails.getServiceType()));
-                if (mychecklistTemplate.getLabel()!=null && mychecklistTemplate.getLabel().size()>0) {
+                if (mychecklistTemplate.getLabel() != null && mychecklistTemplate.getLabel().size() > 0) {
                     if (mychecklistTemplate != null) {
                         Intent intent = new Intent(NewTaskConversation.this, CheckListActivity.class);
                         intent.putExtra("checklistBean", mychecklistTemplate);
@@ -5832,7 +5856,7 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                         intent.putExtra("PMStaskId", webtaskId);
                         startActivity(intent);
                     }
-                }else{
+                } else {
                     Toast.makeText(NewTaskConversation.this, "CheckList Not Available....", Toast.LENGTH_SHORT).show();
                 }
             }
@@ -8479,6 +8503,7 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
             dialog.show();
             TextView gallery = (TextView) dialog.findViewById(R.id.delete_acc);
             TextView camera = (TextView) dialog.findViewById(R.id.log_out);
+            TextView open_PDF = (TextView) dialog.findViewById(R.id.open_PDF);
             if (type1.equalsIgnoreCase("call")) {
                 gallery.setText("Audio Call");
                 camera.setText("Video Call");
@@ -8491,12 +8516,28 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                     }
                 }
             } else if (type1.equalsIgnoreCase("image")) {
+                if (Build.VERSION.SDK_INT >= 21) {
+                    open_PDF.setVisibility(View.VISIBLE);
+                }
                 gallery.setText("Gallery");
                 camera.setText("Camera");
             } else if (type1.equalsIgnoreCase("video")) {
+                open_PDF.setVisibility(View.GONE);
                 gallery.setText("Gallery");
                 camera.setText("Video");
             }
+
+            open_PDF.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+//                    openFiles_PDF();
+                    dialog.dismiss();
+                    GetDownloadPMS_ServiceManualsPDF();
+                  /*  dialog.dismiss();
+                    Intent intent= new Intent(NewTaskConversation.this,PdfRenderererActivity.class);
+                    startActivityForResult(intent,423);*/
+                }
+            });
             TextView cancel1 = (TextView) dialog.findViewById(R.id.cancel);
             cancel1.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -8695,6 +8736,47 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
             // TODO Auto-generated catch block
             e.printStackTrace();
             Appreference.printLog("NewTaskConversation", "multimediaImage Exception : " + e.getMessage(), "WARN", null);
+        }
+    }
+
+    public void GetDownloadPMS_ServiceManualsPDF() {
+        try {
+            if (isNetworkAvailable()) {
+                showprogressforpriority("Please Wait....");
+                JSONObject jsonObjectPDf = new JSONObject();
+                jsonObjectPDf.put("userId", Appreference.loginuserdetails.getId());
+
+                ArrayList<Integer> manualList = new ArrayList<>();
+                ArrayList<PdfManualListBean> listBeen = VideoCallDataBase.getDB(context).getPDFnameList("select * from userManual");
+
+                if (listBeen != null) {
+                    for (int i = 0; i < listBeen.size(); i++) {
+                        PdfManualListBean pdfBean = listBeen.get(i);
+                        String pdf_file_downloads = Environment
+                                .getExternalStorageDirectory().getAbsolutePath()
+                                + "/High Message/servicemanual/" + pdfBean.getPdfFilePathName();
+                        File pdfFile = new File(pdf_file_downloads);
+                        if (pdfFile.exists()) {
+                            manualList.add(pdfBean.getId());
+                        }
+                    }
+                }
+
+                JSONArray Multi_array = new JSONArray();
+                if (manualList != null) {
+                    for (int i = 0; i < manualList.size(); i++) {
+                        Multi_array.put(i, manualList.get(i));
+                    }
+                }
+                jsonObjectPDf.put("listallPDF", Multi_array);
+                Appreference.jsonRequestSender.getPDFList(EnumJsonWebservicename.getUploadServiceManualList, jsonObjectPDf, NewTaskConversation.this);
+            } else {
+                Intent intent = new Intent(NewTaskConversation.this, PdfRenderererActivity.class);
+                startActivityForResult(intent, 423);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            Appreference.printLog("MainActivity", "ListUserGroupMemberAccess Exception: " + e.getMessage(), "WARN", null);
         }
     }
 
@@ -12867,7 +12949,7 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                          public void run() {
                              Log.i("taskresponse123", "NewTaskConversation ResponceMethod");
                              CommunicationBean communicationBean = (CommunicationBean) object;
-                             cancelDialog();
+//                             cancelDialog();
                              try {
                                  String sig_id = Utility.getSessionID();
                                  final String server_Response_string = communicationBean.getEmail();
@@ -13244,6 +13326,71 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                                          } catch (Exception e) {
                                              e.printStackTrace();
                                              Appreference.printLog("NewTaskConversation", "ResponceMethod fieldServiceReport Exception : " + e.getMessage(), "WARN", null);
+                                         }
+                                     } else if (WebServiceEnum_Response != null && WebServiceEnum_Response.equalsIgnoreCase("getUploadServiceManualList")) {
+                                         Log.i("pdf123", "getUploadServiceManualList reponse NewtaskConv ---->  " + server_Response_string);
+                                         try {
+                                             JSONArray jr = new JSONArray(communicationBean.getEmail());
+                                             if (jr.length() > 0) {
+                                                 Type collectionType = new TypeToken<List<PdfManualListBean>>() {
+                                                 }.getType();
+                                                 List<PdfManualListBean> pdfManualListBeen = new Gson().fromJson(communicationBean.getEmail(), collectionType);
+                                                 Log.i("pdf123", "getUploadServiceManualList pdfManualListBeen size ---->  " + pdfManualListBeen.size());
+                                                 VideoCallDataBase.getDB(context).insertOrDelete_PDFmanual(pdfManualListBeen);
+                                                 int count = 0;
+                                                 boolean isNewPdfUploaded = false;
+                                                 for (int i = 0; i < pdfManualListBeen.size(); i++) {
+                                                     PdfManualListBean pdfBean = pdfManualListBeen.get(i);
+                                                     count++;
+//                                                     Log.i("pdf123", "getUploadServiceManualList pdfManualListBeen position fileName ---->  " + i + "==>  " + pdfBean.getPdfFilePathName());
+
+                                                     if (pdfBean != null && pdfBean.getStatus() != null && !pdfBean.getStatus().toString().equalsIgnoreCase("")
+                                                             && pdfBean.getStatus().toString().equalsIgnoreCase("1")) {
+                                                         String pdf_file_downloads = Environment
+                                                                 .getExternalStorageDirectory().getAbsolutePath()
+                                                                 + "/High Message/servicemanual/" + pdfBean.getPdfFilePathName();
+                                                         File pdfFile = new File(pdf_file_downloads);
+                                                         if (pdfFile.exists())
+                                                             pdfFile.delete();
+                                                     } else {
+                                                         String pdf_file_downloads = Environment
+                                                                 .getExternalStorageDirectory().getAbsolutePath()
+                                                                 + "/High Message/servicemanual/" + pdfBean.getPdfFilePathName();
+                                                         File pdfFile = new File(pdf_file_downloads);
+                                                         if (!pdfFile.exists() && pdfBean.getPdfFilePathName() != null && !pdfBean.getPdfFilePathName().equalsIgnoreCase("")) {
+                                                             isNewPdfUploaded = true;
+                                                             Appreference.do_downloadForServiceManualPDF = true;
+                                                             new DownloadCustomImage(getResources().getString(R.string.file_upload) + pdfBean.getPdfFilePathName(), pdfBean.getPdfFilePathName()).execute();
+                                                         }
+                                                     }
+                                                 }
+                                                 Log.i("pdf123", "getUploadServiceManualList =>isNewPdfUploaded  " + isNewPdfUploaded);
+
+
+                                                 if ((count == pdfManualListBeen.size())) {
+                                                     if (isNewPdfUploaded) {
+                                                         handler.postDelayed(new Runnable() {
+                                                             @Override
+                                                             public void run() {
+                                                                 // Do something after 5s = 5000ms
+                                                                 cancelDialog();
+                                                                 Intent intent = new Intent(NewTaskConversation.this, PdfRenderererActivity.class);
+                                                                 startActivityForResult(intent, 423);
+                                                             }
+                                                         }, 20000);
+                                                     } else {
+                                                         cancelDialog();
+                                                         Intent intent = new Intent(NewTaskConversation.this, PdfRenderererActivity.class);
+                                                         startActivityForResult(intent, 423);
+                                                     }
+                                                 }
+                                             } else {
+                                                 cancelDialog();
+                                                 Intent intent = new Intent(NewTaskConversation.this, PdfRenderererActivity.class);
+                                                 startActivityForResult(intent, 423);
+                                             }
+                                         } catch (Exception e) {
+                                             e.printStackTrace();
                                          }
                                      } else if (WebServiceEnum_Response != null && WebServiceEnum_Response.equalsIgnoreCase("getRequestType")) {
                                          try {
@@ -14796,10 +14943,10 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
     }
 
     private String getGroupAdmin_observer_DB() {
-        String OraclegroupAdminObserver="";
+        String OraclegroupAdminObserver = "";
         try {
             String get_groupAdminobserver_query = "select groupAdminobserver from projectDetails where loginuser = '" + Appreference.loginuserdetails.getEmail() + "'and projectId='" + projectId + "'";
-             OraclegroupAdminObserver = VideoCallDataBase.getDB(context).getprojectIdForOracleID(get_groupAdminobserver_query);
+            OraclegroupAdminObserver = VideoCallDataBase.getDB(context).getprojectIdForOracleID(get_groupAdminobserver_query);
             Log.i("observer123", "OraclegroupAdminObserver ====> " + OraclegroupAdminObserver);
         } catch (Exception e) {
             e.printStackTrace();
@@ -15078,7 +15225,7 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                     listOfObservers.add(taskReceiver);
                 }
             }
-            if (Appreference.loginuserdetails!=null && listOfObservers.contains(Appreference.loginuserdetails.getUsername())) {
+            if (Appreference.loginuserdetails != null && listOfObservers.contains(Appreference.loginuserdetails.getUsername())) {
                 listOfObservers.remove(Appreference.loginuserdetails.getUsername());
             }
             Log.i("taskConversation", "project_details listOfObservers Group " + listOfObservers);
@@ -25102,6 +25249,7 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
             String response = "";
             try {
                 Log.i("profiledownload", "downloadImageurl " + downloadImageurl);
+                Log.i("pdf123", "downloadImageurl doInBackground do_Manual" + Appreference.do_downloadForServiceManualPDF);
                 if (isNetworkAvailable()) {
 //                    String url ="http://122.165.92.171:8080/uploads/highmessaging/user/";
                     Log.i("profiledownload", "profile download ");
@@ -25113,11 +25261,16 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                             profile1 = downloadImageurl.split("chat/")[1];
                         Log.i("profiledownload", "profile1  " + profile1);
                         File extStore = Environment.getExternalStorageDirectory();
-                        File myFile = new File(extStore.getAbsolutePath() + "/High Message/downloads/" + profile1);
+                        File myFile;
+                        if (!Appreference.do_downloadForServiceManualPDF) {
+                            myFile = new File(extStore.getAbsolutePath() + "/High Message/downloads/" + profile1);
+                        } else {
+                            myFile = new File(extStore.getAbsolutePath() + "/High Message/servicemanual/" + profile1);
+                        }
                         Log.i("profiledownload", "file " + myFile.toString());
                         if (!myFile.exists()) {
                             try {
-
+                                Appreference.doTrustToCertificates();//
                                 URL bitmap = new URL(downloadImageurl);
 
                                 Log.i("profiledownload", "profile bitmap " + bitmap);
@@ -25129,16 +25282,31 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                                 connection.connect();
                                 if (connection.getInputStream() != null) {
                                     InputStream inputStream = connection.getInputStream();
-                                    String dir_path = Environment.getExternalStorageDirectory()
-                                            + "/High Message/downloads";
+                                    String dir_path;
+                                    if (!Appreference.do_downloadForServiceManualPDF) {
+                                        dir_path = Environment.getExternalStorageDirectory()
+                                                + "/High Message/downloads";
+                                    } else {
+                                        dir_path = Environment.getExternalStorageDirectory()
+                                                + "/High Message/servicemanual/";
+                                    }
                                     Log.i("profiledownload", "profile dir_path" + dir_path);
                                     File directory = new File(dir_path);
                                     if (!directory.exists())
                                         directory.mkdir();
-                                    String filePath = Environment.getExternalStorageDirectory()
-                                            .getAbsolutePath()
-                                            + "/High Message/downloads/"
-                                            + profile1;
+
+                                    String filePath;
+                                    if (!Appreference.do_downloadForServiceManualPDF) {
+                                        filePath = Environment.getExternalStorageDirectory()
+                                                .getAbsolutePath()
+                                                + "/High Message/downloads/"
+                                                + profile1;
+                                    } else {
+                                        filePath = Environment.getExternalStorageDirectory()
+                                                .getAbsolutePath()
+                                                + "/High Message/servicemanual/"
+                                                + profile1;
+                                    }
 
                                     Log.d("profiledownload", "my file path is---->" + filePath);
 
@@ -25163,6 +25331,7 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                                     }
                                     //End
 //                                        Appreference.profile_image.put(profile, filePath);
+
                                 }
                             } catch (FileNotFoundException e) {
                                 e.printStackTrace();
@@ -25220,6 +25389,7 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
             super.onPreExecute();
         }
     }
+
 
     public class CounterClass extends CountDownTimer {
         String from_userName, date_taskId;

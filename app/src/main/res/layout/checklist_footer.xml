@@ -47,7 +47,7 @@
             android:layout_height="1dp"
             android:layout_marginTop="5dp"
             android:background="@color/gray"
-            android:visibility="gone"/>
+            android:visibility="gone" />
 
         <TableLayout
             android:layout_width="match_parent"
@@ -124,7 +124,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:weightSum="3">
+                android:weightSum="2">
 
                 <TextView
                     android:id="@+id/textView15"
@@ -143,23 +143,29 @@
 
                 <Button
                     android:id="@+id/checklist_advice"
-                    android:layout_width="0dp"
+                    android:layout_width="7dp"
                     android:layout_height="30dp"
                     android:layout_gravity="center_vertical"
                     android:layout_marginLeft="10dp"
-                    android:layout_weight="0.2"
+                    android:layout_weight="0.1"
                     android:background="@drawable/writeordraw"
                     android:gravity="center_vertical" />
+
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
 
                 <EditText
                     android:id="@+id/checklist_advice_text"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
-                    android:layout_marginLeft="15dp"
                     android:layout_marginTop="5dp"
                     android:layout_weight="1"
-                    android:gravity="start"
+                    android:gravity="center"
                     android:hint="Type Here"
                     android:textColor="@color/black"
                     android:textSize="18sp"
@@ -173,7 +179,7 @@
                     android:layout_marginLeft="15dp"
                     android:layout_weight="1"
                     android:gravity="center_vertical"
-                    android:visibility="invisible" />
+                    android:visibility="gone" />
             </LinearLayout>
 
         </TableLayout>
@@ -192,7 +198,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:weightSum="3">
+                android:weightSum="2">
 
                 <TextView
                     android:layout_width="0dp"
@@ -229,13 +235,14 @@
 
         <TableLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp">
 
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:weightSum="3">
+                android:weightSum="2">
 
                 <TextView
                     android:id="@+id/textView17"
@@ -255,14 +262,22 @@
 
                 <Button
                     android:id="@+id/checklist_tech_sign"
-                    android:layout_width="0dp"
+                    android:layout_width="7dp"
                     android:layout_height="30dp"
                     android:layout_gravity="center_vertical"
                     android:layout_marginLeft="10dp"
-                    android:layout_weight="0.2"
+                    android:layout_weight="0.1"
                     android:background="@drawable/writeordraw"
                     android:gravity="center_vertical" />
 
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/checklist_sign_engineer"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:visibility="gone">
                 <ImageView
                     android:id="@+id/checklist_tech_img"
                     android:layout_width="80dp"
@@ -290,7 +305,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:weightSum="3">
+                android:weightSum="2">
 
                 <TextView
                     android:layout_width="0dp"
@@ -325,13 +340,14 @@
 
         <TableLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp">
 
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:weightSum="3">
+                android:weightSum="2">
 
                 <TextView
                     android:id="@+id/textView23"
@@ -350,14 +366,21 @@
 
                 <Button
                     android:id="@+id/checklist_cust_sign"
-                    android:layout_width="0dp"
+                    android:layout_width="7dp"
                     android:layout_height="30dp"
                     android:layout_gravity="center_vertical"
                     android:layout_marginLeft="10dp"
-                    android:layout_weight="0.2"
+                    android:layout_weight="0.1"
                     android:background="@drawable/writeordraw"
                     android:gravity="center_vertical" />
 
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/checklist_sign_client"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:visibility="gone">
                 <ImageView
                     android:id="@+id/checklist_cust_img"
                     android:layout_width="80dp"
@@ -368,7 +391,6 @@
                     android:gravity="center_vertical"
                     android:visibility="visible" />
             </LinearLayout>
-
         </TableLayout>
 
         <View
@@ -390,7 +412,7 @@
                 android:weightSum="3">
 
                 <TextView
-                    android:layout_width="0dp"
+                    android:layout_width="110dp"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
                     android:layout_marginLeft="5dp"
@@ -406,10 +428,10 @@
 
                 <Button
                     android:id="@+id/checklist_date_btn"
-                    android:layout_width="20dp"
-                    android:layout_height="30dp"
-                    android:layout_marginRight="40dp"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
                     android:layout_gravity="center_vertical"
+                    android:layout_marginRight="40dp"
                     android:layout_weight="0.1"
                     android:background="@drawable/ic_date_chang_request"
                     android:gravity="center_vertical" />
@@ -420,7 +442,6 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
-                    android:layout_marginLeft="15dp"
                     android:layout_marginTop="5dp"
                     android:layout_weight="1"
                     android:gravity="start"

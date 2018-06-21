@@ -20,6 +20,7 @@ import com.ase.Bean.ListTaskFile;
 import com.ase.Bean.ListTaskTransaction;
 import com.ase.Bean.ListallProjectBean;
 import com.ase.Bean.ListofFileds;
+import com.ase.Bean.PdfManualListBean;
 import com.ase.Bean.Project;
 import com.ase.Bean.ProjectDetailsBean;
 import com.ase.Bean.ProjectOrganisationBean;
@@ -91,6 +92,11 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
     public static final String CREATE_TABLE_CHECKLIST_DETAILS = "create table if not exists checklistDetails(id integer primary key autoincrement,projectId integer,taskId integer,userId integer,advice varchar(100),checkListName varchar(100),checklistDate varchar(100),hmReading varchar(100),technicianSignature varchar(100),customerSignature varchar(100),checklistEntryDate varchar(100),clientName varchar(100),technicianName varchar(100),isServiceDone integer,wsSendStatus varchar(100))";
     public static final String CREATE_TABLE_CHECKLIST_DATA = "create table if not exists checklistData(checklistFieldId integer,checklistdataid integer,issueType varchar(100),checklistItem varchar(100),jobDescription varchar(100),jobStatus varchar(100),quantity varchar(100), FOREIGN KEY (checklistdataid) REFERENCES checklistDetails (id))";
     public static final String CREATE_TABLE_CHECKLIST_TEMPLATE = "create table if not exists checklistTemplate(id integer primary key autoincrement,checklistName varchar(100),machine varchar(100),modal varchar(100),serviceType varchar(100),checklistFieldId integer,issueType varchar(100),checklistItem varchar(100),jobDescription varchar(100))";
+    
+	/* For Service Manual  PDf*/
+	public static final String CREATE_USER_MANUAL = "create table if not exists userManual(id integer primary key, pdfFilePathName varchar(100))";
+
+   
     public static final String EULATABLE = "eulaagree";
     public static final String EULACREATE = "create table if not exists '" + EULATABLE + "'(id integer (1),selection varchar(1))";
 
@@ -160,6 +166,7 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
         db.execSQL(CREATE_TABLE_CHECKLIST_DATA);
         db.execSQL(CREATE_TABLE_CHECKLIST_TEMPLATE);
         db.execSQL(EULACREATE);
+		db.execSQL(CREATE_USER_MANUAL);
     }
 
     @Override
@@ -10418,6 +10425,100 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
             Appreference.printLog("getProjectdetails 2", "Exception " + e.getMessage(), "WARN", null);
         } finally {
             return bean;
+        }
+    }
+
+
+    public ArrayList<Integer> getPDFIDList(String query) {
+        ArrayList<Integer> arrayList = new ArrayList<>();
+        Cursor cur;
+        try {
+            if (db == null)
+                db = getReadableDatabase();
+            try {
+                if (db != null) {
+                    if (!db.isOpen())
+                        openDatabase();
+                    cur = db.rawQuery(query, null);
+                    cur.moveToFirst();
+
+                    while (!cur.isAfterLast()) {
+                        arrayList.add(cur.getInt(cur.getColumnIndex("id")));
+                        cur.moveToNext();
+                    }
+                    cur.close();
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                Appreference.printLog("getTaskDetailsInfo 1 ", "Exception " + e.getMessage(), "WARN", null);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            Appreference.printLog("getTaskDetailsInfo 2 ", "Exception " + e.getMessage(), "WARN", null);
+        } finally {
+            Log.i("file", "size" + arrayList.size());
+            return arrayList;
+        }
+    }
+	
+	 public ArrayList<PdfManualListBean> getPDFnameList(String query) {
+        ArrayList<PdfManualListBean> arrayList = new ArrayList<>();
+        Cursor cur;
+        try {
+            if (db == null)
+                db = getReadableDatabase();
+            try {
+                if (db != null) {
+                    if (!db.isOpen())
+                        openDatabase();
+                    cur = db.rawQuery(query, null);
+                    cur.moveToFirst();
+
+                    while (!cur.isAfterLast()) {
+                        PdfManualListBean bean=new PdfManualListBean();
+                        bean.setId(cur.getInt(cur.getColumnIndex("id")));
+                        bean.setPdfFilePathName(cur.getString(cur.getColumnIndex("pdfFilePathName")));
+                        arrayList.add(bean);
+                        cur.moveToNext();
+                    }
+                    cur.close();
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                Appreference.printLog("getTaskDetailsInfo 1 ", "Exception " + e.getMessage(), "WARN", null);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            Appreference.printLog("getTaskDetailsInfo 2 ", "Exception " + e.getMessage(), "WARN", null);
+        } finally {
+            Log.i("file", "size" + arrayList.size());
+            return arrayList;
+        }
+    }
+
+    public void insertOrDelete_PDFmanual(List<PdfManualListBean> pdfManualListBeen) {
+        int row_id = 0;
+        try {
+            if (!db.isOpen())
+                openDatabase();
+            ContentValues cv = new ContentValues();
+            if (pdfManualListBeen != null && pdfManualListBeen.size() > 0) {
+                for (int i = 0; i < pdfManualListBeen.size(); i++) {
+                    PdfManualListBean pdfbean = pdfManualListBeen.get(i);
+                    cv.put("id", pdfbean.getId());
+                    cv.put("pdfFilePathName", pdfbean.getPdfFilePathName());
+
+                    if ((isRecordExists("select id from userManual"))&& pdfbean.getStatus().toString().equalsIgnoreCase("1")) {
+                        row_id = (int) db.delete("userManual", "id='" + pdfbean.getId() + "'", null);
+                    } else {
+                        row_id = (int) db.insert("userManual", null, cv);
+                    }
+                }
+            }
+        } catch (Exception e) {
+            // TODO: handle exception
+            e.printStackTrace();
+            Appreference.printLog("insert_updateProjectStatus ", "Exception " + e.getMessage(), "WARN", null);
         }
     }
 }

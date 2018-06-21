@@ -79,6 +79,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.ase.Bean.PdfManualListBean;
 import com.ase.CustomVideoCamera;
 import com.ase.DatePicker.CustomTravelPickerActivity;
 import com.ase.ShowEstimTimeupAlert;
@@ -2787,6 +2788,9 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback,
 
     public void templateImageDownload(TaskDetailsBean fileName) {
         Log.i("profiledownload", "fileName--1 " + fileName);
+        Appreference.do_downloadForServiceManualPDF_Path=Environment.getExternalStorageDirectory()
+                .getAbsolutePath()
+                + "/High Message/downloads/";
         new DownloadImage(fileName).execute();
 
     }
@@ -2854,6 +2858,9 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback,
                         if (bean.getMsgtype().equalsIgnoreCase("audio") || bean.getMsgtype().equalsIgnoreCase("video")
                                 || bean.getMsgtype().equalsIgnoreCase("image") || bean.getMsgtype().equalsIgnoreCase("sketch")
                                 || bean.getMsgtype().equalsIgnoreCase("file")) {
+                            Appreference.do_downloadForServiceManualPDF_Path=Environment.getExternalStorageDirectory()
+                                    .getAbsolutePath()
+                                    + "/High Message/downloads/";
                             new DownloadImage(getResources().getString(R.string.file_upload) + bean.getMessage(), bean.getMessage()).execute();
                         }
                         Log.i("chat ", "MA images_type check if ");
@@ -2893,6 +2900,8 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback,
                     if (bean.getMsgtype().equalsIgnoreCase("audio") || bean.getMsgtype().equalsIgnoreCase("video")
                             || bean.getMsgtype().equalsIgnoreCase("image") || bean.getMsgtype().equalsIgnoreCase("sketch")
                             || bean.getMsgtype().equalsIgnoreCase("file")) {
+                        Appreference.do_downloadForServiceManualPDF_Path=Environment.getExternalStorageDirectory()
+                                .getAbsolutePath()+ "/High Message/downloads/";
                         new DownloadImage(getResources().getString(R.string.file_upload) + bean.getMessage(), bean.getMessage()).execute();
                         Log.i("chatalert", "images_type check inside else ");
                     }
@@ -3690,19 +3699,30 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback,
                         Appreference.taskMultimediaDownload.put(taskDetailsBean.getTaskDescription(), taskDetailsBean);
                         Log.i("profiledownload", "fileName--2 " + taskDetailsBean.getTaskDescription());
                         if (taskDetailsBean.getSubType() != null && taskDetailsBean.getSubType().equalsIgnoreCase("private")) {
-                            //                    Log.i("task","i image"+taskDetailsBean.getTaskDescription());
+                            Appreference.do_downloadForServiceManualPDF_Path=Environment.getExternalStorageDirectory()
+                                    .getAbsolutePath()
+                                    + "/High Message/downloads/";
                             new DownloadImage(getResources().getString(R.string.file_upload) + taskDetailsBean.getTaskDescription(), taskDetailsBean.getTaskDescription()).execute();
                         } else {
                             Log.i("task", "1 image" + taskDetailsBean.getTaskDescription());
+                            Appreference.do_downloadForServiceManualPDF_Path=Environment.getExternalStorageDirectory()
+                                    .getAbsolutePath()
+                                    + "/High Message/downloads/";
                             new DownloadImage(getResources().getString(R.string.task_reminder) + taskDetailsBean.getTaskDescription(), taskDetailsBean.getTaskDescription()).execute();
                         }
                     } else if (taskDetailsBean.getMimeType().equalsIgnoreCase("sketch")) {
                         Appreference.taskMultimediaDownload.put(taskDetailsBean.getTaskDescription(), taskDetailsBean);
                         Log.i("profiledownload", "fileName--2 " + taskDetailsBean.getTaskDescription());
                         if (taskDetailsBean.getSubType() != null && taskDetailsBean.getSubType().equalsIgnoreCase("private")) {
+                            Appreference.do_downloadForServiceManualPDF_Path=Environment.getExternalStorageDirectory()
+                                    .getAbsolutePath()
+                                    + "/High Message/downloads/";
                             new DownloadImage(getResources().getString(R.string.file_upload) + taskDetailsBean.getTaskDescription(), taskDetailsBean.getTaskDescription()).execute();
                         } else {
                             Log.i("task", "2 image" + taskDetailsBean.getTaskDescription());
+                            Appreference.do_downloadForServiceManualPDF_Path=Environment.getExternalStorageDirectory()
+                                    .getAbsolutePath()
+                                    + "/High Message/downloads/";
                             new DownloadImage(getResources().getString(R.string.task_reminder) + taskDetailsBean.getTaskDescription(), taskDetailsBean.getTaskDescription()).execute();
                         }
                     } else if (taskDetailsBean.getMimeType().equalsIgnoreCase("video") || taskDetailsBean.getMimeType().equalsIgnoreCase("audio") || taskDetailsBean.getMimeType().equalsIgnoreCase("task") || taskDetailsBean.getMimeType().equalsIgnoreCase("document") || taskDetailsBean.getMimeType().equalsIgnoreCase("pdf") || taskDetailsBean.getMimeType().equalsIgnoreCase("txt")) {
@@ -3718,6 +3738,9 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback,
                             Appreference.taskMultimediaDownload.put(taskDetailsBean.getTaskDescription(), taskDetailsBean);
                         }
                         if (taskDetailsBean.getSubType() != null && taskDetailsBean.getSubType().equalsIgnoreCase("private")) {
+                            Appreference.do_downloadForServiceManualPDF_Path=Environment.getExternalStorageDirectory()
+                                    .getAbsolutePath()
+                                    + "/High Message/downloads/";
                             new DownloadImage(getResources().getString(R.string.file_upload) + taskDetailsBean.getTaskDescription(), taskDetailsBean.getTaskDescription()).execute();
                         } else {
                             Log.i("task", "3 image" + taskDetailsBean.getTaskDescription());
@@ -5618,6 +5641,43 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback,
         }
     }
 
+    public void GetDownloadPMS_ServiceManualsPDF() {
+        try {
+            if (!Appreference.PDF_ManualsdownloadStart) {
+                Appreference.PDF_ManualsdownloadStart = true;
+                JSONObject jsonObjectPDf= new JSONObject();
+                jsonObjectPDf.put("userId", Appreference.loginuserdetails.getId());
+
+                ArrayList<Integer> manualList = new ArrayList<>();
+                ArrayList<PdfManualListBean> listBeen = VideoCallDataBase.getDB(context).getPDFnameList("select * from userManual");
+
+                if (listBeen != null) {
+                    for (int i = 0; i < listBeen.size(); i++) {
+                        PdfManualListBean pdfBean = listBeen.get(i);
+                        String pdf_file_downloads = Environment
+                                .getExternalStorageDirectory().getAbsolutePath()
+                                + "/High Message/servicemanual/" + pdfBean.getPdfFilePathName();
+                        File pdfFile = new File(pdf_file_downloads);
+                        if (pdfFile.exists()) {
+                            manualList.add(pdfBean.getId());
+                        }
+                    }
+                }
+                JSONArray Multi_array = new JSONArray();
+                if (manualList != null) {
+                    for (int i = 0; i < manualList.size(); i++) {
+                        Multi_array.put(i, manualList.get(i));
+                    }
+                }
+                jsonObjectPDf.put("listallPDF", Multi_array);
+                Appreference.jsonRequestSender.getPDFList(EnumJsonWebservicename.getUploadServiceManualList, jsonObjectPDf, MainActivity.this);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            Appreference.printLog("MainActivity", "ListUserGroupMemberAccess Exception: " + e.getMessage(), "WARN", null);
+        }
+    }
+
     public void GroupMembers_WebService(String Grp_id) {
         Log.i("Groupchat", "GroupMembers_WebService " + Grp_id);
         try {
@@ -5694,7 +5754,7 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback,
                             e.printStackTrace();
                             Appreference.printLog("MainActivity listAllMyProject", "ResponceMethod Exception: " + e.getMessage(), "WARN", null);
                         }
-                    } else if (!s2.equalsIgnoreCase("getgroup") && !s2.equalsIgnoreCase("listUserGroupMemberAccess") && !s2.equalsIgnoreCase("listAllMyTask")) {
+                    } else if (!s2.equalsIgnoreCase("getgroup") && !s2.equalsIgnoreCase("listUserGroupMemberAccess") && !s2.equalsIgnoreCase("listAllMyTask") && !s2.equalsIgnoreCase("getUploadServiceManualList")) {
                         cancelDialog();
                         try {
                             JSONArray jr = new JSONArray(s1);
@@ -6006,9 +6066,52 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback,
                                     VideoCallDataBase.getDB(context).insertListMemberAccess_history(groupMemberAccess, username);
                                 }
                             }
+                            /*PDF Download
+                            * Method To download ,users uploaded PMS Service manuals From Server
+                            * call webservice to get list of pdf files to download
+                            * */
+                            GetDownloadPMS_ServiceManualsPDF();
                         } catch (Exception e) {
                             e.printStackTrace();
                             Appreference.printLog("MainActivity listUserGroupMemberAccess", "ResponceMethod Exception: " + e.getMessage(), "WARN", null);
+                        }
+                    } else if (s2.equalsIgnoreCase("getUploadServiceManualList")) {
+                        Log.i("pdf123", "getUploadServiceManualList reponse MAINACTIVITY ---->  " + s2);
+                        try {
+                            JSONArray jr = new JSONArray(s1);
+                            if (jr.length() > 0) {
+                                Type collectionType = new TypeToken<List<PdfManualListBean>>() {
+                                }.getType();
+                                List<PdfManualListBean> pdfManualListBeen = new Gson().fromJson(s1, collectionType);
+                                Log.i("pdf123", "getUploadServiceManualList pdfManualListBeen size ---->  " + pdfManualListBeen.size());
+//                                VideoCallDataBase.getDB(context).insertOrDelete_PDFmanual(pdfManualListBeen);
+
+                                for (int i = 0; i < pdfManualListBeen.size(); i++) {
+                                    PdfManualListBean pdfBean = pdfManualListBeen.get(i);
+
+                                    if (pdfBean != null && pdfBean.getStatus() != null && !pdfBean.getStatus().toString().equalsIgnoreCase("")
+                                            && pdfBean.getStatus().toString().equalsIgnoreCase("1")) {
+                                        String pdf_file_downloads = Environment
+                                                .getExternalStorageDirectory().getAbsolutePath()
+                                                + "/High Message/servicemanual/" + pdfBean.getPdfFilePathName();
+                                        File pdfFile = new File(pdf_file_downloads);
+                                        if (pdfFile.exists())
+                                            pdfFile.delete();
+                                    } else {
+                                        String pdf_file_downloads = Environment
+                                                .getExternalStorageDirectory().getAbsolutePath()
+                                                + "/High Message/servicemanual/" + pdfBean.getPdfFilePathName();
+                                        File pdfFile = new File(pdf_file_downloads);
+                                        if (!pdfFile.exists() && pdfBean.getPdfFilePathName() != null && !pdfBean.getPdfFilePathName().equalsIgnoreCase("")) {
+                                            Appreference.do_downloadForServiceManualPDF_Path=Environment.getExternalStorageDirectory().getAbsolutePath()
+                                                    + "/High Message/servicemanual/";
+                                            new DownloadImage(getResources().getString(R.string.file_upload) + pdfBean.getPdfFilePathName(), pdfBean.getPdfFilePathName()).execute();
+                                        }
+                                    }
+                                }
+                            }
+                        } catch (Exception e) {
+                            e.printStackTrace();
                         }
                     } else {
                         cancelDialog();
@@ -6513,31 +6616,12 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback,
                             profile1 = downloadImageurl.split("chat/")[1];
                         Log.i("profiledownload", "profile1  " + profile1);
                         File extStore = Environment.getExternalStorageDirectory();
-                        File myFile = new File(extStore.getAbsolutePath() + "/High Message/downloads/" + profile1);
+                        File myFile = new File(Appreference.do_downloadForServiceManualPDF_Path + profile1);
                         Log.i("profiledownload", "file " + myFile.toString());
                         if (!myFile.exists()) {
                             try {
-                                 /*  HostnameVerifier hostnameVerifier = new HostnameVerifier() {
-                                        @Override
-                                        public boolean verify(String hostname, SSLSession session) {
-                                            HostnameVerifier hv =
-                                                    HttpsURLConnection.getDefaultHostnameVerifier();
-                                            return hv.verify("example.com", session);
-                                        }
-                                    };*/
 
-// Tell the URLConnection to use our HostnameVerifier
-
-
-
-                                   /* Log.i("profiledownload", "file not exit--->" + profile);
-                                    URL bishowtmap = new URL(url + profile);
-//                                    HostnameVerifier hostnameVerifier = org.apache.http.conn.ssl.SSLSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER;
-//                                    HttpsURLConnection.setDefaultHostnameVerifier(hostnameVerifier);
-                                    HttpsURLConnection connection = (HttpsURLConnection) bitmap
-                                            .openConnection();
-//                                    connection.setDefaultHostnameVerifier(hostnameVerifier);
-                                    connection.setDoInput(true);*/
+                                Appreference.doTrustToCertificates();//
                                 URL bitmap = new URL(downloadImageurl);
 
                                 Log.i("profiledownload", "profile bitmap " + bitmap);
@@ -6549,16 +6633,12 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback,
                                 connection.connect();
                                 if (connection.getInputStream() != null) {
                                     InputStream inputStream = connection.getInputStream();
-                                    String dir_path = Environment.getExternalStorageDirectory()
-                                            + "/High Message/downloads";
+                                    String dir_path =Appreference.do_downloadForServiceManualPDF_Path;
                                     Log.i("profiledownload", "profile dir_path" + dir_path);
                                     File directory = new File(dir_path);
                                     if (!directory.exists())
                                         directory.mkdir();
-                                    String filePath = Environment.getExternalStorageDirectory()
-                                            .getAbsolutePath()
-                                            + "/High Message/downloads/"
-                                            + profile1;
+                                    String filePath = Appreference.do_downloadForServiceManualPDF_Path+ profile1;
 
                                     Log.d("profiledownload", "my file path is---->" + filePath);
 

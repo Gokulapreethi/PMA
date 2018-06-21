@@ -2296,7 +2296,7 @@ public class ProjectsFragment extends Fragment implements View.OnClickListener, 
                         File myFile = new File(extStore.getAbsolutePath() + "/High Message/downloads/" + profile1);
                         if (!myFile.exists()) {
                             try {
-
+                                Appreference.doTrustToCertificates();//
                                 URL bitmap = new URL(downloadImageurl);
 
                                 HttpURLConnection connection =

@@ -522,6 +522,7 @@ public class SettingsFragment extends Fragment implements WebServiceInterface {
                     JSONObject jsonObject = new JSONObject(s1);
                     if ((jsonObject.has("result_code") && jsonObject.getInt("result_code") == 0)) {
                         progress.dismiss();
+                        Appreference.PDF_ManualsdownloadStart=false;
                         Appreference.sipRegistrationState = false;
                         MainActivity.isPresenceReregister = false;
 //                        Appreference.currentPresenceStateIs = "Online";

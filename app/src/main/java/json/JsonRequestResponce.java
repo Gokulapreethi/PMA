@@ -328,7 +328,9 @@ public class JsonRequestResponce extends Thread {
                                 obj.setFirstname("taskStatus");
                             }else if (obj.getEnumJsonWebservicename().toString().equals("assignTask")) {
                                 obj.setFirstname("assignTask");
-                            }else if (obj.getEnumJsonWebservicename().toString().equals("searchMedia")) {
+                            }else if (obj.getEnumJsonWebservicename().toString().equals("getUploadServiceManualList")) {
+                                obj.setFirstname("getUploadServiceManualList");
+                            } else if (obj.getEnumJsonWebservicename().toString().equals("searchMedia")) {
                                 obj.setFirstname("searchMedia");
                             }else if (obj.getEnumJsonWebservicename().toString().equals("taskNeedAssessmentReport")) {
                                 obj.setFirstname("taskNeedAssessmentReport");
@@ -531,6 +533,11 @@ public class JsonRequestResponce extends Thread {
              case taskStatus:
                 NewTaskConversation.getInstance().cancelDialog();
                 NewTaskConversation.getInstance().showToast("taskStatus error . Try again later");
+                inter.ErrorMethod(obj);
+                break;
+            case getUploadServiceManualList:
+                NewTaskConversation.getInstance().cancelDialog();
+                NewTaskConversation.getInstance().showToast("getUploadServiceManualList error . Try again later");
                 inter.ErrorMethod(obj);
                 break;
             case assignTask:
@@ -876,6 +883,13 @@ public class JsonRequestResponce extends Thread {
                         Log.i("sendofflinemsg","response taskstatus-->"+inter);
                         inter.ResponceMethod(obj);
                         break;
+					case getUploadServiceManualList:
+                        obj.setEmail(responseString);
+                        obj.setFirstname("getUploadServiceManualList");
+                        Log.i("sendofflinemsg","response getUploadServiceManualList-->"+inter);
+                        inter.ResponceMethod(obj);
+                        break;
+                   
                    case saveCheckListDataDetails:
                         obj.setEmail(responseString);
                         obj.setFirstname("saveCheckListDataDetails");

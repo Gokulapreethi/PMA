@@ -201,6 +201,9 @@ public class CheckListActivity extends Activity implements WebServiceInterface {
         checklist_tech_name = (EditText) footerView.findViewById(R.id.checklist_tech_name);
         checklist_client_name = (EditText) footerView.findViewById(R.id.checklist_client_name);
 
+        final LinearLayout checklist_sign_engineer=(LinearLayout)footerView.findViewById(R.id.checklist_sign_engineer);
+        final LinearLayout checklist_sign_client=(LinearLayout)footerView.findViewById(R.id.checklist_sign_client);
+
         if (Appreference.loginuserdetails != null && Appreference.loginuserdetails.getUsername() != null) {
             checklist_tech_name.setText(Appreference.loginuserdetails.getFirstName() + " " + Appreference.loginuserdetails.getLastName());
             checklist_tech_name.setEnabled(false);
@@ -262,6 +265,7 @@ public class CheckListActivity extends Activity implements WebServiceInterface {
                 Bitmap myBitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
                 checklist_tech_sign_img.setImageBitmap(myBitmap);
             }
+            checklist_sign_engineer.setVisibility(View.VISIBLE);
             checklist_tech_sign_img.setVisibility(View.VISIBLE);
         }
 
@@ -271,6 +275,7 @@ public class CheckListActivity extends Activity implements WebServiceInterface {
                 Bitmap myBitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
                 checklist_cust_sign_img.setImageBitmap(myBitmap);
             }
+            checklist_sign_client.setVisibility(View.VISIBLE);
             checklist_cust_sign_img.setVisibility(View.VISIBLE);
         }
 
@@ -334,7 +339,7 @@ public class CheckListActivity extends Activity implements WebServiceInterface {
                 saveDialog.setPositiveButton("Text", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         checklist_advice_text.setVisibility(View.VISIBLE);
-                        checklist_advice_img.setVisibility(View.INVISIBLE);
+                        checklist_advice_img.setVisibility(View.GONE);
                         isAdviceImg = false;
                         dialog.cancel();
                     }
@@ -375,6 +380,7 @@ public class CheckListActivity extends Activity implements WebServiceInterface {
                     isAdviceImg = false;
                     isCommentsImg = false;
                     isCustomerSign = false;
+                    checklist_sign_engineer.setVisibility(View.VISIBLE);
                     Intent i = new Intent(getApplicationContext(), HandSketchActivity2.class);
                     i.putExtra("isFromchecList", false);
                     startActivityForResult(i, 423);
@@ -396,6 +402,7 @@ public class CheckListActivity extends Activity implements WebServiceInterface {
                     isAdviceImg = false;
                     isCommentsImg = false;
                     isTechnicianSign = false;
+                    checklist_sign_client.setVisibility(View.VISIBLE);
                     Intent i = new Intent(getApplicationContext(), HandSketchActivity2.class);
                     i.putExtra("isFromchecList", false);
                     startActivityForResult(i, 423);

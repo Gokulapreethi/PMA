@@ -1,0 +1,15 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.androidsrc.pdfdemo.MainActivity" >
+    <item
+        android:id="@+id/action_crop_pdf"
+        android:orderInCategory="100"
+        android:showAsAction="ifRoom"
+        android:title="Crop Page" />
+    <item
+        android:id="@+id/action_close_pdf"
+        android:orderInCategory="100"
+        android:showAsAction="ifRoom"
+        android:title="Close" />
+
+</menu>

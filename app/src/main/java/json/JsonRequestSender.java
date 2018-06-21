@@ -360,6 +360,17 @@ public class JsonRequestSender {
         queue.addMsg(communicationBean);
     }
 
+    public void getPDFList(EnumJsonWebservicename webservicename, JSONObject jsonObject, WebServiceInterface access) {
+
+        CommunicationBean communicationBean = new CommunicationBean();
+        communicationBean.setEnumJsonWebservicename(webservicename);
+        if (jsonObject != null) {
+            communicationBean.setJsonObject(jsonObject);
+        }
+        communicationBean.setAccess(access);
+        queue.addMsg(communicationBean);
+    }
+
     public void listUserGroupMemberAccess(EnumJsonWebservicename webservicename, List<NameValuePair> valuePair, WebServiceInterface access, GroupMemberAccess groupMemberAccess) {
 
         CommunicationBean communicationBean = new CommunicationBean();

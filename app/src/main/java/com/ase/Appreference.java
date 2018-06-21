@@ -1,6 +1,7 @@
 package com.ase;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.net.ConnectivityManager;
@@ -13,6 +14,7 @@ import android.text.SpannableStringBuilder;
 import android.text.format.DateFormat;
 import android.text.style.ForegroundColorSpan;
 import android.util.Log;
+import android.view.View;
 
 import com.ase.Bean.checkListDetails;
 import com.ase.DB.VideoCallDataBase;
@@ -24,6 +26,10 @@ import org.pjsip.pjsua2.Call;
 import org.pjsip.pjsua2.app.MainActivity;
 
 import java.io.File;
+import java.io.FileOutputStream;
+import java.security.SecureRandom;
+import java.security.cert.CertificateException;
+import java.security.cert.X509Certificate;
 import java.sql.Timestamp;
 import java.text.Format;
 import java.text.ParseException;
@@ -37,6 +43,13 @@ import java.util.Iterator;
 import java.util.Locale;
 import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
+
+import javax.net.ssl.HostnameVerifier;
+import javax.net.ssl.HttpsURLConnection;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLSession;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.X509TrustManager;
 
 import json.CommunicationBean;
 import json.JsonOfflineRequestSender;
@@ -153,6 +166,22 @@ public class Appreference {
     public static boolean isTemplateTaskProfile = false;
     public static boolean isPasswordChanged = false;
 
+
+    /*Added For PDF to Image Convert File Path Start*/
+    public static ArrayList<String> PDFPageImagePath = new ArrayList<String>();
+    public static ArrayList<String> PDFCropPageImageList = new ArrayList<String>();
+    /*Added For PDF to Image Convert File Path End*/
+
+    /*Added For PDF view File Path Start*/
+    public static ArrayList<String> PDFConvImagePath = new ArrayList<String>();
+    /*Added For PDF view File Path End*/
+
+
+    /*Added For PDF manuals Download webservice Start*/
+    public static boolean PDF_ManualsdownloadStart= false;
+    public static boolean do_downloadForServiceManualPDF=false;
+    public static String do_downloadForServiceManualPDF_Path;
+    /*Added For PDF manuals Download webservice End*/
 /*************************added for checklist start*/
     public static checkListDetails mychecklistTemplate;
     public static boolean isMandatoryLabelNotFilled=false;
@@ -661,10 +690,78 @@ public class Appreference {
         return strFilename;
     }
 
+
+    public static String takeScreenshot(View v1) {
+        Date now = new Date();
+        android.text.format.DateFormat.format("yyyy-MM-dd_hh:mm:ss", now);
+        String mPath = null;
+        try {
+            final String createpath = Environment.getExternalStorageDirectory() + "/High Message/PDF/";
+            File directory = new File(createpath);
+            if (!directory.exists())
+                directory.mkdir();
+            // image naming and path  to include sd card  appending name you choose for file
+             mPath = Environment.getExternalStorageDirectory() + "/High Message/PDF/"+"PDF"+Appreference.getFileName()+".jpg";
+
+            // create bitmap screen capture
+//            View v1 = getWindow().getDecorView().getRootView();
+            v1.setDrawingCacheEnabled(true);
+            Bitmap bitmap = Bitmap.createBitmap(v1.getDrawingCache());
+            v1.setDrawingCacheEnabled(false);
+
+            File imageFile = new File(mPath);
+
+            FileOutputStream outputStream = new FileOutputStream(imageFile);
+            int quality = 100;
+            bitmap.compress(Bitmap.CompressFormat.JPEG, quality, outputStream);
+            outputStream.flush();
+            outputStream.close();
+
+
+        } catch (Throwable e) {
+            // Several error may come out with file handling or DOM
+            e.printStackTrace();
+        }
+        return mPath;
+    }
+
     public static String getDeviceName() {
         String reqString = Build.MANUFACTURER
                 + " " + Build.MODEL;
         return reqString;
+    }
+
+
+    // trusting all certificate
+    public static void doTrustToCertificates() throws Exception {
+        TrustManager[] trustAllCerts = new TrustManager[]{
+                new X509TrustManager() {
+                    public X509Certificate[] getAcceptedIssuers() {
+                        return null;
+                    }
+
+                    public void checkServerTrusted(X509Certificate[] certs, String authType) throws CertificateException {
+                        return;
+                    }
+
+                    public void checkClientTrusted(X509Certificate[] certs, String authType) throws CertificateException {
+                        return;
+                    }
+                }
+        };
+
+        SSLContext sc = SSLContext.getInstance("SSL");
+        sc.init(null, trustAllCerts, new SecureRandom());
+        HttpsURLConnection.setDefaultSSLSocketFactory(sc.getSocketFactory());
+        HostnameVerifier hv = new HostnameVerifier() {
+            public boolean verify(String urlHostName, SSLSession session) {
+                if (!urlHostName.equalsIgnoreCase(session.getPeerHost())) {
+                    System.out.println("Warning: URL host '" + urlHostName + "' is different to SSLSession host '" + session.getPeerHost() + "'.");
+                }
+                return true;
+            }
+        };
+        HttpsURLConnection.setDefaultHostnameVerifier(hv);
     }
 
     public static String TimeFrequencyConvertion(String timefrequency) {

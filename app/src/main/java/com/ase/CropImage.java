@@ -1,9 +1,11 @@
 package com.ase;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
@@ -42,13 +44,14 @@ public class CropImage extends Activity {
     private Uri sourceUri = null;
     private Uri saveUri = null;
     private Uri path_uri = null;
-    ImageView sentBtn;
+    ImageView sentBtn,preview_image;
     TextView back;
     String strpath;
     public static String folderPath = Environment.getExternalStorageDirectory() + "/High Message/";
     static String filename;
     private Bitmap.CompressFormat mCompressFormat = Bitmap.CompressFormat.JPEG;
     static String path_intent = null;
+    private boolean isfromCONVcrop;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -58,13 +61,19 @@ public class CropImage extends Activity {
 
         mCropView = (CropImageView) findViewById(R.id.cropImageView);
         sentBtn = (ImageView) findViewById(R.id.sentBtn);
+        preview_image = (ImageView) findViewById(R.id.preview_image);
         back = (TextView) findViewById(R.id.back);
         try {
             strpath = getIntent().getStringExtra("path");
+            isfromCONVcrop = getIntent().getBooleanExtra("fromConvCrop", false);
             Log.i("Crop", "sketch strpath==> " + strpath);
         } catch (Exception e) {
             e.printStackTrace();
         }
+        if(isfromCONVcrop)
+            preview_image.setVisibility(View.VISIBLE);
+        else
+            preview_image.setVisibility(View.GONE);
         if (sourceUri == null) {
             // default data
 //            sourceUri = getUriFromDrawableResId(this, R.drawable.sample5);
@@ -80,6 +89,12 @@ public class CropImage extends Activity {
             @Override
             public void onError(Throwable e) {
 
+            }
+        });
+        preview_image.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                preview_croppedImage();
             }
         });
         sentBtn.setOnClickListener(new View.OnClickListener() {
@@ -292,5 +307,59 @@ public class CropImage extends Activity {
                 });
     }
 
+    private Disposable preview_croppedImage() {
+        return mCropView.crop(sourceUri)
+                .executeAsSingle()
+                .flatMap(new Function<Bitmap, SingleSource<Uri>>() {
+                    @Override
+                    public SingleSource<Uri> apply(@io.reactivex.annotations.NonNull Bitmap bitmap)
+                            throws Exception {
+                        return mCropView.save(bitmap)
+                                .compressFormat(mCompressFormat)
+                                .executeAsSingle(createSaveUri());
+                    }
+                })
+                .doOnSubscribe(new Consumer<Disposable>() {
+                    @Override
+                    public void accept(@io.reactivex.annotations.NonNull Disposable disposable)
+                            throws Exception {
+//                        showProgress();
+                    }
+                })
+                .doFinally(new Action() {
+                    @Override
+                    public void run() throws Exception {
+//                        dismissProgress();
+                    }
+                })
+                .subscribeOn(Schedulers.newThread())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<Uri>() {
+                    @Override
+                    public void accept(@io.reactivex.annotations.NonNull Uri uri) throws Exception {
+                        startpreviewActivity(uri);
+
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(@io.reactivex.annotations.NonNull Throwable throwable)
+                            throws Exception {
+                    }
+                });
+    }
+
+    private void startpreviewActivity(Uri uri) {
+        if (isFinishing()) return;
+        try {
+            Log.i("Crop", "filename path_intent ==> " + path_intent);
+            if (path_intent != null) {
+                Intent intent=new Intent(getApplicationContext(),FullScreenImage.class);
+                intent.putExtra("image",path_intent);
+                startActivity(intent);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 }
 

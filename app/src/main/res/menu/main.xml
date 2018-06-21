@@ -9,6 +9,10 @@
         android:id="@+id/action_quit"
         android:icon="@android:drawable/ic_menu_close_clear_cancel"
         android:showAsAction="ifRoom"
-        android:title="Quit"/>
-    
+        android:title="Quit" />
+    <item
+        android:id="@+id/action_close"
+        android:orderInCategory="100"
+        android:showAsAction="always"
+        android:title="Close" />
 </menu>
