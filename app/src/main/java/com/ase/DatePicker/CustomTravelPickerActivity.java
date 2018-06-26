@@ -40,8 +40,8 @@ import java.util.Date;
 public class CustomTravelPickerActivity extends Activity implements DateTimePicker.DateWatcher {
 
     public Context context;
-    String taskNameshow, projectIDshow, taskIDshow,jobcodeno,activitycode;
-    String StartDate, EndDate,StartDateFilled;
+    String taskNameshow, projectIDshow, taskIDshow, jobcodeno, activitycode;
+    String StartDate, EndDate, StartDateFilled;
     boolean isTravel = false;
     boolean isStartEndFilled = false;
     boolean isStartOnlyFilled = false;
@@ -75,7 +75,7 @@ public class CustomTravelPickerActivity extends Activity implements DateTimePick
 
         final SimpleDateFormat sdf = new SimpleDateFormat("dd-MMM-yyyy HH:mm");
         SimpleDateFormat df = new SimpleDateFormat("hh:mm aa");
-        currentDateTimeString= df.format(c.getTime());
+        currentDateTimeString = df.format(c.getTime());
         Log.i("travel123", "currentTime=======>" + currentDateTimeString);
         Log.i("travel123", "todayDate=======>" + todayDate);
         final Button travelstart_sign = (Button) findViewById(R.id.travelstart_sign);
@@ -92,21 +92,21 @@ public class CustomTravelPickerActivity extends Activity implements DateTimePick
             @Override
             public void onClick(View v) {
                 finish();
-                overridePendingTransition(R.anim.left_to_right,R.anim.right_to_left);
+                overridePendingTransition(R.anim.left_to_right, R.anim.right_to_left);
             }
         });
 //        project_name.setText(taskNameshow);
-        project_name.setText("Job Card No : "+ jobcodeno +"\nActivity Code : "+activitycode);
+        project_name.setText("Job Card No : " + jobcodeno + "\nActivity Code : " + activitycode);
         String query = "select * from projectStatus where projectId='" + projectIDshow + "' and userId='" + Appreference.loginuserdetails.getId() + "' and taskId= '" + taskIDshow + "' and (status = '7' or status = '2' or status = '4')";
         TaskDetailsBean bean = VideoCallDataBase.getDB(context).getActivityTimeFromStatus(query);
         if (bean != null) {
-            if (bean.getTravelStartTime() != null  && !bean.getTravelStartTime().equalsIgnoreCase("")
+            if (bean.getTravelStartTime() != null && !bean.getTravelStartTime().equalsIgnoreCase("")
                     && bean.getTravelEndTime() != null && !bean.getTravelEndTime().equalsIgnoreCase("")) {
                 isStartEndFilled = true;
             } else if (bean.getTravelStartTime() != null && !bean.getTravelStartTime().equalsIgnoreCase("")) {
                 isStartOnlyFilled = true;
                 StartDate = bean.getTravelStartTime();
-                StartDateFilled=bean.getTravelStartTime();
+                StartDateFilled = bean.getTravelStartTime();
 //                travel_start.setText(bean.getActivityStartTime());
                 travelstart_sign.setEnabled(false);
 
@@ -117,7 +117,7 @@ public class CustomTravelPickerActivity extends Activity implements DateTimePick
                     Date dt_temp = originalFormat.parse(bean.getTravelStartTime());
                     travel_start.setText(dateFormat.format(dt_temp));
 
-                }catch (Exception e){
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
@@ -146,11 +146,11 @@ public class CustomTravelPickerActivity extends Activity implements DateTimePick
                             // TODO Auto-generated method stub
                             String result_string = mDateTimePicker.getMonth() + "-" + String.valueOf(mDateTimePicker.getDay()) + "-" + String.valueOf(mDateTimePicker.getYear())
                                     + "  " + String.valueOf(mDateTimePicker.getHour()) + ":" + String.valueOf(mDateTimePicker.getMinute());
-                            Date date_from=null;
+                            Date date_from = null;
                             final Calendar c_date1 = Calendar.getInstance();
 
                             try {
-                                date_from=new SimpleDateFormat("MMM-d-yyyy HH:mm").parse(result_string);
+                                date_from = new SimpleDateFormat("MMM-d-yyyy HH:mm").parse(result_string);
                             } catch (ParseException e) {
                                 e.printStackTrace();
                             }
@@ -168,26 +168,26 @@ public class CustomTravelPickerActivity extends Activity implements DateTimePick
                             } catch (Exception e) {
                                 e.printStackTrace();
                             }
-                            Log.i("Date123","Date arrange===>"+result_string);
-                            Log.i("Date123","Date From===>"+date_from);
-                            Log.i("Date123","Date to===>"+date_to);
+                            Log.i("Date123", "Date arrange===>" + result_string);
+                            Log.i("Date123", "Date From===>" + date_from);
+                            Log.i("Date123", "Date to===>" + date_to);
                             if (date_from.compareTo(date_to) > 0) {
                                 Toast.makeText(getApplicationContext(), "Please select Still today date", Toast.LENGTH_SHORT).show();
 //                                totimepickerDialog.cancel();
                             } else if (date_from.compareTo(date_to) <= 0) {
-                                String form=sdf.format(date_from);
-                                Log.i("Trends","from date value is       "+form);
+                                String form = sdf.format(date_from);
+                                Log.i("Trends", "from date value is       " + form);
 
 //                                Log.i("Trends","to_date is   "+to_date.getText().toString());
-                                Log.i("Trends","sdf format to date is   "+sdf.format(date_to));
+                                Log.i("Trends", "sdf format to date is   " + sdf.format(date_to));
                                 try {
-                                    if(travel_end.getText().toString().length()>0) {
+                                    if (travel_end.getText().toString().length() > 0) {
                                         date_initial = sdf.parse(travel_end.getText().toString());
                                     }
                                 } catch (ParseException e) {
                                     e.printStackTrace();
                                 }
-                                if(date_initial!=null && travel_end.getText().toString().length()>0) {
+                                if (date_initial != null && travel_end.getText().toString().length() > 0) {
                                     if (date_from.compareTo(date_initial) > 0) {
                                         Toast.makeText(getApplicationContext(), "Can't set", Toast.LENGTH_SHORT).show();
                                     } else {
@@ -197,7 +197,7 @@ public class CustomTravelPickerActivity extends Activity implements DateTimePick
                                     travel_start.setText(form);
                                 }
                             }
-                            date3=null;
+                            date3 = null;
                             mDateTimeDialog.dismiss();
                         }
                     });
@@ -257,13 +257,13 @@ public class CustomTravelPickerActivity extends Activity implements DateTimePick
                     ((Button) mDateTimeDialogView.findViewById(R.id.SetDateTime)).setOnClickListener(new View.OnClickListener() {
 
                         public void onClick(View v) {
-                            if(travel_start.getText().toString().trim().length()>0) {
+                            if (travel_start.getText().toString().trim().length() > 0) {
                                 mDateTimePicker.clearFocus();
                                 // TODO Auto-generated method stub
                                 String result_string = mDateTimePicker.getMonth() + "-" + String.valueOf(mDateTimePicker.getDay()) + "-" + String.valueOf(mDateTimePicker.getYear())
                                         + "  " + String.valueOf(mDateTimePicker.getHour()) + ":" + String.valueOf(mDateTimePicker.getMinute());
-                                date1=null;
-                                date4=null;
+                                date1 = null;
+                                date4 = null;
                                 final Calendar c_date = Calendar.getInstance();
 
                                 try {
@@ -274,9 +274,9 @@ public class CustomTravelPickerActivity extends Activity implements DateTimePick
 //                            to_date.setText(sdf.format(date_to));
                                 if (date1 == null) {
                                     try {
-                                        Log.i("datetime","start date-->"+travel_start.getText().toString());
-                                            date1 = travel_start.getText().toString();
-                                            date_from = sdf.parse(date1);
+                                        Log.i("datetime", "start date-->" + travel_start.getText().toString());
+                                        date1 = travel_start.getText().toString();
+                                        date_from = sdf.parse(date1);
                                     } catch (Exception e) {
                                         e.printStackTrace();
                                     }
@@ -290,21 +290,21 @@ public class CustomTravelPickerActivity extends Activity implements DateTimePick
                                         e.printStackTrace();
                                     }
                                 }
-                                Log.i("Date123","date_from1.compareTo(date_to) < 0***********8");
-                                Log.i("Date123","endDate arrange ===>"+result_string);
-                                Log.i("Date123","endDate From ===>"+date_from);
-                                Log.i("Date123","endDate to ===>"+date_to);
-                                Log.i("Date123","endDate current date date_from1 ===>"+date_from1);
-                                if (date_from!=null && date_to!=null && date_from.compareTo(date_to) > 0) {
+                                Log.i("Date123", "date_from1.compareTo(date_to) < 0***********8");
+                                Log.i("Date123", "endDate arrange ===>" + result_string);
+                                Log.i("Date123", "endDate From ===>" + date_from);
+                                Log.i("Date123", "endDate to ===>" + date_to);
+                                Log.i("Date123", "endDate current date date_from1 ===>" + date_from1);
+                                if (date_from != null && date_to != null && date_from.compareTo(date_to) > 0) {
                                     Toast.makeText(getApplicationContext(), "Please select above from date", Toast.LENGTH_SHORT).show();
 //                                totimepickerDialog.cancel();
-                                } else if (date_from1!=null && date_to!=null && date_from1.compareTo(date_to) < 0) {
+                                } else if (date_from1 != null && date_to != null && date_from1.compareTo(date_to) < 0) {
                                     Toast.makeText(getApplicationContext(), "please Select date till today", Toast.LENGTH_SHORT).show();
                                 } else {
                                     travel_end.setText(sdf.format(date_to));
                                 }
                                 mDateTimeDialog.dismiss();
-                            }else{
+                            } else {
                                 Toast.makeText(getApplicationContext(), "Please Fill Start Date Time", Toast.LENGTH_SHORT).show();
                             }
                         }
@@ -364,44 +364,71 @@ public class CustomTravelPickerActivity extends Activity implements DateTimePick
                         SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MMM-yyyy HH:mm");
                         SimpleDateFormat originalFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
                         Date dt_temp;
+                        final Calendar c_date = Calendar.getInstance();
+                        Date date_start_date = null, date_end_date = null;
                         if (travel_start.getText().toString().length() > 0) {
                             dt_temp = dateFormat.parse(travel_start.getText().toString());
                             StartDate = originalFormat.format(dt_temp);
+
+                            String selected_start_date = travel_start.getText().toString();
+                            date_start_date = sdf.parse(selected_start_date);
                         }
                         if (travel_end.getText().toString().length() > 0) {
                             dt_temp = dateFormat.parse(travel_end.getText().toString());
                             EndDate = originalFormat.format(dt_temp);
+                            String selected_end_date = travel_end.getText().toString();
+                            date_end_date = sdf.parse(selected_end_date);
                         }
 
-                       //New Code End
+                        boolean start_travel = false;
+                        boolean end_travel = false;
+                        //New Code End
 
-                       if (StartDate != null || EndDate != null) {
-                           NewTaskConversation newTaskConversation = (NewTaskConversation) Appreference.context_table.get("taskcoversation");
-                           if (!isTravel && newTaskConversation != null) {
-                               if (isStartOnlyFilled && EndDate != null && !EndDate.equalsIgnoreCase("")) {
-                                   newTaskConversation.getEnteredTravelTime(StartDateFilled, EndDate,"9");
-                                   finish();
-                               } else if (!isStartOnlyFilled && StartDate != null && !StartDate.equalsIgnoreCase("") || EndDate != null && !EndDate.equalsIgnoreCase("")) {
-                                   newTaskConversation.getEnteredTravelTime(StartDate, EndDate,"7");
-                                   finish();
-                               } else
-                                   Toast.makeText(CustomTravelPickerActivity.this, "Please Enter DateTime to send", Toast.LENGTH_SHORT).show();
+                        String current_date_time = sdf.format(c_date.getTime());
+                        Date date_now_check = sdf.parse(current_date_time);
 
-                           } else {
-                               TravelJobDetails travelJobDetails = (TravelJobDetails) Appreference.context_table.get("traveljobdetails");
-                               if (travelJobDetails != null && isTravel) {
-                                   if (isStartOnlyFilled && EndDate != null && !EndDate.equalsIgnoreCase("")) {
-                                       travelJobDetails.getEnteredTravelTime(StartDateFilled, EndDate,"9");
-                                       finish();
-                                   } else if (!isStartOnlyFilled && StartDate != null && !StartDate.equalsIgnoreCase("") || EndDate != null && !EndDate.equalsIgnoreCase("")) {
-                                       travelJobDetails.getEnteredTravelTime(StartDate, EndDate,"7");
-                                       finish();
-                                   } else
-                                       Toast.makeText(CustomTravelPickerActivity.this, "Please Enter DateTime to send", Toast.LENGTH_SHORT).show();
-                               }
-                           }
-                       } else
-                           Toast.makeText(CustomTravelPickerActivity.this, "Please Enter DateTime to send", Toast.LENGTH_SHORT).show();
+                        if (date_now_check != null) {
+
+                            if (!isStartOnlyFilled && date_start_date != null && date_now_check.compareTo(date_start_date) == 0) {
+                                start_travel = true;
+                            }
+                            if (isStartOnlyFilled && date_end_date != null && date_now_check.compareTo(date_end_date) == 0) {
+                                end_travel = true;
+                            }
+                        }
+                        if (start_travel || end_travel) {
+                            start_travel = false;
+                            end_travel = false;
+                            if (StartDate != null || EndDate != null) {
+                                NewTaskConversation newTaskConversation = (NewTaskConversation) Appreference.context_table.get("taskcoversation");
+                                if (!isTravel && newTaskConversation != null) {
+                                    if (isStartOnlyFilled && EndDate != null && !EndDate.equalsIgnoreCase("")) {
+                                        newTaskConversation.getEnteredTravelTime(StartDateFilled, EndDate, "9");
+                                        finish();
+                                    } else if (!isStartOnlyFilled && StartDate != null && !StartDate.equalsIgnoreCase("") || EndDate != null && !EndDate.equalsIgnoreCase("")) {
+                                        newTaskConversation.getEnteredTravelTime(StartDate, EndDate, "7");
+                                        finish();
+                                    } else
+                                        Toast.makeText(CustomTravelPickerActivity.this, "Please Enter DateTime to send", Toast.LENGTH_SHORT).show();
+
+                                } else {
+                                    TravelJobDetails travelJobDetails = (TravelJobDetails) Appreference.context_table.get("traveljobdetails");
+                                    if (travelJobDetails != null && isTravel) {
+                                        if (isStartOnlyFilled && EndDate != null && !EndDate.equalsIgnoreCase("")) {
+                                            travelJobDetails.getEnteredTravelTime(StartDateFilled, EndDate, "9");
+                                            finish();
+                                        } else if (!isStartOnlyFilled && StartDate != null && !StartDate.equalsIgnoreCase("") || EndDate != null && !EndDate.equalsIgnoreCase("")) {
+                                            travelJobDetails.getEnteredTravelTime(StartDate, EndDate, "7");
+                                            finish();
+                                        } else
+                                            Toast.makeText(CustomTravelPickerActivity.this, "Please Enter DateTime to send", Toast.LENGTH_SHORT).show();
+                                    }
+                                }
+                            } else
+                                Toast.makeText(CustomTravelPickerActivity.this, "Please Enter DateTime to send", Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(CustomTravelPickerActivity.this, "Please select current date and time", Toast.LENGTH_SHORT).show();
+                        }
 //                   }else
 //                       Toast.makeText(CustomTravelPickerActivity.this, "Check your internet connection", Toast.LENGTH_SHORT).show();
                     } else {
@@ -448,9 +475,9 @@ public class CustomTravelPickerActivity extends Activity implements DateTimePick
         } catch (Exception e) {
             e.printStackTrace();
         }
-        if (date2.compareTo(date1) > 0 && date2.compareTo(todayDate)<0) {
+        if (date2.compareTo(date1) > 0 && date2.compareTo(todayDate) < 0) {
             isValid = true;
-        } else if (date2.compareTo(date1) == 0 &&  date2.compareTo(todayDate)==0) {
+        } else if (date2.compareTo(date1) == 0 && date2.compareTo(todayDate) == 0) {
             isValid = true;
         } else if (date2.compareTo(date1) < 0) {
             isValid = false;
@@ -464,21 +491,23 @@ public class CustomTravelPickerActivity extends Activity implements DateTimePick
         if (ConnectionManager != null) {
             NetworkInfo networkInfo = ConnectionManager.getActiveNetworkInfo();
             if (networkInfo != null && networkInfo.isConnected() == true)
-                isNetwork= true;
+                isNetwork = true;
             else
-                isNetwork= false;
+                isNetwork = false;
         }
         return isNetwork;
     }
+
     @Override
     public void onBackPressed() {
         super.onBackPressed();
 
         finish();
-        overridePendingTransition(R.anim.left_to_right,R.anim.right_to_left);
+        overridePendingTransition(R.anim.left_to_right, R.anim.right_to_left);
     }
+
     @Override
     public void onDateChanged(Calendar c) {
-        Log.i("TrendsActivity","Month :" + c.get(Calendar.MONTH) + "Day :" + c.get(Calendar.DAY_OF_MONTH) + "Year :" + c.get(Calendar.YEAR));
+        Log.i("TrendsActivity", "Month :" + c.get(Calendar.MONTH) + "Day :" + c.get(Calendar.DAY_OF_MONTH) + "Year :" + c.get(Calendar.YEAR));
     }
 }
