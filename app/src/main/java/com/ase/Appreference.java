@@ -188,6 +188,10 @@ public class Appreference {
     public static boolean ischecklistIDEmpty=false;
 /*************************added for checklist End*/
 
+/*************************added for Device Manipulation start*/
+    public static boolean do_startDeviceManipulation=false;
+/*************************added for Device Manipulation End*/
+
 
     /************ADDED FOR ASE PHASE 2 FEB 26********/
 

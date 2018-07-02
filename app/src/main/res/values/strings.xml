@@ -118,7 +118,7 @@
 
     //IP for US Server 204(SSL ceritified)) sip:tls:5061
 
-   <!-- <string name="app_version">204</string>
+    <string name="app_version">204</string>
     <string name="app_versionDate">Version No : 1.5.4</string>
     <string name="app_releaseDate">Release No : 0014_trail</string>
     <string name="app_url">https://www1.cognitivemobile.net/ASE/</string>
@@ -127,7 +127,6 @@
     <string name="task_reminder">https://www1.cognitivemobile.net/uploads/highmessaging/task/</string>
     <string name="user_upload">https://www1.cognitivemobile.net/uploads/highmessaging/user/</string>
     <string name="group_profile">https://www1.cognitivemobile.net/uploads/highmessaging/group/</string>
--->
     //IP for US Server 204 sip:tls:5061
 
     <!--  <string name="app_version">204</string>
@@ -142,7 +141,7 @@
 
     //new ip for local 203 sip:tls:5061
 
-    <string name="app_version">3</string>
+   <!-- <string name="app_version">3</string>
     <string name="app_versionDate">Version No : 1.5.4</string>
     <string name="app_releaseDate">Release No : 009</string>
     <string name="app_url">https://172.16.1.203:8443/ASE/</string>
@@ -151,7 +150,7 @@
     <string name="task_reminder">http://172.16.1.203:8080/uploads/highmessaging/task/</string>
     <string name="user_upload">http://172.16.1.203:8080/uploads/highmessaging/user/</string>
     <string name="group_profile">http://172.16.1.203:8080/uploads/highmessaging/group/</string>
-
+-->
     <!--<string name="app_version">203</string>
     <string name="app_versionDate">Version No : 1.5.2</string>
     <string name="app_releaseDate">Release No : 0039</string>

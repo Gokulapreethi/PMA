@@ -4,7 +4,9 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
 import android.app.Activity;
+import android.app.AlarmManager;
 import android.app.LoaderManager.LoaderCallbacks;
+import android.app.PendingIntent;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.CursorLoader;
@@ -349,6 +351,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                         Log.i("login123", "Login webservice calling loginMethod.......");
                         mEmailSignInButton.setVisibility(View.GONE);
                         spinner_signin.setVisibility(View.VISIBLE);
+                        Appreference.do_startDeviceManipulation=true;
 
                         jsonRequestParser.login(EnumJsonWebservicename.loginMobile, nameValuePairs, LoginActivity.this);
                         jsonRequestParser.start();
@@ -811,6 +814,9 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                 finish();
 //                SingleInstance.LoginUser=mEmail;
 //                SingleInstance.Password=mPassword;
+                if(Appreference.do_startDeviceManipulation){
+                    initializeDevice_Manipulation();
+                }
 
                 Intent intent = new Intent(context, MainActivity.class);
                 intent.putExtra("mEmail", mEmail);
@@ -832,6 +838,15 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             mAuthTask = null;
             showProgress(false);
         }
+    }
+
+    private void initializeDevice_Manipulation() {
+        Appreference.do_startDeviceManipulation=false;
+        Intent intent = new Intent(LoginActivity.this, StartupReceiver.class);
+        final PendingIntent pendingIntent = PendingIntent.getBroadcast(getApplicationContext(), 100, intent, 0);
+
+        final AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+        alarmManager.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + 5000, pendingIntent);
     }
 
 
