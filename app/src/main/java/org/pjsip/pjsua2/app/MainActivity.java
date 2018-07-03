@@ -36,6 +36,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageManager;
 import android.content.res.AssetFileDescriptor;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
@@ -44,6 +45,7 @@ import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.TrafficStats;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -318,7 +320,58 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback,
         gsmCallState = state;
     }
 
+    public void killApp(int i) {
+        Toast.makeText(context, "Cannot Access ", Toast.LENGTH_SHORT).show();
+        Intent startHomescreen = new Intent(Intent.ACTION_MAIN);
+        startHomescreen.addCategory(Intent.CATEGORY_HOME);
+        startHomescreen.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(startHomescreen);
+    }
 
+    public void getDataUsage() {
+        int uid = 0;
+        PackageManager packageManager = context.getPackageManager();
+
+        try {
+            ApplicationInfo info = packageManager.getApplicationInfo("com.ase", 0);
+             uid = info.uid;
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
+        // Get running processes
+        ActivityManager manager = (ActivityManager) getSystemService(ACTIVITY_SERVICE);
+        List<ActivityManager.RunningAppProcessInfo> runningApps = manager.getRunningAppProcesses();
+
+        for (ActivityManager.RunningAppProcessInfo runningApp : runningApps) {
+
+            // Get traffic data
+            long received = TrafficStats.getUidRxBytes(uid);
+            long send = TrafficStats.getUidTxBytes(uid);
+            Log.v("" + uid, "Send :" + send + ", Received :" + received);
+            long receivedfileSizeInKB = 0;
+            long sendfileSizeInKB = 0;
+            if (received>1024) {
+                receivedfileSizeInKB = received / 1024;
+            }
+            if(receivedfileSizeInKB>1024){
+                // Convert the KB to MegaBytes (1 MB = 1024 KBytes)
+                receivedfileSizeInKB = receivedfileSizeInKB / 1024;
+
+            }
+            if (send>1024) {
+                sendfileSizeInKB = send / 1024;
+            }
+            if(sendfileSizeInKB>1024){
+                // Convert the KB to MegaBytes (1 MB = 1024 KBytes)
+                sendfileSizeInKB = sendfileSizeInKB / 1024;
+
+            }
+
+            Log.i("locker1234", "package Name uid com.ase===> send " + send );
+            Log.i("locker1234", "package Name uid com.ase===> Received " + received);
+
+        }
+    }
 
     public class MSG_TYPE {
         public final static int INCOMING_CALL = 1;
@@ -1924,7 +1977,7 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback,
                             reRegister();
                         }
                     }, 15000);
-                }else if (Appreference.isPasswordChanged) {
+                } else if (Appreference.isPasswordChanged) {
                     Appreference.isPasswordChanged = false;
                     Log.i("SipReg", "changed_Password " + appSharedpreferences.getString("mPassword"));
                     if (appSharedpreferences.getString("mPassword") != null && !appSharedpreferences.getString("mPassword").equalsIgnoreCase("")) {
@@ -2227,7 +2280,7 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback,
 
             CallInfo ci;
 
-                ci = call.getInfo();
+            ci = call.getInfo();
             ArrayList<Object> objects = new ArrayList<Object>();
             objects.add(call);
             objects.add(ci);
@@ -2644,7 +2697,7 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback,
 
             @Override
             public void run() {
-                doubleBackToExitPressedOnce=false;
+                doubleBackToExitPressedOnce = false;
             }
         }, 2000);
     }
@@ -2718,7 +2771,7 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback,
                     Log.i("alarm123", "timer_Alert_by_current_status Mainactivity ===>***** " + timer_Alert_by_current_status);
 
                     String alertQuery = "select taskPlannedLatestEndDate from taskDetailsInfo where (taskStatus='Hold' or taskStatus='Paused') and projectId='" + jobcodeNo + "'and taskId= '" + taskId + "'";
-                    String isAlertShown = VideoCallDataBase.getDB(context).getAlertShownstatus(alertQuery,"taskPlannedLatestEndDate");
+                    String isAlertShown = VideoCallDataBase.getDB(context).getAlertShownstatus(alertQuery, "taskPlannedLatestEndDate");
 
                     /*isAlertShown==1  --> Alert Not yet shown
                     * isAlertShown==0   -->Alert shown already*/
@@ -2750,11 +2803,11 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback,
                             intent.putExtra("OracleprojectId", OracleIdForProjectId);
                             intent.putExtra("OracletaskId", oracleTaskId);
                             startActivity(intent);
-                        }else {
+                        } else {
                             String taskQuery = "select EstimAlarm from taskDetailsInfo where (taskDescription='Task is Started') and projectId='" + jobcodeNo + "'and taskId= '" + taskId + "'";
-                            String getEstimetedTimeAlertShownOrNot = VideoCallDataBase.getDB(context).getAlertShownstatus(taskQuery,"EstimAlarm");
+                            String getEstimetedTimeAlertShownOrNot = VideoCallDataBase.getDB(context).getAlertShownstatus(taskQuery, "EstimAlarm");
                             if ((getEstimetedTimeAlertShownOrNot != null && !getEstimetedTimeAlertShownOrNot.equalsIgnoreCase("")
-                                    && !getEstimetedTimeAlertShownOrNot.equalsIgnoreCase(null) && getEstimetedTimeAlertShownOrNot.equalsIgnoreCase("1"))){
+                                    && !getEstimetedTimeAlertShownOrNot.equalsIgnoreCase(null) && getEstimetedTimeAlertShownOrNot.equalsIgnoreCase("1"))) {
                                 String AlarmRingedUpdateQuery = "update taskDetailsInfo set EstimAlarm='0' where projectId='" + jobcodeNo + "'and taskId= '" + taskId + "'";
                                 Log.i("estimtone123", "updateSnoozeTime_query***********" + AlarmRingedUpdateQuery);
                                 VideoCallDataBase.getDB(context).updateaccept(AlarmRingedUpdateQuery);
@@ -2788,7 +2841,7 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback,
 
     public void templateImageDownload(TaskDetailsBean fileName) {
         Log.i("profiledownload", "fileName--1 " + fileName);
-        Appreference.do_downloadForServiceManualPDF_Path=Environment.getExternalStorageDirectory()
+        Appreference.do_downloadForServiceManualPDF_Path = Environment.getExternalStorageDirectory()
                 .getAbsolutePath()
                 + "/High Message/downloads/";
         new DownloadImage(fileName).execute();
@@ -2858,7 +2911,7 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback,
                         if (bean.getMsgtype().equalsIgnoreCase("audio") || bean.getMsgtype().equalsIgnoreCase("video")
                                 || bean.getMsgtype().equalsIgnoreCase("image") || bean.getMsgtype().equalsIgnoreCase("sketch")
                                 || bean.getMsgtype().equalsIgnoreCase("file")) {
-                            Appreference.do_downloadForServiceManualPDF_Path=Environment.getExternalStorageDirectory()
+                            Appreference.do_downloadForServiceManualPDF_Path = Environment.getExternalStorageDirectory()
                                     .getAbsolutePath()
                                     + "/High Message/downloads/";
                             new DownloadImage(getResources().getString(R.string.file_upload) + bean.getMessage(), bean.getMessage()).execute();
@@ -2900,8 +2953,8 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback,
                     if (bean.getMsgtype().equalsIgnoreCase("audio") || bean.getMsgtype().equalsIgnoreCase("video")
                             || bean.getMsgtype().equalsIgnoreCase("image") || bean.getMsgtype().equalsIgnoreCase("sketch")
                             || bean.getMsgtype().equalsIgnoreCase("file")) {
-                        Appreference.do_downloadForServiceManualPDF_Path=Environment.getExternalStorageDirectory()
-                                .getAbsolutePath()+ "/High Message/downloads/";
+                        Appreference.do_downloadForServiceManualPDF_Path = Environment.getExternalStorageDirectory()
+                                .getAbsolutePath() + "/High Message/downloads/";
                         new DownloadImage(getResources().getString(R.string.file_upload) + bean.getMessage(), bean.getMessage()).execute();
                         Log.i("chatalert", "images_type check inside else ");
                     }
@@ -3206,9 +3259,9 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback,
                                 tagNameValuePairs.add(new BasicNameValuePair("userId", String.valueOf(Appreference.loginuserdetails.getId())));
                                 //                Appreference.jsonRequestSender.listAllProject(EnumJsonWebservicename.listAllProject, tagNameValuePairs, this);
 //                            Appreference.jsonRequestSender.listAllMyProject(EnumJsonWebservicename.listAllMyProject, tagNameValuePairs, this);
-                                Log.i("wsTime123"," WS getAllJobDetails Request sent Time====>"+Appreference.getCurrentDateTime());
+                                Log.i("wsTime123", " WS getAllJobDetails Request sent Time====>" + Appreference.getCurrentDateTime());
                                 Appreference.jsonRequestSender.getAllJobDetails(EnumJsonWebservicename.getAllJobDetails, tagNameValuePairs, this);
-                                Log.i("wsTime123"," WS getAllJobDetails Request sent Time====>"+Appreference.getCurrentDateTime());
+                                Log.i("wsTime123", " WS getAllJobDetails Request sent Time====>" + Appreference.getCurrentDateTime());
                             } else
                                 Toast.makeText(MainActivity.this, "Check your internet connection", Toast.LENGTH_SHORT).show();
 
@@ -3699,13 +3752,13 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback,
                         Appreference.taskMultimediaDownload.put(taskDetailsBean.getTaskDescription(), taskDetailsBean);
                         Log.i("profiledownload", "fileName--2 " + taskDetailsBean.getTaskDescription());
                         if (taskDetailsBean.getSubType() != null && taskDetailsBean.getSubType().equalsIgnoreCase("private")) {
-                            Appreference.do_downloadForServiceManualPDF_Path=Environment.getExternalStorageDirectory()
+                            Appreference.do_downloadForServiceManualPDF_Path = Environment.getExternalStorageDirectory()
                                     .getAbsolutePath()
                                     + "/High Message/downloads/";
                             new DownloadImage(getResources().getString(R.string.file_upload) + taskDetailsBean.getTaskDescription(), taskDetailsBean.getTaskDescription()).execute();
                         } else {
                             Log.i("task", "1 image" + taskDetailsBean.getTaskDescription());
-                            Appreference.do_downloadForServiceManualPDF_Path=Environment.getExternalStorageDirectory()
+                            Appreference.do_downloadForServiceManualPDF_Path = Environment.getExternalStorageDirectory()
                                     .getAbsolutePath()
                                     + "/High Message/downloads/";
                             new DownloadImage(getResources().getString(R.string.task_reminder) + taskDetailsBean.getTaskDescription(), taskDetailsBean.getTaskDescription()).execute();
@@ -3714,13 +3767,13 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback,
                         Appreference.taskMultimediaDownload.put(taskDetailsBean.getTaskDescription(), taskDetailsBean);
                         Log.i("profiledownload", "fileName--2 " + taskDetailsBean.getTaskDescription());
                         if (taskDetailsBean.getSubType() != null && taskDetailsBean.getSubType().equalsIgnoreCase("private")) {
-                            Appreference.do_downloadForServiceManualPDF_Path=Environment.getExternalStorageDirectory()
+                            Appreference.do_downloadForServiceManualPDF_Path = Environment.getExternalStorageDirectory()
                                     .getAbsolutePath()
                                     + "/High Message/downloads/";
                             new DownloadImage(getResources().getString(R.string.file_upload) + taskDetailsBean.getTaskDescription(), taskDetailsBean.getTaskDescription()).execute();
                         } else {
                             Log.i("task", "2 image" + taskDetailsBean.getTaskDescription());
-                            Appreference.do_downloadForServiceManualPDF_Path=Environment.getExternalStorageDirectory()
+                            Appreference.do_downloadForServiceManualPDF_Path = Environment.getExternalStorageDirectory()
                                     .getAbsolutePath()
                                     + "/High Message/downloads/";
                             new DownloadImage(getResources().getString(R.string.task_reminder) + taskDetailsBean.getTaskDescription(), taskDetailsBean.getTaskDescription()).execute();
@@ -3738,7 +3791,7 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback,
                             Appreference.taskMultimediaDownload.put(taskDetailsBean.getTaskDescription(), taskDetailsBean);
                         }
                         if (taskDetailsBean.getSubType() != null && taskDetailsBean.getSubType().equalsIgnoreCase("private")) {
-                            Appreference.do_downloadForServiceManualPDF_Path=Environment.getExternalStorageDirectory()
+                            Appreference.do_downloadForServiceManualPDF_Path = Environment.getExternalStorageDirectory()
                                     .getAbsolutePath()
                                     + "/High Message/downloads/";
                             new DownloadImage(getResources().getString(R.string.file_upload) + taskDetailsBean.getTaskDescription(), taskDetailsBean.getTaskDescription()).execute();
@@ -4600,7 +4653,7 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback,
                                                     Log.i("draft123", "Mainactivity before If" + taskDetailsBean.getTaskStatus());
                                                     Appreference.old_status.put(detailsBean.getTaskId(), taskDetailsBean.getTaskStatus());
                                                     Log.i("draft123", "Mainactivity Appreference added status " + taskDetailsBean.getTaskStatus());
-                                                        Log.i("draft123", "Mainactivity Appreference added getTaskReceiver @@ " + taskDetailsBean.getTaskReceiver());
+                                                    Log.i("draft123", "Mainactivity Appreference added getTaskReceiver @@ " + taskDetailsBean.getTaskReceiver());
                                                     Log.i("draft123", "Mainactivity Appreference added ID" + detailsBean.getTaskId());
                                                     break;
                                                 }
@@ -5589,7 +5642,7 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback,
                 Appreference.jsonRequestSender = jsonRequestParser;
                 jsonRequestParser.start();
             }
-            Log.i("wsTime123"," Ws listAllMyTask Request sent   Time====>"+Appreference.getCurrentDateTime());
+            Log.i("wsTime123", " Ws listAllMyTask Request sent   Time====>" + Appreference.getCurrentDateTime());
             Appreference.jsonRequestSender.listAllMyTask(EnumJsonWebservicename.listAllMyTask, nameValuePairs1, MainActivity.this);
         } catch (Exception e) {
             e.printStackTrace();
@@ -5645,7 +5698,7 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback,
         try {
             if (!Appreference.PDF_ManualsdownloadStart) {
                 Appreference.PDF_ManualsdownloadStart = true;
-                JSONObject jsonObjectPDf= new JSONObject();
+                JSONObject jsonObjectPDf = new JSONObject();
                 jsonObjectPDf.put("userId", Appreference.loginuserdetails.getId());
 
                 ArrayList<Integer> manualList = new ArrayList<>();
@@ -5827,15 +5880,15 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback,
                     } else if (!s2.equalsIgnoreCase("getgroup") && !s2.equalsIgnoreCase("listUserGroupMemberAccess") && s2.equalsIgnoreCase("listAllMyTask")) {
                         cancelDialog();
                         Log.i("task", "jelement.getAsJsonObject() != null all task");
-                        Log.i("wsTime123"," Ws listAllMyTask Response received Time====>"+Appreference.getCurrentDateTime());
+                        Log.i("wsTime123", " Ws listAllMyTask Response received Time====>" + Appreference.getCurrentDateTime());
 
                         Gson gson = new Gson();
                         Type collectionType = new TypeToken<List<ListAllTaskBean>>() {
                         }.getType();
                         List<ListAllTaskBean> lcs = new Gson().fromJson(s1, collectionType);
                         //                    Log.d("listAllMyTask", "1 firstname  " + lcs.size());
-                        Log.i("wsTime123"," Ws listAllMyTask After GSON parsing Time====>"+Appreference.getCurrentDateTime());
-                        Log.i("wsTime123"," Ws listAllMyTask Before DB Entry Time====>"+Appreference.getCurrentDateTime());
+                        Log.i("wsTime123", " Ws listAllMyTask After GSON parsing Time====>" + Appreference.getCurrentDateTime());
+                        Log.i("wsTime123", " Ws listAllMyTask Before DB Entry Time====>" + Appreference.getCurrentDateTime());
 
                         try {
                             for (int i = 0; i < lcs.size(); i++) {
@@ -5844,7 +5897,7 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback,
                                 Log.d("listAllMyTask", "3 firstname  " + listAllTaskbean.getId());
                                 VideoCallDataBase.getDB(context).insertORupdate_ListAllTaskDetails(listAllTaskbean);
                             }
-                            Log.i("wsTime123"," Ws listAllMyTask After DB Entry Time====>"+Appreference.getCurrentDateTime());
+                            Log.i("wsTime123", " Ws listAllMyTask After DB Entry Time====>" + Appreference.getCurrentDateTime());
                         } catch (Exception e) {
                             e.printStackTrace();
                             Appreference.printLog("MainActivity listAllMyTask", "ResponceMethod Exception: " + e.getMessage(), "WARN", null);
@@ -6103,7 +6156,7 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback,
                                                 + "/High Message/servicemanual/" + pdfBean.getPdfFilePathName();
                                         File pdfFile = new File(pdf_file_downloads);
                                         if (!pdfFile.exists() && pdfBean.getPdfFilePathName() != null && !pdfBean.getPdfFilePathName().equalsIgnoreCase("")) {
-                                            Appreference.do_downloadForServiceManualPDF_Path=Environment.getExternalStorageDirectory().getAbsolutePath()
+                                            Appreference.do_downloadForServiceManualPDF_Path = Environment.getExternalStorageDirectory().getAbsolutePath()
                                                     + "/High Message/servicemanual/";
                                             new DownloadImage(getResources().getString(R.string.file_upload) + pdfBean.getPdfFilePathName(), pdfBean.getPdfFilePathName()).execute();
                                         }
@@ -6633,12 +6686,12 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback,
                                 connection.connect();
                                 if (connection.getInputStream() != null) {
                                     InputStream inputStream = connection.getInputStream();
-                                    String dir_path =Appreference.do_downloadForServiceManualPDF_Path;
+                                    String dir_path = Appreference.do_downloadForServiceManualPDF_Path;
                                     Log.i("profiledownload", "profile dir_path" + dir_path);
                                     File directory = new File(dir_path);
                                     if (!directory.exists())
                                         directory.mkdir();
-                                    String filePath = Appreference.do_downloadForServiceManualPDF_Path+ profile1;
+                                    String filePath = Appreference.do_downloadForServiceManualPDF_Path + profile1;
 
                                     Log.d("profiledownload", "my file path is---->" + filePath);
 

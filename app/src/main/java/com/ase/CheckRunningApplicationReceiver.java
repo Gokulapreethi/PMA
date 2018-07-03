@@ -15,6 +15,8 @@ import android.util.Log;
 import com.jaredrummler.android.processes.AndroidProcesses;
 import com.jaredrummler.android.processes.models.AndroidAppProcess;
 
+import org.pjsip.pjsua2.app.MainActivity;
+
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
@@ -71,14 +73,14 @@ public class CheckRunningApplicationReceiver extends BroadcastReceiver {
             NetworkInfo mWifi = connManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
             NetworkInfo networkInfo = connManager.getActiveNetworkInfo();
 
-            if (!mWifi.isConnected() && networkInfo != null && networkInfo.isConnected()) {
+            if (mWifi.isConnected() && networkInfo != null && networkInfo.isConnected()) {
                 // Do whatever
                 Log.i("locker1234", "mobile data Connected ");
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                     List<AndroidAppProcess> MyAppList = getProcessNew(aContext);
                     for (int i = 0; i < MyAppList.size(); i++) {
                         String packageNameList = MyAppList.get(i).getPackageName();
-                        Log.i("locker124", "package Name FOREGROUND"+packageNameList);
+                        Log.i("locker124", "package Name FOREGROUND" + packageNameList);
 
                         if (packageNameList.equals("com.android.chrome")
                                 || packageNameList.contains("com.android.vending")
@@ -94,15 +96,27 @@ public class CheckRunningApplicationReceiver extends BroadcastReceiver {
                                 || packageNameList.contains("com.google.android.googlequicksearchbox:search")
                                 || packageNameList.contains("com.google.android.apps.magazines")
                                 || packageNameList.contains("com.google.android.talk")
-                                || packageNameList.equals(nameOfLauncherPkg)){
-                            Log.i("locker124", "package Name to close above 5.0 "+packageNameList);
-//                            ( MainActivity.getInstance()).killApp(0);
-                            Intent startHomescreen = new Intent(Intent.ACTION_MAIN);
-                            startHomescreen.addCategory(Intent.CATEGORY_HOME);
-                            startHomescreen.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                            startHomescreen.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                            aContext.startActivity(startHomescreen);
+                                || packageNameList.equals(nameOfLauncherPkg)) {
+                            Log.i("locker124", "package Name to close above 5.0 " + packageNameList);
 
+                            MainActivity mainActivity = (MainActivity) Appreference.context_table.get("mainactivity");
+
+                            if (mainActivity != null) {
+                                mainActivity.killApp(0);
+                            }else{
+                                Intent startHomescreen = new Intent(Intent.ACTION_MAIN);
+                                startHomescreen.addCategory(Intent.CATEGORY_HOME);
+                                startHomescreen.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                startHomescreen.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                aContext.startActivity(startHomescreen);
+                            }
+                        }
+                        if(packageNameList.equals("com.ase")){
+                            MainActivity mainActivity = (MainActivity) Appreference.context_table.get("mainactivity");
+
+                            if (mainActivity != null) {
+                                mainActivity.getDataUsage();
+                            }
                         }
 
                        /* if (!packageNameList.equals("com.ase")
@@ -139,14 +153,19 @@ public class CheckRunningApplicationReceiver extends BroadcastReceiver {
                             || packageNameList.contains("com.google.android.googlequicksearchbox:search")
                             || packageNameList.contains("com.google.android.apps.magazines")
                             || packageNameList.contains("com.google.android.talk")
-                            || packageNameList.equals(nameOfLauncherPkg)){
-                        Log.i("locker124", "package Name to close above 5.0 "+packageNameList);
-//                            ( MainActivity.getInstance()).killApp(0);
-                        Intent startHomescreen = new Intent(Intent.ACTION_MAIN);
-                        startHomescreen.addCategory(Intent.CATEGORY_HOME);
-                        startHomescreen.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                        startHomescreen.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                        aContext.startActivity(startHomescreen);
+                            || packageNameList.equals(nameOfLauncherPkg)) {
+                        Log.i("locker124", "package Name to close above 5.0 " + packageNameList);
+                        MainActivity mainActivity = (MainActivity) Appreference.context_table.get("mainactivity");
+
+                        if (mainActivity != null) {
+                            mainActivity.killApp(0);
+                        }else{
+                            Intent startHomescreen = new Intent(Intent.ACTION_MAIN);
+                            startHomescreen.addCategory(Intent.CATEGORY_HOME);
+                            startHomescreen.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                            startHomescreen.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                            aContext.startActivity(startHomescreen);
+                        }
 
                     }
                  /*   if (!packageNameList.equals("com.ase")
@@ -165,7 +184,7 @@ public class CheckRunningApplicationReceiver extends BroadcastReceiver {
 
                     }*/
                 }
-            }else{
+            } else {
                 Log.i("locker1234", "mWifi Connected ");
             }
           /*  if (mWifi.isConnected()) {
@@ -176,43 +195,14 @@ public class CheckRunningApplicationReceiver extends BroadcastReceiver {
 
             }*/
 
-
-            String mPackageName = "";
-            if (Build.VERSION.SDK_INT > 20) {
-                mPackageName = am.getRunningAppProcesses().get(0).processName;
-            } else {
-                mPackageName = am.getRunningTasks(1).get(0).topActivity
-                        .getPackageName();
-            }
-
-
-
-            if (!mPackageName.equals("com.example.preethi.checkcurrentrunningapplication")
-                    && !mPackageName.contains("com.android.launcher")
-                    && !mPackageName.contains("com.sec.android.app.launcher")
-                    && !mPackageName.equals(nameOfLauncherPkg)
-                    && !ar.topActivity.toString().contains(
-                    "recent.RecentsActivity")) {
-
-                Log.i("locker123" +
-                        "", "nameOfLauncherPkg 1 " + mPackageName);
-                Log.i("locker1234", "nameOfLauncherPkg 1 " + am.getRunningTasks(1).get(0).topActivity.getPackageName());
-              /*  ((AppMainActivity) AppLocker.context).killApp(0);
-                if (SingleInstance.contextTable.containsKey("MAIN")) {
-                    Log.i("locker123", "nameOfLauncherPkg 2" + mPackageName);
-                    ((AppMainActivity) SingleInstance.contextTable.get("MAIN"))
-                            .killApp(0);
-
-                }*/
-
-            }
-
-        } catch(Exception t){
+        } catch (Exception t) {
             Log.i(TAG, "Throwable caught: " + t.getMessage(), t);
             Log.i("locker1234", "Exception 1 " + t.getMessage());
         }
 
     }
+
+
 
 
     String[] getActivePackagesCompat() {
