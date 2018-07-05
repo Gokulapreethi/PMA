@@ -100,8 +100,9 @@ public class PdfRenderererActivity extends AppCompatActivity implements View.OnC
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pdf_view);
 
+        openedPdfFileName=getIntent().getStringExtra("fileName");
         readLayout = (LinearLayout) findViewById(R.id.read_layout);
-        pdfSelectionLayout = (LinearLayout) findViewById(R.id.pdf_selection_layout);
+//        pdfSelectionLayout = (LinearLayout) findViewById(R.id.pdf_selection_layout);
         pdfContentView = (EditText) findViewById(R.id.pdf_content);
 
         next = (Button) findViewById(R.id.next);
@@ -112,25 +113,11 @@ public class PdfRenderererActivity extends AppCompatActivity implements View.OnC
         generatePdf.setOnClickListener(this);
 
         pdfList = (ListView) findViewById(R.id.pdfList);
-        pdfList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view,
-                                    int position, long id) {
-                //On Clicking list item, Render Pdf file corresponding to filePath
-//                openedPdfFileName = adapter.getItem(position);
-                openedPdfFileName = adapter.getItem(position);
-                String openedPdfFileName_url = Environment
-                        .getExternalStorageDirectory().getAbsolutePath()
-                        + "/High Message/servicemanual/" + openedPdfFileName;
-                openRenderer(openedPdfFileName_url);
-                updateView(CurrentView.READ_LAYOUT);
-            }
-        });
         pdfView = (ImageView) findViewById(R.id.pdfView);
 
-        currentView = CurrentView.PDF_SELECTION_LAYOUT;
-        updateView(CurrentView.PDF_SELECTION_LAYOUT);
+        currentView = CurrentView.READ_LAYOUT;
+        updateView(CurrentView.READ_LAYOUT);
         Log.i("pdf123", "inside updateView currentView==>" + currentView);
 
     }
@@ -151,15 +138,7 @@ public class PdfRenderererActivity extends AppCompatActivity implements View.OnC
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         if (id == R.id.action_close_pdf) {
-            if (currentView == CurrentView.PDF_SELECTION_LAYOUT) {
-                finish();
-            } else if (currentView == CurrentView.READ_LAYOUT) {
-                if (listTask != null)
-                    listTask.cancel(true);
-                listTask = new PdfListLoadTask();
-                listTask.execute();
-                updateView(CurrentView.PDF_SELECTION_LAYOUT);
-            } else {
+            if (currentView == CurrentView.READ_LAYOUT) {
                 finish();
             }
             return true;
@@ -216,17 +195,7 @@ public class PdfRenderererActivity extends AppCompatActivity implements View.OnC
      */
     @Override
     public void onBackPressed() {
-        if (currentView == CurrentView.PDF_SELECTION_LAYOUT) {
-//            updateView(CurrentView.OPTIONS_LAYOUT);
-//            updateActionBarText();
-            super.onBackPressed();
-        } else if (currentView == CurrentView.READ_LAYOUT) {
-            if (listTask != null)
-                listTask.cancel(true);
-            listTask = new PdfListLoadTask();
-            listTask.execute();
-            updateView(CurrentView.PDF_SELECTION_LAYOUT);
-        } else {
+        if (currentView == CurrentView.READ_LAYOUT) {
             super.onBackPressed();
         }
     }
@@ -280,29 +249,11 @@ public class PdfRenderererActivity extends AppCompatActivity implements View.OnC
                 currentView = CurrentView.READ_LAYOUT;
                 Log.i("pdf123", "inside updateView currentView==>" + currentView);
                 closeRenderer();
-                if (openedPdfFileName != null && !openedPdfFileName.contains("/storage/emulated/")) {
-                    openedPdfFileName = Environment
-                            .getExternalStorageDirectory().getAbsolutePath()
-                            + "/High Message/servicemanual/" + openedPdfFileName;
-                }
                 openRenderer(openedPdfFileName);
                 currentPage = 0;
                 showPage(currentPage);
                 readLayout.setVisibility(View.VISIBLE);
-                pdfSelectionLayout.setVisibility(View.INVISIBLE);
                 break;
-            case CurrentView.PDF_SELECTION_LAYOUT:
-                currentView = CurrentView.PDF_SELECTION_LAYOUT;
-                Log.i("pdf123", "inside updateView currentView==>" + currentView);
-                closeRenderer();
-                if (listTask != null)
-                    listTask.cancel(true);
-                listTask = new PdfListLoadTask();
-                listTask.execute();
-                readLayout.setVisibility(View.INVISIBLE);
-                pdfSelectionLayout.setVisibility(View.VISIBLE);
-                break;
-
         }
     }
 

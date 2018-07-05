@@ -8741,7 +8741,7 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
 
     public void GetDownloadPMS_ServiceManualsPDF() {
         try {
-            if (isNetworkAvailable()) {
+           /* if (isNetworkAvailable()) {
                 showprogressforpriority("Please Wait....");
                 JSONObject jsonObjectPDf = new JSONObject();
                 jsonObjectPDf.put("userId", Appreference.loginuserdetails.getId());
@@ -8773,6 +8773,23 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
             } else {
                 Intent intent = new Intent(NewTaskConversation.this, PdfRenderererActivity.class);
                 startActivityForResult(intent, 423);
+            }*/
+
+           /* Intent intent_file = new Intent(NewTaskConversation.this, FilePathPicker.class);
+            startActivityForResult(intent_file, 55);*/
+            Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+//            intent.setType("*/*");
+            intent.setType("application/pdf");
+            intent.addCategory(Intent.CATEGORY_OPENABLE);
+
+            try {
+                startActivityForResult(
+                        Intent.createChooser(intent, "Select a File to Upload"),
+                        122);
+            } catch (android.content.ActivityNotFoundException ex) {
+                // Potentially direct the user to the Market with a Dialog
+                Toast.makeText(this, "Please install a File Manager.",
+                        Toast.LENGTH_SHORT).show();
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -10469,6 +10486,46 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                             Appreference.printLog("NewTaskConversation", "onActivityResult 33 video Exception " + e.getMessage(), "WARN", null);
                         }
                     }
+                }else if(requestCode == 122){
+                    if (data != null) {
+                        try {
+                            String FilePath = data.getData().getPath();
+                            Log.i("picker123", "Picker path===> " + FilePath);
+                            if (FilePath!=null) {
+                                String[] split = null;
+                                if (FilePath.contains(":")) {
+                                    split = FilePath.split(":");
+                                }
+                                final String[] type = split[0].trim().split("/");
+    //                        String sdPath=getSDPath();
+                                File url = null;
+                                String PDF_Path=null;
+                                if (type[2].contains("primary")) {
+                                     url = new File(Environment.getExternalStorageDirectory() + "/" + split[1]);
+                                    PDF_Path=Environment.getExternalStorageDirectory() + "/" + split[1];
+                                } else {
+                                    url = new File("storage/"+type[2] + "/" + split[1]);
+                                    PDF_Path="storage/"+type[2] + "/" + split[1];
+
+                                }
+                              /*  Uri uri = Uri.fromFile(url);
+                                Intent intentdocument = new Intent(Intent.ACTION_VIEW);
+                                intentdocument.setDataAndType(uri, "application/pdf");
+                                intentdocument.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                                try {
+                                    context.startActivity(intentdocument);
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                    Appreference.printLog("picker123", "pdf view 122 Exception: " + e.getMessage(), "WARN", null);
+                                }*/
+                                Intent intent = new Intent(NewTaskConversation.this, PdfRenderererActivity.class);
+                                intent.putExtra("fileName",PDF_Path);
+                                startActivityForResult(intent, 423);
+                            }
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
                 } else if (requestCode == 55) {
                     try {
                         fileExt = data.getStringExtra("fileExt");
@@ -11777,6 +11834,32 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
             e.printStackTrace();
             Appreference.printLog("NewTaskConversation", "onActivityResult Exception " + e.getMessage(), "WARN", null);
         }
+    }
+
+    private String getSDPath() {
+        String filepath = "";
+        String[] strPath = {"/storage/sdcard1", "/storage/extsdcard",
+                "/storage/sdcard0/external_sdcard", "/mnt/extsdcard",
+                "/mnt/sdcard/external_sd", "/mnt/external_sd",
+                "/mnt/media_rw/sdcard1", "/removable/microsd", "/mnt/emmc",
+                "/storage/external_SD", "/storage/ext_sd",
+                "/storage/removable/sdcard1", "/data/sdext", "/data/sdext2",
+                "/data/sdext3", "/data/sdext4", "/emmc", "/sdcard/sd",
+                "/mnt/sdcard/bpemmctest", "/mnt/sdcard/_ExternalSD",
+                "/mnt/sdcard-ext", "/mnt/Removable/MicroSD",
+                "/Removable/MicroSD", "/mnt/external1", "/mnt/extSdCard",
+                "/mnt/extsd", "/mnt/usb_storage", "/mnt/extSdCard",
+                "/mnt/UsbDriveA", "/mnt/UsbDriveB"};
+
+        for (String value : strPath) {
+            File f = null;
+            f = new File(value);
+            if (f.exists() && f.isDirectory()) {
+                filepath = value;
+                break;
+            }
+        }
+        return filepath;
     }
 
     public void forwardto(String str, TaskDetailsBean detailsBean) {
