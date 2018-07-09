@@ -5056,9 +5056,9 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
         Log.i("pms123", "PMSCARD====> " + PMSJobcard);
         /*added for checklist_PMS End*/
 
-        if (oracleProjectOwner != null && !oracleProjectOwner.equalsIgnoreCase(Appreference.loginuserdetails.getUsername()) &&
-                (OraclegroupAdminObserver != null && !OraclegroupAdminObserver.contains(Appreference.loginuserdetails.getUsername()))
-                && (taskReceiver != null && taskReceiver.equalsIgnoreCase(Appreference.loginuserdetails.getUsername()))) {
+        if((oracleProjectOwner != null && !oracleProjectOwner.equalsIgnoreCase(Appreference.loginuserdetails.getUsername())
+                && (taskReceiver != null && taskReceiver.equalsIgnoreCase(Appreference.loginuserdetails.getUsername())) && (null==OraclegroupAdminObserver))
+                || (OraclegroupAdminObserver != null && !OraclegroupAdminObserver.contains(Appreference.loginuserdetails.getUsername()))) {
 //            popup.getMenu().getItem(7).setVisible(false);
             if (current_status == -1)
                 popup.getMenu().getItem(0).setVisible(true);
@@ -5137,7 +5137,7 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                 popup.getMenu().getItem(6).setVisible(true);
 //                Toast.makeText(getApplicationContext(), "Task has been DeAssigned", Toast.LENGTH_SHORT).show();
             }
-        } else {
+        } else{
             popup.getMenu().getItem(0).setVisible(false);
             if (current_status != 5) {
                 popup.getMenu().getItem(7).setVisible(true);
@@ -10486,26 +10486,26 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                             Appreference.printLog("NewTaskConversation", "onActivityResult 33 video Exception " + e.getMessage(), "WARN", null);
                         }
                     }
-                }else if(requestCode == 122){
+                } else if (requestCode == 122) {
                     if (data != null) {
                         try {
                             String FilePath = data.getData().getPath();
                             Log.i("picker123", "Picker path===> " + FilePath);
-                            if (FilePath!=null) {
+                            if (FilePath != null) {
                                 String[] split = null;
                                 if (FilePath.contains(":")) {
                                     split = FilePath.split(":");
                                 }
                                 final String[] type = split[0].trim().split("/");
-    //                        String sdPath=getSDPath();
+                                //                        String sdPath=getSDPath();
                                 File url = null;
-                                String PDF_Path=null;
+                                String PDF_Path = null;
                                 if (type[2].contains("primary")) {
-                                     url = new File(Environment.getExternalStorageDirectory() + "/" + split[1]);
-                                    PDF_Path=Environment.getExternalStorageDirectory() + "/" + split[1];
+                                    url = new File(Environment.getExternalStorageDirectory() + "/" + split[1]);
+                                    PDF_Path = Environment.getExternalStorageDirectory() + "/" + split[1];
                                 } else {
-                                    url = new File("storage/"+type[2] + "/" + split[1]);
-                                    PDF_Path="storage/"+type[2] + "/" + split[1];
+                                    url = new File("storage/" + type[2] + "/" + split[1]);
+                                    PDF_Path = "storage/" + type[2] + "/" + split[1];
 
                                 }
                               /*  Uri uri = Uri.fromFile(url);
@@ -10519,7 +10519,7 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                                     Appreference.printLog("picker123", "pdf view 122 Exception: " + e.getMessage(), "WARN", null);
                                 }*/
                                 Intent intent = new Intent(NewTaskConversation.this, PdfRenderererActivity.class);
-                                intent.putExtra("fileName",PDF_Path);
+                                intent.putExtra("fileName", PDF_Path);
                                 startActivityForResult(intent, 423);
                             }
                         } catch (Exception e) {

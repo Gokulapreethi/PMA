@@ -885,8 +885,9 @@ public class TravelJobDetails extends Activity implements View.OnClickListener, 
             String OraclegroupAdminObserver = VideoCallDataBase.getDB(context).getprojectIdForOracleID(get_groupAdminobserver_query);
             /*added for GroupAdmin Observer End*/
             Log.i(tab, "project CurrentStatus from DB====>" + current_status);
-            if (oracleProjectOwner != null && !oracleProjectOwner.equalsIgnoreCase(Appreference.loginuserdetails.getUsername()) &&
-                    (OraclegroupAdminObserver != null && !OraclegroupAdminObserver.contains(Appreference.loginuserdetails.getUsername()))) {
+            if((oracleProjectOwner != null && !oracleProjectOwner.equalsIgnoreCase(Appreference.loginuserdetails.getUsername())
+                    && (taskReceiver != null && taskReceiver.equalsIgnoreCase(Appreference.loginuserdetails.getUsername())) && (null==OraclegroupAdminObserver))
+                    || (OraclegroupAdminObserver != null && !OraclegroupAdminObserver.contains(Appreference.loginuserdetails.getUsername()))) {
                 if (current_status == -1) {
                     popup.getMenu().getItem(0).setVisible(true);
                     popup.getMenu().getItem(1).setVisible(false);
