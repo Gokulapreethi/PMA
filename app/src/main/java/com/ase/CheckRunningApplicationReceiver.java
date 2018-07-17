@@ -80,9 +80,11 @@ public class CheckRunningApplicationReceiver extends BroadcastReceiver {
                     List<AndroidAppProcess> MyAppList = getProcessNew(aContext);
                     for (int i = 0; i < MyAppList.size(); i++) {
                         String packageNameList = MyAppList.get(i).getPackageName();
-                        Log.i("locker124", "package Name FOREGROUND" + packageNameList);
+                        String packageNameList1 = MyAppList.get(i).name;
+                        Log.i("locker124", "package Name FOREGROUND===> " + packageNameList);
+                        Log.i("locker124", "package Name FOREGROUND name===> " + packageNameList1);
 
-                        if (packageNameList.equals("com.android.chrome")
+                   /*     if (packageNameList.equals("com.android.chrome")
                                 || packageNameList.contains("com.android.vending")
                                 || packageNameList.contains("com.google.android.youtube")
                                 || packageNameList.contains("com.google.android.apps.maps")
@@ -118,28 +120,43 @@ public class CheckRunningApplicationReceiver extends BroadcastReceiver {
                                 mainActivity.getDataUsage();
                             }
                         }
-
-                       /* if (!packageNameList.equals("com.ase")
-                                && !packageNameList.contains("com.android.launcher")
-                                && !packageNameList.contains("com.sec.android.app.launcher")
-                                && !packageNameList.contains("com.estrongs.android.pop")
-                                && !packageNameList.equals(nameOfLauncherPkg)
-                                && !ar.topActivity.toString().contains(
+*/
+                        if (!packageNameList.equals("com.ase")
+                                || !packageNameList.contains("com.android.launcher")
+                                || !packageNameList.contains("com.sec.android.app.launcher")
+                                || !packageNameList.contains("com.google.android.gm")
+                                || !packageNameList.contains("com.sec.android.app.popupcalculator")
+                                || !packageNameList.contains("com.sec.android.gallery3d")
+                                || !packageNameList.contains("com.android.settings")
+                                || !packageNameList.contains("com.android.contacts")
+                                || !packageNameList.equals(nameOfLauncherPkg)
+                                || !ar.topActivity.toString().contains(
                                 "recent.RecentsActivity")) {
-                            Log.i("locker124", "package Name to close above 5.0 "+packageNameList);
-//                            ( MainActivity.getInstance()).killApp(0);
-                            Intent startHomescreen = new Intent(Intent.ACTION_MAIN);
-                            startHomescreen.addCategory(Intent.CATEGORY_HOME);
-                            startHomescreen.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                            startHomescreen.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                            aContext.startActivity(startHomescreen);
+                            Log.i("locker124", "package Name to close above 5.0 " + packageNameList);
 
-                        }*/
+                            MainActivity mainActivity = (MainActivity) Appreference.context_table.get("mainactivity");
 
+                            if (mainActivity != null) {
+                                mainActivity.killApp(0);
+                            } else {
+                                Intent startHomescreen = new Intent(Intent.ACTION_MAIN);
+                                startHomescreen.addCategory(Intent.CATEGORY_HOME);
+                                startHomescreen.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                startHomescreen.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                aContext.startActivity(startHomescreen);
+                            }
+                        }
+                        if (packageNameList.equals("com.ase")) {
+                            MainActivity mainActivity = (MainActivity) Appreference.context_table.get("mainactivity");
+
+                            if (mainActivity != null) {
+                                mainActivity.getDataUsage();
+                            }
+                        }
                     }
                 } else {
                     String packageNameList = am.getRunningAppProcesses().get(0).processName;
-                    if (packageNameList.equals("com.android.chrome")
+                  /*   if (packageNameList.equals("com.android.chrome")
                             || packageNameList.contains("com.android.vending")
                             || packageNameList.contains("com.google.android.youtube")
                             || packageNameList.contains("com.google.android.apps.maps")
@@ -159,7 +176,7 @@ public class CheckRunningApplicationReceiver extends BroadcastReceiver {
 
                         if (mainActivity != null) {
                             mainActivity.killApp(0);
-                        }else{
+                        } else {
                             Intent startHomescreen = new Intent(Intent.ACTION_MAIN);
                             startHomescreen.addCategory(Intent.CATEGORY_HOME);
                             startHomescreen.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
@@ -168,21 +185,45 @@ public class CheckRunningApplicationReceiver extends BroadcastReceiver {
                         }
 
                     }
-                 /*   if (!packageNameList.equals("com.ase")
-                            && !packageNameList.contains("com.android.launcher")
-                            && !packageNameList.contains("com.sec.android.app.launcher")
-                            && !packageNameList.contains("com.estrongs.android.pop")
-                            && !packageNameList.equals(nameOfLauncherPkg)
-                            && !ar.topActivity.toString().contains(
-                            "recent.RecentsActivity")) {
-                        Log.i("locker124", "package Name to close below 5.0 "+packageNameList);
-                        Intent startHomescreen = new Intent(Intent.ACTION_MAIN);
-                        startHomescreen.addCategory(Intent.CATEGORY_HOME);
-                        startHomescreen.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                        startHomescreen.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                        aContext.startActivity(startHomescreen);
 
-                    }*/
+                    if (packageNameList.equals("com.ase")) {
+                        MainActivity mainActivity = (MainActivity) Appreference.context_table.get("mainactivity");
+
+                        if (mainActivity != null) {
+                            mainActivity.getDataUsage();
+                        }
+                }*/
+                    if (!packageNameList.equals("com.ase")
+                            || !packageNameList.contains("com.android.launcher")
+                            || !packageNameList.contains("com.sec.android.app.launcher")
+                            || !packageNameList.contains("com.google.android.gm")
+                            || !packageNameList.contains("com.android.settings")
+                            || !packageNameList.contains("com.sec.android.app.popupcalculator")
+                            || !packageNameList.contains(" com.sec.android.gallery3d")
+                            || !packageNameList.contains("com.android.contacts")
+                            || !packageNameList.equals(nameOfLauncherPkg)
+                            || !ar.topActivity.toString().contains(
+                            "recent.RecentsActivity")) {
+                        Log.i("locker124", "package Name to close below 5.0 " + packageNameList);
+                        MainActivity mainActivity = (MainActivity) Appreference.context_table.get("mainactivity");
+
+                        if (mainActivity != null) {
+                            mainActivity.killApp(0);
+                        } else {
+                            Intent startHomescreen = new Intent(Intent.ACTION_MAIN);
+                            startHomescreen.addCategory(Intent.CATEGORY_HOME);
+                            startHomescreen.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                            startHomescreen.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                            aContext.startActivity(startHomescreen);
+                        }
+                    }
+                    if (packageNameList.equals("com.ase")) {
+                        MainActivity mainActivity = (MainActivity) Appreference.context_table.get("mainactivity");
+
+                        if (mainActivity != null) {
+                            mainActivity.getDataUsage();
+                        }
+                    }
                 }
             } else {
                 Log.i("locker1234", "mWifi Connected ");
@@ -201,8 +242,6 @@ public class CheckRunningApplicationReceiver extends BroadcastReceiver {
         }
 
     }
-
-
 
 
     String[] getActivePackagesCompat() {

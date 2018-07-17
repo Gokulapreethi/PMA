@@ -342,35 +342,17 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback,
         ActivityManager manager = (ActivityManager) getSystemService(ACTIVITY_SERVICE);
         List<ActivityManager.RunningAppProcessInfo> runningApps = manager.getRunningAppProcesses();
 
-        for (ActivityManager.RunningAppProcessInfo runningApp : runningApps) {
+//        for (ActivityManager.RunningAppProcessInfo runningApp : runningApps) {
 
             // Get traffic data
             long received = TrafficStats.getUidRxBytes(uid);
             long send = TrafficStats.getUidTxBytes(uid);
             Log.v("" + uid, "Send :" + send + ", Received :" + received);
-            long receivedfileSizeInKB = 0;
-            long sendfileSizeInKB = 0;
-            if (received>1024) {
-                receivedfileSizeInKB = received / 1024;
-            }
-            if(receivedfileSizeInKB>1024){
-                // Convert the KB to MegaBytes (1 MB = 1024 KBytes)
-                receivedfileSizeInKB = receivedfileSizeInKB / 1024;
-
-            }
-            if (send>1024) {
-                sendfileSizeInKB = send / 1024;
-            }
-            if(sendfileSizeInKB>1024){
-                // Convert the KB to MegaBytes (1 MB = 1024 KBytes)
-                sendfileSizeInKB = sendfileSizeInKB / 1024;
-
-            }
 
             Log.i("locker1234", "package Name uid com.ase===> send " + send );
             Log.i("locker1234", "package Name uid com.ase===> Received " + received);
 
-        }
+//        }
     }
 
     public class MSG_TYPE {
