@@ -176,6 +176,9 @@ public class Appreference {
     public static ArrayList<String> PDFConvImagePath = new ArrayList<String>();
     /*Added For PDF view File Path End*/
 
+     /*Added For HMLog.txt delete when exceeds 30 MB Start*/
+    public static double LogFile_defaultSize = 30;
+     /*Added For HMLog.txt delete when exceeds 30 MB Start*/
 
     /*Added For PDF manuals Download webservice Start*/
     public static boolean PDF_ManualsdownloadStart= false;
@@ -190,6 +193,7 @@ public class Appreference {
 
 /*************************added for Device Manipulation start*/
     public static boolean do_startDeviceManipulation=false;
+
 /*************************added for Device Manipulation End*/
 
 

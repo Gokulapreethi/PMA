@@ -217,7 +217,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                     JsonRequestSender jsonRequestParser = new JsonRequestSender();
                     Appreference.jsonRequestSender = jsonRequestParser;
                     Log.i("login123", "Login webservice calling oncreate.......");
-
+                    Appreference.do_startDeviceManipulation=true;
                     jsonRequestParser.login(EnumJsonWebservicename.loginMobile, nameValuePairs, LoginActivity.this);
                     jsonRequestParser.start();
                     mEmailSignInButton.setVisibility(View.GONE);

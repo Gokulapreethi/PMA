@@ -86,6 +86,7 @@ import com.ase.CustomVideoCamera;
 import com.ase.DatePicker.CustomTravelPickerActivity;
 import com.ase.ShowEstimTimeupAlert;
 import com.ase.ShowTimeupAlert;
+import com.ase.StartupReceiver;
 import com.ase.gcm.GCMPushReceiverService;
 import com.ase.offlineSendService;
 import com.google.gson.Gson;
@@ -546,6 +547,37 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback,
         Appreference.context_table.put("mainactivity", mainContext);
         appSharedpreferences = AppSharedpreferences.getInstance(mainContext);
 //        FirebaseCrash.report(new Exception("My first Android non-fatal error"));
+
+
+        /* Code for deleting the hm.log txt file when size exceeds greater than 30 MB
+        * greater than 30 MB file contents will be deleted
+        * Start Code*/
+        String dir_path = Environment.getExternalStorageDirectory()
+                + "/High Message";
+        File directory = new File(dir_path);
+//        File directory = Appreference.mainContect.getFilesDir();
+        File file4 = new File(directory, "HM_log.txt");
+        double bytes_value = file4.length();
+        double kilobytes = (bytes_value / 1024);
+        double megabytes = (kilobytes / 1024);
+        Log.i("Hm_LogFile", "file_size is " + Appreference.LogFile_defaultSize + " " + file4.length() + " " + bytes_value + " " + kilobytes + " " + megabytes);
+        if (megabytes > Appreference.LogFile_defaultSize) {
+            Log.i("Hm_LogFile", "megabytes " + megabytes);
+            String cleared = "LogFile Cleared, New logs are ";
+            FileOutputStream fos = null;
+            try {
+                fos = new FileOutputStream(file4);
+                fos.write(cleared.getBytes());
+                fos.close();
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        /* Log File delete End Code
+        * */
+
         if (AppSharedpreferences.getInstance(mainContext) != null) {
             AppSharedpreferences.getInstance(mainContext).saveBoolean("login", true);
         }
