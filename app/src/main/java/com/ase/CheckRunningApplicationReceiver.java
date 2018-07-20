@@ -82,7 +82,7 @@ public class CheckRunningApplicationReceiver extends BroadcastReceiver {
             NetworkInfo mWifi = connManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
             NetworkInfo networkInfo = connManager.getActiveNetworkInfo();
 
-            if (mWifi.isConnected() && networkInfo != null && networkInfo.isConnected()) {
+            if (!mWifi.isConnected() && networkInfo != null && networkInfo.isConnected()) {
                 // Do whatever
                 Log.i("locker1234", "mobile data Connected ");
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {

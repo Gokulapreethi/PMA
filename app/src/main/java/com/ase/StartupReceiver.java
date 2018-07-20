@@ -41,11 +41,11 @@ public class StartupReceiver extends BroadcastReceiver {
                     afterTenSeconds,
                     5000, ServiceManagementIntent);
 
-
         } catch (Exception e) {
             Log.i(TAG, "Exception : "+e);
         }
 
     }
+
 
 }
