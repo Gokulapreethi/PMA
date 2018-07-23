@@ -1,5 +1,7 @@
 package com.ase;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -20,29 +22,56 @@ public class NetWorkChange extends BroadcastReceiver {
                 .getSystemService(Context.CONNECTIVITY_SERVICE);
 
         final NetworkInfo networkInfo = _connec.getActiveNetworkInfo();
-        if(networkInfo!=null) {
+
+        NetworkInfo mWifi = _connec.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
+
+
+        if (networkInfo != null) {
             Log.d("network", "NetworkChange Onreceived method networkInfo!=null");
             int type = networkInfo.getType();
             boolean connected = networkInfo.isConnected();
-            Log.d("network", "network connected-->"+connected);
+            Log.d("network", "network connected-->" + connected);
             if (connected) {
-                 if(Appreference.context_table!=null && Appreference.context_table.containsKey("mainactivity")){
-                    MainActivity mainActivity=(MainActivity)Appreference.context_table.get("mainactivity");
-                     mainActivity.NetworkState(true);
+                if (Appreference.context_table != null && Appreference.context_table.containsKey("mainactivity")) {
+                    MainActivity mainActivity = (MainActivity) Appreference.context_table.get("mainactivity");
+                    mainActivity.NetworkState(true);
 
-                 }
-            }else{
-                if(Appreference.context_table!=null && Appreference.context_table.containsKey("mainactivity")){
-                    MainActivity mainActivity=(MainActivity)Appreference.context_table.get("mainactivity");
+                }
+            } else {
+                if (Appreference.context_table != null && Appreference.context_table.containsKey("mainactivity")) {
+                    MainActivity mainActivity = (MainActivity) Appreference.context_table.get("mainactivity");
                     mainActivity.NetworkState(false);
 
                 }
             }
-        }else{
+
+            /*code added for device manipulation mobile data restrication added check started
+            *
+            * */
+            if (mWifi.isConnected()) {
+                /*wifi connected */
+                if (Appreference.context_table != null && Appreference.context_table.containsKey("mainactivity")) {
+                    MainActivity mainActivity = (MainActivity) Appreference.context_table.get("mainactivity");
+                    mainActivity.Cancel_Start_AlarmManager(true);
+                }
+            } else {
+                /*Mobile Data Connected*/
+                if (Appreference.context_table != null && Appreference.context_table.containsKey("mainactivity")) {
+                    MainActivity mainActivity = (MainActivity) Appreference.context_table.get("mainactivity");
+                    mainActivity.Cancel_Start_AlarmManager(false);
+                }
+            }
+
+            /*code added for device manipulation mobile data restrication added check
+            * Code ented
+            * */
+        } else {
             Log.d("network", "NetworkChange Onreceived method networkInfo=null");
-            if(Appreference.context_table!=null && Appreference.context_table.containsKey("mainactivity")){
-                MainActivity mainActivity=(MainActivity)Appreference.context_table.get("mainactivity");
+            if (Appreference.context_table != null && Appreference.context_table.containsKey("mainactivity")) {
+                MainActivity mainActivity = (MainActivity) Appreference.context_table.get("mainactivity");
                 mainActivity.NetworkState(false);
+                mainActivity.Cancel_Start_AlarmManager(true);
+
 
             }
         }

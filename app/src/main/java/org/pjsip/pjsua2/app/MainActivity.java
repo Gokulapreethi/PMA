@@ -356,6 +356,26 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback,
 //        }
     }
 
+    public void Cancel_Start_AlarmManager(boolean isWifiEnabled) {
+        Log.i("locker111", "isWifiEnabled===> "+isWifiEnabled);
+
+        if (!isWifiEnabled) {
+            Intent intent = new Intent(MainActivity.this, StartupReceiver.class);
+            final PendingIntent pendingIntent = PendingIntent.getBroadcast(getApplicationContext(), 100, intent, 0);
+            final AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
+            alarmManager.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + 5000, pendingIntent);
+            Log.i("locker111", "isWifiEnabled Alarm set===> ");
+
+        } else {
+            Intent intent = new Intent(this, StartupReceiver.class);
+            PendingIntent pendingIntent = PendingIntent.getBroadcast(getApplicationContext(), 100, intent, 0);
+            AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
+            alarmManager.cancel(pendingIntent);
+            Log.i("locker111", "isWifiEnabled Alarm Cancel===> ");
+
+        }
+    }
+
     public class MSG_TYPE {
         public final static int INCOMING_CALL = 1;
         public final static int CALL_STATE = 2;
