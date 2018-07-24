@@ -7,6 +7,7 @@ import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.net.ConnectivityManager;
@@ -87,7 +88,7 @@ public class CheckRunningApplicationReceiver extends BroadcastReceiver {
                 Log.i("locker1234", "mobile data Connected ");
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                     List<AndroidAppProcess> MyAppList = getProcessNew(aContext);
-                   ArrayList<String> myForegroundApps = new ArrayList<>();
+                    ArrayList<String> myForegroundApps = new ArrayList<>();
                     for (int i = 0; i < MyAppList.size(); i++) {
                         myForegroundApps.add(MyAppList.get(i).getPackageName());
                     }
@@ -96,7 +97,7 @@ public class CheckRunningApplicationReceiver extends BroadcastReceiver {
                         String packageNameList1 = MyAppList.get(i).name;
                         Log.i("locker124", "package Name FOREGROUND===> " + packageNameList);
                         Log.i("locker124", "package Name FOREGROUND name===> " + packageNameList1);
-                        Appreference.printLog("CheckRunningApplication", "Package name List : "+i + packageNameList, "WARN", null);
+                        Appreference.printLog("CheckRunningApplication", "Package name List : " + i + packageNameList, "WARN", null);
 
                    /*     if (packageNameList.equals("com.android.chrome")
                                 || packageNameList.contains("com.android.vending")
@@ -135,7 +136,7 @@ public class CheckRunningApplicationReceiver extends BroadcastReceiver {
                             }
                         }
 */
-                   Log.i("locker124", "package Name contains myForegroundApps.contains(\"com.ase\")==>" + myForegroundApps.contains("com.ase"));
+                        Log.i("locker124", "package Name contains myForegroundApps.contains(\"com.ase\")==>" + myForegroundApps.contains("com.ase"));
 
                         if (myForegroundApps.contains("com.ase")
                                 || myForegroundApps.contains("com.android.launcher")
@@ -151,7 +152,7 @@ public class CheckRunningApplicationReceiver extends BroadcastReceiver {
                             Log.i("locker124", "package Name to close above 5.0 " + packageNameList);
 
 
-                        }else{
+                        } else {
                             MainActivity mainActivity = (MainActivity) Appreference.context_table.get("mainactivity");
 
                             if (!packageNameList.toString().equalsIgnoreCase("com.estrongs.android.pop")) {
@@ -273,7 +274,7 @@ public class CheckRunningApplicationReceiver extends BroadcastReceiver {
 
             os.flush();
 
-            os.writeBytes("am force-stop " +app + "\n");
+            os.writeBytes("am force-stop " + app + "\n");
 
             os.flush();
         } catch (IOException e) {
@@ -308,18 +309,21 @@ public class CheckRunningApplicationReceiver extends BroadcastReceiver {
         String topApp = "Not Exist";
         List<AndroidAppProcess> processes = AndroidProcesses.getRunningForegroundApps(aContext);
         Collections.sort(processes, new AndroidProcesses.ProcessComparator());
-        Log.i("locker1234", "> 20 TOP APP=> " +
-                "" + processes.get(0).getPackageName());
+
+
+        UsageStatsManager usage = (UsageStatsManager) aContext.getSystemService(Context.USAGE_STATS_SERVICE);
+        long time = System.currentTimeMillis();
+        List<UsageStats> stats = usage.queryUsageStats(UsageStatsManager.INTERVAL_DAILY, time - 1000 * 1000, time);
+        if (stats != null) {
+            SortedMap<Long, UsageStats> runningTask = new TreeMap<Long, UsageStats>();
+            for (UsageStats usageStats : stats) {
+                runningTask.put(usageStats.getLastTimeUsed(), usageStats);
+            }
+            Log.i("locker124", "package Name FOREGROUND NOUGAT===> " + runningTask.);
+
+        }
+
         return processes;
     }
-
-    //API 21 and above
-    private String getRunningApp(Context aContext) throws Exception {
-       String currentApp="hi";
-        return currentApp;
-    }
-
-
-
 }
 
