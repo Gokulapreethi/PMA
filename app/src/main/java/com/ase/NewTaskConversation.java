@@ -6173,10 +6173,14 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                 }
             }
             SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            SimpleDateFormat dateFormat_interval = new SimpleDateFormat("yyyy-MM-dd HH:mm");
             SimpleDateFormat dateParse = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
             SimpleDateFormat taskDateParse = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
             SimpleDateFormat taskDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
             String dateTime = dateFormat.format(new Date());
+            String dateTime_status_break = dateFormat_interval.format(new Date());
+            Date dt_change_format = dateFormat_interval.parse(dateTime_status_break);
+            dateTime_status_break = dateParse.format(dt_change_format);
             dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
             taskDateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
             String dateforrow = dateFormat.format(new Date());
@@ -6196,14 +6200,14 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
             }
             if (status.equalsIgnoreCase("1") || status.equalsIgnoreCase("3")) {
                 Log.i("status", "timer ==> " + timer);
-                ActivityEnddate = dateTime;
+                ActivityEnddate = dateTime_status_break;
                 Appreference.isEstimTimerStarted = false;
             } else
                 Appreference.isEstimTimerStarted = true;
 
             if (status.equalsIgnoreCase("2") || status.equalsIgnoreCase("4")) {
                 Log.i("status", "timer ==> " + timer);
-                ActivityStartdate = dateTime;
+                ActivityStartdate = dateTime_status_break;
             }
             if (ActivityStartdate != null && !ActivityStartdate.equalsIgnoreCase("")) {
                 try {
@@ -14522,7 +14526,14 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                 }
                 Log.i("estim123", "hms result_timer*********" + hms);
                 String time_array[] = hms.split(":");
-                Date Entered_old_start_date = df.parse(Estimated_dateTime);
+                Date Entered_old_start_date = null;
+                try {
+                    if (Estimated_dateTime!=null && !Estimated_dateTime.equalsIgnoreCase("")) {
+                        Entered_old_start_date = df.parse(Estimated_dateTime);
+                    }
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
                 Calendar calendar = Calendar.getInstance();
                 Log.i("estim123", "************Entered_old_start_date *********" + Entered_old_start_date);
 

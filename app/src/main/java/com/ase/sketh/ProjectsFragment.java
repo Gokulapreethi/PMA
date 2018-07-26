@@ -585,6 +585,7 @@ public class ProjectsFragment extends Fragment implements View.OnClickListener, 
                                                     }
                                                     try {
                                                         List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
+                                                        nameValuePairs.add(new BasicNameValuePair("userId", String.valueOf(Appreference.loginuserdetails.getId())));
                                                         nameValuePairs.add(new BasicNameValuePair("mcSrNo", selected_mcSrNo));
                                                         nameValuePairs.add(new BasicNameValuePair("taskCompletedStartDate", FSRStartDateUTC));
                                                         nameValuePairs.add(new BasicNameValuePair("taskCompletedEndDate", FSREndDateUTC));
@@ -1254,9 +1255,10 @@ public class ProjectsFragment extends Fragment implements View.OnClickListener, 
                         pjt_owner = projectDetailsBean.getProject_ownerName();
                     }
                     Log.i("Fragment", "pjt_owner ==> " + pjt_owner);
-                    if (pjt_owner != null && pjt_owner.equalsIgnoreCase(Appreference.loginuserdetails.getUsername())
-                            || Appreference.loginuserdetails != null && Appreference.loginuserdetails.getRoleId() != null
-                            && Appreference.loginuserdetails.getRoleId().equalsIgnoreCase("2")) {
+                    if ((pjt_owner != null && pjt_owner.equalsIgnoreCase(Appreference.loginuserdetails.getUsername()))
+                            || (pjt_owner != null && !pjt_owner.equalsIgnoreCase(Appreference.loginuserdetails.getUsername())
+                            && Appreference.loginuserdetails != null && Appreference.loginuserdetails.getRoleId() != null
+                            && Appreference.loginuserdetails.getRoleId().equalsIgnoreCase("2"))) {
                         completed_status.setVisibility(View.VISIBLE);
                     }
                     if (pjt_owner != null && pjt_owner.equalsIgnoreCase(Appreference.loginuserdetails.getUsername())) {
