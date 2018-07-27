@@ -119,7 +119,7 @@ public class JsonRequestResponce extends Thread {
 
  //                            httppost = new HttpPost("https://www1.cognitivemobile.net/ASE/" + obj.getEnumJsonWebservicename()); //ip US Server 204 SSL ceritified
 
-                             httppost = new HttpPost("https://www2.cognitivemobile.net/ASE/" + obj.getEnumJsonWebservicename()); //ip US Server 205 (SSL)
+                             httppost = new HttpPost("https://www2.cognitivemobile.net/pilot/" + obj.getEnumJsonWebservicename()); //ip US Server 205 (SSL)
 //                             httppost = new HttpPost("https://66.109.17.204/ASE/" + obj.getEnumJsonWebservicename()); //ip US Server 204
 
 //                             httppost = new HttpPost("https://66.109.17.205/ASE/" + obj.getEnumJsonWebservicename()); //ip Local Server 205
