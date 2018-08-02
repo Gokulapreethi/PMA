@@ -9,6 +9,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.location.LocationManager;
 import android.net.ConnectivityManager;
@@ -45,6 +46,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonSyntaxException;
+import com.google.gson.reflect.TypeToken;
 
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
@@ -59,6 +61,7 @@ import org.pjsip.pjsua2.app.MyBuddy;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.lang.reflect.Type;
 import java.nio.charset.Charset;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -77,6 +80,7 @@ import java.util.concurrent.TimeUnit;
 import json.CommunicationBean;
 import json.EnumJsonWebservicename;
 import json.JsonRequestSender;
+import json.Loginuserdetails;
 import json.WebServiceInterface;
 
 
@@ -182,7 +186,24 @@ public class TravelJobDetails extends Activity implements View.OnClickListener, 
         ll_networkUI = (LinearLayout) findViewById(R.id.ll_networkstate);
         tv_networkstate = (TextView) findViewById(R.id.tv_networksate);
 
+        if(Appreference.loginuserdetails!=null){
+                /*&& Appreference.loginuserdetails.toString().equalsIgnoreCase(null)
+                && Appreference.loginuserdetails.toString().equalsIgnoreCase("null")){*/
+        }else{
+            Log.i("BG123","Appreference.loginuserdetails===> inside");
+            SharedPreferences prefs = getSharedPreferences("myUserProfile", MODE_PRIVATE);
+            String restoredText = prefs.getString("MyUserObjectdetails", null);
+            if (restoredText != null) {
+                Gson gson = new Gson();
+                String json = prefs.getString("MyUserObjectdetails", "");
+                Type collectionType = new TypeToken<Loginuserdetails>() {
+                }.getType();
+                Loginuserdetails obj = new Gson().fromJson(json, collectionType);
+                Appreference.loginuserdetails = obj;
+            }
+            Log.i("BG123","Appreference.loginuserdetails===> "+Appreference.loginuserdetails);
 
+        }
         cancel = (TextView) findViewById(R.id.cancel);
         head = (TextView) findViewById(R.id.head);
         text11 = (TextView) findViewById(R.id.text11);
@@ -221,7 +242,7 @@ public class TravelJobDetails extends Activity implements View.OnClickListener, 
                     clickPosition = getIntent().getIntExtra("position", 0);
                     Log.i(tab, "isProjectFromOracle " + isProjectFromOracle);
                     Log.i(tab, "isProjectFromOracle " + isTemplate);
-                    Log.i(tab, "oracleProjectOwner===>" + oracleProjectOwner + " logged in by===>" + Appreference.loginuserdetails.getUsername());
+//                    Log.i(tab, "oracleProjectOwner===>" + oracleProjectOwner + " logged in by===>" + Appreference.loginuserdetails.getUsername());
                 }
             }
         } catch (Exception e) {
@@ -311,7 +332,7 @@ public class TravelJobDetails extends Activity implements View.OnClickListener, 
         }
 
         try {
-            if (Appreference.loginuserdetails.getUsername().equalsIgnoreCase(ownerOfTask)) {
+            if (Appreference.loginuserdetails!=null && Appreference.loginuserdetails.getUsername().equalsIgnoreCase(ownerOfTask)) {
                 text12.setText("Me");
             } else {
                 Log.i(tab, "ownerOfTask -->  ");
@@ -495,19 +516,21 @@ public class TravelJobDetails extends Activity implements View.OnClickListener, 
             }
         });
         try {
-            String query_status = "select status from projectStatus where projectId='" + projectId + "' and userId='" + Appreference.loginuserdetails.getId() + "' and taskId= '" + webtaskId + "'";
-            int disable_by_current_status = VideoCallDataBase.getDB(context).getCurrentStatus(query_status);
-            if (disable_by_current_status == 5)
-                isTaskCompleted = true;
-            if (isTaskCompleted) {
-                status_job.setVisibility(View.GONE);
-                travel_job.setVisibility(View.GONE);
-            }
-            if (disable_by_current_status != 8) {
-                String taskQuery = "select * from taskDetailsInfo where projectId='" + projectId + "'and taskId= '" + webtaskId + "' and estimCompletion='1'";
-                int getEstimatedTimerCompleted = VideoCallDataBase.getDB(context).getCountForTravelEntry(taskQuery);
-                if (getEstimatedTimerCompleted == 0) {
-                    Show_travel_EstimTimerDisplay();
+            if (Appreference.loginuserdetails!=null) {
+                String query_status = "select status from projectStatus where projectId='" + projectId + "' and userId='" + Appreference.loginuserdetails.getId() + "' and taskId= '" + webtaskId + "'";
+                int disable_by_current_status = VideoCallDataBase.getDB(context).getCurrentStatus(query_status);
+                if (disable_by_current_status == 5)
+                    isTaskCompleted = true;
+                if (isTaskCompleted) {
+                    status_job.setVisibility(View.GONE);
+                    travel_job.setVisibility(View.GONE);
+                }
+                if (disable_by_current_status != 8) {
+                    String taskQuery = "select * from taskDetailsInfo where projectId='" + projectId + "'and taskId= '" + webtaskId + "' and estimCompletion='1'";
+                    int getEstimatedTimerCompleted = VideoCallDataBase.getDB(context).getCountForTravelEntry(taskQuery);
+                    if (getEstimatedTimerCompleted == 0) {
+                        Show_travel_EstimTimerDisplay();
+                    }
                 }
             }
         } catch (Exception e) {
@@ -3296,9 +3319,17 @@ public class TravelJobDetails extends Activity implements View.OnClickListener, 
     }
 
     private String getGroupAdmin_observer_DB() {
-        String get_groupAdminobserver_query = "select groupAdminobserver from projectDetails where loginuser = '" + Appreference.loginuserdetails.getEmail() + "'and projectId='" + projectId + "'";
-        String OraclegroupAdminObserver = VideoCallDataBase.getDB(context).getprojectIdForOracleID(get_groupAdminobserver_query);
-        Log.i("observer123", "OraclegroupAdminObserver ====> " + OraclegroupAdminObserver);
+        String OraclegroupAdminObserver="";
+        try {
+            if (Appreference.loginuserdetails!=null) {
+                String get_groupAdminobserver_query = "select groupAdminobserver from projectDetails where loginuser = '" + Appreference.loginuserdetails.getEmail() + "'and projectId='" + projectId + "'";
+                OraclegroupAdminObserver = VideoCallDataBase.getDB(context).getprojectIdForOracleID(get_groupAdminobserver_query);
+                Log.i("observer123", "OraclegroupAdminObserver ====> " + OraclegroupAdminObserver);
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         return OraclegroupAdminObserver;
     }
 
@@ -3723,7 +3754,7 @@ public class TravelJobDetails extends Activity implements View.OnClickListener, 
         try {
             Log.i(tab, "onResume ");
             showNetworkStateUI();
-            if (Appreference.main_Activity_context.openPinActivity) {
+            if (Appreference.main_Activity_context!=null && Appreference.main_Activity_context.openPinActivity) {
                 Appreference.main_Activity_context.reRegister_onAppResume();
             }
             startTimer();

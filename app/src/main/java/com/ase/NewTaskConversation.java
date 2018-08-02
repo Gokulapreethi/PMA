@@ -10,6 +10,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.content.res.Resources;
@@ -169,6 +170,7 @@ import Services.ShowOrCancelProgress;
 import json.CommunicationBean;
 import json.EnumJsonWebservicename;
 import json.ListMember;
+import json.Loginuserdetails;
 import json.WebServiceInterface;
 import xml.xmlcomposer;
 import xml.xmlparser;
@@ -553,6 +555,29 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
             isProjectFromOracle = getIntent().getBooleanExtra("ProjectFromOracle", false);
 //            Log.i("ws123", "oracleProjectOwner===>" + oracleProjectOwner + " logged in by===>" + Appreference.loginuserdetails.getUsername());
         }
+        /*
+        * code for when appreference loginuserdetails become null
+        * START*/
+
+       /* if(Appreference.loginuserdetails!=null){
+        }else{
+            Log.i("BG123","Appreference.loginuserdetails===> inside");
+            SharedPreferences prefs = getSharedPreferences("myUserProfile", MODE_PRIVATE);
+            String restoredText = prefs.getString("MyUserObjectdetails", null);
+            if (restoredText != null) {
+                Gson gson = new Gson();
+                String json = prefs.getString("MyUserObjectdetails", "");
+                Type collectionType = new TypeToken<Loginuserdetails>() {
+                }.getType();
+                Loginuserdetails obj = new Gson().fromJson(json, collectionType);
+                Appreference.loginuserdetails = obj;
+            }
+            Log.i("BG123","Appreference.loginuserdetails===> "+Appreference.loginuserdetails);
+        }
+*/
+       /*
+        * code for when appreference loginuserdetails become null
+        * END*/
 
         try {
             switch (conversation_In) {

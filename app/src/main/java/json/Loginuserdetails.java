@@ -1,11 +1,12 @@
 package json;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
  * Created by vignesh on 6/1/2016.
  */
-public class Loginuserdetails {
+public class Loginuserdetails implements Serializable {
 
     int id;
     String email;

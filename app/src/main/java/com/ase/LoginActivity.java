@@ -64,6 +64,7 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import it.sephiroth.android.library.tooltip.Tooltip;
 import json.CommunicationBean;
@@ -633,6 +634,11 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 //                            Loginuserdetails u1 = g1.fromJson(test1, Loginuserdetails.class);
 //                            String loginuserdetails = g1.toJson(test1);
                             Appreference.loginuserdetails = u1;
+                            String sharedpref_loginuserdetails = test1;
+                            SharedPreferences.Editor user_editor = getSharedPreferences("myUserProfile", MODE_PRIVATE).edit();
+                            user_editor.putString("MyUserObjectdetails", sharedpref_loginuserdetails);
+                            user_editor.apply();
+                            user_editor.commit();
                             Appreference.isLoginRequestSent = false;
                             try {
 
