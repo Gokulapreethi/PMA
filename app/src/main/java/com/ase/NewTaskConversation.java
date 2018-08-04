@@ -5679,7 +5679,7 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                                             alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "Yes",
                                                     new DialogInterface.OnClickListener() {
                                                         public void onClick(DialogInterface dialog, int which) {
-                                                            Appreference.mychecklistTemplate = getTemplateList(PMSJobDetails, Integer.parseInt(type_service));
+                                                            Appreference.mychecklistTemplate = getTemplateList(PMSJobDetails, type_service);
                                                             try {
                                                                 if (Appreference.mychecklistTemplate.getLabel() != null
                                                                         && Appreference.mychecklistTemplate.getLabel().size() > 0) {
@@ -5871,7 +5871,7 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
             } else {
 //                Toast.makeText(NewTaskConversation.this, "CheckList Not Available....", Toast.LENGTH_SHORT).show();
                 final ProjectDetailsBean PMSJobDetails = getprojectDetails_Row();
-                checkListDetails mychecklistTemplate = getTemplateList(PMSJobDetails, Integer.parseInt(PMSJobDetails.getServiceType()));
+                checkListDetails mychecklistTemplate = getTemplateList(PMSJobDetails, PMSJobDetails.getServiceType());
                 if (mychecklistTemplate.getLabel() != null && mychecklistTemplate.getLabel().size() > 0) {
                     if (mychecklistTemplate != null) {
                         Intent intent = new Intent(NewTaskConversation.this, CheckListActivity.class);
@@ -5891,7 +5891,7 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
         }
     }
 
-    private checkListDetails getTemplateList(ProjectDetailsBean PMSJobDetails, int ServiceType) {
+    private checkListDetails getTemplateList(ProjectDetailsBean PMSJobDetails, String ServiceType) {
         String checklistTemplate_quey = "select * from checklistTemplate where machine='" + PMSJobDetails.getMachineMake() + "'and modal='" + PMSJobDetails.getMcModel() + "'and serviceType='" + ServiceType + "'";
         checkListDetails mychecklistTemplate = VideoCallDataBase.getDB(context).getTemplatedetails(checklistTemplate_quey);
         return mychecklistTemplate;
