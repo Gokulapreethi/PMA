@@ -1,6 +1,7 @@
 package com.ase;
 
 import android.app.ActivityManager;
+import android.app.AppOpsManager;
 import android.app.usage.UsageStats;
 import android.app.usage.UsageStatsManager;
 import android.content.BroadcastReceiver;
@@ -13,7 +14,10 @@ import android.content.pm.ResolveInfo;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Build;
+import android.provider.Settings;
 import android.util.Log;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.jaredrummler.android.processes.AndroidProcesses;
 import com.jaredrummler.android.processes.models.AndroidAppProcess;
@@ -30,6 +34,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.SortedMap;
 import java.util.TreeMap;
+import java.util.concurrent.TimeUnit;
 
 import static android.content.Context.ACTIVITY_SERVICE;
 
@@ -57,21 +62,6 @@ public class CheckRunningApplicationReceiver extends BroadcastReceiver {
 
             ActivityManager.RunningTaskInfo ar = alltasks.get(0);
 
-            String[] activePackages;
-            if (Build.VERSION.SDK_INT > Build.VERSION_CODES.KITKAT_WATCH) {
-                activePackages = getActivePackages();
-            } else {
-                activePackages = getActivePackagesCompat();
-            }
-
-            if (activePackages != null) {
-                for (String activePackage : activePackages) {
-                    if (activePackage.equals("com.google.android.calendar")) {
-                        // Calendar app is launched, do something
-                    }
-                }
-            }
-
             Intent intent = new Intent(Intent.ACTION_MAIN);
             intent.addCategory(Intent.CATEGORY_HOME);
             ResolveInfo defaultLauncher = aContext.getPackageManager()
@@ -87,56 +77,15 @@ public class CheckRunningApplicationReceiver extends BroadcastReceiver {
                 // Do whatever
                 Log.i("locker1234", "mobile data Connected ");
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                    List<AndroidAppProcess> MyAppList = getProcessNew(aContext);
+                    List<AndroidAppProcess> MyAppList = null;
+                    String topPackageName = "";
                     ArrayList<String> myForegroundApps = new ArrayList<>();
-                    for (int i = 0; i < MyAppList.size(); i++) {
-                        myForegroundApps.add(MyAppList.get(i).getPackageName());
-                    }
-                    for (int i = 0; i < MyAppList.size(); i++) {
-                        String packageNameList = MyAppList.get(i).getPackageName();
-                        String packageNameList1 = MyAppList.get(i).name;
-                        Log.i("locker124", "package Name FOREGROUND===> " + packageNameList);
-                        Log.i("locker124", "package Name FOREGROUND name===> " + packageNameList1);
-                        Appreference.printLog("CheckRunningApplication", "Package name List : " + i + packageNameList, "WARN", null);
+                    topPackageName = getForegroundAppList(aContext);
+                    myForegroundApps.add(topPackageName);
 
-                   /*     if (packageNameList.equals("com.android.chrome")
-                                || packageNameList.contains("com.android.vending")
-                                || packageNameList.contains("com.google.android.youtube")
-                                || packageNameList.contains("com.google.android.apps.maps")
-                                || packageNameList.contains("com.sec.android.app.samsungapps")
-                                || packageNameList.contains("com.xuecs.sqlitemanager")
-                                || packageNameList.contains("com.google.android.videos")
-                                || packageNameList.contains("com.google.android.apps.plus")
-                                || packageNameList.contains("com.android.browser")
-                                || packageNameList.contains("com.dropbox.android")
-                                || packageNameList.contains("com.utorrent.client")
-                                || packageNameList.contains("com.google.android.googlequicksearchbox:search")
-                                || packageNameList.contains("com.google.android.apps.magazines")
-                                || packageNameList.contains("com.google.android.talk")
-                                || packageNameList.equals(nameOfLauncherPkg)) {
-                            Log.i("locker124", "package Name to close above 5.0 " + packageNameList);
+                    for (int i = 0; i < myForegroundApps.size(); i++) {
 
-                            MainActivity mainActivity = (MainActivity) Appreference.context_table.get("mainactivity");
-
-                            if (mainActivity != null) {
-                                mainActivity.killApp(0);
-                            }else{
-                                Intent startHomescreen = new Intent(Intent.ACTION_MAIN);
-                                startHomescreen.addCategory(Intent.CATEGORY_HOME);
-                                startHomescreen.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                                startHomescreen.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                                aContext.startActivity(startHomescreen);
-                            }
-                        }
-                        if(packageNameList.equals("com.ase")){
-                            MainActivity mainActivity = (MainActivity) Appreference.context_table.get("mainactivity");
-
-                            if (mainActivity != null) {
-                                mainActivity.getDataUsage();
-                            }
-                        }
-*/
-                        Log.i("locker124", "package Name contains myForegroundApps.contains(\"com.ase\")==>" + myForegroundApps.contains("com.ase"));
+                        Appreference.printLog("CheckRunningApplication", "Package name List : " + i + topPackageName, "WARN", null);
 
                         if (myForegroundApps.contains("com.ase")
                                 || myForegroundApps.contains("com.android.launcher")
@@ -149,13 +98,13 @@ public class CheckRunningApplicationReceiver extends BroadcastReceiver {
                                 || myForegroundApps.contains(nameOfLauncherPkg)
                                 || ar.topActivity.toString().contains(
                                 "recent.RecentsActivity")) {
-                            Log.i("locker124", "package Name to close above 5.0 " + packageNameList);
+                            Log.i("locker124", "package Name to close above 5.0 " + topPackageName);
 
 
                         } else {
                             MainActivity mainActivity = (MainActivity) Appreference.context_table.get("mainactivity");
 
-                            if (!packageNameList.toString().equalsIgnoreCase("com.estrongs.android.pop")) {
+                            if (topPackageName != null && !topPackageName.toString().equalsIgnoreCase("com.estrongs.android.pop")) {
                                 if (mainActivity != null) {
                                     mainActivity.killApp(0);
                                 } else {
@@ -167,7 +116,7 @@ public class CheckRunningApplicationReceiver extends BroadcastReceiver {
                                 }
                             }
                         }
-                        if (packageNameList.equals("com.ase")) {
+                        if (topPackageName != null && topPackageName.equals("com.ase")) {
                             MainActivity mainActivity = (MainActivity) Appreference.context_table.get("mainactivity");
 
                             if (mainActivity != null) {
@@ -177,43 +126,7 @@ public class CheckRunningApplicationReceiver extends BroadcastReceiver {
                     }
                 } else {
                     String packageNameList = am.getRunningAppProcesses().get(0).processName;
-                  /*   if (packageNameList.equals("com.android.chrome")
-                            || packageNameList.contains("com.android.vending")
-                            || packageNameList.contains("com.google.android.youtube")
-                            || packageNameList.contains("com.google.android.apps.maps")
-                            || packageNameList.contains("com.sec.android.app.samsungapps")
-                            || packageNameList.contains("com.xuecs.sqlitemanager")
-                            || packageNameList.contains("com.google.android.videos")
-                            || packageNameList.contains("com.google.android.apps.plus")
-                            || packageNameList.contains("com.android.browser")
-                            || packageNameList.contains("com.dropbox.android")
-                            || packageNameList.contains("com.utorrent.client")
-                            || packageNameList.contains("com.google.android.googlequicksearchbox:search")
-                            || packageNameList.contains("com.google.android.apps.magazines")
-                            || packageNameList.contains("com.google.android.talk")
-                            || packageNameList.equals(nameOfLauncherPkg)) {
-                        Log.i("locker124", "package Name to close above 5.0 " + packageNameList);
-                        MainActivity mainActivity = (MainActivity) Appreference.context_table.get("mainactivity");
 
-                        if (mainActivity != null) {
-                            mainActivity.killApp(0);
-                        } else {
-                            Intent startHomescreen = new Intent(Intent.ACTION_MAIN);
-                            startHomescreen.addCategory(Intent.CATEGORY_HOME);
-                            startHomescreen.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                            startHomescreen.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                            aContext.startActivity(startHomescreen);
-                        }
-
-                    }
-
-                    if (packageNameList.equals("com.ase")) {
-                        MainActivity mainActivity = (MainActivity) Appreference.context_table.get("mainactivity");
-
-                        if (mainActivity != null) {
-                            mainActivity.getDataUsage();
-                        }
-                }*/
                     if (!packageNameList.contains("com.ase")
                             || !packageNameList.contains("com.android.launcher")
                             || !packageNameList.contains("com.sec.android.app.launcher")
@@ -238,7 +151,7 @@ public class CheckRunningApplicationReceiver extends BroadcastReceiver {
                             aContext.startActivity(startHomescreen);
                         }
                     }
-                    if (packageNameList.equals("com.ase")) {
+                    if (packageNameList != null && packageNameList.equals("com.ase")) {
                         MainActivity mainActivity = (MainActivity) Appreference.context_table.get("mainactivity");
 
                         if (mainActivity != null) {
@@ -249,14 +162,6 @@ public class CheckRunningApplicationReceiver extends BroadcastReceiver {
             } else {
                 Log.i("locker1234", "mWifi Connected ");
             }
-          /*  if (mWifi.isConnected()) {
-                Log.i("locker1234", "mWifi Connected ");
-            }
-            if (networkInfo == null) {
-                Log.i("locker1234", "No Network Connected ");
-
-            }*/
-
         } catch (Exception t) {
             Appreference.printLog("CheckRunningApplication", "Forground app Packagelist  Exception : " + t.getMessage(), "WARN", null);
             Log.i(TAG, "Throwable caught: " + t.getMessage(), t);
@@ -264,6 +169,56 @@ public class CheckRunningApplicationReceiver extends BroadcastReceiver {
         }
 
     }
+
+    private String getForegroundAppList(Context aContext) {
+        String topPackageName = "";
+        MainActivity mainActivity = (MainActivity) Appreference.context_table.get("mainactivity");
+
+        if (mainActivity != null) {
+            if (mainActivity.hasPermission()) {
+                topPackageName = getAppList(aContext);
+            } else {
+                mainActivity.requestPermission();
+            }
+        } else {
+            topPackageName = getAppList(aContext);
+        }
+        return topPackageName;
+    }
+
+    private String getAppList(Context aContext) {
+        String topPackageName = "";
+
+        UsageStatsManager usage = (UsageStatsManager) aContext.getSystemService(Context.USAGE_STATS_SERVICE);
+        long time = System.currentTimeMillis();
+        List<UsageStats> stats = usage.queryUsageStats(UsageStatsManager.INTERVAL_DAILY, System.currentTimeMillis() - TimeUnit.DAYS.toMillis(1), System.currentTimeMillis() + TimeUnit.DAYS.toMillis(1));
+//            TextView lTextView = (TextView) findViewById(R.id.usage_stats);
+
+        if (stats != null) {
+            SortedMap<Long, UsageStats> runningTask = new TreeMap<Long, UsageStats>();
+            for (UsageStats usageStats : stats) {
+                runningTask.put(usageStats.getLastTimeUsed(), usageStats);
+            }
+            Log.i("locker124", "list Size NOUGAT===> " + runningTask.size());
+
+            if (runningTask.isEmpty()) {
+//                    return null;
+            }
+            topPackageName = runningTask.get(runningTask.lastKey()).getPackageName();
+            Log.i("locker124", "package Name FOREGROUND NOUGAT===> " + topPackageName);
+
+        }
+
+        StringBuilder lStringBuilder = new StringBuilder();
+
+        for (UsageStats lUsageStats : stats) {
+            lStringBuilder.append(lUsageStats.getPackageName());
+            lStringBuilder.append("\r\n");
+        }
+//            lTextView.setText(lStringBuilder.toString());
+        return topPackageName;
+    }
+
 
     private void forceClose(String app) {
         try {
@@ -309,20 +264,6 @@ public class CheckRunningApplicationReceiver extends BroadcastReceiver {
         String topApp = "Not Exist";
         List<AndroidAppProcess> processes = AndroidProcesses.getRunningForegroundApps(aContext);
         Collections.sort(processes, new AndroidProcesses.ProcessComparator());
-
-/*
-        UsageStatsManager usage = (UsageStatsManager) aContext.getSystemService(Context.USAGE_STATS_SERVICE);
-        long time = System.currentTimeMillis();
-        List<UsageStats> stats = usage.queryUsageStats(UsageStatsManager.INTERVAL_DAILY, time - 1000 * 1000, time);
-        if (stats != null) {
-            SortedMap<Long, UsageStats> runningTask = new TreeMap<Long, UsageStats>();
-            for (UsageStats usageStats : stats) {
-                runningTask.put(usageStats.getLastTimeUsed(), usageStats);
-            }
-            Log.i("locker124", "package Name FOREGROUND NOUGAT===> " + runningTask.);
-
-        }*/
-
         return processes;
     }
 }

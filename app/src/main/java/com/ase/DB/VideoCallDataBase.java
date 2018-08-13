@@ -2190,7 +2190,7 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
                     Log.i("Response", "projectDetailsBean listMember_1.getUsername()" + listMember_1.getUsername());
                     Log.i("chat123", "DB contact list size" + grouplist2.size());
 
-                    if (grouplist2.size() > 0) {
+//                    if (grouplist2.size() > 0) {
                         if (!listMember_1.getUsername().equalsIgnoreCase(Appreference.loginuserdetails.getUsername())) {
                             Log.i("chat123", "DB contact list notcontains new one===>" + listMember_1.getUsername());
                             Log.i("chat123", "DB contact list notcontains new RoleId===>" + listMember_1.getRoleId());
@@ -2216,7 +2216,7 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
                                 VideoCallDataBase.getDB(context).contactRoleIdUpdate(listMember_1.getRoleId(), listMember_1.getRoleName(), listMember_1.getId());
                             }
                         }
-                    }
+//                    }
                     pjt_members = pjt_members.concat(listMember_1.getUsername() + ",");
                 }
 //                pjt_members = pjt_members.concat(listMember_2.getUsername() + ",");

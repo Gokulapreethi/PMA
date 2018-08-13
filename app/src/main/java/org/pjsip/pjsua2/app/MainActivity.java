@@ -23,12 +23,14 @@ import android.app.Activity;
 import android.app.ActivityManager;
 import android.app.AlarmManager;
 import android.app.AlertDialog;
+import android.app.AppOpsManager;
 import android.app.DownloadManager;
 import android.app.KeyguardManager;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.ProgressDialog;
+import android.content.ActivityNotFoundException;
 import android.content.BroadcastReceiver;
 import android.content.ContentValues;
 import android.content.Context;
@@ -376,6 +378,23 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback,
         }
     }
 
+
+    public boolean hasPermission() {
+        AppOpsManager appOps = (AppOpsManager)
+                getSystemService(Context.APP_OPS_SERVICE);
+        int mode = 0;
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.KITKAT) {
+            mode = appOps.checkOpNoThrow(AppOpsManager.OPSTR_GET_USAGE_STATS,
+                    android.os.Process.myUid(), getPackageName());
+        }
+        return mode == AppOpsManager.MODE_ALLOWED;
+    }
+
+    public void requestPermission() {
+        Toast.makeText(this, "Need to request permission", Toast.LENGTH_SHORT).show();
+        startActivityForResult(new Intent(Settings.ACTION_USAGE_ACCESS_SETTINGS), 100);
+    }
+
     public class MSG_TYPE {
         public final static int INCOMING_CALL = 1;
         public final static int CALL_STATE = 2;
@@ -615,7 +634,7 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback,
                 intent.setData(Uri.parse("package:" + packageName));
 //                }
                 mainContext.startActivity(intent);
-            } catch (Exception e) {
+            } catch (ActivityNotFoundException e) {
                 e.printStackTrace();
                 Appreference.printLog("MainActivity", "onCreate Exception: " + e.getMessage(), "WARN", null);
             }
