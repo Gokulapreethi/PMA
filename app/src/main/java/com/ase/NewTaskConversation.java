@@ -14958,7 +14958,7 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                 }
                 try {
                     project_SipUser = new ArrayList<>();
-                    if (MainActivity.account.buddyList != null && MainActivity.account.buddyList.size() > 0) {
+                    if (MainActivity.account.buddyList != null ) {
                         Log.i("sipTest", "Buddy list size()--->" + MainActivity.account.buddyList.size());
                         Log.i("register", " MainActivity.account.buddyList.size()>0 && Buddy Add after register successfully");
                         for (int i = 0; i < MainActivity.account.buddyList.size(); i++) {
