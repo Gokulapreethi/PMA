@@ -293,6 +293,71 @@ public class TravelJobDetails extends Activity implements View.OnClickListener, 
                 }
 
                 Log.i(tab, "taskStatus==> 1 " + taskStatus);
+
+
+                    /* $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+                    *  project Members add to contact table
+                    *  */
+
+                try {
+                    ArrayList<String> project_SipUser = new ArrayList<>();
+                    HashMap<String, MyBuddy> tempvalue = new HashMap<String, MyBuddy>();
+
+                    if (MainActivity.account.buddyList != null ) {
+                        Log.i("sipTest", "Buddy list size()--->" + MainActivity.account.buddyList.size());
+                        Log.i("register", " MainActivity.account.buddyList.size()>0 && Buddy Add after register successfully");
+                        for (int i = 0; i < MainActivity.account.buddyList.size(); i++) {
+                            String name = MainActivity.account.buddyList.get(i).cfg.getUri();
+                            tempvalue.put(name, MainActivity.account.buddyList.get(i));
+                            Log.i("sipTest", "tempvalue name and values " + name + " " + tempvalue.get(name));
+                        }
+                        try {
+                            for (String Mem_Name : listOfObservers) {
+                                if (tempvalue != null && Mem_Name != null) {
+                                    String name = "sip:" + Mem_Name + "@" + getResources().getString(R.string.server_ip);
+                                    if (!tempvalue.containsKey(name)) {
+                                        String b_uri = null;
+                                        try {
+                                            BuddyConfig cfg = new BuddyConfig();
+                                            b_uri = "sip:" + Mem_Name + "@" + getResources().getString(R.string.server_ip);
+                                            Log.i("sipTest", "buddy name not in hashmap b_uri" + b_uri);
+                                            Appreference.printLog("sipregister", "NewTaskconversation Adding the buddy to hashmap b_uri--->" + b_uri, "DEBUG", null);
+                                            cfg.setUri(b_uri);
+                                            cfg.setSubscribe(true);
+                                            MainActivity.account.addBuddy(cfg);
+                                            project_SipUser.add(b_uri);
+                                            Appreference.printLog("sipregister", "NewTaskconversation hashmap b_uri buddy sip Added successfully-->" + b_uri, "DEBUG", null);
+                                            Log.i("sipTest", "project_SipUser " + project_SipUser.size());
+                                        } catch (Resources.NotFoundException e) {
+                                            e.printStackTrace();
+                                            Log.i("sipTest", "project_SipUser " + project_SipUser.size());
+                                            Appreference.printLog("sipregister", "buddy add in my accout-->" + b_uri, "DEBUG", null);
+                                        } catch (Exception e) {
+                                            e.printStackTrace();
+                                            Log.i("sipTest", "project_SipUser " + project_SipUser.size());
+                                            Appreference.printLog("sipregister", "buddy add in my accout-->" + b_uri, "DEBUG", null);
+                                        }
+                                    }
+                                }
+                            }
+                        } catch (Resources.NotFoundException e) {
+                            e.printStackTrace();
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                } catch (Resources.NotFoundException e) {
+                    e.printStackTrace();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+                    /* $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+                    *  project Members add to contact table
+                    *  */
+
+
+
             } catch (NumberFormatException e) {
                 e.printStackTrace();
                 Appreference.printLog("TravelJobDetails", "projectHistory intent Exception : " + e.getMessage(), "WARN", null);
