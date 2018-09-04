@@ -7,6 +7,7 @@ import com.ase.Appreference;
 import com.ase.Bean.ListofFileds;
 import com.ase.Bean.TaskDetailsBean;
 import com.ase.CheckListActivity;
+import com.ase.CheckRunningApplicationReceiver;
 import com.ase.NewTaskConversation;
 import com.ase.chat.ChatBean;
 import com.ase.gcm.NotificationActivity;
@@ -39,7 +40,7 @@ public class JsonRequestSender {
     }
 
     public void login(EnumJsonWebservicename webservicename, List<NameValuePair> valuePair, WebServiceInterface access) {
-        Appreference.isLoginRequestSent=true;
+        Appreference.isLoginRequestSent = true;
         CommunicationBean communicationBean = new CommunicationBean();
         communicationBean.setEnumJsonWebservicename(webservicename);
         communicationBean.setNameValuePairs(valuePair);
@@ -314,7 +315,7 @@ public class JsonRequestSender {
         queue.addMsg(communicationBean);
     }
 
-    public void taskStatus(EnumJsonWebservicename webservicename, JSONObject jsonObject, ArrayList<TaskDetailsBean> detailsBeanArrayList, TaskDetailsBean taskDetailsBean,WebServiceInterface access) {
+    public void taskStatus(EnumJsonWebservicename webservicename, JSONObject jsonObject, ArrayList<TaskDetailsBean> detailsBeanArrayList, TaskDetailsBean taskDetailsBean, WebServiceInterface access) {
 
         CommunicationBean communicationBean = new CommunicationBean();
         communicationBean.setEnumJsonWebservicename(webservicename);
@@ -324,7 +325,7 @@ public class JsonRequestSender {
         if (detailsBeanArrayList != null) {
             communicationBean.setGetStatusListForMedia(detailsBeanArrayList);
         }
-        if(taskDetailsBean != null){
+        if (taskDetailsBean != null) {
             communicationBean.setTaskDetailsBean(taskDetailsBean);
         }
         communicationBean.setAccess(access);
@@ -343,7 +344,7 @@ public class JsonRequestSender {
     }
 
     public void getTask(EnumJsonWebservicename webservicename, List<NameValuePair> valuePair, WebServiceInterface access) {
-        Log.i("getTask123","gettaskwebservice JsonrequestSender*************");
+        Log.i("getTask123", "gettaskwebservice JsonrequestSender*************");
         CommunicationBean communicationBean = new CommunicationBean();
         communicationBean.setEnumJsonWebservicename(webservicename);
         communicationBean.setNameValuePairs(valuePair);
@@ -559,6 +560,7 @@ public class JsonRequestSender {
         communicationBean.setAccess(access);
         queue.addMsg(communicationBean);
     }
+
     public void projectCompleted(EnumJsonWebservicename webservicename, List<NameValuePair> valuePair, WebServiceInterface access) {
 
         CommunicationBean communicationBean = new CommunicationBean();
@@ -567,6 +569,7 @@ public class JsonRequestSender {
         communicationBean.setAccess(access);
         queue.addMsg(communicationBean);
     }
+
     public void getMediaSearch(EnumJsonWebservicename webservicename, List<NameValuePair> valuePair, WebServiceInterface access) {
 
         CommunicationBean communicationBean = new CommunicationBean();
@@ -575,6 +578,7 @@ public class JsonRequestSender {
         communicationBean.setAccess(access);
         queue.addMsg(communicationBean);
     }
+
     public void SaveFormAccessRestrictions(EnumJsonWebservicename servicename, JSONObject jsonObject, WebServiceInterface access) {
         CommunicationBean communicationBean = new CommunicationBean();
         communicationBean.setEnumJsonWebservicename(servicename);
@@ -593,7 +597,8 @@ public class JsonRequestSender {
         communicationBean.setAccess(access);
         queue.addMsg(communicationBean);
     }
-   public void reactivateStatus(EnumJsonWebservicename webservicename, List<NameValuePair> valuePair, WebServiceInterface access,TaskDetailsBean taskDetailsBean) {
+
+    public void reactivateStatus(EnumJsonWebservicename webservicename, List<NameValuePair> valuePair, WebServiceInterface access, TaskDetailsBean taskDetailsBean) {
 
         CommunicationBean communicationBean = new CommunicationBean();
         communicationBean.setEnumJsonWebservicename(webservicename);
@@ -602,18 +607,20 @@ public class JsonRequestSender {
         communicationBean.setAccess(access);
         queue.addMsg(communicationBean);
     }
-    public void OracleAssignTask(EnumJsonWebservicename webservicename, JSONObject jsonObject,TaskDetailsBean taskDetailsBean, WebServiceInterface access) {
+
+    public void OracleAssignTask(EnumJsonWebservicename webservicename, JSONObject jsonObject, TaskDetailsBean taskDetailsBean, WebServiceInterface access) {
         CommunicationBean communicationBean = new CommunicationBean();
         communicationBean.setEnumJsonWebservicename(webservicename);
         if (jsonObject != null) {
             communicationBean.setJsonObject(jsonObject);
         }
-        if(taskDetailsBean!=null)
+        if (taskDetailsBean != null)
             communicationBean.setTaskDetailsBean(taskDetailsBean);
 
         communicationBean.setAccess(access);
         queue.addMsg(communicationBean);
     }
+
     public void OracleTNAReport(EnumJsonWebservicename webservicename, JSONObject jsonObject, WebServiceInterface access) {
         CommunicationBean communicationBean = new CommunicationBean();
         communicationBean.setEnumJsonWebservicename(webservicename);
@@ -623,6 +630,7 @@ public class JsonRequestSender {
         communicationBean.setAccess(access);
         queue.addMsg(communicationBean);
     }
+
     public void OracleFSRReport(EnumJsonWebservicename webservicename, JSONObject jsonObject, WebServiceInterface access) {
         CommunicationBean communicationBean = new CommunicationBean();
         communicationBean.setEnumJsonWebservicename(webservicename);
@@ -640,13 +648,15 @@ public class JsonRequestSender {
         communicationBean.setAccess(access);
         queue.addMsg(communicationBean);
     }
-   public void OraclefieldServiceSearch(EnumJsonWebservicename webservicename, List<NameValuePair> valuePair, WebServiceInterface access) {
+
+    public void OraclefieldServiceSearch(EnumJsonWebservicename webservicename, List<NameValuePair> valuePair, WebServiceInterface access) {
         CommunicationBean communicationBean = new CommunicationBean();
         communicationBean.setEnumJsonWebservicename(webservicename);
         communicationBean.setNameValuePairs(valuePair);
         communicationBean.setAccess(access);
         queue.addMsg(communicationBean);
     }
+
     public void OracleTNAJobReport(EnumJsonWebservicename webservicename, List<NameValuePair> valuePair, WebServiceInterface access) {
         CommunicationBean communicationBean = new CommunicationBean();
         communicationBean.setEnumJsonWebservicename(webservicename);
@@ -654,7 +664,8 @@ public class JsonRequestSender {
         communicationBean.setAccess(access);
         queue.addMsg(communicationBean);
     }
-    public void taskConversactionCaption(EnumJsonWebservicename webservicename, List<NameValuePair> valuePair, WebServiceInterface access,TaskDetailsBean taskDetailsBean) {
+
+    public void taskConversactionCaption(EnumJsonWebservicename webservicename, List<NameValuePair> valuePair, WebServiceInterface access, TaskDetailsBean taskDetailsBean) {
 
         CommunicationBean communicationBean = new CommunicationBean();
         communicationBean.setEnumJsonWebservicename(webservicename);
@@ -700,6 +711,16 @@ public class JsonRequestSender {
         queue.addMsg(communicationBean);
     }
 
+    public void DataUsageSender(EnumJsonWebservicename webservicename, JSONObject jsonObject, WebServiceInterface access) {
+
+        CommunicationBean communicationBean = new CommunicationBean();
+        communicationBean.setEnumJsonWebservicename(webservicename);
+        if (jsonObject != null) {
+            communicationBean.setJsonObject(jsonObject);
+        }
+        communicationBean.setAccess(access);
+        queue.addMsg(communicationBean);
+    }
     /*public void listMembersInGroup(EnumJsonWebservicename webservicename, List<NameValuePair> valuePair, WebServiceInterface access){
 
         CommunicationBean communicationBean=new CommunicationBean();

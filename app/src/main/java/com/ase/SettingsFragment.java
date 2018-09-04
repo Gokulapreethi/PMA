@@ -79,7 +79,7 @@ public class SettingsFragment extends Fragment implements WebServiceInterface {
     Button version_no, show_log, sync_btn,release_version;
     TextView username, em, edit, signout, changepass, exclation_counter;
     ImageView imageview;
-    LinearLayout files;
+    LinearLayout files,DeviceManipulation;
     public static Context classContext;
     ImageLoader imageLoader;
     private ProgressDialog progress;
@@ -184,6 +184,7 @@ public class SettingsFragment extends Fragment implements WebServiceInterface {
         version_no = (Button) rootView.findViewById(R.id.version);
         release_version = (Button) rootView.findViewById(R.id.release_version);
         sync_btn = (Button) rootView.findViewById(R.id.sync_btn);
+        DeviceManipulation = (LinearLayout) rootView.findViewById(R.id.DeviceManipulation);
 
         signout = (TextView) rootView.findViewById(R.id.signout);
 
@@ -322,6 +323,13 @@ public class SettingsFragment extends Fragment implements WebServiceInterface {
             sync_btn.setBackgroundResource(R.color.gray);
 
         }
+        DeviceManipulation.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent=new Intent(getActivity(), ListActivity.class);
+                startActivity(intent);
+            }
+        });
 
         sync_btn.setOnClickListener(new View.OnClickListener() {
             @Override

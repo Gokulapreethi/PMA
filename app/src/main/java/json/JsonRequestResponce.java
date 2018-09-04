@@ -357,6 +357,8 @@ public class JsonRequestResponce extends Thread {
                                 obj.setFirstname("getCheckListDetailsFromClient");
                             }else if (obj.getEnumJsonWebservicename().toString().equals("saveCheckListDataDetails")) {
                                 obj.setFirstname("saveCheckListDataDetails");
+                            }else if (obj.getEnumJsonWebservicename().toString().equals("userDeviceManagementDetails")) {
+                                obj.setFirstname("userDeviceManagementDetails");
                             }else if (obj.getEnumJsonWebservicename().toString().equals("taskConversactionCaption")) {
                                 obj.setFirstname("taskConversactionCaption");
                             }
@@ -654,6 +656,11 @@ public class JsonRequestResponce extends Thread {
                CheckListActivity.getInstance().showToast("saveCheckListDataDetails error . Try again later");
                 inter.ErrorMethod(obj);
                 break;
+             case userDeviceManagementDetails:
+//               CheckListActivity.getInstance().cancelDialog();
+//               CheckListActivity.getInstance().showToast("userDeviceManagementDetails error . Try again later");
+                inter.ErrorMethod(obj);
+                break;
             case taskConversactionCaption:
                 CaptionMedia.getInstance().cancelDialog();
                 CaptionMedia.getInstance().showToast(result);
@@ -895,6 +902,12 @@ public class JsonRequestResponce extends Thread {
                         obj.setEmail(responseString);
                         obj.setFirstname("saveCheckListDataDetails");
                         Log.i("sendofflinemsg","response taskstatus-->"+inter);
+                        inter.ResponceMethod(obj);
+                        break;
+                     case userDeviceManagementDetails:
+                        obj.setEmail(responseString);
+                        obj.setFirstname("userDeviceManagementDetails");
+                        Log.i("sendofflinemsg","response userDeviceManagementDetails-->"+inter);
                         inter.ResponceMethod(obj);
                         break;
                     case taskNeedAssessmentReport:

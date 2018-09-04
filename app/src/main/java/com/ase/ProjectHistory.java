@@ -552,6 +552,7 @@ public class ProjectHistory extends Activity implements WebServiceInterface, Swi
                         String get_groupAdminobserver_query = "select groupAdminobserver from projectDetails where loginuser = '" + Appreference.loginuserdetails.getEmail() + "'and projectId='" + taskDetailsBean.getId() + "'";
                         String OraclegroupAdminObserver = VideoCallDataBase.getDB(context).getprojectIdForOracleID(get_groupAdminobserver_query);
                         Log.i("observer123", "OraclegroupAdminObserver ====> " + OraclegroupAdminObserver);
+                        Log.i("observer123", "********Receiver Name From ProjectHistory Bean******* ====> " + taskDetailsBean.getTaskReceiver());
                         Log.i("observer123", "projectId ====> " + taskDetailsBean.getId());
 
                         if (taskDetailsBean.getTaskStatus() != null && taskDetailsBean.getTaskStatus().equalsIgnoreCase("Template")

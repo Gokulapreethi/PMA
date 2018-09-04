@@ -17,6 +17,7 @@ public class StartupReceiver extends BroadcastReceiver {
     static final String TAG = "SR";
 
     final int startupID = 1111111;
+    final int DatausageID =2222222;
 
 
     @Override
@@ -40,6 +41,15 @@ public class StartupReceiver extends BroadcastReceiver {
             alarmManager.setRepeating(AlarmManager.RTC_WAKEUP,
                     afterTenSeconds,
                     5000, ServiceManagementIntent);
+
+
+            Intent i8 = new Intent(context, CheckDataUsageReceiver.class);
+            PendingIntent DataUsageIntent = PendingIntent.getBroadcast(context,
+                    DatausageID, i8, 0);
+            alarmManager.setRepeating(AlarmManager.RTC_WAKEUP,
+                    afterTenSeconds,
+                    3600*1000, DataUsageIntent);
+
 
         } catch (Exception e) {
             Log.i(TAG, "Exception : "+e);

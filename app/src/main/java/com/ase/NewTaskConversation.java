@@ -292,8 +292,8 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
     int vie = 0;
     AppSharedpreferences appSharedpreferences;
     public static boolean calender = false;
-    private String toas = null, Weekdays, oracleProjectOwner = "";
     private String quotes = "\"";
+    private String toas = null, Weekdays, oracleProjectOwner = "";
     private boolean startTimeSet = false, endTimeSet = false;
     private static Handler handler = new Handler();
     boolean check_call = false;
@@ -5586,30 +5586,32 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                     String checklist_available_query = "select * from checklistDetails where projectId='" + projectId + "'and taskId='" + webtaskId + "'and userId='" + Appreference.loginuserdetails.getId() + "'";
                     checkListDetails checklistBean = VideoCallDataBase.getDB(context).getchecklistdetails(checklist_available_query);
                     final ProjectDetailsBean PMSJobDetails = getprojectDetails_Row();
+                    String PMSJobcard_query = "select isActiveStatus from projectDetails where loginuser = '" + Appreference.loginuserdetails.getEmail() + "'and projectId='" + projectId + "'";
+                    String PMSJobcard = VideoCallDataBase.getDB(context).getprojectIdForOracleID(PMSJobcard_query);
                     boolean isPMSJobCard;
-                    if (PMSJobDetails == null)
+                    if (checklistBean.getCheckListName()== null)
                         isPMSJobCard = false;
                     else
                         isPMSJobCard = true;
 
                     if (count != 0) {
                         if (travelentry == 0) {
-//                            if ((isPMSJobCard && (checklistBean.getId() != null && checklistBean.getIsServiceDone().equalsIgnoreCase("1")))
-//                                     || !isPMSJobCard){
-                            if (complete_travel == 0) {
-                                Intent i = new Intent(context, EodScreen.class);
-                                i.putExtra("projectId", projectId);
-                                i.putExtra("webtaskId", webtaskId);
-                                i.putExtra("taskName", taskName);
-                                i.putExtra("JobCodeNo", JobCodeNo);
-                                i.putExtra("ActivityCode", ActivityCode);
-                                startActivityForResult(i, 9999);
+                            if (PMSJobcard==null || (PMSJobcard!=null && !PMSJobcard.equalsIgnoreCase("") && (checklistBean.getId() != null && checklistBean.getIsServiceDone().equalsIgnoreCase("1")))
+                                    || PMSJobcard!=null && PMSJobcard.equalsIgnoreCase("")) {
+                                if (complete_travel == 0) {
+                                    Intent i = new Intent(context, EodScreen.class);
+                                    i.putExtra("projectId", projectId);
+                                    i.putExtra("webtaskId", webtaskId);
+                                    i.putExtra("taskName", taskName);
+                                    i.putExtra("JobCodeNo", JobCodeNo);
+                                    i.putExtra("ActivityCode", ActivityCode);
+                                    startActivityForResult(i, 9999);
+                                } else {
+                                    Toast.makeText(NewTaskConversation.this, "Already EOD sent", Toast.LENGTH_SHORT).show();
+                                }
                             } else {
-                                Toast.makeText(NewTaskConversation.this, "Already EOD sent", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(NewTaskConversation.this, "Please submit the check list before EOD!", Toast.LENGTH_SHORT).show();
                             }
-//                            } else {
-//                                Toast.makeText(NewTaskConversation.this, "Please submit the check list before EOD!", Toast.LENGTH_SHORT).show();
-//                            }
                         } else {
                             Toast.makeText(NewTaskConversation.this, "Enter end date and time and then proceed to complete the task.", Toast.LENGTH_SHORT).show();
                         }
@@ -14958,7 +14960,7 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                 }
                 try {
                     project_SipUser = new ArrayList<>();
-                    if (MainActivity.account.buddyList != null ) {
+                    if (MainActivity.account.buddyList != null) {
                         Log.i("sipTest", "Buddy list size()--->" + MainActivity.account.buddyList.size());
                         Log.i("register", " MainActivity.account.buddyList.size()>0 && Buddy Add after register successfully");
                         for (int i = 0; i < MainActivity.account.buddyList.size(); i++) {
@@ -16861,6 +16863,10 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                                 if (taskReceiver != null && !taskReceiver.equalsIgnoreCase("") && !taskReceiver.equalsIgnoreCase(Appreference.loginuserdetails.getUsername()) && !listOfObservers.contains(taskReceiver)) {
                                     listOfObservers.add(taskReceiver);
                                 }
+
+                                if(taskReceiver==null){
+                                    listOfObservers.add(GetReceiverfromDB());
+                                }
                                 /* added for groupAdmin-Observer End*/
 
                                 Log.i("deassign123", "------listOfObservers !!!** " + listOfObservers);
@@ -17007,6 +17013,11 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
             e.printStackTrace();
             Appreference.printLog("NewTaskConversation", "sendMessage Exception : " + e.getMessage(), "WARN", null);
         }
+    }
+
+    private String GetReceiverfromDB() {
+        String taskMemberList_qry = "select taskReceiver from projectHistory where projectId='" + projectId + "' and taskId='" + webtaskId + "'";
+        return VideoCallDataBase.getDB(context).getValuesForQuery(taskMemberList_qry);
     }
 
     private void addGroupAdminObserver_list() {

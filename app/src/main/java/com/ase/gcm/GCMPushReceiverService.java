@@ -184,7 +184,7 @@ public class GCMPushReceiverService extends FirebaseMessagingService {
                                         if (jsonObject_check.has("serverKey")) {
                                             PMS_collapse_key = jsonObject_check.getString("serverKey");
                                         }
-                                        if (PMS_collapse_key != null && PMS_collapse_key.contains("PMS-Alert")) {
+                                        if (PMS_collapse_key != null && PMS_collapse_key.contains("PMA-Alert")) {
                                             ShowNotification(PMS_DueDate, jsonObject_check, jsonObject_check.getString("Technician_Name"));
                                         }
                                     }

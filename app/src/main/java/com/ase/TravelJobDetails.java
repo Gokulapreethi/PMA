@@ -3469,7 +3469,7 @@ public class TravelJobDetails extends Activity implements View.OnClickListener, 
             handler.post(new Runnable() {
                 @Override
                 public void run() {
-                    if (list_all != null)
+                    if (list_all != null && list_all.getAdapter()!=null)
                         list_all.setSelection(list_all.getAdapter().getCount() - 1);
                 }
             });
