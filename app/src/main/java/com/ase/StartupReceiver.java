@@ -46,9 +46,10 @@ public class StartupReceiver extends BroadcastReceiver {
             Intent i8 = new Intent(context, CheckDataUsageReceiver.class);
             PendingIntent DataUsageIntent = PendingIntent.getBroadcast(context,
                     DatausageID, i8, 0);
+            /*alarm for every two hour*/
             alarmManager.setRepeating(AlarmManager.RTC_WAKEUP,
                     afterTenSeconds,
-                    3600*1000, DataUsageIntent);
+                    300000, DataUsageIntent);
 
 
         } catch (Exception e) {

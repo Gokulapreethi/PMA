@@ -973,6 +973,10 @@ public class TravelJobDetails extends Activity implements View.OnClickListener, 
             String OraclegroupAdminObserver = VideoCallDataBase.getDB(context).getprojectIdForOracleID(get_groupAdminobserver_query);
             /*added for GroupAdmin Observer End*/
             Log.i(tab, "project CurrentStatus from DB====>" + current_status);
+
+            if(taskReceiver==null){
+                taskReceiver=GetReceiverfromDB();
+            }
             if ((oracleProjectOwner != null && !oracleProjectOwner.equalsIgnoreCase(Appreference.loginuserdetails.getUsername())
                     && (taskReceiver != null && taskReceiver.equalsIgnoreCase(Appreference.loginuserdetails.getUsername())) && (null == OraclegroupAdminObserver))
                     || (OraclegroupAdminObserver != null && !OraclegroupAdminObserver.contains(Appreference.loginuserdetails.getUsername()))) {
@@ -1153,6 +1157,11 @@ public class TravelJobDetails extends Activity implements View.OnClickListener, 
             e.printStackTrace();
             Appreference.printLog("TravelJobDetails", "showStatusPopupWindow Exception : " + e.getMessage(), "WARN", null);
         }
+    }
+
+    private String GetReceiverfromDB() {
+        String taskMemberList_qry = "select taskReceiver from projectHistory where projectId='" + projectId + "' and taskId='" + webtaskId + "'";
+        return VideoCallDataBase.getDB(context).getValuesForQuery(taskMemberList_qry);
     }
 
     public void showSettingsAlert(String message) {

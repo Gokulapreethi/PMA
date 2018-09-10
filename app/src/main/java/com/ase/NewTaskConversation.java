@@ -1107,11 +1107,11 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
                     Log.i("monthly123", "current_status===>" + current_status);
                     if (current_status == -1 || current_status == 8) {
                         //                    travel_job.setEnabled(false);
-                        if (MonthlyJobBean.getIsActiveStatus() != null) {
+                      /*  if (MonthlyJobBean.getIsActiveStatus() != null) {
                             showtravelTimePopup(v);
-                        } else {
+                        } else {*/
                             showToast("The task has not yet started...");
-                        }
+//                        }
                     } else if (current_status == 1 || current_status == 3) {
                         showToast("you are not allowed when you are Hold/Pause the task..");
                     } else {
@@ -5081,6 +5081,9 @@ public class NewTaskConversation extends Activity implements View.OnClickListene
         Log.i("pms123", "PMSCARD====> " + PMSJobcard);
         /*added for checklist_PMS End*/
 
+        if(taskReceiver==null){
+            taskReceiver=GetReceiverfromDB();
+        }
         if ((oracleProjectOwner != null && !oracleProjectOwner.equalsIgnoreCase(Appreference.loginuserdetails.getUsername())
                 && (taskReceiver != null && taskReceiver.equalsIgnoreCase(Appreference.loginuserdetails.getUsername())) && (null == OraclegroupAdminObserver))
                 || (OraclegroupAdminObserver != null && !OraclegroupAdminObserver.contains(Appreference.loginuserdetails.getUsername()))) {
