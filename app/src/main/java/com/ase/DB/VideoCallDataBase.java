@@ -10407,11 +10407,11 @@ public class VideoCallDataBase extends SQLiteOpenHelper {
                         beanLabel.setItem(cur.getString(cur.getColumnIndex("checklistItem")));
                         beanLabel.setJobDescription(cur.getString(cur.getColumnIndex("jobDescription")));
                         arrayList.add(beanLabel);
-                        bean.setCheckListName(cur.getString(cur.getColumnIndex("checklistName")));
-                        bean.setLabel(arrayList);
+
                         cur.moveToNext();
                     }
-
+                    bean.setCheckListName(cur.getString(cur.getColumnIndex("checklistName")));
+                    bean.setLabel(arrayList);
                     cur.close();
 
                 }

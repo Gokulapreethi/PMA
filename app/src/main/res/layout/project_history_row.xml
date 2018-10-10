@@ -33,7 +33,7 @@
                 android:text="Header"
                 android:textColor="@color/appcolor"
                 android:textSize="16dp"
-                android:visibility="gone" />
+                android:visibility="visible" />
 
             <RelativeLayout
                 android:id="@+id/task_namedatails"
