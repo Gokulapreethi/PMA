@@ -186,6 +186,8 @@ public class GCMPushReceiverService extends FirebaseMessagingService {
                                         }
                                         if (PMS_collapse_key != null && PMS_collapse_key.contains("PMA-Alert")) {
                                             ShowNotification(PMS_DueDate, jsonObject_check, jsonObject_check.getString("Technician_Name"));
+                                        } else if (PMS_collapse_key != null && PMS_collapse_key.contains("HMR-Alert")) {
+                                            ShowHMR_Notification(PMS_DueDate, jsonObject_check, jsonObject_check.getString("Technician_Name"));
                                         }
                                     }
                                 } catch (Exception e) {
@@ -773,7 +775,7 @@ public class GCMPushReceiverService extends FirebaseMessagingService {
                     .setColor(getResources().getColor(R.color.bluenew))
                     .setContentTitle(content.getString("serverKey"))
                     .setAutoCancel(true)
-                    .setOngoing(true)
+                    .setOngoing(true)   //Prevent user from dismissing notification
                     .setContentText(content.getString("result_text"))
                     .setDefaults(Notification.DEFAULT_ALL) // must requires VIBRATE permission
                     .setPriority(NotificationCompat.PRIORITY_HIGH) //must give priority to High, Max which will considered as heads-up notification
@@ -811,6 +813,51 @@ public class GCMPushReceiverService extends FirebaseMessagingService {
 
     }
 
+    private void ShowHMR_Notification(long when, JSONObject content, String technician_name) {
+
+        int notificationAcceptId = new Random().nextInt(); // just use a counter in some util class...
+        Log.i("pms123", "notification notifyID=======>notifyId  " + notificationAcceptId);
+
+        int m = (int) ((new Date().getTime() / 1000L) % Integer.MAX_VALUE);
+
+        NotificationCompat.Builder builder = null;
+
+        int dismissId = (int) ((new Date().getTime() / 1000L) % Integer.MAX_VALUE);
+
+
+        try {
+            builder = new NotificationCompat.Builder(this)
+                    .setSmallIcon(R.drawable.logo)
+                    .setColor(getResources().getColor(R.color.bluenew))
+                    .setContentTitle(content.getString("serverKey"))
+                    .setAutoCancel(true)
+                    .setContentText(content.getString("result_text"))
+                    .setDefaults(Notification.DEFAULT_ALL) // must requires VIBRATE permission
+                    .setPriority(NotificationCompat.PRIORITY_HIGH); //must give priority to High, Max which will considered as heads-up notification
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+// Gets an instance of the NotificationManager service
+        /*Notification notification = new NotificationCompat.BigTextStyle(builder)
+                .bigText(msgText).build();*/
+        Notification notification = null;
+        try {
+            notification = new NotificationCompat.BigTextStyle(builder)
+                    .bigText(content.getString("Message")).build();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        NotificationManager notificationManager =
+                (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+
+        builder.build().flags |= Notification.FLAG_AUTO_CANCEL;
+//to post your notification to the notification bar with a id. If a notification with same id already exists, it will get replaced with updated information.
+//        notificationManager.notify(m, builder.build());
+        notificationManager.notify(notificationAcceptId, notification);
+    }
 
     public boolean isApplicationBroughtToBackground() {
         boolean openPinActivity = false;

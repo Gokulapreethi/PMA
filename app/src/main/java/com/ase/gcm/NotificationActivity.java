@@ -94,6 +94,8 @@ public class NotificationActivity extends Activity implements WebServiceInterfac
     @Override
     public void ResponceMethod(Object object) {
         Log.i("pms123", "NotificationActivity Response methos=======>");
+        cancelNotification(this, getIntent().getIntExtra(NOTIFICATION_ID, -1));
+
     }
 
     @Override
